@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ReglagesRouteImport } from './routes/reglages'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as MethodologieRouteImport } from './routes/methodologie'
@@ -19,6 +20,11 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiEthiRouteImport } from './routes/api.ethi'
 
+const ReglagesRoute = ReglagesRouteImport.update({
+  id: '/reglages',
+  path: '/reglages',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PortfolioRoute = PortfolioRouteImport.update({
   id: '/portfolio',
   path: '/portfolio',
@@ -74,6 +80,7 @@ export interface FileRoutesByFullPath {
   '/methodologie': typeof MethodologieRoute
   '/onboarding': typeof OnboardingRoute
   '/portfolio': typeof PortfolioRoute
+  '/reglages': typeof ReglagesRoute
   '/api/ethi': typeof ApiEthiRoute
 }
 export interface FileRoutesByTo {
@@ -85,6 +92,7 @@ export interface FileRoutesByTo {
   '/methodologie': typeof MethodologieRoute
   '/onboarding': typeof OnboardingRoute
   '/portfolio': typeof PortfolioRoute
+  '/reglages': typeof ReglagesRoute
   '/api/ethi': typeof ApiEthiRoute
 }
 export interface FileRoutesById {
@@ -97,6 +105,7 @@ export interface FileRoutesById {
   '/methodologie': typeof MethodologieRoute
   '/onboarding': typeof OnboardingRoute
   '/portfolio': typeof PortfolioRoute
+  '/reglages': typeof ReglagesRoute
   '/api/ethi': typeof ApiEthiRoute
 }
 export interface FileRouteTypes {
@@ -110,6 +119,7 @@ export interface FileRouteTypes {
     | '/methodologie'
     | '/onboarding'
     | '/portfolio'
+    | '/reglages'
     | '/api/ethi'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -121,6 +131,7 @@ export interface FileRouteTypes {
     | '/methodologie'
     | '/onboarding'
     | '/portfolio'
+    | '/reglages'
     | '/api/ethi'
   id:
     | '__root__'
@@ -132,6 +143,7 @@ export interface FileRouteTypes {
     | '/methodologie'
     | '/onboarding'
     | '/portfolio'
+    | '/reglages'
     | '/api/ethi'
   fileRoutesById: FileRoutesById
 }
@@ -144,11 +156,19 @@ export interface RootRouteChildren {
   MethodologieRoute: typeof MethodologieRoute
   OnboardingRoute: typeof OnboardingRoute
   PortfolioRoute: typeof PortfolioRoute
+  ReglagesRoute: typeof ReglagesRoute
   ApiEthiRoute: typeof ApiEthiRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/reglages': {
+      id: '/reglages'
+      path: '/reglages'
+      fullPath: '/reglages'
+      preLoaderRoute: typeof ReglagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/portfolio': {
       id: '/portfolio'
       path: '/portfolio'
@@ -224,6 +244,7 @@ const rootRouteChildren: RootRouteChildren = {
   MethodologieRoute: MethodologieRoute,
   OnboardingRoute: OnboardingRoute,
   PortfolioRoute: PortfolioRoute,
+  ReglagesRoute: ReglagesRoute,
   ApiEthiRoute: ApiEthiRoute,
 }
 export const routeTree = rootRouteImport

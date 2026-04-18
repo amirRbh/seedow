@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
+import { AppHeader } from "@/components/navigation/AppHeader";
 import { GrowthComparison } from "@/components/roots/GrowthComparison";
 import { TimelineEvent } from "@/components/roots/TimelineEvent";
 import { BadgesCard } from "@/components/garden/SeasonalBadges";
@@ -34,14 +35,11 @@ function Portfolio() {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
       <div className="max-w-lg mx-auto pb-28">
-        <header className="px-5 pt-6 pb-4">
-          <p className="text-[11px] uppercase tracking-wider text-ink-3 font-medium">Ton histoire</p>
-          <h1 className="font-value text-4xl text-ink mt-0.5">Les racines</h1>
-          <p className="text-sm text-ink-3 mt-2">
-            {MOCK_HOLDINGS.length} plantes ·{" "}
-            {totalValue.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 })} cultivés
-          </p>
-        </header>
+        <AppHeader
+          eyebrow="Ton histoire"
+          title="Les racines"
+          subtitle={`${MOCK_HOLDINGS.length} plantes · ${totalValue.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 })} cultivés`}
+        />
 
         <section className="px-5 pt-2">
           <GrowthComparison currentValue={totalValue} invested={totalInvested} gain={gain} returnPct={returnPct} />

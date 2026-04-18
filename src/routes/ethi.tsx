@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
@@ -72,16 +72,28 @@ function Ethi() {
   return (
     <div className="min-h-screen bg-ink text-paper flex flex-col">
       <header className="px-5 pt-6 pb-3 border-b border-paper/5 safe-area-top">
-        <div className="flex items-center gap-3 max-w-lg mx-auto w-full">
-          <div className="w-10 h-10 rounded-full bg-moss-2 flex items-center justify-center">
-            <svg viewBox="0 0 24 24" className="w-5 h-5 text-paper" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0 1 1 21 12Z" />
+        <div className="flex items-center justify-between gap-3 max-w-lg mx-auto w-full">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 rounded-full bg-moss-2 flex items-center justify-center flex-shrink-0">
+              <svg viewBox="0 0 24 24" className="w-5 h-5 text-paper" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0 1 1 21 12Z" />
+              </svg>
+            </div>
+            <div className="min-w-0">
+              <p className="text-[10px] uppercase tracking-wider text-paper/40 font-semibold">Ton conseiller jardin</p>
+              <h1 className="font-value text-2xl">Ethi</h1>
+            </div>
+          </div>
+          <Link
+            to="/reglages"
+            aria-label="Réglages"
+            className="flex items-center justify-center w-9 h-9 rounded-full border border-paper/15 text-paper/70 hover:text-paper hover:border-paper/40 transition-colors flex-shrink-0"
+          >
+            <svg viewBox="0 0 24 24" className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z" />
             </svg>
-          </div>
-          <div>
-            <p className="text-[10px] uppercase tracking-wider text-paper/40 font-semibold">Ton conseiller jardin</p>
-            <h1 className="font-value text-2xl">Ethi</h1>
-          </div>
+          </Link>
         </div>
       </header>
 
