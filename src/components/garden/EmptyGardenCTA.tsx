@@ -3,35 +3,52 @@ import { motion } from "framer-motion";
 
 export function EmptyGardenCTA({ userName }: { userName: string }) {
   return (
-    <div className="max-w-lg mx-auto px-6 pt-16 pb-32 text-center">
+    <div className="max-w-lg mx-auto px-8 pt-20 pb-32">
       <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ type: "spring", damping: 14 }}
-        className="w-24 h-24 mx-auto mb-8 relative"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        className="mb-12"
       >
-        <div className="absolute inset-0 -m-4 rounded-full bg-moss-3/20 blur-2xl" />
-        <svg viewBox="0 0 80 80" className="w-full h-full relative animate-breathe">
-          <path d="M 40 22 C 30 22, 24 34, 28 50 C 32 62, 48 62, 52 50 C 56 34, 50 22, 40 22 Z" fill="var(--moss-2)" />
-          <path d="M 40 22 Q 40 12, 46 10" stroke="var(--moss-3)" strokeWidth="2" fill="none" strokeLinecap="round" />
-          <ellipse cx="47" cy="8" rx="3" ry="2" fill="var(--moss-3)" transform="rotate(30 47 8)" />
+        <svg viewBox="0 0 200 60" className="w-full h-16" preserveAspectRatio="none">
+          <line x1="0" y1="59" x2="200" y2="59" stroke="var(--paper-3)" strokeWidth="0.5" />
+          <motion.path
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 1.4, ease: "easeOut", delay: 0.2 }}
+            d="M 0 50 L 40 46 L 80 38 L 120 30 L 160 18 L 200 8"
+            stroke="var(--ink)"
+            strokeWidth="1"
+            fill="none"
+          />
+          <motion.circle
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.4 }}
+            cx="200"
+            cy="8"
+            r="2"
+            fill="var(--moss-1)"
+          />
         </svg>
       </motion.div>
 
-      <p className="text-[11px] uppercase tracking-[0.2em] text-moss-1 font-semibold">
+      <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-medium">
         Bienvenue, {userName}
       </p>
-      <h1 className="font-value text-4xl text-ink mt-3">Ton jardin t'attend.</h1>
-      <p className="text-sm text-ink-3 mt-4 max-w-sm mx-auto leading-relaxed">
-        Plante ta première graine et regarde-la pousser. Pas besoin d'être expert : Ethi te guide pas à pas.
+      <h1 className="font-value text-3xl text-ink mt-2 leading-tight">
+        Composez votre premier portefeuille.
+      </h1>
+      <p className="text-sm text-ink-2 mt-4 max-w-md leading-relaxed">
+        Quatre questions pour définir vos convictions. Ethi structure ensuite une allocation alignée sur vos critères.
       </p>
 
-      <div className="mt-10 flex flex-col items-center gap-3">
+      <div className="mt-10 flex items-center gap-4">
         <Link to="/onboarding" className="btn-plant">
-          Planter ma première graine
+          Démarrer
         </Link>
-        <Link to="/discover" className="text-xs text-ink-3 hover:text-moss-1 transition-colors">
-          Explorer d'abord les graines
+        <Link to="/discover" className="text-[13px] text-ink-3 hover:text-ink transition-colors underline-offset-4 hover:underline">
+          Explorer les actifs
         </Link>
       </div>
     </div>
