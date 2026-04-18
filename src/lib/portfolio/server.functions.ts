@@ -34,16 +34,18 @@ interface UniverseCache {
 let _cache: UniverseCache | null = null;
 const CACHE_TTL_MS = 5 * 60 * 1000;
 
-async function loadUniverse(): Promise<UniverseCache> {
-  if (_cache && Date.now() - _cache.loadedAt < CACHE_TTL_MS) {
+async function loadUniverse(
+  client: typeof supabaseAdmin = supabaseAdmin,
+): Promise<UniverseCache> {
+  if (_cache && Date.now() - _cache.loadedAt < CACHE_TTL_MS && _cache.assets.length > 0) {
     return _cache;
   }
   const [assetsRes, covRes] = await Promise.all([
-    supabaseAdmin
+    client
       .from("assets")
       .select("id, ticker, name, asset_class, region, ter, esg_score, sfdr_article, expected_return, volatility, cause_exposure, excluded_sectors, description")
       .eq("is_active", true),
-    supabaseAdmin
+    client
       .from("asset_covariance")
       .select("asset_a, asset_b, covariance"),
   ]);
