@@ -184,7 +184,18 @@ export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
       total += weights[id];
     }
   }
-  for (const id in cleaned) cleaned[id] /= total;
+  // Safety net: if dust filter wiped everything, keep raw weights
+  if (Object.keys(cleaned).length === 0) {
+    console.warn("[engine] Dust filter wiped all weights; keeping raw");
+    total = 0;
+    for (const id in weights) {
+      if (weights[id] > 0) {
+        cleaned[id] = weights[id];
+        total += weights[id];
+      }
+    }
+  }
+  if (total > 0) for (const id in cleaned) cleaned[id] /= total;
 
   const selectedAssets = pool.filter((a) => cleaned[a.id] !== undefined);
   const μFinal = pool.map((a) => a.expected_return); // metrics use raw returns
