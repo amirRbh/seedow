@@ -97,27 +97,33 @@ function Onboarding() {
 function Intro({ onStart }: { onStart: () => void }) {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="min-h-screen flex flex-col items-center justify-center px-8 py-12">
-      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 1.2, ease: [0.34, 1.56, 0.64, 1] }} className="relative mb-12">
-        <motion.div animate={{ scale: [1, 1.08, 1], opacity: [0.5, 0.8, 0.5] }} transition={{ duration: 3, repeat: Infinity }} className="absolute inset-0 -m-8 rounded-full bg-moss-3/20 blur-2xl" />
-        <svg viewBox="0 0 80 80" className="w-24 h-24 relative">
-          <path d="M 40 22 C 30 22, 24 34, 28 50 C 32 62, 48 62, 52 50 C 56 34, 50 22, 40 22 Z" fill="var(--moss-3)" />
-          <path d="M 40 22 Q 40 12, 46 10" stroke="var(--moss-3)" strokeWidth="2" fill="none" strokeLinecap="round" />
-          <ellipse cx="47" cy="8" rx="3" ry="2" fill="var(--moss-3)" transform="rotate(30 47 8)" />
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }} className="w-full max-w-xs mb-14">
+        <svg viewBox="0 0 240 60" className="w-full h-14" preserveAspectRatio="none">
+          <line x1="0" y1="59" x2="240" y2="59" stroke="var(--paper)" strokeOpacity="0.15" strokeWidth="0.5" />
+          <motion.path
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 1.6, ease: "easeOut", delay: 0.3 }}
+            d="M 0 50 L 60 44 L 120 32 L 180 18 L 240 6"
+            stroke="var(--paper)"
+            strokeWidth="1"
+            fill="none"
+          />
         </svg>
       </motion.div>
 
-      <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="text-[11px] uppercase tracking-[0.2em] text-moss-3 font-semibold">
-        Ethi, ton conseiller jardin
+      <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="text-[10px] uppercase tracking-[0.18em] text-paper/50 font-medium">
+        Conseiller en allocation
       </motion.p>
-      <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }} className="font-value text-5xl text-paper text-center mt-4 leading-tight">
-        Plantons<br />ta première graine.
+      <motion.h1 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="font-value text-4xl text-paper text-center mt-3 leading-tight max-w-md">
+        Composons votre portefeuille.
       </motion.h1>
-      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.4 }} className="text-sm text-paper/60 text-center mt-6 max-w-xs leading-relaxed">
-        4 questions, 2 minutes. Je vais cultiver avec toi un portefeuille aligné sur tes valeurs.
+      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1 }} className="text-[13px] text-paper/60 text-center mt-5 max-w-sm leading-relaxed">
+        Quatre questions, deux minutes. Ethi structure une allocation alignée sur vos convictions et vos exclusions.
       </motion.p>
-      <motion.button initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.8 }} onClick={onStart} className="mt-12 px-8 py-4 rounded-full bg-paper text-ink font-semibold text-sm hover:bg-moss-5 hover:text-moss-1 transition-colors flex items-center gap-2">
+      <motion.button initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.4 }} onClick={onStart} className="mt-12 px-7 py-3 rounded bg-paper text-ink font-medium text-[13px] tracking-wide hover:bg-paper-2 transition-colors flex items-center gap-2">
         Commencer
-        <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
+        <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
       </motion.button>
     </motion.div>
   );
@@ -230,58 +236,60 @@ function PlantingScene({ onEnter, answers }: { onEnter: () => void; answers: Rec
       <AnimatePresence mode="wait">
         {phase === "loading" && (
           <motion.div key="l" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center">
-            <motion.div animate={{ rotate: 360 }} transition={{ duration: 3, repeat: Infinity, ease: "linear" }} className="w-16 h-16 mb-6">
-              <svg viewBox="0 0 40 40" className="w-full h-full">
-                <circle cx="20" cy="20" r="16" fill="none" stroke="var(--moss-5)" strokeWidth="3" />
-                <path d="M 20 4 A 16 16 0 0 1 36 20" fill="none" stroke="var(--moss-1)" strokeWidth="3" strokeLinecap="round" />
-              </svg>
-            </motion.div>
-            <p className="font-value text-2xl">Ethi compose ton jardin…</p>
-            <p className="text-xs text-ink-3 mt-2">{Object.keys(answers).length} préférences prises en compte</p>
+            <div className="w-32 h-px bg-paper-3 relative mb-8 overflow-hidden">
+              <motion.div
+                animate={{ x: ["-100%", "100%"] }}
+                transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute inset-y-0 w-1/2 bg-ink"
+              />
+            </div>
+            <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-medium">Composition en cours</p>
+            <p className="font-value text-2xl text-ink mt-3">Structuration du portefeuille</p>
+            <p className="text-[12px] text-ink-3 mt-2">{Object.keys(answers).length} préférences appliquées</p>
           </motion.div>
         )}
 
         {phase === "reveal" && (
           <motion.div key="r" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-md">
-            <p className="font-value text-3xl text-center mb-8">Ton jardin prend vie…</p>
-            <svg viewBox="0 0 340 200" className="w-full">
-              <rect x="0" y="160" width="340" height="40" fill="var(--paper-inset)" rx="8" />
-              {allocations.map((alloc, i) => {
-                const cx = (i + 0.5) * (340 / 4);
-                const headSize = 32 + alloc.percentage * 0.4;
-                const stemHeight = 20 + i * 8;
-                return (
-                  <motion.g
-                    key={alloc.ticker}
-                    initial={{ scaleY: 0, opacity: 0 }}
-                    animate={{ scaleY: 1, opacity: 1 }}
-                    transition={{ delay: i * 0.35, duration: 0.9, ease: [0.34, 1.56, 0.64, 1] }}
-                    style={{ transformOrigin: `${cx}px 160px` }}
-                  >
-                    <line x1={cx} y1="160" x2={cx} y2={160 - stemHeight} stroke="var(--moss-2)" strokeWidth="3" strokeLinecap="round" />
-                    <ellipse cx={cx} cy={160 - stemHeight - headSize / 2} rx={headSize / 2} ry={(headSize / 2) * 1.1} fill={i % 2 === 0 ? "var(--moss-1)" : "var(--moss-2)"} />
-                    <text x={cx} y={160 - stemHeight - headSize / 2 + 3} textAnchor="middle" fill="var(--paper)" fontSize="9" fontWeight="700">
-                      {alloc.ticker}
-                    </text>
-                  </motion.g>
-                );
-              })}
-            </svg>
+            <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-medium text-center">Allocation cible</p>
+            <p className="font-value text-2xl text-ink text-center mt-2 mb-8">Votre portefeuille</p>
+            <ul className="divide-y divide-paper-3 border-t border-b border-paper-3">
+              {allocations.map((alloc, i) => (
+                <motion.li
+                  key={alloc.ticker}
+                  initial={{ opacity: 0, x: -6 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.18, duration: 0.4 }}
+                  className="py-3"
+                >
+                  <div className="flex items-baseline justify-between mb-1.5">
+                    <span className="font-value text-[14px] text-ink">{alloc.ticker}</span>
+                    <span className="text-[12px] text-ink tabular-nums font-medium">{alloc.percentage}%</span>
+                  </div>
+                  <div className="h-px bg-paper-3 relative">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${alloc.percentage * 2.5}%` }}
+                      transition={{ delay: i * 0.18 + 0.2, duration: 0.7, ease: "easeOut" }}
+                      className="absolute inset-y-0 left-0 bg-ink"
+                    />
+                  </div>
+                </motion.li>
+              ))}
+            </ul>
           </motion.div>
         )}
 
         {phase === "done" && (
-          <motion.div key="d" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-md text-center">
-            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", damping: 14 }} className="w-20 h-20 mx-auto mb-6 rounded-full bg-moss-1 flex items-center justify-center">
-              <svg viewBox="0 0 24 24" className="w-10 h-10 text-paper" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 13l4 4L19 7" /></svg>
-            </motion.div>
-            <h2 className="font-value text-4xl">Ton jardin est planté.</h2>
-            <p className="text-sm text-ink-3 mt-4 leading-relaxed max-w-sm mx-auto">
-              {allocations.length} graines cultivées, alignées sur tes valeurs. Ethi continuera à veiller sur elles.
+          <motion.div key="d" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md text-center">
+            <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-medium">Confirmation</p>
+            <h2 className="font-value text-3xl text-ink mt-3 leading-tight">Portefeuille structuré.</h2>
+            <p className="text-[13px] text-ink-2 mt-5 leading-relaxed max-w-sm mx-auto">
+              {allocations.length} positions sélectionnées selon vos critères. Le suivi est désormais actif.
             </p>
             <button onClick={onEnter} className="btn-plant mt-10">
-              Entrer dans mon jardin
-              <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
+              Accéder au tableau de bord
+              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
             </button>
           </motion.div>
         )}

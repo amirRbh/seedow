@@ -19,103 +19,93 @@ interface GardenVisualizationProps {
   onEmptySlotClick?: () => void;
 }
 
+/**
+ * Institutional allocation view — fine horizontal bars, tabular numerals.
+ * Inspired by Bloomberg / Lombard Odier holdings tables.
+ */
 export function GardenVisualization({
   plants,
-  maxSlots = 5,
   onPlantClick,
   onEmptySlotClick,
 }: GardenVisualizationProps) {
   const navigate = useNavigate();
 
-  const slots = useMemo(() => {
-    const sorted = [...plants].sort((a, b) => b.allocationPct - a.allocationPct);
-    const result: (GardenPlant | null)[] = [];
-    for (let i = 0; i < maxSlots; i++) result.push(sorted[i] ?? null);
-    return result;
-  }, [plants, maxSlots]);
+  const sorted = useMemo(
+    () => [...plants].sort((a, b) => b.allocationPct - a.allocationPct),
+    [plants],
+  );
 
-  const W = 340;
-  const H = 200;
-  const GROUND_Y = 160;
-  const slotWidth = W / maxSlots;
+  const maxAlloc = Math.max(...sorted.map((p) => p.allocationPct), 1);
 
   return (
-    <div className="relative w-full" style={{ aspectRatio: "340/200" }}>
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full" role="img" aria-label="Visualisation vivante de ton jardin">
-        <defs>
-          <pattern id="soilTexture" width="12" height="6" patternUnits="userSpaceOnUse">
-            <circle cx="1" cy="3" r="0.5" fill="var(--paper-inset)" opacity="0.4" />
-            <circle cx="6" cy="2" r="0.5" fill="var(--paper-inset)" opacity="0.4" />
-            <circle cx="10" cy="4" r="0.5" fill="var(--paper-inset)" opacity="0.4" />
-          </pattern>
-        </defs>
+    <div className="w-full">
+      <div className="flex items-baseline justify-between border-b border-paper-3 pb-2 mb-1">
+        <p className="text-[10px] uppercase tracking-[0.12em] text-ink-3 font-medium">
+          Allocation
+        </p>
+        <p className="text-[10px] uppercase tracking-[0.12em] text-ink-3 font-medium">
+          Perf.
+        </p>
+      </div>
 
-        <line x1="0" y1={GROUND_Y - 14} x2={W} y2={GROUND_Y - 14} stroke="var(--paper-3)" strokeWidth="0.5" strokeDasharray="2 4" opacity="0.5" />
-        <line x1="0" y1={GROUND_Y - 28} x2={W} y2={GROUND_Y - 28} stroke="var(--paper-3)" strokeWidth="0.5" strokeDasharray="2 4" opacity="0.3" />
+      <ul className="divide-y divide-paper-3">
+        {sorted.map((plant, i) => {
+          const widthPct = (plant.allocationPct / maxAlloc) * 100;
+          const isPositive = plant.performancePct >= 0;
+          return (
+            <motion.li
+              key={plant.id}
+              initial={{ opacity: 0, x: -4 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.04, duration: 0.3 }}
+              onClick={() => onPlantClick?.(plant)}
+              className="group py-3 cursor-pointer"
+            >
+              <div className="flex items-baseline justify-between gap-3">
+                <div className="flex items-baseline gap-2 min-w-0">
+                  <span className="font-value text-[13px] text-ink tracking-tight">
+                    {plant.ticker}
+                  </span>
+                  <span className="text-[11px] text-ink-3 truncate">
+                    {plant.name}
+                  </span>
+                </div>
+                <span
+                  className={`text-[12px] font-medium tabular-nums flex-shrink-0 ${
+                    isPositive ? "text-moss-1" : "text-rust"
+                  }`}
+                >
+                  {isPositive ? "+" : ""}
+                  {plant.performancePct.toFixed(2)}%
+                </span>
+              </div>
 
-        <rect x="0" y={GROUND_Y} width={W} height={H - GROUND_Y} fill="var(--paper-inset)" rx="8" />
-        <rect x="0" y={GROUND_Y} width={W} height={H - GROUND_Y} fill="url(#soilTexture)" />
-
-        {slots.map((plant, i) => {
-          const cx = i * slotWidth + slotWidth / 2;
-          return plant ? (
-            <PlantSprite key={plant.id} plant={plant} cx={cx} groundY={GROUND_Y} onClick={() => onPlantClick?.(plant)} />
-          ) : (
-            <EmptySlot key={`e-${i}`} cx={cx} groundY={GROUND_Y} onClick={() => (onEmptySlotClick ? onEmptySlotClick() : navigate({ to: "/discover" }))} />
+              <div className="mt-1.5 flex items-center gap-2">
+                <div className="flex-1 h-px bg-paper-3 relative">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${widthPct}%` }}
+                    transition={{ delay: 0.15 + i * 0.05, duration: 0.6, ease: "easeOut" }}
+                    className="absolute inset-y-0 left-0 bg-ink"
+                    style={{ height: "1px", marginTop: "0px" }}
+                  />
+                </div>
+                <span className="text-[10px] text-ink-3 tabular-nums w-10 text-right">
+                  {plant.allocationPct.toFixed(1)}%
+                </span>
+              </div>
+            </motion.li>
           );
         })}
-      </svg>
+
+        <li
+          onClick={() => (onEmptySlotClick ? onEmptySlotClick() : navigate({ to: "/discover" }))}
+          className="py-3 cursor-pointer text-ink-3 hover:text-ink transition-colors flex items-center justify-between"
+        >
+          <span className="text-[12px] tracking-tight">+ Ajouter une position</span>
+          <span className="text-[10px] uppercase tracking-[0.12em]">Explorer</span>
+        </li>
+      </ul>
     </div>
-  );
-}
-
-function PlantSprite({ plant, cx, groundY, onClick }: { plant: GardenPlant; cx: number; groundY: number; onClick: () => void }) {
-  const headSize = Math.max(28, Math.min(56, 24 + plant.allocationPct * 0.8));
-  const stemHeight = Math.max(10, Math.min(70, 20 + plant.performancePct * 2));
-  const isStruggling = plant.performancePct < -1;
-
-  const headColor = isStruggling
-    ? "var(--rust)"
-    : plant.performancePct > 8
-      ? "var(--moss-1)"
-      : "var(--moss-2)";
-  const stemColor = isStruggling ? "var(--gold)" : "var(--moss-2)";
-  const stemTop = groundY - stemHeight - headSize / 2;
-
-  return (
-    <motion.g
-      initial={{ opacity: 0, scaleY: 0 }}
-      animate={{ opacity: 1, scaleY: 1 }}
-      transition={{ duration: 0.8, ease: [0.34, 1.56, 0.64, 1], delay: Math.random() * 0.2 }}
-      style={{ transformOrigin: `${cx}px ${groundY}px`, cursor: "pointer" }}
-      onClick={onClick}
-      whileHover={{ y: -3 }}
-    >
-      <line x1={cx} y1={groundY} x2={cx} y2={groundY - stemHeight} stroke={stemColor} strokeWidth="2.5" strokeLinecap="round" />
-      {stemHeight > 30 && (
-        <>
-          <ellipse cx={cx - 5} cy={groundY - stemHeight * 0.5} rx="4" ry="2" fill="var(--moss-2)" transform={`rotate(-30 ${cx - 5} ${groundY - stemHeight * 0.5})`} opacity="0.7" />
-          <ellipse cx={cx + 5} cy={groundY - stemHeight * 0.7} rx="4" ry="2" fill="var(--moss-3)" transform={`rotate(30 ${cx + 5} ${groundY - stemHeight * 0.7})`} opacity="0.7" />
-        </>
-      )}
-      <ellipse cx={cx} cy={stemTop + headSize / 2} rx={headSize / 2} ry={(headSize / 2) * 1.1} fill={headColor} />
-      <text x={cx} y={stemTop + headSize / 2 + 2} textAnchor="middle" fill="var(--paper)" fontSize="8" fontWeight="700" fontFamily="Geist, sans-serif" style={{ pointerEvents: "none" }}>
-        {plant.ticker.slice(0, 5)}
-      </text>
-      <text x={cx} y={groundY + 18} textAnchor="middle" fill="var(--ink-3)" fontSize="7" fontWeight="500" fontFamily="Geist, sans-serif" style={{ pointerEvents: "none" }}>
-        {plant.allocationPct.toFixed(0)}%
-      </text>
-    </motion.g>
-  );
-}
-
-function EmptySlot({ cx, groundY, onClick }: { cx: number; groundY: number; onClick: () => void }) {
-  return (
-    <motion.g initial={{ opacity: 0 }} animate={{ opacity: 0.5 }} transition={{ duration: 0.5, delay: 0.3 }} style={{ cursor: "pointer" }} onClick={onClick} whileHover={{ opacity: 1 }}>
-      <ellipse cx={cx} cy={groundY + 4} rx="10" ry="3" fill="var(--paper-inset)" />
-      <circle cx={cx} cy={groundY - 10} r="8" fill="none" stroke="var(--ink-3)" strokeWidth="1" strokeDasharray="2 2" />
-      <line x1={cx - 3} y1={groundY - 10} x2={cx + 3} y2={groundY - 10} stroke="var(--ink-3)" strokeWidth="1" strokeLinecap="round" />
-      <line x1={cx} y1={groundY - 13} x2={cx} y2={groundY - 7} stroke="var(--ink-3)" strokeWidth="1" strokeLinecap="round" />
-    </motion.g>
   );
 }
