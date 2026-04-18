@@ -125,7 +125,7 @@ export const generatePortfolio = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => ParamsSchema.parse(input))
   .handler(async ({ data, context }) => {
-    const { userId } = context;
+    const { userId, supabase: userClient } = context;
     const universe = await loadUniverse();
     const params: PortfolioParams = {
       causes: data.causes,
@@ -141,13 +141,13 @@ export const generatePortfolio = createServerFn({ method: "POST" })
       params,
     });
 
-    // Deactivate previous portfolios
-    await supabaseAdmin
+    // Deactivate previous portfolios (user-scoped client → RLS satisfied)
+    await userClient
       .from("portfolios")
       .update({ is_active: false })
       .eq("user_id", userId);
 
-    const { data: inserted, error } = await supabaseAdmin
+    const { data: inserted, error } = await userClient
       .from("portfolios")
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .insert({
@@ -174,7 +174,7 @@ export const generatePortfolio = createServerFn({ method: "POST" })
     }
 
     // Mark onboarding complete
-    await supabaseAdmin
+    await userClient
       .from("profiles")
       .update({ onboarding_completed: true })
       .eq("id", userId);
