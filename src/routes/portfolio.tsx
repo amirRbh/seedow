@@ -5,6 +5,8 @@ import { AppHeader } from "@/components/navigation/AppHeader";
 import { GrowthComparison } from "@/components/roots/GrowthComparison";
 import { TimelineEvent } from "@/components/roots/TimelineEvent";
 import { BadgesCard } from "@/components/garden/SeasonalBadges";
+import { AllocationBreakdown } from "@/components/portfolio/AllocationBreakdown";
+import { PortfolioMetricsCard } from "@/components/portfolio/PortfolioMetricsCard";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { supabase } from "@/integrations/supabase/client";
 import { MOCK_BADGES } from "@/lib/mockGarden";
@@ -75,6 +77,15 @@ function Portfolio() {
         </section>
 
         <section className="px-5 pt-6">
+          <h2 className="text-sm font-semibold text-ink mb-3">Indicateurs clés</h2>
+          <PortfolioMetricsCard metrics={portfolio.metrics} />
+        </section>
+
+        <section className="px-5 pt-6">
+          <AllocationBreakdown holdings={portfolio.holdings} totalAmount={totalInvested} />
+        </section>
+
+        <section className="px-5 pt-6">
           <BadgesCard badges={MOCK_BADGES} />
         </section>
 
@@ -103,16 +114,6 @@ function Portfolio() {
               badge="Terreau"
               badgeVariant="soil"
             />
-            {portfolio.holdings.slice(0, 6).map((h) => (
-              <TimelineEvent
-                key={h.id}
-                type="plant"
-                title={`Tu as planté ${h.name}`}
-                subtitle={`${((h.allocationPct / 100) * totalInvested).toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 })} confiés à cette graine · ESG ${h.esgScore.toFixed(0)}`}
-                badge={h.ticker}
-                badgeVariant="plant"
-              />
-            ))}
           </div>
         </section>
       </div>
