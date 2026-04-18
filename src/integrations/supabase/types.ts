@@ -14,7 +14,192 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      asset_covariance: {
+        Row: {
+          asset_a: string
+          asset_b: string
+          computed_at: string
+          covariance: number
+        }
+        Insert: {
+          asset_a: string
+          asset_b: string
+          computed_at?: string
+          covariance: number
+        }
+        Update: {
+          asset_a?: string
+          asset_b?: string
+          computed_at?: string
+          covariance?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asset_covariance_asset_a_fkey"
+            columns: ["asset_a"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "asset_covariance_asset_b_fkey"
+            columns: ["asset_b"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assets: {
+        Row: {
+          asset_class: Database["public"]["Enums"]["asset_class"]
+          cause_exposure: Json
+          created_at: string
+          currency: string
+          description: string | null
+          esg_score: number
+          excluded_sectors: Database["public"]["Enums"]["exclusion_tag"][]
+          expected_return: number
+          id: string
+          is_active: boolean
+          isin: string | null
+          issuer: string | null
+          name: string
+          region: string | null
+          sfdr_article: number | null
+          ter: number
+          ticker: string
+          updated_at: string
+          volatility: number
+        }
+        Insert: {
+          asset_class: Database["public"]["Enums"]["asset_class"]
+          cause_exposure?: Json
+          created_at?: string
+          currency?: string
+          description?: string | null
+          esg_score?: number
+          excluded_sectors?: Database["public"]["Enums"]["exclusion_tag"][]
+          expected_return?: number
+          id?: string
+          is_active?: boolean
+          isin?: string | null
+          issuer?: string | null
+          name: string
+          region?: string | null
+          sfdr_article?: number | null
+          ter?: number
+          ticker: string
+          updated_at?: string
+          volatility?: number
+        }
+        Update: {
+          asset_class?: Database["public"]["Enums"]["asset_class"]
+          cause_exposure?: Json
+          created_at?: string
+          currency?: string
+          description?: string | null
+          esg_score?: number
+          excluded_sectors?: Database["public"]["Enums"]["exclusion_tag"][]
+          expected_return?: number
+          id?: string
+          is_active?: boolean
+          isin?: string | null
+          issuer?: string | null
+          name?: string
+          region?: string | null
+          sfdr_article?: number | null
+          ter?: number
+          ticker?: string
+          updated_at?: string
+          volatility?: number
+        }
+        Relationships: []
+      }
+      portfolios: {
+        Row: {
+          cause_intensity: Json
+          causes: Database["public"]["Enums"]["cause_tag"][]
+          created_at: string
+          exclusions: Database["public"]["Enums"]["exclusion_tag"][]
+          generated_at: string
+          horizon_years: number
+          id: string
+          initial_amount: number
+          is_active: boolean
+          methodology_version: string
+          metrics: Json
+          name: string
+          risk_target: number
+          updated_at: string
+          user_id: string
+          weights: Json
+        }
+        Insert: {
+          cause_intensity?: Json
+          causes?: Database["public"]["Enums"]["cause_tag"][]
+          created_at?: string
+          exclusions?: Database["public"]["Enums"]["exclusion_tag"][]
+          generated_at?: string
+          horizon_years?: number
+          id?: string
+          initial_amount?: number
+          is_active?: boolean
+          methodology_version?: string
+          metrics?: Json
+          name?: string
+          risk_target?: number
+          updated_at?: string
+          user_id: string
+          weights?: Json
+        }
+        Update: {
+          cause_intensity?: Json
+          causes?: Database["public"]["Enums"]["cause_tag"][]
+          created_at?: string
+          exclusions?: Database["public"]["Enums"]["exclusion_tag"][]
+          generated_at?: string
+          horizon_years?: number
+          id?: string
+          initial_amount?: number
+          is_active?: boolean
+          methodology_version?: string
+          metrics?: Json
+          name?: string
+          risk_target?: number
+          updated_at?: string
+          user_id?: string
+          weights?: Json
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          onboarding_completed: boolean
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id: string
+          onboarding_completed?: boolean
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          onboarding_completed?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +208,30 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      asset_class:
+        | "equity_dev"
+        | "equity_em"
+        | "thematic"
+        | "green_bond"
+        | "social_bond"
+        | "sov_bond"
+        | "reit"
+        | "commodity"
+        | "cash"
+      cause_tag:
+        | "climat"
+        | "biodiversite"
+        | "humain"
+        | "egalite"
+        | "tech"
+        | "circulaire"
+      exclusion_tag:
+        | "fossiles"
+        | "armes"
+        | "tabac"
+        | "jeux"
+        | "animaux"
+        | "fast-fashion"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +358,34 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      asset_class: [
+        "equity_dev",
+        "equity_em",
+        "thematic",
+        "green_bond",
+        "social_bond",
+        "sov_bond",
+        "reit",
+        "commodity",
+        "cash",
+      ],
+      cause_tag: [
+        "climat",
+        "biodiversite",
+        "humain",
+        "egalite",
+        "tech",
+        "circulaire",
+      ],
+      exclusion_tag: [
+        "fossiles",
+        "armes",
+        "tabac",
+        "jeux",
+        "animaux",
+        "fast-fashion",
+      ],
+    },
   },
 } as const

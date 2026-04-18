@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { GardenVisualization, type GardenPlant } from "@/components/garden/GardenVisualization";
 import { IntentCards } from "@/components/garden/IntentCards";
@@ -10,16 +10,17 @@ import { MOCK_HOLDINGS, MOCK_PORTFOLIO, MOCK_WALLET, MOCK_USER_NAME } from "@/li
 
 export const Route = createFileRoute("/dashboard")({ component: Dashboard });
 
-function getGreeting() {
-  const h = new Date().getHours();
-  if (h < 12) return "Belle matinée";
-  if (h < 18) return "Bel après-midi";
+function getGreeting(hour: number) {
+  if (hour < 12) return "Belle matinée";
+  if (hour < 18) return "Bel après-midi";
   return "Belle soirée";
 }
 
 function Dashboard() {
   const { L } = useLexicon();
   const navigate = useNavigate();
+  const [greeting, setGreeting] = useState("Bonjour");
+  useEffect(() => { setGreeting(getGreeting(new Date().getHours())); }, []);
 
   const plants: GardenPlant[] = useMemo(
     () =>
@@ -46,7 +47,7 @@ function Dashboard() {
       <div className="max-w-lg mx-auto pb-28">
         <header className="flex items-start justify-between px-5 pt-6">
           <div>
-            <p className="text-[11px] uppercase tracking-wider text-ink-3 font-medium">{getGreeting()}</p>
+            <p className="text-[11px] uppercase tracking-wider text-ink-3 font-medium">{greeting}</p>
             <h1 className="font-value text-3xl text-ink mt-0.5">{MOCK_USER_NAME}</h1>
           </div>
           <Link to="/portfolio" aria-label="Profil" className="w-9 h-9 rounded-full bg-moss-1 text-paper font-semibold text-sm flex items-center justify-center hover:bg-moss-2 transition-colors">
