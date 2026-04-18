@@ -175,16 +175,16 @@ export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
   // Stage 5 — cause tilts
   weights = applyCauseTilts(weights, pool, params.causes, params.cause_intensity);
 
-  // Final filter — drop dust positions
-  const cleaned: Record<string, number> = {};
+  // Final filter — drop dust positions (lowered threshold)
+  let cleaned: Record<string, number> = {};
   let total = 0;
   for (const id in weights) {
-    if (weights[id] >= 0.005) {
+    if (weights[id] >= 0.001) {
       cleaned[id] = weights[id];
       total += weights[id];
     }
   }
-  // Safety net: if dust filter wiped everything, keep raw weights
+  // Safety net 1: if dust filter wiped everything, keep raw weights
   if (Object.keys(cleaned).length === 0) {
     console.warn("[engine] Dust filter wiped all weights; keeping raw");
     total = 0;
@@ -192,6 +192,29 @@ export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
       if (weights[id] > 0) {
         cleaned[id] = weights[id];
         total += weights[id];
+      }
+    }
+  }
+  // Safety net 2: ABSOLUTE guarantee — never return < 3 positions when pool > 0
+  if (Object.keys(cleaned).length < 3 && pool.length > 0) {
+    console.warn(
+      `[engine] Only ${Object.keys(cleaned).length} positions after optimisation; falling back to class-balanced equal-weight across ${pool.length} assets`,
+    );
+    cleaned = {};
+    total = 0;
+    // Build class-balanced equal-weight directly
+    const byClass = new Map<string, Asset[]>();
+    for (const a of pool) {
+      const arr = byClass.get(a.asset_class) ?? [];
+      arr.push(a);
+      byClass.set(a.asset_class, arr);
+    }
+    const classCount = byClass.size;
+    for (const [, arr] of byClass) {
+      const share = (1 / classCount) / arr.length;
+      for (const a of arr) {
+        cleaned[a.id] = share;
+        total += share;
       }
     }
   }
