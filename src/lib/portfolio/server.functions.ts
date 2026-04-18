@@ -34,16 +34,18 @@ interface UniverseCache {
 let _cache: UniverseCache | null = null;
 const CACHE_TTL_MS = 5 * 60 * 1000;
 
-async function loadUniverse(): Promise<UniverseCache> {
-  if (_cache && Date.now() - _cache.loadedAt < CACHE_TTL_MS) {
+async function loadUniverse(
+  client: typeof supabaseAdmin = supabaseAdmin,
+): Promise<UniverseCache> {
+  if (_cache && Date.now() - _cache.loadedAt < CACHE_TTL_MS && _cache.assets.length > 0) {
     return _cache;
   }
   const [assetsRes, covRes] = await Promise.all([
-    supabaseAdmin
+    client
       .from("assets")
       .select("id, ticker, name, asset_class, region, ter, esg_score, sfdr_article, expected_return, volatility, cause_exposure, excluded_sectors, description")
       .eq("is_active", true),
-    supabaseAdmin
+    client
       .from("asset_covariance")
       .select("asset_a, asset_b, covariance"),
   ]);
@@ -72,6 +74,7 @@ async function loadUniverse(): Promise<UniverseCache> {
     covariance.set(`${c.asset_a}|${c.asset_b}`, Number(c.covariance));
   }
 
+  console.log(`[loadUniverse] loaded ${assets.length} assets, ${covariance.size} cov entries`);
   _cache = { assets, covariance, loadedAt: Date.now() };
   return _cache;
 }
@@ -126,7 +129,7 @@ export const generatePortfolio = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => ParamsSchema.parse(input))
   .handler(async ({ data, context }) => {
     const { userId, supabase: userClient } = context;
-    const universe = await loadUniverse();
+    const universe = await loadUniverse(userClient as typeof supabaseAdmin);
     const params: PortfolioParams = {
       causes: data.causes,
       cause_intensity: data.cause_intensity,
