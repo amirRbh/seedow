@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { GardenVisualization, type GardenPlant } from "@/components/garden/GardenVisualization";
 import { IntentCards } from "@/components/garden/IntentCards";
@@ -10,16 +10,17 @@ import { MOCK_HOLDINGS, MOCK_PORTFOLIO, MOCK_WALLET, MOCK_USER_NAME } from "@/li
 
 export const Route = createFileRoute("/dashboard")({ component: Dashboard });
 
-function getGreeting() {
-  const h = new Date().getHours();
-  if (h < 12) return "Belle matinée";
-  if (h < 18) return "Bel après-midi";
+function getGreeting(hour: number) {
+  if (hour < 12) return "Belle matinée";
+  if (hour < 18) return "Bel après-midi";
   return "Belle soirée";
 }
 
 function Dashboard() {
   const { L } = useLexicon();
   const navigate = useNavigate();
+  const [greeting, setGreeting] = useState("Bonjour");
+  useEffect(() => { setGreeting(getGreeting(new Date().getHours())); }, []);
 
   const plants: GardenPlant[] = useMemo(
     () =>
