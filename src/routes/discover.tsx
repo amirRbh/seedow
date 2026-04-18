@@ -175,24 +175,34 @@ function Discover() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.04 }}
-                className="paper-card p-3.5 flex items-center gap-3 leaf-hover"
+                className="paper-card p-3.5 flex items-center gap-3 leaf-hover hover:shadow-leaf transition-shadow"
               >
-                <div className="w-10 h-10 rounded-full bg-moss-1 flex items-center justify-center flex-shrink-0">
-                  <span className="text-paper text-[10px] font-bold">{asset.ticker.slice(0, 4)}</span>
+                <div
+                  className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 shadow-leaf"
+                  style={{
+                    background: `radial-gradient(circle at 30% 30%, color-mix(in oklab, var(--moss-1) 75%, white), var(--moss-1))`,
+                  }}
+                >
+                  <span className="text-paper text-[10px] font-bold tracking-tight">{asset.ticker.slice(0, 4)}</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-ink truncate">{asset.name}</p>
-                  <p className="text-[11px] text-ink-3 mt-0.5 truncate">{asset.category}</p>
+                  <p className="text-[13px] font-semibold text-ink truncate leading-tight">{asset.name}</p>
+                  <div className="flex items-center gap-1.5 mt-1">
+                    <span className="text-[9px] uppercase tracking-wider text-ink-3 font-semibold">{asset.category}</span>
+                    <span className="text-[9px] text-moss-1 font-bold bg-moss-5 px-1.5 py-0.5 rounded-full">
+                      ESG {asset.overall_esg_score.toFixed(1)}
+                    </span>
+                  </div>
                 </div>
                 <div className="text-right flex-shrink-0">
-                  <p className="font-value text-sm text-ink">
+                  <p className="font-value text-base text-ink leading-none">
                     {asset.current_price.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 })}
                   </p>
-                  <p className="text-[10px] text-moss-1 font-bold mt-0.5">ESG {asset.overall_esg_score.toFixed(1)}</p>
+                  <p className="text-[9px] text-ink-3 mt-1">prix unitaire</p>
                 </div>
                 <button
                   onClick={() => openDeposit(asset.name)}
-                  className="flex-shrink-0 px-3 py-1.5 text-[11px] font-medium border border-ink text-ink rounded-full hover:bg-ink hover:text-paper transition-colors"
+                  className="flex-shrink-0 px-3 py-1.5 text-[11px] font-semibold border border-ink text-ink rounded-full hover:bg-ink hover:text-paper transition-colors"
                 >
                   Investir
                 </button>
