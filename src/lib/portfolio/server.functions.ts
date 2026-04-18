@@ -129,7 +129,7 @@ export const generatePortfolio = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => ParamsSchema.parse(input))
   .handler(async ({ data, context }) => {
     const { userId, supabase: userClient } = context;
-    const universe = await loadUniverse();
+    const universe = await loadUniverse(userClient as typeof supabaseAdmin);
     const params: PortfolioParams = {
       causes: data.causes,
       cause_intensity: data.cause_intensity,
