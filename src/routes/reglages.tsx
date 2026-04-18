@@ -6,6 +6,7 @@ import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { useAuth } from "@/hooks/useAuth";
 import { generatePortfolio } from "@/lib/portfolio/server.functions";
+import { callAuthed } from "@/lib/authedServerFn";
 import { supabase } from "@/integrations/supabase/client";
 import type { CauseTag, ExclusionTag } from "@/lib/portfolio/types";
 
@@ -166,15 +167,13 @@ function PreferencesSection() {
     setStatus("saving");
     setErrorMsg(null);
     debounceRef.current = setTimeout(() => {
-      generate({
-        data: {
-          causes,
-          cause_intensity: intensity,
-          exclusions,
-          risk_target: risk,
-          horizon_years: horizon,
-          initial_amount: amount,
-        },
+      callAuthed(generate, {
+        causes,
+        cause_intensity: intensity,
+        exclusions,
+        risk_target: risk,
+        horizon_years: horizon,
+        initial_amount: amount,
       })
         .then(() => setStatus("saved"))
         .catch((err: unknown) => {
