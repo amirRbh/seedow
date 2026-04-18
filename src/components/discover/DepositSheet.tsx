@@ -17,16 +17,19 @@ interface DepositSheetProps {
  * Trois moyens : carte bancaire, Apple/Google Pay, virement SEPA.
  */
 export function DepositSheet({ open, onClose, assetName }: DepositSheetProps) {
+  const { addDeposit } = useDeposits();
   const [step, setStep] = useState<Step>("amount");
   const [amount, setAmount] = useState(100);
   const [method, setMethod] = useState<Method>("card");
   const [processing, setProcessing] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const reset = () => {
     setStep("amount");
     setAmount(100);
     setMethod("card");
     setProcessing(false);
+    setSubmitError(null);
   };
 
   const close = () => {
@@ -34,13 +37,18 @@ export function DepositSheet({ open, onClose, assetName }: DepositSheetProps) {
     setTimeout(reset, 250);
   };
 
-  const submit = () => {
+  const submit = async () => {
     setProcessing(true);
-    // Simule le traitement
-    setTimeout(() => {
-      setProcessing(false);
-      setStep("success");
-    }, 1400);
+    setSubmitError(null);
+    // Petite latence pour l'effet
+    await new Promise((r) => setTimeout(r, 900));
+    const res = await addDeposit({ amount, method, asset_hint: assetName });
+    setProcessing(false);
+    if (!res.ok) {
+      setSubmitError(res.error);
+      return;
+    }
+    setStep("success");
   };
 
   return (
