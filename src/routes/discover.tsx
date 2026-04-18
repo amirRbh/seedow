@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence, type PanInfo } from "framer-motion";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
@@ -7,8 +7,17 @@ import { SeedCard } from "@/components/discover/SeedCard";
 import { ThemeFilter } from "@/components/discover/ThemeFilter";
 import { DepositSheet } from "@/components/discover/DepositSheet";
 import { MOCK_ASSETS } from "@/lib/mockGarden";
+import { supabase } from "@/integrations/supabase/client";
 
-export const Route = createFileRoute("/discover")({ component: Discover });
+export const Route = createFileRoute("/discover")({
+  beforeLoad: async () => {
+    const { data } = await supabase.auth.getSession();
+    if (!data.session) {
+      throw redirect({ to: "/auth", search: { redirect: "/discover", mode: "login" } });
+    }
+  },
+  component: Discover,
+});
 
 function Discover() {
   const [activeTheme, setActiveTheme] = useState("all");

@@ -116,6 +116,45 @@ export type Database = {
         }
         Relationships: []
       }
+      deposits: {
+        Row: {
+          amount: number
+          asset_hint: string | null
+          available_at: string
+          created_at: string
+          currency: string
+          id: string
+          method: Database["public"]["Enums"]["deposit_method"]
+          reference: string | null
+          status: Database["public"]["Enums"]["deposit_status"]
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          asset_hint?: string | null
+          available_at?: string
+          created_at?: string
+          currency?: string
+          id?: string
+          method: Database["public"]["Enums"]["deposit_method"]
+          reference?: string | null
+          status?: Database["public"]["Enums"]["deposit_status"]
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          asset_hint?: string | null
+          available_at?: string
+          created_at?: string
+          currency?: string
+          id?: string
+          method?: Database["public"]["Enums"]["deposit_method"]
+          reference?: string | null
+          status?: Database["public"]["Enums"]["deposit_status"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       portfolios: {
         Row: {
           cause_intensity: Json
@@ -225,6 +264,8 @@ export type Database = {
         | "egalite"
         | "tech"
         | "circulaire"
+      deposit_method: "card" | "wallet" | "sepa"
+      deposit_status: "pending" | "settled" | "failed"
       exclusion_tag:
         | "fossiles"
         | "armes"
@@ -378,6 +419,8 @@ export const Constants = {
         "tech",
         "circulaire",
       ],
+      deposit_method: ["card", "wallet", "sepa"],
+      deposit_status: ["pending", "settled", "failed"],
       exclusion_tag: [
         "fossiles",
         "armes",

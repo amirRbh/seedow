@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDeposits } from "@/hooks/useDeposits";
 
 type Method = "card" | "wallet" | "sepa";
 type Step = "amount" | "method" | "details" | "confirm" | "success";
@@ -16,16 +17,19 @@ interface DepositSheetProps {
  * Trois moyens : carte bancaire, Apple/Google Pay, virement SEPA.
  */
 export function DepositSheet({ open, onClose, assetName }: DepositSheetProps) {
+  const { addDeposit } = useDeposits();
   const [step, setStep] = useState<Step>("amount");
   const [amount, setAmount] = useState(100);
   const [method, setMethod] = useState<Method>("card");
   const [processing, setProcessing] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const reset = () => {
     setStep("amount");
     setAmount(100);
     setMethod("card");
     setProcessing(false);
+    setSubmitError(null);
   };
 
   const close = () => {
@@ -33,13 +37,18 @@ export function DepositSheet({ open, onClose, assetName }: DepositSheetProps) {
     setTimeout(reset, 250);
   };
 
-  const submit = () => {
+  const submit = async () => {
     setProcessing(true);
-    // Simule le traitement
-    setTimeout(() => {
-      setProcessing(false);
-      setStep("success");
-    }, 1400);
+    setSubmitError(null);
+    // Petite latence pour l'effet
+    await new Promise((r) => setTimeout(r, 900));
+    const res = await addDeposit({ amount, method, asset_hint: assetName });
+    setProcessing(false);
+    if (!res.ok) {
+      setSubmitError(res.error);
+      return;
+    }
+    setStep("success");
   };
 
   return (
@@ -117,6 +126,7 @@ export function DepositSheet({ open, onClose, assetName }: DepositSheetProps) {
                     amount={amount}
                     method={method}
                     processing={processing}
+                    error={submitError}
                     onBack={() => setStep("details")}
                     onSubmit={submit}
                   />
@@ -430,12 +440,14 @@ function ConfirmStep({
   amount,
   method,
   processing,
+  error,
   onBack,
   onSubmit,
 }: {
   amount: number;
   method: Method;
   processing: boolean;
+  error: string | null;
   onBack: () => void;
   onSubmit: () => void;
 }) {
@@ -463,6 +475,12 @@ function ConfirmStep({
         En validant, vous confirmez avoir lu et accepté les conditions générales d'investissement.
         Investir comporte un risque de perte en capital.
       </p>
+
+      {error && (
+        <p className="text-[12px] text-rust border border-rust/40 bg-rust/5 rounded px-3 py-2">
+          {error}
+        </p>
+      )}
 
       <button
         onClick={onSubmit}
