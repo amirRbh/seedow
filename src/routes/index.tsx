@@ -1,7 +1,23 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { motion } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
 
-export const Route = createFileRoute("/")({ component: Index });
+export const Route = createFileRoute("/")({
+  beforeLoad: async () => {
+    const { data } = await supabase.auth.getSession();
+    if (data.session) {
+      // Logged-in users : si déjà un portefeuille → dashboard, sinon onboarding
+      const { data: pf } = await supabase
+        .from("portfolios")
+        .select("id")
+        .eq("user_id", data.session.user.id)
+        .eq("is_active", true)
+        .maybeSingle();
+      throw redirect({ to: pf ? "/dashboard" : "/onboarding" });
+    }
+  },
+  component: Index,
+});
 
 function Index() {
   return (
@@ -36,14 +52,14 @@ function Index() {
         </motion.p>
 
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.1 }} className="mt-12 flex flex-col items-center gap-3">
-          <Link to="/onboarding" className="btn-plant">
+          <Link to="/auth" search={{ redirect: "/onboarding", mode: "signup" }} className="btn-plant">
             Planter ma première graine
             <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
               <path d="M5 12h14M13 5l7 7-7 7" />
             </svg>
           </Link>
-          <Link to="/dashboard" className="text-xs text-ink-3 hover:text-moss-1 transition-colors">
-            Voir une démo du jardin →
+          <Link to="/auth" search={{ redirect: "/dashboard", mode: "login" }} className="text-xs text-ink-3 hover:text-moss-1 transition-colors">
+            Déjà un compte ? Se connecter →
           </Link>
         </motion.div>
       </main>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDeposits } from "@/hooks/useDeposits";
 
 type Method = "card" | "wallet" | "sepa";
 type Step = "amount" | "method" | "details" | "confirm" | "success";
