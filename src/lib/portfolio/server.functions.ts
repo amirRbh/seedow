@@ -74,6 +74,7 @@ async function loadUniverse(
     covariance.set(`${c.asset_a}|${c.asset_b}`, Number(c.covariance));
   }
 
+  console.log(`[loadUniverse] loaded ${assets.length} assets, ${covariance.size} cov entries`);
   _cache = { assets, covariance, loadedAt: Date.now() };
   return _cache;
 }
