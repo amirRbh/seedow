@@ -126,6 +126,7 @@ export function DepositSheet({ open, onClose, assetName }: DepositSheetProps) {
                     amount={amount}
                     method={method}
                     processing={processing}
+                    error={submitError}
                     onBack={() => setStep("details")}
                     onSubmit={submit}
                   />
@@ -439,12 +440,14 @@ function ConfirmStep({
   amount,
   method,
   processing,
+  error,
   onBack,
   onSubmit,
 }: {
   amount: number;
   method: Method;
   processing: boolean;
+  error: string | null;
   onBack: () => void;
   onSubmit: () => void;
 }) {
@@ -472,6 +475,12 @@ function ConfirmStep({
         En validant, vous confirmez avoir lu et accepté les conditions générales d'investissement.
         Investir comporte un risque de perte en capital.
       </p>
+
+      {error && (
+        <p className="text-[12px] text-rust border border-rust/40 bg-rust/5 rounded px-3 py-2">
+          {error}
+        </p>
+      )}
 
       <button
         onClick={onSubmit}
