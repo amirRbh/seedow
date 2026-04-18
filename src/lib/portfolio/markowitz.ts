@@ -1,0 +1,235 @@
+import { create, all, type Matrix } from "mathjs";
+// quadprog has no types but we type the call signature locally
+// @ts-expect-error - no published types
+import quadprog from "quadprog";
+import type {
+  Asset,
+  PortfolioParams,
+  PortfolioWeights,
+} from "./types";
+import {
+  getClassBounds,
+  MAX_SINGLE_WEIGHT,
+  MIN_PORTFOLIO_ESG,
+} from "./types";
+
+const math = create(all, {});
+
+interface QPResult {
+  solution: number[];
+  Lagrangian: number[];
+  value: number[];
+  iterations: number[];
+  iact: number[];
+  message: string;
+}
+
+interface QuadprogModule {
+  solveQP: (
+    Dmat: number[][],
+    dvec: number[],
+    Amat: number[][],
+    bvec: number[],
+    meq: number,
+  ) => QPResult;
+}
+
+const qp = quadprog as QuadprogModule;
+
+/**
+ * Solve constrained mean-variance optimisation.
+ *
+ * Maximises: μᵀw − (λ/2)·wᵀΣw
+ * Subject to:
+ *   Σwᵢ = 1
+ *   wᵢ ≥ 0
+ *   wᵢ ≤ MAX_SINGLE_WEIGHT
+ *   Σ wᵢ (in class C) ∈ [class_min, class_max]
+ *   ESG portfolio score ≥ MIN_PORTFOLIO_ESG (soft → enforced via penalty if needed)
+ *
+ * quadprog formulation: min (1/2)·wᵀDw − dᵀw  s.t. Aᵀw ≥ b (with first `meq` as equality).
+ * So D = λ·Σ, d = μ.
+ *
+ * quadprog uses 1-indexed arrays — we pad position 0 with dummy values.
+ */
+export function optimizeMarkowitz(
+  assets: Asset[],
+  expectedReturns: number[],
+  covariance: number[][],
+  params: PortfolioParams,
+  riskAversion = 4,
+): PortfolioWeights {
+  const n = assets.length;
+  if (n === 0) return {};
+
+  const bounds = getClassBounds(params.risk_target);
+
+  // Build D = λ·Σ (with padding)
+  const Dmat: number[][] = [Array(n + 1).fill(0)];
+  for (let i = 0; i < n; i++) {
+    const row = [0];
+    for (let j = 0; j < n; j++) {
+      row.push(riskAversion * covariance[i][j]);
+    }
+    Dmat.push(row);
+  }
+
+  // Ensure positive-definiteness via small ridge
+  for (let i = 1; i <= n; i++) {
+    Dmat[i][i] += 1e-6;
+  }
+
+  // d vector = expected returns (padded)
+  const dvec = [0, ...expectedReturns];
+
+  // Constraints — Aᵀw ≥ b  (quadprog convention)
+  // We build Amat with rows = variables (n+1) and cols = constraints (m+1).
+  // Constraint k corresponds to column k in Amat (Amat[i][k]).
+  //
+  // 1 equality: Σw = 1
+  // n constraints: w_i ≥ 0
+  // n constraints: -w_i ≥ -MAX_SINGLE_WEIGHT  (i.e. w_i ≤ MAX)
+  // For each class: Σ_{i∈C} w_i ≥ class_min
+  // For each class: -Σ_{i∈C} w_i ≥ -class_max
+
+  const classes = Array.from(new Set(assets.map((a) => a.asset_class)));
+
+  type ConstraintCol = { coefs: number[]; b: number };
+  const cols: ConstraintCol[] = [];
+
+  // 1) Equality Σw = 1
+  cols.push({
+    coefs: Array(n).fill(1),
+    b: 1,
+  });
+  const meq = 1;
+
+  // 2) Lower bounds w_i ≥ 0
+  for (let i = 0; i < n; i++) {
+    const c = Array(n).fill(0);
+    c[i] = 1;
+    cols.push({ coefs: c, b: 0 });
+  }
+
+  // 3) Upper bounds w_i ≤ MAX
+  for (let i = 0; i < n; i++) {
+    const c = Array(n).fill(0);
+    c[i] = -1;
+    cols.push({ coefs: c, b: -MAX_SINGLE_WEIGHT });
+  }
+
+  // 4) Class min/max
+  for (const cls of classes) {
+    const indicator = assets.map((a) => (a.asset_class === cls ? 1 : 0));
+    const bnd = bounds[cls];
+    if (!bnd) continue;
+    // ≥ min
+    cols.push({ coefs: indicator, b: bnd.min });
+    // ≤ max  →  -indicator ≥ -max
+    cols.push({
+      coefs: indicator.map((x) => -x),
+      b: -bnd.max,
+    });
+  }
+
+  // 5) ESG floor: Σ esg_i · w_i ≥ MIN_PORTFOLIO_ESG
+  cols.push({
+    coefs: assets.map((a) => a.esg_score),
+    b: MIN_PORTFOLIO_ESG,
+  });
+
+  const m = cols.length;
+
+  // Build Amat: (n+1) rows × (m+1) cols, padded
+  const Amat: number[][] = [];
+  for (let i = 0; i <= n; i++) {
+    Amat.push(new Array(m + 1).fill(0));
+  }
+  for (let k = 0; k < m; k++) {
+    for (let i = 0; i < n; i++) {
+      Amat[i + 1][k + 1] = cols[k].coefs[i];
+    }
+  }
+  const bvec = [0, ...cols.map((c) => c.b)];
+
+  let result: QPResult;
+  try {
+    result = qp.solveQP(Dmat, dvec, Amat, bvec, meq);
+  } catch (err) {
+    console.warn("[markowitz] QP failed, falling back to equal-weight:", err);
+    return equalWeight(assets);
+  }
+
+  if (!result.solution || result.message) {
+    // Try relaxing ESG constraint
+    cols.pop();
+    const m2 = cols.length;
+    const Amat2: number[][] = [];
+    for (let i = 0; i <= n; i++) {
+      Amat2.push(new Array(m2 + 1).fill(0));
+    }
+    for (let k = 0; k < m2; k++) {
+      for (let i = 0; i < n; i++) {
+        Amat2[i + 1][k + 1] = cols[k].coefs[i];
+      }
+    }
+    const bvec2 = [0, ...cols.map((c) => c.b)];
+    try {
+      result = qp.solveQP(Dmat, dvec, Amat2, bvec2, meq);
+    } catch {
+      return equalWeight(assets);
+    }
+  }
+
+  const sol = result.solution.slice(1); // drop padding
+  const weights: PortfolioWeights = {};
+  let total = 0;
+  for (let i = 0; i < n; i++) {
+    const w = Math.max(0, sol[i]);
+    if (w > 0.001) {
+      weights[assets[i].id] = w;
+      total += w;
+    }
+  }
+  // Renormalise (numerical drift)
+  if (total > 0) {
+    for (const id in weights) weights[id] /= total;
+  }
+  return weights;
+}
+
+function equalWeight(assets: Asset[]): PortfolioWeights {
+  const w: PortfolioWeights = {};
+  const n = assets.length;
+  if (n === 0) return w;
+  for (const a of assets) w[a.id] = 1 / n;
+  return w;
+}
+
+/**
+ * Black-Litterman style: blend equilibrium returns with user views (causes).
+ * Simplified — we boost expected returns of assets aligned with chosen causes.
+ */
+export function applyBlackLittermanViews(
+  assets: Asset[],
+  baseReturns: number[],
+  causes: PortfolioParams["causes"],
+  intensity: PortfolioParams["cause_intensity"],
+): number[] {
+  return baseReturns.map((r, i) => {
+    const a = assets[i];
+    let boost = 0;
+    for (const c of causes) {
+      const w = intensity[c] ?? 0.5;
+      const exp = a.cause_exposure[c] ?? 0;
+      // up to +1.5% expected return for a perfectly aligned, fully-weighted cause
+      boost += exp * w * 0.015;
+    }
+    return r + boost;
+  });
+}
+
+// Keep export to silence unused-import warning if mathjs functions aren't used
+// in trivial paths — mathjs may be useful for future extensions.
+export const _math: typeof math = math;
+export type _Matrix = Matrix;
