@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600;700&display=swap");
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
@@ -18,8 +18,8 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
 
-  --font-sans: "Geist", system-ui, sans-serif;
-  --font-value: "Instrument Serif", Georgia, serif;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-value: "Fraunces", Georgia, serif;
 
   /* shadcn semantic tokens */
   --color-background: var(--background);
@@ -87,31 +87,31 @@
 }
 
 :root {
-  --radius: 1rem;
+  --radius: 0.5rem;
 
-  /* Surfaces — papier, terre */
-  --paper: oklch(0.965 0.018 90);
-  --paper-2: oklch(0.935 0.020 88);
-  --paper-3: oklch(0.895 0.022 86);
-  --paper-inset: oklch(0.860 0.024 84);
+  /* Surfaces — ivoire institutionnel, neutre froid */
+  --paper: oklch(0.985 0.003 100);
+  --paper-2: oklch(0.965 0.004 100);
+  --paper-3: oklch(0.925 0.005 100);
+  --paper-inset: oklch(0.895 0.006 100);
 
-  /* Encre — vrai noir organique */
-  --ink: oklch(0.18 0.018 110);
-  --ink-2: oklch(0.36 0.018 108);
-  --ink-3: oklch(0.55 0.012 105);
+  /* Encre — quasi-noir neutre */
+  --ink: oklch(0.20 0.008 260);
+  --ink-2: oklch(0.42 0.010 260);
+  --ink-3: oklch(0.60 0.008 260);
 
-  /* Mousse — 5 stops */
-  --moss-1: oklch(0.38 0.10 145);
-  --moss-2: oklch(0.56 0.13 140);
-  --moss-3: oklch(0.72 0.13 138);
-  --moss-4: oklch(0.85 0.08 138);
-  --moss-5: oklch(0.94 0.04 138);
+  /* Accent unique — vert forêt très désaturé */
+  --moss-1: oklch(0.34 0.045 155);
+  --moss-2: oklch(0.46 0.050 155);
+  --moss-3: oklch(0.62 0.040 155);
+  --moss-4: oklch(0.86 0.020 155);
+  --moss-5: oklch(0.95 0.010 155);
 
-  /* Accents naturels */
-  --rust: oklch(0.58 0.16 45);
-  --gold: oklch(0.72 0.14 85);
-  --sky: oklch(0.50 0.09 230);
-  --bloom: oklch(0.65 0.16 350);
+  /* Accents data */
+  --rust: oklch(0.50 0.13 25);
+  --gold: oklch(0.65 0.10 80);
+  --sky: oklch(0.45 0.07 240);
+  --bloom: oklch(0.50 0.10 280);
 
   /* shadcn mapping */
   --background: var(--paper);
@@ -134,24 +134,24 @@
   --input: var(--paper-3);
   --ring: var(--moss-2);
 
-  --shadow-leaf: 0 2px 8px -2px oklch(0.25 0.10 145 / 0.10);
-  --shadow-deep: 0 12px 32px -8px oklch(0.25 0.10 145 / 0.18);
-  --shadow-soil: inset 0 2px 4px 0 oklch(0.7 0.02 90 / 0.18);
+  --shadow-leaf: 0 1px 2px 0 oklch(0.20 0.008 260 / 0.04), 0 1px 3px 0 oklch(0.20 0.008 260 / 0.06);
+  --shadow-deep: 0 4px 16px -4px oklch(0.20 0.008 260 / 0.10);
+  --shadow-soil: inset 0 1px 2px 0 oklch(0.20 0.008 260 / 0.06);
 }
 
 .dark {
-  --paper: oklch(0.16 0.012 100);
-  --paper-2: oklch(0.20 0.014 100);
-  --paper-3: oklch(0.26 0.016 100);
-  --paper-inset: oklch(0.30 0.018 100);
-  --ink: oklch(0.95 0.014 90);
-  --ink-2: oklch(0.78 0.014 90);
-  --ink-3: oklch(0.55 0.012 95);
-  --moss-1: oklch(0.70 0.13 140);
-  --moss-2: oklch(0.55 0.12 140);
-  --moss-3: oklch(0.45 0.10 140);
-  --moss-4: oklch(0.34 0.08 140);
-  --moss-5: oklch(0.24 0.06 140);
+  --paper: oklch(0.14 0.006 260);
+  --paper-2: oklch(0.18 0.007 260);
+  --paper-3: oklch(0.24 0.008 260);
+  --paper-inset: oklch(0.28 0.009 260);
+  --ink: oklch(0.96 0.005 100);
+  --ink-2: oklch(0.78 0.006 100);
+  --ink-3: oklch(0.58 0.007 100);
+  --moss-1: oklch(0.72 0.060 155);
+  --moss-2: oklch(0.58 0.055 155);
+  --moss-3: oklch(0.45 0.045 155);
+  --moss-4: oklch(0.30 0.030 155);
+  --moss-5: oklch(0.22 0.020 155);
   --background: var(--paper);
   --foreground: var(--ink);
   --card: var(--paper-2);
@@ -169,15 +169,16 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
-    font-feature-settings: "cv11", "ss01";
-    letter-spacing: -0.005em;
+    font-feature-settings: "cv11", "ss01", "tnum";
+    letter-spacing: -0.011em;
   }
 
   .font-value {
     font-family: var(--font-value);
-    font-style: italic;
-    letter-spacing: -0.02em;
-    font-feature-settings: "lnum";
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    font-feature-settings: "lnum", "tnum";
   }
 }
 
@@ -185,28 +186,29 @@
   .paper-card {
     background-color: var(--color-card);
     border: 1px solid var(--color-paper-3);
-    border-radius: 1rem;
+    border-radius: 0.5rem;
   }
 
   .paper-card-inset {
     background: var(--color-paper-2);
-    box-shadow: var(--shadow-soil);
-    border-radius: 1rem;
+    border: 1px solid var(--color-paper-3);
+    border-radius: 0.5rem;
   }
 
   .leaf-hover {
-    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
   }
-  .leaf-hover:hover { transform: translateY(-2px); box-shadow: var(--shadow-leaf); }
-  .leaf-hover:active { transform: translateY(0) scale(0.98); }
+  .leaf-hover:hover { border-color: var(--color-ink-3); }
 
   .btn-plant {
-    background: var(--color-moss-1);
+    background: var(--color-ink);
     color: var(--color-paper);
-    border-radius: 999px;
-    padding: 14px 24px;
-    font-weight: 600;
-    transition: all 0.2s;
+    border-radius: 4px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    transition: background 0.15s;
     border: none;
     cursor: pointer;
     display: inline-flex;
@@ -214,43 +216,47 @@
     justify-content: center;
     gap: 8px;
   }
-  .btn-plant:hover { background: var(--color-moss-2); }
-  .btn-plant:active { transform: scale(0.97); }
+  .btn-plant:hover { background: var(--color-ink-2); }
 
   .btn-harvest {
-    background: transparent;
+    background: var(--color-paper);
     color: var(--color-ink);
-    border: 1.5px solid var(--color-paper-3);
-    border-radius: 999px;
-    padding: 14px 24px;
-    font-weight: 600;
-    transition: all 0.2s;
+    border: 1px solid var(--color-paper-3);
+    border-radius: 4px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    transition: all 0.15s;
     cursor: pointer;
   }
   .btn-harvest:hover {
-    border-color: var(--color-moss-3);
-    background: var(--color-moss-5);
-    color: var(--color-moss-1);
+    border-color: var(--color-ink);
   }
 
   .moss-badge {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    padding: 3px 8px;
-    border-radius: 999px;
+    padding: 2px 7px;
+    border-radius: 3px;
     font-size: 10px;
-    font-weight: 600;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     background: var(--color-moss-5);
     color: var(--color-moss-1);
+    border: 1px solid var(--color-moss-4);
   }
 
   .bubble-ethi {
     background: var(--color-paper-2);
     color: var(--color-ink);
-    border-radius: 18px 18px 18px 4px;
+    border: 1px solid var(--color-paper-3);
+    border-radius: 6px;
     padding: 12px 16px;
     line-height: 1.55;
+    font-size: 14px;
   }
 
   .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom, 0); }
