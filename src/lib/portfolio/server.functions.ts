@@ -149,6 +149,7 @@ export const generatePortfolio = createServerFn({ method: "POST" })
 
     const { data: inserted, error } = await supabaseAdmin
       .from("portfolios")
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .insert({
         user_id: userId,
         name: "Mon portefeuille",
@@ -162,7 +163,8 @@ export const generatePortfolio = createServerFn({ method: "POST" })
         metrics: result.metrics as unknown as Record<string, unknown>,
         methodology_version: result.methodology_version,
         is_active: true,
-      })
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any)
       .select()
       .single();
 
