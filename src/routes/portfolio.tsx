@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
@@ -6,9 +6,18 @@ import { GrowthComparison } from "@/components/roots/GrowthComparison";
 import { TimelineEvent } from "@/components/roots/TimelineEvent";
 import { BadgesCard } from "@/components/garden/SeasonalBadges";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
+import { supabase } from "@/integrations/supabase/client";
 import { MOCK_BADGES } from "@/lib/mockGarden";
 
-export const Route = createFileRoute("/portfolio")({ component: Portfolio });
+export const Route = createFileRoute("/portfolio")({
+  beforeLoad: async () => {
+    const { data } = await supabase.auth.getSession();
+    if (!data.session) {
+      throw redirect({ to: "/auth", search: { redirect: "/portfolio", mode: "login" } });
+    }
+  },
+  component: Portfolio,
+});
 
 function monthLabel(d: Date) {
   return d.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
