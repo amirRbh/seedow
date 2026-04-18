@@ -1,11 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { GrowthComparison } from "@/components/roots/GrowthComparison";
 import { TimelineEvent } from "@/components/roots/TimelineEvent";
 import { BadgesCard } from "@/components/garden/SeasonalBadges";
-import { MOCK_HOLDINGS, MOCK_PORTFOLIO, MOCK_TRANSACTIONS, MOCK_BADGES } from "@/lib/mockGarden";
+import { useActivePortfolio } from "@/hooks/useActivePortfolio";
+import { MOCK_BADGES } from "@/lib/mockGarden";
 
 export const Route = createFileRoute("/portfolio")({ component: Portfolio });
 
@@ -14,23 +15,42 @@ function monthLabel(d: Date) {
 }
 
 function Portfolio() {
-  const totalValue = MOCK_PORTFOLIO.total_value;
-  const totalInvested = MOCK_PORTFOLIO.total_invested;
-  const gain = totalValue - totalInvested;
-  const returnPct = (gain / totalInvested) * 100;
+  const { portfolio, loading } = useActivePortfolio();
 
-  const groups: Record<string, typeof MOCK_TRANSACTIONS> = {};
-  for (const tx of MOCK_TRANSACTIONS) {
-    const d = new Date(tx.created_at);
-    const key = `${d.getFullYear()}-${String(d.getMonth()).padStart(2, "0")}`;
-    (groups[key] ??= []).push(tx);
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-paper flex items-center justify-center">
+        <p className="text-[12px] text-ink-3">Chargement de vos racines…</p>
+      </div>
+    );
   }
-  const months = Object.entries(groups)
-    .sort(([a], [b]) => b.localeCompare(a))
-    .map(([key, evs]) => {
-      const [y, m] = key.split("-");
-      return { key, date: new Date(Number(y), Number(m), 1), events: evs };
-    });
+
+  if (!portfolio) {
+    return (
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
+        <div className="max-w-lg mx-auto pb-28">
+          <AppHeader eyebrow="Ton histoire" title="Les racines" />
+          <div className="px-5 pt-8">
+            <div className="border border-dashed border-paper-3 rounded p-6 text-center">
+              <p className="text-[13px] text-ink-2 mb-3">Aucun portefeuille actif pour le moment.</p>
+              <Link to="/onboarding" className="inline-block px-4 py-2 text-[12px] font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors">
+                Démarrer l'onboarding
+              </Link>
+            </div>
+          </div>
+        </div>
+        <BottomNavigation />
+      </motion.div>
+    );
+  }
+
+  const totalInvested = portfolio.initial_amount;
+  const totalValue = totalInvested; // pas de prix temps réel
+  const gain = 0;
+  const returnPct = 0;
+
+  const generated = new Date(portfolio.generated_at);
+  const monthKey = `${generated.getFullYear()}-${String(generated.getMonth()).padStart(2, "0")}`;
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
@@ -38,7 +58,7 @@ function Portfolio() {
         <AppHeader
           eyebrow="Ton histoire"
           title="Les racines"
-          subtitle={`${MOCK_HOLDINGS.length} plantes · ${totalValue.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 })} cultivés`}
+          subtitle={`${portfolio.holdings.length} plantes · ${totalValue.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 })} cultivés`}
         />
 
         <section className="px-5 pt-2">
@@ -56,53 +76,35 @@ function Portfolio() {
           <TimelineEvent
             type="gain"
             title="Ton jardin est en croissance"
-            subtitle={`${gain >= 0 ? "+" : ""}${gain.toLocaleString("fr-FR", { maximumFractionDigits: 0 })} € depuis la plantation`}
-            badge={`${gain >= 0 ? "+" : ""}${returnPct.toFixed(1)}%`}
-            badgeVariant={gain >= 0 ? "gain" : "loss"}
-            impactChips={[`${MOCK_PORTFOLIO.co2_avoided}t CO₂ évité`, `${MOCK_PORTFOLIO.trees_equivalent} arbres éq.`]}
+            subtitle={`Score ESG ${portfolio.metrics?.esg_score ? (portfolio.metrics.esg_score).toFixed(0) : "—"}/100 · ${portfolio.holdings.length} positions`}
+            badge={`${returnPct >= 0 ? "+" : ""}${returnPct.toFixed(1)}%`}
+            badgeVariant={returnPct >= 0 ? "gain" : "loss"}
+            impactChips={[
+              `${portfolio.metrics?.co2_avoided_tons?.toFixed(2) ?? "—"}t CO₂ évité / 10k€`,
+              `Vol. ${portfolio.metrics?.volatility ? (portfolio.metrics.volatility * 100).toFixed(1) : "—"}%`,
+            ]}
           />
 
-          {months.map(({ key, date, events }) => (
-            <div key={key} className="mt-4">
-              <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold mb-2 capitalize">{monthLabel(date)}</p>
-              {events.map((ev) => {
-                if (ev.type === "deposit") {
-                  return (
-                    <TimelineEvent
-                      key={ev.id}
-                      type="soil"
-                      title="Tu as enrichi ton terreau"
-                      subtitle={`Dépôt de ${ev.amount.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 })}`}
-                      badge="Terreau"
-                      badgeVariant="soil"
-                    />
-                  );
-                }
-                if (ev.type === "buy") {
-                  return (
-                    <TimelineEvent
-                      key={ev.id}
-                      type="plant"
-                      title={`Tu as planté ${ev.asset_name ?? ev.asset_ticker}`}
-                      subtitle={`${ev.amount.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 })} confiés à cette graine`}
-                      badge={ev.asset_ticker ?? "Plant"}
-                      badgeVariant="plant"
-                    />
-                  );
-                }
-                return (
-                  <TimelineEvent
-                    key={ev.id}
-                    type="harvest"
-                    title="Récolte"
-                    subtitle={`${ev.amount.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 })}`}
-                    badge="Récolte"
-                    badgeVariant="harvest"
-                  />
-                );
-              })}
-            </div>
-          ))}
+          <div className="mt-4">
+            <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold mb-2 capitalize">{monthLabel(generated)}</p>
+            <TimelineEvent
+              type="soil"
+              title="Tu as enrichi ton terreau"
+              subtitle={`Capital initial ${totalInvested.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 })}`}
+              badge="Terreau"
+              badgeVariant="soil"
+            />
+            {portfolio.holdings.slice(0, 6).map((h) => (
+              <TimelineEvent
+                key={h.id}
+                type="plant"
+                title={`Tu as planté ${h.name}`}
+                subtitle={`${((h.allocationPct / 100) * totalInvested).toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 })} confiés à cette graine · ESG ${h.esgScore.toFixed(0)}`}
+                badge={h.ticker}
+                badgeVariant="plant"
+              />
+            ))}
+          </div>
         </section>
       </div>
       <BottomNavigation />
