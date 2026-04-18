@@ -47,7 +47,7 @@ function Dashboard() {
       <div className="max-w-lg mx-auto pb-28">
         <header className="flex items-start justify-between px-5 pt-6">
           <div>
-            <p className="text-[11px] uppercase tracking-wider text-ink-3 font-medium">{getGreeting()}</p>
+            <p className="text-[11px] uppercase tracking-wider text-ink-3 font-medium">{greeting}</p>
             <h1 className="font-value text-3xl text-ink mt-0.5">{MOCK_USER_NAME}</h1>
           </div>
           <Link to="/portfolio" aria-label="Profil" className="w-9 h-9 rounded-full bg-moss-1 text-paper font-semibold text-sm flex items-center justify-center hover:bg-moss-2 transition-colors">
