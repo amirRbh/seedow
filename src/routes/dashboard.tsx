@@ -7,7 +7,9 @@ import { GardenVisualization, type GardenPlant } from "@/components/garden/Garde
 import { IntentCards } from "@/components/garden/IntentCards";
 import { ImpactRibbon } from "@/components/garden/ImpactRibbon";
 import { useLexicon } from "@/hooks/useLexicon";
-import { MOCK_HOLDINGS, MOCK_PORTFOLIO, MOCK_WALLET, MOCK_USER_NAME } from "@/lib/mockGarden";
+import { useAuth } from "@/hooks/useAuth";
+import { useActivePortfolio } from "@/hooks/useActivePortfolio";
+import { MOCK_WALLET, MOCK_PORTFOLIO } from "@/lib/mockGarden";
 
 export const Route = createFileRoute("/dashboard")({ component: Dashboard });
 
@@ -20,33 +22,51 @@ function getGreeting(hour: number) {
 function Dashboard() {
   const { L } = useLexicon();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { portfolio, loading } = useActivePortfolio();
   const [greeting, setGreeting] = useState("Bonjour");
   useEffect(() => { setGreeting(getGreeting(new Date().getHours())); }, []);
 
+  const userName = useMemo(() => {
+    const meta = user?.user_metadata as { display_name?: string; full_name?: string } | undefined;
+    return meta?.display_name || meta?.full_name || user?.email?.split("@")[0] || "Bienvenue";
+  }, [user]);
+
   const plants: GardenPlant[] = useMemo(
     () =>
-      MOCK_HOLDINGS.map((h) => ({
+      (portfolio?.holdings ?? []).map((h) => ({
         id: h.id,
-        ticker: h.asset.ticker,
-        name: h.asset.name,
+        ticker: h.ticker,
+        name: h.name,
         allocationPct: h.allocationPct,
-        performancePct: h.performancePct,
-        esgScore: h.asset.overall_esg_score,
-        category: h.asset.category,
+        performancePct: 0, // pas encore de prix réels — on affiche 0 plutôt que mock
+        esgScore: h.esgScore,
+        category: h.category,
       })),
-    [],
+    [portfolio],
   );
 
-  const totalValue = MOCK_PORTFOLIO.total_value;
-  const totalInvested = MOCK_PORTFOLIO.total_invested;
-  const gain = totalValue - totalInvested;
-  const returnPct = (gain / totalInvested) * 100;
-  const isGrowing = gain >= 0;
+  const totalInvested = portfolio?.initial_amount ?? 0;
+  // Sans prix réels : valeur courante = capital initial (croissance = 0)
+  const totalValue = totalInvested;
+  const gain = 0;
+  const returnPct = 0;
+  const isGrowing = true;
+
+  // Estimation impact à partir des métriques sauvegardées
+  const co2 = portfolio?.metrics?.co2_avoided_tons
+    ? Number(((portfolio.metrics.co2_avoided_tons * totalInvested) / 10000).toFixed(2))
+    : MOCK_PORTFOLIO.co2_avoided;
+  const trees = Math.round(co2 * 45);
+  const energy = Math.round((portfolio?.metrics?.expected_return ?? 0) * 0 + (totalInvested / 5));
+  const esgScore = portfolio?.metrics?.esg_score
+    ? Number(((portfolio.metrics.esg_score / 10)).toFixed(1))
+    : MOCK_PORTFOLIO.overall_score;
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
       <div className="max-w-lg mx-auto pb-28">
-        <AppHeader eyebrow={greeting} title={MOCK_USER_NAME} />
+        <AppHeader eyebrow={greeting} title={userName} />
 
         <motion.section initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="px-5 pt-8">
           <p className="text-[11px] uppercase tracking-wider text-ink-3 font-medium">{L.labels.total_value}</p>
@@ -65,7 +85,18 @@ function Dashboard() {
         </motion.section>
 
         <motion.section initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.25 }} className="px-5 pt-8">
-          <GardenVisualization plants={plants} maxSlots={Math.max(5, plants.length + 1)} onEmptySlotClick={() => navigate({ to: "/discover" })} />
+          {loading ? (
+            <p className="text-[12px] text-ink-3">Chargement de votre jardin…</p>
+          ) : plants.length === 0 ? (
+            <div className="border border-dashed border-paper-3 rounded p-6 text-center">
+              <p className="text-[13px] text-ink-2 mb-3">Votre jardin est encore vide.</p>
+              <Link to="/onboarding" className="inline-block px-4 py-2 text-[12px] font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors">
+                Planter mes premières graines
+              </Link>
+            </div>
+          ) : (
+            <GardenVisualization plants={plants} maxSlots={Math.max(5, plants.length + 1)} onEmptySlotClick={() => navigate({ to: "/discover" })} />
+          )}
         </motion.section>
 
         <motion.section initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="px-5 pt-6">
@@ -74,10 +105,10 @@ function Dashboard() {
 
         <motion.section initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="px-5 pt-5">
           <ImpactRibbon
-            co2Avoided={MOCK_PORTFOLIO.co2_avoided}
-            treesEquivalent={MOCK_PORTFOLIO.trees_equivalent}
-            energyFinanced={MOCK_PORTFOLIO.energy_financed}
-            esgScore={MOCK_PORTFOLIO.overall_score}
+            co2Avoided={co2}
+            treesEquivalent={trees}
+            energyFinanced={energy}
+            esgScore={esgScore}
           />
         </motion.section>
 
