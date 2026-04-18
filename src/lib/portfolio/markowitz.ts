@@ -181,19 +181,58 @@ export function optimizeMarkowitz(
     }
   }
 
-  const sol = result.solution.slice(1); // drop padding
+  const sol = result.solution?.slice(1) ?? []; // drop padding
   const weights: PortfolioWeights = {};
   let total = 0;
   for (let i = 0; i < n; i++) {
-    const w = Math.max(0, sol[i]);
+    const w = Math.max(0, sol[i] ?? 0);
     if (w > 0.001) {
       weights[assets[i].id] = w;
       total += w;
     }
   }
+  // If QP returned an empty / degenerate solution, fall back to a sane allocation
+  if (total < 0.5) {
+    console.warn(
+      `[markowitz] QP returned degenerate solution (total=${total.toFixed(3)}), falling back to class-bounded equal-weight`,
+    );
+    return classBoundedEqualWeight(assets, params);
+  }
   // Renormalise (numerical drift)
-  if (total > 0) {
-    for (const id in weights) weights[id] /= total;
+  for (const id in weights) weights[id] /= total;
+  return weights;
+}
+
+/**
+ * Allocate by class minimums, then split the remainder equally across all
+ * assets weighted by class. Guarantees a non-empty, feasible portfolio.
+ */
+function classBoundedEqualWeight(
+  assets: Asset[],
+  params: PortfolioParams,
+): PortfolioWeights {
+  const bounds = getClassBounds(params.risk_target);
+  const byClass = new Map<string, Asset[]>();
+  for (const a of assets) {
+    const arr = byClass.get(a.asset_class) ?? [];
+    arr.push(a);
+    byClass.set(a.asset_class, arr);
+  }
+  const targets: Record<string, number> = {};
+  let assigned = 0;
+  for (const [cls, arr] of byClass) {
+    const bnd = bounds[cls as keyof typeof bounds];
+    const target = bnd ? (bnd.min + bnd.max) / 2 : 1 / byClass.size;
+    targets[cls] = target;
+    assigned += target;
+  }
+  // Renormalise class targets to sum to 1
+  for (const cls in targets) targets[cls] /= assigned;
+
+  const weights: PortfolioWeights = {};
+  for (const [cls, arr] of byClass) {
+    const share = targets[cls] / arr.length;
+    for (const a of arr) weights[a.id] = share;
   }
   return weights;
 }
