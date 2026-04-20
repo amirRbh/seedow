@@ -178,7 +178,17 @@ function PreferencesSection() {
         horizon_years: horizon,
         initial_amount: amount,
       })
-        .then(() => setStatus("saved"))
+        .then((res) => {
+          const weights = (res as { weights: Record<string, number> }).weights ?? {};
+          const selected = (res as { selected: PreviewLine[] }).selected ?? [];
+          const metrics = (res as { metrics: { esg_score: number; ter: number } }).metrics;
+          const lines = selected
+            .map((s) => ({ ...s, weight: weights[s.id] ?? 0 }))
+            .sort((a, b) => b.weight - a.weight)
+            .slice(0, 3);
+          setPreview({ lines, esg: metrics?.esg_score ?? 0, ter: metrics?.ter ?? 0 });
+          setStatus("saved");
+        })
         .catch((err: unknown) => {
           console.error("[reglages] generate:", err);
           setStatus("error");
