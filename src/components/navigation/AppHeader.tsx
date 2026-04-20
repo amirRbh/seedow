@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
+import { useViewMode } from "@/hooks/useViewMode";
 
 interface AppHeaderProps {
   /** Petit éyebrow au-dessus du titre */
@@ -10,16 +11,24 @@ interface AppHeaderProps {
   subtitle?: string;
   /** Si vrai, masque le bouton réglages (utile sur la page réglages elle-même) */
   hideSettings?: boolean;
+  /** Si vrai, masque le toggle Simple/Expert */
+  hideViewToggle?: boolean;
 }
 
 /**
- * Header institutionnel commun aux pages principales.
- * Affiche un titre et une icône engrenage menant aux réglages.
+ * Header commun aux pages principales.
+ * Affiche un titre, un toggle Simple/Expert et un bouton réglages.
  */
-export function AppHeader({ eyebrow, title, subtitle, hideSettings = false }: AppHeaderProps) {
+export function AppHeader({
+  eyebrow,
+  title,
+  subtitle,
+  hideSettings = false,
+  hideViewToggle = false,
+}: AppHeaderProps) {
   return (
-    <header className="flex items-start justify-between gap-4 px-5 pt-6 pb-4">
-      <div className="min-w-0">
+    <header className="flex items-start justify-between gap-3 px-5 pt-6 pb-4">
+      <div className="min-w-0 flex-1">
         {eyebrow && (
           <p className="text-[11px] uppercase tracking-wider text-ink-3 font-medium">{eyebrow}</p>
         )}
@@ -27,22 +36,46 @@ export function AppHeader({ eyebrow, title, subtitle, hideSettings = false }: Ap
         {subtitle && <p className="text-sm text-ink-3 mt-1.5">{subtitle}</p>}
       </div>
 
-      {!hideSettings && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.85 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ type: "spring", damping: 22, stiffness: 280 }}
-        >
-          <Link
-            to="/reglages"
-            aria-label="Réglages"
-            className="flex items-center justify-center w-9 h-9 rounded-full border border-paper-3 text-ink-2 hover:text-ink hover:border-ink-3 transition-colors"
+      <div className="flex items-center gap-2 flex-shrink-0 mt-1">
+        {!hideViewToggle && <ViewModeToggle />}
+        {!hideSettings && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: "spring", damping: 22, stiffness: 280 }}
           >
-            <SettingsIcon />
-          </Link>
-        </motion.div>
-      )}
+            <Link
+              to="/reglages"
+              aria-label="Réglages"
+              className="flex items-center justify-center w-9 h-9 rounded-full border border-paper-3 text-ink-2 hover:text-ink hover:border-moss-2 transition-colors"
+            >
+              <SettingsIcon />
+            </Link>
+          </motion.div>
+        )}
+      </div>
     </header>
+  );
+}
+
+function ViewModeToggle() {
+  const { mode, toggle } = useViewMode();
+  const isExpert = mode === "expert";
+  return (
+    <button
+      onClick={toggle}
+      aria-label={`Basculer en mode ${isExpert ? "Simple" : "Expert"}`}
+      title={isExpert ? "Mode Expert : toutes les métriques" : "Mode Simple : essentiel uniquement"}
+      className="relative inline-flex items-center h-7 px-1 rounded-full border border-paper-3 bg-paper-2 hover:border-moss-3 transition-colors"
+    >
+      <span className="text-[10px] font-bold uppercase tracking-wider px-1.5">
+        <span className={isExpert ? "text-ink-3" : "text-moss-1"}>Simple</span>
+        <span className="text-ink-3 mx-1">·</span>
+        <span className={isExpert ? "text-bloom" : "text-ink-3"} style={{ color: isExpert ? "var(--bloom)" : undefined }}>
+          Expert
+        </span>
+      </span>
+    </button>
   );
 }
 
