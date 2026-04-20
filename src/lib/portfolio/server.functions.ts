@@ -144,12 +144,20 @@ export const generatePortfolio = createServerFn({ method: "POST" })
       params,
     });
 
-    // Deactivate previous portfolios (user-scoped client → RLS satisfied)
-    await userClient
+    // 1) Désactiver tous les portefeuilles actifs existants (await garanti via .select())
+    const { error: deactivateErr } = await userClient
       .from("portfolios")
       .update({ is_active: false })
-      .eq("user_id", userId);
+      .eq("user_id", userId)
+      .eq("is_active", true)
+      .select("id");
 
+    if (deactivateErr) {
+      console.error("[generatePortfolio] deactivate error:", deactivateErr);
+      throw new Error(`Failed to deactivate previous portfolio: ${deactivateErr.message}`);
+    }
+
+    // 2) Insérer le nouveau portefeuille comme actif
     const { data: inserted, error } = await userClient
       .from("portfolios")
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -173,6 +181,33 @@ export const generatePortfolio = createServerFn({ method: "POST" })
 
     if (error) {
       console.error("[generatePortfolio] insert error:", error);
+      // Si la contrainte unique a déclenché malgré tout (course rare), on retombe
+      // sur le portefeuille actif existant plutôt que de planter l'UI.
+      if (error.code === "23505") {
+        const { data: existing } = await userClient
+          .from("portfolios")
+          .select("*")
+          .eq("user_id", userId)
+          .eq("is_active", true)
+          .order("generated_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        if (existing) {
+          await userClient
+            .from("profiles")
+            .update({ onboarding_completed: true })
+            .eq("id", userId);
+          return {
+            portfolio_id: existing.id,
+            weights: result.weights,
+            metrics: result.metrics,
+            selected: result.selected_assets.map((a) => ({
+              id: a.id, ticker: a.ticker, name: a.name,
+              asset_class: a.asset_class, esg_score: a.esg_score, ter: a.ter,
+            })),
+          };
+        }
+      }
       throw new Error(`Failed to save portfolio: ${error.message}`);
     }
 
