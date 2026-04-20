@@ -87,31 +87,32 @@
 }
 
 :root {
-  --radius: 0.5rem;
+  --radius: 0.75rem;
 
-  /* Surfaces — ivoire institutionnel, neutre froid */
-  --paper: oklch(0.985 0.003 100);
-  --paper-2: oklch(0.965 0.004 100);
-  --paper-3: oklch(0.925 0.005 100);
-  --paper-inset: oklch(0.895 0.006 100);
+  /* Surfaces — crème chaud, plus lumineux */
+  --paper: oklch(0.985 0.012 90);
+  --paper-2: oklch(0.965 0.018 88);
+  --paper-3: oklch(0.918 0.022 85);
+  --paper-inset: oklch(0.890 0.025 82);
 
-  /* Encre — quasi-noir neutre */
-  --ink: oklch(0.20 0.008 260);
-  --ink-2: oklch(0.42 0.010 260);
-  --ink-3: oklch(0.60 0.008 260);
+  /* Encre — bleu-nuit profond plutôt que noir */
+  --ink: oklch(0.24 0.040 250);
+  --ink-2: oklch(0.46 0.040 250);
+  --ink-3: oklch(0.64 0.030 250);
 
-  /* Accent unique — vert forêt très désaturé */
-  --moss-1: oklch(0.34 0.045 155);
-  --moss-2: oklch(0.46 0.050 155);
-  --moss-3: oklch(0.62 0.040 155);
-  --moss-4: oklch(0.86 0.020 155);
-  --moss-5: oklch(0.95 0.010 155);
+  /* Vert menthe énergique — couleur signature */
+  --moss-1: oklch(0.55 0.150 155);
+  --moss-2: oklch(0.68 0.140 158);
+  --moss-3: oklch(0.78 0.110 160);
+  --moss-4: oklch(0.90 0.080 162);
+  --moss-5: oklch(0.96 0.045 164);
 
-  /* Accents data */
-  --rust: oklch(0.50 0.13 25);
-  --gold: oklch(0.65 0.10 80);
-  --sky: oklch(0.45 0.07 240);
-  --bloom: oklch(0.50 0.10 280);
+  /* Accents pastel énergique */
+  --rust: oklch(0.68 0.160 35);    /* corail/pêche */
+  --gold: oklch(0.82 0.140 88);    /* jaune soleil doux */
+  --sky: oklch(0.72 0.110 230);    /* bleu ciel */
+  --bloom: oklch(0.70 0.140 310);  /* lavande/orchidée */
+  --peach: oklch(0.85 0.090 50);   /* pêche tendre */
 
   /* shadcn mapping */
   --background: var(--paper);
