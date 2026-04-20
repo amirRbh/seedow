@@ -181,7 +181,7 @@ function PreferencesSection() {
       })
         .then((res) => {
           const weights = (res as { weights: Record<string, number> }).weights ?? {};
-          const selected = (res as { selected: PreviewLine[] }).selected ?? [];
+          const selected = (res as { selected: SelectedAsset[] }).selected ?? [];
           const metrics = (res as { metrics: { esg_score: number; ter: number } }).metrics;
           const lines = selected
             .map((s) => ({ ...s, weight: weights[s.id] ?? 0 }))
