@@ -7,15 +7,15 @@ interface Props {
 }
 
 const CLASS_LABELS: Record<string, string> = {
-  equity_dev: "Actions développées",
-  equity_em: "Actions émergentes",
-  thematic: "Thématique",
-  green_bond: "Obligation verte",
-  social_bond: "Obligation sociale",
-  sov_bond: "Souverain",
-  reit: "Immobilier",
-  commodity: "Matière première",
-  cash: "Liquidités",
+  equity_dev: "Grandes entreprises",
+  equity_em: "Marchés émergents",
+  thematic: "Thématique impact",
+  green_bond: "Obligations vertes",
+  social_bond: "Obligations sociales",
+  sov_bond: "Obligations d'État",
+  reit: "Immobilier durable",
+  commodity: "Matières premières",
+  cash: "Réserve sécurisée",
 };
 
 const CLASS_COLOR: Record<string, string> = {
@@ -26,7 +26,7 @@ const CLASS_COLOR: Record<string, string> = {
   social_bond: "var(--sky)",
   sov_bond: "var(--ink-2)",
   reit: "var(--gold)",
-  commodity: "var(--rust)",
+  commodity: "var(--peach)",
   cash: "var(--paper-3)",
 };
 
