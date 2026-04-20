@@ -59,23 +59,39 @@ export function AppHeader({
 }
 
 function ViewModeToggle() {
-  const { mode, toggle } = useViewMode();
-  const isExpert = mode === "expert";
+  const { mode, setMode } = useViewMode();
   return (
-    <button
-      onClick={toggle}
-      aria-label={`Basculer en mode ${isExpert ? "Simple" : "Expert"}`}
-      title={isExpert ? "Mode Expert : toutes les métriques" : "Mode Simple : essentiel uniquement"}
-      className="relative inline-flex items-center h-7 px-1 rounded-full border border-paper-3 bg-paper-2 hover:border-moss-3 transition-colors"
+    <div
+      role="group"
+      aria-label="Niveau de détail"
+      className="inline-flex items-center h-7 p-0.5 rounded-full border border-paper-3 bg-paper-2"
     >
-      <span className="text-[10px] font-bold uppercase tracking-wider px-1.5">
-        <span className={isExpert ? "text-ink-3" : "text-moss-1"}>Simple</span>
-        <span className="text-ink-3 mx-1">·</span>
-        <span className={isExpert ? "text-bloom" : "text-ink-3"} style={{ color: isExpert ? "var(--bloom)" : undefined }}>
-          Expert
-        </span>
-      </span>
-    </button>
+      <button
+        type="button"
+        onClick={() => setMode("simple")}
+        aria-pressed={mode === "simple"}
+        className={`px-2.5 h-6 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all ${
+          mode === "simple"
+            ? "bg-moss-1 text-paper shadow-leaf"
+            : "text-ink-3 hover:text-ink"
+        }`}
+      >
+        Simple
+      </button>
+      <button
+        type="button"
+        onClick={() => setMode("expert")}
+        aria-pressed={mode === "expert"}
+        className={`px-2.5 h-6 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all ${
+          mode === "expert"
+            ? "bg-bloom text-paper shadow-leaf"
+            : "text-ink-3 hover:text-ink"
+        }`}
+        style={mode === "expert" ? { backgroundColor: "var(--bloom)" } : undefined}
+      >
+        Expert
+      </button>
+    </div>
   );
 }
 
