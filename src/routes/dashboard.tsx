@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate, redirect } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { GardenVisualization, type GardenPlant } from "@/components/garden/GardenVisualization";
@@ -35,19 +35,28 @@ function Dashboard() {
   const { portfolio, loading } = useActivePortfolio();
   const { total: walletTotal, pending: walletPending, deposits } = useDeposits();
   const [greeting, setGreeting] = useState("Bonjour");
+  const hasSeenPortfolioRef = useRef(false);
 
   useEffect(() => {
     setGreeting(getGreeting(new Date().getHours()));
   }, []);
 
-  // Si l'utilisateur arrive sans portefeuille, on l'envoie vers l'onboarding.
-  // On laisse une fenêtre de grâce pour éviter une redirection prématurée
-  // juste après la création du portefeuille (latence realtime / cache).
   useEffect(() => {
-    if (loading || portfolio) return;
+    if (portfolio) {
+      hasSeenPortfolioRef.current = true;
+    }
+  }, [portfolio]);
+
+  // On ne redirige vers l'onboarding que pour un vrai "nouvel utilisateur".
+  // Si un portefeuille a déjà été vu dans cette session, on évite toute boucle
+  // causée par une latence de re-fetch ou un refresh intermédiaire.
+  useEffect(() => {
+    if (loading || portfolio || hasSeenPortfolioRef.current) return;
     const timer = setTimeout(() => {
-      if (!portfolio) navigate({ to: "/onboarding" });
-    }, 1500);
+      if (!hasSeenPortfolioRef.current) {
+        navigate({ to: "/onboarding" });
+      }
+    }, 1800);
     return () => clearTimeout(timer);
   }, [loading, portfolio, navigate]);
 
