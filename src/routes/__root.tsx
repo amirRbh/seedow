@@ -1,6 +1,7 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { LexiconProvider } from "@/hooks/useLexicon";
 import { AuthProvider } from "@/hooks/useAuth";
+import { ViewModeProvider } from "@/hooks/useViewMode";
 
 import appCss from "../styles.css?url";
 
@@ -60,7 +61,9 @@ function RootComponent() {
   return (
     <AuthProvider>
       <LexiconProvider>
-        <Outlet />
+        <ViewModeProvider>
+          <Outlet />
+        </ViewModeProvider>
       </LexiconProvider>
     </AuthProvider>
   );
