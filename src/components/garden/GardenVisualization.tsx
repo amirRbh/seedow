@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 
 export interface GardenPlant {
@@ -19,9 +19,23 @@ interface GardenVisualizationProps {
   onEmptySlotClick?: () => void;
 }
 
+// Couleurs pastel par catégorie pour la barre stack
+const CATEGORY_COLORS: Record<string, string> = {
+  equity_dev: "oklch(0.78 0.10 145)",
+  equity_em: "oklch(0.80 0.11 80)",
+  thematic: "oklch(0.78 0.12 200)",
+  green_bond: "oklch(0.82 0.09 160)",
+  social_bond: "oklch(0.80 0.10 30)",
+  sov_bond: "oklch(0.85 0.05 250)",
+  reit: "oklch(0.80 0.10 50)",
+  commodity: "oklch(0.82 0.08 90)",
+  cash: "oklch(0.88 0.03 240)",
+};
+
+const colorFor = (cat: string) => CATEGORY_COLORS[cat] ?? "oklch(0.85 0.05 200)";
+
 /**
- * Institutional allocation view — fine horizontal bars, tabular numerals.
- * Inspired by Bloomberg / Lombard Odier holdings tables.
+ * Vue compacte : barre stack + top 3, "voir plus" pour le reste.
  */
 export function GardenVisualization({
   plants,
@@ -29,80 +43,88 @@ export function GardenVisualization({
   onEmptySlotClick,
 }: GardenVisualizationProps) {
   const navigate = useNavigate();
+  const [expanded, setExpanded] = useState(false);
 
   const sorted = useMemo(
     () => [...plants].sort((a, b) => b.allocationPct - a.allocationPct),
     [plants],
   );
 
-  const maxAlloc = Math.max(...sorted.map((p) => p.allocationPct), 1);
+  const top = sorted.slice(0, 3);
+  const rest = sorted.slice(3);
+  const visible = expanded ? sorted : top;
 
   return (
     <div className="w-full">
-      <div className="flex items-baseline justify-between border-b border-paper-3 pb-2 mb-1">
+      <div className="flex items-baseline justify-between mb-2">
         <p className="text-[10px] uppercase tracking-[0.12em] text-ink-3 font-medium">
-          Allocation
+          Allocation · {plants.length} ligne{plants.length > 1 ? "s" : ""}
         </p>
-        <p className="text-[10px] uppercase tracking-[0.12em] text-ink-3 font-medium">
-          Perf.
-        </p>
+        {rest.length > 0 && (
+          <button
+            onClick={() => setExpanded((v) => !v)}
+            className="text-[11px] text-ink-2 hover:text-ink underline-offset-2 hover:underline"
+          >
+            {expanded ? "Réduire" : `Tout voir (${plants.length})`}
+          </button>
+        )}
       </div>
 
-      <ul className="divide-y divide-paper-3">
-        {sorted.map((plant, i) => {
-          const widthPct = (plant.allocationPct / maxAlloc) * 100;
-          const isPositive = plant.performancePct >= 0;
-          return (
-            <motion.li
-              key={plant.id}
-              initial={{ opacity: 0, x: -4 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.04, duration: 0.3 }}
-              onClick={() => onPlantClick?.(plant)}
-              className="group py-3 cursor-pointer"
-            >
-              <div className="flex items-baseline justify-between gap-3">
-                <div className="flex items-baseline gap-2 min-w-0">
-                  <span className="font-value text-[13px] text-ink tracking-tight">
-                    {plant.ticker}
-                  </span>
-                  <span className="text-[11px] text-ink-3 truncate">
-                    {plant.name}
-                  </span>
-                </div>
-                <span
-                  className={`text-[12px] font-medium tabular-nums flex-shrink-0 ${
-                    isPositive ? "text-moss-1" : "text-rust"
-                  }`}
-                >
-                  {isPositive ? "+" : ""}
-                  {plant.performancePct.toFixed(2)}%
-                </span>
-              </div>
+      {/* Barre stack pastel */}
+      <div className="flex w-full h-2 rounded-full overflow-hidden bg-paper-2 mb-3">
+        {sorted.map((p, i) => (
+          <motion.div
+            key={p.id}
+            initial={{ width: 0 }}
+            animate={{ width: `${p.allocationPct}%` }}
+            transition={{ delay: 0.1 + i * 0.03, duration: 0.5, ease: "easeOut" }}
+            style={{ backgroundColor: colorFor(p.category) }}
+            title={`${p.ticker} · ${p.allocationPct.toFixed(1)}%`}
+          />
+        ))}
+      </div>
 
-              <div className="mt-1.5 flex items-center gap-2">
-                <div className="flex-1 h-px bg-paper-3 relative">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${widthPct}%` }}
-                    transition={{ delay: 0.15 + i * 0.05, duration: 0.6, ease: "easeOut" }}
-                    className="absolute inset-y-0 left-0 bg-ink"
-                    style={{ height: "1px", marginTop: "0px" }}
-                  />
-                </div>
-                <span className="text-[10px] text-ink-3 tabular-nums w-10 text-right">
-                  {plant.allocationPct.toFixed(1)}%
-                </span>
-              </div>
-            </motion.li>
-          );
-        })}
+      <ul className="space-y-1">
+        {visible.map((plant, i) => (
+          <motion.li
+            key={plant.id}
+            initial={{ opacity: 0, y: 2 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.03, duration: 0.25 }}
+            onClick={() => onPlantClick?.(plant)}
+            className="flex items-center gap-2.5 py-1.5 cursor-pointer group"
+          >
+            <span
+              className="w-2 h-2 rounded-full flex-shrink-0"
+              style={{ backgroundColor: colorFor(plant.category) }}
+            />
+            <span className="font-value text-[12px] text-ink tracking-tight w-14 flex-shrink-0">
+              {plant.ticker}
+            </span>
+            <span className="text-[11px] text-ink-3 truncate flex-1">{plant.name}</span>
+            <span className="text-[12px] font-medium tabular-nums text-ink w-12 text-right flex-shrink-0">
+              {plant.allocationPct.toFixed(1)}%
+            </span>
+          </motion.li>
+        ))}
+
+        {!expanded && rest.length > 0 && (
+          <li className="flex items-center gap-2.5 py-1.5 text-[11px] text-ink-3">
+            <span className="w-2 h-2 rounded-full bg-paper-3 flex-shrink-0" />
+            <span className="flex-1">
+              + {rest.length} autre{rest.length > 1 ? "s" : ""} position{rest.length > 1 ? "s" : ""}
+            </span>
+            <span className="tabular-nums w-12 text-right">
+              {rest.reduce((s, p) => s + p.allocationPct, 0).toFixed(1)}%
+            </span>
+          </li>
+        )}
 
         <li
           onClick={() => (onEmptySlotClick ? onEmptySlotClick() : navigate({ to: "/discover" }))}
-          className="py-3 cursor-pointer text-ink-3 hover:text-ink transition-colors flex items-center justify-between"
+          className="pt-2 mt-1 border-t border-paper-3 cursor-pointer text-ink-3 hover:text-ink transition-colors flex items-center justify-between"
         >
-          <span className="text-[12px] tracking-tight">+ Ajouter une position</span>
+          <span className="text-[11px] tracking-tight">+ Ajouter une position</span>
           <span className="text-[10px] uppercase tracking-[0.12em]">Explorer</span>
         </li>
       </ul>

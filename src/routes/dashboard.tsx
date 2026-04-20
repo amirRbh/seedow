@@ -132,10 +132,24 @@ function Dashboard() {
         </motion.section>
 
         <motion.section
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="px-5 pt-6"
+        >
+          <ImpactRibbon
+            co2Avoided={co2}
+            treesEquivalent={trees}
+            energyFinanced={energy}
+            esgScore={esgScore}
+          />
+        </motion.section>
+
+        <motion.section
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.25 }}
-          className="px-5 pt-8"
+          transition={{ delay: 0.35 }}
+          className="px-5 pt-6"
         >
           {loading ? (
             <p className="text-[12px] text-ink-3">Chargement de votre jardin…</p>
@@ -161,7 +175,7 @@ function Dashboard() {
         <motion.section
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
+          transition={{ delay: 0.5 }}
           className="px-5 pt-6"
         >
           <WalletCard
@@ -169,20 +183,6 @@ function Dashboard() {
             pending={walletPending}
             depositCount={deposits.length}
             onAdd={() => navigate({ to: "/discover" })}
-          />
-        </motion.section>
-
-        <motion.section
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="px-5 pt-5"
-        >
-          <ImpactRibbon
-            co2Avoided={co2}
-            treesEquivalent={trees}
-            energyFinanced={energy}
-            esgScore={esgScore}
           />
         </motion.section>
 
