@@ -59,13 +59,13 @@ export function useActivePortfolio(): State {
     setError(null);
 
     (async () => {
-      const { data: pf, error: pfErr } = await supabase
+      const { data: portfolios, error: pfErr } = await supabase
         .from("portfolios")
         .select("id, name, initial_amount, generated_at, weights, metrics")
         .eq("user_id", user.id)
         .eq("is_active", true)
         .order("generated_at", { ascending: false })
-        .maybeSingle();
+        .limit(1);
 
       if (cancelled) return;
       if (pfErr) {
@@ -73,6 +73,8 @@ export function useActivePortfolio(): State {
         setLoading(false);
         return;
       }
+
+      const pf = portfolios?.[0] ?? null;
       if (!pf) {
         setPortfolio(null);
         setLoading(false);
