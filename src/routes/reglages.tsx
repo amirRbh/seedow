@@ -127,6 +127,7 @@ function PreferencesSection() {
   const firstLoadRef = useRef(true);
 
   type PreviewLine = { id: string; ticker: string; name: string; asset_class: string; weight: number };
+  type SelectedAsset = { id: string; ticker: string; name: string; asset_class: string };
   const [preview, setPreview] = useState<{ lines: PreviewLine[]; esg: number; ter: number } | null>(null);
 
   // Charger le portefeuille actif
