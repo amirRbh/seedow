@@ -126,6 +126,9 @@ function PreferencesSection() {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const firstLoadRef = useRef(true);
 
+  type PreviewLine = { id: string; ticker: string; name: string; asset_class: string; weight: number };
+  const [preview, setPreview] = useState<{ lines: PreviewLine[]; esg: number; ter: number } | null>(null);
+
   // Charger le portefeuille actif
   useEffect(() => {
     if (!user) return;
