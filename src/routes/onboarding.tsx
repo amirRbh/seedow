@@ -131,7 +131,7 @@ function Onboarding() {
           <AccountStep
             key="account"
             onAuthed={() => setPhase("planting")}
-            onBack={() => setStepIndex(STEPS.length - 1) || setPhase("steps")}
+            onBack={() => { setStepIndex(STEPS.length - 1); setPhase("steps"); }}
           />
         )}
         {phase === "planting" && (
