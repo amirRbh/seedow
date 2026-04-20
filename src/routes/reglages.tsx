@@ -549,6 +549,101 @@ function MethodologySection() {
         </ul>
       </Block>
 
+      <Block title="Comment est calculée la note ESG ?">
+        <p className="text-[12px] text-ink-2 leading-relaxed mb-4">
+          La note ESG (Environnement, Social, Gouvernance) va de <span className="font-value">0</span> à{" "}
+          <span className="font-value">100</span>. Plus elle est élevée, mieux l'entreprise ou le fonds gère
+          ses impacts extra-financiers. Voici exactement comment nous l'établissons.
+        </p>
+
+        <div className="space-y-4">
+          <div>
+            <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
+              1. Trois piliers, pondération 40 / 40 / 20
+            </p>
+            <ul className="text-[12px] text-ink-2 space-y-1.5 leading-relaxed">
+              <li>
+                <span className="font-medium text-ink">Environnement (40%)</span> — émissions CO₂ scope 1-2-3,
+                intensité carbone, eau, déchets, exposition aux énergies renouvelables.
+              </li>
+              <li>
+                <span className="font-medium text-ink">Social (40%)</span> — droits humains, conditions de
+                travail, égalité F/H, sécurité produit, relations communautés.
+              </li>
+              <li>
+                <span className="font-medium text-ink">Gouvernance (20%)</span> — indépendance du conseil,
+                rémunération dirigeants, éthique fiscale, transparence, lutte anti-corruption.
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
+              2. Sources externes croisées
+            </p>
+            <p className="text-[12px] text-ink-2 leading-relaxed">
+              Les notes brutes proviennent de <span className="font-medium text-ink">MSCI ESG Research</span>{" "}
+              et <span className="font-medium text-ink">Sustainalytics</span>. Quand les deux divergent de
+              plus de 15 points, nous prenons la note la plus prudente (la plus basse) pour éviter le
+              greenwashing.
+            </p>
+          </div>
+
+          <div>
+            <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
+              3. Pénalités automatiques
+            </p>
+            <ul className="text-[12px] text-ink-2 space-y-1.5 leading-relaxed">
+              <li>• <span className="font-medium text-ink">−10 pts</span> si exposition &gt; 5% aux énergies fossiles</li>
+              <li>• <span className="font-medium text-ink">−15 pts</span> si controverse majeure dans les 24 derniers mois</li>
+              <li>• <span className="font-medium text-ink">−5 pts</span> si SFDR Article 6 (non durable)</li>
+              <li>• <span className="font-medium text-ink">+5 pts</span> si SFDR Article 9 (impact)</li>
+            </ul>
+          </div>
+
+          <div>
+            <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
+              4. Score du portefeuille
+            </p>
+            <p className="text-[12px] text-ink-2 leading-relaxed">
+              C'est la <span className="font-medium text-ink">moyenne pondérée</span> par le poids de chaque
+              ligne. Exemple : 60% d'un fonds noté 75 + 40% d'un fonds noté 60 = score{" "}
+              <span className="font-value">69</span>.
+            </p>
+          </div>
+
+          <div className="pt-2 border-t border-paper-3">
+            <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
+              Échelle de lecture
+            </p>
+            <div className="grid grid-cols-4 gap-1.5 text-[10px]">
+              <div className="rounded border border-paper-3 p-2">
+                <p className="font-value text-ink">0–40</p>
+                <p className="text-ink-3">Faible</p>
+              </div>
+              <div className="rounded border border-paper-3 p-2">
+                <p className="font-value text-ink">40–60</p>
+                <p className="text-ink-3">Moyen</p>
+              </div>
+              <div className="rounded border border-moss-4 bg-moss-5 p-2">
+                <p className="font-value text-moss-1">60–80</p>
+                <p className="text-moss-1">Bon</p>
+              </div>
+              <div className="rounded border border-moss-2 bg-moss-5 p-2">
+                <p className="font-value text-moss-1">80–100</p>
+                <p className="text-moss-1">Excellent</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p className="text-[11px] text-ink-3 leading-relaxed mt-4 pt-3 border-t border-paper-3">
+          ⚠️ Une note ESG reste une <span className="font-medium">estimation</span>. Elle dépend de la qualité
+          des données publiées par les entreprises. Nous mettons à jour les scores chaque trimestre et
+          publions toute révision dans le journal de méthodologie.
+        </p>
+      </Block>
+
       <Block title="Version du moteur">
         <p className="text-[12px] text-ink-2">
           Méthodologie <span className="font-value">v1.0</span> · révisée trimestriellement.
