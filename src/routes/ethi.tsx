@@ -27,15 +27,15 @@ function Ethi() {
   useEffect(() => {
     const hasGarden = MOCK_HOLDINGS.length > 0;
     const gain = MOCK_PORTFOLIO.total_value - MOCK_PORTFOLIO.total_invested;
-    let greeting = `Salut ${MOCK_USER_NAME} ! 🌱 `;
+    let greeting = "";
     if (intent === "rebalance") {
-      greeting += `Tu veux que je regarde la répartition de ton jardin et te propose un rééquilibrage ? Je peux analyser tes ${MOCK_HOLDINGS.length} plantes et suggérer des ajustements.`;
+      greeting = `Hop ${MOCK_USER_NAME} 🌿 — on rééquilibre ? Je passe en revue tes **${MOCK_HOLDINGS.length} plantes** et je te dis quoi ajuster.`;
     } else if (!hasGarden) {
-      greeting += `Ton jardin n'a pas encore été planté. Tu veux qu'on le fasse ensemble ?`;
+      greeting = `Salut ${MOCK_USER_NAME} 🌱 Ton jardin est encore en terre. Dis-moi ce qui compte pour toi, je sème en 2 min.`;
     } else if (gain > 0) {
-      greeting += `Ton jardin a bien grandi (**+${gain.toFixed(0)} €**). On regarde comment l'entretenir ?`;
+      greeting = `${MOCK_USER_NAME}, ton jardin pousse fort 📈 **+${gain.toFixed(0)} €**. On regarde la suite ?`;
     } else {
-      greeting += `Comment je peux t'aider aujourd'hui ?`;
+      greeting = `Salut ${MOCK_USER_NAME} 🌱 Qu'est-ce qu'on plante aujourd'hui ?`;
     }
     setMessages([{ id: "welcome", role: "assistant", content: greeting }]);
   }, [intent]);
