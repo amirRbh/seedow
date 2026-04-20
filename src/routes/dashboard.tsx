@@ -40,11 +40,15 @@ function Dashboard() {
     setGreeting(getGreeting(new Date().getHours()));
   }, []);
 
-  // Si l'utilisateur arrive sans portefeuille, on l'envoie vers l'onboarding
+  // Si l'utilisateur arrive sans portefeuille, on l'envoie vers l'onboarding.
+  // On laisse une fenêtre de grâce pour éviter une redirection prématurée
+  // juste après la création du portefeuille (latence realtime / cache).
   useEffect(() => {
-    if (!loading && !portfolio) {
-      navigate({ to: "/onboarding" });
-    }
+    if (loading || portfolio) return;
+    const timer = setTimeout(() => {
+      if (!portfolio) navigate({ to: "/onboarding" });
+    }, 1500);
+    return () => clearTimeout(timer);
   }, [loading, portfolio, navigate]);
 
   const userName = useMemo(() => {

@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, redirect } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, useRouter, redirect } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useServerFn } from "@tanstack/react-start";
@@ -98,6 +98,7 @@ function objectiveToRiskHorizon(obj: string | undefined): { risk: number; horizo
 
 function Onboarding() {
   const navigate = useNavigate();
+  const router = useRouter();
   const [phase, setPhase] = useState<Phase>("intro");
   const [stepIndex, setStepIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
@@ -124,7 +125,14 @@ function Onboarding() {
           />
         )}
         {phase === "planting" && (
-          <PlantingScene key="planting" onEnter={() => navigate({ to: "/dashboard" })} answers={answers} />
+          <PlantingScene
+            key="planting"
+            onEnter={async () => {
+              await router.invalidate();
+              navigate({ to: "/dashboard" });
+            }}
+            answers={answers}
+          />
         )}
       </AnimatePresence>
     </div>
