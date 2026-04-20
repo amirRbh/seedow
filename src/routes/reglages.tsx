@@ -126,6 +126,10 @@ function PreferencesSection() {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const firstLoadRef = useRef(true);
 
+  type PreviewLine = { id: string; ticker: string; name: string; asset_class: string; weight: number };
+  type SelectedAsset = { id: string; ticker: string; name: string; asset_class: string };
+  const [preview, setPreview] = useState<{ lines: PreviewLine[]; esg: number; ter: number } | null>(null);
+
   // Charger le portefeuille actif
   useEffect(() => {
     if (!user) return;
@@ -175,7 +179,17 @@ function PreferencesSection() {
         horizon_years: horizon,
         initial_amount: amount,
       })
-        .then(() => setStatus("saved"))
+        .then((res) => {
+          const weights = (res as { weights: Record<string, number> }).weights ?? {};
+          const selected = (res as { selected: SelectedAsset[] }).selected ?? [];
+          const metrics = (res as { metrics: { esg_score: number; ter: number } }).metrics;
+          const lines = selected
+            .map((s) => ({ ...s, weight: weights[s.id] ?? 0 }))
+            .sort((a, b) => b.weight - a.weight)
+            .slice(0, 3);
+          setPreview({ lines, esg: metrics?.esg_score ?? 0, ter: metrics?.ter ?? 0 });
+          setStatus("saved");
+        })
         .catch((err: unknown) => {
           console.error("[reglages] generate:", err);
           setStatus("error");
@@ -212,6 +226,36 @@ function PreferencesSection() {
   return (
     <div className="space-y-6">
       <StatusBanner status={status} errorMsg={errorMsg} />
+
+      {preview && (
+        <motion.div
+          key={preview.lines.map((l) => l.id + l.weight.toFixed(3)).join("|")}
+          initial={{ opacity: 0, y: -2 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="border border-paper-3 rounded-lg p-4 bg-paper-2"
+        >
+          <div className="flex items-baseline justify-between mb-3">
+            <p className="text-[10px] uppercase tracking-[0.15em] text-ink-3 font-medium">
+              Aperçu live
+            </p>
+            <div className="flex gap-3 text-[11px] text-ink-3">
+              <span>ESG <span className="text-ink font-value tabular-nums">{preview.esg.toFixed(1)}</span></span>
+              <span>TER <span className="text-ink font-value tabular-nums">{(preview.ter * 100).toFixed(2)}%</span></span>
+            </div>
+          </div>
+          <ul className="space-y-1.5">
+            {preview.lines.map((l) => (
+              <li key={l.id} className="flex items-center gap-3 text-[12px]">
+                <span className="font-value text-ink-2 w-12 tabular-nums shrink-0">{l.ticker}</span>
+                <span className="flex-1 text-ink truncate">{l.name}</span>
+                <span className="font-value tabular-nums text-ink w-12 text-right">
+                  {(l.weight * 100).toFixed(1)}%
+                </span>
+              </li>
+            ))}
+          </ul>
+        </motion.div>
+      )}
 
       <Block title="Causes & intensité">
         <div className="space-y-3">
