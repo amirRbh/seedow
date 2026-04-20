@@ -7,7 +7,9 @@ import { TimelineEvent } from "@/components/roots/TimelineEvent";
 import { BadgesCard } from "@/components/garden/SeasonalBadges";
 import { AllocationBreakdown } from "@/components/portfolio/AllocationBreakdown";
 import { PortfolioMetricsCard } from "@/components/portfolio/PortfolioMetricsCard";
+import { ExplainerCard } from "@/components/ui/ExplainerCard";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
+import { useViewMode } from "@/hooks/useViewMode";
 import { supabase } from "@/integrations/supabase/client";
 import { MOCK_BADGES } from "@/lib/mockGarden";
 
@@ -27,7 +29,7 @@ function monthLabel(d: Date) {
 
 function Portfolio() {
   const { portfolio, loading } = useActivePortfolio();
-
+  const { isSimple } = useViewMode();
   if (loading) {
     return (
       <div className="min-h-screen bg-paper flex items-center justify-center">
@@ -76,8 +78,13 @@ function Portfolio() {
           <GrowthComparison currentValue={totalValue} invested={totalInvested} gain={gain} returnPct={returnPct} />
         </section>
 
-        <section className="px-5 pt-6">
-          <h2 className="text-sm font-semibold text-ink mb-3">Indicateurs clés</h2>
+        <section className="px-5 pt-6 space-y-3">
+          <h2 className="text-sm font-semibold text-ink">Indicateurs clés</h2>
+          {isSimple && (
+            <ExplainerCard tone="moss">
+              On garde l'essentiel : croissance attendue, impact écologique et CO₂ évité. Active <span className="font-semibold">Expert</span> en haut pour voir tous les détails financiers.
+            </ExplainerCard>
+          )}
           <PortfolioMetricsCard metrics={portfolio.metrics} />
         </section>
 
