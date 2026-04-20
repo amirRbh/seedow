@@ -1,19 +1,16 @@
-import { createFileRoute, useNavigate, useRouter, redirect } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
+import { useEffect, useState, type FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable";
 import { generatePortfolio } from "@/lib/portfolio/server.functions";
 import { callAuthed } from "@/lib/authedServerFn";
 import type { CauseTag, ExclusionTag } from "@/lib/portfolio/types";
 
 export const Route = createFileRoute("/onboarding")({
-  beforeLoad: async () => {
-    const { data } = await supabase.auth.getSession();
-    if (!data.session) {
-      throw redirect({ to: "/auth", search: { redirect: "/onboarding", mode: "signup" } });
-    }
-  },
+  // Pas de guard auth : on laisse l'utilisateur répondre aux questions sans compte.
+  // La création de compte arrive juste avant la génération du portefeuille (phase "account").
   component: Onboarding,
 });
 
@@ -78,7 +75,7 @@ const STEPS = [
 ];
 
 type StepId = (typeof STEPS)[number]["id"];
-type Phase = "intro" | "steps" | "planting";
+type Phase = "intro" | "steps" | "account" | "planting";
 type Answers = Partial<Record<StepId, string[]>>;
 
 // Map onboarding objective → (risk_target, horizon_years)
@@ -103,11 +100,17 @@ function Onboarding() {
   const [stepIndex, setStepIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
 
-  const completeStep = (selected: string[]) => {
+  const completeStep = async (selected: string[]) => {
     const step = STEPS[stepIndex];
     setAnswers((a) => ({ ...a, [step.id]: selected }));
-    if (stepIndex < STEPS.length - 1) setStepIndex((i) => i + 1);
-    else setPhase("planting");
+    if (stepIndex < STEPS.length - 1) {
+      setStepIndex((i) => i + 1);
+    } else {
+      // Dernière question terminée : besoin d'un compte avant de générer.
+      const { data } = await supabase.auth.getSession();
+      if (data.session) setPhase("planting");
+      else setPhase("account");
+    }
   };
 
   return (
@@ -124,6 +127,13 @@ function Onboarding() {
             onBack={() => (stepIndex > 0 ? setStepIndex(stepIndex - 1) : setPhase("intro"))}
           />
         )}
+        {phase === "account" && (
+          <AccountStep
+            key="account"
+            onAuthed={() => setPhase("planting")}
+            onBack={() => setStepIndex(STEPS.length - 1) || setPhase("steps")}
+          />
+        )}
         {phase === "planting" && (
           <PlantingScene
             key="planting"
@@ -136,6 +146,178 @@ function Onboarding() {
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// Account creation step — inline, after questions, before generation
+// ─────────────────────────────────────────────────────────
+function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () => void }) {
+  const [mode, setMode] = useState<"signup" | "login">("signup");
+  const [displayName, setDisplayName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const onGoogle = async () => {
+    setError(null);
+    const result = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: `${window.location.origin}/onboarding`,
+    });
+    if (result.error) setError(result.error.message);
+  };
+
+  const onSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+    try {
+      if (mode === "signup") {
+        const { data, error: err } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/onboarding`,
+            data: { display_name: displayName || email.split("@")[0] },
+          },
+        });
+        if (err) throw err;
+        if (!data.session) {
+          throw new Error("Compte créé. Vérifie ton email pour finaliser puis reviens.");
+        }
+      } else {
+        const { error: err } = await supabase.auth.signInWithPassword({ email, password });
+        if (err) throw err;
+      }
+      onAuthed();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erreur d'authentification");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -20 }}
+      transition={{ duration: 0.35 }}
+      className="min-h-screen flex flex-col"
+    >
+      <div className="flex items-center justify-between px-6 pt-6">
+        <button
+          onClick={onBack}
+          className="w-9 h-9 rounded-full flex items-center justify-center text-paper/50 hover:text-paper transition-colors"
+          aria-label="Retour"
+        >
+          <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+            <path d="M15 6l-6 6 6 6" />
+          </svg>
+        </button>
+        <span className="text-[11px] text-paper/40 font-semibold">Dernière étape</span>
+      </div>
+
+      <div className="px-6 pt-10 pb-12 max-w-md mx-auto w-full flex-1">
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex gap-3 items-start"
+        >
+          <div className="w-9 h-9 rounded-full bg-moss-2 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <svg viewBox="0 0 24 24" className="w-4 h-4 text-paper" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0 1 1 21 12Z" />
+            </svg>
+          </div>
+          <div className="flex-1 bg-paper/10 text-paper text-[13px] rounded-2xl rounded-bl-sm px-4 py-3 leading-relaxed">
+            Top, j'ai tout ce qu'il faut 🌱 Crée ton compte en 10 secondes pour que je sauvegarde ton jardin.
+          </div>
+        </motion.div>
+
+        <h2 className="font-value text-2xl text-paper pt-8">
+          {mode === "signup" ? "Crée ton compte" : "Connecte-toi"}
+        </h2>
+        <p className="text-[12px] text-paper/60 mt-1.5">
+          Tes réponses sont prêtes. Plus qu'un pas pour planter.
+        </p>
+
+        <button
+          onClick={onGoogle}
+          className="mt-6 w-full py-2.5 rounded-xl border border-paper/20 hover:border-paper/40 hover:bg-paper/5 transition-colors text-[13px] font-medium text-paper flex items-center justify-center gap-2"
+        >
+          <svg viewBox="0 0 24 24" className="w-4 h-4">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          </svg>
+          Continuer avec Google
+        </button>
+
+        <div className="my-4 flex items-center gap-3">
+          <div className="flex-1 h-px bg-paper/15" />
+          <span className="text-[10px] uppercase tracking-[0.15em] text-paper/40">ou</span>
+          <div className="flex-1 h-px bg-paper/15" />
+        </div>
+
+        <form onSubmit={onSubmit} className="space-y-2.5">
+          {mode === "signup" && (
+            <input
+              type="text"
+              placeholder="Prénom"
+              value={displayName}
+              onChange={(e) => setDisplayName(e.target.value)}
+              className="w-full px-3.5 py-3 rounded-xl border border-paper/15 bg-paper/5 text-[13px] text-paper placeholder-paper/40 focus:border-paper/40 focus:outline-none transition-colors"
+            />
+          )}
+          <input
+            type="email"
+            placeholder="Adresse email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            autoComplete="email"
+            className="w-full px-3.5 py-3 rounded-xl border border-paper/15 bg-paper/5 text-[13px] text-paper placeholder-paper/40 focus:border-paper/40 focus:outline-none transition-colors"
+          />
+          <input
+            type="password"
+            placeholder="Mot de passe (8 caractères min.)"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            minLength={8}
+            autoComplete={mode === "signup" ? "new-password" : "current-password"}
+            className="w-full px-3.5 py-3 rounded-xl border border-paper/15 bg-paper/5 text-[13px] text-paper placeholder-paper/40 focus:border-paper/40 focus:outline-none transition-colors"
+          />
+
+          {error && <p className="text-[12px] text-rust">{error}</p>}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3.5 rounded-full bg-paper text-ink font-semibold text-[13px] hover:bg-moss-5 hover:text-moss-1 transition-colors disabled:opacity-40 disabled:cursor-not-allowed mt-2"
+          >
+            {loading
+              ? "Veuillez patienter…"
+              : mode === "signup"
+                ? "Créer mon compte et planter 🌱"
+                : "Se connecter et planter 🌱"}
+          </button>
+        </form>
+
+        <p className="mt-5 text-[12px] text-paper/50 text-center">
+          {mode === "signup" ? "Déjà un compte ? " : "Pas encore de compte ? "}
+          <button
+            type="button"
+            onClick={() => setMode(mode === "signup" ? "login" : "signup")}
+            className="text-paper underline-offset-4 hover:underline font-medium"
+          >
+            {mode === "signup" ? "Se connecter" : "Créer un compte"}
+          </button>
+        </p>
+      </div>
+    </motion.div>
   );
 }
 
