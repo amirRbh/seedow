@@ -129,7 +129,7 @@ function Ethi() {
         <div className="max-w-lg mx-auto pointer-events-auto">
           {messages.length <= 1 && !isLoading && (
             <div className="mb-3">
-              <EthiSuggestionChips onSelect={send} hasGarden={MOCK_HOLDINGS.length > 0} />
+              <EthiSuggestionChips onSelect={send} hasGarden={(portfolio?.holdings.length ?? 0) > 0} />
             </div>
           )}
           <form
