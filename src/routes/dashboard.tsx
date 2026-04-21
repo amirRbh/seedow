@@ -9,8 +9,8 @@ import { useLexicon } from "@/hooks/useLexicon";
 import { useAuth } from "@/hooks/useAuth";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { useDeposits } from "@/hooks/useDeposits";
+import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { supabase } from "@/integrations/supabase/client";
-import { MOCK_PORTFOLIO } from "@/lib/mockGarden";
 
 export const Route = createFileRoute("/dashboard")({
   beforeLoad: async () => {
@@ -34,6 +34,7 @@ function Dashboard() {
   const { user } = useAuth();
   const { portfolio, loading } = useActivePortfolio();
   const { total: walletTotal, pending: walletPending, deposits } = useDeposits();
+  const valuation = usePortfolioValuation();
   const [greeting, setGreeting] = useState("Bonjour");
   const hasSeenPortfolioRef = useRef(false);
 
@@ -79,22 +80,21 @@ function Dashboard() {
     [portfolio],
   );
 
-  // Capital de référence du portefeuille (initial_amount) + dépôts effectifs
-  const portfolioInitial = portfolio?.initial_amount ?? 0;
-  const totalInvested = portfolioInitial + walletTotal;
-  const totalValue = totalInvested; // pas de prix temps réel — pas de growth
-  const gain = 0;
-  const returnPct = 0;
-  const isGrowing = true;
+  // Real-money valuation (initial_amount + settled deposits, valued via live quotes)
+  const totalInvested = valuation.totalInvested || (portfolio?.initial_amount ?? 0) + walletTotal;
+  const totalValue = valuation.currentValue || totalInvested;
+  const gain = valuation.pnl;
+  const returnPct = valuation.returnPct;
+  const isGrowing = gain >= 0;
 
   const co2 = portfolio?.metrics?.co2_avoided_tons
     ? Number(((portfolio.metrics.co2_avoided_tons * Math.max(totalInvested, 1)) / 10000).toFixed(2))
-    : MOCK_PORTFOLIO.co2_avoided;
+    : 0;
   const trees = Math.round(co2 * 45);
   const energy = Math.round(totalInvested / 5);
   const esgScore = portfolio?.metrics?.esg_score
     ? Number((portfolio.metrics.esg_score / 10).toFixed(1))
-    : MOCK_PORTFOLIO.overall_score;
+    : 0;
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">

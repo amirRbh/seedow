@@ -9,6 +9,7 @@ import { AllocationBreakdown } from "@/components/portfolio/AllocationBreakdown"
 import { PortfolioMetricsCard } from "@/components/portfolio/PortfolioMetricsCard";
 import { ExplainerCard } from "@/components/ui/ExplainerCard";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
+import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { useViewMode } from "@/hooks/useViewMode";
 import { supabase } from "@/integrations/supabase/client";
 import { MOCK_BADGES } from "@/lib/mockGarden";
@@ -29,6 +30,7 @@ function monthLabel(d: Date) {
 
 function Portfolio() {
   const { portfolio, loading } = useActivePortfolio();
+  const valuation = usePortfolioValuation();
   const { isSimple } = useViewMode();
   if (loading) {
     return (
@@ -57,10 +59,10 @@ function Portfolio() {
     );
   }
 
-  const totalInvested = portfolio.initial_amount;
-  const totalValue = totalInvested; // pas de prix temps réel
-  const gain = 0;
-  const returnPct = 0;
+  const totalInvested = valuation.totalInvested || portfolio.initial_amount;
+  const totalValue = valuation.currentValue || totalInvested;
+  const gain = valuation.pnl;
+  const returnPct = valuation.returnPct;
 
   const generated = new Date(portfolio.generated_at);
   const monthKey = `${generated.getFullYear()}-${String(generated.getMonth()).padStart(2, "0")}`;
