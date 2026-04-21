@@ -4,7 +4,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { EthiBubble } from "@/components/ethi/EthiBubble";
 import { EthiSuggestionChips } from "@/components/ethi/EthiSuggestionChips";
-import { MOCK_HOLDINGS, MOCK_PORTFOLIO, MOCK_USER_NAME } from "@/lib/mockGarden";
+import { useActivePortfolio } from "@/hooks/useActivePortfolio";
+import { useDeposits } from "@/hooks/useDeposits";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/ethi")({
   validateSearch: (s: Record<string, unknown>) => ({ intent: (s.intent as string | undefined) ?? undefined }),
