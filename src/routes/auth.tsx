@@ -5,14 +5,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (search) => ({
-    redirect: typeof search.redirect === "string" ? search.redirect : "/dashboard",
-    mode: search.mode === "signup" ? "signup" : "login",
+  validateSearch: (search: Record<string, unknown>): { redirect?: string; mode?: "login" | "signup" } => ({
+    redirect: typeof search.redirect === "string" ? search.redirect : undefined,
+    mode: search.mode === "signup" ? "signup" : search.mode === "login" ? "login" : undefined,
   }),
   beforeLoad: async ({ search }) => {
     const { data } = await supabase.auth.getSession();
     if (data.session) {
-      throw redirect({ to: search.redirect });
+      throw redirect({ to: search.redirect ?? "/dashboard" });
     }
   },
   component: AuthPage,
@@ -21,7 +21,7 @@ export const Route = createFileRoute("/auth")({
 function AuthPage() {
   const search = Route.useSearch();
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"login" | "signup">(search.mode);
+  const [mode, setMode] = useState<"login" | "signup">(search.mode ?? "login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
@@ -56,7 +56,7 @@ function AuthPage() {
         const { error: err } = await supabase.auth.signInWithPassword({ email, password });
         if (err) throw err;
       }
-      navigate({ to: search.redirect });
+      navigate({ to: search.redirect ?? "/dashboard" });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur d'authentification");
     } finally {
