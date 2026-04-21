@@ -68,96 +68,7 @@ export function SeedCard({ asset, static: isStatic }: SeedCardProps) {
       <div className="mx-5 border-t border-dashed border-paper-3" />
 
       <div className="p-5 pt-4 flex-1 space-y-5 overflow-y-auto">
-        {/* Carte d'identité */}
-        <div>
-          <p className="text-[10px] uppercase tracking-[0.14em] text-ink-3 font-semibold mb-2">
-            Carte d'identité
-          </p>
-          <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[11px]">
-            {asset.issuer && <IdRow label="Émetteur" value={asset.issuer} />}
-            {asset.domicile && <IdRow label="Domicile" value={asset.domicile} />}
-            {asset.currency && <IdRow label="Devise" value={asset.currency} />}
-            {typeof asset.ter_pct === "number" && (
-              <IdRow label="Frais (TER)" value={`${asset.ter_pct.toFixed(2)} %`} />
-            )}
-            {asset.dividend_policy && (
-              <IdRow
-                label="Dividendes"
-                value={
-                  asset.dividend_policy +
-                  (asset.dividend_yield_pct ? ` · ${asset.dividend_yield_pct.toFixed(1)} %` : "")
-                }
-              />
-            )}
-            {typeof asset.risk_level === "number" && (
-              <IdRow label="Risque" value={`${asset.risk_level}/7`} />
-            )}
-            {asset.inception_year && (
-              <IdRow label="Créé en" value={asset.inception_year.toString()} />
-            )}
-            {asset.benchmark && asset.benchmark !== "—" && (
-              <IdRow label="Indice" value={asset.benchmark} />
-            )}
-            {typeof asset.holdings_count === "number" && (
-              <IdRow label="Lignes" value={asset.holdings_count.toLocaleString("fr-FR")} />
-            )}
-          </div>
-        </div>
-
-        {asset.top_holdings && asset.top_holdings.length > 0 && (
-          <div>
-            <p className="text-[10px] uppercase tracking-[0.14em] text-ink-3 font-semibold mb-2">
-              Principales positions
-            </p>
-            <div className="flex flex-wrap gap-1.5">
-              {asset.top_holdings.map((h) => (
-                <span
-                  key={h}
-                  className="text-[10px] bg-paper-2 text-ink-2 font-medium px-2 py-0.5 rounded-full border border-paper-3"
-                >
-                  {h}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {asset.sector_breakdown && asset.sector_breakdown.length > 1 && (
-          <div>
-            <p className="text-[10px] uppercase tracking-[0.14em] text-ink-3 font-semibold mb-2">
-              Répartition sectorielle
-            </p>
-            <Breakdown items={asset.sector_breakdown} color="var(--moss-1)" />
-          </div>
-        )}
-
-        {asset.geo_breakdown && asset.geo_breakdown.length > 1 && (
-          <div>
-            <p className="text-[10px] uppercase tracking-[0.14em] text-ink-3 font-semibold mb-2">
-              Répartition géographique
-            </p>
-            <Breakdown items={asset.geo_breakdown} color="var(--sky)" />
-          </div>
-        )}
-
-        {asset.exclusions && asset.exclusions.length > 0 && (
-          <div>
-            <p className="text-[10px] uppercase tracking-[0.14em] text-ink-3 font-semibold mb-2">
-              Exclusions
-            </p>
-            <div className="flex flex-wrap gap-1.5">
-              {asset.exclusions.map((e) => (
-                <span
-                  key={e}
-                  className="text-[10px] bg-rust/10 text-rust font-semibold px-2 py-0.5 rounded-full border border-rust/20"
-                >
-                  ⊘ {e}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
+        {/* Impact 100 € — toujours visible en premier */}
         <div>
           <p className="text-[10px] uppercase tracking-[0.14em] text-ink-3 font-semibold mb-3">
             Si tu plantes 100 € ici
@@ -196,6 +107,133 @@ export function SeedCard({ asset, static: isStatic }: SeedCardProps) {
             ))}
           </div>
         )}
+
+        {/* Bouton dérouler */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowDetails((v) => !v);
+          }}
+          className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-full bg-paper-2 hover:bg-paper-3 border border-paper-3 text-[11px] font-semibold text-ink-2 transition-colors"
+        >
+          {showDetails ? "Masquer les détails" : "Voir plus de détails"}
+          <svg
+            viewBox="0 0 24 24"
+            className={`w-3 h-3 transition-transform ${showDetails ? "rotate-180" : ""}`}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </button>
+
+        <AnimatePresence initial={false}>
+          {showDetails && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="overflow-hidden"
+            >
+              <div className="space-y-5 pb-1">
+                {/* Carte d'identité */}
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.14em] text-ink-3 font-semibold mb-2">
+                    Carte d'identité
+                  </p>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[11px]">
+                    {asset.issuer && <IdRow label="Émetteur" value={asset.issuer} />}
+                    {asset.domicile && <IdRow label="Domicile" value={asset.domicile} />}
+                    {asset.currency && <IdRow label="Devise" value={asset.currency} />}
+                    {typeof asset.ter_pct === "number" && (
+                      <IdRow label="Frais (TER)" value={`${asset.ter_pct.toFixed(2)} %`} />
+                    )}
+                    {asset.dividend_policy && (
+                      <IdRow
+                        label="Dividendes"
+                        value={
+                          asset.dividend_policy +
+                          (asset.dividend_yield_pct ? ` · ${asset.dividend_yield_pct.toFixed(1)} %` : "")
+                        }
+                      />
+                    )}
+                    {typeof asset.risk_level === "number" && (
+                      <IdRow label="Risque" value={`${asset.risk_level}/7`} />
+                    )}
+                    {asset.inception_year && (
+                      <IdRow label="Créé en" value={asset.inception_year.toString()} />
+                    )}
+                    {asset.benchmark && asset.benchmark !== "—" && (
+                      <IdRow label="Indice" value={asset.benchmark} />
+                    )}
+                    {typeof asset.holdings_count === "number" && (
+                      <IdRow label="Lignes" value={asset.holdings_count.toLocaleString("fr-FR")} />
+                    )}
+                  </div>
+                </div>
+
+                {asset.top_holdings && asset.top_holdings.length > 0 && (
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.14em] text-ink-3 font-semibold mb-2">
+                      Principales positions
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {asset.top_holdings.map((h) => (
+                        <span
+                          key={h}
+                          className="text-[10px] bg-paper-2 text-ink-2 font-medium px-2 py-0.5 rounded-full border border-paper-3"
+                        >
+                          {h}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {asset.sector_breakdown && asset.sector_breakdown.length > 1 && (
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.14em] text-ink-3 font-semibold mb-2">
+                      Répartition sectorielle
+                    </p>
+                    <Breakdown items={asset.sector_breakdown} color="var(--moss-1)" />
+                  </div>
+                )}
+
+                {asset.geo_breakdown && asset.geo_breakdown.length > 1 && (
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.14em] text-ink-3 font-semibold mb-2">
+                      Répartition géographique
+                    </p>
+                    <Breakdown items={asset.geo_breakdown} color="var(--sky)" />
+                  </div>
+                )}
+
+                {asset.exclusions && asset.exclusions.length > 0 && (
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.14em] text-ink-3 font-semibold mb-2">
+                      Exclusions
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {asset.exclusions.map((e) => (
+                        <span
+                          key={e}
+                          className="text-[10px] bg-rust/10 text-rust font-semibold px-2 py-0.5 rounded-full border border-rust/20"
+                        >
+                          ⊘ {e}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </motion.div>
   );
