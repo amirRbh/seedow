@@ -5,9 +5,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (search: Record<string, unknown>): { redirect?: string; mode?: "login" | "signup" } => ({
     redirect: typeof search.redirect === "string" ? search.redirect : undefined,
-    mode: (search.mode === "signup" ? "signup" : "login") as "login" | "signup",
+    mode: search.mode === "signup" ? "signup" : search.mode === "login" ? "login" : undefined,
   }),
   beforeLoad: async ({ search }) => {
     const { data } = await supabase.auth.getSession();
