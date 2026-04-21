@@ -50,6 +50,82 @@ export type Database = {
           },
         ]
       }
+      asset_prices: {
+        Row: {
+          asset_id: string
+          close: number
+          created_at: string
+          currency: string
+          price_date: string
+          source: string
+        }
+        Insert: {
+          asset_id: string
+          close: number
+          created_at?: string
+          currency?: string
+          price_date: string
+          source?: string
+        }
+        Update: {
+          asset_id?: string
+          close?: number
+          created_at?: string
+          currency?: string
+          price_date?: string
+          source?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asset_prices_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      asset_quotes: {
+        Row: {
+          asset_id: string
+          change_pct: number | null
+          currency: string
+          fetched_at: string
+          market_state: string | null
+          previous_close: number | null
+          price: number
+          source: string
+        }
+        Insert: {
+          asset_id: string
+          change_pct?: number | null
+          currency?: string
+          fetched_at?: string
+          market_state?: string | null
+          previous_close?: number | null
+          price: number
+          source?: string
+        }
+        Update: {
+          asset_id?: string
+          change_pct?: number | null
+          currency?: string
+          fetched_at?: string
+          market_state?: string | null
+          previous_close?: number | null
+          price?: number
+          source?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asset_quotes_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: true
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       assets: {
         Row: {
           asset_class: Database["public"]["Enums"]["asset_class"]
@@ -71,6 +147,7 @@ export type Database = {
           ticker: string
           updated_at: string
           volatility: number
+          yahoo_symbol: string | null
         }
         Insert: {
           asset_class: Database["public"]["Enums"]["asset_class"]
@@ -92,6 +169,7 @@ export type Database = {
           ticker: string
           updated_at?: string
           volatility?: number
+          yahoo_symbol?: string | null
         }
         Update: {
           asset_class?: Database["public"]["Enums"]["asset_class"]
@@ -113,6 +191,7 @@ export type Database = {
           ticker?: string
           updated_at?: string
           volatility?: number
+          yahoo_symbol?: string | null
         }
         Relationships: []
       }
@@ -241,7 +320,24 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      portfolio_holdings_valued: {
+        Row: {
+          asset_class: Database["public"]["Enums"]["asset_class"] | null
+          asset_id: string | null
+          current_price: number | null
+          current_value: number | null
+          entry_price: number | null
+          invested_in_holding: number | null
+          name: string | null
+          portfolio_id: string | null
+          quote_fetched_at: string | null
+          ticker: string | null
+          total_invested: number | null
+          user_id: string | null
+          weight: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
