@@ -56,7 +56,7 @@ function AuthPage() {
         const { error: err } = await supabase.auth.signInWithPassword({ email, password });
         if (err) throw err;
       }
-      navigate({ to: search.redirect });
+      navigate({ to: search.redirect ?? "/dashboard" });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur d'authentification");
     } finally {
