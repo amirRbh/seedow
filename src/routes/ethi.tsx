@@ -21,26 +21,41 @@ interface Message {
 
 function Ethi() {
   const { intent } = Route.useSearch();
+  const { user } = useAuth();
+  const { portfolio, loading: pfLoading } = useActivePortfolio();
+  const { total: depositsTotal, loading: depLoading } = useDeposits();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  const dataLoading = pfLoading || depLoading;
+  const firstName =
+    (user?.user_metadata?.display_name as string | undefined)?.split(" ")[0] ??
+    user?.email?.split("@")[0] ??
+    "toi";
+
   useEffect(() => {
-    const hasGarden = MOCK_HOLDINGS.length > 0;
-    const gain = MOCK_PORTFOLIO.total_value - MOCK_PORTFOLIO.total_invested;
+    if (dataLoading) {
+      setMessages([{ id: "welcome", role: "assistant", content: "" }]);
+      return;
+    }
+    const hasGarden = (portfolio?.holdings?.length ?? 0) > 0;
+    const invested = depositsTotal;
     let greeting = "";
     if (intent === "rebalance") {
-      greeting = `Hop ${MOCK_USER_NAME} 🌿 — on rééquilibre ? Je passe en revue tes **${MOCK_HOLDINGS.length} plantes** et je te dis quoi ajuster.`;
+      greeting = hasGarden
+        ? `Hop ${firstName} 🌿 — on rééquilibre ? Je passe en revue tes **${portfolio!.holdings.length} plantes** et je te dis quoi ajuster.`
+        : `Hop ${firstName} 🌿 — pas encore de jardin à rééquilibrer. On en plante un ?`;
     } else if (!hasGarden) {
-      greeting = `Salut ${MOCK_USER_NAME} 🌱 Ton jardin est encore en terre. Dis-moi ce qui compte pour toi, je sème en 2 min.`;
-    } else if (gain > 0) {
-      greeting = `${MOCK_USER_NAME}, ton jardin pousse fort 📈 **+${gain.toFixed(0)} €**. On regarde la suite ?`;
+      greeting = `Salut ${firstName} 🌱 Ton jardin est encore en terre. Dis-moi ce qui compte pour toi, je sème en 2 min.`;
+    } else if (invested > 0) {
+      greeting = `${firstName}, ton jardin tourne sur **${invested.toFixed(0)} €** déposés et **${portfolio!.holdings.length} plantes** 🌿. On regarde la suite ?`;
     } else {
-      greeting = `Salut ${MOCK_USER_NAME} 🌱 Qu'est-ce qu'on plante aujourd'hui ?`;
+      greeting = `Salut ${firstName} 🌱 Ton jardin est prêt mais pas encore arrosé. On programme un premier dépôt ?`;
     }
     setMessages([{ id: "welcome", role: "assistant", content: greeting }]);
-  }, [intent]);
+  }, [intent, dataLoading, portfolio, depositsTotal, firstName]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
