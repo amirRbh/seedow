@@ -340,7 +340,7 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      get_vault_secret: { Args: { secret_name: string }; Returns: string }
     }
     Enums: {
       asset_class:
