@@ -18,6 +18,21 @@ export interface MockAsset {
   co2_factor_per_1k_eur: number;
   energy_factor_per_1k_eur: number;
   themes: string[]; // matche lexicon.themes
+  // — Détails complémentaires pour aider l'investisseur à comprendre
+  issuer?: string;            // émetteur / société de gestion
+  domicile?: string;          // pays de domiciliation (ex: Irlande)
+  currency?: string;          // devise de cotation
+  ter_pct?: number;           // frais courants annuels (%)
+  dividend_policy?: "Capitalisant" | "Distribuant";
+  dividend_yield_pct?: number;
+  holdings_count?: number;    // nombre de lignes (pour ETF)
+  top_holdings?: string[];    // top positions (pour ETF/fonds)
+  sector_breakdown?: { label: string; pct: number }[];
+  geo_breakdown?: { label: string; pct: number }[];
+  risk_level?: 1 | 2 | 3 | 4 | 5 | 6 | 7; // SRRI 1-7
+  inception_year?: number;
+  benchmark?: string;
+  exclusions?: string[];      // secteurs exclus
 }
 
 export interface MockHolding {
