@@ -18,6 +18,21 @@ export interface MockAsset {
   co2_factor_per_1k_eur: number;
   energy_factor_per_1k_eur: number;
   themes: string[]; // matche lexicon.themes
+  // — Détails complémentaires pour aider l'investisseur à comprendre
+  issuer?: string;            // émetteur / société de gestion
+  domicile?: string;          // pays de domiciliation (ex: Irlande)
+  currency?: string;          // devise de cotation
+  ter_pct?: number;           // frais courants annuels (%)
+  dividend_policy?: "Capitalisant" | "Distribuant";
+  dividend_yield_pct?: number;
+  holdings_count?: number;    // nombre de lignes (pour ETF)
+  top_holdings?: string[];    // top positions (pour ETF/fonds)
+  sector_breakdown?: { label: string; pct: number }[];
+  geo_breakdown?: { label: string; pct: number }[];
+  risk_level?: 1 | 2 | 3 | 4 | 5 | 6 | 7; // SRRI 1-7
+  inception_year?: number;
+  benchmark?: string;
+  exclusions?: string[];      // secteurs exclus
 }
 
 export interface MockHolding {
@@ -54,6 +69,31 @@ export const MOCK_ASSETS: MockAsset[] = [
     co2_factor_per_1k_eur: 0.35,
     energy_factor_per_1k_eur: 180,
     themes: ["climat", "governance"],
+    issuer: "BlackRock iShares",
+    domicile: "Irlande",
+    currency: "USD",
+    ter_pct: 0.20,
+    dividend_policy: "Capitalisant",
+    holdings_count: 1512,
+    top_holdings: ["Apple", "Microsoft", "Nvidia", "Alphabet", "Amazon"],
+    sector_breakdown: [
+      { label: "Tech", pct: 24 },
+      { label: "Finance", pct: 16 },
+      { label: "Santé", pct: 13 },
+      { label: "Conso.", pct: 12 },
+      { label: "Industrie", pct: 11 },
+      { label: "Autres", pct: 24 },
+    ],
+    geo_breakdown: [
+      { label: "USA", pct: 68 },
+      { label: "Europe", pct: 16 },
+      { label: "Japon", pct: 6 },
+      { label: "Autres", pct: 10 },
+    ],
+    risk_level: 5,
+    inception_year: 2009,
+    benchmark: "MSCI World",
+    exclusions: ["Armes controversées", "Tabac", "Charbon thermique"],
   },
   {
     id: "a-clean",
@@ -71,6 +111,31 @@ export const MOCK_ASSETS: MockAsset[] = [
     co2_factor_per_1k_eur: 1.2,
     energy_factor_per_1k_eur: 450,
     themes: ["climat", "tech"],
+    issuer: "BlackRock iShares",
+    domicile: "Irlande",
+    currency: "USD",
+    ter_pct: 0.65,
+    dividend_policy: "Distribuant",
+    dividend_yield_pct: 1.2,
+    holdings_count: 100,
+    top_holdings: ["First Solar", "Enphase Energy", "Vestas Wind", "Iberdrola", "Plug Power"],
+    sector_breakdown: [
+      { label: "Solaire", pct: 38 },
+      { label: "Éolien", pct: 28 },
+      { label: "Réseaux", pct: 14 },
+      { label: "Hydrogène", pct: 10 },
+      { label: "Autres", pct: 10 },
+    ],
+    geo_breakdown: [
+      { label: "USA", pct: 42 },
+      { label: "Europe", pct: 30 },
+      { label: "Asie", pct: 22 },
+      { label: "Autres", pct: 6 },
+    ],
+    risk_level: 6,
+    inception_year: 2007,
+    benchmark: "S&P Global Clean Energy",
+    exclusions: ["Énergies fossiles", "Nucléaire"],
   },
   {
     id: "a-grnb",
@@ -88,6 +153,31 @@ export const MOCK_ASSETS: MockAsset[] = [
     co2_factor_per_1k_eur: 0.8,
     energy_factor_per_1k_eur: 220,
     themes: ["climat", "biodiversite"],
+    issuer: "VanEck",
+    domicile: "Irlande",
+    currency: "EUR",
+    ter_pct: 0.35,
+    dividend_policy: "Distribuant",
+    dividend_yield_pct: 3.4,
+    holdings_count: 380,
+    top_holdings: ["Banque Européenne d'Investissement", "KfW", "France OAT verte", "Allemagne Bund vert", "Banque mondiale"],
+    sector_breakdown: [
+      { label: "Énergie verte", pct: 36 },
+      { label: "Bâtiment durable", pct: 22 },
+      { label: "Transport propre", pct: 18 },
+      { label: "Eau", pct: 12 },
+      { label: "Autres", pct: 12 },
+    ],
+    geo_breakdown: [
+      { label: "Europe", pct: 56 },
+      { label: "USA", pct: 18 },
+      { label: "Asie", pct: 18 },
+      { label: "Autres", pct: 8 },
+    ],
+    risk_level: 3,
+    inception_year: 2017,
+    benchmark: "S&P Green Bond Select",
+    exclusions: ["Fossiles", "Armement"],
   },
   {
     id: "a-wtef",
@@ -105,6 +195,28 @@ export const MOCK_ASSETS: MockAsset[] = [
     co2_factor_per_1k_eur: 0.42,
     energy_factor_per_1k_eur: 90,
     themes: ["eau", "biodiversite"],
+    issuer: "Invesco",
+    domicile: "Irlande",
+    currency: "USD",
+    ter_pct: 0.60,
+    dividend_policy: "Distribuant",
+    dividend_yield_pct: 0.8,
+    holdings_count: 38,
+    top_holdings: ["Ecolab", "Roper Tech.", "Xylem", "American Water Works", "Veralto"],
+    sector_breakdown: [
+      { label: "Traitement", pct: 42 },
+      { label: "Distribution", pct: 28 },
+      { label: "Équipements", pct: 20 },
+      { label: "Autres", pct: 10 },
+    ],
+    geo_breakdown: [
+      { label: "USA", pct: 88 },
+      { label: "Autres", pct: 12 },
+    ],
+    risk_level: 5,
+    inception_year: 2005,
+    benchmark: "Nasdaq OMX US Water",
+    exclusions: ["Pétrole & gaz"],
   },
   {
     id: "a-hbio",
@@ -122,6 +234,26 @@ export const MOCK_ASSETS: MockAsset[] = [
     co2_factor_per_1k_eur: 0.28,
     energy_factor_per_1k_eur: 110,
     themes: ["social", "governance"],
+    issuer: "Humankind Investments",
+    domicile: "USA",
+    currency: "USD",
+    ter_pct: 0.11,
+    dividend_policy: "Distribuant",
+    dividend_yield_pct: 1.5,
+    holdings_count: 921,
+    top_holdings: ["Microsoft", "Pfizer", "Cisco", "Costco", "Procter & Gamble"],
+    sector_breakdown: [
+      { label: "Santé", pct: 22 },
+      { label: "Tech", pct: 20 },
+      { label: "Conso.", pct: 18 },
+      { label: "Finance", pct: 14 },
+      { label: "Autres", pct: 26 },
+    ],
+    geo_breakdown: [{ label: "USA", pct: 100 }],
+    risk_level: 5,
+    inception_year: 2021,
+    benchmark: "Humankind US Equity Index",
+    exclusions: ["Tabac", "Armement", "Jeux d'argent", "Énergies fossiles"],
   },
   {
     id: "a-vegn",
@@ -139,6 +271,26 @@ export const MOCK_ASSETS: MockAsset[] = [
     co2_factor_per_1k_eur: 0.95,
     energy_factor_per_1k_eur: 260,
     themes: ["biodiversite", "social"],
+    issuer: "Beyond Investing",
+    domicile: "USA",
+    currency: "USD",
+    ter_pct: 0.60,
+    dividend_policy: "Distribuant",
+    dividend_yield_pct: 1.0,
+    holdings_count: 270,
+    top_holdings: ["Nvidia", "Apple", "Microsoft", "Tesla", "Adobe"],
+    sector_breakdown: [
+      { label: "Tech", pct: 38 },
+      { label: "Santé", pct: 16 },
+      { label: "Finance", pct: 14 },
+      { label: "Conso.", pct: 12 },
+      { label: "Autres", pct: 20 },
+    ],
+    geo_breakdown: [{ label: "USA", pct: 100 }],
+    risk_level: 5,
+    inception_year: 2019,
+    benchmark: "Beyond Investing US Climate Index",
+    exclusions: ["Élevage", "Tests animaux", "Fossiles", "Armement", "Tabac"],
   },
   {
     id: "a-pscw",
@@ -156,6 +308,20 @@ export const MOCK_ASSETS: MockAsset[] = [
     co2_factor_per_1k_eur: 0.52,
     energy_factor_per_1k_eur: 130,
     themes: ["circulaire", "social"],
+    issuer: "Patagonia Inc. (fictif coté)",
+    domicile: "USA",
+    currency: "USD",
+    dividend_policy: "Distribuant",
+    dividend_yield_pct: 0.4,
+    sector_breakdown: [{ label: "Textile / Outdoor", pct: 100 }],
+    geo_breakdown: [
+      { label: "USA", pct: 60 },
+      { label: "Europe", pct: 25 },
+      { label: "Asie", pct: 15 },
+    ],
+    risk_level: 5,
+    inception_year: 1973,
+    benchmark: "—",
   },
   {
     id: "a-aqua",
@@ -173,6 +339,19 @@ export const MOCK_ASSETS: MockAsset[] = [
     co2_factor_per_1k_eur: 0.65,
     energy_factor_per_1k_eur: 175,
     themes: ["eau", "tech"],
+    issuer: "Evoqua Water Technologies",
+    domicile: "USA",
+    currency: "USD",
+    dividend_policy: "Capitalisant",
+    sector_breakdown: [{ label: "Tech. de l'eau", pct: 100 }],
+    geo_breakdown: [
+      { label: "USA", pct: 75 },
+      { label: "Europe", pct: 15 },
+      { label: "Asie", pct: 10 },
+    ],
+    risk_level: 6,
+    inception_year: 2017,
+    benchmark: "—",
   },
 ];
 
