@@ -138,9 +138,9 @@ export function usePortfolioValuation(): PortfolioValuation {
 
   const quoteDates = holdings.map((h) => h.quoteAt).filter(Boolean) as string[];
   const hasQuotes = quoteDates.length > 0;
-  const oldestQuoteAt = hasQuotes
-    ? quoteDates.sort()[0]
-    : null;
+  const sortedQuotes = hasQuotes ? [...quoteDates].sort() : [];
+  const oldestQuoteAt = hasQuotes ? sortedQuotes[0] : null;
+  const latestQuoteAt = hasQuotes ? sortedQuotes[sortedQuotes.length - 1] : null;
 
   return {
     totalInvested,
@@ -150,6 +150,7 @@ export function usePortfolioValuation(): PortfolioValuation {
     holdings,
     hasQuotes,
     oldestQuoteAt,
+    latestQuoteAt,
     loading: loading || depLoading,
     error,
     refresh,
