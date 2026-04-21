@@ -77,7 +77,15 @@ function Portfolio() {
         />
 
         <section className="px-5 pt-2">
-          <GrowthComparison currentValue={totalValue} invested={totalInvested} gain={gain} returnPct={returnPct} />
+          <GrowthComparison
+            currentValue={totalValue}
+            invested={totalInvested}
+            gain={gain}
+            returnPct={returnPct}
+            lastUpdated={valuation.latestQuoteAt}
+            onRefresh={() => valuation.refresh()}
+            refreshing={valuation.loading}
+          />
         </section>
 
         <section className="px-5 pt-6 space-y-3">
