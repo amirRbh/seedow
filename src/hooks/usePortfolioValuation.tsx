@@ -29,6 +29,7 @@ export interface PortfolioValuation {
   // Meta
   hasQuotes: boolean;        // false until refresh-market-data runs at least once
   oldestQuoteAt: string | null;
+  latestQuoteAt: string | null;
   loading: boolean;
   error: string | null;
   refresh: () => void;
