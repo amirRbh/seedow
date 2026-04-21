@@ -8,6 +8,7 @@ interface SeedCardProps {
 }
 
 export function SeedCard({ asset, static: isStatic }: SeedCardProps) {
+  const [showDetails, setShowDetails] = useState(false);
   const esg = asset.overall_esg_score;
   const co2Per100 = asset.co2_factor_per_1k_eur * 0.1;
   const kwhPer100 = asset.energy_factor_per_1k_eur * 0.1;
