@@ -18,6 +18,7 @@ import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as HooksRefreshMarketDataRouteImport } from './routes/hooks/refresh-market-data'
 import { Route as ApiEthiRouteImport } from './routes/api.ethi'
 
 const ReglagesRoute = ReglagesRouteImport.update({
@@ -65,6 +66,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HooksRefreshMarketDataRoute = HooksRefreshMarketDataRouteImport.update({
+  id: '/hooks/refresh-market-data',
+  path: '/hooks/refresh-market-data',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiEthiRoute = ApiEthiRouteImport.update({
   id: '/api/ethi',
   path: '/api/ethi',
@@ -82,6 +88,7 @@ export interface FileRoutesByFullPath {
   '/portfolio': typeof PortfolioRoute
   '/reglages': typeof ReglagesRoute
   '/api/ethi': typeof ApiEthiRoute
+  '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -94,6 +101,7 @@ export interface FileRoutesByTo {
   '/portfolio': typeof PortfolioRoute
   '/reglages': typeof ReglagesRoute
   '/api/ethi': typeof ApiEthiRoute
+  '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -107,6 +115,7 @@ export interface FileRoutesById {
   '/portfolio': typeof PortfolioRoute
   '/reglages': typeof ReglagesRoute
   '/api/ethi': typeof ApiEthiRoute
+  '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -121,6 +130,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/reglages'
     | '/api/ethi'
+    | '/hooks/refresh-market-data'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -133,6 +143,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/reglages'
     | '/api/ethi'
+    | '/hooks/refresh-market-data'
   id:
     | '__root__'
     | '/'
@@ -145,6 +156,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/reglages'
     | '/api/ethi'
+    | '/hooks/refresh-market-data'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -158,6 +170,7 @@ export interface RootRouteChildren {
   PortfolioRoute: typeof PortfolioRoute
   ReglagesRoute: typeof ReglagesRoute
   ApiEthiRoute: typeof ApiEthiRoute
+  HooksRefreshMarketDataRoute: typeof HooksRefreshMarketDataRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -225,6 +238,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/hooks/refresh-market-data': {
+      id: '/hooks/refresh-market-data'
+      path: '/hooks/refresh-market-data'
+      fullPath: '/hooks/refresh-market-data'
+      preLoaderRoute: typeof HooksRefreshMarketDataRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/ethi': {
       id: '/api/ethi'
       path: '/api/ethi'
@@ -246,6 +266,7 @@ const rootRouteChildren: RootRouteChildren = {
   PortfolioRoute: PortfolioRoute,
   ReglagesRoute: ReglagesRoute,
   ApiEthiRoute: ApiEthiRoute,
+  HooksRefreshMarketDataRoute: HooksRefreshMarketDataRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
