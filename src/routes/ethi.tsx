@@ -6,6 +6,7 @@ import { EthiBubble } from "@/components/ethi/EthiBubble";
 import { EthiSuggestionChips } from "@/components/ethi/EthiSuggestionChips";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { useDeposits } from "@/hooks/useDeposits";
+import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/ethi")({
@@ -24,6 +25,7 @@ function Ethi() {
   const { user } = useAuth();
   const { portfolio, loading: pfLoading } = useActivePortfolio();
   const { total: depositsTotal, loading: depLoading } = useDeposits();
+  const valuation = usePortfolioValuation();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -42,6 +44,8 @@ function Ethi() {
     }
     const hasGarden = (portfolio?.holdings?.length ?? 0) > 0;
     const invested = depositsTotal;
+    const pnl = valuation.pnl;
+    const pnlStr = `${pnl >= 0 ? "+" : ""}${pnl.toFixed(0)} €`;
     let greeting = "";
     if (intent === "rebalance") {
       greeting = hasGarden
@@ -49,13 +53,15 @@ function Ethi() {
         : `Hop ${firstName} 🌿 — pas encore de jardin à rééquilibrer. On en plante un ?`;
     } else if (!hasGarden) {
       greeting = `Salut ${firstName} 🌱 Ton jardin est encore en terre. Dis-moi ce qui compte pour toi, je sème en 2 min.`;
+    } else if (invested > 0 && valuation.hasQuotes) {
+      greeting = `${firstName}, ton jardin tourne sur **${invested.toFixed(0)} €** déposés, **${portfolio!.holdings.length} plantes** et un P&L de **${pnlStr}** 🌿. On regarde la suite ?`;
     } else if (invested > 0) {
       greeting = `${firstName}, ton jardin tourne sur **${invested.toFixed(0)} €** déposés et **${portfolio!.holdings.length} plantes** 🌿. On regarde la suite ?`;
     } else {
       greeting = `Salut ${firstName} 🌱 Ton jardin est prêt mais pas encore arrosé. On programme un premier dépôt ?`;
     }
     setMessages([{ id: "welcome", role: "assistant", content: greeting }]);
-  }, [intent, dataLoading, portfolio, depositsTotal, firstName]);
+  }, [intent, dataLoading, portfolio, depositsTotal, firstName, valuation.pnl, valuation.hasQuotes]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
