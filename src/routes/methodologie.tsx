@@ -256,14 +256,35 @@ function MethodologyPage() {
 
           {/* Result */}
           <div className="lg:sticky lg:top-6 lg:self-start space-y-6">
+            {/* ESG floor warning */}
+            {result?.esg_floor_relaxed && (
+              <div className="border border-rust/30 bg-rust/5 px-4 py-3 text-[12px] text-ink-2 leading-relaxed">
+                <p className="font-value text-[13px] text-rust mb-1">Plancher ESG relâché</p>
+                Avec ces contraintes, l'optimiseur n'a pas trouvé de portefeuille satisfaisant le score ESG minimum de 70/100.
+                Le plancher a été levé pour produire une allocation viable. Le score affiché ci-dessous est le score réel obtenu.
+              </div>
+            )}
             {/* Metrics */}
             <div className="border-t border-b border-paper-3 divide-y divide-paper-3">
               <MetricRow label="Rendement attendu" value={result ? `${(result.metrics.expected_return * 100).toFixed(2)}%` : "—"} hint="Brut, annualisé" />
               <MetricRow label="Volatilité estimée" value={result ? `${(result.metrics.volatility * 100).toFixed(2)}%` : "—"} hint="Annualisée" />
               <MetricRow label="Ratio de Sharpe" value={result ? result.metrics.sharpe.toFixed(2) : "—"} hint="Net de frais et taux sans risque" />
-              <MetricRow label="Score ESG" value={result ? `${result.metrics.esg_score.toFixed(0)} / 100` : "—"} hint="Pondéré par les positions" />
+              <MetricRow label="Score ESG" value={result ? `${result.metrics.esg_score.toFixed(0)} / 100` : "—"} hint="Composite E/S/G pondéré par causes" />
               <MetricRow label="Frais courants" value={result ? `${(result.metrics.ter * 100).toFixed(2)}%` : "—"} hint="TER moyen pondéré" />
-              <MetricRow label="CO₂ évité" value={result ? `${result.metrics.co2_avoided_tons.toFixed(2)} t / 10k€` : "—"} hint="Estimation indicative" />
+              <MetricRow label="CO₂ évité (heuristique)" value={result ? `${result.metrics.co2_avoided_tons.toFixed(2)} t / 10k€` : "—"} hint="Estimation indicative basée sur l'ESG" />
+              <MetricRow
+                label="Intensité carbone réelle"
+                value={
+                  result?.metrics.carbon_intensity_gco2e_per_eur != null
+                    ? `${result.metrics.carbon_intensity_gco2e_per_eur.toFixed(0)} gCO₂e/€/an`
+                    : "Donnée indisponible"
+                }
+                hint={
+                  result?.metrics.carbon_intensity_coverage
+                    ? `Couverture : ${(result.metrics.carbon_intensity_coverage * 100).toFixed(0)}% du portefeuille`
+                    : "À renseigner depuis MSCI / Trucost / Yahoo"
+                }
+              />
             </div>
 
             {/* Holdings */}

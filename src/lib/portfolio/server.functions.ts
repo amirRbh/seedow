@@ -132,6 +132,7 @@ export const simulatePortfolio = createServerFn({ method: "POST" })
       })),
       excluded_count: result.excluded_count,
       universe_size: universe.assets.length,
+      esg_floor_relaxed: result.esg_floor_relaxed,
       methodology_version: result.methodology_version,
     };
   });
@@ -188,6 +189,7 @@ export const generatePortfolio = createServerFn({ method: "POST" })
         weights: result.weights,
         metrics: result.metrics as unknown as Record<string, unknown>,
         methodology_version: result.methodology_version,
+        esg_floor_relaxed: result.esg_floor_relaxed,
         is_active: true,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any)
