@@ -133,9 +133,11 @@ export type Database = {
           created_at: string
           currency: string
           description: string | null
+          env_score: number | null
           esg_score: number
           excluded_sectors: Database["public"]["Enums"]["exclusion_tag"][]
           expected_return: number
+          governance_score: number | null
           id: string
           is_active: boolean
           isin: string | null
@@ -143,6 +145,7 @@ export type Database = {
           name: string
           region: string | null
           sfdr_article: number | null
+          social_score: number | null
           ter: number
           ticker: string
           updated_at: string
@@ -155,9 +158,11 @@ export type Database = {
           created_at?: string
           currency?: string
           description?: string | null
+          env_score?: number | null
           esg_score?: number
           excluded_sectors?: Database["public"]["Enums"]["exclusion_tag"][]
           expected_return?: number
+          governance_score?: number | null
           id?: string
           is_active?: boolean
           isin?: string | null
@@ -165,6 +170,7 @@ export type Database = {
           name: string
           region?: string | null
           sfdr_article?: number | null
+          social_score?: number | null
           ter?: number
           ticker: string
           updated_at?: string
@@ -177,9 +183,11 @@ export type Database = {
           created_at?: string
           currency?: string
           description?: string | null
+          env_score?: number | null
           esg_score?: number
           excluded_sectors?: Database["public"]["Enums"]["exclusion_tag"][]
           expected_return?: number
+          governance_score?: number | null
           id?: string
           is_active?: boolean
           isin?: string | null
@@ -187,6 +195,7 @@ export type Database = {
           name?: string
           region?: string | null
           sfdr_article?: number | null
+          social_score?: number | null
           ter?: number
           ticker?: string
           updated_at?: string
