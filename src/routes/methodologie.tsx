@@ -279,13 +279,15 @@ function MethodologyPage() {
                     ? `${result.metrics.carbon_intensity_gco2e_per_eur.toFixed(0)} gCO₂e/€/an`
                     : "Donnée indisponible"
                 }
-                hint={
-                  result?.metrics.carbon_intensity_coverage
-                    ? `Couverture : ${(result.metrics.carbon_intensity_coverage * 100).toFixed(0)}% du portefeuille`
-                    : "À renseigner depuis MSCI / Trucost / Yahoo"
-                }
+                hint="Moyenne pondérée sur les actifs couverts"
               />
             </div>
+
+            {/* Carbon coverage indicator */}
+            <CarbonCoverage
+              coverage={result?.metrics.carbon_intensity_coverage ?? 0}
+              hasRealData={result?.metrics.carbon_intensity_gco2e_per_eur != null}
+            />
 
             {/* Holdings */}
             <div>
