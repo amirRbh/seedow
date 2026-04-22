@@ -38,6 +38,10 @@ export interface Asset {
   env_score: number | null;   // pillar E (0–100), nullable → falls back to esg_score
   social_score: number | null;
   governance_score: number | null;
+  esg_score_source: string | null;  // MSCI, Sustainalytics, Yahoo, manual...
+  carbon_intensity_gco2e_per_eur: number | null;  // gCO2e per € invested per year
+  carbon_intensity_source: string | null;
+  carbon_intensity_updated_at: string | null;     // ISO timestamp
   sfdr_article: number | null;
   expected_return: number;
   volatility: number;
