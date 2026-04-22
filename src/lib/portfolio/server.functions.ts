@@ -43,7 +43,7 @@ async function loadUniverse(
   const [assetsRes, covRes] = await Promise.all([
     client
       .from("assets")
-      .select("id, ticker, name, asset_class, region, ter, esg_score, sfdr_article, expected_return, volatility, cause_exposure, excluded_sectors, description")
+      .select("id, ticker, name, asset_class, region, ter, esg_score, env_score, social_score, governance_score, sfdr_article, expected_return, volatility, cause_exposure, excluded_sectors, description")
       .eq("is_active", true),
     client
       .from("asset_covariance")
@@ -53,6 +53,9 @@ async function loadUniverse(
   if (assetsRes.error) throw new Error(`assets: ${assetsRes.error.message}`);
   if (covRes.error) throw new Error(`covariance: ${covRes.error.message}`);
 
+  const num = (v: unknown): number | null =>
+    v == null ? null : Number(v);
+
   const assets = (assetsRes.data ?? []).map((row) => ({
     id: row.id,
     ticker: row.ticker,
@@ -61,6 +64,9 @@ async function loadUniverse(
     region: row.region,
     ter: Number(row.ter),
     esg_score: Number(row.esg_score),
+    env_score: num((row as Record<string, unknown>).env_score),
+    social_score: num((row as Record<string, unknown>).social_score),
+    governance_score: num((row as Record<string, unknown>).governance_score),
     sfdr_article: row.sfdr_article,
     expected_return: Number(row.expected_return),
     volatility: Number(row.volatility),

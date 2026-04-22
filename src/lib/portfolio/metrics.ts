@@ -3,23 +3,23 @@ import type {
   PortfolioWeights,
   PortfolioMetrics,
   AssetClass,
+  PillarWeights,
 } from "./types";
+import { DEFAULT_PILLAR_WEIGHTS, compositeEsgScore } from "./types";
 
 export function computeMetrics(
   assets: Asset[],
   weights: PortfolioWeights,
   covariance: number[][],
   expectedReturns: number[],
+  pillarWeights: PillarWeights = DEFAULT_PILLAR_WEIGHTS,
 ): PortfolioMetrics {
   const idx = new Map(assets.map((a, i) => [a.id, i]));
-  const n = assets.length;
 
-  // Portfolio expected return & TER
   let portfolioReturn = 0;
   let portfolioTER = 0;
   let portfolioESG = 0;
   let portfolioCO2 = 0;
-  let totalWeight = 0;
 
   for (const id in weights) {
     const i = idx.get(id);
@@ -28,11 +28,13 @@ export function computeMetrics(
     const a = assets[i];
     portfolioReturn += w * expectedReturns[i];
     portfolioTER += w * a.ter;
-    portfolioESG += w * a.esg_score;
-    // Rough estimate: 1 ton CO2 avoided per 10k€ invested per ESG point above 50
-    const esgDelta = Math.max(0, a.esg_score - 50);
+    // Composite ESG: pillar-weighted, with per-pillar fallback to global esg_score
+    const composite = compositeEsgScore(a, pillarWeights);
+    portfolioESG += w * composite;
+    // CO2 heuristic — kept until per-asset carbon_intensity is available in DB.
+    // Documented as an indicative estimate, not a regulatory figure.
+    const esgDelta = Math.max(0, composite - 50);
     portfolioCO2 += w * esgDelta * 0.04;
-    totalWeight += w;
   }
 
   // Portfolio variance: wᵀΣw
@@ -51,7 +53,6 @@ export function computeMetrics(
   const riskFreeRate = 0.025;
   const sharpe = vol > 0 ? (portfolioReturn - portfolioTER - riskFreeRate) / vol : 0;
 
-  // Class breakdown
   const byClass: Record<AssetClass, number> = {
     equity_dev: 0, equity_em: 0, thematic: 0,
     green_bond: 0, social_bond: 0, sov_bond: 0,
@@ -68,7 +69,6 @@ export function computeMetrics(
     byRegion[r] = (byRegion[r] ?? 0) + weights[id];
   }
 
-  // Diversification: 1 - HHI (Herfindahl)
   let hhi = 0;
   for (const id in weights) hhi += weights[id] * weights[id];
   const diversification = 1 - hhi;

@@ -36,9 +36,9 @@ const EXCLUSIONS: { id: ExclusionTag; label: string }[] = [
 const STAGES = [
   { id: 1, name: "Profilage", desc: "Causes, exclusions, horizon, risque cible." },
   { id: 2, name: "Univers", desc: "~40 actifs multi-classes : actions, obligations vertes, thématiques, REIT, monétaire." },
-  { id: 3, name: "Filtres", desc: "Exclusions sectorielles dures, puis best-in-class ESG (top 50% par classe)." },
-  { id: 4, name: "Optimisation", desc: "Markowitz contraint : max rendement / variance, sous bornes par classe + ESG min." },
-  { id: 5, name: "Tilts", desc: "Pondération additionnelle selon l'intensité par cause, plafonds ré-appliqués." },
+  { id: 3, name: "Filtres", desc: "Exclusions sectorielles dures, puis best-in-class ESG (top 50% par classe — médiane)." },
+  { id: 4, name: "Convictions", desc: "Ajustement linéaire des rendements attendus selon vos causes (≤ +1,5% par cause). Pas de Black-Litterman complet." },
+  { id: 5, name: "Optimisation", desc: "Markowitz contraint : max rendement / variance, bornes par classe et plancher ESG composite pondéré E/S/G selon vos causes." },
 ];
 
 type SimResult = Awaited<ReturnType<typeof simulatePortfolio>>;
