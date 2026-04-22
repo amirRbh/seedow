@@ -20,6 +20,10 @@ export function computeMetrics(
   let portfolioTER = 0;
   let portfolioESG = 0;
   let portfolioCO2 = 0;
+  // Real carbon footprint — weighted average of per-asset intensity, only over
+  // assets that actually have a value. Coverage = share of weight with real data.
+  let carbonNumerator = 0;
+  let carbonCoverage = 0;
 
   for (const id in weights) {
     const i = idx.get(id);
@@ -35,6 +39,11 @@ export function computeMetrics(
     // Documented as an indicative estimate, not a regulatory figure.
     const esgDelta = Math.max(0, composite - 50);
     portfolioCO2 += w * esgDelta * 0.04;
+    // Real carbon intensity, when available
+    if (a.carbon_intensity_gco2e_per_eur != null) {
+      carbonNumerator += w * a.carbon_intensity_gco2e_per_eur;
+      carbonCoverage += w;
+    }
   }
 
   // Portfolio variance: wᵀΣw
@@ -73,6 +82,9 @@ export function computeMetrics(
   for (const id in weights) hhi += weights[id] * weights[id];
   const diversification = 1 - hhi;
 
+  // Rescale carbon to per-€ figure on covered assets only (intensive measure).
+  const realCarbon = carbonCoverage > 0 ? carbonNumerator / carbonCoverage : null;
+
   return {
     expected_return: portfolioReturn,
     volatility: vol,
@@ -80,6 +92,8 @@ export function computeMetrics(
     esg_score: portfolioESG,
     ter: portfolioTER,
     co2_avoided_tons: portfolioCO2,
+    carbon_intensity_gco2e_per_eur: realCarbon,
+    carbon_intensity_coverage: carbonCoverage,
     by_class: byClass,
     by_region: byRegion,
     diversification,

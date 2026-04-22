@@ -100,10 +100,13 @@ export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
       metrics: {
         expected_return: 0, volatility: 0, sharpe: 0,
         esg_score: 0, ter: 0, co2_avoided_tons: 0,
+        carbon_intensity_gco2e_per_eur: null,
+        carbon_intensity_coverage: 0,
         by_class: {} as never, by_region: {}, diversification: 0,
       },
       selected_assets: [],
       excluded_count: initialCount,
+      esg_floor_relaxed: false,
       methodology_version: METHODOLOGY_VERSION,
     };
   }
@@ -121,7 +124,7 @@ export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
 
   // Stage 4 — optimise
   const riskAversion = Math.max(2, 0.6 / Math.max(params.risk_target, 0.02));
-  const weights = optimizeMarkowitz(pool, μ, Σ, params, riskAversion);
+  const { weights, esgFloorRelaxed } = optimizeMarkowitz(pool, μ, Σ, params, riskAversion);
 
   // Final filter — drop dust positions
   let cleaned: Record<string, number> = {};
@@ -173,7 +176,10 @@ export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
   const pillarWeights = causeToPillarWeights(params.causes);
   const metrics = computeMetrics(pool, cleaned, Σ, μFinal, pillarWeights);
 
-  if (metrics.esg_score < MIN_PORTFOLIO_ESG) {
+  // The QP-side relax flag covers infeasibility; we also flag when the final
+  // realised composite ESG score lands below the floor (e.g. after fallbacks).
+  const finalEsgBelowFloor = metrics.esg_score < MIN_PORTFOLIO_ESG;
+  if (finalEsgBelowFloor) {
     console.warn(
       `[engine] Portfolio ESG ${metrics.esg_score.toFixed(1)} below floor ${MIN_PORTFOLIO_ESG}`,
     );
@@ -184,6 +190,7 @@ export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
     metrics,
     selected_assets: selectedAssets,
     excluded_count: initialCount - pool.length,
+    esg_floor_relaxed: esgFloorRelaxed || finalEsgBelowFloor,
     methodology_version: METHODOLOGY_VERSION,
   };
 }

@@ -38,6 +38,10 @@ export interface Asset {
   env_score: number | null;   // pillar E (0–100), nullable → falls back to esg_score
   social_score: number | null;
   governance_score: number | null;
+  esg_score_source: string | null;  // MSCI, Sustainalytics, Yahoo, manual...
+  carbon_intensity_gco2e_per_eur: number | null;  // gCO2e per € invested per year
+  carbon_intensity_source: string | null;
+  carbon_intensity_updated_at: string | null;     // ISO timestamp
   sfdr_article: number | null;
   expected_return: number;
   volatility: number;
@@ -117,7 +121,11 @@ export interface PortfolioMetrics {
   sharpe: number;
   esg_score: number;
   ter: number;
-  co2_avoided_tons: number;     // estimation per 10k€ invested
+  co2_avoided_tons: number;     // heuristic estimate (per 10k€ invested)
+  // Real carbon footprint when per-asset intensity data is available.
+  // null if no asset in the selection has a carbon_intensity_gco2e_per_eur value.
+  carbon_intensity_gco2e_per_eur: number | null;  // weighted, gCO2e per € per year
+  carbon_intensity_coverage: number;              // 0..1, share of weight with real data
   by_class: Record<AssetClass, number>;
   by_region: Record<string, number>;
   diversification: number;      // 1 - HHI
@@ -128,6 +136,7 @@ export interface PortfolioResult {
   metrics: PortfolioMetrics;
   selected_assets: Asset[];
   excluded_count: number;       // assets removed by filter
+  esg_floor_relaxed: boolean;   // true if QP couldn't satisfy MIN_PORTFOLIO_ESG
   methodology_version: string;
 }
 
