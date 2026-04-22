@@ -279,13 +279,15 @@ function MethodologyPage() {
                     ? `${result.metrics.carbon_intensity_gco2e_per_eur.toFixed(0)} gCO₂e/€/an`
                     : "Donnée indisponible"
                 }
-                hint={
-                  result?.metrics.carbon_intensity_coverage
-                    ? `Couverture : ${(result.metrics.carbon_intensity_coverage * 100).toFixed(0)}% du portefeuille`
-                    : "À renseigner depuis MSCI / Trucost / Yahoo"
-                }
+                hint="Moyenne pondérée sur les actifs couverts"
               />
             </div>
+
+            {/* Carbon coverage indicator */}
+            <CarbonCoverage
+              coverage={result?.metrics.carbon_intensity_coverage ?? 0}
+              hasRealData={result?.metrics.carbon_intensity_gco2e_per_eur != null}
+            />
 
             {/* Holdings */}
             <div>
@@ -381,6 +383,52 @@ function MetricRow({ label, value, hint }: { label: string; value: string; hint?
         {hint && <p className="text-[10px] text-ink-3 mt-0.5">{hint}</p>}
       </div>
       <span className="font-value text-[15px] tabular-nums">{value}</span>
+    </div>
+  );
+}
+
+function CarbonCoverage({ coverage, hasRealData }: { coverage: number; hasRealData: boolean }) {
+  const pct = Math.round(Math.max(0, Math.min(1, coverage)) * 100);
+
+  let tone: "low" | "partial" | "good";
+  if (pct >= 70) tone = "good";
+  else if (pct >= 30) tone = "partial";
+  else tone = "low";
+
+  const barColor =
+    tone === "good" ? "bg-moss-2" : tone === "partial" ? "bg-ink" : "bg-rust";
+
+  const advice =
+    !hasRealData || pct === 0
+      ? "Aucun actif du portefeuille n'expose encore d'intensité carbone réelle. Le chiffre affiché est l'heuristique ESG. Pour une mesure auditable, complétez les champs carbon_intensity_gco2e_per_eur depuis un fournisseur (MSCI, Trucost, ISS, Yahoo Sustainability)."
+      : pct < 30
+      ? "Couverture trop faible pour publier un chiffre fiable. Considérez l'intensité affichée comme indicative et priorisez l'ingestion des actifs les plus pondérés."
+      : pct < 70
+      ? "Couverture partielle : la valeur est extrapolée sur la part renseignée du portefeuille. Complétez les actifs manquants pour fiabiliser la mesure."
+      : "Couverture suffisante pour un reporting indicatif. Vérifiez la fraîcheur des sources (carbon_intensity_updated_at).";
+
+  return (
+    <div className="border border-paper-3 p-4">
+      <div className="flex items-baseline justify-between">
+        <p className="text-[10px] uppercase tracking-[0.12em] text-ink-3 font-medium">
+          Couverture donnée carbone
+        </p>
+        <span className="font-value text-[14px] tabular-nums">{pct}%</span>
+      </div>
+      <div className="mt-3 h-1.5 bg-paper-3 rounded-full overflow-hidden">
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${pct}%` }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className={`h-full ${barColor}`}
+        />
+      </div>
+      <div className="flex justify-between text-[10px] text-ink-3 mt-1.5 tabular-nums">
+        <span>0%</span>
+        <span>50%</span>
+        <span>100%</span>
+      </div>
+      <p className="text-[11px] text-ink-2 mt-3 leading-relaxed">{advice}</p>
     </div>
   );
 }
