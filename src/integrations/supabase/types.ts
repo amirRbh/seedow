@@ -129,12 +129,16 @@ export type Database = {
       assets: {
         Row: {
           asset_class: Database["public"]["Enums"]["asset_class"]
+          carbon_intensity_gco2e_per_eur: number | null
+          carbon_intensity_source: string | null
+          carbon_intensity_updated_at: string | null
           cause_exposure: Json
           created_at: string
           currency: string
           description: string | null
           env_score: number | null
           esg_score: number
+          esg_score_source: string | null
           excluded_sectors: Database["public"]["Enums"]["exclusion_tag"][]
           expected_return: number
           governance_score: number | null
@@ -154,12 +158,16 @@ export type Database = {
         }
         Insert: {
           asset_class: Database["public"]["Enums"]["asset_class"]
+          carbon_intensity_gco2e_per_eur?: number | null
+          carbon_intensity_source?: string | null
+          carbon_intensity_updated_at?: string | null
           cause_exposure?: Json
           created_at?: string
           currency?: string
           description?: string | null
           env_score?: number | null
           esg_score?: number
+          esg_score_source?: string | null
           excluded_sectors?: Database["public"]["Enums"]["exclusion_tag"][]
           expected_return?: number
           governance_score?: number | null
@@ -179,12 +187,16 @@ export type Database = {
         }
         Update: {
           asset_class?: Database["public"]["Enums"]["asset_class"]
+          carbon_intensity_gco2e_per_eur?: number | null
+          carbon_intensity_source?: string | null
+          carbon_intensity_updated_at?: string | null
           cause_exposure?: Json
           created_at?: string
           currency?: string
           description?: string | null
           env_score?: number | null
           esg_score?: number
+          esg_score_source?: string | null
           excluded_sectors?: Database["public"]["Enums"]["exclusion_tag"][]
           expected_return?: number
           governance_score?: number | null
@@ -248,6 +260,7 @@ export type Database = {
           cause_intensity: Json
           causes: Database["public"]["Enums"]["cause_tag"][]
           created_at: string
+          esg_floor_relaxed: boolean
           exclusions: Database["public"]["Enums"]["exclusion_tag"][]
           generated_at: string
           horizon_years: number
@@ -266,6 +279,7 @@ export type Database = {
           cause_intensity?: Json
           causes?: Database["public"]["Enums"]["cause_tag"][]
           created_at?: string
+          esg_floor_relaxed?: boolean
           exclusions?: Database["public"]["Enums"]["exclusion_tag"][]
           generated_at?: string
           horizon_years?: number
@@ -284,6 +298,7 @@ export type Database = {
           cause_intensity?: Json
           causes?: Database["public"]["Enums"]["cause_tag"][]
           created_at?: string
+          esg_floor_relaxed?: boolean
           exclusions?: Database["public"]["Enums"]["exclusion_tag"][]
           generated_at?: string
           horizon_years?: number
