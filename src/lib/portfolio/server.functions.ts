@@ -43,7 +43,7 @@ async function loadUniverse(
   const [assetsRes, covRes] = await Promise.all([
     client
       .from("assets")
-      .select("id, ticker, name, asset_class, region, ter, esg_score, env_score, social_score, governance_score, sfdr_article, expected_return, volatility, cause_exposure, excluded_sectors, description")
+      .select("id, ticker, name, asset_class, region, ter, esg_score, env_score, social_score, governance_score, esg_score_source, carbon_intensity_gco2e_per_eur, carbon_intensity_source, carbon_intensity_updated_at, sfdr_article, expected_return, volatility, cause_exposure, excluded_sectors, description")
       .eq("is_active", true),
     client
       .from("asset_covariance")
@@ -55,25 +55,34 @@ async function loadUniverse(
 
   const num = (v: unknown): number | null =>
     v == null ? null : Number(v);
+  const str = (v: unknown): string | null =>
+    v == null ? null : String(v);
 
-  const assets = (assetsRes.data ?? []).map((row) => ({
-    id: row.id,
-    ticker: row.ticker,
-    name: row.name,
-    asset_class: row.asset_class,
-    region: row.region,
-    ter: Number(row.ter),
-    esg_score: Number(row.esg_score),
-    env_score: num((row as Record<string, unknown>).env_score),
-    social_score: num((row as Record<string, unknown>).social_score),
-    governance_score: num((row as Record<string, unknown>).governance_score),
-    sfdr_article: row.sfdr_article,
-    expected_return: Number(row.expected_return),
-    volatility: Number(row.volatility),
-    cause_exposure: (row.cause_exposure ?? {}) as Record<string, number>,
-    excluded_sectors: (row.excluded_sectors ?? []) as Asset["excluded_sectors"],
-    description: row.description,
-  })) as Asset[];
+  const assets = (assetsRes.data ?? []).map((row) => {
+    const r = row as Record<string, unknown>;
+    return {
+      id: row.id,
+      ticker: row.ticker,
+      name: row.name,
+      asset_class: row.asset_class,
+      region: row.region,
+      ter: Number(row.ter),
+      esg_score: Number(row.esg_score),
+      env_score: num(r.env_score),
+      social_score: num(r.social_score),
+      governance_score: num(r.governance_score),
+      esg_score_source: str(r.esg_score_source),
+      carbon_intensity_gco2e_per_eur: num(r.carbon_intensity_gco2e_per_eur),
+      carbon_intensity_source: str(r.carbon_intensity_source),
+      carbon_intensity_updated_at: str(r.carbon_intensity_updated_at),
+      sfdr_article: row.sfdr_article,
+      expected_return: Number(row.expected_return),
+      volatility: Number(row.volatility),
+      cause_exposure: (row.cause_exposure ?? {}) as Record<string, number>,
+      excluded_sectors: (row.excluded_sectors ?? []) as Asset["excluded_sectors"],
+      description: row.description,
+    };
+  }) as Asset[];
 
   const covariance = new Map<string, number>();
   for (const c of covRes.data ?? []) {
