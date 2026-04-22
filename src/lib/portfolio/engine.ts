@@ -4,15 +4,14 @@ import type {
   PortfolioParams,
   PortfolioResult,
 } from "./types";
-import { MIN_PORTFOLIO_ESG } from "./types";
-import { optimizeMarkowitz, applyBlackLittermanViews } from "./markowitz";
+import { MIN_PORTFOLIO_ESG, causeToPillarWeights } from "./types";
+import { optimizeMarkowitz, applyConvictionAdjustment } from "./markowitz";
 import { computeMetrics } from "./metrics";
 
-const METHODOLOGY_VERSION = "v1.0";
+const METHODOLOGY_VERSION = "v1.1";
 
 /**
- * Stage 1 — Hard exclusions filter
- * Remove any asset with at least one excluded sector tag.
+ * Stage 1 — Hard exclusions filter.
  */
 function applyExclusions(assets: Asset[], exclusions: ExclusionTag[]): Asset[] {
   if (exclusions.length === 0) return assets;
@@ -21,9 +20,10 @@ function applyExclusions(assets: Asset[], exclusions: ExclusionTag[]): Asset[] {
 }
 
 /**
- * Stage 2 — Best-in-class
- * For each asset class, keep only assets with ESG score ≥ Q3 of the class.
- * If a class has fewer than 3 assets, keep all of them.
+ * Stage 2 — Best-in-class.
+ * Keep the top 50% (median split) of each asset class by ESG score.
+ * Class with ≤3 assets: keep all (avoids killing thin classes).
+ * Threshold is the median, not Q3 — naming aligned with implementation.
  */
 function applyBestInClass(assets: Asset[]): Asset[] {
   const byClass = new Map<string, Asset[]>();
@@ -40,66 +40,14 @@ function applyBestInClass(assets: Asset[]): Asset[] {
       continue;
     }
     const sorted = [...arr].sort((a, b) => a.esg_score - b.esg_score);
-    const q3Index = Math.floor(sorted.length * 0.5); // top 50% (relaxed Q3)
-    kept.push(...sorted.slice(q3Index));
+    const medianIndex = Math.floor(sorted.length * 0.5); // top 50%
+    kept.push(...sorted.slice(medianIndex));
   }
   return kept;
 }
 
 /**
- * Stage 3 — Cause tilts (post-optimisation overlay)
- * Increase weights of assets aligned with chosen causes, then renormalise.
- */
-function applyCauseTilts(
-  weights: Record<string, number>,
-  assets: Asset[],
-  causes: PortfolioParams["causes"],
-  intensity: PortfolioParams["cause_intensity"],
-): Record<string, number> {
-  if (causes.length === 0) return weights;
-  const idx = new Map(assets.map((a) => [a.id, a]));
-  const tilted: Record<string, number> = {};
-  let total = 0;
-  for (const id in weights) {
-    const a = idx.get(id);
-    if (!a) continue;
-    let multiplier = 1;
-    for (const c of causes) {
-      const exp = a.cause_exposure[c] ?? 0;
-      const w = intensity[c] ?? 0.5;
-      multiplier *= 1 + exp * w * 0.20; // up to +20% per cause
-    }
-    const newW = weights[id] * multiplier;
-    tilted[id] = newW;
-    total += newW;
-  }
-  // Renormalise
-  for (const id in tilted) tilted[id] /= total;
-
-  // Cap any line above MAX_SINGLE_WEIGHT, redistribute
-  const MAX = 0.25;
-  let excess = 0;
-  for (const id in tilted) {
-    if (tilted[id] > MAX) {
-      excess += tilted[id] - MAX;
-      tilted[id] = MAX;
-    }
-  }
-  if (excess > 0) {
-    const eligible = Object.keys(tilted).filter((id) => tilted[id] < MAX);
-    const eligibleTotal = eligible.reduce((s, id) => s + tilted[id], 0);
-    if (eligibleTotal > 0) {
-      for (const id of eligible) {
-        tilted[id] += excess * (tilted[id] / eligibleTotal);
-      }
-    }
-  }
-  return tilted;
-}
-
-/**
- * Build covariance sub-matrix for the given asset subset, given the full
- * covariance map keyed by (asset_a, asset_b).
+ * Build covariance sub-matrix for the given asset subset.
  */
 function buildCovariance(
   assets: Asset[],
@@ -120,18 +68,22 @@ function buildCovariance(
 
 export interface BuildPortfolioInput {
   universe: Asset[];
-  covariance: Map<string, number>; // key = `${a.id}|${b.id}`
+  covariance: Map<string, number>;
   params: PortfolioParams;
 }
 
 /**
- * Full pipeline:
+ * Pipeline:
  *   1. Exclusions (hard)
- *   2. Best-in-class (ESG screening)
- *   3. Black-Litterman view adjustment (causes → expected returns)
+ *   2. Best-in-class (top 50% ESG per class)
+ *   3. Conviction adjustment on expected returns (causes → μ)
  *   4. Markowitz optimisation under constraints
- *   5. Cause tilts overlay
- *   6. Compute metrics
+ *   5. Compute metrics with cause-weighted composite ESG score
+ *
+ * Note: a previous version applied a second tilt overlay on weights AFTER
+ * the QP. This was removed in v1.1 to avoid double-counting convictions.
+ * The conviction effect is now expressed once, on expected returns (μ),
+ * and let the QP arbitrate against ESG/class constraints.
  */
 export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
   const { universe, covariance, params } = input;
@@ -159,8 +111,8 @@ export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
   const Σ = buildCovariance(pool, covariance);
   const baseReturns = pool.map((a) => a.expected_return);
 
-  // Stage 3 — adjust expected returns with views
-  const μ = applyBlackLittermanViews(
+  // Stage 3 — conviction adjustment (was misnamed "Black-Litterman")
+  const μ = applyConvictionAdjustment(
     pool,
     baseReturns,
     params.causes,
@@ -168,14 +120,10 @@ export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
   );
 
   // Stage 4 — optimise
-  // Tune risk aversion by target vol — lower target → more aversion
   const riskAversion = Math.max(2, 0.6 / Math.max(params.risk_target, 0.02));
-  let weights = optimizeMarkowitz(pool, μ, Σ, params, riskAversion);
+  const weights = optimizeMarkowitz(pool, μ, Σ, params, riskAversion);
 
-  // Stage 5 — cause tilts
-  weights = applyCauseTilts(weights, pool, params.causes, params.cause_intensity);
-
-  // Final filter — drop dust positions (lowered threshold)
+  // Final filter — drop dust positions
   let cleaned: Record<string, number> = {};
   let total = 0;
   for (const id in weights) {
@@ -184,7 +132,7 @@ export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
       total += weights[id];
     }
   }
-  // Safety net 1: if dust filter wiped everything, keep raw weights
+  // Safety net 1: dust filter wiped everything
   if (Object.keys(cleaned).length === 0) {
     console.warn("[engine] Dust filter wiped all weights; keeping raw");
     total = 0;
@@ -202,7 +150,6 @@ export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
     );
     cleaned = {};
     total = 0;
-    // Build class-balanced equal-weight directly
     const byClass = new Map<string, Asset[]>();
     for (const a of pool) {
       const arr = byClass.get(a.asset_class) ?? [];
@@ -221,12 +168,12 @@ export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
   if (total > 0) for (const id in cleaned) cleaned[id] /= total;
 
   const selectedAssets = pool.filter((a) => cleaned[a.id] !== undefined);
-  const μFinal = pool.map((a) => a.expected_return); // metrics use raw returns
-  const metrics = computeMetrics(pool, cleaned, Σ, μFinal);
+  const μFinal = pool.map((a) => a.expected_return);
+  // Pillar weights derived from active causes; passed to metrics for composite ESG
+  const pillarWeights = causeToPillarWeights(params.causes);
+  const metrics = computeMetrics(pool, cleaned, Σ, μFinal, pillarWeights);
 
-  // Verify ESG floor
   if (metrics.esg_score < MIN_PORTFOLIO_ESG) {
-    // could iterate — for now emit as-is
     console.warn(
       `[engine] Portfolio ESG ${metrics.esg_score.toFixed(1)} below floor ${MIN_PORTFOLIO_ESG}`,
     );

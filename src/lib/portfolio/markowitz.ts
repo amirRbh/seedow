@@ -246,10 +246,16 @@ function equalWeight(assets: Asset[]): PortfolioWeights {
 }
 
 /**
- * Black-Litterman style: blend equilibrium returns with user views (causes).
- * Simplified — we boost expected returns of assets aligned with chosen causes.
+ * Conviction-based expected-return adjustment.
+ *
+ * NOTE — this is NOT a full Black-Litterman implementation (no τ·Σ prior, no
+ * P/Q/Ω view matrices). It is a deliberately simple linear shift on expected
+ * returns to express user convictions before the QP runs. Documented as
+ * "ajustement par convictions" in the methodology page.
+ *
+ * Boost is capped at +1.5% per perfectly-aligned, fully-weighted cause.
  */
-export function applyBlackLittermanViews(
+export function applyConvictionAdjustment(
   assets: Asset[],
   baseReturns: number[],
   causes: PortfolioParams["causes"],
@@ -261,12 +267,14 @@ export function applyBlackLittermanViews(
     for (const c of causes) {
       const w = intensity[c] ?? 0.5;
       const exp = a.cause_exposure[c] ?? 0;
-      // up to +1.5% expected return for a perfectly aligned, fully-weighted cause
       boost += exp * w * 0.015;
     }
     return r + boost;
   });
 }
+
+/** @deprecated Renamed to applyConvictionAdjustment. Kept for back-compat. */
+export const applyBlackLittermanViews = applyConvictionAdjustment;
 
 // Keep export to silence unused-import warning if mathjs functions aren't used
 // in trivial paths — mathjs may be useful for future extensions.

@@ -34,13 +34,68 @@ export interface Asset {
   asset_class: AssetClass;
   region: string | null;
   ter: number;
-  esg_score: number;
+  esg_score: number;          // global aggregate (0–100), back-compat
+  env_score: number | null;   // pillar E (0–100), nullable → falls back to esg_score
+  social_score: number | null;
+  governance_score: number | null;
   sfdr_article: number | null;
   expected_return: number;
   volatility: number;
   cause_exposure: Record<string, number>;
   excluded_sectors: ExclusionTag[];
   description: string | null;
+}
+
+/**
+ * Pillar weights used when computing a composite ESG score.
+ * Defaults follow common SFDR practice (40/40/20). Active causes shift weight
+ * towards the relevant pillar — see causeToPillarWeights().
+ */
+export interface PillarWeights {
+  env: number;        // 0..1
+  social: number;     // 0..1
+  governance: number; // 0..1
+}
+
+export const DEFAULT_PILLAR_WEIGHTS: PillarWeights = {
+  env: 0.4,
+  social: 0.4,
+  governance: 0.2,
+};
+
+/**
+ * Map active causes onto pillar weight shifts.
+ * - Climat / biodiversité → boost E
+ * - Humain / égalité      → boost S
+ * - Tech / circulaire     → neutre (légère faveur G)
+ *
+ * The result is renormalised so weights always sum to 1.
+ */
+export function causeToPillarWeights(causes: CauseTag[]): PillarWeights {
+  if (causes.length === 0) return { ...DEFAULT_PILLAR_WEIGHTS };
+  let env = DEFAULT_PILLAR_WEIGHTS.env;
+  let social = DEFAULT_PILLAR_WEIGHTS.social;
+  let governance = DEFAULT_PILLAR_WEIGHTS.governance;
+  const STEP = 0.1;
+  for (const c of causes) {
+    if (c === "climat" || c === "biodiversite") env += STEP;
+    else if (c === "humain" || c === "egalite") social += STEP;
+    else if (c === "tech" || c === "circulaire") governance += STEP * 0.5;
+  }
+  const sum = env + social + governance;
+  return { env: env / sum, social: social / sum, governance: governance / sum };
+}
+
+/**
+ * Composite ESG score from pillar scores.
+ * If any pillar is missing on the asset, falls back to the aggregate esg_score
+ * for that pillar only (so partial data degrades gracefully).
+ */
+export function compositeEsgScore(asset: Asset, w: PillarWeights): number {
+  const e = asset.env_score ?? asset.esg_score;
+  const s = asset.social_score ?? asset.esg_score;
+  const g = asset.governance_score ?? asset.esg_score;
+  return w.env * e + w.social * s + w.governance * g;
 }
 
 export interface PortfolioParams {
