@@ -52,17 +52,23 @@ const qp = quadprog as QuadprogModule;
  *
  * quadprog uses 1-indexed arrays — we pad position 0 with dummy values.
  */
+export interface OptimizeResult {
+  weights: PortfolioWeights;
+  esgFloorRelaxed: boolean;
+}
+
 export function optimizeMarkowitz(
   assets: Asset[],
   expectedReturns: number[],
   covariance: number[][],
   params: PortfolioParams,
   riskAversion = 4,
-): PortfolioWeights {
+): OptimizeResult {
   const n = assets.length;
-  if (n === 0) return {};
+  if (n === 0) return { weights: {}, esgFloorRelaxed: false };
 
   const bounds = getClassBounds(params.risk_target);
+  let esgFloorRelaxed = false;
 
   // Build D = λ·Σ (with padding)
   const Dmat: number[][] = [Array(n + 1).fill(0)];
@@ -157,11 +163,12 @@ export function optimizeMarkowitz(
     result = qp.solveQP(Dmat, dvec, Amat, bvec, meq);
   } catch (err) {
     console.warn("[markowitz] QP failed, falling back to equal-weight:", err);
-    return equalWeight(assets);
+    return { weights: equalWeight(assets), esgFloorRelaxed: true };
   }
 
   if (!result.solution || result.message) {
     // Try relaxing ESG constraint
+    esgFloorRelaxed = true;
     cols.pop();
     const m2 = cols.length;
     const Amat2: number[][] = [];
@@ -177,7 +184,7 @@ export function optimizeMarkowitz(
     try {
       result = qp.solveQP(Dmat, dvec, Amat2, bvec2, meq);
     } catch {
-      return equalWeight(assets);
+      return { weights: equalWeight(assets), esgFloorRelaxed: true };
     }
   }
 
@@ -196,11 +203,11 @@ export function optimizeMarkowitz(
     console.warn(
       `[markowitz] QP returned degenerate solution (total=${total.toFixed(3)}), falling back to class-bounded equal-weight`,
     );
-    return classBoundedEqualWeight(assets, params);
+    return { weights: classBoundedEqualWeight(assets, params), esgFloorRelaxed: true };
   }
   // Renormalise (numerical drift)
   for (const id in weights) weights[id] /= total;
-  return weights;
+  return { weights, esgFloorRelaxed };
 }
 
 /**
