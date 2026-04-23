@@ -1,0 +1,1 @@
+ALTER VIEW public.portfolio_holdings_valued SET (security_invoker = true);
