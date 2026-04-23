@@ -663,6 +663,24 @@ function MethodologySection() {
             méthodologie.
           </li>
         </ul>
+
+        <div className="mt-4 rounded border border-paper-3 bg-paper-2 p-3">
+          <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
+            Couverture faible ? Voici quoi faire
+          </p>
+          <ul className="text-[12px] text-ink-2 space-y-1.5 leading-relaxed mb-3">
+            <li>• <span className="font-medium text-ink">&lt; 30%</span> — fiez-vous à l'heuristique CO₂ évité, l'intensité réelle n'est pas représentative.</li>
+            <li>• <span className="font-medium text-ink">30–70%</span> — lecture indicative, à recouper avec l'ESG composite.</li>
+            <li>• <span className="font-medium text-ink">≥ 70%</span> — chiffre fiable, utilisable pour reporting interne.</li>
+          </ul>
+          <Link
+            to="/methodologie"
+            className="inline-flex items-center gap-2 text-[12px] font-medium text-ink underline-offset-2 hover:underline"
+          >
+            Voir la couverture de mon portefeuille
+            <span aria-hidden>→</span>
+          </Link>
+        </div>
       </Block>
 
       <Block title="Optimisation Markowitz contrainte">
