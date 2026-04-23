@@ -528,9 +528,10 @@ function MethodologySection() {
     <div className="space-y-6">
       <Block title="Pipeline de construction">
         <p className="text-[12px] text-ink-2 leading-relaxed mb-4">
-          Cinq étapes transparentes : profilage, univers, filtres ESG, optimisation Markowitz contrainte,
-          puis tilts par convictions. Toute la documentation et le simulateur interactif sont disponibles
-          sur la page dédiée.
+          Six étapes traçables : profilage, univers investissable, exclusions sectorielles, filtres
+          best-in-class ESG, optimisation Markowitz contrainte (plancher ESG, budget de risque, bornes
+          de poids), puis tilt pré-optimisation des rendements attendus selon vos causes. Le simulateur
+          interactif et la documentation détaillée sont sur la page dédiée.
         </p>
         <Link
           to="/methodologie"
@@ -543,72 +544,71 @@ function MethodologySection() {
 
       <Block title="Sources de données">
         <ul className="text-[12px] text-ink-2 space-y-1.5 leading-relaxed">
-          <li>• Notations ESG : MSCI ESG Research, Sustainalytics</li>
+          <li>• Scores ESG par pilier (E/S/G) : MSCI ESG Research, Sustainalytics, ESG Book, Yahoo Sustainability</li>
+          <li>• Intensité carbone (gCO₂e/€ investi) : Trucost, ISS ESG, Yahoo Sustainability — avec date et provider stockés par actif</li>
           <li>• Classification SFDR : prospectus émetteurs (iShares, Lyxor, Amundi)</li>
-          <li>• Volatilités et corrélations : séries historiques 5 ans</li>
+          <li>• Prix et volatilités : Yahoo Finance, séries historiques 5 ans, covariances recalculées hebdomadairement</li>
         </ul>
       </Block>
 
-      <Block title="Comment est calculée la note ESG ?">
+      <Block title="Score ESG composite, pondéré par vos causes">
         <p className="text-[12px] text-ink-2 leading-relaxed mb-4">
-          La note ESG (Environnement, Social, Gouvernance) va de <span className="font-value">0</span> à{" "}
-          <span className="font-value">100</span>. Plus elle est élevée, mieux l'entreprise ou le fonds gère
-          ses impacts extra-financiers. Voici exactement comment nous l'établissons.
+          Le score ESG va de <span className="font-value">0</span> à <span className="font-value">100</span>.
+          Au lieu d'une moyenne fixe 40/40/20, <span className="font-medium text-ink">les piliers E, S et G
+          sont repondérés en fonction des causes que vous activez</span> dans vos préférences. Le score reflète
+          ainsi ce qui compte vraiment pour vous.
         </p>
 
         <div className="space-y-4">
           <div>
             <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
-              1. Trois piliers, pondération 40 / 40 / 20
+              1. Trois piliers indépendants
             </p>
             <ul className="text-[12px] text-ink-2 space-y-1.5 leading-relaxed">
               <li>
-                <span className="font-medium text-ink">Environnement (40%)</span> — émissions CO₂ scope 1-2-3,
-                intensité carbone, eau, déchets, exposition aux énergies renouvelables.
+                <span className="font-medium text-ink">Environnement (E)</span> — émissions CO₂ scope 1-2-3,
+                intensité carbone, eau, déchets, exposition renouvelables.
               </li>
               <li>
-                <span className="font-medium text-ink">Social (40%)</span> — droits humains, conditions de
+                <span className="font-medium text-ink">Social (S)</span> — droits humains, conditions de
                 travail, égalité F/H, sécurité produit, relations communautés.
               </li>
               <li>
-                <span className="font-medium text-ink">Gouvernance (20%)</span> — indépendance du conseil,
-                rémunération dirigeants, éthique fiscale, transparence, lutte anti-corruption.
+                <span className="font-medium text-ink">Gouvernance (G)</span> — indépendance du conseil,
+                rémunération dirigeants, éthique fiscale, transparence, anti-corruption.
               </li>
             </ul>
-          </div>
-
-          <div>
-            <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
-              2. Sources externes croisées
-            </p>
-            <p className="text-[12px] text-ink-2 leading-relaxed">
-              Les notes brutes proviennent de <span className="font-medium text-ink">MSCI ESG Research</span>{" "}
-              et <span className="font-medium text-ink">Sustainalytics</span>. Quand les deux divergent de
-              plus de 15 points, nous prenons la note la plus prudente (la plus basse) pour éviter le
-              greenwashing.
+            <p className="text-[11px] text-ink-3 mt-2 leading-relaxed">
+              Quand un pilier n'est pas publié pour un actif, on retombe automatiquement sur le score ESG
+              global comme valeur de repli (fallback documenté).
             </p>
           </div>
 
           <div>
             <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
-              3. Pénalités automatiques
+              2. Mapping causes → piliers (codé en dur)
             </p>
             <ul className="text-[12px] text-ink-2 space-y-1.5 leading-relaxed">
-              <li>• <span className="font-medium text-ink">−10 pts</span> si exposition &gt; 5% aux énergies fossiles</li>
-              <li>• <span className="font-medium text-ink">−15 pts</span> si controverse majeure dans les 24 derniers mois</li>
-              <li>• <span className="font-medium text-ink">−5 pts</span> si SFDR Article 6 (non durable)</li>
-              <li>• <span className="font-medium text-ink">+5 pts</span> si SFDR Article 9 (impact)</li>
+              <li>• <span className="font-medium text-ink">Climat, Biodiversité, Économie circulaire</span> → boostent le pilier <span className="font-medium">E</span></li>
+              <li>• <span className="font-medium text-ink">Droits humains, Égalité F/H</span> → boostent le pilier <span className="font-medium">S</span></li>
+              <li>• <span className="font-medium text-ink">Tech éthique</span> → boostent les piliers <span className="font-medium">S et G</span></li>
             </ul>
+            <p className="text-[11px] text-ink-3 mt-2 leading-relaxed">
+              Sans cause active, on revient à la pondération neutre 40/40/20. Plus vous activez de causes
+              liées à un pilier, plus son poids dans le score composite augmente.
+            </p>
           </div>
 
           <div>
             <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
-              4. Score du portefeuille
+              3. Score du portefeuille
             </p>
             <p className="text-[12px] text-ink-2 leading-relaxed">
-              C'est la <span className="font-medium text-ink">moyenne pondérée</span> par le poids de chaque
-              ligne. Exemple : 60% d'un fonds noté 75 + 40% d'un fonds noté 60 = score{" "}
-              <span className="font-value">69</span>.
+              C'est la <span className="font-medium text-ink">moyenne pondérée</span> du score composite de
+              chaque ligne par son poids. Un plancher ESG par défaut de <span className="font-value">70</span>
+              est imposé à l'optimiseur ; s'il ne trouve aucune solution réalisable, le plancher est relâché
+              et un drapeau <span className="font-mono text-[11px]">esg_floor_relaxed</span> est levé pour
+              transparence.
             </p>
           </div>
 
@@ -638,15 +638,47 @@ function MethodologySection() {
         </div>
 
         <p className="text-[11px] text-ink-3 leading-relaxed mt-4 pt-3 border-t border-paper-3">
-          ⚠️ Une note ESG reste une <span className="font-medium">estimation</span>. Elle dépend de la qualité
-          des données publiées par les entreprises. Nous mettons à jour les scores chaque trimestre et
-          publions toute révision dans le journal de méthodologie.
+          ⚠️ Une note ESG reste une <span className="font-medium">estimation</span> dépendante de la qualité
+          des données publiées. Chaque actif stocke la <span className="font-medium">source</span> du score
+          (<span className="font-mono text-[11px]">esg_score_source</span>) pour auditabilité.
+        </p>
+      </Block>
+
+      <Block title="Empreinte carbone : heuristique + réelle">
+        <p className="text-[12px] text-ink-2 leading-relaxed mb-3">
+          Deux indicateurs cohabitent volontairement, le temps que la couverture en données réelles atteigne
+          100% du portefeuille :
+        </p>
+        <ul className="text-[12px] text-ink-2 space-y-2 leading-relaxed">
+          <li>
+            • <span className="font-medium text-ink">CO₂ évité (heuristique)</span> — estimation indicative
+            dérivée du score ESG composite. Pratique pour comparer deux portefeuilles, pas une figure
+            réglementaire.
+          </li>
+          <li>
+            • <span className="font-medium text-ink">Intensité carbone réelle</span> — moyenne pondérée des
+            <span className="font-mono text-[11px]"> gCO₂e/€ investi/an</span> sur la part du portefeuille
+            réellement couverte par un provider (champs <span className="font-mono text-[11px]">carbon_intensity_*</span>
+            avec source et date de mise à jour). Un indicateur de couverture est affiché dans la page
+            méthodologie.
+          </li>
+        </ul>
+      </Block>
+
+      <Block title="Optimisation Markowitz contrainte">
+        <p className="text-[12px] text-ink-2 leading-relaxed">
+          Maximisation de l'utilité moyenne-variance avec contraintes : somme des poids = 1, poids ≥ 0,
+          plancher par actif, plafond par actif et par classe, budget de risque (volatilité cible),
+          plancher ESG composite. Les <span className="font-medium text-ink">rendements attendus sont tiltés
+          en amont</span> selon vos causes (single-tilt pré-optimisation) — pas de double-tilt en sortie pour
+          ne pas biaiser la frontière efficiente.
         </p>
       </Block>
 
       <Block title="Version du moteur">
         <p className="text-[12px] text-ink-2">
-          Méthodologie <span className="font-value">v1.0</span> · révisée trimestriellement.
+          Méthodologie <span className="font-value">v1.1</span> · piliers E/S/G pondérés par causes,
+          intensité carbone réelle, traçabilité des sources. Révisée trimestriellement.
         </p>
       </Block>
     </div>
