@@ -48,7 +48,7 @@ function Portfolio() {
           <div className="px-5 pt-8">
             <div className="border border-dashed border-paper-3 rounded p-6 text-center">
               <p className="text-[13px] text-ink-2 mb-3">Aucun portefeuille actif pour le moment.</p>
-              <Link to="/onboarding" className="inline-block px-4 py-2 text-[12px] font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors">
+              <Link to="/onboarding" search={{ new: undefined }} className="inline-block px-4 py-2 text-[12px] font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors">
                 Démarrer l'onboarding
               </Link>
             </div>

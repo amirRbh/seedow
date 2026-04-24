@@ -55,7 +55,7 @@ function Dashboard() {
     if (loading || portfolio || hasSeenPortfolioRef.current) return;
     const timer = setTimeout(() => {
       if (!hasSeenPortfolioRef.current) {
-        navigate({ to: "/onboarding" });
+        navigate({ to: "/onboarding", search: { new: undefined } });
       }
     }, 1800);
     return () => clearTimeout(timer);
@@ -99,7 +99,7 @@ function Dashboard() {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
       <div className="max-w-lg mx-auto pb-28">
-        <AppHeader eyebrow={greeting} title={userName} />
+        <AppHeader eyebrow={greeting} title={userName} showPortfolioSelector />
 
         <motion.section
           initial={{ opacity: 0, y: 12 }}
@@ -158,6 +158,7 @@ function Dashboard() {
               <p className="text-[13px] text-ink-2 mb-3">Votre jardin est encore vide.</p>
               <Link
                 to="/onboarding"
+                search={{ new: undefined }}
                 className="inline-block px-4 py-2 text-[12px] font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
               >
                 Planter mes premières graines
