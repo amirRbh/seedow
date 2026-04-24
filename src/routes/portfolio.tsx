@@ -74,6 +74,7 @@ function Portfolio() {
           eyebrow="Ton histoire"
           title="Les racines"
           subtitle={`${portfolio.holdings.length} plantes · ${totalValue.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 })} cultivés`}
+          showPortfolioSelector
         />
 
         <section className="px-5 pt-2">
