@@ -225,6 +225,7 @@ export type Database = {
           currency: string
           id: string
           method: Database["public"]["Enums"]["deposit_method"]
+          portfolio_id: string | null
           reference: string | null
           status: Database["public"]["Enums"]["deposit_status"]
           user_id: string
@@ -237,6 +238,7 @@ export type Database = {
           currency?: string
           id?: string
           method: Database["public"]["Enums"]["deposit_method"]
+          portfolio_id?: string | null
           reference?: string | null
           status?: Database["public"]["Enums"]["deposit_status"]
           user_id: string
@@ -249,11 +251,27 @@ export type Database = {
           currency?: string
           id?: string
           method?: Database["public"]["Enums"]["deposit_method"]
+          portfolio_id?: string | null
           reference?: string | null
           status?: Database["public"]["Enums"]["deposit_status"]
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "deposits_portfolio_id_fkey"
+            columns: ["portfolio_id"]
+            isOneToOne: false
+            referencedRelation: "portfolio_holdings_valued"
+            referencedColumns: ["portfolio_id"]
+          },
+          {
+            foreignKeyName: "deposits_portfolio_id_fkey"
+            columns: ["portfolio_id"]
+            isOneToOne: false
+            referencedRelation: "portfolios"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       portfolios: {
         Row: {
