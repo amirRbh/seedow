@@ -21,6 +21,10 @@ const ParamsSchema = z.object({
   risk_target: z.number().min(0.02).max(0.30),
   horizon_years: z.number().int().min(1).max(40),
   initial_amount: z.number().min(0).max(10_000_000),
+  /** "replace" (default): deactivate all existing active portfolios. "create": add a new one alongside (max 3 enforced by DB trigger). */
+  mode: z.enum(["replace", "create"]).default("replace"),
+  /** Custom name for the new garden (used when creating multiple portfolios) */
+  name: z.string().min(1).max(80).optional(),
 });
 
 // ─────────────────────────────────────────────────────────
@@ -160,17 +164,20 @@ export const generatePortfolio = createServerFn({ method: "POST" })
       params,
     });
 
-    // 1) Désactiver tous les portefeuilles actifs existants (await garanti via .select())
-    const { error: deactivateErr } = await userClient
-      .from("portfolios")
-      .update({ is_active: false })
-      .eq("user_id", userId)
-      .eq("is_active", true)
-      .select("id");
+    // 1) En mode "replace", désactiver tous les portefeuilles actifs existants.
+    //    En mode "create", on conserve les jardins existants (le trigger DB applique la limite de 3).
+    if (data.mode === "replace") {
+      const { error: deactivateErr } = await userClient
+        .from("portfolios")
+        .update({ is_active: false })
+        .eq("user_id", userId)
+        .eq("is_active", true)
+        .select("id");
 
-    if (deactivateErr) {
-      console.error("[generatePortfolio] deactivate error:", deactivateErr);
-      throw new Error(`Failed to deactivate previous portfolio: ${deactivateErr.message}`);
+      if (deactivateErr) {
+        console.error("[generatePortfolio] deactivate error:", deactivateErr);
+        throw new Error(`Failed to deactivate previous portfolio: ${deactivateErr.message}`);
+      }
     }
 
     // 2) Insérer le nouveau portefeuille comme actif
@@ -179,7 +186,7 @@ export const generatePortfolio = createServerFn({ method: "POST" })
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .insert({
         user_id: userId,
-        name: "Mon portefeuille",
+        name: data.name ?? "Mon jardin",
         causes: data.causes,
         cause_intensity: data.cause_intensity,
         exclusions: data.exclusions,
