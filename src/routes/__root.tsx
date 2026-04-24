@@ -2,6 +2,7 @@ import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/r
 import { LexiconProvider } from "@/hooks/useLexicon";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ViewModeProvider } from "@/hooks/useViewMode";
+import { UserPortfoliosProvider } from "@/hooks/useUserPortfolios";
 
 import appCss from "../styles.css?url";
 
@@ -60,11 +61,13 @@ function RootShell({ children }: { children: React.ReactNode }) {
 function RootComponent() {
   return (
     <AuthProvider>
-      <LexiconProvider>
-        <ViewModeProvider>
-          <Outlet />
-        </ViewModeProvider>
-      </LexiconProvider>
+      <UserPortfoliosProvider>
+        <LexiconProvider>
+          <ViewModeProvider>
+            <Outlet />
+          </ViewModeProvider>
+        </LexiconProvider>
+      </UserPortfoliosProvider>
     </AuthProvider>
   );
 }
