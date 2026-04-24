@@ -51,7 +51,7 @@ export function GrowthComparison({ currentValue, invested, gain, returnPct, last
           <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold">Ta croissance</p>
           <p className="font-value text-3xl text-ink mt-1">
             {isGrowing ? "+" : ""}
-            {gain.toLocaleString("fr-FR", { maximumFractionDigits: 0 })} €
+            {gain.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
           </p>
         </div>
         <div className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold ${isGrowing ? "bg-moss-5 text-moss-1" : "bg-[oklch(0.93_0.05_45)] text-rust"}`}>
@@ -61,8 +61,8 @@ export function GrowthComparison({ currentValue, invested, gain, returnPct, last
       </div>
 
       <div className="mt-5 space-y-3.5">
-        <BarRow label="Graines plantées" value={invested.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 })} pct={investedPct} color="bg-paper-3" delay={0} />
-        <BarRow label="Valeur cultivée" value={currentValue.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 })} pct={valuePct} color={isGrowing ? "bg-moss-1" : "bg-rust"} delay={0.15} />
+        <BarRow label="Graines plantées" value={invested.toLocaleString("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 })} pct={investedPct} color="bg-paper-3" delay={0} />
+        <BarRow label="Valeur cultivée" value={currentValue.toLocaleString("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 })} pct={valuePct} color={isGrowing ? "bg-moss-1" : "bg-rust"} delay={0.15} />
       </div>
 
       {(onRefresh || lastUpdated !== undefined) && (
