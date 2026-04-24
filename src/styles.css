@@ -90,11 +90,11 @@
 :root {
   --radius: 0.75rem;
 
-  /* Surfaces — crème chaud, plus lumineux */
-  --paper: oklch(0.985 0.012 90);
-  --paper-2: oklch(0.965 0.018 88);
-  --paper-3: oklch(0.918 0.022 85);
-  --paper-inset: oklch(0.890 0.025 82);
+  /* Surfaces — blanc pur, neutre */
+  --paper: oklch(1 0 0);
+  --paper-2: oklch(0.98 0 0);
+  --paper-3: oklch(0.93 0 0);
+  --paper-inset: oklch(0.90 0 0);
 
   /* Encre — bleu-nuit profond plutôt que noir */
   --ink: oklch(0.24 0.040 250);
