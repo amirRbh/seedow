@@ -87,7 +87,7 @@ export function PortfolioSelector({ compact = false }: { compact?: boolean }) {
             <div className="border-t border-paper-3">
               {canCreateMore ? (
                 <button
-                  onClick={() => { setOpen(false); navigate({ to: "/onboarding", search: { new: 1 } as Record<string, unknown> }); }}
+                  onClick={() => { setOpen(false); navigate({ to: "/onboarding", search: { new: 1 } }); }}
                   className="w-full flex items-center gap-2 px-3 py-2.5 text-left text-[12px] text-moss-1 hover:bg-moss-5/30 font-medium"
                 >
                   <span className="w-4 h-4 rounded-full border border-moss-1 flex items-center justify-center text-[10px] leading-none">+</span>

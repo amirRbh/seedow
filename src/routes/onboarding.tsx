@@ -638,6 +638,8 @@ function PlantingScene({ onEnter, answers, mode = "replace", name }: { onEnter: 
           risk_target: risk,
           horizon_years: horizon,
           initial_amount: amount,
+          mode,
+          name,
         });
 
         if (cancelled) return;
