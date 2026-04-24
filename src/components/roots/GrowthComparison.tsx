@@ -61,8 +61,8 @@ export function GrowthComparison({ currentValue, invested, gain, returnPct, last
       </div>
 
       <div className="mt-5 space-y-3.5">
-        <BarRow label="Graines plantées" value={invested.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 })} pct={investedPct} color="bg-paper-3" delay={0} />
-        <BarRow label="Valeur cultivée" value={currentValue.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 })} pct={valuePct} color={isGrowing ? "bg-moss-1" : "bg-rust"} delay={0.15} />
+        <BarRow label="Graines plantées" value={invested.toLocaleString("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 })} pct={investedPct} color="bg-paper-3" delay={0} />
+        <BarRow label="Valeur cultivée" value={currentValue.toLocaleString("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 })} pct={valuePct} color={isGrowing ? "bg-moss-1" : "bg-rust"} delay={0.15} />
       </div>
 
       {(onRefresh || lastUpdated !== undefined) && (
