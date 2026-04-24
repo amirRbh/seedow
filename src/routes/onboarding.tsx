@@ -9,7 +9,7 @@ import { callAuthed } from "@/lib/authedServerFn";
 import type { CauseTag, ExclusionTag } from "@/lib/portfolio/types";
 
 export const Route = createFileRoute("/onboarding")({
-  validateSearch: (s: Record<string, unknown>) => ({
+  validateSearch: (s: Record<string, unknown>): { new?: 1 } => ({
     new: s.new === 1 || s.new === "1" ? 1 : undefined,
   }),
   // Pas de guard auth : on laisse l'utilisateur répondre aux questions sans compte.
@@ -78,7 +78,7 @@ const STEPS = [
 ];
 
 type StepId = (typeof STEPS)[number]["id"];
-type Phase = "intro" | "steps" | "account" | "planting";
+type Phase = "intro" | "steps" | "account" | "naming" | "planting";
 type Answers = Partial<Record<StepId, string[]>>;
 
 // Map onboarding objective → (risk_target, horizon_years)
