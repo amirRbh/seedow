@@ -611,7 +611,7 @@ interface SelectedAsset {
   name: string;
 }
 
-function PlantingScene({ onEnter, answers }: { onEnter: () => void; answers: Answers }) {
+function PlantingScene({ onEnter, answers, mode = "replace", name }: { onEnter: () => void; answers: Answers; mode?: "replace" | "create"; name?: string }) {
   const generate = useServerFn(generatePortfolio);
   const [phase, setPhase] = useState<"loading" | "reveal" | "error">("loading");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
