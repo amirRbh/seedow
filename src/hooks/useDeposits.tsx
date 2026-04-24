@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 
 export type DepositMethod = "card" | "wallet" | "sepa";
 export type DepositStatus = "pending" | "settled" | "failed";
@@ -15,6 +16,7 @@ export interface Deposit {
   asset_hint: string | null;
   available_at: string;
   created_at: string;
+  portfolio_id: string | null;
 }
 
 interface State {
@@ -27,12 +29,19 @@ interface State {
     amount: number;
     method: DepositMethod;
     asset_hint?: string;
+    /** Override the active portfolio target. Defaults to the currently selected portfolio. */
+    portfolio_id?: string | null;
   }) => Promise<{ ok: true; deposit: Deposit } | { ok: false; error: string }>;
   refresh: () => void;
 }
 
+/**
+ * Returns deposits SCOPED to the currently selected portfolio.
+ * If no portfolio is selected (e.g. brand-new user), returns an empty list.
+ */
 export function useDeposits(): State {
   const { user, loading: authLoading } = useAuth();
+  const { activeId, loading: pfListLoading } = useUserPortfolios();
   const [deposits, setDeposits] = useState<Deposit[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +50,7 @@ export function useDeposits(): State {
   const refresh = useCallback(() => setTick((t) => t + 1), []);
 
   useEffect(() => {
-    if (authLoading) return;
+    if (authLoading || pfListLoading) return;
     if (!user) {
       setDeposits([]);
       setLoading(false);
@@ -50,11 +59,18 @@ export function useDeposits(): State {
     let cancelled = false;
     setLoading(true);
     (async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("deposits")
-        .select("id, amount, currency, method, status, reference, asset_hint, available_at, created_at")
+        .select("id, amount, currency, method, status, reference, asset_hint, available_at, created_at, portfolio_id")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
+      if (activeId) {
+        query = query.eq("portfolio_id", activeId);
+      } else {
+        // No portfolio selected → only show legacy deposits with no portfolio assignment
+        query = query.is("portfolio_id", null);
+      }
+      const { data, error } = await query;
       if (cancelled) return;
       if (error) {
         setError(error.message);
@@ -72,11 +88,12 @@ export function useDeposits(): State {
     return () => {
       cancelled = true;
     };
-  }, [user, authLoading, tick]);
+  }, [user, authLoading, pfListLoading, activeId, tick]);
 
   const addDeposit: State["addDeposit"] = useCallback(
-    async ({ amount, method, asset_hint }) => {
+    async ({ amount, method, asset_hint, portfolio_id }) => {
       if (!user) return { ok: false, error: "Non authentifié" };
+      const targetPortfolio = portfolio_id !== undefined ? portfolio_id : activeId;
       const status: DepositStatus = method === "sepa" ? "pending" : "settled";
       const availableAt =
         method === "sepa"
@@ -93,6 +110,7 @@ export function useDeposits(): State {
           reference,
           asset_hint: asset_hint ?? null,
           available_at: availableAt,
+          portfolio_id: targetPortfolio,
         })
         .select()
         .single();
@@ -100,10 +118,13 @@ export function useDeposits(): State {
         return { ok: false, error: error?.message ?? "Erreur d'enregistrement" };
       }
       const d: Deposit = { ...data, amount: Number(data.amount) } as Deposit;
-      setDeposits((prev) => [d, ...prev]);
+      // Only add to local list if it matches the currently viewed portfolio
+      if (targetPortfolio === activeId || (targetPortfolio == null && activeId == null)) {
+        setDeposits((prev) => [d, ...prev]);
+      }
       return { ok: true, deposit: d };
     },
-    [user],
+    [user, activeId],
   );
 
   const total = deposits
