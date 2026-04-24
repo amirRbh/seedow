@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useViewMode } from "@/hooks/useViewMode";
+import { PortfolioSelector } from "@/components/garden/PortfolioSelector";
 
 interface AppHeaderProps {
   /** Petit éyebrow au-dessus du titre */
@@ -13,6 +14,8 @@ interface AppHeaderProps {
   hideSettings?: boolean;
   /** Si vrai, masque le toggle Simple/Expert */
   hideViewToggle?: boolean;
+  /** Si vrai, affiche le sélecteur de jardin (multi-portefeuilles). */
+  showPortfolioSelector?: boolean;
 }
 
 /**
@@ -25,35 +28,44 @@ export function AppHeader({
   subtitle,
   hideSettings = false,
   hideViewToggle = false,
+  showPortfolioSelector = false,
 }: AppHeaderProps) {
   return (
-    <header className="flex items-start justify-between gap-3 px-5 pt-6 pb-4">
-      <div className="min-w-0 flex-1">
-        {eyebrow && (
-          <p className="text-[11px] uppercase tracking-wider text-ink-3 font-medium">{eyebrow}</p>
-        )}
-        <h1 className="font-value text-3xl text-ink mt-0.5 truncate">{title}</h1>
-        {subtitle && <p className="text-sm text-ink-3 mt-1.5">{subtitle}</p>}
+    <header className="px-5 pt-6 pb-4">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          {eyebrow && (
+            <p className="text-[11px] uppercase tracking-wider text-ink-3 font-medium">{eyebrow}</p>
+          )}
+          <h1 className="font-value text-3xl text-ink mt-0.5 truncate">{title}</h1>
+          {subtitle && <p className="text-sm text-ink-3 mt-1.5">{subtitle}</p>}
+        </div>
+
+        <div className="flex items-center gap-2 flex-shrink-0 mt-1">
+          {!hideViewToggle && <ViewModeToggle />}
+          {!hideSettings && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ type: "spring", damping: 22, stiffness: 280 }}
+            >
+              <Link
+                to="/reglages"
+                aria-label="Réglages"
+                className="flex items-center justify-center w-9 h-9 rounded-full border border-paper-3 text-ink-2 hover:text-ink hover:border-moss-2 transition-colors"
+              >
+                <SettingsIcon />
+              </Link>
+            </motion.div>
+          )}
+        </div>
       </div>
 
-      <div className="flex items-center gap-2 flex-shrink-0 mt-1">
-        {!hideViewToggle && <ViewModeToggle />}
-        {!hideSettings && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.85 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ type: "spring", damping: 22, stiffness: 280 }}
-          >
-            <Link
-              to="/reglages"
-              aria-label="Réglages"
-              className="flex items-center justify-center w-9 h-9 rounded-full border border-paper-3 text-ink-2 hover:text-ink hover:border-moss-2 transition-colors"
-            >
-              <SettingsIcon />
-            </Link>
-          </motion.div>
-        )}
-      </div>
+      {showPortfolioSelector && (
+        <div className="mt-3">
+          <PortfolioSelector />
+        </div>
+      )}
     </header>
   );
 }
