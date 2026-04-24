@@ -1,6 +1,7 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
+import seedowLogo from "@/assets/seedow-logo.png";
 
 export const Route = createFileRoute("/")({
   beforeLoad: async () => {
@@ -24,22 +25,14 @@ function Index() {
     <div className="min-h-screen bg-paper flex flex-col">
       <main className="flex-1 flex flex-col items-center justify-center px-6 py-20 text-center max-w-lg mx-auto">
         <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: "spring", damping: 14 }}
-          className="w-28 h-28 relative mb-10"
+          initial={{ scale: 0.85, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", damping: 16 }}
+          className="relative mb-8"
         >
-          <div className="absolute inset-0 -m-6 rounded-full bg-moss-3/25 blur-2xl" />
-          <svg viewBox="0 0 80 80" className="w-full h-full relative animate-breathe">
-            <path d="M 40 22 C 30 22, 24 34, 28 50 C 32 62, 48 62, 52 50 C 56 34, 50 22, 40 22 Z" fill="var(--moss-2)" />
-            <path d="M 40 22 Q 40 12, 46 10" stroke="var(--moss-3)" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-            <ellipse cx="47" cy="8" rx="3.5" ry="2.5" fill="var(--moss-3)" transform="rotate(30 47 8)" />
-          </svg>
+          <div className="absolute inset-0 -m-8 rounded-full bg-moss-3/25 blur-2xl" />
+          <img src={seedowLogo} alt="Seedow" className="relative h-24 w-auto animate-breathe" />
         </motion.div>
-
-        <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="text-[11px] uppercase tracking-[0.25em] text-moss-1 font-semibold">
-          Seedow
-        </motion.p>
 
         <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="font-value text-5xl text-ink mt-4 leading-tight">
           Plante, cultive,

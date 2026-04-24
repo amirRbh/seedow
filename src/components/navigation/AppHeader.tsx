@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useViewMode } from "@/hooks/useViewMode";
 import { PortfolioSelector } from "@/components/garden/PortfolioSelector";
+import seedowLogo from "@/assets/seedow-logo.png";
 
 interface AppHeaderProps {
   /** Petit éyebrow au-dessus du titre */
@@ -32,6 +33,9 @@ export function AppHeader({
 }: AppHeaderProps) {
   return (
     <header className="px-5 pt-6 pb-4">
+      <Link to="/dashboard" aria-label="Seedow — Accueil" className="inline-flex items-center gap-2 mb-3">
+        <img src={seedowLogo} alt="Seedow" className="h-7 w-auto" />
+      </Link>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           {eyebrow && (

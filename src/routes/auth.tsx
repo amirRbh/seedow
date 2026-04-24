@@ -3,6 +3,7 @@ import { useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
+import seedowLogo from "@/assets/seedow-logo.png";
 
 export const Route = createFileRoute("/auth")({
   validateSearch: (search: Record<string, unknown>): { redirect?: string; mode?: "login" | "signup" } => ({
@@ -71,7 +72,10 @@ function AuthPage() {
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-sm"
       >
-        <Link to="/" className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-medium hover:text-ink transition-colors">
+        <Link to="/" className="inline-flex items-center gap-2 mb-6" aria-label="Seedow">
+          <img src={seedowLogo} alt="Seedow" className="h-8 w-auto" />
+        </Link>
+        <Link to="/" className="block text-[10px] uppercase tracking-[0.18em] text-ink-3 font-medium hover:text-ink transition-colors">
           ← Retour
         </Link>
         <h1 className="font-value text-3xl text-ink mt-6 leading-tight">
