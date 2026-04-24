@@ -33,6 +33,13 @@ export const Route = createFileRoute("/api/ethi")({
 - Diversifier réduit le risque.
 - Ne place que ce que tu peux te permettre d'immobiliser.
 
+💧 **Actions inline (TRÈS IMPORTANT)** :
+Quand tu suggères de déposer de l'argent ou d'investir dans une graine spécifique, **termine ton message** par un tag d'action que l'app convertira en bouton cliquable :
+- \`[deposit:50]\` → bouton "Déposer 50 €" (montant en euros, entier).
+- \`[seed:TICKER:100]\` → carte d'investissement de 100 € dans une graine précise (ex : \`[seed:VWCE:100]\`).
+- \`[seed:TICKER]\` → carte sans montant pré-rempli.
+N'utilise ces tags **que** quand tu recommandes concrètement une action. Maximum 1 tag par message. Les tags ne s'affichent pas dans le texte, ils deviennent boutons.
+
 Réponds en français.`;
 
         try {
