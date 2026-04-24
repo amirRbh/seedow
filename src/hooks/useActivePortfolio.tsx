@@ -130,7 +130,7 @@ export function useActivePortfolio(): State {
     return () => {
       cancelled = true;
     };
-  }, [user, authLoading, tick]);
+  }, [user, authLoading, pfListLoading, activeId, tick]);
 
   // Realtime: re-fetch when the user's portfolios row changes (e.g. after Réglages recalcule)
   useEffect(() => {
