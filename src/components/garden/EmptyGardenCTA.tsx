@@ -44,7 +44,7 @@ export function EmptyGardenCTA({ userName }: { userName: string }) {
       </p>
 
       <div className="mt-10 flex items-center gap-4">
-        <Link to="/onboarding" className="btn-plant">
+        <Link to="/onboarding" search={{ new: undefined }} className="btn-plant">
           Démarrer
         </Link>
         <Link to="/discover" className="text-[13px] text-ink-3 hover:text-ink transition-colors underline-offset-4 hover:underline">

@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useDeposits } from "@/hooks/useDeposits";
+import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 
 export interface ValuedHolding {
   asset_id: string;
@@ -53,6 +54,7 @@ interface ViewRow {
 
 export function usePortfolioValuation(): PortfolioValuation {
   const { user, loading: authLoading } = useAuth();
+  const { activeId, loading: pfListLoading } = useUserPortfolios();
   const { total: depositsTotal, loading: depLoading } = useDeposits();
   const [rows, setRows] = useState<ViewRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -62,7 +64,7 @@ export function usePortfolioValuation(): PortfolioValuation {
   const refresh = useCallback(() => setTick((t) => t + 1), []);
 
   useEffect(() => {
-    if (authLoading) return;
+    if (authLoading || pfListLoading) return;
     if (!user) {
       setRows([]);
       setLoading(false);
@@ -72,14 +74,16 @@ export function usePortfolioValuation(): PortfolioValuation {
     setLoading(true);
     setError(null);
     (async () => {
-      // The view is filtered by user_id on the underlying portfolios RLS,
-      // but we add an explicit filter to be safe.
-      const { data, error } = await supabase
+      let query = supabase
         .from("portfolio_holdings_valued" as never)
         .select(
           "portfolio_id, user_id, asset_id, ticker, name, asset_class, weight, total_invested, invested_in_holding, current_price, entry_price, current_value, quote_fetched_at",
         )
         .eq("user_id", user.id);
+      if (activeId) {
+        query = query.eq("portfolio_id", activeId);
+      }
+      const { data, error } = await query;
       if (cancelled) return;
       if (error) {
         setError(error.message);
@@ -92,7 +96,7 @@ export function usePortfolioValuation(): PortfolioValuation {
     return () => {
       cancelled = true;
     };
-  }, [user, authLoading, tick]);
+  }, [user, authLoading, pfListLoading, activeId, tick]);
 
   // ── Aggregate ────────────────────────────────────────────
   const num = (v: number | string | null | undefined) =>

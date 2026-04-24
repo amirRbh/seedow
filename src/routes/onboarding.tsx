@@ -9,6 +9,9 @@ import { callAuthed } from "@/lib/authedServerFn";
 import type { CauseTag, ExclusionTag } from "@/lib/portfolio/types";
 
 export const Route = createFileRoute("/onboarding")({
+  validateSearch: (s: Record<string, unknown>): { new?: 1 } => ({
+    new: s.new === 1 || s.new === "1" ? 1 : undefined,
+  }),
   // Pas de guard auth : on laisse l'utilisateur répondre aux questions sans compte.
   // La création de compte arrive juste avant la génération du portefeuille (phase "account").
   component: Onboarding,
@@ -75,7 +78,7 @@ const STEPS = [
 ];
 
 type StepId = (typeof STEPS)[number]["id"];
-type Phase = "intro" | "steps" | "account" | "planting";
+type Phase = "intro" | "steps" | "account" | "naming" | "planting";
 type Answers = Partial<Record<StepId, string[]>>;
 
 // Map onboarding objective → (risk_target, horizon_years)
@@ -96,9 +99,12 @@ function objectiveToRiskHorizon(obj: string | undefined): { risk: number; horizo
 function Onboarding() {
   const navigate = useNavigate();
   const router = useRouter();
-  const [phase, setPhase] = useState<Phase>("intro");
+  const { new: isNew } = Route.useSearch();
+  const isAdditive = isNew === 1;
+  const [phase, setPhase] = useState<Phase>(isAdditive ? "steps" : "intro");
   const [stepIndex, setStepIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
+  const [gardenName, setGardenName] = useState("");
 
   const completeStep = async (selected: string[]) => {
     const step = STEPS[stepIndex];
@@ -106,10 +112,16 @@ function Onboarding() {
     if (stepIndex < STEPS.length - 1) {
       setStepIndex((i) => i + 1);
     } else {
-      // Dernière question terminée : besoin d'un compte avant de générer.
+      // Dernière question terminée
       const { data } = await supabase.auth.getSession();
-      if (data.session) setPhase("planting");
-      else setPhase("account");
+      if (isAdditive) {
+        // Mode "nouveau jardin" : utilisateur déjà connecté, on demande le nom puis on plante.
+        if (data.session) setPhase("naming");
+        else setPhase("account");
+      } else {
+        if (data.session) setPhase("planting");
+        else setPhase("account");
+      }
     }
   };
 
@@ -124,13 +136,21 @@ function Onboarding() {
             stepIndex={stepIndex}
             totalSteps={STEPS.length}
             onComplete={completeStep}
-            onBack={() => (stepIndex > 0 ? setStepIndex(stepIndex - 1) : setPhase("intro"))}
+            onBack={() => (stepIndex > 0 ? setStepIndex(stepIndex - 1) : isAdditive ? navigate({ to: "/dashboard" }) : setPhase("intro"))}
+          />
+        )}
+        {phase === "naming" && (
+          <NameGardenStep
+            key="naming"
+            initialName={gardenName}
+            onConfirm={(name) => { setGardenName(name); setPhase("planting"); }}
+            onBack={() => { setStepIndex(STEPS.length - 1); setPhase("steps"); }}
           />
         )}
         {phase === "account" && (
           <AccountStep
             key="account"
-            onAuthed={() => setPhase("planting")}
+            onAuthed={() => setPhase(isAdditive ? "naming" : "planting")}
             onBack={() => { setStepIndex(STEPS.length - 1); setPhase("steps"); }}
           />
         )}
@@ -142,10 +162,68 @@ function Onboarding() {
               navigate({ to: "/dashboard" });
             }}
             answers={answers}
+            mode={isAdditive ? "create" : "replace"}
+            name={gardenName || undefined}
           />
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+function NameGardenStep({
+  initialName,
+  onConfirm,
+  onBack,
+}: {
+  initialName: string;
+  onConfirm: (name: string) => void;
+  onBack: () => void;
+}) {
+  const [name, setName] = useState(initialName);
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -20 }}
+      transition={{ duration: 0.35 }}
+      className="min-h-screen flex flex-col"
+    >
+      <div className="flex items-center justify-between px-6 pt-6">
+        <button
+          onClick={onBack}
+          className="w-9 h-9 rounded-full flex items-center justify-center text-paper/50 hover:text-paper transition-colors"
+          aria-label="Retour"
+        >
+          <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+            <path d="M15 6l-6 6 6 6" />
+          </svg>
+        </button>
+        <span className="text-[11px] text-paper/40 font-semibold">Nomme ton jardin</span>
+      </div>
+      <div className="px-6 pt-12 pb-12 max-w-md mx-auto w-full flex-1">
+        <h2 className="font-value text-3xl text-paper">Comment s'appelle ce jardin ?</h2>
+        <p className="text-[13px] text-paper/60 mt-2">
+          Donne-lui un nom qui te parle — par exemple <em>Climat</em>, <em>Retraite</em>, <em>Tech responsable</em>…
+        </p>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value.slice(0, 40))}
+          placeholder="Mon jardin climat"
+          autoFocus
+          className="mt-8 w-full px-4 py-4 rounded-2xl border border-paper/15 bg-paper/5 text-paper text-[16px] placeholder-paper/30 focus:border-paper/40 focus:outline-none transition-colors"
+        />
+        <p className="mt-2 text-[10px] text-paper/40 text-right">{name.length}/40</p>
+
+        <button
+          onClick={() => onConfirm(name.trim() || "Mon jardin")}
+          className="mt-8 w-full py-4 rounded-full bg-paper text-ink font-semibold text-sm hover:bg-moss-5 hover:text-moss-1 transition-colors"
+        >
+          Planter ce jardin 🌱
+        </button>
+      </div>
+    </motion.div>
   );
 }
 
@@ -533,7 +611,7 @@ interface SelectedAsset {
   name: string;
 }
 
-function PlantingScene({ onEnter, answers }: { onEnter: () => void; answers: Answers }) {
+function PlantingScene({ onEnter, answers, mode = "replace", name }: { onEnter: () => void; answers: Answers; mode?: "replace" | "create"; name?: string }) {
   const generate = useServerFn(generatePortfolio);
   const [phase, setPhase] = useState<"loading" | "reveal" | "error">("loading");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -560,6 +638,8 @@ function PlantingScene({ onEnter, answers }: { onEnter: () => void; answers: Ans
           risk_target: risk,
           horizon_years: horizon,
           initial_amount: amount,
+          mode,
+          name,
         });
 
         if (cancelled) return;

@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 
 export interface ActiveHolding {
   id: string;
@@ -40,6 +41,7 @@ interface State {
 
 export function useActivePortfolio(): State {
   const { user, loading: authLoading } = useAuth();
+  const { activeId, loading: pfListLoading } = useUserPortfolios();
   const [portfolio, setPortfolio] = useState<ActivePortfolio | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -48,7 +50,7 @@ export function useActivePortfolio(): State {
   const refresh = useCallback(() => setTick((t) => t + 1), []);
 
   useEffect(() => {
-    if (authLoading) return;
+    if (authLoading || pfListLoading) return;
     if (!user) {
       setPortfolio(null);
       setLoading(false);
@@ -59,13 +61,19 @@ export function useActivePortfolio(): State {
     setError(null);
 
     (async () => {
-      const { data: portfolios, error: pfErr } = await supabase
+      let query = supabase
         .from("portfolios")
         .select("id, name, initial_amount, generated_at, weights, metrics")
         .eq("user_id", user.id)
-        .eq("is_active", true)
-        .order("generated_at", { ascending: false })
-        .limit(1);
+        .eq("is_active", true);
+
+      if (activeId) {
+        query = query.eq("id", activeId);
+      } else {
+        query = query.order("generated_at", { ascending: false }).limit(1);
+      }
+
+      const { data: portfolios, error: pfErr } = await query;
 
       if (cancelled) return;
       if (pfErr) {
@@ -122,7 +130,7 @@ export function useActivePortfolio(): State {
     return () => {
       cancelled = true;
     };
-  }, [user, authLoading, tick]);
+  }, [user, authLoading, pfListLoading, activeId, tick]);
 
   // Realtime: re-fetch when the user's portfolios row changes (e.g. after Réglages recalcule)
   useEffect(() => {

@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
+import { parseEthiActions, EthiActions } from "./EthiActions";
 
 interface EthiBubbleProps {
   role: "user" | "assistant";
@@ -9,6 +10,8 @@ interface EthiBubbleProps {
 
 export function EthiBubble({ role, content, typing }: EthiBubbleProps) {
   const isUser = role === "user";
+  const parsed = !isUser && !typing ? parseEthiActions(content) : null;
+  const displayContent = parsed?.cleaned ?? content;
 
   return (
     <motion.div
@@ -17,7 +20,7 @@ export function EthiBubble({ role, content, typing }: EthiBubbleProps) {
       transition={{ duration: 0.25, ease: "easeOut" }}
       className={`flex ${isUser ? "justify-end" : "justify-start"}`}
     >
-      <div className={`max-w-[85%] ${isUser ? "ml-auto" : ""}`}>
+      <div className={`max-w-[85%] ${isUser ? "ml-auto" : "w-full"}`}>
         {!isUser && <p className="text-[10px] text-paper/40 font-semibold mb-1.5 ml-1">Ethi</p>}
 
         <div
@@ -31,10 +34,12 @@ export function EthiBubble({ role, content, typing }: EthiBubbleProps) {
             <p className="whitespace-pre-wrap">{content}</p>
           ) : (
             <div className="space-y-1.5 [&_strong]:text-moss-3 [&_p]:my-1 [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4">
-              <ReactMarkdown>{content}</ReactMarkdown>
+              <ReactMarkdown>{displayContent}</ReactMarkdown>
             </div>
           )}
         </div>
+
+        {parsed && parsed.actions.length > 0 && <EthiActions actions={parsed.actions} />}
       </div>
     </motion.div>
   );
