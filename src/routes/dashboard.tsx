@@ -110,7 +110,7 @@ function Dashboard() {
           <p className="text-[11px] uppercase tracking-wider text-ink-3 font-medium">{L.labels.total_value}</p>
           <h2 className="font-value text-6xl text-ink leading-none mt-1">
             <sup className="text-2xl align-super mr-1">€</sup>
-            {totalValue.toLocaleString("fr-FR", { maximumFractionDigits: 0 })}
+            {totalValue.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </h2>
           <div
             className={`inline-flex items-center gap-1.5 mt-3 px-3 py-1 rounded-full text-xs font-semibold ${
@@ -121,7 +121,7 @@ function Dashboard() {
               {isGrowing ? <polyline points="2,12 6,7 10,9 14,3" /> : <polyline points="2,4 6,9 10,7 14,13" />}
             </svg>
             {isGrowing ? "+" : ""}
-            {gain.toLocaleString("fr-FR", { maximumFractionDigits: 0 })} € · {returnPct.toFixed(1)}%
+            {gain.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} € · {returnPct.toFixed(2)}%
             <span className="text-ink-3 font-normal ml-1">depuis la plantation</span>
           </div>
           {walletPending > 0 && (
