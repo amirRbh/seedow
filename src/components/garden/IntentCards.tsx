@@ -18,7 +18,7 @@ export function IntentCards({ wallet }: IntentCardsProps) {
         <p className="text-[11px] text-ink-3">
           Terreau dispo :{" "}
           <span className="text-ink font-semibold">
-            {balance.toLocaleString("fr-FR", { style: "currency", currency, maximumFractionDigits: 0 })}
+            {balance.toLocaleString("fr-FR", { style: "currency", currency, minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </span>
         </p>
       </div>

@@ -52,7 +52,7 @@ export function AllocationBreakdown({ holdings, totalAmount }: Props) {
         <p className="text-[11px] text-ink-3">
           Total{" "}
           <span className="font-semibold text-ink">
-            {totalAmount.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 })}
+            {totalAmount.toLocaleString("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </span>
         </p>
       </div>
@@ -125,7 +125,7 @@ export function AllocationBreakdown({ holdings, totalAmount }: Props) {
                       <span className="text-moss-1 font-semibold">{h.esgScore.toFixed(0)}</span>
                     </p>
                     <p className="text-[10px] text-ink-3 flex-shrink-0">
-                      {amount.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 })}
+                      {amount.toLocaleString("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                   </div>
                   <div className="h-1 mt-1.5 bg-paper-2 rounded-full overflow-hidden">

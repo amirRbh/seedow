@@ -73,7 +73,7 @@ function Portfolio() {
         <AppHeader
           eyebrow="Ton histoire"
           title="Les racines"
-          subtitle={`${portfolio.holdings.length} plantes · ${totalValue.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 })} cultivés`}
+          subtitle={`${portfolio.holdings.length} plantes · ${totalValue.toLocaleString("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 })} cultivés`}
           showPortfolioSelector
         />
 
@@ -128,7 +128,7 @@ function Portfolio() {
             <TimelineEvent
               type="soil"
               title="Tu as enrichi ton terreau"
-              subtitle={`Capital initial ${totalInvested.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 })}`}
+              subtitle={`Capital initial ${totalInvested.toLocaleString("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
               badge="Terreau"
               badgeVariant="soil"
             />
