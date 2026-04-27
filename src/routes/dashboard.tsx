@@ -126,7 +126,7 @@ function Dashboard() {
           </div>
           {walletPending > 0 && (
             <p className="text-[11px] text-ink-3 mt-2">
-              + {walletPending.toLocaleString("fr-FR")} € en attente de virement SEPA
+              + {walletPending.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} € en attente de virement SEPA
             </p>
           )}
         </motion.section>
@@ -231,11 +231,11 @@ function WalletCard({
         <span className="text-[11px] text-ink-3">{depositCount} dépôt{depositCount > 1 ? "s" : ""}</span>
       </div>
       <p className="font-value text-3xl text-ink mt-1.5 tabular-nums">
-        {balance.toLocaleString("fr-FR")} €
+        {balance.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
       </p>
       {pending > 0 && (
         <p className="text-[11px] text-ink-3 mt-1">
-          {pending.toLocaleString("fr-FR")} € en attente
+          {pending.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} € en attente
         </p>
       )}
       <button
