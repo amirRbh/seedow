@@ -49,16 +49,16 @@ function Ethi() {
     let greeting = "";
     if (intent === "rebalance") {
       greeting = hasGarden
-        ? `Hop ${firstName} 🌿 — on rééquilibre ? Je passe en revue tes **${portfolio!.holdings.length} plantes** et je te dis quoi ajuster.`
-        : `Hop ${firstName} 🌿 — pas encore de jardin à rééquilibrer. On en plante un ?`;
+        ? `Hop ${firstName} — on rééquilibre ? Je passe en revue tes **${portfolio!.holdings.length} lignes** et je te dis quoi ajuster.`
+        : `Hop ${firstName} — pas encore de portefeuille à rééquilibrer. On en construit un ?`;
     } else if (!hasGarden) {
-      greeting = `Salut ${firstName} 🌱 Ton jardin est encore en terre. Dis-moi ce qui compte pour toi, je sème en 2 min.`;
+      greeting = `Salut ${firstName} ✨ Ton portefeuille n'est pas encore créé. Dis-moi ce qui compte pour toi, je le compose en 2 min.`;
     } else if (invested > 0 && valuation.hasQuotes) {
-      greeting = `${firstName}, ton jardin tourne sur **${invested.toFixed(0)} €** déposés, **${portfolio!.holdings.length} plantes** et un P&L de **${pnlStr}** 🌿. On regarde la suite ?`;
+      greeting = `${firstName}, ton portefeuille tourne sur **${invested.toFixed(0)} €** investis, **${portfolio!.holdings.length} lignes** et un P&L de **${pnlStr}** 📈. On regarde la suite ?`;
     } else if (invested > 0) {
-      greeting = `${firstName}, ton jardin tourne sur **${invested.toFixed(0)} €** déposés et **${portfolio!.holdings.length} plantes** 🌿. On regarde la suite ?`;
+      greeting = `${firstName}, ton portefeuille tourne sur **${invested.toFixed(0)} €** investis et **${portfolio!.holdings.length} lignes**. On regarde la suite ?`;
     } else {
-      greeting = `Salut ${firstName} 🌱 Ton jardin est prêt mais pas encore arrosé. On programme un premier dépôt ?`;
+      greeting = `Salut ${firstName} ✨ Ton portefeuille est prêt mais pas encore alimenté. On programme un premier versement ?`;
     }
     setMessages([{ id: "welcome", role: "assistant", content: greeting }]);
   }, [intent, dataLoading, portfolio, depositsTotal, firstName, valuation.pnl, valuation.hasQuotes]);
@@ -103,7 +103,7 @@ function Ethi() {
               </svg>
             </div>
             <div className="min-w-0">
-              <p className="text-[10px] uppercase tracking-wider text-paper/40 font-semibold">Ton conseiller jardin</p>
+              <p className="text-[10px] uppercase tracking-wider text-paper/40 font-semibold">Ton conseiller</p>
               <h1 className="font-value text-2xl">Ethi</h1>
             </div>
           </div>

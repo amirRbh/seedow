@@ -5,7 +5,7 @@ import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 
 /**
  * Dropdown selector to switch between the user's active portfolios (max 3).
- * Includes a "+ nouveau jardin" action when capacity allows.
+ * Includes a "+ nouveau portefeuille" action when capacity allows.
  * Hides itself entirely when the user has zero or one portfolio (degenerate UI).
  */
 export function PortfolioSelector({ compact = false }: { compact?: boolean }) {
@@ -91,12 +91,12 @@ export function PortfolioSelector({ compact = false }: { compact?: boolean }) {
                   className="w-full flex items-center gap-2 px-3 py-2.5 text-left text-[12px] text-moss-1 hover:bg-moss-5/30 font-medium"
                 >
                   <span className="w-4 h-4 rounded-full border border-moss-1 flex items-center justify-center text-[10px] leading-none">+</span>
-                  Nouveau jardin
+                  Nouveau portefeuille
                   <span className="ml-auto text-[9px] text-ink-3">{portfolios.length}/3</span>
                 </button>
               ) : (
                 <div className="px-3 py-2 text-[10px] text-ink-3 text-center">
-                  Limite de 3 jardins atteinte
+                  Limite de 3 portefeuilles atteinte
                 </div>
               )}
             </div>

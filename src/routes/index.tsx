@@ -35,18 +35,18 @@ function Index() {
         </motion.div>
 
         <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="font-value text-5xl text-ink mt-4 leading-tight">
-          Plante, cultive,
+          Investis,
           <br />
-          récolte.
+          avec impact.
         </motion.h1>
 
         <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }} className="text-sm text-ink-3 mt-6 max-w-sm leading-relaxed">
-          L'investissement éthique comme un jardin qui pousse. Aucun jargon, juste du sens — et Ethi à tes côtés.
+          Investissement responsable, sans jargon. Suis ta performance et ton impact — Ethi t'accompagne à chaque étape.
         </motion.p>
 
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.1 }} className="mt-12 flex flex-col items-center gap-3">
           <Link to="/auth" search={{ redirect: "/onboarding", mode: "signup" }} className="btn-plant">
-            Planter ma première graine
+            Commencer maintenant
             <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
               <path d="M5 12h14M13 5l7 7-7 7" />
             </svg>

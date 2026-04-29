@@ -7,7 +7,7 @@ interface EthiSuggestionChipsProps {
 
 export function EthiSuggestionChips({ onSelect, hasGarden }: EthiSuggestionChipsProps) {
   const suggestions = hasGarden
-    ? ["Analyse mon jardin", "Quelle graine ajouter ?", "Mon impact carbone ?", "Comment optimiser ?"]
+    ? ["Analyse mon portefeuille", "Quel actif ajouter ?", "Mon impact carbone ?", "Comment optimiser ?"]
     : ["Comment commencer ?", "C'est quoi un ETF ESG ?", "Combien minimum pour investir ?"];
 
   return (

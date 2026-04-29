@@ -152,16 +152,16 @@ function Dashboard() {
           className="px-5 pt-6"
         >
           {loading ? (
-            <p className="text-[12px] text-ink-3">Chargement de votre jardin…</p>
+            <p className="text-[12px] text-ink-3">Chargement de votre portefeuille…</p>
           ) : plants.length === 0 ? (
             <div className="border border-dashed border-paper-3 rounded p-6 text-center">
-              <p className="text-[13px] text-ink-2 mb-3">Votre jardin est encore vide.</p>
+              <p className="text-[13px] text-ink-2 mb-3">Votre portefeuille est encore vide.</p>
               <Link
                 to="/onboarding"
                 search={{ new: undefined }}
                 className="inline-block px-4 py-2 text-[12px] font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
               >
-                Planter mes premières graines
+                Faire mon premier investissement
               </Link>
             </div>
           ) : (
@@ -198,8 +198,8 @@ function Dashboard() {
             className="w-full flex items-center justify-between p-4 rounded-2xl bg-paper-2 hover:bg-paper-3 transition-colors"
           >
             <div className="text-left">
-              <p className="text-sm font-semibold text-ink">Voir les racines</p>
-              <p className="text-xs text-ink-3 mt-0.5">L'histoire complète de ton jardin</p>
+              <p className="text-sm font-semibold text-ink">Voir le détail</p>
+              <p className="text-xs text-ink-3 mt-0.5">Allocation, performance et historique</p>
             </div>
             <svg viewBox="0 0 24 24" className="w-5 h-5 text-ink-3" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M9 6l6 6-6 6" />

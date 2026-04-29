@@ -80,7 +80,7 @@ export function DepositSheet({ open, onClose, assetName }: DepositSheetProps) {
                     Déposer
                   </p>
                   <h2 className="font-value text-2xl text-ink mt-0.5">
-                    {assetName ? `Investir dans ${assetName}` : "Alimenter mon jardin"}
+                    {assetName ? `Investir dans ${assetName}` : "Alimenter mon portefeuille"}
                   </h2>
                 </div>
                 <button

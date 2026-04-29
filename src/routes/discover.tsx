@@ -55,14 +55,14 @@ function Discover() {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
       <div className="max-w-lg mx-auto pb-28">
-        <AppHeader eyebrow="Découvrir" title="Quelles graines ?" />
+        <AppHeader eyebrow="Découvrir" title="Quels actifs ?" />
 
         <div className="px-5 pb-2 flex items-center justify-between gap-3">
           {planted.length > 0 ? (
             <div className="flex items-center gap-1.5 text-[11px] text-moss-1 font-semibold bg-moss-5 px-2.5 py-1 rounded-full border border-moss-4">
-              <span>🌱</span>
+              <span>✓</span>
               <span>
-                {planted.length} graine{planted.length > 1 ? "s" : ""} sélectionnée{planted.length > 1 ? "s" : ""}
+                {planted.length} actif{planted.length > 1 ? "s" : ""} sélectionné{planted.length > 1 ? "s" : ""}
               </span>
             </div>
           ) : (
@@ -118,7 +118,7 @@ function Discover() {
             {!current ? (
               <div className="pt-12 text-center">
                 <p className="font-value text-3xl text-ink">Tu as tout vu !</p>
-                <p className="text-sm text-ink-3 mt-3">Tu as parcouru toutes les graines de ce thème.</p>
+                <p className="text-sm text-ink-3 mt-3">Tu as parcouru tous les actifs de ce thème.</p>
                 <button onClick={reset} className="btn-plant mt-8">Recommencer</button>
               </div>
             ) : (
@@ -158,16 +158,14 @@ function Discover() {
                   >
                     Investir
                   </button>
-                  <button onClick={() => handleSwipe("plant")} aria-label="Planter" className="w-14 h-14 rounded-full bg-moss-1 text-paper flex items-center justify-center hover:bg-moss-2 transition-all active:scale-95">
+                  <button onClick={() => handleSwipe("plant")} aria-label="Sélectionner" className="w-14 h-14 rounded-full bg-moss-1 text-paper flex items-center justify-center hover:bg-moss-2 transition-all active:scale-95">
                     <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 22V12" />
-                      <path d="M12 12c0-4 3-7 7-7 0 4-3 7-7 7Z" />
-                      <path d="M12 12c0-3-2-5-5-5 0 3 2 5 5 5Z" />
+                      <path d="M20 6L9 17l-5-5" />
                     </svg>
                   </button>
                 </div>
 
-                <p className="text-center text-[11px] text-ink-3 mt-4">Glisse à droite pour planter · à gauche pour passer · ou investis directement</p>
+                <p className="text-center text-[11px] text-ink-3 mt-4">Glisse à droite pour sélectionner · à gauche pour passer · ou investis directement</p>
               </>
             )}
           </div>

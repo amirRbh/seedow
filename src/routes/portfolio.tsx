@@ -35,7 +35,7 @@ function Portfolio() {
   if (loading) {
     return (
       <div className="min-h-screen bg-paper flex items-center justify-center">
-        <p className="text-[12px] text-ink-3">Chargement de vos racines…</p>
+        <p className="text-[12px] text-ink-3">Chargement du portefeuille…</p>
       </div>
     );
   }
@@ -44,7 +44,7 @@ function Portfolio() {
     return (
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
         <div className="max-w-lg mx-auto pb-28">
-          <AppHeader eyebrow="Ton histoire" title="Les racines" />
+          <AppHeader eyebrow="Détails" title="Mon portefeuille" />
           <div className="px-5 pt-8">
             <div className="border border-dashed border-paper-3 rounded p-6 text-center">
               <p className="text-[13px] text-ink-2 mb-3">Aucun portefeuille actif pour le moment.</p>
@@ -71,9 +71,9 @@ function Portfolio() {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
       <div className="max-w-lg mx-auto pb-28">
         <AppHeader
-          eyebrow="Ton histoire"
-          title="Les racines"
-          subtitle={`${portfolio.holdings.length} plantes · ${totalValue.toLocaleString("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 })} cultivés`}
+          eyebrow="Détails"
+          title="Mon portefeuille"
+          subtitle={`${portfolio.holdings.length} ligne${portfolio.holdings.length > 1 ? "s" : ""} · ${totalValue.toLocaleString("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
           showPortfolioSelector
         />
 
@@ -108,12 +108,12 @@ function Portfolio() {
         </section>
 
         <section className="px-5 pt-8">
-          <h2 className="text-sm font-semibold text-ink mb-4">Chronologie du jardin</h2>
+          <h2 className="text-sm font-semibold text-ink mb-4">Historique du portefeuille</h2>
 
           <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold mb-2 mt-1">Aujourd'hui</p>
           <TimelineEvent
             type="gain"
-            title="Ton jardin est en croissance"
+            title="Ton portefeuille est en hausse"
             subtitle={`Score ESG ${portfolio.metrics?.esg_score ? (portfolio.metrics.esg_score).toFixed(0) : "—"}/100 · ${portfolio.holdings.length} positions`}
             badge={`${returnPct >= 0 ? "+" : ""}${returnPct.toFixed(1)}%`}
             badgeVariant={returnPct >= 0 ? "gain" : "loss"}
@@ -127,9 +127,9 @@ function Portfolio() {
             <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold mb-2 capitalize">{monthLabel(generated)}</p>
             <TimelineEvent
               type="soil"
-              title="Tu as enrichi ton terreau"
-              subtitle={`Capital initial ${totalInvested.toLocaleString("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
-              badge="Terreau"
+              title="Capital initial déposé"
+              subtitle={`${totalInvested.toLocaleString("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+              badge="Dépôt"
               badgeVariant="soil"
             />
           </div>
