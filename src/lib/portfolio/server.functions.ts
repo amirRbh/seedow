@@ -186,7 +186,7 @@ export const generatePortfolio = createServerFn({ method: "POST" })
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .insert({
         user_id: userId,
-        name: data.name ?? "Mon jardin",
+        name: data.name ?? "Mon portefeuille",
         causes: data.causes,
         cause_intensity: data.cause_intensity,
         exclusions: data.exclusions,

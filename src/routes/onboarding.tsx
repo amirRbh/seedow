@@ -26,7 +26,7 @@ const STEPS = [
     id: "values" as const,
     multi: true,
     ethiMessage:
-      "Salut, moi c'est Ethi 🌱 Je vais t'aider à créer ton jardin aujourd'hui. Dis-moi d'abord : qu'est-ce qui compte vraiment pour toi ?",
+      "Salut, moi c'est Ethi ✨ Je vais t'aider à composer ton portefeuille aujourd'hui. Dis-moi d'abord : qu'est-ce qui compte vraiment pour toi ?",
     question: "Choisis tes causes — tu peux en prendre plusieurs.",
     options: [
       { id: "climat", label: "Climat", icon: "☀️", desc: "Transition énergétique" },
@@ -54,7 +54,7 @@ const STEPS = [
   {
     id: "objective" as const,
     multi: false,
-    ethiMessage: "Bien noté. Maintenant : tu veux faire pousser ton jardin pour quoi ?",
+    ethiMessage: "Bien noté. Maintenant : pour quel objectif veux-tu faire grandir ce capital ?",
     question: "Ton objectif principal",
     options: [
       { id: "retraite", label: "Préparer ma retraite", icon: "🏖️", desc: "20+ ans" },
@@ -66,13 +66,13 @@ const STEPS = [
   {
     id: "amount" as const,
     multi: false,
-    ethiMessage: "Combien veux-tu planter pour commencer ? On peut commencer petit.",
+    ethiMessage: "Combien veux-tu investir pour commencer ? On peut commencer petit.",
     question: "Ton premier dépôt",
     options: [
       { id: "10", label: "10 €", icon: "🌱", desc: "Je teste tranquille" },
       { id: "50", label: "50 €", icon: "🌿", desc: "Un engagement sérieux" },
       { id: "100", label: "100 €", icon: "🌳", desc: "Un vrai démarrage" },
-      { id: "500", label: "500 €", icon: "🍃", desc: "Un jardin ambitieux" },
+      { id: "500", label: "500 €", icon: "🍃", desc: "Un démarrage ambitieux" },
     ],
   },
 ];
@@ -115,7 +115,7 @@ function Onboarding() {
       // Dernière question terminée
       const { data } = await supabase.auth.getSession();
       if (isAdditive) {
-        // Mode "nouveau jardin" : utilisateur déjà connecté, on demande le nom puis on plante.
+        // Mode "nouveau portefeuille" : utilisateur déjà connecté, on demande le nom puis on génère.
         if (data.session) setPhase("naming");
         else setPhase("account");
       } else {
@@ -199,10 +199,10 @@ function NameGardenStep({
             <path d="M15 6l-6 6 6 6" />
           </svg>
         </button>
-        <span className="text-[11px] text-paper/40 font-semibold">Nomme ton jardin</span>
+        <span className="text-[11px] text-paper/40 font-semibold">Nomme ton portefeuille</span>
       </div>
       <div className="px-6 pt-12 pb-12 max-w-md mx-auto w-full flex-1">
-        <h2 className="font-value text-3xl text-paper">Comment s'appelle ce jardin ?</h2>
+        <h2 className="font-value text-3xl text-paper">Comment s'appelle ce portefeuille ?</h2>
         <p className="text-[13px] text-paper/60 mt-2">
           Donne-lui un nom qui te parle — par exemple <em>Climat</em>, <em>Retraite</em>, <em>Tech responsable</em>…
         </p>
@@ -210,17 +210,17 @@ function NameGardenStep({
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value.slice(0, 40))}
-          placeholder="Mon jardin climat"
+          placeholder="Mon portefeuille climat"
           autoFocus
           className="mt-8 w-full px-4 py-4 rounded-2xl border border-paper/15 bg-paper/5 text-paper text-[16px] placeholder-paper/30 focus:border-paper/40 focus:outline-none transition-colors"
         />
         <p className="mt-2 text-[10px] text-paper/40 text-right">{name.length}/40</p>
 
         <button
-          onClick={() => onConfirm(name.trim() || "Mon jardin")}
+          onClick={() => onConfirm(name.trim() || "Mon portefeuille")}
           className="mt-8 w-full py-4 rounded-full bg-paper text-ink font-semibold text-sm hover:bg-moss-5 hover:text-moss-1 transition-colors"
         >
-          Planter ce jardin 🌱
+          Valider ce portefeuille
         </button>
       </div>
     </motion.div>
@@ -309,7 +309,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
             </svg>
           </div>
           <div className="flex-1 bg-paper/10 text-paper text-[13px] rounded-2xl rounded-bl-sm px-4 py-3 leading-relaxed">
-            Top, j'ai tout ce qu'il faut 🌱 Crée ton compte en 10 secondes pour que je sauvegarde ton jardin.
+            Top, j'ai tout ce qu'il faut ✨ Crée ton compte en 10 secondes pour que je sauvegarde ton portefeuille.
           </div>
         </motion.div>
 
@@ -317,7 +317,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
           {mode === "signup" ? "Crée ton compte" : "Connecte-toi"}
         </h2>
         <p className="text-[12px] text-paper/60 mt-1.5">
-          Tes réponses sont prêtes. Plus qu'un pas pour planter.
+          Tes réponses sont prêtes. Plus qu'un pas pour démarrer.
         </p>
 
         <button
@@ -379,8 +379,8 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
             {loading
               ? "Veuillez patienter…"
               : mode === "signup"
-                ? "Créer mon compte et planter 🌱"
-                : "Se connecter et planter 🌱"}
+                ? "Créer mon compte et investir"
+                : "Se connecter et investir"}
           </button>
         </form>
 
