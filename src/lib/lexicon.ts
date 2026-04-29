@@ -1,30 +1,30 @@
 /**
- * SEEDOW LEXICON — "Le Jardin"
- * Vocabulaire centralisé : graines, jardin, racines.
+ * SEEDOW LEXICON — sobre & moderne
+ * Vocabulaire financier épuré, avec quelques touches d'impact.
  */
 
 export const lexicon = {
   nav: {
-    garden: "Jardin",
-    roots: "Racines",
+    garden: "Portefeuille",
+    roots: "Détails",
     discover: "Découvrir",
     ethi: "Ethi",
   },
   actions: {
-    plant: "Planter",
-    harvest: "Récolter",
-    water: "Arroser",
-    replant: "Replanter",
-    compost: "Composter",
+    plant: "Investir",
+    harvest: "Retirer",
+    water: "Verser",
+    replant: "Rééquilibrer",
+    compost: "Arbitrer",
   },
   entities: {
-    seed: "graine",
-    seedPlural: "graines",
-    seedling: "jeune pousse",
-    plant: "plante",
-    garden: "ton jardin",
-    seed_initial: "graine originelle",
-    soil: "terreau",
+    seed: "actif",
+    seedPlural: "actifs",
+    seedling: "nouvel actif",
+    plant: "ligne",
+    garden: "ton portefeuille",
+    seed_initial: "capital initial",
+    soil: "solde",
   },
   themes: {
     climat: { label: "Climat", icon: "☀️", desc: "Transition énergétique" },
@@ -36,16 +36,16 @@ export const lexicon = {
     tech: { label: "Tech propre", icon: "🧠", desc: "IA responsable" },
   },
   status: {
-    growing: "en croissance",
-    dormant: "en dormance",
-    struggling: "a soif",
-    blooming: "en floraison",
-    new: "jeune pousse",
+    growing: "en hausse",
+    dormant: "stable",
+    struggling: "à surveiller",
+    blooming: "forte hausse",
+    new: "récent",
   },
   labels: {
-    total_value: "Valeur cultivée",
-    invested: "Graines plantées",
-    gain: "Croissance",
+    total_value: "Valeur actuelle",
+    invested: "Capital investi",
+    gain: "Performance",
     impact_co2: "CO₂ évité",
     impact_trees: "Arbres équivalents",
     impact_energy: "Énergie verte",
