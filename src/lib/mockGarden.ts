@@ -388,12 +388,12 @@ export const MOCK_TRANSACTIONS: MockTransaction[] = [
 ];
 
 export const MOCK_BADGES = [
-  { id: "first_seed", name: "Première graine", description: "Tu as planté ta première graine.", icon: "🌱", tier: "bronze" as const, unlocked: true },
-  { id: "patient_gardener", name: "Jardinier patient", description: "90 jours sans paniquer.", icon: "🧘", tier: "bronze" as const, unlocked: true },
-  { id: "biodiversity", name: "Écosystème riche", description: "5 graines différentes plantées.", icon: "🌿", tier: "silver" as const, unlocked: true },
-  { id: "regular_waterer", name: "Arrosage régulier", description: "6 mois d'abondements.", icon: "💧", tier: "silver" as const, unlocked: false },
+  { id: "first_seed", name: "Premier investissement", description: "Tu as effectué ton premier investissement.", icon: "🌱", tier: "bronze" as const, unlocked: true },
+  { id: "patient_gardener", name: "Investisseur patient", description: "90 jours sans paniquer.", icon: "🧘", tier: "bronze" as const, unlocked: true },
+  { id: "biodiversity", name: "Bien diversifié", description: "5 actifs différents en portefeuille.", icon: "🌿", tier: "silver" as const, unlocked: true },
+  { id: "regular_waterer", name: "Versements réguliers", description: "6 mois de versements consécutifs.", icon: "💧", tier: "silver" as const, unlocked: false },
   { id: "carbon_neutral", name: "Empreinte nulle", description: "Autant de CO₂ évité que ta conso annuelle.", icon: "🌍", tier: "silver" as const, unlocked: false },
-  { id: "forest", name: "Petite forêt", description: "100 arbres équivalents.", icon: "🌳", tier: "gold" as const, unlocked: false },
-  { id: "first_harvest", name: "Première récolte", description: "Tu as récolté pour un projet qui te tient à cœur.", icon: "🍎", tier: "gold" as const, unlocked: false },
+  { id: "forest", name: "Petite forêt", description: "100 arbres équivalents financés.", icon: "🌳", tier: "gold" as const, unlocked: false },
+  { id: "first_harvest", name: "Premier retrait", description: "Tu as retiré pour un projet qui te tient à cœur.", icon: "🍎", tier: "gold" as const, unlocked: false },
   { id: "aligned", name: "Parfait alignement", description: "ESG > 8,5 sur tout.", icon: "✨", tier: "gold" as const, unlocked: true },
 ];

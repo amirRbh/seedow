@@ -17,7 +17,7 @@ export function BadgesCard({ badges }: { badges: SeasonalBadge[] }) {
     <div className="paper-card p-5">
       <div className="flex items-baseline justify-between mb-4">
         <div>
-          <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold">Jalons de ton jardin</p>
+          <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold">Jalons</p>
           <h3 className="font-value text-2xl text-ink mt-0.5">
             {unlocked.length} célébré{unlocked.length > 1 ? "s" : ""}
           </h3>

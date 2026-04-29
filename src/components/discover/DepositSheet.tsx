@@ -80,7 +80,7 @@ export function DepositSheet({ open, onClose, assetName }: DepositSheetProps) {
                     Déposer
                   </p>
                   <h2 className="font-value text-2xl text-ink mt-0.5">
-                    {assetName ? `Investir dans ${assetName}` : "Alimenter mon jardin"}
+                    {assetName ? `Investir dans ${assetName}` : "Alimenter mon portefeuille"}
                   </h2>
                 </div>
                 <button
@@ -536,7 +536,7 @@ function SuccessStep({
       <p className="text-[13px] text-ink-2 mt-2 max-w-xs mx-auto leading-relaxed">
         {method === "sepa"
           ? `Votre virement de ${amount.toLocaleString("fr-FR")} € sera crédité sous 2 jours ouvrés.`
-          : `${amount.toLocaleString("fr-FR")} € ont été ajoutés à votre jardin.`}
+          : `${amount.toLocaleString("fr-FR")} € ont été ajoutés à votre portefeuille.`}
       </p>
       <p className="text-[10px] text-ink-3 mt-4">
         Démo : aucun débit réel n'a été effectué.

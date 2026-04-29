@@ -23,8 +23,8 @@ export function PortfolioMetricsCard({ metrics }: Props) {
 
   const items: Item[] = [
     {
-      label: "Croissance estimée",
-      hint: "Combien ton jardin pourrait croître chaque année en moyenne. Estimation, pas une garantie.",
+      label: "Performance estimée",
+      hint: "Combien ton portefeuille pourrait croître chaque année en moyenne. Estimation, pas une garantie.",
       value: `${(metrics.expected_return * 100).toFixed(1)}%`,
       sub: "par an",
       tone: "moss",
@@ -45,7 +45,7 @@ export function PortfolioMetricsCard({ metrics }: Props) {
     },
     {
       label: "Variations possibles",
-      hint: "Volatilité : à quel point ton jardin peut bouger d'un mois à l'autre. Plus haut = plus de hauts et de bas.",
+      hint: "Volatilité : à quel point ton portefeuille peut bouger d'un mois à l'autre. Plus haut = plus de hauts et de bas.",
       value: `${(metrics.volatility * 100).toFixed(1)}%`,
       sub: "par an",
       tone: "peach",
@@ -53,7 +53,7 @@ export function PortfolioMetricsCard({ metrics }: Props) {
     },
     {
       label: "Qualité du rendement",
-      hint: "Ratio de Sharpe : mesure si la croissance vaut le risque pris. Au-dessus de 1 = très bon.",
+      hint: "Ratio de Sharpe : mesure si la performance vaut le risque pris. Au-dessus de 1 = très bon.",
       value: metrics.sharpe.toFixed(2),
       sub: "Sharpe",
       tone: "sky",

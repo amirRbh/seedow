@@ -81,13 +81,13 @@ export function EthiActions({ actions }: EthiActionsProps) {
               transition={{ delay: 0.1 + i * 0.05 }}
               className="rounded-xl border border-moss-3/40 bg-moss-2/15 p-3"
             >
-              <p className="text-[10px] uppercase tracking-wider text-moss-3 font-bold">Graine recommandée</p>
+              <p className="text-[10px] uppercase tracking-wider text-moss-3 font-bold">Actif recommandé</p>
               <p className="text-[14px] font-value text-paper mt-1">{a.ticker}</p>
               <button
                 onClick={() => trigger(a)}
                 className="mt-2 w-full px-3 py-2 rounded-lg bg-paper text-ink text-[11px] font-semibold hover:bg-moss-5 transition-colors"
               >
-                Planter {a.amount ? `${a.amount} €` : "cette graine"} 🌱
+                Investir {a.amount ? `${a.amount} €` : "dans cet actif"}
               </button>
             </motion.div>
           );

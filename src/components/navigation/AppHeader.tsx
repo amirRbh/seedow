@@ -15,7 +15,7 @@ interface AppHeaderProps {
   hideSettings?: boolean;
   /** Si vrai, masque le toggle Simple/Expert */
   hideViewToggle?: boolean;
-  /** Si vrai, affiche le sélecteur de jardin (multi-portefeuilles). */
+  /** Si vrai, affiche le sélecteur de portefeuille. */
   showPortfolioSelector?: boolean;
 }
 
