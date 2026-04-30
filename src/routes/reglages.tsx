@@ -6,6 +6,7 @@ import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { useAuth } from "@/hooks/useAuth";
 import { generatePortfolio } from "@/lib/portfolio/server.functions";
+import { triggerMarketRefresh } from "@/lib/market/refresh.functions";
 import { callAuthed } from "@/lib/authedServerFn";
 import { supabase } from "@/integrations/supabase/client";
 import type { CauseTag, ExclusionTag } from "@/lib/portfolio/types";
@@ -523,9 +524,50 @@ function ToggleRow({
 // Méthodologie & transparence
 // ─────────────────────────────────────────────────────────
 
+function MarketDataBlock() {
+  const refresh = useServerFn(triggerMarketRefresh);
+  const [state, setState] = useState<"idle" | "loading" | "ok" | "error">("idle");
+  const [msg, setMsg] = useState<string | null>(null);
+
+  const onClick = async () => {
+    setState("loading");
+    setMsg(null);
+    try {
+      const res = await refresh();
+      setState("ok");
+      setMsg(`${res.ok} actif(s) mis à jour${res.failed ? `, ${res.failed} en échec` : ""}.`);
+    } catch (e) {
+      setState("error");
+      setMsg(e instanceof Error ? e.message : "Erreur de rafraîchissement");
+    }
+  };
+
+  return (
+    <Block title="Données de marché">
+      <p className="text-[12px] text-ink-2 leading-relaxed mb-3">
+        Les prix sont rafraîchis automatiquement chaque jour ouvré en fin de séance.
+        Tu peux forcer une mise à jour immédiate ici.
+      </p>
+      <button
+        onClick={onClick}
+        disabled={state === "loading"}
+        className="px-4 py-2 text-[12px] font-medium border border-ink text-ink rounded hover:bg-ink hover:text-paper transition-colors disabled:opacity-50"
+      >
+        {state === "loading" ? "Rafraîchissement…" : "Rafraîchir les prix maintenant"}
+      </button>
+      {msg && (
+        <p className={`text-[11px] mt-2 ${state === "error" ? "text-rust" : "text-ink-3"}`}>
+          {msg}
+        </p>
+      )}
+    </Block>
+  );
+}
+
 function MethodologySection() {
   return (
     <div className="space-y-6">
+      <MarketDataBlock />
       <Block title="Pipeline de construction">
         <p className="text-[12px] text-ink-2 leading-relaxed mb-4">
           Six étapes traçables : profilage, univers investissable, exclusions sectorielles, filtres
