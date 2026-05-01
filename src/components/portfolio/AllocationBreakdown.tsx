@@ -1,9 +1,14 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import type { ActiveHolding } from "@/hooks/useActivePortfolio";
+import type { ValuedHolding } from "@/hooks/usePortfolioValuation";
+import { HoldingDetailSheet } from "./HoldingDetailSheet";
 
 interface Props {
   holdings: ActiveHolding[];
   totalAmount: number;
+  valuedHoldings?: ValuedHolding[];
 }
 
 const CLASS_LABELS: Record<string, string> = {
