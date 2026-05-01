@@ -100,7 +100,11 @@ function Portfolio() {
         </section>
 
         <section className="px-5 pt-6">
-          <AllocationBreakdown holdings={portfolio.holdings} totalAmount={totalInvested} />
+          <AllocationBreakdown
+            holdings={portfolio.holdings}
+            totalAmount={totalInvested}
+            valuedHoldings={valuation.holdings}
+          />
         </section>
 
         <section className="px-5 pt-6">
