@@ -35,8 +35,22 @@ const CLASS_COLOR: Record<string, string> = {
   cash: "var(--paper-3)",
 };
 
-export function AllocationBreakdown({ holdings, totalAmount }: Props) {
+export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: Props) {
+  const [selected, setSelected] = useState<ActiveHolding | null>(null);
+
   if (holdings.length === 0) return null;
+
+  // Index valued holdings by asset id for quick lookup
+  const valuedById = new Map<string, ValuedHolding>();
+  for (const v of valuedHoldings ?? []) {
+    valuedById.set(v.asset_id, v);
+  }
+
+  // Movers: assets with a non-null return today (sorted by |returnPct|)
+  const movers = (valuedHoldings ?? [])
+    .filter((v) => v.currentPrice != null && v.entryPrice != null && Math.abs(v.returnPct) > 0.01)
+    .sort((a, b) => Math.abs(b.returnPct) - Math.abs(a.returnPct))
+    .slice(0, 3);
 
   // Group by class for the stacked bar
   const byClass = new Map<string, number>();
