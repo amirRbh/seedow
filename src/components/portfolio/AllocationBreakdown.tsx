@@ -1,9 +1,14 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import type { ActiveHolding } from "@/hooks/useActivePortfolio";
+import type { ValuedHolding } from "@/hooks/usePortfolioValuation";
+import { HoldingDetailSheet } from "./HoldingDetailSheet";
 
 interface Props {
   holdings: ActiveHolding[];
   totalAmount: number;
+  valuedHoldings?: ValuedHolding[];
 }
 
 const CLASS_LABELS: Record<string, string> = {
@@ -30,8 +35,22 @@ const CLASS_COLOR: Record<string, string> = {
   cash: "var(--paper-3)",
 };
 
-export function AllocationBreakdown({ holdings, totalAmount }: Props) {
+export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: Props) {
+  const [selected, setSelected] = useState<ActiveHolding | null>(null);
+
   if (holdings.length === 0) return null;
+
+  // Index valued holdings by asset id for quick lookup
+  const valuedById = new Map<string, ValuedHolding>();
+  for (const v of valuedHoldings ?? []) {
+    valuedById.set(v.asset_id, v);
+  }
+
+  // Movers: assets with a non-null return today (sorted by |returnPct|)
+  const movers = (valuedHoldings ?? [])
+    .filter((v) => v.currentPrice != null && v.entryPrice != null && Math.abs(v.returnPct) > 0.01)
+    .sort((a, b) => Math.abs(b.returnPct) - Math.abs(a.returnPct))
+    .slice(0, 3);
 
   // Group by class for the stacked bar
   const byClass = new Map<string, number>();
@@ -88,18 +107,60 @@ export function AllocationBreakdown({ holdings, totalAmount }: Props) {
         ))}
       </div>
 
+      {/* Movers — actifs dont le prix a évolué */}
+      {movers.length > 0 && (
+        <div className="border-t border-paper-3 pt-4 mb-4">
+          <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
+            Mouvements notables
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {movers.map((m) => {
+              const up = m.returnPct >= 0;
+              const target = holdings.find((h) => h.id === m.asset_id);
+              if (!target) return null;
+              return (
+                <button
+                  key={m.asset_id}
+                  onClick={() => setSelected(target)}
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[11px] transition-colors ${
+                    up
+                      ? "border-moss-1/30 bg-moss-1/5 text-moss-1 hover:bg-moss-1/10"
+                      : "border-bloom/30 bg-bloom/5 text-bloom hover:bg-bloom/10"
+                  }`}
+                >
+                  {up ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
+                  <span className="font-value font-semibold">{m.ticker}</span>
+                  <span className="tabular-nums">
+                    {up ? "+" : ""}
+                    {m.returnPct.toFixed(2)}%
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Holdings list */}
       <div className="border-t border-paper-3 pt-4 space-y-2.5">
         {holdings.map((h, i) => {
           const amount = (h.allocationPct / 100) * totalAmount;
           const color = CLASS_COLOR[h.category] ?? "var(--moss-2)";
+          const valued = valuedById.get(h.id);
+          const hasMove =
+            valued?.currentPrice != null &&
+            valued?.entryPrice != null &&
+            Math.abs(valued.returnPct) > 0.01;
+          const up = (valued?.returnPct ?? 0) >= 0;
           return (
-            <motion.div
+            <motion.button
               key={h.id}
+              type="button"
+              onClick={() => setSelected(h)}
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.04 }}
-              className="group"
+              className="group w-full text-left rounded-lg -mx-2 px-2 py-1.5 hover:bg-paper-2/60 transition-colors cursor-pointer"
             >
               <div className="flex items-center gap-3">
                 <div
@@ -113,9 +174,26 @@ export function AllocationBreakdown({ holdings, totalAmount }: Props) {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-baseline justify-between gap-2">
                     <p className="text-[13px] font-semibold text-ink truncate">{h.name}</p>
-                    <p className="font-value text-sm text-ink flex-shrink-0">
-                      {h.allocationPct.toFixed(1)}%
-                    </p>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      {hasMove && (
+                        <span
+                          className={`flex items-center gap-0.5 text-[11px] font-semibold tabular-nums ${
+                            up ? "text-moss-1" : "text-bloom"
+                          }`}
+                        >
+                          {up ? (
+                            <ArrowUpRight className="w-3 h-3" />
+                          ) : (
+                            <ArrowDownRight className="w-3 h-3" />
+                          )}
+                          {up ? "+" : ""}
+                          {valued!.returnPct.toFixed(2)}%
+                        </span>
+                      )}
+                      <p className="font-value text-sm text-ink">
+                        {h.allocationPct.toFixed(1)}%
+                      </p>
+                    </div>
                   </div>
                   <div className="flex items-center justify-between gap-2 mt-0.5">
                     <p className="text-[10px] text-ink-3 truncate">
@@ -139,10 +217,18 @@ export function AllocationBreakdown({ holdings, totalAmount }: Props) {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </motion.button>
           );
         })}
       </div>
+
+      <HoldingDetailSheet
+        open={selected !== null}
+        onClose={() => setSelected(null)}
+        holding={selected}
+        valued={selected ? valuedById.get(selected.id) ?? null : null}
+      />
     </div>
   );
 }
+
