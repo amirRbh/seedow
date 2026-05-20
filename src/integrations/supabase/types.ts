@@ -216,6 +216,42 @@ export type Database = {
         }
         Relationships: []
       }
+      cron_run_log: {
+        Row: {
+          assets_failed: number
+          assets_ok: number
+          details: Json | null
+          duration_ms: number | null
+          id: string
+          job_name: string
+          message: string | null
+          ran_at: string
+          status: string
+        }
+        Insert: {
+          assets_failed?: number
+          assets_ok?: number
+          details?: Json | null
+          duration_ms?: number | null
+          id?: string
+          job_name: string
+          message?: string | null
+          ran_at?: string
+          status: string
+        }
+        Update: {
+          assets_failed?: number
+          assets_ok?: number
+          details?: Json | null
+          duration_ms?: number | null
+          id?: string
+          job_name?: string
+          message?: string | null
+          ran_at?: string
+          status?: string
+        }
+        Relationships: []
+      }
       deposits: {
         Row: {
           amount: number
