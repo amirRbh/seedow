@@ -19,6 +19,7 @@ export const Route = createFileRoute("/hooks/refresh-market-data")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const startedAt = Date.now();
         // ── Auth ──────────────────────────────────────────────
         const authHeader = request.headers.get("authorization") ?? "";
         const token = authHeader.replace(/^Bearer\s+/i, "").trim();
