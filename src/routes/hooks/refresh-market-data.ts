@@ -145,11 +145,33 @@ export const Route = createFileRoute("/hooks/refresh-market-data")({
 
         const ok = results.filter((r) => r.ok).length;
         const failed = results.length - ok;
+        const durationMs = Date.now() - startedAt;
+        const status = failed === 0 ? "ok" : ok === 0 ? "error" : "partial";
+
+        // Journalise l'exécution (best-effort, n'échoue jamais la requête)
+        try {
+          await supabaseAdmin.from("cron_run_log").insert({
+            job_name: "refresh-market-data",
+            status,
+            message:
+              status === "ok"
+                ? `${ok} actif(s) rafraîchi(s)`
+                : `${ok} ok, ${failed} en échec`,
+            assets_ok: ok,
+            assets_failed: failed,
+            duration_ms: durationMs,
+            details: { range, interval },
+          });
+        } catch (logErr) {
+          console.error("[refresh-market-data] cron_run_log insert failed:", logErr);
+        }
+
         return json({
           ok,
           failed,
           range,
           interval,
+          duration_ms: durationMs,
           results,
         });
       },
