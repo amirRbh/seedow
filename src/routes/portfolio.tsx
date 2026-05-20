@@ -7,6 +7,8 @@ import { TimelineEvent } from "@/components/roots/TimelineEvent";
 import { BadgesCard } from "@/components/garden/SeasonalBadges";
 import { AllocationBreakdown } from "@/components/portfolio/AllocationBreakdown";
 import { PortfolioMetricsCard } from "@/components/portfolio/PortfolioMetricsCard";
+import { PortfolioHistoryChart } from "@/components/portfolio/PortfolioHistoryChart";
+import { MarketFreshnessBanner } from "@/components/portfolio/MarketFreshnessBanner";
 import { ExplainerCard } from "@/components/ui/ExplainerCard";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
@@ -77,7 +79,17 @@ function Portfolio() {
           showPortfolioSelector
         />
 
-        <section className="px-5 pt-2">
+        <MarketFreshnessBanner
+          latestQuoteAt={valuation.latestQuoteAt}
+          hasQuotes={valuation.hasQuotes}
+          onRefreshed={() => valuation.refresh()}
+        />
+
+        <section className="px-5 pt-4">
+          <PortfolioHistoryChart />
+        </section>
+
+        <section className="px-5 pt-4">
           <GrowthComparison
             currentValue={totalValue}
             invested={totalInvested}

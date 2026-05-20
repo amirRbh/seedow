@@ -7,6 +7,7 @@ import { AppHeader } from "@/components/navigation/AppHeader";
 import { useAuth } from "@/hooks/useAuth";
 import { generatePortfolio } from "@/lib/portfolio/server.functions";
 import { triggerMarketRefresh } from "@/lib/market/refresh.functions";
+import { getRecentCronRuns, type CronRunEntry } from "@/lib/market/cron.functions";
 import { callAuthed } from "@/lib/authedServerFn";
 import { supabase } from "@/integrations/supabase/client";
 import type { CauseTag, ExclusionTag } from "@/lib/portfolio/types";
@@ -564,10 +565,103 @@ function MarketDataBlock() {
   );
 }
 
+function CronHealthBlock() {
+  const fetchRuns = useServerFn(getRecentCronRuns);
+  const [runs, setRuns] = useState<CronRunEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchRuns()
+      .then((res) => {
+        if (!cancelled) setRuns(res.runs);
+      })
+      .catch((e) => console.error("[cron-health]", e))
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [fetchRuns]);
+
+  const lastRun = runs[0];
+  const lastOk = runs.find((r) => r.status === "ok");
+  const ageHours = lastOk
+    ? Math.round((Date.now() - new Date(lastOk.ran_at).getTime()) / 3_600_000)
+    : null;
+
+  return (
+    <Block title="Santé des données">
+      {loading ? (
+        <p className="text-[12px] text-ink-3">Chargement de l'historique…</p>
+      ) : runs.length === 0 ? (
+        <p className="text-[12px] text-ink-3">
+          Aucune exécution journalisée pour l'instant. Force un rafraîchissement ci-dessus
+          pour démarrer le suivi.
+        </p>
+      ) : (
+        <>
+          <div className="flex items-center gap-2 mb-3">
+            <span
+              className={`w-2 h-2 rounded-full ${
+                lastRun?.status === "ok"
+                  ? "bg-moss-1"
+                  : lastRun?.status === "partial"
+                    ? "bg-gold"
+                    : "bg-rust"
+              }`}
+            />
+            <p className="text-[12px] text-ink-2">
+              Dernier succès&nbsp;:
+              <span className="text-ink font-medium ml-1">
+                {ageHours != null ? `il y a ${ageHours}h` : "jamais"}
+              </span>
+            </p>
+          </div>
+          <ul className="space-y-1.5">
+            {runs.map((r) => (
+              <li
+                key={r.id}
+                className="flex items-center gap-2 text-[11px] py-1.5 border-b border-paper-3 last:border-b-0"
+              >
+                <span
+                  className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
+                    r.status === "ok"
+                      ? "bg-moss-1"
+                      : r.status === "partial"
+                        ? "bg-gold"
+                        : "bg-rust"
+                  }`}
+                />
+                <span className="text-ink-3 tabular-nums w-28 flex-shrink-0">
+                  {new Date(r.ran_at).toLocaleString("fr-FR", {
+                    day: "2-digit",
+                    month: "short",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+                <span className="text-ink truncate flex-1">{r.message ?? "—"}</span>
+                {r.duration_ms != null && (
+                  <span className="text-ink-3 tabular-nums flex-shrink-0">
+                    {(r.duration_ms / 1000).toFixed(1)}s
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </Block>
+  );
+}
+
 function MethodologySection() {
   return (
     <div className="space-y-6">
       <MarketDataBlock />
+      <CronHealthBlock />
       <Block title="Pipeline de construction">
         <p className="text-[12px] text-ink-2 leading-relaxed mb-4">
           Six étapes traçables : profilage, univers investissable, exclusions sectorielles, filtres
