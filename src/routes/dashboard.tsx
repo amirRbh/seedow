@@ -82,8 +82,8 @@ function Dashboard() {
     [portfolio],
   );
 
-  // Real-money valuation (initial_amount + settled deposits, valued via live quotes)
-  const totalInvested = valuation.totalInvested || (portfolio?.initial_amount ?? 0) + walletTotal;
+  // Valeur du portefeuille basée uniquement sur l'initial_amount déclaré + cours.
+  const totalInvested = valuation.totalInvested || (portfolio?.initial_amount ?? 0);
   const totalValue = valuation.currentValue || totalInvested;
   const gain = valuation.pnl;
   const returnPct = valuation.returnPct;
