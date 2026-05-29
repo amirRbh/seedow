@@ -7,7 +7,7 @@
 
 /* ═══════════════════════════════════════════════════════════════
    SEEDOW DESIGN SYSTEM — "Le Jardin"
-   Papier crème, encre organique, mousse vivante.
+   Papier blanc, encre organique, mousse vivante.
 ═══════════════════════════════════════════════════════════════ */
 
 @theme inline {
@@ -90,11 +90,11 @@
 :root {
   --radius: 0.5rem;
 
-  /* Surfaces — ivoire éditorial */
-  --paper: oklch(0.965 0.018 88);
-  --paper-2: oklch(0.945 0.020 86);
-  --paper-3: oklch(0.895 0.025 85);
-  --paper-inset: oklch(0.860 0.028 84);
+  /* Surfaces — blanc éditorial */
+  --paper: oklch(0.995 0.003 90);
+  --paper-2: oklch(0.985 0.005 90);
+  --paper-3: oklch(0.92 0.010 90);
+  --paper-inset: oklch(0.90 0.012 90);
 
   /* Encre — emerald profond */
   --ink: oklch(0.30 0.060 165);
@@ -118,9 +118,9 @@
   /* shadcn mapping */
   --background: var(--paper);
   --foreground: var(--ink);
-  --card: oklch(0.985 0.012 88);
+  --card: oklch(0.995 0.003 90);
   --card-foreground: var(--ink);
-  --popover: oklch(0.985 0.012 88);
+  --popover: oklch(0.995 0.003 90);
   --popover-foreground: var(--ink);
   --primary: var(--ink);
   --primary-foreground: var(--paper);
