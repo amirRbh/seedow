@@ -165,19 +165,12 @@ function Discover() {
                   </p>
                   <p className="text-[9px] text-ink-3 mt-1">prix unitaire</p>
                 </div>
-                <button
-                  onClick={() => openDeposit(asset.name)}
-                  className="flex-shrink-0 px-3 py-1.5 text-[11px] font-semibold border border-ink text-ink rounded-full hover:bg-ink hover:text-paper transition-colors"
-                >
-                  Investir
-                </button>
               </motion.div>
             ))}
           </div>
         )}
       </div>
 
-      <DepositSheet open={depositOpen} onClose={() => setDepositOpen(false)} assetName={depositTarget} />
       <BottomNavigation />
     </motion.div>
   );
