@@ -82,30 +82,6 @@ function Discover() {
           <ThemeFilter active={activeTheme} onChange={(t) => { setActiveTheme(t); setCurrentIndex(0); }} />
         </div>
 
-        {/* Bandeau Investir — accès rapide au dépôt */}
-        <div className="px-5 pb-4">
-          <button
-            onClick={() => openDeposit()}
-            className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl text-paper hover:opacity-95 transition-all active:scale-[0.99] shadow-deep"
-            style={{
-              background:
-                "linear-gradient(120deg, var(--moss-1) 0%, var(--moss-2) 45%, var(--bloom) 100%)",
-            }}
-          >
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="w-9 h-9 rounded-full bg-paper/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0 border border-paper/30">
-                <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 5v14M5 12h14" />
-                </svg>
-              </div>
-              <div className="text-left min-w-0">
-                <p className="text-[13px] font-semibold">Déposer pour investir</p>
-                <p className="text-[10px] opacity-85 mt-0.5">Carte · Apple Pay · Virement SEPA</p>
-              </div>
-            </div>
-            <span className="text-base opacity-90">→</span>
-          </button>
-        </div>
 
         {viewMode === "swipe" ? (
           <div className="px-5">
