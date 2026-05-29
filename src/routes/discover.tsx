@@ -45,10 +45,6 @@ function Discover() {
     else if (info.offset.x < -120) handleSwipe("pass");
   };
 
-  const openDeposit = (assetName?: string) => {
-    setDepositTarget(assetName);
-    setDepositOpen(true);
-  };
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
