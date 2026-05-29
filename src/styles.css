@@ -165,7 +165,12 @@
 @layer base {
   * { border-color: var(--color-border); }
 
-  html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Apple-like smooth scrolling */
+    scroll-behavior: smooth;
+  }
 
   body {
     background-color: var(--color-background);
@@ -173,6 +178,23 @@
     font-family: var(--font-sans);
     font-feature-settings: "tnum", "ss01";
     letter-spacing: -0.012em;
+  }
+
+  /* Apple-style global transitions: signature spring easing */
+  a, button, [role="button"], input, select, textarea, summary,
+  .paper-card, .paper-card-inset, .moss-badge {
+    transition-property: background-color, border-color, color, fill, stroke,
+      opacity, box-shadow, transform, filter, backdrop-filter;
+    transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+    transition-duration: 400ms;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 
   .font-value {
@@ -189,6 +211,7 @@
     text-transform: none;
   }
 }
+
 
 @layer components {
   .paper-card {
