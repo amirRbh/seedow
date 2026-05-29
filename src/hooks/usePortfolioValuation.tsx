@@ -101,10 +101,9 @@ export function usePortfolioValuation(): PortfolioValuation {
     v == null ? 0 : typeof v === "number" ? v : Number(v);
 
   const initialFromView = rows[0] ? num(rows[0].total_invested) : 0;
-  // Real money the user actually put in = portfolio's initial_amount + settled deposits.
-  // We keep initial_amount as the floor so that an empty deposits table still values
-  // the portfolio at the amount the user set during onboarding.
-  const totalInvested = Math.max(initialFromView, 0) + depositsTotal;
+  // Valeur saisie par l'utilisateur (initial_amount du portefeuille).
+  // Le système de dépôts a été retiré : on travaille sur du déclaratif.
+  const totalInvested = Math.max(initialFromView, 0);
 
   const holdings: ValuedHolding[] = rows.map((r) => {
     const weight = num(r.weight);
