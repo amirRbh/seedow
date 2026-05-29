@@ -9,7 +9,7 @@ import { useLexicon } from "@/hooks/useLexicon";
 import { useAuth } from "@/hooks/useAuth";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
-import { useDeposits } from "@/hooks/useDeposits";
+
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { supabase } from "@/integrations/supabase/client";
 
