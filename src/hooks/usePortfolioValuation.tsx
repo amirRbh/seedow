@@ -152,7 +152,7 @@ export function usePortfolioValuation(): PortfolioValuation {
     hasQuotes,
     oldestQuoteAt,
     latestQuoteAt,
-    loading: loading || depLoading,
+    loading,
     error,
     refresh,
   };
