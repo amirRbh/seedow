@@ -38,7 +38,6 @@ function Dashboard() {
   const { user } = useAuth();
   const { portfolio, loading } = useActivePortfolio();
   const { portfolios, loading: pfListLoading } = useUserPortfolios();
-  const { total: walletTotal, pending: walletPending, deposits } = useDeposits();
   const valuation = usePortfolioValuation();
   const [greeting, setGreeting] = useState("Bonjour");
   const hasSeenPortfolioRef = useRef(false);
