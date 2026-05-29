@@ -15,6 +15,9 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/dashboard")({
   beforeLoad: async () => {
+    // La session Supabase vit dans localStorage : on ne peut la lire que côté client.
+    // Côté serveur (SSR/prerender), on laisse passer — le client refera le check.
+    if (typeof window === "undefined") return;
     const { data } = await supabase.auth.getSession();
     if (!data.session) {
       throw redirect({ to: "/auth", search: { redirect: "/dashboard", mode: "login" } });

@@ -18,6 +18,7 @@ import { MOCK_BADGES } from "@/lib/mockGarden";
 
 export const Route = createFileRoute("/portfolio")({
   beforeLoad: async () => {
+    if (typeof window === "undefined") return;
     const { data } = await supabase.auth.getSession();
     if (!data.session) {
       throw redirect({ to: "/auth", search: { redirect: "/portfolio", mode: "login" } });
