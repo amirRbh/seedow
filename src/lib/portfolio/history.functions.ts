@@ -52,8 +52,11 @@ export const getPortfolioHistory = createServerFn({ method: "POST" })
       .eq("user_id", userId);
     if (data.portfolioId) pfQuery = pfQuery.eq("id", data.portfolioId);
     else pfQuery = pfQuery.eq("is_active", true);
-    const { data: pf, error: pfErr } = await pfQuery.maybeSingle();
+    const { data: pfs, error: pfErr } = await pfQuery
+      .order("generated_at", { ascending: false })
+      .limit(1);
     if (pfErr) throw new Error(pfErr.message);
+    const pf = pfs?.[0];
     if (!pf) return { points: [], range: data.range, hasData: false };
 
     const weights = (pf.weights ?? {}) as Record<string, number>;
