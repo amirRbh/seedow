@@ -4,9 +4,18 @@ export const Route = createFileRoute("/api/ethi")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const body = (await request.json()) as { messages: { role: string; content: string }[] };
-        const apiKey = process.env.LOVABLE_API_KEY;
-        if (!apiKey) {
+      const body = (await request.json()) as {
+        messages: { role: string; content: string }[];
+        context?: unknown;
+      };
+      const apiKey = process.env.LOVABLE_API_KEY;
+      if (!apiKey) {
+        return Response.json({ error: "AI gateway not configured" });
+      }
+
+      const contextBlock = body.context
+        ? `\n\n📊 **Contexte portefeuille (JSON, source de vérité)** :\n\`\`\`json\n${JSON.stringify(body.context, null, 2)}\n\`\`\`\nUtilise EXCLUSIVEMENT ces données quand on te parle du portefeuille de l'utilisateur. Ne jamais inventer de ticker, montant, allocation, P&L ou score. Si \`hasPortfolio\` est false, propose d'en créer un. Cite les chiffres tels quels (allocations en %, montants en €).`
+        : "";
           return Response.json({ error: "AI gateway not configured" });
         }
 
