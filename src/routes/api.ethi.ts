@@ -4,13 +4,21 @@ export const Route = createFileRoute("/api/ethi")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const body = (await request.json()) as { messages: { role: string; content: string }[] };
-        const apiKey = process.env.LOVABLE_API_KEY;
-        if (!apiKey) {
-          return Response.json({ error: "AI gateway not configured" });
-        }
+      const body = (await request.json()) as {
+        messages: { role: string; content: string }[];
+        context?: unknown;
+      };
+      const apiKey = process.env.LOVABLE_API_KEY;
+      if (!apiKey) {
+        return Response.json({ error: "AI gateway not configured" });
+      }
+
+      const contextBlock = body.context
+        ? `\n\n📊 **Contexte portefeuille (JSON, source de vérité)** :\n\`\`\`json\n${JSON.stringify(body.context, null, 2)}\n\`\`\`\nUtilise EXCLUSIVEMENT ces données quand on te parle du portefeuille de l'utilisateur. Ne jamais inventer de ticker, montant, allocation, P&L ou score. Si \`hasPortfolio\` est false, propose d'en créer un. Cite les chiffres tels quels (allocations en %, montants en €).`
+        : "";
 
         const systemPrompt = `Tu es **Ethi**, le conseiller en investissement responsable de Seedow. Vif, direct, complice — jamais mou, jamais corporate.
+
 
 🎯 **Ton rôle** : aider à investir, verser, rééquilibrer un portefeuille d'actifs ESG. Vocabulaire financier clair : actif, portefeuille, performance, allocation, versement, rééquilibrage.
 
@@ -40,7 +48,7 @@ Quand tu suggères de déposer de l'argent ou d'investir dans un actif spécifiq
 - \`[seed:TICKER]\` → carte sans montant pré-rempli.
 N'utilise ces tags **que** quand tu recommandes concrètement une action. Maximum 1 tag par message. Les tags ne s'affichent pas dans le texte, ils deviennent boutons.
 
-Réponds en français.`;
+Réponds en français.${contextBlock}`;
 
         try {
           const resp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {

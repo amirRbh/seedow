@@ -77,10 +77,48 @@ function Ethi() {
     setIsLoading(true);
 
     try {
+      // Build a compact portfolio context to ground Ethi's answers.
+      const ctx = (() => {
+        if (!portfolio || portfolio.holdings.length === 0) {
+          return { hasPortfolio: false, invested: depositsTotal };
+        }
+        const m = portfolio.metrics;
+        return {
+          hasPortfolio: true,
+          name: portfolio.name,
+          invested: Number(depositsTotal.toFixed(2)),
+          currentValue: Number(valuation.currentValue.toFixed(2)),
+          pnl: Number(valuation.pnl.toFixed(2)),
+          returnPct: Number(valuation.returnPct.toFixed(2)),
+          hasQuotes: valuation.hasQuotes,
+          metrics: m
+            ? {
+                expectedReturnPct: +(m.expected_return * 100).toFixed(2),
+                volatilityPct: +(m.volatility * 100).toFixed(2),
+                sharpe: +m.sharpe.toFixed(2),
+                esgScore: +m.esg_score.toFixed(0),
+                terPct: +(m.ter * 100).toFixed(2),
+                co2AvoidedTons: +m.co2_avoided_tons.toFixed(2),
+              }
+            : null,
+          holdings: portfolio.holdings.map((h) => ({
+            ticker: h.ticker,
+            name: h.name,
+            category: h.category,
+            allocationPct: +h.allocationPct.toFixed(1),
+            esgScore: +h.esgScore.toFixed(0),
+            region: h.region,
+          })),
+        };
+      })();
+
       const res = await fetch("/api/ethi", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next.map((m) => ({ role: m.role, content: m.content })) }),
+        body: JSON.stringify({
+          messages: next.map((m) => ({ role: m.role, content: m.content })),
+          context: ctx,
+        }),
       });
       const json = (await res.json()) as { content?: string; error?: string };
       const reply = json.content ?? json.error ?? "Désolée, je n'arrive pas à répondre.";
