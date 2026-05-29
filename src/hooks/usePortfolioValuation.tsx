@@ -54,7 +54,6 @@ interface ViewRow {
 export function usePortfolioValuation(): PortfolioValuation {
   const { user, loading: authLoading } = useAuth();
   const { activeId, loading: pfListLoading } = useUserPortfolios();
-  const { total: depositsTotal, loading: depLoading } = useDeposits();
   const [rows, setRows] = useState<ViewRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
