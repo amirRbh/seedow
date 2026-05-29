@@ -116,7 +116,7 @@ export const Route = createFileRoute("/")({
 
 // Palette éditoriale verrouillée
 const C = {
-  paper: "#f5f0e0",
+  paper: "#ffffff",
   ink: "#064e3b",
   inkSoft: "#0d7a5f",
   gold: "#c9a84c",
@@ -142,7 +142,7 @@ function Landing() {
 
   return (
     <div
-      className="min-h-screen selection:bg-[#c9a84c] selection:text-[#f5f0e0]"
+      className="min-h-screen selection:bg-[#c9a84c] selection:text-white"
       style={{
         backgroundColor: C.paper,
         color: C.ink,
@@ -153,7 +153,7 @@ function Landing() {
       <header
         className="sticky top-0 z-30 backdrop-blur-md border-b"
         style={{
-          backgroundColor: "rgba(245, 240, 224, 0.85)",
+          backgroundColor: "rgba(255, 255, 255, 0.85)",
           borderColor: "rgba(6, 78, 59, 0.12)",
         }}
       >
@@ -460,7 +460,7 @@ function Landing() {
               </h2>
               <p
                 className="max-w-xl mx-auto mb-12 text-base sm:text-lg"
-                style={{ color: "rgba(245, 240, 224, 0.75)" }}
+                style={{ color: "rgba(255, 255, 255, 0.75)" }}
               >
                 Ouvre ton compte aujourd'hui et rejoins une nouvelle génération
                 d'investisseurs conscients.
@@ -468,7 +468,7 @@ function Landing() {
               {isAuthed ? (
                 <Link
                   to="/dashboard"
-                  className="inline-flex items-center gap-3 px-12 py-5 font-bold uppercase tracking-[0.18em] text-xs transition-colors hover:bg-[#f5f0e0]"
+                  className="inline-flex items-center gap-3 px-12 py-5 font-bold uppercase tracking-[0.18em] text-xs transition-colors hover:bg-white"
                   style={{ backgroundColor: C.gold, color: C.ink }}
                 >
                   Accéder à mon espace
@@ -478,7 +478,7 @@ function Landing() {
                 <Link
                   to="/auth"
                   search={{ redirect: "/onboarding", mode: "signup" }}
-                  className="inline-flex items-center gap-3 px-12 py-5 font-bold uppercase tracking-[0.18em] text-xs transition-colors hover:bg-[#f5f0e0]"
+                  className="inline-flex items-center gap-3 px-12 py-5 font-bold uppercase tracking-[0.18em] text-xs transition-colors hover:bg-white"
                   style={{ backgroundColor: C.gold, color: C.ink }}
                 >
                   Commencer maintenant
