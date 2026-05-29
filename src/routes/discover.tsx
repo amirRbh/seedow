@@ -5,7 +5,6 @@ import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { SeedCard } from "@/components/discover/SeedCard";
 import { ThemeFilter } from "@/components/discover/ThemeFilter";
-import { DepositSheet } from "@/components/discover/DepositSheet";
 import { MOCK_ASSETS } from "@/lib/mockGarden";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -25,8 +24,6 @@ function Discover() {
   const [viewMode, setViewMode] = useState<"swipe" | "list">("swipe");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [planted, setPlanted] = useState<string[]>([]);
-  const [depositOpen, setDepositOpen] = useState(false);
-  const [depositTarget, setDepositTarget] = useState<string | undefined>(undefined);
 
   const assets = useMemo(() => {
     if (activeTheme === "all") return MOCK_ASSETS;
@@ -48,10 +45,6 @@ function Discover() {
     else if (info.offset.x < -120) handleSwipe("pass");
   };
 
-  const openDeposit = (assetName?: string) => {
-    setDepositTarget(assetName);
-    setDepositOpen(true);
-  };
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
@@ -89,30 +82,6 @@ function Discover() {
           <ThemeFilter active={activeTheme} onChange={(t) => { setActiveTheme(t); setCurrentIndex(0); }} />
         </div>
 
-        {/* Bandeau Investir — accès rapide au dépôt */}
-        <div className="px-5 pb-4">
-          <button
-            onClick={() => openDeposit()}
-            className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl text-paper hover:opacity-95 transition-all active:scale-[0.99] shadow-deep"
-            style={{
-              background:
-                "linear-gradient(120deg, var(--moss-1) 0%, var(--moss-2) 45%, var(--bloom) 100%)",
-            }}
-          >
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="w-9 h-9 rounded-full bg-paper/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0 border border-paper/30">
-                <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 5v14M5 12h14" />
-                </svg>
-              </div>
-              <div className="text-left min-w-0">
-                <p className="text-[13px] font-semibold">Déposer pour investir</p>
-                <p className="text-[10px] opacity-85 mt-0.5">Carte · Apple Pay · Virement SEPA</p>
-              </div>
-            </div>
-            <span className="text-base opacity-90">→</span>
-          </button>
-        </div>
 
         {viewMode === "swipe" ? (
           <div className="px-5">
@@ -152,13 +121,6 @@ function Discover() {
                   <button onClick={() => handleSwipe("pass")} aria-label="Passer" className="w-14 h-14 rounded-full bg-card border border-paper-3 flex items-center justify-center hover:border-rust transition-all active:scale-95">
                     <svg viewBox="0 0 24 24" className="w-5 h-5 text-ink-3" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
                   </button>
-                  <button
-                    onClick={() => openDeposit(current.name)}
-                    aria-label="Investir"
-                    className="px-5 h-14 rounded-full bg-paper border border-ink text-ink text-[12px] font-medium hover:bg-ink hover:text-paper transition-colors active:scale-95"
-                  >
-                    Investir
-                  </button>
                   <button onClick={() => handleSwipe("plant")} aria-label="Sélectionner" className="w-14 h-14 rounded-full bg-moss-1 text-paper flex items-center justify-center hover:bg-moss-2 transition-all active:scale-95">
                     <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M20 6L9 17l-5-5" />
@@ -166,7 +128,7 @@ function Discover() {
                   </button>
                 </div>
 
-                <p className="text-center text-[11px] text-ink-3 mt-4">Glisse à droite pour sélectionner · à gauche pour passer · ou investis directement</p>
+                <p className="text-center text-[11px] text-ink-3 mt-4">Glisse à droite pour sélectionner · à gauche pour passer</p>
               </>
             )}
           </div>
@@ -203,19 +165,12 @@ function Discover() {
                   </p>
                   <p className="text-[9px] text-ink-3 mt-1">prix unitaire</p>
                 </div>
-                <button
-                  onClick={() => openDeposit(asset.name)}
-                  className="flex-shrink-0 px-3 py-1.5 text-[11px] font-semibold border border-ink text-ink rounded-full hover:bg-ink hover:text-paper transition-colors"
-                >
-                  Investir
-                </button>
               </motion.div>
             ))}
           </div>
         )}
       </div>
 
-      <DepositSheet open={depositOpen} onClose={() => setDepositOpen(false)} assetName={depositTarget} />
       <BottomNavigation />
     </motion.div>
   );

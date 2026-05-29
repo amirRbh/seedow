@@ -138,6 +138,7 @@ export type Database = {
           description: string | null
           env_score: number | null
           esg_score: number
+          esg_score_fetched_at: string | null
           esg_score_source: string | null
           excluded_sectors: Database["public"]["Enums"]["exclusion_tag"][]
           expected_return: number
@@ -167,6 +168,7 @@ export type Database = {
           description?: string | null
           env_score?: number | null
           esg_score?: number
+          esg_score_fetched_at?: string | null
           esg_score_source?: string | null
           excluded_sectors?: Database["public"]["Enums"]["exclusion_tag"][]
           expected_return?: number
@@ -196,6 +198,7 @@ export type Database = {
           description?: string | null
           env_score?: number | null
           esg_score?: number
+          esg_score_fetched_at?: string | null
           esg_score_source?: string | null
           excluded_sectors?: Database["public"]["Enums"]["exclusion_tag"][]
           expected_return?: number
@@ -251,63 +254,6 @@ export type Database = {
           status?: string
         }
         Relationships: []
-      }
-      deposits: {
-        Row: {
-          amount: number
-          asset_hint: string | null
-          available_at: string
-          created_at: string
-          currency: string
-          id: string
-          method: Database["public"]["Enums"]["deposit_method"]
-          portfolio_id: string | null
-          reference: string | null
-          status: Database["public"]["Enums"]["deposit_status"]
-          user_id: string
-        }
-        Insert: {
-          amount: number
-          asset_hint?: string | null
-          available_at?: string
-          created_at?: string
-          currency?: string
-          id?: string
-          method: Database["public"]["Enums"]["deposit_method"]
-          portfolio_id?: string | null
-          reference?: string | null
-          status?: Database["public"]["Enums"]["deposit_status"]
-          user_id: string
-        }
-        Update: {
-          amount?: number
-          asset_hint?: string | null
-          available_at?: string
-          created_at?: string
-          currency?: string
-          id?: string
-          method?: Database["public"]["Enums"]["deposit_method"]
-          portfolio_id?: string | null
-          reference?: string | null
-          status?: Database["public"]["Enums"]["deposit_status"]
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "deposits_portfolio_id_fkey"
-            columns: ["portfolio_id"]
-            isOneToOne: false
-            referencedRelation: "portfolio_holdings_valued"
-            referencedColumns: ["portfolio_id"]
-          },
-          {
-            foreignKeyName: "deposits_portfolio_id_fkey"
-            columns: ["portfolio_id"]
-            isOneToOne: false
-            referencedRelation: "portfolios"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       portfolios: {
         Row: {
@@ -398,24 +344,7 @@ export type Database = {
       }
     }
     Views: {
-      portfolio_holdings_valued: {
-        Row: {
-          asset_class: Database["public"]["Enums"]["asset_class"] | null
-          asset_id: string | null
-          current_price: number | null
-          current_value: number | null
-          entry_price: number | null
-          invested_in_holding: number | null
-          name: string | null
-          portfolio_id: string | null
-          quote_fetched_at: string | null
-          ticker: string | null
-          total_invested: number | null
-          user_id: string | null
-          weight: number | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       get_vault_secret: { Args: { secret_name: string }; Returns: string }
@@ -438,8 +367,6 @@ export type Database = {
         | "egalite"
         | "tech"
         | "circulaire"
-      deposit_method: "card" | "wallet" | "sepa"
-      deposit_status: "pending" | "settled" | "failed"
       exclusion_tag:
         | "fossiles"
         | "armes"
@@ -593,8 +520,6 @@ export const Constants = {
         "tech",
         "circulaire",
       ],
-      deposit_method: ["card", "wallet", "sepa"],
-      deposit_status: ["pending", "settled", "failed"],
       exclusion_tag: [
         "fossiles",
         "armes",

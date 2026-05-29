@@ -9,7 +9,7 @@ import { useLexicon } from "@/hooks/useLexicon";
 import { useAuth } from "@/hooks/useAuth";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
-import { useDeposits } from "@/hooks/useDeposits";
+
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -38,7 +38,6 @@ function Dashboard() {
   const { user } = useAuth();
   const { portfolio, loading } = useActivePortfolio();
   const { portfolios, loading: pfListLoading } = useUserPortfolios();
-  const { total: walletTotal, pending: walletPending, deposits } = useDeposits();
   const valuation = usePortfolioValuation();
   const [greeting, setGreeting] = useState("Bonjour");
   const hasSeenPortfolioRef = useRef(false);
@@ -83,8 +82,8 @@ function Dashboard() {
     [portfolio],
   );
 
-  // Real-money valuation (initial_amount + settled deposits, valued via live quotes)
-  const totalInvested = valuation.totalInvested || (portfolio?.initial_amount ?? 0) + walletTotal;
+  // Valeur du portefeuille basée uniquement sur l'initial_amount déclaré + cours.
+  const totalInvested = valuation.totalInvested || (portfolio?.initial_amount ?? 0);
   const totalValue = valuation.currentValue || totalInvested;
   const gain = valuation.pnl;
   const returnPct = valuation.returnPct;
@@ -127,11 +126,6 @@ function Dashboard() {
             {gain.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} € · {returnPct.toFixed(2)}%
             <span className="text-ink-3 font-normal ml-1">depuis la plantation</span>
           </div>
-          {walletPending > 0 && (
-            <p className="text-[11px] text-ink-3 mt-2">
-              + {walletPending.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} € en attente de virement SEPA
-            </p>
-          )}
         </motion.section>
 
         <motion.section
@@ -176,19 +170,6 @@ function Dashboard() {
           )}
         </motion.section>
 
-        <motion.section
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="px-5 pt-6"
-        >
-          <WalletCard
-            balance={walletTotal}
-            pending={walletPending}
-            depositCount={deposits.length}
-            onAdd={() => navigate({ to: "/discover" })}
-          />
-        </motion.section>
 
         <motion.section
           initial={{ opacity: 0 }}
@@ -216,37 +197,3 @@ function Dashboard() {
   );
 }
 
-function WalletCard({
-  balance,
-  pending,
-  depositCount,
-  onAdd,
-}: {
-  balance: number;
-  pending: number;
-  depositCount: number;
-  onAdd: () => void;
-}) {
-  return (
-    <div className="border border-paper-3 rounded-2xl p-4">
-      <div className="flex items-baseline justify-between">
-        <p className="text-[10px] uppercase tracking-[0.15em] text-ink-3 font-medium">Solde investi</p>
-        <span className="text-[11px] text-ink-3">{depositCount} dépôt{depositCount > 1 ? "s" : ""}</span>
-      </div>
-      <p className="font-value text-3xl text-ink mt-1.5 tabular-nums">
-        {balance.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
-      </p>
-      {pending > 0 && (
-        <p className="text-[11px] text-ink-3 mt-1">
-          {pending.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} € en attente
-        </p>
-      )}
-      <button
-        onClick={onAdd}
-        className="mt-3 w-full py-2.5 text-[12px] font-medium border border-ink rounded-lg hover:bg-ink hover:text-paper transition-colors"
-      >
-        + Faire un nouveau dépôt
-      </button>
-    </div>
-  );
-}

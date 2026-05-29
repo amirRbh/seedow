@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { useDeposits } from "@/hooks/useDeposits";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 
 export interface ValuedHolding {
@@ -55,7 +54,6 @@ interface ViewRow {
 export function usePortfolioValuation(): PortfolioValuation {
   const { user, loading: authLoading } = useAuth();
   const { activeId, loading: pfListLoading } = useUserPortfolios();
-  const { total: depositsTotal, loading: depLoading } = useDeposits();
   const [rows, setRows] = useState<ViewRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -103,10 +101,9 @@ export function usePortfolioValuation(): PortfolioValuation {
     v == null ? 0 : typeof v === "number" ? v : Number(v);
 
   const initialFromView = rows[0] ? num(rows[0].total_invested) : 0;
-  // Real money the user actually put in = portfolio's initial_amount + settled deposits.
-  // We keep initial_amount as the floor so that an empty deposits table still values
-  // the portfolio at the amount the user set during onboarding.
-  const totalInvested = Math.max(initialFromView, 0) + depositsTotal;
+  // Valeur saisie par l'utilisateur (initial_amount du portefeuille).
+  // Le système de dépôts a été retiré : on travaille sur du déclaratif.
+  const totalInvested = Math.max(initialFromView, 0);
 
   const holdings: ValuedHolding[] = rows.map((r) => {
     const weight = num(r.weight);
@@ -155,7 +152,7 @@ export function usePortfolioValuation(): PortfolioValuation {
     hasQuotes,
     oldestQuoteAt,
     latestQuoteAt,
-    loading: loading || depLoading,
+    loading,
     error,
     refresh,
   };

@@ -105,21 +105,10 @@ export const getPortfolioHistory = createServerFn({ method: "POST" })
       bucket.set(aid, close);
     }
 
-    // 4. Dépôts pour reconstituer le capital investi à chaque date
-    const { data: deposits, error: depErr } = await supabase
-      .from("deposits")
-      .select("amount, available_at, status")
-      .eq("user_id", userId)
-      .eq("status", "settled")
-      .order("available_at", { ascending: true });
-    if (depErr) throw new Error(depErr.message);
-
+    // 4. Capital investi : on s'appuie uniquement sur le montant initial du
+    //    portefeuille. Le système de dépôts a été retiré (pivot vers audit).
     const initialAmount = Number(pf.initial_amount ?? 0);
-    // Capital cumulé settled à chaque date : on ne compte que les dépôts <= date
-    const sortedDeposits = (deposits ?? []).map((d) => ({
-      date: (d.available_at as string).slice(0, 10),
-      amount: Number(d.amount),
-    }));
+    const sortedDeposits: { date: string; amount: number }[] = [];
 
     // 5. Itère sur chaque date de prix dispo, forward-fill des cours manquants
     const sortedDates = Array.from(dateIndex.keys()).sort();

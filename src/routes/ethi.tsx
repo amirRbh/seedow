@@ -5,7 +5,7 @@ import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { EthiBubble } from "@/components/ethi/EthiBubble";
 import { EthiSuggestionChips } from "@/components/ethi/EthiSuggestionChips";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
-import { useDeposits } from "@/hooks/useDeposits";
+
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -24,7 +24,8 @@ function Ethi() {
   const { intent } = Route.useSearch();
   const { user } = useAuth();
   const { portfolio, loading: pfLoading } = useActivePortfolio();
-  const { total: depositsTotal, loading: depLoading } = useDeposits();
+  const depositsTotal = 0;
+  const depLoading = false;
   const valuation = usePortfolioValuation();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
