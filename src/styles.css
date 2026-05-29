@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap");
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
@@ -18,8 +18,8 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
 
-  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
-  --font-value: "Fraunces", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-value: "Syne", "Plus Jakarta Sans", sans-serif;
 
   /* shadcn semantic tokens */
   --color-background: var(--background);
@@ -88,41 +88,41 @@
 }
 
 :root {
-  --radius: 0.75rem;
+  --radius: 0.5rem;
 
-  /* Surfaces — blanc pur, neutre */
-  --paper: oklch(1 0 0);
-  --paper-2: oklch(0.98 0 0);
-  --paper-3: oklch(0.93 0 0);
-  --paper-inset: oklch(0.90 0 0);
+  /* Surfaces — ivoire éditorial */
+  --paper: oklch(0.965 0.018 88);
+  --paper-2: oklch(0.945 0.020 86);
+  --paper-3: oklch(0.895 0.025 85);
+  --paper-inset: oklch(0.860 0.028 84);
 
-  /* Encre — bleu-nuit profond plutôt que noir */
-  --ink: oklch(0.24 0.040 250);
-  --ink-2: oklch(0.46 0.040 250);
-  --ink-3: oklch(0.64 0.030 250);
+  /* Encre — emerald profond */
+  --ink: oklch(0.30 0.060 165);
+  --ink-2: oklch(0.45 0.065 162);
+  --ink-3: oklch(0.62 0.045 160);
 
-  /* Vert menthe énergique — couleur signature */
-  --moss-1: oklch(0.55 0.150 155);
-  --moss-2: oklch(0.68 0.140 158);
-  --moss-3: oklch(0.78 0.110 160);
-  --moss-4: oklch(0.90 0.080 162);
-  --moss-5: oklch(0.96 0.045 164);
+  /* Emerald signature */
+  --moss-1: oklch(0.42 0.090 163);
+  --moss-2: oklch(0.55 0.085 162);
+  --moss-3: oklch(0.70 0.065 161);
+  --moss-4: oklch(0.84 0.045 160);
+  --moss-5: oklch(0.93 0.030 158);
 
-  /* Accents pastel énergique */
-  --rust: oklch(0.68 0.160 35);    /* corail/pêche */
-  --gold: oklch(0.82 0.140 88);    /* jaune soleil doux */
-  --sky: oklch(0.72 0.110 230);    /* bleu ciel */
-  --bloom: oklch(0.70 0.140 310);  /* lavande/orchidée */
-  --peach: oklch(0.85 0.090 50);   /* pêche tendre */
+  /* Accents — or éditorial + neutres compatibles */
+  --rust: oklch(0.62 0.135 38);
+  --gold: oklch(0.78 0.115 86);
+  --sky: oklch(0.70 0.080 220);
+  --bloom: oklch(0.68 0.110 305);
+  --peach: oklch(0.85 0.080 60);
 
   /* shadcn mapping */
   --background: var(--paper);
   --foreground: var(--ink);
-  --card: oklch(1 0 0);
+  --card: oklch(0.985 0.012 88);
   --card-foreground: var(--ink);
-  --popover: oklch(1 0 0);
+  --popover: oklch(0.985 0.012 88);
   --popover-foreground: var(--ink);
-  --primary: var(--moss-1);
+  --primary: var(--ink);
   --primary-foreground: var(--paper);
   --secondary: var(--paper-2);
   --secondary-foreground: var(--ink-2);
@@ -134,11 +134,11 @@
   --destructive-foreground: var(--paper);
   --border: var(--paper-3);
   --input: var(--paper-3);
-  --ring: var(--moss-2);
+  --ring: var(--gold);
 
-  --shadow-leaf: 0 1px 2px 0 oklch(0.20 0.008 260 / 0.04), 0 1px 3px 0 oklch(0.20 0.008 260 / 0.06);
-  --shadow-deep: 0 4px 16px -4px oklch(0.20 0.008 260 / 0.10);
-  --shadow-soil: inset 0 1px 2px 0 oklch(0.20 0.008 260 / 0.06);
+  --shadow-leaf: 0 1px 2px 0 oklch(0.30 0.060 165 / 0.05), 0 1px 3px 0 oklch(0.30 0.060 165 / 0.07);
+  --shadow-deep: 0 8px 28px -10px oklch(0.30 0.060 165 / 0.14);
+  --shadow-soil: inset 0 1px 2px 0 oklch(0.30 0.060 165 / 0.07);
 }
 
 .dark {
@@ -171,16 +171,22 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
-    font-feature-settings: "cv11", "ss01", "tnum";
-    letter-spacing: -0.011em;
+    font-feature-settings: "tnum", "ss01";
+    letter-spacing: -0.012em;
   }
 
   .font-value {
     font-family: var(--font-value);
-    font-style: normal;
-    font-weight: 400;
-    letter-spacing: -0.025em;
+    font-weight: 600;
+    letter-spacing: -0.02em;
     font-feature-settings: "lnum", "tnum";
+  }
+
+  .font-display {
+    font-family: var(--font-value);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    text-transform: none;
   }
 }
 
