@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/discover")({
   beforeLoad: async () => {
+    if (typeof window === "undefined") return;
     const { data } = await supabase.auth.getSession();
     if (!data.session) {
       throw redirect({ to: "/auth", search: { redirect: "/discover", mode: "login" } });
