@@ -126,11 +126,6 @@ function Dashboard() {
             {gain.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} € · {returnPct.toFixed(2)}%
             <span className="text-ink-3 font-normal ml-1">depuis la plantation</span>
           </div>
-          {walletPending > 0 && (
-            <p className="text-[11px] text-ink-3 mt-2">
-              + {walletPending.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} € en attente de virement SEPA
-            </p>
-          )}
         </motion.section>
 
         <motion.section
