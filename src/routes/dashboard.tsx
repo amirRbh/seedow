@@ -170,19 +170,6 @@ function Dashboard() {
           )}
         </motion.section>
 
-        <motion.section
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="px-5 pt-6"
-        >
-          <WalletCard
-            balance={walletTotal}
-            pending={walletPending}
-            depositCount={deposits.length}
-            onAdd={() => navigate({ to: "/discover" })}
-          />
-        </motion.section>
 
         <motion.section
           initial={{ opacity: 0 }}
