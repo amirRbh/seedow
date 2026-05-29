@@ -327,15 +327,16 @@ function Landing() {
 
 function StickyHeader({ isAuthed }: { isAuthed: boolean | null }) {
   const { scrollY } = useScroll();
-  const opacity = useTransform(scrollY, [0, 400], [0, 1]);
-  const borderOpacity = useTransform(scrollY, [0, 400], [0, 0.12]);
+  const bg = useTransform(scrollY, [0, 400], ["rgba(245, 240, 224, 0)", "rgba(245, 240, 224, 0.92)"]);
+  const borderColor = useTransform(scrollY, [0, 400], ["rgba(6, 78, 59, 0)", "rgba(6, 78, 59, 0.12)"]);
 
   return (
     <motion.header
-      style={{ backgroundColor: useTransform(opacity, (v) => `rgba(245, 240, 224, ${0.92 * v})`) }}
+      style={{ backgroundColor: bg }}
       className="fixed top-0 left-0 right-0 z-40 backdrop-blur-xl"
     >
-      <motion.div style={{ borderColor: useTransform(borderOpacity, (v) => `rgba(6, 78, 59, ${v})`) }} className="border-b">
+      <motion.div style={{ borderColor }} className="border-b">
+
         <nav className="max-w-7xl mx-auto flex justify-between items-center px-6 md:px-12 py-5">
           <Link to="/" className="font-display font-bold text-xl tracking-tight uppercase">
             seedow<span className="text-gold">.</span>
