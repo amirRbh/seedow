@@ -8,6 +8,7 @@ import { ImpactRibbon } from "@/components/garden/ImpactRibbon";
 import { useLexicon } from "@/hooks/useLexicon";
 import { useAuth } from "@/hooks/useAuth";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
+import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 import { useDeposits } from "@/hooks/useDeposits";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { supabase } from "@/integrations/supabase/client";
@@ -33,6 +34,7 @@ function Dashboard() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { portfolio, loading } = useActivePortfolio();
+  const { portfolios, loading: pfListLoading } = useUserPortfolios();
   const { total: walletTotal, pending: walletPending, deposits } = useDeposits();
   const valuation = usePortfolioValuation();
   const [greeting, setGreeting] = useState("Bonjour");
@@ -43,23 +45,21 @@ function Dashboard() {
   }, []);
 
   useEffect(() => {
-    if (portfolio) {
+    if (portfolio || portfolios.length > 0) {
       hasSeenPortfolioRef.current = true;
     }
-  }, [portfolio]);
+  }, [portfolio, portfolios.length]);
 
-  // On ne redirige vers l'onboarding que pour un vrai "nouvel utilisateur".
-  // Si un portefeuille a déjà été vu dans cette session, on évite toute boucle
-  // causée par une latence de re-fetch ou un refresh intermédiaire.
+  // Redirection vers l'onboarding pilotée par l'état explicite de la requête,
+  // pas par un délai. On attend que les listes (portefeuilles + portefeuille actif)
+  // soient résolues, puis on redirige uniquement si aucun portefeuille n'existe.
   useEffect(() => {
-    if (loading || portfolio || hasSeenPortfolioRef.current) return;
-    const timer = setTimeout(() => {
-      if (!hasSeenPortfolioRef.current) {
-        navigate({ to: "/onboarding", search: { new: undefined } });
-      }
-    }, 1800);
-    return () => clearTimeout(timer);
-  }, [loading, portfolio, navigate]);
+    if (pfListLoading || loading) return;
+    if (hasSeenPortfolioRef.current) return;
+    if (portfolios.length === 0 && !portfolio) {
+      navigate({ to: "/onboarding", search: { new: undefined } });
+    }
+  }, [pfListLoading, loading, portfolios.length, portfolio, navigate]);
 
   const userName = useMemo(() => {
     const meta = user?.user_metadata as { display_name?: string; full_name?: string } | undefined;
