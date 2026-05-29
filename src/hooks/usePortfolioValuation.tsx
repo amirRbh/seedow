@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { useDeposits } from "@/hooks/useDeposits";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 
 export interface ValuedHolding {
