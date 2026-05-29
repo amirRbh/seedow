@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
+import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 import {
   Area,
   AreaChart,
@@ -35,6 +36,7 @@ const fmtDate = (iso: string) =>
 
 export function PortfolioHistoryChart() {
   const fetchHistory = useServerFn(getPortfolioHistory);
+  const { activeId } = useUserPortfolios();
   const [range, setRange] = useState<Range>("3M");
   const [points, setPoints] = useState<HistoryPoint[]>([]);
   const [loading, setLoading] = useState(true);
@@ -44,7 +46,7 @@ export function PortfolioHistoryChart() {
     let cancelled = false;
     setLoading(true);
     setError(null);
-    fetchHistory({ data: { range } })
+    fetchHistory({ data: { range, portfolioId: activeId ?? undefined } })
       .then((res) => {
         if (cancelled) return;
         setPoints(res.points);
@@ -59,7 +61,7 @@ export function PortfolioHistoryChart() {
     return () => {
       cancelled = true;
     };
-  }, [range, fetchHistory]);
+  }, [range, fetchHistory, activeId]);
 
   const { first, last, deltaPct, deltaAbs, isUp, minY, maxY } = useMemo(() => {
     if (points.length === 0) {
