@@ -197,37 +197,3 @@ function Dashboard() {
   );
 }
 
-function WalletCard({
-  balance,
-  pending,
-  depositCount,
-  onAdd,
-}: {
-  balance: number;
-  pending: number;
-  depositCount: number;
-  onAdd: () => void;
-}) {
-  return (
-    <div className="border border-paper-3 rounded-2xl p-4">
-      <div className="flex items-baseline justify-between">
-        <p className="text-[10px] uppercase tracking-[0.15em] text-ink-3 font-medium">Solde investi</p>
-        <span className="text-[11px] text-ink-3">{depositCount} dépôt{depositCount > 1 ? "s" : ""}</span>
-      </div>
-      <p className="font-value text-3xl text-ink mt-1.5 tabular-nums">
-        {balance.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
-      </p>
-      {pending > 0 && (
-        <p className="text-[11px] text-ink-3 mt-1">
-          {pending.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} € en attente
-        </p>
-      )}
-      <button
-        onClick={onAdd}
-        className="mt-3 w-full py-2.5 text-[12px] font-medium border border-ink rounded-lg hover:bg-ink hover:text-paper transition-colors"
-      >
-        + Faire un nouveau dépôt
-      </button>
-    </div>
-  );
-}
