@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
+import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 import {
   Area,
   AreaChart,
