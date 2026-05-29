@@ -64,16 +64,34 @@ function RootShell({ children }: { children: React.ReactNode }) {
   );
 }
 
+function RouteTransition() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      <motion.div
+        key={pathname}
+        initial={{ opacity: 0, y: 8, filter: "blur(6px)" }}
+        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        exit={{ opacity: 0, y: -6, filter: "blur(6px)" }}
+        transition={{ duration: 0.45, ease: [0.32, 0.72, 0, 1] }}
+      >
+        <Outlet />
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
 function RootComponent() {
   return (
     <AuthProvider>
       <UserPortfoliosProvider>
         <LexiconProvider>
           <ViewModeProvider>
-            <Outlet />
+            <RouteTransition />
           </ViewModeProvider>
         </LexiconProvider>
       </UserPortfoliosProvider>
     </AuthProvider>
   );
 }
+
