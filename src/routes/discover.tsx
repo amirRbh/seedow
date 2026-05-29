@@ -5,7 +5,6 @@ import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { SeedCard } from "@/components/discover/SeedCard";
 import { ThemeFilter } from "@/components/discover/ThemeFilter";
-import { DepositSheet } from "@/components/discover/DepositSheet";
 import { MOCK_ASSETS } from "@/lib/mockGarden";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -25,8 +24,6 @@ function Discover() {
   const [viewMode, setViewMode] = useState<"swipe" | "list">("swipe");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [planted, setPlanted] = useState<string[]>([]);
-  const [depositOpen, setDepositOpen] = useState(false);
-  const [depositTarget, setDepositTarget] = useState<string | undefined>(undefined);
 
   const assets = useMemo(() => {
     if (activeTheme === "all") return MOCK_ASSETS;
