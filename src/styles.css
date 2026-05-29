@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap");
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
@@ -6,8 +6,9 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ═══════════════════════════════════════════════════════════════
-   SEEDOW DESIGN SYSTEM — "Le Jardin"
-   Papier blanc, encre organique, mousse vivante.
+   SEEDOW — Emerald Prestige
+   Éditorial financier premium. Vert profond, or, crème.
+   Typo : Space Grotesk (display) + DM Sans (body).
 ═══════════════════════════════════════════════════════════════ */
 
 @theme inline {
@@ -18,10 +19,10 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
 
-  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
-  --font-value: "Syne", "Plus Jakarta Sans", sans-serif;
+  --font-sans: "DM Sans", system-ui, -apple-system, sans-serif;
+  --font-value: "Space Grotesk", "DM Sans", sans-serif;
+  --font-display: "Space Grotesk", "DM Sans", sans-serif;
 
-  /* shadcn semantic tokens */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -42,7 +43,6 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  /* Seedow garden tokens — directly mapped, no -DEFAULT suffix needed */
   --color-paper: var(--paper);
   --color-paper-2: var(--paper-2);
   --color-paper-3: var(--paper-3);
@@ -60,6 +60,7 @@
 
   --color-rust: var(--rust);
   --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
   --color-sky: var(--sky);
   --color-bloom: var(--bloom);
   --color-peach: var(--peach);
@@ -88,29 +89,32 @@
 }
 
 :root {
-  --radius: 0.5rem;
+  --radius: 0.375rem;
 
-  /* Surfaces — blanc éditorial */
-  --paper: oklch(0.995 0.003 90);
-  --paper-2: oklch(0.985 0.005 90);
-  --paper-3: oklch(0.92 0.010 90);
-  --paper-inset: oklch(0.90 0.012 90);
+  /* Crème éditorial — papier de revue */
+  --paper: oklch(0.975 0.015 90);        /* #f5f0e0 */
+  --paper-2: oklch(0.955 0.018 88);
+  --paper-3: oklch(0.88 0.020 85);
+  --paper-inset: oklch(0.84 0.022 84);
 
-  /* Encre — emerald profond */
-  --ink: oklch(0.30 0.060 165);
-  --ink-2: oklch(0.45 0.065 162);
-  --ink-3: oklch(0.62 0.045 160);
+  /* Encre = vert profond Emerald Prestige */
+  --ink: oklch(0.34 0.075 165);          /* #064e3b */
+  --ink-2: oklch(0.48 0.085 162);        /* #0d7a5f */
+  --ink-3: oklch(0.62 0.060 160);
 
-  /* Emerald signature */
-  --moss-1: oklch(0.42 0.090 163);
-  --moss-2: oklch(0.55 0.085 162);
-  --moss-3: oklch(0.70 0.065 161);
-  --moss-4: oklch(0.84 0.045 160);
-  --moss-5: oklch(0.93 0.030 158);
+  /* Emerald stops */
+  --moss-1: oklch(0.34 0.075 165);
+  --moss-2: oklch(0.48 0.085 162);
+  --moss-3: oklch(0.65 0.060 161);
+  --moss-4: oklch(0.82 0.040 160);
+  --moss-5: oklch(0.93 0.025 158);
 
-  /* Accents — or éditorial + neutres compatibles */
-  --rust: oklch(0.62 0.135 38);
-  --gold: oklch(0.78 0.115 86);
+  /* Or éditorial — accent signature */
+  --gold: oklch(0.78 0.115 86);          /* #c9a84c */
+  --gold-soft: oklch(0.88 0.080 86);     /* #f0d78c */
+
+  /* Accents secondaires */
+  --rust: oklch(0.60 0.140 38);
   --sky: oklch(0.70 0.080 220);
   --bloom: oklch(0.68 0.110 305);
   --peach: oklch(0.85 0.080 60);
@@ -118,9 +122,9 @@
   /* shadcn mapping */
   --background: var(--paper);
   --foreground: var(--ink);
-  --card: oklch(0.995 0.003 90);
+  --card: var(--paper);
   --card-foreground: var(--ink);
-  --popover: oklch(0.995 0.003 90);
+  --popover: var(--paper);
   --popover-foreground: var(--ink);
   --primary: var(--ink);
   --primary-foreground: var(--paper);
@@ -136,24 +140,26 @@
   --input: var(--paper-3);
   --ring: var(--gold);
 
-  --shadow-leaf: 0 1px 2px 0 oklch(0.30 0.060 165 / 0.05), 0 1px 3px 0 oklch(0.30 0.060 165 / 0.07);
-  --shadow-deep: 0 8px 28px -10px oklch(0.30 0.060 165 / 0.14);
-  --shadow-soil: inset 0 1px 2px 0 oklch(0.30 0.060 165 / 0.07);
+  --shadow-leaf: 0 1px 2px 0 oklch(0.34 0.075 165 / 0.05), 0 1px 3px 0 oklch(0.34 0.075 165 / 0.08);
+  --shadow-deep: 0 18px 48px -18px oklch(0.34 0.075 165 / 0.22);
+  --shadow-soil: inset 0 1px 2px 0 oklch(0.34 0.075 165 / 0.07);
 }
 
 .dark {
-  --paper: oklch(0.14 0.006 260);
-  --paper-2: oklch(0.18 0.007 260);
-  --paper-3: oklch(0.24 0.008 260);
-  --paper-inset: oklch(0.28 0.009 260);
-  --ink: oklch(0.96 0.005 100);
-  --ink-2: oklch(0.78 0.006 100);
-  --ink-3: oklch(0.58 0.007 100);
-  --moss-1: oklch(0.72 0.060 155);
-  --moss-2: oklch(0.58 0.055 155);
-  --moss-3: oklch(0.45 0.045 155);
-  --moss-4: oklch(0.30 0.030 155);
-  --moss-5: oklch(0.22 0.020 155);
+  --paper: oklch(0.16 0.020 165);        /* vert nuit */
+  --paper-2: oklch(0.20 0.022 165);
+  --paper-3: oklch(0.28 0.025 165);
+  --paper-inset: oklch(0.32 0.026 165);
+  --ink: oklch(0.96 0.015 90);
+  --ink-2: oklch(0.82 0.020 88);
+  --ink-3: oklch(0.62 0.025 85);
+  --moss-1: oklch(0.82 0.055 158);
+  --moss-2: oklch(0.66 0.060 160);
+  --moss-3: oklch(0.50 0.055 162);
+  --moss-4: oklch(0.34 0.040 164);
+  --moss-5: oklch(0.24 0.028 165);
+  --gold: oklch(0.82 0.115 86);
+  --gold-soft: oklch(0.72 0.090 86);
   --background: var(--paper);
   --foreground: var(--ink);
   --card: var(--paper-2);
@@ -168,7 +174,6 @@
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* Apple-like smooth scrolling */
     scroll-behavior: smooth;
   }
 
@@ -177,10 +182,10 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     font-feature-settings: "tnum", "ss01";
-    letter-spacing: -0.012em;
+    letter-spacing: -0.011em;
   }
 
-  /* Apple-style global transitions: signature spring easing */
+  /* Easing Apple-like sur les éléments interactifs */
   a, button, [role="button"], input, select, textarea, summary,
   .paper-card, .paper-card-inset, .moss-badge {
     transition-property: background-color, border-color, color, fill, stroke,
@@ -200,15 +205,57 @@
   .font-value {
     font-family: var(--font-value);
     font-weight: 600;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.022em;
     font-feature-settings: "lnum", "tnum";
   }
 
   .font-display {
-    font-family: var(--font-value);
+    font-family: var(--font-display);
     font-weight: 700;
     letter-spacing: -0.035em;
-    text-transform: none;
+  }
+
+  /* Échelle éditoriale signature */
+  .display-xl {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(3.5rem, 10vw, 8rem);
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    font-feature-settings: "lnum", "tnum";
+  }
+
+  .display-lg {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(2.25rem, 5vw, 3.75rem);
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+  }
+
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--color-gold);
+  }
+
+  /* Filet or — séparateur signature */
+  .gold-rule {
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      var(--color-gold) 12%,
+      var(--color-gold) 88%,
+      transparent
+    );
+  }
+  .gold-rule-solid {
+    height: 1px;
+    background-color: var(--color-gold);
   }
 }
 
@@ -217,13 +264,13 @@
   .paper-card {
     background-color: var(--color-card);
     border: 1px solid var(--color-paper-3);
-    border-radius: 0.5rem;
+    border-radius: 0.375rem;
   }
 
   .paper-card-inset {
     background: var(--color-paper-2);
     border: 1px solid var(--color-paper-3);
-    border-radius: 0.5rem;
+    border-radius: 0.375rem;
   }
 
   .leaf-hover {
@@ -232,16 +279,18 @@
                 transform 400ms cubic-bezier(0.32, 0.72, 0, 1),
                 box-shadow 400ms cubic-bezier(0.32, 0.72, 0, 1);
   }
-  .leaf-hover:hover { border-color: var(--color-ink-3); }
+  .leaf-hover:hover { border-color: var(--color-gold); }
 
+  /* CTA principal — vert profond, hover plus dense */
   .btn-plant {
     background: var(--color-ink);
     color: var(--color-paper);
-    border-radius: 4px;
-    padding: 10px 18px;
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.01em;
+    border-radius: 2px;
+    padding: 14px 24px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
     transition: background 400ms cubic-bezier(0.32, 0.72, 0, 1),
                 transform 400ms cubic-bezier(0.32, 0.72, 0, 1),
                 box-shadow 400ms cubic-bezier(0.32, 0.72, 0, 1);
@@ -250,52 +299,65 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
   }
   .btn-plant:hover { background: var(--color-ink-2); transform: translateY(-1px); box-shadow: var(--shadow-deep); }
-  .btn-plant:active { transform: scale(0.97); transition-duration: 120ms; }
+  .btn-plant:active { transform: scale(0.98); transition-duration: 120ms; }
 
+  /* Secondaire — bordure or */
   .btn-harvest {
-    background: var(--color-paper);
+    background: transparent;
     color: var(--color-ink);
-    border: 1px solid var(--color-paper-3);
-    border-radius: 4px;
-    padding: 10px 18px;
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.01em;
-    transition: border-color 400ms cubic-bezier(0.32, 0.72, 0, 1),
-                background 400ms cubic-bezier(0.32, 0.72, 0, 1),
+    border: 1px solid var(--color-gold);
+    border-radius: 2px;
+    padding: 14px 24px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    transition: background 400ms cubic-bezier(0.32, 0.72, 0, 1),
+                color 400ms cubic-bezier(0.32, 0.72, 0, 1),
                 transform 400ms cubic-bezier(0.32, 0.72, 0, 1);
     cursor: pointer;
   }
-  .btn-harvest:hover { border-color: var(--color-ink); transform: translateY(-1px); }
-  .btn-harvest:active { transform: scale(0.97); transition-duration: 120ms; }
+  .btn-harvest:hover { background: var(--color-gold); color: var(--color-ink); transform: translateY(-1px); }
+  .btn-harvest:active { transform: scale(0.98); transition-duration: 120ms; }
 
-
+  /* Badge éditorial — filet or à gauche */
   .moss-badge {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    padding: 2px 7px;
-    border-radius: 3px;
+    gap: 6px;
+    padding: 3px 10px 3px 8px;
+    border-radius: 2px;
     font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.04em;
+    font-weight: 600;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    background: var(--color-moss-5);
-    color: var(--color-moss-1);
-    border: 1px solid var(--color-moss-4);
+    background: transparent;
+    color: var(--color-ink);
+    border: none;
+    border-left: 2px solid var(--color-gold);
   }
 
   .bubble-ethi {
     background: var(--color-paper-2);
     color: var(--color-ink);
     border: 1px solid var(--color-paper-3);
-    border-radius: 6px;
-    padding: 12px 16px;
+    border-radius: 4px;
+    padding: 14px 18px;
     line-height: 1.55;
     font-size: 14px;
+  }
+
+  /* KPI éditorial — chiffres en Space Grotesk tabulaire */
+  .kpi-figure {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-feature-settings: "lnum", "tnum";
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+    color: var(--color-ink);
   }
 
   .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom, 0); }

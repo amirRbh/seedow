@@ -1,128 +1,77 @@
-# Pivot vers l'audit ESG indépendant
+# Refonte design system "Emerald Prestige" + landing cinématique
 
-## Principe
+Direction : **éditorial financier premium**, palette **Emerald Prestige** (vert profond #064e3b + or #c9a84c + crème #f5f0e0), typo **Space Grotesk / DM Sans**. Innovation prioritaire : **landing cinématique scroll-driven**.
 
-Seedow ne promet plus de placer l'argent. L'utilisateur **saisit son portefeuille existant** (lignes ISIN/ticker/nom + montant ou %), on **récupère les données ESG réelles** datées et sourcées, et on rend un **verdict d'audit** clair, transparent sur ses trous de couverture.
+## 1. Nouveau design system (`src/styles.css`)
 
-Le mode démo actuel (jardin généré, badges, growth comparison) reste accessible sur `/demo` pour la vitrine.
+Remplacer les tokens actuels :
 
----
+- **Surfaces** : `--paper` crème (#f5f0e0 → oklch), `--paper-2` ivoire, `--ink` vert profond (#064e3b), `--ink-2/3` déclinaisons
+- **Accent or** : `--gold` (#c9a84c) pour CTA, chiffres clés, séparateurs fins
+- **Vert signature** : conserve `--moss-*` mais recalibré sur emerald prestige (5 stops du #064e3b au crème)
+- **Mode sombre** : ink crème sur fond vert nuit (#0a1f17)
+- **Typo** : import Space Grotesk (500/600/700) pour `--font-display` + `--font-value`, DM Sans (300/400/500) pour `--font-sans`. Suppression Syne/Plus Jakarta.
+- **Échelle éditoriale** : nouvelle classe `.display-xl` (clamp 56→128px, Space Grotesk 600, tracking -0.04em) pour gros chiffres
+- **Filet or** : utility `.gold-rule` (1px #c9a84c) pour séparer sections
+- **Easing Apple conservé** : `cubic-bezier(0.32, 0.72, 0, 1)` 400ms (déjà en place)
+- **Grain subtil** : overlay SVG noise 2% sur `body` pour texture papier
 
-## 1. Nettoyage (1.1)
+## 2. Composants refondus
 
-**Code supprimé / neutralisé**
-- `src/components/discover/DepositSheet.tsx` → supprimé
-- `src/hooks/useDeposits.tsx` → supprimé
-- `src/routes/api/public/hooks/refresh-market-data.ts` → conservé (cron prix, utile pour cours actuels)
-- Toutes les références à `useDeposits` dans `discover.tsx`, `portfolio.tsx`, `dashboard.tsx` → retirées
-- `src/lib/mockGarden.ts` → déplacé/renommé `src/lib/demo/mockGarden.ts`, n'est plus importé que par `/demo`
+- **`AppHeader`** : wordmark "seedow" en Space Grotesk 600 tracking -0.03em, filet or 1px sous le header, fond crème translucide + backdrop-blur
+- **`BottomNavigation`** : barre flottante crème, icônes vert profond, indicateur actif = pastille or
+- **`paper-card`** : fond ivoire, bordure 1px vert/10%, hover : bordure or
+- **`btn-plant`** → CTA principal vert profond, hover vire à un vert plus sombre + ombre douce
+- **`btn-harvest`** → secondaire transparent + bordure or
+- **`moss-badge`** : nouveau style éditorial (uppercase, tracking large, filet or à gauche)
+- Nouveau **`<KPIFigure value unit label />`** : gros chiffre Space Grotesk + tabular-nums + libellé uppercase tracking large (utilisé partout dans dashboard/verdict)
+- Nouveau **`<EditorialSection eyebrow title kicker />`** : pattern unifié de section avec eyebrow uppercase or, titre serif-like, filet or
 
-**Migration DB**
-- `DROP TABLE public.deposits` (avec CASCADE sur les FK éventuelles)
-- L'enum `deposit_status` et `deposit_method` → DROP
-- `portfolios.initial_amount` → renommé `total_value` (ou conservé, sémantique différente : c'est maintenant la valeur saisie par l'utilisateur)
+## 3. Landing cinématique (`src/routes/index.tsx`)
 
----
+Refonte complète en 6 séquences scroll-driven (Framer Motion `useScroll` + `useTransform`) :
 
-## 2. Saisie manuelle du portefeuille (1.2)
+1. **Hero plein écran** : wordmark "seedow" géant qui se contracte au scroll vers le header, sous-titre "L'audit ESG de ton épargne, sans promesse de placement", CTA or "Auditer mon portefeuille"
+2. **Manifeste** : phrase éditoriale qui se révèle mot par mot au scroll (split text + opacity stagger)
+3. **Démo interactive inline** : input ticker → preview d'un mini-verdict animé (3 KPI qui s'incrémentent : couverture ESG, score moyen, lignes non auditables). Données mockées, sans backend.
+4. **3 piliers** : grille éditoriale 3 colonnes avec filets or, chiffres XL, descriptions courtes (Audit / Transparence / Trous de couverture assumés)
+5. **Méthodologie teaser** : extrait de la page méthodologie + lien
+6. **Waitlist + disclaimers** : form email minimal, disclaimers en filet or fin
 
-**Nouveau composant** : `src/components/audit/HoldingsInput.tsx`
-- Liste de lignes éditables : `[champ recherche unique]` + `[montant € | %]` + bouton supprimer
-- Champ unique avec autocomplétion sur la table `assets` existante (matching nom + ticker + ISIN, fuzzy)
-- Si pas de match → ligne marquée "non auditable" (gardée pour le total mais exclue du verdict, affichée honnêtement)
-- Toggle global "Je saisis en € / en %" en haut
-- Bouton "Ajouter une ligne" + import CSV simple (optionnel v1, sinon V2)
+Toutes les transitions utilisent l'easing Apple + parallax léger sur titres et fades successifs.
 
-**Nouvelle route** : `src/routes/audit.tsx` (remplace `discover.tsx` dans la nav)
-- Étape 1 : saisie holdings
-- Étape 2 : verdict (cf §4)
+## 4. Écrans secondaires alignés
 
-**Server fn** : `src/lib/audit/holdings.functions.ts`
-- `searchAssets({ query })` → autocomplete (top 10, ranking par nom puis ticker puis ISIN)
-- `saveAuditPortfolio({ holdings: [{assetId | rawInput, amount, isPercent}] })` → écrit dans `portfolios` + `weights` JSON
+Pas de refonte fonctionnelle, juste réapplication des nouveaux tokens/composants :
+- `dashboard.tsx` : remplace les chiffres par `<KPIFigure>`, sections par `<EditorialSection>`, ImpactRibbon restylé
+- `portfolio.tsx`, `discover.tsx`, `methodologie.tsx`, `reglages.tsx`, `auth.tsx`, `onboarding.tsx`, `ethi.tsx` : application automatique via tokens + remplacement ponctuel des classes spécifiques
+- `__root.tsx` : transitions de route existantes conservées (déjà en place)
 
----
+## 5. Mémoire projet
 
-## 3. Fetcher ESG réel (1.3)
+Mettre à jour `mem://index.md` Core :
+- Palette : Emerald Prestige (#064e3b / #c9a84c / #f5f0e0)
+- Typo : Space Grotesk (display) + DM Sans (body)
+- Style : éditorial financier premium, filets or, KPI en Space Grotesk tabulaire
 
-**Nouveau fichier** : `src/lib/market/esg.server.ts`
-- Source : MSCI ESG via API publique limitée OU Sustainalytics OU Yahoo `quoteSummary?modules=esgScores` (gratuit, partiel). **Recommandation v1 : Yahoo esgScores** (déjà notre source de prix, gratuit, mais couverture limitée aux grandes caps — c'est OK car ça illustre les trous).
-- Fonction : `fetchEsgScores(yahooSymbol)` → `{ esgScore, envScore, socialScore, govScore, source: 'yahoo_esg', fetchedAt }`
+## Détails techniques
 
-**Migration DB** : `assets`
-- Ajout `esg_score_fetched_at timestamptz`
-- `esg_score_source` existe déjà → utilisé
-- Idem pour `env_score_source`, `social_score_source`, `governance_score_source` (nullable)
-- Politique de cache : refresh > 30j seulement (ESG bouge lentement)
+- **Pas de nouvelle dépendance** : Framer Motion déjà installé
+- **Fonts** : Google Fonts via `@import` dans `styles.css` (remplace l'import Syne/Plus Jakarta existant)
+- **Pas de migration DB** : refonte purement frontend
+- **Pas de changement de logique métier** : on touche uniquement styles/composants de présentation
+- **Lexique** : respect strict de la mémoire (pas de "jardin/graines"), wordmark "seedow" en texte seul, montants `minimumFractionDigits: 2`
 
-**Nouvelle server route cron** : `src/routes/api/public/hooks/refresh-esg.ts`
-- Itère sur les assets actifs avec `esg_score_fetched_at < now() - 30d`
-- Log dans `cron_run_log` (table existante)
-- Cron pg_cron mensuel
+## Hors périmètre
 
-**Affichage source/date** : nouveau composant `src/components/audit/DataSourceBadge.tsx`
-- Petit chip `Yahoo · 12 nov 2026` en pied de chaque donnée affichée
+- Pas de touch aux server functions, RLS, types Supabase
+- Pas de retrait/ajout de routes
+- Pas de nouvelle feature (audit ESG batch B/C/D reste à part)
+- Pas de mode "audit live home" ni "chat Ethi onboarding" (variantes non retenues)
 
----
+## Batches
 
-## 4. Verdict d'audit (1.4)
-
-**Réutilise** : `src/lib/portfolio/metrics.ts` (computeMetrics existe déjà, prend weights+assets+covariance).
-
-**Adaptations**
-- `metrics.ts` doit gérer `esg_score = null` → exclure de la moyenne pondérée, retourner `coverage_pct` (poids couvert par une donnée ESG)
-- Idem `carbon_intensity_coverage` déjà géré
-- Nouveau champ output : `verdict: "aligné" | "mixte" | "désaligné"` calculé sur (esg_score, env_score, sfdr_article 8/9)
-
-**Nouveau composant** : `src/components/audit/VerdictCard.tsx`
-- Gros titre verdict (typo Syne grande, sobre)
-- 3 KPIs : Score ESG pondéré / Intensité carbone / % SFDR 8-9
-- Pour chaque KPI : valeur, source, couverture (ex: "couverture 78% du portefeuille")
-- Liste détaillée par actif : ligne, montant, esg score, source, date — ou pastille "donnée indisponible"
-- Bouton "Comment c'est calculé ?" → ouvre `/methodologie`
-
-**Route** : `src/routes/audit.tsx` affiche `<HoldingsInput />` si pas encore saisi, sinon `<VerdictCard />`. La viz jardin/timeline est **gardée mais nourrie par le portefeuille saisi** (réutilisation maximale).
-
----
-
-## 5. Landing + disclaimers (1.5)
-
-**Refonte** : `src/routes/index.tsx`
-- H1 : "Découvre si ton épargne est vraiment alignée"
-- Sous-titre : "Audit ESG indépendant. Sans changer de banque."
-- 3 piliers : (1) Tu saisis tes lignes, (2) On audite avec données publiques sourcées, (3) Tu repars avec un verdict clair
-- Section "Trous de couverture assumés" — argument de transparence
-- CTA : "Lancer mon audit" → `/audit` (ou `/auth` si non connecté)
-- Mention liste d'attente : "Audit ouvert aux inscrits — [s'inscrire]"
-- Disclaimers (méthodologie, non-conseil financier, sources tierces)
-
-**Méthodologie** : `src/routes/methodologie.tsx` existe déjà → ajouter section "Audit" expliquant sources ESG, fréquence refresh, gestion des trous.
-
----
-
-## Ordre d'exécution (4 batchs)
-
-**Batch A — Nettoyage + migration DB** : suppression DepositSheet/useDeposits, migration DROP deposits + ajout colonne `esg_score_fetched_at`, mode démo isolé. *Risque : casser portfolio.tsx / discover.tsx qui consomment useDeposits — je remplace les usages par 0 / état vide propre.*
-
-**Batch B — Saisie manuelle** : table inchangée (on réutilise `portfolios.weights`), nouvelle route `/audit`, composants `HoldingsInput` + `searchAssets` server fn.
-
-**Batch C — Fetcher ESG + verdict** : `esg.server.ts`, route cron, adaptation `metrics.ts` pour gérer les nulls, `VerdictCard`.
-
-**Batch D — Landing + disclaimers + nav** : refonte `index.tsx`, remplacement `/discover` par `/audit` dans `BottomNavigation`.
-
----
-
-## Hors périmètre (à confirmer plus tard)
-
-- Phase 2 (analytics, interviews, monétisation) : pas dans ce jet
-- Import CSV / OFX : V2
-- ESG source premium (MSCI payant) : V2
-- Suppression complète du mode démo : on garde sur `/demo` pour l'instant
-
----
-
-## Question bloquante avant code
-
-**Source ESG v1 : Yahoo `esgScores` (gratuit, partiel) ou tu veux qu'on parte sur un provider gratuit dédié type [Sustainalytics public ratings](https://www.sustainalytics.com/esg-rating) (scraping limité) ou [Refinitiv/LSEG free tier] ?**
-
-Je recommande Yahoo : on a déjà l'intégration, c'est cohérent avec les prix, et les trous de couverture deviennent un argument de transparence (pas un bug). Si OK, je démarre par le Batch A.
+- **A** — Tokens CSS + fonts + composants primitifs (`KPIFigure`, `EditorialSection`, `gold-rule`)
+- **B** — Refonte `routes/index.tsx` cinématique scroll-driven
+- **C** — Réapplication des nouveaux composants sur dashboard / portfolio / autres écrans
+- **D** — Update mémoire projet

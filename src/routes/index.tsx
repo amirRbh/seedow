@@ -1,90 +1,68 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ArrowRight, Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 const SITE_URL = "https://seedow.life";
 
 const FAQS = [
   {
-    q: "Comment Seedow choisit-il mes investissements ?",
-    a: "À partir de tes causes (climat, biodiversité, droits humains…) et de ton appétence au risque, un pipeline en six étapes construit ton portefeuille : exclusions sectorielles, filtres ESG best-in-class, puis optimisation Markowitz contrainte (plancher ESG, budget de risque, plafonds par classe). Chaque étape est traçable et documentée.",
+    q: "Que fait Seedow exactement ?",
+    a: "Seedow audite ton portefeuille existant sous l'angle ESG. Tu saisis tes lignes (ISIN ou ticker, montant ou %), on calcule un score moyen pondéré, un taux de couverture des données et on identifie les angles morts. Aucune promesse de placement — seulement de la lecture.",
   },
   {
-    q: "Quels actifs sont utilisés ?",
-    a: "Des ETF européens et internationaux à dominante actions, obligations vertes et sociales, immobilier durable et réserve sécurisée. Tous sont classifiés SFDR article 8 ou 9 lorsque c'est documenté, et leurs scores ESG sont sourcés (MSCI, Sustainalytics, ESG Book).",
+    q: "D'où viennent les scores ESG ?",
+    a: "Les données proviennent de fournisseurs publics (Yahoo Finance ESG, MSCI ESG quand disponible). Chaque score affiche sa source et sa date. Les lignes non couvertes sont marquées « non auditables » — pas masquées.",
   },
   {
-    q: "Comment l'impact est-il mesuré ?",
-    a: "Deux indicateurs cohabitent : une estimation heuristique (CO₂ évité par 10 k€ investis, dérivée du score ESG) et l'intensité carbone réelle pondérée (gCO₂e/€ investi/an) sur la part du portefeuille couverte par un provider. La méthodologie complète est publique.",
+    q: "Est-ce gratuit ?",
+    a: "L'audit est gratuit. À terme, Seedow proposera un service payant de réalignement (recommandations actionnables, suivi). L'audit lui-même restera ouvert.",
   },
   {
     q: "Mes données sont-elles protégées ?",
-    a: "Oui. Aucune donnée bancaire n'est stockée par Seedow. L'authentification est sécurisée, tu peux exporter ou supprimer ton compte à tout moment depuis les réglages.",
+    a: "Aucune donnée bancaire n'est stockée. Tu saisis manuellement tes lignes. Tu peux exporter ou supprimer ton compte à tout moment.",
   },
 ];
 
 const PILLARS = [
   {
-    title: "Rigueur",
-    body: "Une sélection d'actifs adossée à des critères financiers et extra-financiers exigeants — score ESG par pilier, classification SFDR, source documentée.",
+    n: "01",
+    title: "Audit",
+    body: "Score ESG pondéré sur ton portefeuille réel. Pas de simulation, pas de classement marketing.",
   },
   {
-    title: "Alignement",
-    body: "Pas de marketing vert. On investit uniquement dans des entreprises et fonds dont le modèle d'affaires sert tes convictions.",
-  },
-  {
+    n: "02",
     title: "Transparence",
-    body: "Tout est lisible : composition, performance, intensité carbone, frais. Aucune ligne cachée, aucune rétrocommission.",
+    body: "Chaque chiffre indique sa source et sa date. La méthodologie est publique et reproductible.",
+  },
+  {
+    n: "03",
+    title: "Trous assumés",
+    body: "Les lignes non couvertes restent visibles. Un audit honnête vaut mieux qu'une moyenne trompeuse.",
   },
 ];
 
-const STEPS = [
-  {
-    n: "01.",
-    t: "Analyse de profil",
-    b: "Définis tes causes prioritaires et ton appétence au risque en quelques minutes.",
-  },
-  {
-    n: "02.",
-    t: "Allocation personnalisée",
-    b: "Notre moteur applique exclusions, filtres ESG et optimisation Markowitz pour une allocation cohérente.",
-  },
-  {
-    n: "03.",
-    t: "Suivi quotidien",
-    b: "Valeur, performance, impact carbone, score ESG : tout est actualisé chaque jour ouvré.",
-  },
-];
+const MANIFESTO = "Ton épargne raconte une histoire. Nous la lisons à haute voix.";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Seedow — Investir simplement, durablement" },
+      { title: "Seedow — L'audit ESG de ton épargne" },
       {
         name: "description",
         content:
-          "Construis un portefeuille d'investissement aligné sur tes valeurs en quelques minutes. Méthodologie transparente, impact mesuré, performance suivie au quotidien.",
+          "Saisis ton portefeuille, obtiens un audit ESG transparent : score pondéré, taux de couverture, angles morts assumés. Aucune promesse de placement.",
       },
-      { property: "og:title", content: "Seedow — Investir simplement, durablement" },
+      { property: "og:title", content: "Seedow — L'audit ESG de ton épargne" },
       {
         property: "og:description",
-        content:
-          "Construis un portefeuille d'investissement aligné sur tes valeurs. Méthodologie transparente, impact mesuré.",
+        content: "Audit ESG transparent. Saisis ton portefeuille, lis ce qu'il finance vraiment.",
       },
       { property: "og:url", content: SITE_URL },
       { property: "og:type", content: "website" },
     ],
-    links: [
-      { rel: "canonical", href: SITE_URL },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap",
-      },
-    ],
+    links: [{ rel: "canonical", href: SITE_URL }],
     scripts: [
       {
         type: "application/ld+json",
@@ -93,8 +71,7 @@ export const Route = createFileRoute("/")({
           "@type": "Organization",
           name: "Seedow",
           url: SITE_URL,
-          description:
-            "Plateforme d'investissement responsable avec méthodologie ESG transparente.",
+          description: "Audit ESG transparent pour ton portefeuille.",
         }),
       },
       {
@@ -114,23 +91,18 @@ export const Route = createFileRoute("/")({
   component: Landing,
 });
 
-// Palette éditoriale verrouillée
-const C = {
-  paper: "#ffffff",
-  ink: "#064e3b",
-  inkSoft: "#0d7a5f",
-  gold: "#c9a84c",
-};
-
-const fadeUp = {
-  initial: { opacity: 0, y: 16 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: "-80px" },
-  transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
-};
+const easeOut = [0.22, 1, 0.36, 1] as [number, number, number, number];
 
 function Landing() {
   const [isAuthed, setIsAuthed] = useState<boolean | null>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+
+  // Scroll progress sur le hero pour contraction du wordmark
+  const { scrollY } = useScroll();
+  const heroProgress = useTransform(scrollY, [0, 600], [0, 1]);
+  const heroScale = useSpring(useTransform(heroProgress, [0, 1], [1, 0.18]), { stiffness: 90, damping: 24 });
+  const heroOpacity = useTransform(heroProgress, [0.3, 0.9], [1, 0]);
+  const heroY = useTransform(heroProgress, [0, 1], [0, -120]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setIsAuthed(!!data.session));
@@ -141,258 +113,151 @@ function Landing() {
   }, []);
 
   return (
-    <div
-      className="min-h-screen selection:bg-[#c9a84c] selection:text-white"
-      style={{
-        backgroundColor: C.paper,
-        color: C.ink,
-        fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
-      }}
-    >
-      {/* Header */}
-      <header
-        className="sticky top-0 z-30 backdrop-blur-md border-b"
-        style={{
-          backgroundColor: "rgba(255, 255, 255, 0.85)",
-          borderColor: "rgba(6, 78, 59, 0.12)",
-        }}
-      >
-        <nav className="max-w-7xl mx-auto flex justify-between items-center px-6 py-6">
-          <Link
-            to="/"
-            className="text-2xl font-extrabold tracking-tight uppercase"
-            style={{ fontFamily: "'Syne', sans-serif" }}
-            aria-label="Seedow"
-          >
-            seedow
-          </Link>
-          <div className="flex items-center gap-3 sm:gap-10 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.18em]">
-            <Link
-              to="/methodologie"
-              className="hidden sm:inline-block transition-colors hover:text-[#c9a84c]"
-            >
-              Méthodologie
-            </Link>
-            {isAuthed ? (
-              <Link
-                to="/dashboard"
-                className="px-5 sm:px-8 py-3 transition-all hover:bg-[#0d7a5f]"
-                style={{ backgroundColor: C.ink, color: C.paper }}
-              >
-                Mon espace
-              </Link>
-            ) : (
-              <>
-                <Link
-                  to="/auth"
-                  search={{ redirect: "/dashboard", mode: "login" }}
-                  className="transition-colors hover:text-[#c9a84c]"
-                >
-                  Connexion
-                </Link>
-                <Link
-                  to="/auth"
-                  search={{ redirect: "/onboarding", mode: "signup" }}
-                  className="px-5 sm:px-8 py-3 transition-all hover:bg-[#0d7a5f]"
-                  style={{ backgroundColor: C.ink, color: C.paper }}
-                >
-                  Commencer
-                </Link>
-              </>
-            )}
-          </div>
-        </nav>
-      </header>
+    <div className="bg-paper text-ink selection:bg-gold selection:text-ink">
+      <StickyHeader isAuthed={isAuthed} />
 
       <main>
-        {/* Hero */}
+        {/* ════ 01. HERO plein écran ════ */}
         <section
-          className="max-w-7xl mx-auto px-6 py-24 md:py-36 border-b"
-          style={{ borderColor: "rgba(6, 78, 59, 0.12)" }}
+          ref={heroRef}
+          className="relative min-h-screen flex flex-col justify-between px-6 md:px-12 pt-32 pb-16 border-b border-ink/10"
         >
-          <div className="max-w-4xl">
+          <div className="max-w-7xl mx-auto w-full flex-1 flex flex-col justify-center">
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6 }}
-              className="text-[11px] font-bold uppercase tracking-[0.3em] mb-8"
-              style={{ color: C.gold }}
+              className="eyebrow mb-10"
             >
-              N°01 — Édition 2026
+              N°01 — Édition 2026 · Audit ESG
             </motion.p>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              className="text-6xl md:text-8xl font-extrabold leading-[0.92] tracking-tighter mb-10 uppercase"
-              style={{ fontFamily: "'Syne', sans-serif" }}
+            <motion.div
+              style={{ scale: heroScale, opacity: heroOpacity, y: heroY, transformOrigin: "left center" }}
             >
-              L'excellence
-              <br />
-              <span style={{ color: C.gold }}>durable.</span>
-            </motion.h1>
+              <h1 className="display-xl uppercase">
+                seedow<span className="text-gold">.</span>
+              </h1>
+            </motion.div>
 
             <motion.p
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              className="text-xl md:text-2xl max-w-2xl leading-relaxed mb-12"
-              style={{ color: "rgba(6, 78, 59, 0.78)" }}
+              transition={{ duration: 0.8, delay: 0.3, ease: easeOut }}
+              className="mt-12 text-xl md:text-3xl max-w-3xl leading-[1.3] text-ink-2 font-display font-medium tracking-tight"
             >
-              Une approche rigoureuse de l'investissement responsable, alliant
-              performance financière et impact sociétal mesurable.
+              L'audit ESG de ton épargne,
+              <br />
+              <span className="text-ink">sans promesse de placement.</span>
             </motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.35 }}
-              className="flex flex-col sm:flex-row items-start sm:items-center gap-6"
+              transition={{ duration: 0.7, delay: 0.5 }}
+              className="mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-6"
             >
-              {isAuthed ? (
-                <Link
-                  to="/dashboard"
-                  className="group inline-flex items-center gap-3 px-10 py-5 font-bold uppercase tracking-[0.18em] text-xs transition-transform hover:-translate-y-0.5"
-                  style={{ backgroundColor: C.ink, color: C.paper }}
-                >
-                  Accéder à mon espace
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </Link>
-              ) : (
-                <Link
-                  to="/auth"
-                  search={{ redirect: "/onboarding", mode: "signup" }}
-                  className="group inline-flex items-center gap-3 px-10 py-5 font-bold uppercase tracking-[0.18em] text-xs transition-transform hover:-translate-y-0.5"
-                  style={{ backgroundColor: C.ink, color: C.paper }}
-                >
-                  Découvrir l'offre
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </Link>
-              )}
               <Link
-                to="/methodologie"
-                className="text-xs font-semibold uppercase tracking-[0.18em] border-b border-current pb-1 transition-colors hover:text-[#c9a84c]"
+                to={isAuthed ? "/dashboard" : "/auth"}
+                search={isAuthed ? undefined : { redirect: "/onboarding", mode: "signup" }}
+                className="btn-plant group"
               >
-                Voir la méthodologie
+                {isAuthed ? "Mon espace" : "Auditer mon portefeuille"}
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+              <Link to="/methodologie" className="btn-harvest">
+                Méthodologie
               </Link>
             </motion.div>
-
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
-              className="text-[10px] uppercase tracking-[0.25em] mt-10"
-              style={{ color: "rgba(6, 78, 59, 0.5)" }}
-            >
-              Aucune donnée bancaire stockée · Méthodologie publique · Sans frais cachés
-            </motion.p>
           </div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1, duration: 1.2 }}
+            className="max-w-7xl mx-auto w-full flex items-end justify-between gap-6 text-[10px] uppercase tracking-[0.22em] text-ink-3"
+          >
+            <span>Aucune donnée bancaire stockée</span>
+            <span className="hidden md:inline">Méthodologie publique</span>
+            <span className="hidden md:inline">Sources documentées</span>
+            <ScrollHint />
+          </motion.div>
         </section>
 
-        {/* 3 Piliers */}
-        <section
-          className="max-w-7xl mx-auto px-6 py-24 border-b"
-          style={{ borderColor: "rgba(6, 78, 59, 0.12)" }}
-        >
-          <motion.p
-            {...fadeUp}
-            className="text-[11px] font-bold uppercase tracking-[0.3em] mb-16"
-            style={{ color: C.gold }}
-          >
-            Ce qui nous distingue
-          </motion.p>
-          <div className="grid md:grid-cols-3 gap-10 md:gap-12">
+        {/* ════ 02. MANIFESTE — révélation mot par mot ════ */}
+        <ManifestoSection />
+
+        {/* ════ 03. DÉMO INTERACTIVE inline ════ */}
+        <DemoAuditSection />
+
+        {/* ════ 04. TROIS PILIERS ════ */}
+        <section className="max-w-7xl mx-auto px-6 md:px-12 py-32 border-t border-ink/10">
+          <div className="grid md:grid-cols-12 gap-12 mb-16">
+            <div className="md:col-span-3">
+              <p className="eyebrow mb-4">Ce qui nous distingue</p>
+            </div>
+            <h2 className="md:col-span-9 display-lg">
+              Trois engagements,
+              <br />
+              <span className="text-gold">aucun compromis.</span>
+            </h2>
+          </div>
+          <div className="gold-rule mb-16" />
+          <div className="grid md:grid-cols-3 gap-12 md:gap-16">
             {PILLARS.map((p, i) => (
-              <motion.div
+              <motion.article
                 key={p.title}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.6, delay: i * 0.1 }}
-                className="border-l pl-8"
-                style={{ borderColor: "rgba(6, 78, 59, 0.22)" }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.7, delay: i * 0.1, ease: easeOut }}
               >
-                <h3
-                  className="text-2xl font-bold mb-4 uppercase tracking-tight"
-                  style={{ fontFamily: "'Syne', sans-serif" }}
-                >
-                  {p.title}
-                </h3>
-                <p
-                  className="leading-relaxed"
-                  style={{ color: "rgba(6, 78, 59, 0.72)" }}
-                >
-                  {p.body}
+                <p className="font-display text-xs tracking-[0.25em] text-gold tabular-nums mb-6">
+                  {p.n}
                 </p>
-              </motion.div>
+                <h3 className="display-lg text-3xl md:text-4xl mb-4">{p.title}</h3>
+                <p className="text-ink-2 leading-relaxed">{p.body}</p>
+              </motion.article>
             ))}
           </div>
         </section>
 
-        {/* 3 Étapes */}
-        <section
-          className="max-w-7xl mx-auto px-6 py-24 border-b"
-          style={{ borderColor: "rgba(6, 78, 59, 0.12)" }}
-        >
-          <div className="flex flex-col md:flex-row gap-12 md:gap-16 items-baseline">
-            <div className="md:w-1/3">
-              <motion.p
-                {...fadeUp}
-                className="text-[11px] font-bold uppercase tracking-[0.3em] mb-4"
-                style={{ color: C.gold }}
-              >
-                Comment ça marche
-              </motion.p>
-              <motion.h2
-                {...fadeUp}
-                transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-                className="text-4xl md:text-5xl font-extrabold uppercase leading-[0.95]"
-                style={{ fontFamily: "'Syne', sans-serif" }}
-              >
-                Trois étapes,
-                <br />
-                dix minutes.
-              </motion.h2>
-            </div>
-            <div className="md:w-2/3 grid grid-cols-1 gap-14">
-              {STEPS.map((step, i) => (
-                <motion.div
-                  key={step.n}
-                  initial={{ opacity: 0, x: 24 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-60px" }}
-                  transition={{ duration: 0.6, delay: i * 0.1 }}
-                  className="flex gap-6 sm:gap-8 items-start"
+        {/* ════ 05. MÉTHODOLOGIE teaser ════ */}
+        <section className="bg-ink text-paper py-32">
+          <div className="max-w-7xl mx-auto px-6 md:px-12">
+            <div className="grid md:grid-cols-12 gap-12 items-end">
+              <div className="md:col-span-7">
+                <p className="eyebrow mb-6">Méthodologie</p>
+                <h2 className="display-lg text-paper">
+                  Un score se justifie.
+                  <br />
+                  <span className="text-gold">Le nôtre se vérifie.</span>
+                </h2>
+                <p className="mt-8 text-paper-2 max-w-xl leading-relaxed text-lg">
+                  Exclusions sectorielles, scores ESG pondérés, taux de couverture explicite, sources horodatées. Chaque chiffre affiché peut être tracé jusqu'à sa source publique.
+                </p>
+              </div>
+              <div className="md:col-span-5 flex md:justify-end">
+                <Link
+                  to="/methodologie"
+                  className="inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.22em] text-gold border-b border-gold pb-2 hover:border-gold-soft hover:text-gold-soft transition-colors"
                 >
-                  <span
-                    className="text-4xl sm:text-5xl font-extrabold leading-none flex-shrink-0"
-                    style={{ color: C.gold, fontFamily: "'Syne', sans-serif" }}
-                  >
-                    {step.n}
-                  </span>
-                  <div>
-                    <h4 className="text-lg font-bold mb-2 uppercase tracking-[0.08em]">
-                      {step.t}
-                    </h4>
-                    <p style={{ color: "rgba(6, 78, 59, 0.72)" }}>{step.b}</p>
-                  </div>
-                </motion.div>
-              ))}
+                  Lire la méthodologie complète
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* FAQ */}
-        <section className="max-w-3xl mx-auto px-6 py-24">
-          <motion.h2
-            {...fadeUp}
-            className="text-4xl md:text-5xl font-extrabold uppercase text-center mb-16 tracking-tight"
-            style={{ fontFamily: "'Syne', sans-serif" }}
-          >
-            Questions fréquentes
-          </motion.h2>
-          <div className="space-y-1">
+        {/* ════ 06. FAQ ════ */}
+        <section className="max-w-4xl mx-auto px-6 md:px-12 py-32">
+          <div className="mb-16">
+            <p className="eyebrow mb-4">Questions</p>
+            <h2 className="display-lg">Tout ce qu'il faut savoir.</h2>
+            <div className="gold-rule mt-8" />
+          </div>
+          <div>
             {FAQS.map((f, i) => (
               <motion.details
                 key={f.q}
@@ -400,120 +265,271 @@ function Landing() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.5, delay: i * 0.05 }}
-                className="group border-b py-6 [&_summary::-webkit-details-marker]:hidden"
-                style={{ borderColor: "rgba(6, 78, 59, 0.12)" }}
+                className="group border-b border-ink/10 py-8 [&_summary::-webkit-details-marker]:hidden"
               >
-                <summary className="flex items-center justify-between cursor-pointer list-none gap-6">
-                  <h3 className="font-bold uppercase tracking-[0.05em] text-sm sm:text-base group-hover:text-[#c9a84c] transition-colors">
+                <summary className="flex items-start justify-between cursor-pointer list-none gap-6">
+                  <h3 className="font-display font-semibold text-lg md:text-xl leading-snug group-hover:text-gold transition-colors">
                     {f.q}
                   </h3>
-                  <span
-                    className="text-2xl leading-none flex-shrink-0 group-open:rotate-45 transition-transform"
-                    style={{ color: C.gold }}
-                  >
-                    +
+                  <span className="text-gold mt-1 group-open:rotate-45 transition-transform duration-400">
+                    <Plus className="w-5 h-5" />
                   </span>
                 </summary>
-                <p
-                  className="text-sm mt-4 leading-relaxed pr-10"
-                  style={{ color: "rgba(6, 78, 59, 0.75)" }}
-                >
-                  {f.a}
-                </p>
+                <p className="mt-4 text-ink-2 leading-relaxed pr-12">{f.a}</p>
               </motion.details>
             ))}
           </div>
         </section>
 
-        {/* CTA final */}
-        <section className="max-w-7xl mx-auto px-6 pb-24">
+        {/* ════ CTA FINAL ════ */}
+        <section className="max-w-7xl mx-auto px-6 md:px-12 pb-32">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.7 }}
-            className="relative overflow-hidden p-12 md:p-24 text-center"
-            style={{ backgroundColor: C.ink, color: C.paper }}
+            transition={{ duration: 0.8, ease: easeOut }}
+            className="relative overflow-hidden bg-ink text-paper p-12 md:p-24"
           >
-            <div
-              className="absolute -top-20 -right-20 w-80 h-80 rounded-full blur-[120px] opacity-30"
-              style={{ backgroundColor: C.inkSoft }}
-            />
-            <div
-              className="absolute -bottom-32 -left-20 w-80 h-80 rounded-full blur-[140px] opacity-20"
-              style={{ backgroundColor: C.gold }}
-            />
-            <div className="relative z-10">
-              <p
-                className="text-[11px] font-bold uppercase tracking-[0.3em] mb-6"
-                style={{ color: C.gold }}
-              >
-                Édition limitée — accès anticipé
-              </p>
-              <h2
-                className="text-4xl md:text-6xl font-extrabold uppercase mb-8 leading-[0.95] tracking-tight"
-                style={{ fontFamily: "'Syne', sans-serif" }}
-              >
-                Prêt à investir dans
+            <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full blur-[140px] opacity-30 bg-gold" />
+            <div className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full blur-[160px] opacity-20 bg-moss-2" />
+            <div className="relative z-10 max-w-3xl">
+              <p className="eyebrow mb-6">Accès anticipé</p>
+              <h2 className="display-lg text-paper mb-8">
+                Ton épargne mérite d'être lue.
                 <br />
-                ce qui compte ?
+                <span className="text-gold">Commence par l'auditer.</span>
               </h2>
-              <p
-                className="max-w-xl mx-auto mb-12 text-base sm:text-lg"
-                style={{ color: "rgba(255, 255, 255, 0.75)" }}
+              <Link
+                to={isAuthed ? "/dashboard" : "/auth"}
+                search={isAuthed ? undefined : { redirect: "/onboarding", mode: "signup" }}
+                className="inline-flex items-center gap-3 bg-gold text-ink px-10 py-5 font-semibold uppercase tracking-[0.2em] text-xs hover:bg-gold-soft transition-colors"
               >
-                Ouvre ton compte aujourd'hui et rejoins une nouvelle génération
-                d'investisseurs conscients.
-              </p>
-              {isAuthed ? (
-                <Link
-                  to="/dashboard"
-                  className="inline-flex items-center gap-3 px-12 py-5 font-bold uppercase tracking-[0.18em] text-xs transition-colors hover:bg-white"
-                  style={{ backgroundColor: C.gold, color: C.ink }}
-                >
-                  Accéder à mon espace
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              ) : (
-                <Link
-                  to="/auth"
-                  search={{ redirect: "/onboarding", mode: "signup" }}
-                  className="inline-flex items-center gap-3 px-12 py-5 font-bold uppercase tracking-[0.18em] text-xs transition-colors hover:bg-white"
-                  style={{ backgroundColor: C.gold, color: C.ink }}
-                >
-                  Commencer maintenant
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              )}
+                {isAuthed ? "Mon espace" : "Lancer mon audit"}
+                <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
           </motion.div>
         </section>
-      </main>
 
-      <footer
-        className="border-t"
-        style={{ borderColor: "rgba(6, 78, 59, 0.12)" }}
-      >
-        <div className="max-w-7xl mx-auto px-6 py-10 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p
-            className="text-[10px] uppercase tracking-[0.25em]"
-            style={{ color: "rgba(6, 78, 59, 0.55)" }}
-          >
-            © {new Date().getFullYear()} Seedow — Investir simplement, durablement.
-          </p>
-          <div className="flex gap-8 text-[10px] font-bold uppercase tracking-[0.25em]">
-            <Link to="/methodologie" className="hover:text-[#c9a84c] transition-colors">
+        <footer className="border-t border-ink/10 py-12">
+          <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between gap-6 text-xs text-ink-3">
+            <p>© 2026 Seedow — Lecture éditoriale de l'épargne.</p>
+            <div className="flex gap-8">
+              <Link to="/methodologie" className="hover:text-ink transition-colors">Méthodologie</Link>
+              <a href="mailto:hello@seedow.life" className="hover:text-ink transition-colors">Contact</a>
+            </div>
+          </div>
+        </footer>
+      </main>
+    </div>
+  );
+}
+
+function StickyHeader({ isAuthed }: { isAuthed: boolean | null }) {
+  const { scrollY } = useScroll();
+  const bg = useTransform(scrollY, [0, 400], ["rgba(245, 240, 224, 0)", "rgba(245, 240, 224, 0.92)"]);
+  const borderColor = useTransform(scrollY, [0, 400], ["rgba(6, 78, 59, 0)", "rgba(6, 78, 59, 0.12)"]);
+
+  return (
+    <motion.header
+      style={{ backgroundColor: bg }}
+      className="fixed top-0 left-0 right-0 z-40 backdrop-blur-xl"
+    >
+      <motion.div style={{ borderColor }} className="border-b">
+
+        <nav className="max-w-7xl mx-auto flex justify-between items-center px-6 md:px-12 py-5">
+          <Link to="/" className="font-display font-bold text-xl tracking-tight uppercase">
+            seedow<span className="text-gold">.</span>
+          </Link>
+          <div className="flex items-center gap-6 md:gap-10 text-[10px] font-semibold uppercase tracking-[0.22em]">
+            <Link to="/methodologie" className="hidden sm:inline-block hover:text-gold transition-colors">
               Méthodologie
             </Link>
-            <a
-              href="mailto:hello@seedow.life"
-              className="hover:text-[#c9a84c] transition-colors"
+            {isAuthed ? (
+              <Link to="/dashboard" className="bg-ink text-paper px-5 py-3 hover:bg-ink-2 transition-colors">
+                Mon espace
+              </Link>
+            ) : (
+              <>
+                <Link to="/auth" search={{ redirect: "/dashboard", mode: "login" }} className="hover:text-gold transition-colors">
+                  Connexion
+                </Link>
+                <Link to="/auth" search={{ redirect: "/onboarding", mode: "signup" }} className="bg-ink text-paper px-5 py-3 hover:bg-ink-2 transition-colors">
+                  Auditer
+                </Link>
+              </>
+            )}
+          </div>
+        </nav>
+      </motion.div>
+    </motion.header>
+  );
+}
+
+function ScrollHint() {
+  return (
+    <div className="flex items-center gap-2 text-ink-3">
+      <span>Défile</span>
+      <motion.span
+        animate={{ y: [0, 4, 0] }}
+        transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+        aria-hidden
+      >
+        ↓
+      </motion.span>
+    </div>
+  );
+}
+
+function ManifestoSection() {
+  const words = MANIFESTO.split(" ");
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 80%", "end 50%"] });
+
+  return (
+    <section ref={ref} className="max-w-7xl mx-auto px-6 md:px-12 py-32 md:py-48">
+      <p className="eyebrow mb-12">Manifeste</p>
+      <p className="display-lg leading-[1.1] max-w-5xl">
+        {words.map((word, i) => {
+          const start = i / words.length;
+          const end = start + 1 / words.length;
+          return <ManifestoWord key={i} word={word} progress={scrollYProgress} start={start} end={end} />;
+        })}
+      </p>
+    </section>
+  );
+}
+
+function ManifestoWord({
+  word,
+  progress,
+  start,
+  end,
+}: {
+  word: string;
+  progress: ReturnType<typeof useScroll>["scrollYProgress"];
+  start: number;
+  end: number;
+}) {
+  const opacity = useTransform(progress, [start, end], [0.15, 1]);
+  return (
+    <motion.span style={{ opacity }} className="inline-block mr-[0.25em]">
+      {word}
+    </motion.span>
+  );
+}
+
+// Mini-démo : l'utilisateur tape un ticker, on lui montre un mini-verdict animé
+const DEMO_DATA: Record<string, { name: string; esg: number; coverage: number; sectors: string[] }> = {
+  AAPL: { name: "Apple Inc.", esg: 72, coverage: 98, sectors: ["Tech"] },
+  TSLA: { name: "Tesla Inc.", esg: 58, coverage: 92, sectors: ["Auto", "Énergie"] },
+  TTE: { name: "TotalEnergies", esg: 34, coverage: 95, sectors: ["Énergie fossile"] },
+  MC: { name: "LVMH", esg: 64, coverage: 88, sectors: ["Luxe"] },
+  NESN: { name: "Nestlé", esg: 56, coverage: 90, sectors: ["Agro"] },
+};
+
+function DemoAuditSection() {
+  const [ticker, setTicker] = useState("AAPL");
+  const [committed, setCommitted] = useState("AAPL");
+
+  const data = useMemo(() => DEMO_DATA[committed.toUpperCase()] ?? null, [committed]);
+
+  return (
+    <section className="bg-paper-2 border-y border-ink/10 py-32">
+      <div className="max-w-7xl mx-auto px-6 md:px-12">
+        <div className="grid md:grid-cols-12 gap-12 mb-16">
+          <div className="md:col-span-5">
+            <p className="eyebrow mb-4">Démo live</p>
+            <h2 className="display-lg">
+              Essaie maintenant.
+              <br />
+              <span className="text-gold">Sans inscription.</span>
+            </h2>
+            <p className="mt-6 text-ink-2 leading-relaxed">
+              Tape un ticker, lis ce que ton portefeuille raconterait. Un avant-goût de l'audit complet.
+            </p>
+          </div>
+          <div className="md:col-span-7">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                setCommitted(ticker);
+              }}
+              className="flex gap-3 mb-12"
             >
-              Contact
-            </a>
+              <input
+                value={ticker}
+                onChange={(e) => setTicker(e.target.value)}
+                placeholder="AAPL, TSLA, TTE, MC, NESN…"
+                className="flex-1 bg-transparent border-b-2 border-ink/20 focus:border-gold outline-none px-1 py-4 font-display text-2xl uppercase tracking-wider placeholder:text-ink-3/50"
+                aria-label="Ticker à auditer"
+              />
+              <button type="submit" className="btn-plant">
+                Auditer
+              </button>
+            </form>
+
+            {data ? (
+              <motion.div
+                key={committed}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: easeOut }}
+                className="grid grid-cols-3 gap-8 md:gap-12"
+              >
+                <AnimatedKPI value={data.esg} label="Score ESG" suffix="/100" accent />
+                <AnimatedKPI value={data.coverage} label="Couverture" suffix="%" />
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-ink-3 mb-3">
+                    Secteurs
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {data.sectors.map((s) => (
+                      <span key={s} className="moss-badge">{s}</span>
+                    ))}
+                  </div>
+                  <p className="mt-4 text-xs text-ink-3 leading-relaxed">
+                    {data.name} · données démo, audit complet sur ton portefeuille réel.
+                  </p>
+                </div>
+              </motion.div>
+            ) : (
+              <p className="text-ink-3 text-sm">
+                Ticker inconnu en démo. Essaie AAPL, TSLA, TTE, MC ou NESN.
+              </p>
+            )}
           </div>
         </div>
-      </footer>
+      </div>
+    </section>
+  );
+}
+
+function AnimatedKPI({ value, label, suffix, accent }: { value: number; label: string; suffix?: string; accent?: boolean }) {
+  const [display, setDisplay] = useState(0);
+
+  useEffect(() => {
+    let frame = 0;
+    const total = 36;
+    const id = setInterval(() => {
+      frame += 1;
+      const t = Math.min(1, frame / total);
+      const eased = 1 - Math.pow(1 - t, 3);
+      setDisplay(Math.round(value * eased));
+      if (frame >= total) clearInterval(id);
+    }, 16);
+    return () => clearInterval(id);
+  }, [value]);
+
+  return (
+    <div>
+      <p className={`text-[10px] font-semibold uppercase tracking-[0.22em] mb-3 ${accent ? "text-gold" : "text-ink-3"}`}>
+        {label}
+      </p>
+      <div className="kpi-figure text-5xl md:text-6xl flex items-baseline gap-1">
+        <span>{display}</span>
+        {suffix && <span className="text-base text-ink-3 font-sans">{suffix}</span>}
+      </div>
     </div>
   );
 }
