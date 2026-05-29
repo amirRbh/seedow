@@ -6,7 +6,7 @@
 export const lexicon = {
   nav: {
     garden: "Portefeuille",
-    roots: "Détails",
+    roots: "Analyse",
     discover: "Découvrir",
     ethi: "Ethi",
   },
