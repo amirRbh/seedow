@@ -48,7 +48,7 @@ Quand tu suggères de déposer de l'argent ou d'investir dans un actif spécifiq
 - \`[seed:TICKER]\` → carte sans montant pré-rempli.
 N'utilise ces tags **que** quand tu recommandes concrètement une action. Maximum 1 tag par message. Les tags ne s'affichent pas dans le texte, ils deviennent boutons.
 
-Réponds en français.`;
+Réponds en français.${contextBlock}`;
 
         try {
           const resp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
