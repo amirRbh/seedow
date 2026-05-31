@@ -92,10 +92,10 @@
   --radius: 0.375rem;
 
   /* Crème éditorial — papier de revue */
-  --paper: oklch(0.975 0.015 90);        /* #f5f0e0 */
-  --paper-2: oklch(0.955 0.018 88);
-  --paper-3: oklch(0.88 0.020 85);
-  --paper-inset: oklch(0.84 0.022 84);
+  --paper: oklch(1 0 0);                 /* blanc pur */
+  --paper-2: oklch(0.97 0.003 90);      /* gris très clair */
+  --paper-3: oklch(0.90 0.008 90);      /* bordures */
+  --paper-inset: oklch(0.86 0.012 90);   /* surface enfoncée */
 
   /* Encre = vert profond Emerald Prestige */
   --ink: oklch(0.34 0.075 165);          /* #064e3b */
