@@ -183,8 +183,16 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     font-feature-settings: "tnum", "ss01";
-    letter-spacing: -0.011em;
+    font-size: 16px;
+    line-height: 1.6;
+    letter-spacing: -0.005em;
+    font-weight: 400;
+    text-rendering: optimizeLegibility;
   }
+
+  p { line-height: 1.65; }
+  small, .text-xs { line-height: 1.55; }
+
 
   /* Easing Apple-like sur les éléments interactifs */
   a, button, [role="button"], input, select, textarea, summary,
