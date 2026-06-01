@@ -97,10 +97,11 @@
   --paper-3: oklch(0.90 0.008 90);      /* bordures */
   --paper-inset: oklch(0.86 0.012 90);   /* surface enfoncée */
 
-  /* Encre = vert profond Emerald Prestige */
-  --ink: oklch(0.34 0.075 165);          /* #064e3b */
-  --ink-2: oklch(0.48 0.085 162);        /* #0d7a5f */
-  --ink-3: oklch(0.62 0.060 160);
+  /* Encre = vert profond Emerald Prestige — contrastes renforcés pour lisibilité */
+  --ink: oklch(0.26 0.060 165);          /* vert très profond, ~AAA sur paper */
+  --ink-2: oklch(0.40 0.075 163);        /* secondaire, ~AA large */
+  --ink-3: oklch(0.50 0.055 161);        /* tertiaire, ~AA sur paper */
+
 
   /* Emerald stops */
   --moss-1: oklch(0.34 0.075 165);
@@ -182,8 +183,16 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     font-feature-settings: "tnum", "ss01";
-    letter-spacing: -0.011em;
+    font-size: 16px;
+    line-height: 1.6;
+    letter-spacing: -0.005em;
+    font-weight: 400;
+    text-rendering: optimizeLegibility;
   }
+
+  p { line-height: 1.65; }
+  small, .text-xs { line-height: 1.55; }
+
 
   /* Easing Apple-like sur les éléments interactifs */
   a, button, [role="button"], input, select, textarea, summary,
