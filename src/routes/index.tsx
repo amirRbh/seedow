@@ -146,9 +146,7 @@ function Landing() {
               transition={{ duration: 0.8, delay: 0.3, ease: easeOut }}
               className="mt-12 text-xl md:text-3xl max-w-3xl leading-[1.3] text-ink-2 font-display font-medium tracking-tight"
             >
-              L'audit ESG de ton épargne,
-              <br />
-              <span className="text-ink">sans promesse de placement.</span>
+              L'audit ESG de ton épargne.
             </motion.p>
 
             <motion.div
