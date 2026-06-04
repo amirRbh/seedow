@@ -3,6 +3,9 @@ import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { RailNav } from "./RailNav";
 import { TopBar } from "./TopBar";
 import { CommandPalette } from "./CommandPalette";
+import { useFocusMode } from "@/hooks/useFocusMode";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 
 /**
  * Shell de l'application — rail + topbar persistants sur desktop (md+).
@@ -11,9 +14,9 @@ import { CommandPalette } from "./CommandPalette";
  *
  * Raccourcis clavier globaux :
  *   ⌘K / Ctrl+K → palette
- *   g d         → /dashboard
- *   g p         → /portfolio
- *   g c         → /comparatif
+ *   g d / g p / g c → navigation rapide
+ *   .           → bascule mode focus (rétracte le chrome)
+ *   Escape      → sort du mode focus
  *   ?           → palette + aide
  */
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -21,6 +24,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const gPrefix = useRef<number | null>(null);
+  const { focus, setFocus, toggle: toggleFocus } = useFocusMode();
 
   const openPalette = useCallback(() => setPaletteOpen(true), []);
 
@@ -38,23 +42,31 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     };
 
     const onKey = (e: KeyboardEvent) => {
-      // ⌘K / Ctrl+K — toujours actif, même dans un champ
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
         setPaletteOpen((o) => !o);
         return;
       }
+      if (e.key === "Escape" && focus) {
+        setFocus(false);
+        return;
+      }
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       if (isEditable(e.target)) return;
 
-      // ? → aide / palette
       if (e.key === "?" || (e.shiftKey && e.key === "/")) {
         e.preventDefault();
         setPaletteOpen(true);
         return;
       }
 
-      // séquence "g <x>" — go-to
+      // "." → bascule focus
+      if (e.key === ".") {
+        e.preventDefault();
+        toggleFocus();
+        return;
+      }
+
       if (e.key.toLowerCase() === "g") {
         gPrefix.current = Date.now();
         return;
@@ -62,29 +74,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       if (gPrefix.current && Date.now() - gPrefix.current < 1500) {
         const key = e.key.toLowerCase();
         gPrefix.current = null;
-        if (key === "d") {
-          e.preventDefault();
-          navigate({ to: "/dashboard" });
-          return;
-        }
-        if (key === "p") {
-          e.preventDefault();
-          navigate({ to: "/portfolio" });
-          return;
-        }
-        if (key === "c") {
-          e.preventDefault();
-          navigate({ to: "/comparatif" });
-          return;
-        }
+        if (key === "d") { e.preventDefault(); navigate({ to: "/dashboard" }); return; }
+        if (key === "p") { e.preventDefault(); navigate({ to: "/portfolio" }); return; }
+        if (key === "c") { e.preventDefault(); navigate({ to: "/comparatif" }); return; }
       }
     };
 
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [navigate]);
+  }, [navigate, focus, setFocus, toggleFocus]);
 
-  // Routes "plein écran" (auth, onboarding, landing) — pas de shell
   const fullBleed =
     pathname === "/" ||
     pathname.startsWith("/auth") ||
@@ -96,12 +95,81 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-paper">
-      <RailNav />
-      <div className="md:pl-16">
-        <TopBar onOpenCommand={openPalette} />
+      <div
+        className={cn(
+          "transition-all duration-300 ease-out",
+          focus ? "md:opacity-0 md:pointer-events-none md:-translate-x-2" : "md:opacity-100",
+        )}
+        aria-hidden={focus ? "true" : undefined}
+      >
+        <RailNav />
+      </div>
+      <div className={cn("transition-[padding] duration-300 ease-out", focus ? "md:pl-0" : "md:pl-16")}>
+        <div
+          className={cn(
+            "transition-all duration-300 ease-out overflow-hidden",
+            focus ? "md:max-h-0 md:opacity-0 md:-translate-y-1" : "md:max-h-20 md:opacity-100",
+          )}
+          aria-hidden={focus ? "true" : undefined}
+        >
+          <TopBar onOpenCommand={openPalette} />
+        </div>
         <main>{children}</main>
       </div>
+      <FocusToggle focus={focus} onToggle={toggleFocus} />
       <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} />
     </div>
+  );
+}
+
+function FocusToggle({ focus, onToggle }: { focus: boolean; onToggle: () => void }) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-pressed={focus}
+          aria-label={focus ? "Quitter le mode focus" : "Activer le mode focus"}
+          className={cn(
+            "hidden md:flex fixed top-3 right-4 z-50 items-center gap-1.5 h-8 px-3 rounded-full",
+            "border text-[11px] font-semibold uppercase tracking-[0.18em] transition-all duration-200",
+            "outline-none focus-visible:ring-2 focus-visible:ring-moss-1",
+            focus
+              ? "bg-ink text-paper border-ink shadow-lg hover:bg-ink-2"
+              : "bg-paper/80 backdrop-blur text-ink-3 border-paper-3 opacity-0 hover:opacity-100 focus-visible:opacity-100",
+          )}
+        >
+          <FocusIcon active={focus} />
+          <span>{focus ? "Focus" : "Focus"}</span>
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="left" sideOffset={8} className="text-[11px]">
+        {focus ? "Réafficher le chrome" : "Masquer la barre et le rail"}
+        <kbd className="ml-2 text-[9px] text-ink-3 font-mono">.</kbd>
+      </TooltipContent>
+    </Tooltip>
+  );
+}
+
+function FocusIcon({ active }: { active: boolean }) {
+  return (
+    <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {active ? (
+        <>
+          <path d="M4 9V5h4" />
+          <path d="M20 9V5h-4" />
+          <path d="M4 15v4h4" />
+          <path d="M20 15v4h-4" />
+        </>
+      ) : (
+        <>
+          <path d="M9 4H5v4" />
+          <path d="M15 4h4v4" />
+          <path d="M9 20H5v-4" />
+          <path d="M15 20h4v-4" />
+        </>
+      )}
+    </svg>
   );
 }
