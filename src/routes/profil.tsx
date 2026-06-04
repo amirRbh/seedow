@@ -5,6 +5,8 @@ import { AppHeader } from "@/components/navigation/AppHeader";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { JourneySteps } from "@/components/navigation/JourneySteps";
 import { KPIFigure } from "@/components/ui/KPIFigure";
+import { Glossary } from "@/components/ui/Glossary";
+import { DecisionTimeline } from "@/components/profil/DecisionTimeline";
 import { useAuth } from "@/hooks/useAuth";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
@@ -229,9 +231,12 @@ function ProfilPage() {
           <dl className="mt-5 divide-y divide-paper-3 border-t border-b border-paper-3">
             <Row label="Portefeuille actif" value={portfolio?.name ?? "—"} />
             <Row label="Nombre de portefeuilles" value={`${portfolios.length} / 3`} />
-            <Row label="Volatilité cible" value={`${riskPct} %`} />
             <Row
-              label="Horizon"
+              label={<><Glossary term="Volatilite">Volatilité</Glossary> cible</>}
+              value={`${riskPct} %`}
+            />
+            <Row
+              label={<Glossary term="Horizon">Horizon</Glossary>}
               value={meta ? `${meta.horizon_years} ans` : "—"}
             />
           </dl>
@@ -275,6 +280,44 @@ function ProfilPage() {
             />
           </ul>
         </section>
+
+        {/* Historique des décisions */}
+        <section className="px-5 pt-10">
+          <div className="gold-rule mb-5" />
+          <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold mb-3">
+            04 · Tes décisions
+          </p>
+          <h2 className="font-value text-2xl text-ink leading-tight">
+            La mémoire de ton parcours
+          </h2>
+          <p className="text-sm text-ink-3 mt-2">
+            Chaque arbitrage, exclusion ou rééquilibrage laisse une trace.
+          </p>
+          <DecisionTimeline />
+        </section>
+
+        {/* Comparatif teaser */}
+        <section className="px-5 pt-10">
+          <Link
+            to="/comparatif"
+            className="block border-t border-paper-3 pt-5 group"
+          >
+            <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold mb-2">
+              Comparatif
+            </p>
+            <div className="flex items-baseline justify-between gap-4">
+              <h3 className="font-value text-xl text-ink leading-tight group-hover:text-moss-1 transition-colors">
+                Ton portefeuille vs <Glossary term="MSCIWorld">MSCI World</Glossary>
+              </h3>
+              <svg viewBox="0 0 24 24" className="w-5 h-5 text-ink-3 shrink-0" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M9 6l6 6-6 6" />
+              </svg>
+            </div>
+            <p className="text-sm text-ink-3 mt-2">
+              Performance, frais, score d'impact, CO₂ — les chiffres face à face.
+            </p>
+          </Link>
+        </section>
       </div>
 
       <BottomNavigation />
@@ -282,7 +325,7 @@ function ProfilPage() {
   );
 }
 
-function Row({ label, value }: { label: string; value: string }) {
+function Row({ label, value }: { label: React.ReactNode; value: string }) {
   return (
     <div className="flex items-baseline justify-between py-3 gap-4">
       <dt className="text-[11px] uppercase tracking-wider text-ink-3 font-medium">{label}</dt>
