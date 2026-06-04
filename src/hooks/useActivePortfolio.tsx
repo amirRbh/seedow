@@ -136,7 +136,7 @@ export function useActivePortfolio(): State {
   useEffect(() => {
     if (!user) return;
     const channel = supabase
-      .channel(`portfolios:${user.id}`)
+      .channel(`portfolios:${user.id}:${Math.random().toString(36).slice(2)}`)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "portfolios", filter: `user_id=eq.${user.id}` },
