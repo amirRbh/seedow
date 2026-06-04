@@ -11,6 +11,7 @@ import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 
 import { JourneySteps } from "@/components/navigation/JourneySteps";
+import { ProjectionSimulator } from "@/components/dashboard/ProjectionSimulator";
 
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { supabase } from "@/integrations/supabase/client";
@@ -178,6 +179,20 @@ function Dashboard() {
           )}
         </motion.section>
 
+
+        {portfolio && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            <ProjectionSimulator
+              initialAmount={totalValue || totalInvested || 1000}
+              expectedReturn={portfolio.metrics?.expected_return ?? 0.05}
+              volatility={portfolio.metrics?.volatility ?? 0.12}
+            />
+          </motion.div>
+        )}
 
         <motion.section
           initial={{ opacity: 0 }}
