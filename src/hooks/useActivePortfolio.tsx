@@ -132,21 +132,37 @@ export function useActivePortfolio(): State {
     };
   }, [user, authLoading, pfListLoading, activeId, tick]);
 
-  // Realtime: re-fetch when the user's portfolios row changes (e.g. après Réglages recalcule)
+  // Realtime : un canal par portefeuille actif. Quand `activeId` change,
+  // l'effet se rejoue → ancien canal délié proprement avant qu'un nouveau
+  // ne s'abonne, donc aucun listener fantôme ne reste actif.
   useEffect(() => {
     if (!user) return;
+    // On attend que la résolution du portefeuille actif soit faite côté contexte
+    // pour éviter un cycle inutile (abonnement large → abonnement filtré).
+    const targetId = portfolio?.id ?? activeId ?? null;
+
     let active = true;
+    const suffix = Math.random().toString(36).slice(2);
+    const channelName = targetId
+      ? `pf:${user.id}:${targetId}:${suffix}`
+      : `pf:${user.id}:all:${suffix}`;
+
+    const filter = targetId
+      ? `id=eq.${targetId}`
+      : `user_id=eq.${user.id}`;
+
     const channel = supabase
-      .channel(`portfolios:${user.id}:${Math.random().toString(36).slice(2)}`)
+      .channel(channelName)
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "portfolios", filter: `user_id=eq.${user.id}` },
+        { event: "*", schema: "public", table: "portfolios", filter },
         () => {
           if (!active) return;
           setTick((t) => t + 1);
         },
       )
       .subscribe();
+
     return () => {
       active = false;
       try {
@@ -156,7 +172,7 @@ export function useActivePortfolio(): State {
       }
       supabase.removeChannel(channel);
     };
-  }, [user]);
+  }, [user, activeId, portfolio?.id]);
 
   return { portfolio, loading, error, refresh };
 }
