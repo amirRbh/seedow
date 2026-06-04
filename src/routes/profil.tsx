@@ -277,6 +277,44 @@ function ProfilPage() {
             />
           </ul>
         </section>
+
+        {/* Historique des décisions */}
+        <section className="px-5 pt-10">
+          <div className="gold-rule mb-5" />
+          <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold mb-3">
+            04 · Tes décisions
+          </p>
+          <h2 className="font-value text-2xl text-ink leading-tight">
+            La mémoire de ton parcours
+          </h2>
+          <p className="text-sm text-ink-3 mt-2">
+            Chaque arbitrage, exclusion ou rééquilibrage laisse une trace.
+          </p>
+          <DecisionTimeline />
+        </section>
+
+        {/* Comparatif teaser */}
+        <section className="px-5 pt-10">
+          <Link
+            to="/comparatif"
+            className="block border-t border-paper-3 pt-5 group"
+          >
+            <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold mb-2">
+              Comparatif
+            </p>
+            <div className="flex items-baseline justify-between gap-4">
+              <h3 className="font-value text-xl text-ink leading-tight group-hover:text-moss-1 transition-colors">
+                Ton portefeuille vs <Glossary term="MSCIWorld">MSCI World</Glossary>
+              </h3>
+              <svg viewBox="0 0 24 24" className="w-5 h-5 text-ink-3 shrink-0" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M9 6l6 6-6 6" />
+              </svg>
+            </div>
+            <p className="text-sm text-ink-3 mt-2">
+              Performance, frais, score d'impact, CO₂ — les chiffres face à face.
+            </p>
+          </Link>
+        </section>
       </div>
 
       <BottomNavigation />
