@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useViewMode } from "@/hooks/useViewMode";
 import { PortfolioSelector } from "@/components/garden/PortfolioSelector";
+import { AlertsBell } from "@/components/alerts/AlertsBell";
 import { cn } from "@/lib/utils";
 
 interface AppHeaderProps {
@@ -48,6 +49,7 @@ export function AppHeader({
         </Link>
         <div className="flex items-center gap-2">
           {!hideViewToggle && <ViewModeToggle />}
+          <AlertsBell />
           {!hideSettings && (
             <Link
               to="/reglages"

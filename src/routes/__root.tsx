@@ -4,6 +4,7 @@ import { LexiconProvider } from "@/hooks/useLexicon";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ViewModeProvider } from "@/hooks/useViewMode";
 import { UserPortfoliosProvider } from "@/hooks/useUserPortfolios";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 
 import appCss from "../styles.css?url";
@@ -90,7 +91,9 @@ function RootComponent() {
       <UserPortfoliosProvider>
         <LexiconProvider>
           <ViewModeProvider>
-            <RouteTransition />
+            <TooltipProvider delayDuration={150}>
+              <RouteTransition />
+            </TooltipProvider>
           </ViewModeProvider>
         </LexiconProvider>
       </UserPortfoliosProvider>

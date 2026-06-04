@@ -17,6 +17,7 @@ import { Route as MethodologieRouteImport } from './routes/methodologie'
 import { Route as EthiRouteImport } from './routes/ethi'
 import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as ComparatifRouteImport } from './routes/comparatif'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as HooksRefreshMarketDataRouteImport } from './routes/hooks/refresh-market-data'
@@ -62,6 +63,11 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ComparatifRoute = ComparatifRouteImport.update({
+  id: '/comparatif',
+  path: '/comparatif',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -86,6 +92,7 @@ const ApiEthiRoute = ApiEthiRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/comparatif': typeof ComparatifRoute
   '/dashboard': typeof DashboardRoute
   '/discover': typeof DiscoverRoute
   '/ethi': typeof EthiRoute
@@ -100,6 +107,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/comparatif': typeof ComparatifRoute
   '/dashboard': typeof DashboardRoute
   '/discover': typeof DiscoverRoute
   '/ethi': typeof EthiRoute
@@ -115,6 +123,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/comparatif': typeof ComparatifRoute
   '/dashboard': typeof DashboardRoute
   '/discover': typeof DiscoverRoute
   '/ethi': typeof EthiRoute
@@ -131,6 +140,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/comparatif'
     | '/dashboard'
     | '/discover'
     | '/ethi'
@@ -145,6 +155,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/comparatif'
     | '/dashboard'
     | '/discover'
     | '/ethi'
@@ -159,6 +170,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/auth'
+    | '/comparatif'
     | '/dashboard'
     | '/discover'
     | '/ethi'
@@ -174,6 +186,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
+  ComparatifRoute: typeof ComparatifRoute
   DashboardRoute: typeof DashboardRoute
   DiscoverRoute: typeof DiscoverRoute
   EthiRoute: typeof EthiRoute
@@ -244,6 +257,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/comparatif': {
+      id: '/comparatif'
+      path: '/comparatif'
+      fullPath: '/comparatif'
+      preLoaderRoute: typeof ComparatifRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -278,6 +298,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
+  ComparatifRoute: ComparatifRoute,
   DashboardRoute: DashboardRoute,
   DiscoverRoute: DiscoverRoute,
   EthiRoute: EthiRoute,
