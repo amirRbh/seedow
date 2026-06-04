@@ -10,6 +10,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 
+import { JourneySteps } from "@/components/navigation/JourneySteps";
+
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -102,6 +104,12 @@ function Dashboard() {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
       <div className="max-w-lg mx-auto pb-28">
         <AppHeader eyebrow={greeting} title={userName} showPortfolioSelector />
+
+        <div className="pt-2">
+          <JourneySteps active="tracking" />
+        </div>
+
+
 
         <motion.section
           initial={{ opacity: 0, y: 12 }}
