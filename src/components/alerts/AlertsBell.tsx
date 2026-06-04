@@ -74,11 +74,21 @@ export function AlertsBell() {
                   key={a.id}
                   className="border-t border-paper-3 pt-4 first:border-t-0 first:pt-0"
                 >
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className={cn("inline-block w-1.5 h-1.5 rounded-full", tone.dot)} />
-                    <span className="text-[10px] uppercase tracking-[0.18em] font-semibold text-ink-3">
-                      {tone.label}
-                    </span>
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className={cn("inline-block w-1.5 h-1.5 rounded-full", tone.dot)} />
+                      <span className="text-[10px] uppercase tracking-[0.18em] font-semibold text-ink-3">
+                        {tone.label}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => void dismiss(a.id)}
+                      aria-label="Écarter cette alerte"
+                      className="text-ink-3 hover:text-ink text-[11px] outline-none focus-visible:ring-2 focus-visible:ring-moss-1 rounded"
+                    >
+                      ✕
+                    </button>
                   </div>
                   <h3 className="text-sm font-semibold text-ink leading-snug">{a.title}</h3>
                   <p className="text-[13px] text-ink-2 mt-1.5 leading-relaxed">{a.body}</p>
@@ -94,6 +104,7 @@ export function AlertsBell() {
                       </svg>
                     </Link>
                   )}
+
                 </article>
               );
             })
