@@ -39,7 +39,7 @@ export function AppHeader({
 }: AppHeaderProps) {
   return (
     <header className="px-5 pt-6 pb-5">
-      <div className="flex items-center justify-between border-b border-paper-3 pb-3">
+      <div className="md:hidden flex items-center justify-between border-b border-paper-3 pb-3">
         <Link
           to="/dashboard"
           aria-label="Seedow — retour à ton portefeuille"
@@ -91,7 +91,7 @@ export function AppHeader({
       </div>
 
       {showPortfolioSelector && (
-        <div className="mt-4">
+        <div className="mt-4 md:hidden">
           <PortfolioSelector />
         </div>
       )}
