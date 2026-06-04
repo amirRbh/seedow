@@ -56,8 +56,8 @@ export function useAlerts(): State {
         .eq("id", portfolio.id)
         .maybeSingle();
       if (cancelled) return;
-      setExclusions(((data?.exclusions ?? []) as string[]) ?? []);
-      setCauses(((data?.causes ?? []) as string[]) ?? []);
+      setExclusions((data?.exclusions ?? []) as string[]);
+      setCauses((data?.causes ?? []) as string[]);
       setLoadedMeta(true);
     })();
     return () => { cancelled = true; };
