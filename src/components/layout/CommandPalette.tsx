@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/command";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 import { useAlerts } from "@/hooks/useAlerts";
-import { GLOSSARY_TERMS } from "@/components/ui/Glossary";
+import { GLOSSARY } from "@/components/ui/Glossary";
 import { toast } from "sonner";
 
 interface Props {
@@ -47,7 +47,15 @@ export function CommandPalette({ open, onOpenChange }: Props) {
 
   const close = () => onOpenChange(false);
 
-  const glossaryEntries = useMemo(() => GLOSSARY_TERMS.slice(0, 24), []);
+  const glossaryEntries = useMemo(
+    () =>
+      Object.entries(GLOSSARY).map(([key, v]) => ({
+        key,
+        label: v.title,
+        definition: v.body,
+      })),
+    [],
+  );
 
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
