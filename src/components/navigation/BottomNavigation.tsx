@@ -1,5 +1,4 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { useLexicon } from "@/hooks/useLexicon";
 import { cn } from "@/lib/utils";
 
 type IconKey = "portefeuille" | "analyse" | "ethi" | "decouvrir" | "profil";
@@ -27,7 +26,6 @@ const NAV_ITEMS: NavItem[] = [
  */
 export function BottomNavigation() {
   const location = useLocation();
-  useLexicon();
 
   return (
     <nav
