@@ -1,77 +1,115 @@
-# Refonte design system "Emerald Prestige" + landing cinématique
+# Plan — 3 chantiers prioritaires Seedow
 
-Direction : **éditorial financier premium**, palette **Emerald Prestige** (vert profond #064e3b + or #c9a84c + crème #f5f0e0), typo **Space Grotesk / DM Sans**. Innovation prioritaire : **landing cinématique scroll-driven**.
+Approfondissement des 3 pistes prioritaires. Chaque chantier est livrable indépendamment ; ordre recommandé : **#1 → #2 → #3** (le simulateur prépare le terrain pour les versements programmés).
 
-## 1. Nouveau design system (`src/styles.css`)
+---
 
-Remplacer les tokens actuels :
+## Chantier 1 — Simulateur « Et si j'ajoute X €/mois ? »
 
-- **Surfaces** : `--paper` crème (#f5f0e0 → oklch), `--paper-2` ivoire, `--ink` vert profond (#064e3b), `--ink-2/3` déclinaisons
-- **Accent or** : `--gold` (#c9a84c) pour CTA, chiffres clés, séparateurs fins
-- **Vert signature** : conserve `--moss-*` mais recalibré sur emerald prestige (5 stops du #064e3b au crème)
-- **Mode sombre** : ink crème sur fond vert nuit (#0a1f17)
-- **Typo** : import Space Grotesk (500/600/700) pour `--font-display` + `--font-value`, DM Sans (300/400/500) pour `--font-sans`. Suppression Syne/Plus Jakarta.
-- **Échelle éditoriale** : nouvelle classe `.display-xl` (clamp 56→128px, Space Grotesk 600, tracking -0.04em) pour gros chiffres
-- **Filet or** : utility `.gold-rule` (1px #c9a84c) pour séparer sections
-- **Easing Apple conservé** : `cubic-bezier(0.32, 0.72, 0, 1)` 400ms (déjà en place)
-- **Grain subtil** : overlay SVG noise 2% sur `body` pour texture papier
+### Objectif utilisateur
+Visualiser, en 1 geste, ce que devient le portefeuille si on verse un montant mensuel sur 5/10/20 ans. Transforme le dashboard d'un état figé en outil de décision.
 
-## 2. Composants refondus
+### Où ça vit
+- **Dashboard** (`src/routes/dashboard.tsx`) — bloc principal, juste sous les KPIs.
+- **Portfolio** (`src/routes/portfolio.tsx`) — version compacte (lien « Simuler un versement »).
 
-- **`AppHeader`** : wordmark "seedow" en Space Grotesk 600 tracking -0.03em, filet or 1px sous le header, fond crème translucide + backdrop-blur
-- **`BottomNavigation`** : barre flottante crème, icônes vert profond, indicateur actif = pastille or
-- **`paper-card`** : fond ivoire, bordure 1px vert/10%, hover : bordure or
-- **`btn-plant`** → CTA principal vert profond, hover vire à un vert plus sombre + ombre douce
-- **`btn-harvest`** → secondaire transparent + bordure or
-- **`moss-badge`** : nouveau style éditorial (uppercase, tracking large, filet or à gauche)
-- Nouveau **`<KPIFigure value unit label />`** : gros chiffre Space Grotesk + tabular-nums + libellé uppercase tracking large (utilisé partout dans dashboard/verdict)
-- Nouveau **`<EditorialSection eyebrow title kicker />`** : pattern unifié de section avec eyebrow uppercase or, titre serif-like, filet or
+### UX
+- Bloc éditorial titré « Et si tu ajoutais… » (eyebrow or, h2 Space Grotesk).
+- 3 contrôles : **montant mensuel** (slider 0 → 1 000 €, pas 25 €), **horizon** (5 / 10 / 20 ans en pills), **scénario** (prudent / central / optimiste — basé sur `expected_return ± volatility`).
+- Sortie : KPIFigure XL du capital final + 2 KPIFigure sm (versements cumulés, plus-value estimée).
+- Mini-graph aire (Recharts déjà installé) — comparaison « sans versement » vs « avec versement ».
+- Mention obligatoire : « Projection indicative, non contractuelle. Hypothèses : rendement annualisé X %, volatilité Y %. »
 
-## 3. Landing cinématique (`src/routes/index.tsx`)
+### Technique
+- **Pur frontend, zéro backend.** Calcul d'intérêts composés avec versements périodiques (formule fermée + série mensuelle pour le graph).
+- Nouveau hook `src/hooks/useProjection.ts` — `(initial, monthly, years, annualReturn) => { finalValue, contributed, gain, series[] }`.
+- Nouveau composant `src/components/dashboard/ProjectionSimulator.tsx`.
+- Reprend `portfolio.metrics.expected_return` et `volatility` du portefeuille actif ; fallback `5%` / `12%` si absent.
+- Scénarios : central = `expected_return`, prudent = `expected_return - 0.5·volatility`, optimiste = `+ 0.5·volatility`.
 
-Refonte complète en 6 séquences scroll-driven (Framer Motion `useScroll` + `useTransform`) :
+### Hors scope
+Pas de persistance, pas d'A/B fiscal, pas de courbe Monte-Carlo (réservé v2).
 
-1. **Hero plein écran** : wordmark "seedow" géant qui se contracte au scroll vers le header, sous-titre "L'audit ESG de ton épargne, sans promesse de placement", CTA or "Auditer mon portefeuille"
-2. **Manifeste** : phrase éditoriale qui se révèle mot par mot au scroll (split text + opacity stagger)
-3. **Démo interactive inline** : input ticker → preview d'un mini-verdict animé (3 KPI qui s'incrémentent : couverture ESG, score moyen, lignes non auditables). Données mockées, sans backend.
-4. **3 piliers** : grille éditoriale 3 colonnes avec filets or, chiffres XL, descriptions courtes (Audit / Transparence / Trous de couverture assumés)
-5. **Méthodologie teaser** : extrait de la page méthodologie + lien
-6. **Waitlist + disclaimers** : form email minimal, disclaimers en filet or fin
+---
 
-Toutes les transitions utilisent l'easing Apple + parallax léger sur titres et fades successifs.
+## Chantier 2 — Rapport d'impact mensuel
 
-## 4. Écrans secondaires alignés
+### Objectif utilisateur
+Donner du sens concret au capital investi : « ce mois-ci, ton portefeuille a évité X kg de CO₂ et financé Y MWh d'énergie verte ». Renforce la signature ESG/impact de Seedow.
 
-Pas de refonte fonctionnelle, juste réapplication des nouveaux tokens/composants :
-- `dashboard.tsx` : remplace les chiffres par `<KPIFigure>`, sections par `<EditorialSection>`, ImpactRibbon restylé
-- `portfolio.tsx`, `discover.tsx`, `methodologie.tsx`, `reglages.tsx`, `auth.tsx`, `onboarding.tsx`, `ethi.tsx` : application automatique via tokens + remplacement ponctuel des classes spécifiques
-- `__root.tsx` : transitions de route existantes conservées (déjà en place)
+### Où ça vit
+- **Page Profil** (`src/routes/profil.tsx`) — nouvelle section « 04 · Ton impact » avant la progression.
+- **Dashboard** — carte teaser compacte « Impact du mois » + lien « Voir le rapport complet ».
 
-## 5. Mémoire projet
+### UX
+- Eyebrow or « Rapport d'impact · {mois} {année} ».
+- 3 KPIFigure : **CO₂ évité** (kg), **Énergie verte financée** (équivalent MWh), **Score d'impact moyen** (/100).
+- Equivalences humanisées : « = X trajets Paris-Marseille en voiture » / « = Y foyers alimentés 1 jour » (table de conversion en dur côté front).
+- Filet or `.gold-rule` entre sections.
+- Bouton « Télécharger le PDF » → **v2** (placeholder désactivé avec tooltip « Bientôt »).
 
-Mettre à jour `mem://index.md` Core :
-- Palette : Emerald Prestige (#064e3b / #c9a84c / #f5f0e0)
-- Typo : Space Grotesk (display) + DM Sans (body)
-- Style : éditorial financier premium, filets or, KPI en Space Grotesk tabulaire
+### Technique
+- Calcul dérivé des données déjà en base :
+  - `assets.carbon_intensity_gco2e_per_eur` × valeur pondérée par holding → CO₂ évité vs benchmark (MSCI World moyenne ≈ 200 gCO₂e/€).
+  - `cause_exposure` (jsonb sur `assets`) → MWh estimé pour la cause `climat`/`energie`.
+- Nouveau serverFn `src/lib/impact/report.functions.ts` :
+  - input : `{ portfolioId, month: 'YYYY-MM' }`
+  - middleware : `requireSupabaseAuth`
+  - calcul en SQL/JS à partir des holdings + prix de fin de mois (`asset_prices`).
+- Nouveau composant `src/components/impact/ImpactReportCard.tsx`.
+- Pas de nouvelle table — tout est calculé à la volée et caché via TanStack Query (`['impact', portfolioId, month]`, staleTime 1h).
 
-## Détails techniques
+### Hors scope
+PDF export, notifications email mensuelles (chantier ultérieur, nécessite cron + storage).
 
-- **Pas de nouvelle dépendance** : Framer Motion déjà installé
-- **Fonts** : Google Fonts via `@import` dans `styles.css` (remplace l'import Syne/Plus Jakarta existant)
-- **Pas de migration DB** : refonte purement frontend
-- **Pas de changement de logique métier** : on touche uniquement styles/composants de présentation
-- **Lexique** : respect strict de la mémoire (pas de "jardin/graines"), wordmark "seedow" en texte seul, montants `minimumFractionDigits: 2`
+---
 
-## Hors périmètre
+## Chantier 3 — Versements programmés (DCA mensuel)
 
-- Pas de touch aux server functions, RLS, types Supabase
-- Pas de retrait/ajout de routes
-- Pas de nouvelle feature (audit ESG batch B/C/D reste à part)
-- Pas de mode "audit live home" ni "chat Ethi onboarding" (variantes non retenues)
+### Objectif utilisateur
+Permettre de planifier un versement récurrent (« 100 € chaque 5 du mois ») et voir le prochain prélèvement à venir. Comportement attendu d'un investisseur sérieux, et boucle bien avec le simulateur (#1).
 
-## Batches
+### Où ça vit
+- **Profil** — nouvelle section « Ton plan d'épargne » (entre Portefeuille et Progression).
+- **Dashboard** — chip discret « Prochain versement : 100 € le 5 déc. ».
+- **Onboarding** — étape optionnelle finale « Veux-tu programmer un versement mensuel ? ».
 
-- **A** — Tokens CSS + fonts + composants primitifs (`KPIFigure`, `EditorialSection`, `gold-rule`)
-- **B** — Refonte `routes/index.tsx` cinématique scroll-driven
-- **C** — Réapplication des nouveaux composants sur dashboard / portfolio / autres écrans
-- **D** — Update mémoire projet
+### UX
+- Form : montant, jour du mois (1-28), date de démarrage, statut actif/pause.
+- Liste des versements passés (timeline avec `TimelineEvent` existant, type `soil`).
+- Action « Mettre en pause » / « Modifier ».
+- Pas de prélèvement réel — c'est un **plan déclaratif** (l'app simule l'exécution à la date prévue en ajoutant une ligne d'historique).
+
+### Technique
+- **Migration DB** (nouvelle table) :
+  ```
+  scheduled_contributions
+    id, user_id, portfolio_id, amount_eur, day_of_month (1-28),
+    starts_on, status (active|paused|cancelled), last_run_on, created_at, updated_at
+  ```
+  + RLS scoped `auth.uid() = user_id` + GRANT authenticated/service_role.
+- **Table d'historique** existante réutilisée — ou nouvelle `contribution_history` si besoin (à arbitrer pendant l'impl).
+- ServerFns : `createSchedule`, `pauseSchedule`, `cancelSchedule`, `listSchedules` (tous avec `requireSupabaseAuth`).
+- **Cron** (`pg_cron` quotidien à 02:00 UTC) → route publique `/api/public/hooks/run-scheduled-contributions` qui :
+  - lit les `scheduled_contributions` actives dont `day_of_month = EXTRACT(day, now())` et `last_run_on < today`.
+  - insère une ligne d'historique + met à jour `portfolios.initial_amount` (ou table dédiée selon le modèle actuel).
+  - signature : header `apikey` = anon key (pattern standard documenté).
+- Hook `useScheduledContributions` (TanStack Query).
+- Composant `src/components/contributions/ScheduleEditor.tsx`.
+
+### Hors scope
+Intégration bancaire réelle (SEPA, Bridge, Powens), notifications push, ajustement automatique des holdings (tout va en cash virtuel).
+
+---
+
+## Récap dépendances / effort
+
+| Chantier | Backend | Frontend | DB | Effort |
+|---|---|---|---|---|
+| #1 Simulateur | — | 1 hook + 1 composant | — | **S** |
+| #2 Rapport impact | 1 serverFn | 1 composant + intégration 2 pages | — | **M** |
+| #3 Versements DCA | 4 serverFns + 1 cron route | 2 composants + 3 intégrations | 1 migration | **L** |
+
+## Question pour toi
+
+Par lequel on commence ? Je recommande **#1 (Simulateur)** — impact visuel immédiat, zéro risque backend, et il prépare le discours pour le #3.
