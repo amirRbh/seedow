@@ -8,6 +8,7 @@ const TYPE_TONE: Record<DecisionType, { dot: string; label: string }> = {
   horizon: { dot: "bg-gold", label: "Horizon" },
   risk: { dot: "bg-gold", label: "Risque" },
   rebalance: { dot: "bg-moss-2", label: "Rééquilibrage" },
+  contribution: { dot: "bg-gold", label: "Versement" },
 };
 
 const fmtDate = (iso: string) =>
