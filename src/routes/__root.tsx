@@ -5,6 +5,8 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { ViewModeProvider } from "@/hooks/useViewMode";
 import { UserPortfoliosProvider } from "@/hooks/useUserPortfolios";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "@/components/ui/sonner";
+import { AppShell } from "@/components/layout/AppShell";
 
 
 import appCss from "../styles.css?url";
@@ -92,7 +94,10 @@ function RootComponent() {
         <LexiconProvider>
           <ViewModeProvider>
             <TooltipProvider delayDuration={150}>
-              <RouteTransition />
+              <AppShell>
+                <RouteTransition />
+              </AppShell>
+              <Toaster richColors position="bottom-right" />
             </TooltipProvider>
           </ViewModeProvider>
         </LexiconProvider>
