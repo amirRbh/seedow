@@ -2,13 +2,21 @@ import { Link, useLocation } from "@tanstack/react-router";
 import { useLexicon } from "@/hooks/useLexicon";
 import { cn } from "@/lib/utils";
 
-type IconKey = "portefeuille" | "analyse" | "ethi" | "decouvrir";
+type IconKey = "portefeuille" | "analyse" | "ethi" | "decouvrir" | "profil";
 
-const NAV_ITEMS: { key: "garden" | "roots" | "ethi" | "discover"; path: string; labelKey: "garden" | "roots" | "ethi" | "discover"; icon: IconKey }[] = [
-  { key: "garden", path: "/dashboard", labelKey: "garden", icon: "portefeuille" },
-  { key: "roots", path: "/portfolio", labelKey: "roots", icon: "analyse" },
-  { key: "ethi", path: "/ethi", labelKey: "ethi", icon: "ethi" },
-  { key: "discover", path: "/discover", labelKey: "discover", icon: "decouvrir" },
+type NavItem = {
+  key: "garden" | "roots" | "profil" | "ethi" | "discover";
+  path: string;
+  label: string;
+  icon: IconKey;
+};
+
+const NAV_ITEMS: NavItem[] = [
+  { key: "garden", path: "/dashboard", label: "Vue", icon: "portefeuille" },
+  { key: "roots", path: "/portfolio", label: "Analyse", icon: "analyse" },
+  { key: "profil", path: "/profil", label: "Profil", icon: "profil" },
+  { key: "ethi", path: "/ethi", label: "Ethi", icon: "ethi" },
+  { key: "discover", path: "/discover", label: "Explorer", icon: "decouvrir" },
 ];
 
 /**
@@ -19,7 +27,7 @@ const NAV_ITEMS: { key: "garden" | "roots" | "ethi" | "discover"; path: string; 
  */
 export function BottomNavigation() {
   const location = useLocation();
-  const { L } = useLexicon();
+  useLexicon();
 
   return (
     <nav
@@ -48,7 +56,7 @@ export function BottomNavigation() {
                   isActive ? "font-semibold" : "font-medium",
                 )}
               >
-                {L.nav[item.labelKey]}
+                {item.label}
               </span>
               {isActive && (
                 <span
@@ -109,6 +117,14 @@ function NavIcon({ type }: { type: IconKey }) {
         <svg {...common}>
           <circle cx="12" cy="12" r="9" />
           <path d="m15 9-2 4-4 2 2-4 4-2Z" />
+        </svg>
+      );
+    case "profil":
+      // Silhouette sobre
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" />
         </svg>
       );
   }
