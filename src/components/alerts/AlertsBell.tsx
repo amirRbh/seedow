@@ -11,9 +11,17 @@ const TONE: Record<AlertSeverity, { dot: string; label: string }> = {
 };
 
 export function AlertsBell() {
-  const { alerts, unread } = useAlerts();
+  const { alerts, unread, markAllRead, dismiss } = useAlerts();
   const [open, setOpen] = useState(false);
   const count = alerts.length;
+
+  const handleOpen = (next: boolean) => {
+    setOpen(next);
+    if (next && unread > 0) {
+      void markAllRead();
+    }
+  };
+
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
