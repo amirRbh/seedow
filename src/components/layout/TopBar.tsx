@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useViewMode } from "@/hooks/useViewMode";
 import { PortfolioSelector } from "@/components/garden/PortfolioSelector";
@@ -13,7 +14,10 @@ interface TopBarProps {
  * Affiche : marque "seedow", sélecteur de portefeuille, bouton ⌘K, cloche, toggle Simple/Expert, réglages.
  */
 export function TopBar({ onOpenCommand }: TopBarProps) {
-  const isMac = typeof navigator !== "undefined" && /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+  const [isMac, setIsMac] = useState(false);
+  useEffect(() => {
+    setIsMac(/Mac|iPod|iPhone|iPad/.test(navigator.platform));
+  }, []);
   return (
     <header className="hidden md:flex sticky top-0 z-30 h-14 items-center justify-between bg-paper/95 backdrop-blur border-b border-paper-3 pl-5 pr-4">
       <div className="flex items-center gap-4">
