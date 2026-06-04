@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ReglagesRouteImport } from './routes/reglages'
+import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as MethodologieRouteImport } from './routes/methodologie'
@@ -24,6 +25,11 @@ import { Route as ApiEthiRouteImport } from './routes/api.ethi'
 const ReglagesRoute = ReglagesRouteImport.update({
   id: '/reglages',
   path: '/reglages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfilRoute = ProfilRouteImport.update({
+  id: '/profil',
+  path: '/profil',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PortfolioRoute = PortfolioRouteImport.update({
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/methodologie': typeof MethodologieRoute
   '/onboarding': typeof OnboardingRoute
   '/portfolio': typeof PortfolioRoute
+  '/profil': typeof ProfilRoute
   '/reglages': typeof ReglagesRoute
   '/api/ethi': typeof ApiEthiRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
@@ -99,6 +106,7 @@ export interface FileRoutesByTo {
   '/methodologie': typeof MethodologieRoute
   '/onboarding': typeof OnboardingRoute
   '/portfolio': typeof PortfolioRoute
+  '/profil': typeof ProfilRoute
   '/reglages': typeof ReglagesRoute
   '/api/ethi': typeof ApiEthiRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   '/methodologie': typeof MethodologieRoute
   '/onboarding': typeof OnboardingRoute
   '/portfolio': typeof PortfolioRoute
+  '/profil': typeof ProfilRoute
   '/reglages': typeof ReglagesRoute
   '/api/ethi': typeof ApiEthiRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
     | '/methodologie'
     | '/onboarding'
     | '/portfolio'
+    | '/profil'
     | '/reglages'
     | '/api/ethi'
     | '/hooks/refresh-market-data'
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
     | '/methodologie'
     | '/onboarding'
     | '/portfolio'
+    | '/profil'
     | '/reglages'
     | '/api/ethi'
     | '/hooks/refresh-market-data'
@@ -154,6 +165,7 @@ export interface FileRouteTypes {
     | '/methodologie'
     | '/onboarding'
     | '/portfolio'
+    | '/profil'
     | '/reglages'
     | '/api/ethi'
     | '/hooks/refresh-market-data'
@@ -168,6 +180,7 @@ export interface RootRouteChildren {
   MethodologieRoute: typeof MethodologieRoute
   OnboardingRoute: typeof OnboardingRoute
   PortfolioRoute: typeof PortfolioRoute
+  ProfilRoute: typeof ProfilRoute
   ReglagesRoute: typeof ReglagesRoute
   ApiEthiRoute: typeof ApiEthiRoute
   HooksRefreshMarketDataRoute: typeof HooksRefreshMarketDataRoute
@@ -180,6 +193,13 @@ declare module '@tanstack/react-router' {
       path: '/reglages'
       fullPath: '/reglages'
       preLoaderRoute: typeof ReglagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profil': {
+      id: '/profil'
+      path: '/profil'
+      fullPath: '/profil'
+      preLoaderRoute: typeof ProfilRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/portfolio': {
@@ -264,6 +284,7 @@ const rootRouteChildren: RootRouteChildren = {
   MethodologieRoute: MethodologieRoute,
   OnboardingRoute: OnboardingRoute,
   PortfolioRoute: PortfolioRoute,
+  ProfilRoute: ProfilRoute,
   ReglagesRoute: ReglagesRoute,
   ApiEthiRoute: ApiEthiRoute,
   HooksRefreshMarketDataRoute: HooksRefreshMarketDataRoute,
@@ -271,13 +292,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

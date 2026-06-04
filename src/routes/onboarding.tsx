@@ -451,6 +451,37 @@ function Intro({ onStart }: { onStart: () => void }) {
       >
         Quatre questions, deux minutes. Ethi structure une allocation alignée sur vos convictions et vos exclusions.
       </motion.p>
+
+      {/* Récap du parcours en 3 temps */}
+      <motion.ol
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.25 }}
+        className="mt-10 grid grid-cols-3 gap-3 max-w-sm w-full"
+      >
+        {[
+          { n: "01", l: "Tes valeurs" },
+          { n: "02", l: "Ton portefeuille" },
+          { n: "03", l: "Ton suivi" },
+        ].map((s, i) => (
+          <li
+            key={s.n}
+            className={`border-t pt-2 ${i === 0 ? "border-paper" : "border-paper/15"}`}
+          >
+            <p className="font-value text-[10px] tabular-nums tracking-widest text-paper/40">
+              {s.n}
+            </p>
+            <p
+              className={`text-[11px] uppercase tracking-[0.16em] mt-1 ${
+                i === 0 ? "text-paper font-semibold" : "text-paper/50 font-medium"
+              }`}
+            >
+              {s.l}
+            </p>
+          </li>
+        ))}
+      </motion.ol>
+
       <motion.button
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
