@@ -24,7 +24,7 @@ export function AlertsBell() {
 
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet open={open} onOpenChange={handleOpen}>
       <SheetTrigger asChild>
         <button
           type="button"
@@ -36,6 +36,9 @@ export function AlertsBell() {
           )}
         >
           <BellIcon />
+          <span aria-live="polite" className="sr-only">
+            {unread > 0 ? `${unread} alerte${unread > 1 ? "s" : ""} non lue${unread > 1 ? "s" : ""}` : ""}
+          </span>
           {unread > 0 && (
             <span
               aria-hidden="true"
@@ -46,6 +49,7 @@ export function AlertsBell() {
           )}
         </button>
       </SheetTrigger>
+
       <SheetContent side="right" className="w-full sm:max-w-md bg-paper border-paper-3 p-0">
         <SheetHeader className="px-5 pt-6 pb-4 border-b border-paper-3 text-left">
           <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold">
