@@ -11,12 +11,20 @@ const TONE: Record<AlertSeverity, { dot: string; label: string }> = {
 };
 
 export function AlertsBell() {
-  const { alerts, unread } = useAlerts();
+  const { alerts, unread, markAllRead, dismiss } = useAlerts();
   const [open, setOpen] = useState(false);
   const count = alerts.length;
 
+  const handleOpen = (next: boolean) => {
+    setOpen(next);
+    if (next && unread > 0) {
+      void markAllRead();
+    }
+  };
+
+
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet open={open} onOpenChange={handleOpen}>
       <SheetTrigger asChild>
         <button
           type="button"
@@ -28,6 +36,9 @@ export function AlertsBell() {
           )}
         >
           <BellIcon />
+          <span aria-live="polite" className="sr-only">
+            {unread > 0 ? `${unread} alerte${unread > 1 ? "s" : ""} non lue${unread > 1 ? "s" : ""}` : ""}
+          </span>
           {unread > 0 && (
             <span
               aria-hidden="true"
@@ -38,6 +49,7 @@ export function AlertsBell() {
           )}
         </button>
       </SheetTrigger>
+
       <SheetContent side="right" className="w-full sm:max-w-md bg-paper border-paper-3 p-0">
         <SheetHeader className="px-5 pt-6 pb-4 border-b border-paper-3 text-left">
           <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold">
@@ -62,11 +74,21 @@ export function AlertsBell() {
                   key={a.id}
                   className="border-t border-paper-3 pt-4 first:border-t-0 first:pt-0"
                 >
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className={cn("inline-block w-1.5 h-1.5 rounded-full", tone.dot)} />
-                    <span className="text-[10px] uppercase tracking-[0.18em] font-semibold text-ink-3">
-                      {tone.label}
-                    </span>
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className={cn("inline-block w-1.5 h-1.5 rounded-full", tone.dot)} />
+                      <span className="text-[10px] uppercase tracking-[0.18em] font-semibold text-ink-3">
+                        {tone.label}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => void dismiss(a.id)}
+                      aria-label="Écarter cette alerte"
+                      className="text-ink-3 hover:text-ink text-[11px] outline-none focus-visible:ring-2 focus-visible:ring-moss-1 rounded"
+                    >
+                      ✕
+                    </button>
                   </div>
                   <h3 className="text-sm font-semibold text-ink leading-snug">{a.title}</h3>
                   <p className="text-[13px] text-ink-2 mt-1.5 leading-relaxed">{a.body}</p>
@@ -82,6 +104,7 @@ export function AlertsBell() {
                       </svg>
                     </Link>
                   )}
+
                 </article>
               );
             })

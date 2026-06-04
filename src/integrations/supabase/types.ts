@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      alerts: {
+        Row: {
+          body: string
+          created_at: string
+          cta_href: string | null
+          cta_label: string | null
+          dedup_key: string
+          dismissed_at: string | null
+          id: string
+          kind: Database["public"]["Enums"]["alert_kind"]
+          portfolio_id: string | null
+          read_at: string | null
+          severity: Database["public"]["Enums"]["alert_severity"]
+          title: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          cta_href?: string | null
+          cta_label?: string | null
+          dedup_key: string
+          dismissed_at?: string | null
+          id?: string
+          kind: Database["public"]["Enums"]["alert_kind"]
+          portfolio_id?: string | null
+          read_at?: string | null
+          severity?: Database["public"]["Enums"]["alert_severity"]
+          title: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          cta_href?: string | null
+          cta_label?: string | null
+          dedup_key?: string
+          dismissed_at?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["alert_kind"]
+          portfolio_id?: string | null
+          read_at?: string | null
+          severity?: Database["public"]["Enums"]["alert_severity"]
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       asset_covariance: {
         Row: {
           asset_a: string
@@ -255,6 +303,39 @@ export type Database = {
         }
         Relationships: []
       }
+      decision_events: {
+        Row: {
+          detail: string | null
+          id: string
+          kind: Database["public"]["Enums"]["decision_kind"]
+          occurred_at: string
+          payload: Json
+          portfolio_id: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          detail?: string | null
+          id?: string
+          kind: Database["public"]["Enums"]["decision_kind"]
+          occurred_at?: string
+          payload?: Json
+          portfolio_id?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          detail?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["decision_kind"]
+          occurred_at?: string
+          payload?: Json
+          portfolio_id?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       portfolios: {
         Row: {
           cause_intensity: Json
@@ -342,6 +423,51 @@ export type Database = {
         }
         Relationships: []
       }
+      scheduled_contributions: {
+        Row: {
+          amount: number
+          created_at: string
+          day_of_month: number
+          frequency: Database["public"]["Enums"]["contribution_frequency"]
+          id: string
+          is_active: boolean
+          last_processed_at: string | null
+          paused_until: string | null
+          portfolio_id: string
+          started_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          day_of_month?: number
+          frequency?: Database["public"]["Enums"]["contribution_frequency"]
+          id?: string
+          is_active?: boolean
+          last_processed_at?: string | null
+          paused_until?: string | null
+          portfolio_id: string
+          started_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          day_of_month?: number
+          frequency?: Database["public"]["Enums"]["contribution_frequency"]
+          id?: string
+          is_active?: boolean
+          last_processed_at?: string | null
+          paused_until?: string | null
+          portfolio_id?: string
+          started_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -350,6 +476,14 @@ export type Database = {
       get_vault_secret: { Args: { secret_name: string }; Returns: string }
     }
     Enums: {
+      alert_kind:
+        | "esg_drift"
+        | "rebalance"
+        | "missed_contribution"
+        | "performance"
+        | "fresh_quotes"
+        | "concentration"
+      alert_severity: "info" | "warn" | "alert"
       asset_class:
         | "equity_dev"
         | "equity_em"
@@ -367,6 +501,18 @@ export type Database = {
         | "egalite"
         | "tech"
         | "circulaire"
+      contribution_frequency: "monthly" | "quarterly"
+      decision_kind:
+        | "creation"
+        | "cause_added"
+        | "cause_removed"
+        | "exclusion_added"
+        | "exclusion_removed"
+        | "horizon_changed"
+        | "risk_changed"
+        | "rebalance"
+        | "contribution_scheduled"
+        | "contribution_paused"
       exclusion_tag:
         | "fossiles"
         | "armes"
@@ -501,6 +647,15 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      alert_kind: [
+        "esg_drift",
+        "rebalance",
+        "missed_contribution",
+        "performance",
+        "fresh_quotes",
+        "concentration",
+      ],
+      alert_severity: ["info", "warn", "alert"],
       asset_class: [
         "equity_dev",
         "equity_em",
@@ -519,6 +674,19 @@ export const Constants = {
         "egalite",
         "tech",
         "circulaire",
+      ],
+      contribution_frequency: ["monthly", "quarterly"],
+      decision_kind: [
+        "creation",
+        "cause_added",
+        "cause_removed",
+        "exclusion_added",
+        "exclusion_removed",
+        "horizon_changed",
+        "risk_changed",
+        "rebalance",
+        "contribution_scheduled",
+        "contribution_paused",
       ],
       exclusion_tag: [
         "fossiles",

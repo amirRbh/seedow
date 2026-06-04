@@ -3,15 +3,35 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 
-export type DecisionType = "creation" | "cause" | "exclusion" | "horizon" | "risk" | "rebalance";
+export type DecisionType =
+  | "creation"
+  | "cause"
+  | "exclusion"
+  | "horizon"
+  | "risk"
+  | "rebalance"
+  | "contribution";
 
 export interface DecisionEvent {
   id: string;
   type: DecisionType;
-  date: string; // ISO
+  date: string;
   title: string;
   detail?: string;
 }
+
+const KIND_TO_TYPE: Record<string, DecisionType> = {
+  creation: "creation",
+  cause_added: "cause",
+  cause_removed: "cause",
+  exclusion_added: "exclusion",
+  exclusion_removed: "exclusion",
+  horizon_changed: "horizon",
+  risk_changed: "risk",
+  rebalance: "rebalance",
+  contribution_scheduled: "contribution",
+  contribution_paused: "contribution",
+};
 
 const CAUSE_LABEL: Record<string, string> = {
   climat: "Climat",
@@ -35,9 +55,8 @@ const EXCLUSION_LABEL: Record<string, string> = {
 };
 
 /**
- * Reconstitue l'historique des décisions à partir de la table portfolios.
- * V1 : pas de table dédiée — on dérive des champs (created_at, exclusions, causes,
- * risk_target, horizon_years, generated_at).
+ * Lit l'historique des décisions depuis `decision_events` (alimenté par triggers).
+ * Si la table est vide pour ce portefeuille (legacy), on dérive depuis les champs.
  */
 export function useDecisionHistory(): { decisions: DecisionEvent[]; loading: boolean } {
   const { user } = useAuth();
@@ -54,6 +73,44 @@ export function useDecisionHistory(): { decisions: DecisionEvent[]; loading: boo
     let cancelled = false;
     (async () => {
       setLoading(true);
+
+      // 1) Lire la timeline persistée
+      const { data: events } = await supabase
+        .from("decision_events")
+        .select("id, kind, title, detail, payload, occurred_at")
+        .eq("user_id", user.id)
+        .eq("portfolio_id", portfolio.id)
+        .order("occurred_at", { ascending: false });
+
+      if (cancelled) return;
+
+      if (events && events.length > 0) {
+        setDecisions(
+          events.map((e) => {
+            const payload = (e.payload ?? {}) as Record<string, unknown>;
+            const cause = typeof payload.cause === "string" ? payload.cause : null;
+            const excl = typeof payload.exclusion === "string" ? payload.exclusion : null;
+            let title = e.title;
+            if (cause && CAUSE_LABEL[cause]) {
+              title = title.replace(cause, CAUSE_LABEL[cause]);
+            }
+            if (excl && EXCLUSION_LABEL[excl]) {
+              title = title.replace(excl, EXCLUSION_LABEL[excl]);
+            }
+            return {
+              id: e.id,
+              type: KIND_TO_TYPE[e.kind] ?? "rebalance",
+              date: e.occurred_at,
+              title,
+              detail: e.detail ?? undefined,
+            };
+          }),
+        );
+        setLoading(false);
+        return;
+      }
+
+      // 2) Fallback : dérivation pour les portefeuilles legacy
       const { data } = await supabase
         .from("portfolios")
         .select(
@@ -73,58 +130,50 @@ export function useDecisionHistory(): { decisions: DecisionEvent[]; loading: boo
       const generated = data.generated_at ?? created;
       const updated = data.updated_at ?? generated;
 
-      // Création
       out.push({
         id: "creation",
         type: "creation",
         date: created,
-        title: `Tu as créé « ${data.name} »`,
+        title: `Création de « ${data.name} »`,
         detail: `Capital initial : ${Number(data.initial_amount).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`,
       });
 
-      // Horizon
       if (data.horizon_years) {
         out.push({
           id: "horizon",
           type: "horizon",
           date: created,
-          title: `Tu as choisi un horizon de ${data.horizon_years} ans`,
+          title: `Horizon : ${data.horizon_years} ans`,
         });
       }
 
-      // Risque
       if (data.risk_target) {
         out.push({
           id: "risk",
           type: "risk",
           date: created,
-          title: `Tu as ciblé ${(Number(data.risk_target) * 100).toFixed(1)} % de volatilité`,
+          title: `Cible de volatilité : ${(Number(data.risk_target) * 100).toFixed(1)} %`,
         });
       }
 
-      // Causes
-      const causes = (data.causes ?? []) as string[];
-      causes.forEach((c) => {
+      ((data.causes ?? []) as string[]).forEach((c) => {
         out.push({
           id: `cause-${c}`,
           type: "cause",
           date: created,
-          title: `Tu soutiens : ${CAUSE_LABEL[c] ?? c}`,
+          title: `Cause soutenue : ${CAUSE_LABEL[c] ?? c}`,
         });
       });
 
-      // Exclusions
-      const exclusions = (data.exclusions ?? []) as string[];
-      exclusions.forEach((e) => {
+      ((data.exclusions ?? []) as string[]).forEach((e) => {
         out.push({
           id: `excl-${e}`,
           type: "exclusion",
           date: created,
-          title: `Tu as exclu ${EXCLUSION_LABEL[e] ?? e}`,
+          title: `Exclusion : ${EXCLUSION_LABEL[e] ?? e}`,
         });
       });
 
-      // Recalcul / génération
       if (generated && generated !== created) {
         out.push({
           id: "generated",
@@ -143,7 +192,6 @@ export function useDecisionHistory(): { decisions: DecisionEvent[]; loading: boo
         });
       }
 
-      // Tri antéchronologique
       out.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
       setDecisions(out);
       setLoading(false);

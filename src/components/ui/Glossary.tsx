@@ -71,6 +71,44 @@ export const GLOSSARY = {
     body:
       "Méthode consistant à verser un montant fixe régulièrement (ex. 100 € / mois) plutôt qu'en une fois. Lisse le prix d'entrée et réduit l'impact du timing.",
   },
+  PEA: {
+    title: "PEA",
+    long: "Plan d'Épargne en Actions",
+    body:
+      "Enveloppe française d'épargne en actions européennes. Au bout de 5 ans, les plus-values sont exonérées d'impôt sur le revenu — seuls les prélèvements sociaux de 17,2 % restent dus.",
+  },
+  AV: {
+    title: "Assurance-Vie",
+    body:
+      "Enveloppe d'épargne polyvalente (actions, obligations, fonds euros). Après 8 ans : abattement annuel de 4 600 € (célibataire) puis 7,5 % d'IR + 17,2 % de prélèvements sociaux.",
+  },
+  CTO: {
+    title: "CTO",
+    long: "Compte-Titres Ordinaire",
+    body:
+      "Compte sans avantage fiscal, mais sans restriction (tous marchés, tous instruments). Plus-values et dividendes taxés au PFU 30 % (12,8 % IR + 17,2 % PS).",
+  },
+  Inflation: {
+    title: "Inflation",
+    body:
+      "Hausse générale des prix qui érode le pouvoir d'achat. 2 % d'inflation par an signifie que 100 € aujourd'hui équivalent à ~82 € de pouvoir d'achat dans 10 ans.",
+  },
+  Beta: {
+    title: "Bêta",
+    body:
+      "Sensibilité d'un actif aux mouvements du marché. Bêta = 1 : suit le marché ; > 1 : amplifie ; < 1 : amortit. Un bêta négatif évolue à l'inverse du marché.",
+  },
+  HHI: {
+    title: "Indice HHI",
+    long: "Herfindahl-Hirschman Index",
+    body:
+      "Mesure de la concentration d'un portefeuille. Plus le HHI est bas, mieux le capital est réparti. La diversification = 1 − HHI.",
+  },
+  TrackingError: {
+    title: "Tracking Error",
+    body:
+      "Écart-type de la différence de performance entre un fonds et son indice de référence. Une TE faible (< 0,5 %) indique un suivi fidèle de l'indice.",
+  },
 } as const;
 
 export type GlossaryTerm = keyof typeof GLOSSARY;
