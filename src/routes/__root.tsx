@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { LexiconProvider } from "@/hooks/useLexicon";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ViewModeProvider } from "@/hooks/useViewMode";
+import { FocusModeProvider } from "@/hooks/useFocusMode";
 import { UserPortfoliosProvider } from "@/hooks/useUserPortfolios";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
@@ -93,12 +94,14 @@ function RootComponent() {
       <UserPortfoliosProvider>
         <LexiconProvider>
           <ViewModeProvider>
-            <TooltipProvider delayDuration={150}>
-              <AppShell>
-                <RouteTransition />
-              </AppShell>
-              <Toaster richColors position="bottom-right" />
-            </TooltipProvider>
+            <FocusModeProvider>
+              <TooltipProvider delayDuration={150}>
+                <AppShell>
+                  <RouteTransition />
+                </AppShell>
+                <Toaster richColors position="bottom-right" />
+              </TooltipProvider>
+            </FocusModeProvider>
           </ViewModeProvider>
         </LexiconProvider>
       </UserPortfoliosProvider>
