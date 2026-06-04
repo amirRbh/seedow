@@ -1,115 +1,118 @@
-# Plan — 3 chantiers prioritaires Seedow
 
-Approfondissement des 3 pistes prioritaires. Chaque chantier est livrable indépendamment ; ordre recommandé : **#1 → #2 → #3** (le simulateur prépare le terrain pour les versements programmés).
+# Plan d'amélioration — 3 phases
 
----
+## Phase 1 — Enrichir le simulateur de projection
 
-## Chantier 1 — Simulateur « Et si j'ajoute X €/mois ? »
+Objectif : passer d'une courbe lisse à un vrai outil d'aide à la décision.
 
-### Objectif utilisateur
-Visualiser, en 1 geste, ce que devient le portefeuille si on verse un montant mensuel sur 5/10/20 ans. Transforme le dashboard d'un état figé en outil de décision.
+### 1.1 Inflation & rendement réel
+- Ajouter un paramètre `inflation` (défaut 2 %) au hook `useProjection`.
+- Calculer en parallèle `finalValueReal = finalValue / (1 + infl)^years`.
+- Afficher 2 KPI : capital nominal vs pouvoir d'achat équivalent aujourd'hui.
 
-### Où ça vit
-- **Dashboard** (`src/routes/dashboard.tsx`) — bloc principal, juste sous les KPIs.
-- **Portfolio** (`src/routes/portfolio.tsx`) — version compacte (lien « Simuler un versement »).
+### 1.2 Fiscalité par enveloppe
+- Sélecteur d'enveloppe : **PEA** (17.2 % PS après 5 ans), **Assurance-Vie** (24.7 % puis 7.5 % + PS après 8 ans, abattement 4 600 €/9 200 €), **CTO** (PFU 30 %).
+- Calcul du net : appliquer le bon prélèvement sur `gain` selon la durée.
+- Nouveau KPI "Net après fiscalité" à côté du brut.
 
-### UX
-- Bloc éditorial titré « Et si tu ajoutais… » (eyebrow or, h2 Space Grotesk).
-- 3 contrôles : **montant mensuel** (slider 0 → 1 000 €, pas 25 €), **horizon** (5 / 10 / 20 ans en pills), **scénario** (prudent / central / optimiste — basé sur `expected_return ± volatility`).
-- Sortie : KPIFigure XL du capital final + 2 KPIFigure sm (versements cumulés, plus-value estimée).
-- Mini-graph aire (Recharts déjà installé) — comparaison « sans versement » vs « avec versement ».
-- Mention obligatoire : « Projection indicative, non contractuelle. Hypothèses : rendement annualisé X %, volatilité Y %. »
+### 1.3 Scénarios stress-test
+- 3 boutons : **Krach -30 % en année N**, **Pause des versements 2 ans**, **Inflation choc 5 %**.
+- Réutiliser `useProjection` en injectant un événement ponctuel sur la série.
+- Afficher la courbe altérée en overlay (couleur ambre) sur le graphique.
 
-### Technique
-- **Pur frontend, zéro backend.** Calcul d'intérêts composés avec versements périodiques (formule fermée + série mensuelle pour le graph).
-- Nouveau hook `src/hooks/useProjection.ts` — `(initial, monthly, years, annualReturn) => { finalValue, contributed, gain, series[] }`.
-- Nouveau composant `src/components/dashboard/ProjectionSimulator.tsx`.
-- Reprend `portfolio.metrics.expected_return` et `volatility` du portefeuille actif ; fallback `5%` / `12%` si absent.
-- Scénarios : central = `expected_return`, prudent = `expected_return - 0.5·volatility`, optimiste = `+ 0.5·volatility`.
+### 1.4 Objectif inversé (goal-seeking)
+- Nouveau mode du simulateur : "J'ai un objectif" → input `targetCapital` + `targetYear`.
+- Résoudre numériquement le `monthly` requis (recherche dichotomique sur `useProjection`).
+- CTA : "Pour atteindre 50 000 € en 2032, verse 187 €/mois".
 
-### Hors scope
-Pas de persistance, pas d'A/B fiscal, pas de courbe Monte-Carlo (réservé v2).
+### 1.5 Rendement scénarisé sur le portefeuille réel
+- Aujourd'hui on entre `annualReturn` à la main. Permettre de pré-remplir depuis `portfolio.metrics.expected_return` (3 boutons : prudent = -1σ, central, optimiste = +1σ).
 
 ---
 
-## Chantier 2 — Rapport d'impact mensuel
+## Phase 2 — Fiabiliser les alertes & l'historique
 
-### Objectif utilisateur
-Donner du sens concret au capital investi : « ce mois-ci, ton portefeuille a évité X kg de CO₂ et financé Y MWh d'énergie verte ». Renforce la signature ESG/impact de Seedow.
+Objectif : transformer les heuristiques client en vraies données persistées et auditables.
 
-### Où ça vit
-- **Page Profil** (`src/routes/profil.tsx`) — nouvelle section « 04 · Ton impact » avant la progression.
-- **Dashboard** — carte teaser compacte « Impact du mois » + lien « Voir le rapport complet ».
+### 2.1 Table `alerts`
+Schéma :
+- `id, user_id, portfolio_id, kind, severity, title, body, cta_href, created_at, read_at, dismissed_at, dedup_key (unique partiel)`
+- RLS : user voit/MAJ ses propres alertes ; `service_role` insert depuis le cron.
 
-### UX
-- Eyebrow or « Rapport d'impact · {mois} {année} ».
-- 3 KPIFigure : **CO₂ évité** (kg), **Énergie verte financée** (équivalent MWh), **Score d'impact moyen** (/100).
-- Equivalences humanisées : « = X trajets Paris-Marseille en voiture » / « = Y foyers alimentés 1 jour » (table de conversion en dur côté front).
-- Filet or `.gold-rule` entre sections.
-- Bouton « Télécharger le PDF » → **v2** (placeholder désactivé avec tooltip « Bientôt »).
+### 2.2 Génération serveur
+- Server function `generateAlertsForUser` (appelée en cron quotidien + au refresh portefeuille).
+- Reprend la logique de `useAlerts` côté serveur, déduplique sur `dedup_key`.
+- `useAlerts` lit la table au lieu de tout recalculer.
+- Badge header devient un vrai compteur `unread = count(read_at IS NULL)`.
 
-### Technique
-- Calcul dérivé des données déjà en base :
-  - `assets.carbon_intensity_gco2e_per_eur` × valeur pondérée par holding → CO₂ évité vs benchmark (MSCI World moyenne ≈ 200 gCO₂e/€).
-  - `cause_exposure` (jsonb sur `assets`) → MWh estimé pour la cause `climat`/`energie`.
-- Nouveau serverFn `src/lib/impact/report.functions.ts` :
-  - input : `{ portfolioId, month: 'YYYY-MM' }`
-  - middleware : `requireSupabaseAuth`
-  - calcul en SQL/JS à partir des holdings + prix de fin de mois (`asset_prices`).
-- Nouveau composant `src/components/impact/ImpactReportCard.tsx`.
-- Pas de nouvelle table — tout est calculé à la volée et caché via TanStack Query (`['impact', portfolioId, month]`, staleTime 1h).
+### 2.3 Table `scheduled_contributions`
+- `id, portfolio_id, amount, frequency (monthly/quarterly), day_of_month, started_at, paused_until, last_processed_at`.
+- Détection réelle des versements manqués : si `last_processed_at < expected_date`, on crée une alerte `missed_contribution`.
+- UI simple : "Programmer un versement" depuis le dashboard.
 
-### Hors scope
-PDF export, notifications email mensuelles (chantier ultérieur, nécessite cron + storage).
+### 2.4 Table `decision_events`
+- `id, user_id, portfolio_id, kind (exclusion_added | exclusion_removed | cause_added | rebalance | contribution | created), payload jsonb, occurred_at`.
+- Triggers Postgres sur `portfolios` (UPDATE exclusions/causes) qui insèrent l'événement avec diff.
+- `DecisionTimeline` lit cette table au lieu de la dérivation client actuelle.
 
----
-
-## Chantier 3 — Versements programmés (DCA mensuel)
-
-### Objectif utilisateur
-Permettre de planifier un versement récurrent (« 100 € chaque 5 du mois ») et voir le prochain prélèvement à venir. Comportement attendu d'un investisseur sérieux, et boucle bien avec le simulateur (#1).
-
-### Où ça vit
-- **Profil** — nouvelle section « Ton plan d'épargne » (entre Portefeuille et Progression).
-- **Dashboard** — chip discret « Prochain versement : 100 € le 5 déc. ».
-- **Onboarding** — étape optionnelle finale « Veux-tu programmer un versement mensuel ? ».
-
-### UX
-- Form : montant, jour du mois (1-28), date de démarrage, statut actif/pause.
-- Liste des versements passés (timeline avec `TimelineEvent` existant, type `soil`).
-- Action « Mettre en pause » / « Modifier ».
-- Pas de prélèvement réel — c'est un **plan déclaratif** (l'app simule l'exécution à la date prévue en ajoutant une ligne d'historique).
-
-### Technique
-- **Migration DB** (nouvelle table) :
-  ```
-  scheduled_contributions
-    id, user_id, portfolio_id, amount_eur, day_of_month (1-28),
-    starts_on, status (active|paused|cancelled), last_run_on, created_at, updated_at
-  ```
-  + RLS scoped `auth.uid() = user_id` + GRANT authenticated/service_role.
-- **Table d'historique** existante réutilisée — ou nouvelle `contribution_history` si besoin (à arbitrer pendant l'impl).
-- ServerFns : `createSchedule`, `pauseSchedule`, `cancelSchedule`, `listSchedules` (tous avec `requireSupabaseAuth`).
-- **Cron** (`pg_cron` quotidien à 02:00 UTC) → route publique `/api/public/hooks/run-scheduled-contributions` qui :
-  - lit les `scheduled_contributions` actives dont `day_of_month = EXTRACT(day, now())` et `last_run_on < today`.
-  - insère une ligne d'historique + met à jour `portfolios.initial_amount` (ou table dédiée selon le modèle actuel).
-  - signature : header `apikey` = anon key (pattern standard documenté).
-- Hook `useScheduledContributions` (TanStack Query).
-- Composant `src/components/contributions/ScheduleEditor.tsx`.
-
-### Hors scope
-Intégration bancaire réelle (SEPA, Bridge, Powens), notifications push, ajustement automatique des holdings (tout va en cash virtuel).
+### 2.5 Comparatif MSCI World sourcé
+- Stocker MSCI World (URTH ou IWDA) comme un asset normal dans `assets`.
+- La page `/comparatif` lit les vraies métriques (perf 1Y/3Y/5Y depuis `asset_prices`, TER en dur de la fiche, ESG depuis la source actuelle).
+- Afficher la date de fraîcheur des données et la source en bas de page.
 
 ---
 
-## Récap dépendances / effort
+## Phase 3 — Polir l'UX
 
-| Chantier | Backend | Frontend | DB | Effort |
-|---|---|---|---|---|
-| #1 Simulateur | — | 1 hook + 1 composant | — | **S** |
-| #2 Rapport impact | 1 serverFn | 1 composant + intégration 2 pages | — | **M** |
-| #3 Versements DCA | 4 serverFns + 1 cron route | 2 composants + 3 intégrations | 1 migration | **L** |
+### 3.1 Glossaire complet
+- Audit du contenu de `Glossary.tsx` : couvrir SFDR, TER, Sharpe, ESG, MSCI World, DCA, PEA, AV, CTO, drawdown, tracking error, volatilité, HHI, beta.
+- Composant `<Term>SFDR</Term>` réutilisable qui affiche un tooltip + lien vers une page `/glossaire` dédiée.
 
-## Question pour toi
+### 3.2 Coach-mark "Nouveautés"
+- Sur première visite après déploiement, overlay 3 étapes : badge alertes → simulateur enrichi → comparatif.
+- Flag `profiles.tour_seen_v2 boolean`.
 
-Par lequel on commence ? Je recommande **#1 (Simulateur)** — impact visuel immédiat, zéro risque backend, et il prépare le discours pour le #3.
+### 3.3 Mobile (< 400 px)
+- Audit dédié sur `DecisionTimeline`, `ProjectionSimulator` (sliders accessibles), `/comparatif` (table → cards).
+- Tester sur 375 px et 320 px.
+
+### 3.4 Accessibilité
+- `aria-live="polite"` sur le badge d'alertes.
+- Focus visible (ring or) sur les tooltips Glossary.
+- Lecture clavier complète du simulateur.
+
+### 3.5 Export PDF rapport trimestriel (bonus)
+- Server route `/api/report/quarterly` qui génère un PDF (perf, impact, mouvements, alignement valeurs).
+- Bouton sur dashboard "Télécharger mon rapport Q…".
+
+---
+
+## Détails techniques
+
+**Migrations DB nécessaires (phase 2)** :
+- `alerts` (table + RLS + GRANT + index sur `(user_id, read_at)`)
+- `scheduled_contributions` (table + RLS + GRANT)
+- `decision_events` (table + RLS + GRANT + index sur `(user_id, occurred_at DESC)`)
+- Triggers sur `portfolios` pour alimenter `decision_events`
+- Insert ETF MSCI World dans `assets` (data migration)
+
+**Server functions à créer** :
+- `lib/projection/scenarios.functions.ts` — résolution objectif inversé
+- `lib/alerts/generate.functions.ts` — génération serveur des alertes
+- `lib/contributions/schedule.functions.ts` — CRUD versements programmés
+- `lib/report/quarterly.server.ts` — génération PDF (si bonus retenu)
+
+**Aucun changement de design tokens** : on reste sur Emerald Prestige, `KPIFigure`, `EditorialSection`, montants à 2 décimales.
+
+**Hors scope** :
+- Notifications email (peut venir après phase 3).
+- Multi-devise (l'app est EUR-only).
+- Trading réel / passage d'ordres.
+
+---
+
+## Ordre d'exécution proposé
+
+Je propose d'attaquer **Phase 1 d'abord** (pas de migration DB, gain utilisateur immédiat), puis **Phase 2** (migrations groupées en une seule passe pour limiter les allers-retours d'approbation), puis **Phase 3**.
+
+Tu peux aussi me dire si tu veux retirer une sous-section (ex : pas de PDF, pas de coach-mark) pour aller plus vite.
