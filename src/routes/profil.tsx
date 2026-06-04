@@ -325,7 +325,7 @@ function ProfilPage() {
   );
 }
 
-function Row({ label, value }: { label: string; value: string }) {
+function Row({ label, value }: { label: React.ReactNode; value: string }) {
   return (
     <div className="flex items-baseline justify-between py-3 gap-4">
       <dt className="text-[11px] uppercase tracking-wider text-ink-3 font-medium">{label}</dt>
