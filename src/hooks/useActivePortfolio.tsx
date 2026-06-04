@@ -132,18 +132,28 @@ export function useActivePortfolio(): State {
     };
   }, [user, authLoading, pfListLoading, activeId, tick]);
 
-  // Realtime: re-fetch when the user's portfolios row changes (e.g. after Réglages recalcule)
+  // Realtime: re-fetch when the user's portfolios row changes (e.g. après Réglages recalcule)
   useEffect(() => {
     if (!user) return;
+    let active = true;
     const channel = supabase
       .channel(`portfolios:${user.id}:${Math.random().toString(36).slice(2)}`)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "portfolios", filter: `user_id=eq.${user.id}` },
-        () => setTick((t) => t + 1),
+        () => {
+          if (!active) return;
+          setTick((t) => t + 1);
+        },
       )
       .subscribe();
     return () => {
+      active = false;
+      try {
+        channel.unsubscribe();
+      } catch {
+        /* noop */
+      }
       supabase.removeChannel(channel);
     };
   }, [user]);
