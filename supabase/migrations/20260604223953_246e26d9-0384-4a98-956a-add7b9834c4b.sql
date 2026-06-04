@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.log_portfolio_decision() FROM PUBLIC, anon, authenticated;
