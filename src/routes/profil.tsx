@@ -231,9 +231,12 @@ function ProfilPage() {
           <dl className="mt-5 divide-y divide-paper-3 border-t border-b border-paper-3">
             <Row label="Portefeuille actif" value={portfolio?.name ?? "—"} />
             <Row label="Nombre de portefeuilles" value={`${portfolios.length} / 3`} />
-            <Row label="Volatilité cible" value={`${riskPct} %`} />
             <Row
-              label="Horizon"
+              label={<><Glossary term="Volatilite">Volatilité</Glossary> cible</>}
+              value={`${riskPct} %`}
+            />
+            <Row
+              label={<Glossary term="Horizon">Horizon</Glossary>}
               value={meta ? `${meta.horizon_years} ans` : "—"}
             />
           </dl>
