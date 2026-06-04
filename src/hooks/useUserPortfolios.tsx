@@ -88,15 +88,27 @@ export function UserPortfoliosProvider({ children }: { children: ReactNode }) {
   // Realtime: refresh on portfolio changes
   useEffect(() => {
     if (!user) return;
+    let active = true;
     const ch = supabase
-      .channel(`user_portfolios:${user.id}`)
+      .channel(`user_portfolios:${user.id}:${Math.random().toString(36).slice(2)}`)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "portfolios", filter: `user_id=eq.${user.id}` },
-        () => setTick((t) => t + 1),
+        () => {
+          if (!active) return;
+          setTick((t) => t + 1);
+        },
       )
       .subscribe();
-    return () => { supabase.removeChannel(ch); };
+    return () => {
+      active = false;
+      try {
+        ch.unsubscribe();
+      } catch {
+        /* noop */
+      }
+      supabase.removeChannel(ch);
+    };
   }, [user]);
 
   return (
