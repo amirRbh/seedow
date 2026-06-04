@@ -310,7 +310,7 @@ export function solveMonthlyForGoal(input: GoalSeekInput): GoalSeekResult {
   }
 
   let lo = 0;
-  let hi = PROJECTION_BOUNDS.monthlyMax;
+  let hi: number = PROJECTION_BOUNDS.monthlyMax;
   // Pas atteignable même au plafond ?
   if (project(hi) < nominalTarget) {
     return {
