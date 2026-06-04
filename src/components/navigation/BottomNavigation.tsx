@@ -30,7 +30,7 @@ export function BottomNavigation() {
   return (
     <nav
       aria-label="Navigation principale"
-      className="fixed bottom-0 left-0 right-0 z-50 bg-paper/95 backdrop-blur-xl border-t border-paper-3 safe-area-bottom"
+      className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-paper/95 backdrop-blur-xl border-t border-paper-3 safe-area-bottom"
     >
       <div className="flex items-stretch justify-around max-w-lg mx-auto px-2">
         {NAV_ITEMS.map((item) => {

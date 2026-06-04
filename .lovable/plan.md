@@ -1,118 +1,154 @@
+## Objectif
 
-# Plan d'amélioration — 3 phases
+Rendre l'app **plus intuitive** (où je suis / où je vais / comment j'y arrive vite) et **plus innovante** (5 interactions signature qui te démarquent des comparateurs financiers classiques), **sans rien retirer** de l'existant et en gardant la charte Emerald Prestige + tous les composants signature (`KPIFigure`, `EditorialSection`, `.gold-rule`, header "seedow" texte, 2 décimales partout).
 
-## Phase 1 — Enrichir le simulateur de projection
-
-Objectif : passer d'une courbe lisse à un vrai outil d'aide à la décision.
-
-### 1.1 Inflation & rendement réel
-- Ajouter un paramètre `inflation` (défaut 2 %) au hook `useProjection`.
-- Calculer en parallèle `finalValueReal = finalValue / (1 + infl)^years`.
-- Afficher 2 KPI : capital nominal vs pouvoir d'achat équivalent aujourd'hui.
-
-### 1.2 Fiscalité par enveloppe
-- Sélecteur d'enveloppe : **PEA** (17.2 % PS après 5 ans), **Assurance-Vie** (24.7 % puis 7.5 % + PS après 8 ans, abattement 4 600 €/9 200 €), **CTO** (PFU 30 %).
-- Calcul du net : appliquer le bon prélèvement sur `gain` selon la durée.
-- Nouveau KPI "Net après fiscalité" à côté du brut.
-
-### 1.3 Scénarios stress-test
-- 3 boutons : **Krach -30 % en année N**, **Pause des versements 2 ans**, **Inflation choc 5 %**.
-- Réutiliser `useProjection` en injectant un événement ponctuel sur la série.
-- Afficher la courbe altérée en overlay (couleur ambre) sur le graphique.
-
-### 1.4 Objectif inversé (goal-seeking)
-- Nouveau mode du simulateur : "J'ai un objectif" → input `targetCapital` + `targetYear`.
-- Résoudre numériquement le `monthly` requis (recherche dichotomique sur `useProjection`).
-- CTA : "Pour atteindre 50 000 € en 2032, verse 187 €/mois".
-
-### 1.5 Rendement scénarisé sur le portefeuille réel
-- Aujourd'hui on entre `annualReturn` à la main. Permettre de pré-remplir depuis `portfolio.metrics.expected_return` (3 boutons : prudent = -1σ, central, optimiste = +1σ).
+Périmètre : transversal (dashboard, portfolio, comparatif, profil, discover, ethi, méthodologie, réglages). Desktop d'abord, mobile en passe 2.
 
 ---
 
-## Phase 2 — Fiabiliser les alertes & l'historique
+## Acte 1 — Architecture & navigation (la fondation)
 
-Objectif : transformer les heuristiques client en vraies données persistées et auditables.
+### 1.1 Nouveau shell desktop persistant
+Aujourd'hui chaque route ré-affiche `AppHeader` + `BottomNavigation`. Sur desktop on bascule sur un **shell à 3 zones** monté une seule fois dans `__root.tsx` :
 
-### 2.1 Table `alerts`
-Schéma :
-- `id, user_id, portfolio_id, kind, severity, title, body, cta_href, created_at, read_at, dismissed_at, dedup_key (unique partiel)`
-- RLS : user voit/MAJ ses propres alertes ; `service_role` insert depuis le cron.
+```text
+┌──────────────────────────────────────────────────────┐
+│  seedow   Portfolio ▾   ⌘K Rechercher   🔔  Simple/Expert  ⚙
+├──────┬───────────────────────────────────────────────┤
+│ ░░░░ │                                                │
+│ Rail │  Contenu de la route (Outlet)                  │
+│ icons│                                                │
+│  +   │  ← largeur fluide, max 1280px, marges          │
+│ tabs │     éditoriales conservées                     │
+└──────┴───────────────────────────────────────────────┘
+```
 
-### 2.2 Génération serveur
-- Server function `generateAlertsForUser` (appelée en cron quotidien + au refresh portefeuille).
-- Reprend la logique de `useAlerts` côté serveur, déduplique sur `dedup_key`.
-- `useAlerts` lit la table au lieu de tout recalculer.
-- Badge header devient un vrai compteur `unread = count(read_at IS NULL)`.
+- **Rail gauche** (72 px, collapsible) : icônes des 5 sections + séparateur or + raccourcis (Comparatif, Méthodologie). Reprend les pictos sobres existants de `BottomNavigation`. Tooltip au hover.
+- **Topbar** : marque "seedow" + sélecteur de portefeuille amélioré (voir 1.3) + ⌘K + cloche alertes + toggle Simple/Expert + réglages.
+- **Mobile** (< 768 px) : on garde **strictement** le rendu actuel (`AppHeader` + `BottomNavigation`). Le shell desktop ne s'active qu'à `md:` et au-dessus.
 
-### 2.3 Table `scheduled_contributions`
-- `id, portfolio_id, amount, frequency (monthly/quarterly), day_of_month, started_at, paused_until, last_processed_at`.
-- Détection réelle des versements manqués : si `last_processed_at < expected_date`, on crée une alerte `missed_contribution`.
-- UI simple : "Programmer un versement" depuis le dashboard.
+Les pages perdent leur `AppHeader` redondant et reçoivent à la place un `PageHeader` plus léger (eyebrow + titre + sous-titre, sans bouton réglages/toggle/cloche qui montent dans la topbar).
 
-### 2.4 Table `decision_events`
-- `id, user_id, portfolio_id, kind (exclusion_added | exclusion_removed | cause_added | rebalance | contribution | created), payload jsonb, occurred_at`.
-- Triggers Postgres sur `portfolios` (UPDATE exclusions/causes) qui insèrent l'événement avec diff.
-- `DecisionTimeline` lit cette table au lieu de la dérivation client actuelle.
+### 1.2 Command Palette ⌘K (cmdk via `components/ui/command.tsx`)
+Une seule entrée pour **tout retrouver en 1 raccourci**, structurée en sections :
+- **Aller à** : Dashboard, Portfolio, Comparatif, Profil, Discover, Ethi, Méthodologie, Réglages.
+- **Portefeuille actif** : switcher rapide entre tes portefeuilles (avec valorisation à droite).
+- **Actions** : "Simuler un objectif", "Lancer un stress-test krach -30 %", "Marquer toutes les alertes lues", "Exporter PDF trimestriel" (si dispo).
+- **Glossaire** : recherche dans les termes (PEA, SFDR, Sharpe…) → ouvre la fiche.
+- **Aide** : "Comment lire mes KPI ?", "Comprendre la fiscalité PEA/AV/CTO".
 
-### 2.5 Comparatif MSCI World sourcé
-- Stocker MSCI World (URTH ou IWDA) comme un asset normal dans `assets`.
-- La page `/comparatif` lit les vraies métriques (perf 1Y/3Y/5Y depuis `asset_prices`, TER en dur de la fiche, ESG depuis la source actuelle).
-- Afficher la date de fraîcheur des données et la source en bas de page.
+Ouverture clavier ⌘K / Ctrl+K, et bouton visible dans la topbar.
+
+### 1.3 Sélecteur de portefeuille enrichi
+Le dropdown actuel devient un **mini-panneau** avec, par ligne :
+- nom + tag enveloppe (PEA/AV/CTO),
+- valorisation en or, delta 30 j,
+- mini-sparkline 6 mois (Recharts),
+- badge "actif".
+
+Footer du panneau : "+ Nouveau portefeuille" et "Comparer ce portefeuille au MSCI World" (raccourci vers /comparatif).
+
+### 1.4 Fil d'Ariane contextuel
+Pour les écrans imbriqués (fiche holding ouverte, comparaison à 2 actifs, simulateur en mode "objectif") on affiche un fil léger sous la topbar — pas de carte, juste typo éditoriale, séparateur or `›`.
+
+### 1.5 États de chargement / vide / erreur unifiés
+- **Skeleton KPIFigure** : version grise du composant avec animation shimmer subtile (max 600 ms).
+- **Empty state éditorial** : eyebrow + phrase + 1 CTA — exemple Discover sans favoris : « Tu n'as encore rien mis en favori. Explore les fiches pour bâtir ta sélection. »
+- **Erreur** : carte crème avec filet or, message clair, bouton "Recharger".
 
 ---
 
-## Phase 3 — Polir l'UX
+## Acte 2 — Moments « waouh » signature
 
-### 3.1 Glossaire complet
-- Audit du contenu de `Glossary.tsx` : couvrir SFDR, TER, Sharpe, ESG, MSCI World, DCA, PEA, AV, CTO, drawdown, tracking error, volatilité, HHI, beta.
-- Composant `<Term>SFDR</Term>` réutilisable qui affiche un tooltip + lien vers une page `/glossaire` dédiée.
+Cinq interactions soignées qui élèvent le produit sans bruit visuel.
 
-### 3.2 Coach-mark "Nouveautés"
-- Sur première visite après déploiement, overlay 3 étapes : badge alertes → simulateur enrichi → comparatif.
-- Flag `profiles.tour_seen_v2 boolean`.
+### 2.1 Projection Simulator — scrubber interactif sur la courbe
+Aujourd'hui le simulateur calcule, on lit le KPI final. Demain : **on glisse le curseur sur la courbe** et 4 KPI (nominal / réel / versé / plus-value) se mettent à jour en temps réel pour l'année survolée. Halo or sur le point actif, ligne pointillée verticale. Sur clavier : ←/→ pour avancer d'un an, Shift+←/→ pour 5 ans.
 
-### 3.3 Mobile (< 400 px)
-- Audit dédié sur `DecisionTimeline`, `ProjectionSimulator` (sliders accessibles), `/comparatif` (table → cards).
-- Tester sur 375 px et 320 px.
+### 2.2 Comparatif — split view drag-to-compare
+Le `/comparatif` actuel est statique. On passe à un **diff-view** :
+- Colonne gauche = portefeuille actif, colonne droite = MSCI World (ou autre).
+- Chaque ligne (perf 1Y/3Y/5Y, vol, Sharpe, ESG, TER) affiche **les deux valeurs + une barre delta** centrée sur zéro (vert si tu surperformes, neutre sinon).
+- Drag-and-drop d'un actif depuis le portefeuille vers la colonne droite pour le comparer ad-hoc.
 
-### 3.4 Accessibilité
-- `aria-live="polite"` sur le badge d'alertes.
-- Focus visible (ring or) sur les tooltips Glossary.
-- Lecture clavier complète du simulateur.
+### 2.3 Decision Timeline — frise verticale animée
+La timeline existe mais est plate. On la convertit en **frise verticale** avec :
+- ligne or continue à gauche,
+- points pulsés sur les décisions récentes (< 7 j),
+- groupement par mois avec sticky-header éditorial,
+- au hover sur un événement : carte latérale qui pousse depuis la droite (Sheet) avec le détail (avant/après, cause, lien vers la fiche).
 
-### 3.5 Export PDF rapport trimestriel (bonus)
-- Server route `/api/report/quarterly` qui génère un PDF (perf, impact, mouvements, alignement valeurs).
-- Bouton sur dashboard "Télécharger mon rapport Q…".
+### 2.4 Allocation breakdown — treemap interactif
+Le `AllocationBreakdown` actuel est une liste. On ajoute un **treemap responsive** au-dessus :
+- tuiles dimensionnées par poids, couleur graduée vert profond → or selon ESG,
+- au hover : agrandissement subtil + tooltip KPI,
+- clic = ouvre `HoldingDetailSheet`.
+La liste reste en dessous pour les utilisateurs qui préfèrent lire les chiffres (basculement via toggle Simple/Expert).
+
+### 2.5 Alertes — panneau latéral inbox
+La cloche ouvre aujourd'hui un menu déroulant court. On la convertit en **Sheet droit type "inbox" e-mail** :
+- onglets : Toutes / Non lues / Critiques,
+- chaque alerte avec eyebrow (catégorie) + titre + résumé + CTA contextuel,
+- swipe-out / bouton ✕ pour dismiss,
+- footer "Tout marquer lu" + lien vers réglages des seuils d'alerte.
+
+### 2.6 Transitions de route éditoriales
+Entre deux routes : fade rapide (160 ms) + glissement vertical de 6 px sur le titre — pas plus, pour rester sobre. Utilise `framer-motion` (déjà dispo via shadcn).
+
+---
+
+## Acte 3 — Détails qui font la différence
+
+- **Raccourcis clavier visibles** : g+d (dashboard), g+p (portfolio), g+c (comparatif), ⌘K (palette), ? (cheat sheet).
+- **Tooltips éducatifs** sur tous les KPI : icône `ⓘ` discrète à droite du label, contenu = définition courte + lien "En savoir plus" qui ouvre le Glossary.
+- **Toasts cohérents** (sonner) : succès en or, erreur en rouge ink, info en vert profond — toujours alignés bas-droite, durée 4 s.
+- **Focus rings** harmonisés : un seul style `ring-1 ring-moss-1 ring-offset-1`.
+- **Smooth scroll** sur les ancres méthodologie + scroll-restoration TanStack activée globalement.
 
 ---
 
 ## Détails techniques
 
-**Migrations DB nécessaires (phase 2)** :
-- `alerts` (table + RLS + GRANT + index sur `(user_id, read_at)`)
-- `scheduled_contributions` (table + RLS + GRANT)
-- `decision_events` (table + RLS + GRANT + index sur `(user_id, occurred_at DESC)`)
-- Triggers sur `portfolios` pour alimenter `decision_events`
-- Insert ETF MSCI World dans `assets` (data migration)
+**Architecture** :
+- Créer `src/components/layout/AppShell.tsx` (shell desktop) monté dans `__root.tsx` derrière un `md:` breakpoint.
+- Créer `src/components/layout/RailNav.tsx` (rail gauche) + `src/components/layout/TopBar.tsx`.
+- Créer `src/components/layout/PageHeader.tsx` (version allégée de l'`AppHeader` actuel — eyebrow + titre + sous-titre + sectionNumber).
+- Migrer les 12 routes : retirer `<AppHeader>` (sauf en mobile via fallback), brancher `<PageHeader>`.
+- Conserver `AppHeader` et `BottomNavigation` pour `< md`.
 
-**Server functions à créer** :
-- `lib/projection/scenarios.functions.ts` — résolution objectif inversé
-- `lib/alerts/generate.functions.ts` — génération serveur des alertes
-- `lib/contributions/schedule.functions.ts` — CRUD versements programmés
-- `lib/report/quarterly.server.ts` — génération PDF (si bonus retenu)
+**Command Palette** :
+- `src/components/layout/CommandPalette.tsx` utilisant `cmdk` (déjà dans `components/ui/command.tsx`).
+- Provider global dans `__root.tsx` avec listener `useEffect` sur `keydown` (e.metaKey/ctrlKey + k).
 
-**Aucun changement de design tokens** : on reste sur Emerald Prestige, `KPIFigure`, `EditorialSection`, montants à 2 décimales.
+**Interactions signature** :
+- Scrubber : `useState<number>` pour `hoverYear`, `onMouseMove` sur le `<ResponsiveContainer>` Recharts (calcul x → year).
+- Treemap : `Treemap` de Recharts (déjà installé).
+- Sheet inbox : composant `Sheet` shadcn (déjà dans `components/ui/sheet.tsx`).
+- Transitions : `motion.div` avec `initial`/`animate`/`exit`, montés au niveau de l'`Outlet`.
+
+**Garde-fous** :
+- Aucune modification de la palette ni des polices.
+- Aucune migration BDD.
+- `KPIFigure`, `EditorialSection`, `.gold-rule` réutilisés tels quels.
+- Le header "seedow" en texte reste identique sur mobile et dans la topbar desktop.
+- Toutes les sommes restent à 2 décimales.
 
 **Hors scope** :
-- Notifications email (peut venir après phase 3).
-- Multi-devise (l'app est EUR-only).
-- Trading réel / passage d'ordres.
+- Refonte visuelle des contenus (textes, illustrations).
+- Mobile (passe 2, déjà actée).
+- Notifications e-mail.
+- Mode sombre.
 
 ---
 
-## Ordre d'exécution proposé
+## Ordre de livraison
 
-Je propose d'attaquer **Phase 1 d'abord** (pas de migration DB, gain utilisateur immédiat), puis **Phase 2** (migrations groupées en une seule passe pour limiter les allers-retours d'approbation), puis **Phase 3**.
+1. **Shell desktop** (rail + topbar + PageHeader + migration des 12 routes) — la fondation, débloque tout le reste.
+2. **Command Palette ⌘K** + raccourcis clavier — gain d'usage immédiat.
+3. **Sélecteur de portefeuille enrichi** + fil d'Ariane.
+4. **Scrubber simulateur** + **treemap allocation** (2 moments waouh à fort impact visuel sur le dashboard).
+5. **Comparatif diff-view** + **timeline frise**.
+6. **Alertes inbox** + transitions de route + états vides/erreur unifiés.
+7. Polissage final : tooltips KPI, focus rings, toasts.
 
-Tu peux aussi me dire si tu veux retirer une sous-section (ex : pas de PDF, pas de coach-mark) pour aller plus vite.
+Chaque étape est livrable indépendamment — tu peux valider au fil de l'eau et arrêter quand tu estimes qu'on en a fait assez.
