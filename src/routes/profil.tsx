@@ -5,6 +5,8 @@ import { AppHeader } from "@/components/navigation/AppHeader";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { JourneySteps } from "@/components/navigation/JourneySteps";
 import { KPIFigure } from "@/components/ui/KPIFigure";
+import { Glossary } from "@/components/ui/Glossary";
+import { DecisionTimeline } from "@/components/profil/DecisionTimeline";
 import { useAuth } from "@/hooks/useAuth";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
