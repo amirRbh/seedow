@@ -24,7 +24,7 @@ interface Message {
 }
 
 function Ethi() {
-  const { intent } = Route.useSearch();
+  const { intent, q } = Route.useSearch();
   const { user } = useAuth();
   const { portfolio, loading: pfLoading } = useActivePortfolio();
   const depositsTotal = 0;
