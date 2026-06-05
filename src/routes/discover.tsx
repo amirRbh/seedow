@@ -148,7 +148,15 @@ function Discover() {
                   </button>
                 </div>
 
-                <p className="text-center text-[11px] text-ink-3 mt-4">Glisse pour trier · Investir débloque le versement immédiat</p>
+                <button
+                  type="button"
+                  onClick={() => setDetailAsset(current)}
+                  className="mt-4 mx-auto block text-[11px] font-semibold text-ink-2 underline underline-offset-4 decoration-paper-3 hover:decoration-ink"
+                >
+                  Voir la fiche détaillée
+                </button>
+                <p className="text-center text-[11px] text-ink-3 mt-2">Glisse pour trier · Touche la fiche pour tout savoir avant d'investir</p>
+
 
               </>
             )}
