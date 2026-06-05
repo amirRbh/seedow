@@ -67,6 +67,11 @@ function Ethi() {
     setMessages([{ id: "welcome", role: "assistant", content: greeting }]);
   }, [intent, dataLoading, portfolio, depositsTotal, firstName, valuation.pnl, valuation.hasQuotes]);
 
+  // Pré-remplit l'input quand la page est ouverte avec ?q=... (depuis le briefing).
+  useEffect(() => {
+    if (q && q.trim().length > 0) setInput(q);
+  }, [q]);
+
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, isLoading]);
