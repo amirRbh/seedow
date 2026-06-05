@@ -195,19 +195,20 @@ function Discover() {
                   </p>
                   <p className="text-[9px] text-ink-3 mt-1">prix unitaire</p>
                 </div>
-                <InvestDialog
-                  label={`Investir dans ${asset.ticker}`}
-                  defaultAmount={100}
-                  trigger={
-                    <button
-                      type="button"
-                      className="flex-shrink-0 h-9 px-3.5 rounded-full bg-ink text-paper text-[10px] font-semibold uppercase tracking-[0.12em] hover:bg-ink-2 transition-colors"
-                    >
-                      Investir
-                    </button>
-                  }
-                />
-
+                <div onClick={(e) => e.stopPropagation()} className="flex-shrink-0">
+                  <InvestDialog
+                    label={`Investir dans ${asset.ticker}`}
+                    defaultAmount={100}
+                    trigger={
+                      <button
+                        type="button"
+                        className="h-9 px-3.5 rounded-full bg-ink text-paper text-[10px] font-semibold uppercase tracking-[0.12em] hover:bg-ink-2 transition-colors"
+                      >
+                        Investir
+                      </button>
+                    }
+                  />
+                </div>
               </motion.div>
             ))}
           </div>
