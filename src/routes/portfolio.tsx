@@ -10,6 +10,7 @@ import { PortfolioMetricsCard } from "@/components/portfolio/PortfolioMetricsCar
 import { PortfolioHistoryChart } from "@/components/portfolio/PortfolioHistoryChart";
 import { MarketFreshnessBanner } from "@/components/portfolio/MarketFreshnessBanner";
 import { ImpactCertificate } from "@/components/portfolio/ImpactCertificate";
+import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { ExplainerCard } from "@/components/ui/ExplainerCard";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
