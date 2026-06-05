@@ -68,7 +68,7 @@ export function EthiBriefing() {
                 <Link
                   key={`${s.kind}-${i}`}
                   to="/ethi"
-                  search={{ q: s.prompt }}
+                  search={{ q: s.prompt } as never}
                   className={cn(
                     "inline-flex items-center gap-2 px-3 py-2 rounded-full border text-[12px] font-medium transition-colors",
                     TONE[s.tone],
