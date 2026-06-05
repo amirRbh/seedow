@@ -215,6 +215,12 @@ function Discover() {
         )}
       </div>
 
+      <AssetDetailSheet
+        open={detailAsset !== null}
+        onOpenChange={(o) => !o && setDetailAsset(null)}
+        asset={detailAsset}
+      />
+
       <BottomNavigation />
     </motion.div>
   );
