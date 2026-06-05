@@ -97,8 +97,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-paper">
       <div
         className={cn(
-          "transition-all duration-300 ease-out",
-          focus ? "md:opacity-0 md:pointer-events-none md:-translate-x-2" : "md:opacity-100",
+          "transform-gpu will-change-transform transition-[opacity,transform] duration-300 ease-out",
+          focus ? "md:opacity-0 md:pointer-events-none md:-translate-x-2" : "md:opacity-100 md:translate-x-0",
         )}
         aria-hidden={focus ? "true" : undefined}
       >
@@ -107,12 +107,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <div className={cn("transition-[padding] duration-300 ease-out", focus ? "md:pl-0" : "md:pl-16")}>
         <div
           className={cn(
-            "transition-all duration-300 ease-out overflow-hidden",
-            focus ? "md:max-h-0 md:opacity-0 md:-translate-y-1" : "md:max-h-20 md:opacity-100",
+            "grid transform-gpu will-change-[grid-template-rows] transition-[grid-template-rows,opacity] duration-300 ease-out",
+            focus ? "md:grid-rows-[0fr] md:opacity-0" : "md:grid-rows-[1fr] md:opacity-100",
           )}
           aria-hidden={focus ? "true" : undefined}
         >
-          <TopBar onOpenCommand={openPalette} />
+          <div className="overflow-hidden min-h-0">
+            <TopBar onOpenCommand={openPalette} />
+          </div>
         </div>
         <main>{children}</main>
       </div>
