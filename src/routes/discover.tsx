@@ -27,6 +27,7 @@ function Discover() {
   const [viewMode, setViewMode] = useState<"swipe" | "list">("swipe");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [planted, setPlanted] = useState<string[]>([]);
+  const [detailAsset, setDetailAsset] = useState<MockAsset | null>(null);
 
   const assets = useMemo(() => {
     if (activeTheme === "all") return MOCK_ASSETS;
