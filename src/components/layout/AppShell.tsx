@@ -97,17 +97,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-paper">
       <div
         className={cn(
-          "transform-gpu will-change-transform transition-[opacity,transform] duration-300 ease-out",
+          prefersReducedMotion ? "" : "transform-gpu will-change-transform transition-[opacity,transform] duration-300 ease-out",
           focus ? "md:opacity-0 md:pointer-events-none md:-translate-x-2" : "md:opacity-100 md:translate-x-0",
         )}
         aria-hidden={focus ? "true" : undefined}
       >
         <RailNav />
       </div>
-      <div className={cn("transition-[padding] duration-300 ease-out", focus ? "md:pl-0" : "md:pl-16")}>
+      <div className={cn(prefersReducedMotion ? "" : "transition-[padding] duration-300 ease-out", focus ? "md:pl-0" : "md:pl-16")}>
         <div
           className={cn(
-            "grid transform-gpu will-change-[grid-template-rows] transition-[grid-template-rows,opacity] duration-300 ease-out",
+            prefersReducedMotion ? "grid" : "grid transform-gpu will-change-[grid-template-rows] transition-[grid-template-rows,opacity] duration-300 ease-out",
             focus ? "md:grid-rows-[0fr] md:opacity-0" : "md:grid-rows-[1fr] md:opacity-100",
           )}
           aria-hidden={focus ? "true" : undefined}
