@@ -118,10 +118,26 @@ function Discover() {
                   </AnimatePresence>
                 </div>
 
-                <div className="flex justify-center gap-3 mt-6">
+                <div className="flex justify-center items-center gap-3 mt-6">
                   <button onClick={() => handleSwipe("pass")} aria-label="Passer" className="w-14 h-14 rounded-full bg-card border border-paper-3 flex items-center justify-center hover:border-rust transition-all active:scale-95">
                     <svg viewBox="0 0 24 24" className="w-5 h-5 text-ink-3" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
                   </button>
+                  <InvestDialog
+                    label={`Investir dans ${current.ticker}`}
+                    defaultAmount={100}
+                    trigger={
+                      <button
+                        type="button"
+                        aria-label="Investir"
+                        className="h-14 px-5 rounded-full bg-ink text-paper text-[12px] font-semibold uppercase tracking-[0.14em] hover:bg-ink-2 transition-colors flex items-center gap-2 active:scale-95"
+                      >
+                        <svg viewBox="0 0 16 16" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.4}>
+                          <path d="M8 3v10M3 8h10" />
+                        </svg>
+                        Investir
+                      </button>
+                    }
+                  />
                   <button onClick={() => handleSwipe("plant")} aria-label="Sélectionner" className="w-14 h-14 rounded-full bg-moss-1 text-paper flex items-center justify-center hover:bg-moss-2 transition-all active:scale-95">
                     <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M20 6L9 17l-5-5" />
@@ -129,7 +145,8 @@ function Discover() {
                   </button>
                 </div>
 
-                <p className="text-center text-[11px] text-ink-3 mt-4">Glisse à droite pour sélectionner · à gauche pour passer</p>
+                <p className="text-center text-[11px] text-ink-3 mt-4">Glisse pour trier · Investir débloque le versement immédiat</p>
+
               </>
             )}
           </div>
@@ -166,6 +183,19 @@ function Discover() {
                   </p>
                   <p className="text-[9px] text-ink-3 mt-1">prix unitaire</p>
                 </div>
+                <InvestDialog
+                  label={`Investir dans ${asset.ticker}`}
+                  defaultAmount={100}
+                  trigger={
+                    <button
+                      type="button"
+                      className="flex-shrink-0 h-9 px-3.5 rounded-full bg-ink text-paper text-[10px] font-semibold uppercase tracking-[0.12em] hover:bg-ink-2 transition-colors"
+                    >
+                      Investir
+                    </button>
+                  }
+                />
+
               </motion.div>
             ))}
           </div>
