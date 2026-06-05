@@ -24,7 +24,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const gPrefix = useRef<number | null>(null);
-  const { focus, setFocus, toggle: toggleFocus } = useFocusMode();
+  const { focus, setFocus, toggle: toggleFocus, prefersReducedMotion } = useFocusMode();
 
   const openPalette = useCallback(() => setPaletteOpen(true), []);
 
