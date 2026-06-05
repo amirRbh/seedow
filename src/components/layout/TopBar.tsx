@@ -45,8 +45,12 @@ export function TopBar({ onOpenCommand }: TopBarProps) {
         >
           <SearchIcon />
           <span className="font-medium">Rechercher</span>
-          <kbd className="ml-3 inline-flex items-center gap-0.5 h-5 px-1.5 rounded border border-paper-3 bg-paper text-[10px] text-ink-3 font-mono">
-            {isMac ? "⌘" : "Ctrl"}<span>K</span>
+          <kbd
+            suppressHydrationWarning
+            className="ml-3 inline-flex items-center gap-0.5 h-5 px-1.5 rounded border border-paper-3 bg-paper text-[10px] text-ink-3 font-mono"
+          >
+            <span suppressHydrationWarning>{isMac ? "⌘" : "Ctrl"}</span>
+            <span>K</span>
           </kbd>
         </button>
         <ViewModeToggle />
