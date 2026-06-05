@@ -122,6 +122,10 @@ function Portfolio() {
         </section>
 
         <section className="px-5 pt-6">
+          <ImpactCertificate />
+        </section>
+
+        <section className="px-5 pt-6">
           <BadgesCard badges={MOCK_BADGES} />
         </section>
 
