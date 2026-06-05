@@ -10,7 +10,10 @@ import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/ethi")({
-  validateSearch: (s: Record<string, unknown>) => ({ intent: (s.intent as string | undefined) ?? undefined }),
+  validateSearch: (s: Record<string, unknown>) => ({
+    intent: (s.intent as string | undefined) ?? undefined,
+    q: (s.q as string | undefined) ?? undefined,
+  }),
   component: Ethi,
 });
 
