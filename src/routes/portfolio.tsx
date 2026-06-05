@@ -102,7 +102,24 @@ function Portfolio() {
             onRefresh={() => valuation.refresh()}
             refreshing={valuation.loading}
           />
+          <div className="mt-4 flex flex-wrap gap-2">
+            <InvestDialog label="Investir" defaultAmount={200} />
+            <InvestDialog
+              label="Verser mensuel"
+              defaultAmount={50}
+              trigger={
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-1.5 h-10 px-5 rounded-full border border-paper-3 bg-paper text-ink text-[12px] font-semibold uppercase tracking-[0.14em] hover:bg-paper-2 transition-colors"
+                >
+                  Verser mensuel
+                </button>
+              }
+            />
+          </div>
         </section>
+
+
 
         <section className="px-5 pt-6 space-y-3">
           <h2 className="text-sm font-semibold text-ink">Indicateurs clés</h2>
