@@ -12,6 +12,7 @@ import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 
 import { JourneySteps } from "@/components/navigation/JourneySteps";
 import { ProjectionSimulator } from "@/components/dashboard/ProjectionSimulator";
+import { EthiBriefing } from "@/components/dashboard/EthiBriefing";
 
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { supabase } from "@/integrations/supabase/client";
@@ -109,6 +110,10 @@ function Dashboard() {
         <div className="pt-2">
           <JourneySteps active="tracking" />
         </div>
+
+        <EthiBriefing />
+
+
 
 
 

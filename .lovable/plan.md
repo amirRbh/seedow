@@ -1,154 +1,77 @@
-## Objectif
+# Plan — Enrichir Seedow : briefing, certificat & moments waouh
 
-Rendre l'app **plus intuitive** (où je suis / où je vais / comment j'y arrive vite) et **plus innovante** (5 interactions signature qui te démarquent des comparateurs financiers classiques), **sans rien retirer** de l'existant et en gardant la charte Emerald Prestige + tous les composants signature (`KPIFigure`, `EditorialSection`, `.gold-rule`, header "seedow" texte, 2 décimales partout).
+Trois ajouts qui se renforcent : un **briefing Ethi** intelligent en haut du dashboard, un **certificat d'impact** téléchargeable/partageable, et une couche de **micro-interactions signature** qui les met en scène. Demi-journée, design Emerald Prestige, mobile inchangé (passe 2 si besoin).
 
-Périmètre : transversal (dashboard, portfolio, comparatif, profil, discover, ethi, méthodologie, réglages). Desktop d'abord, mobile en passe 2.
+## 1. Briefing Ethi quotidien (Dashboard)
 
----
-
-## Acte 1 — Architecture & navigation (la fondation)
-
-### 1.1 Nouveau shell desktop persistant
-Aujourd'hui chaque route ré-affiche `AppHeader` + `BottomNavigation`. Sur desktop on bascule sur un **shell à 3 zones** monté une seule fois dans `__root.tsx` :
+Bandeau éditorial en haut de `/dashboard`, juste sous le header, qui résume la journée du portefeuille en 3 lignes.
 
 ```text
-┌──────────────────────────────────────────────────────┐
-│  seedow   Portfolio ▾   ⌘K Rechercher   🔔  Simple/Expert  ⚙
-├──────┬───────────────────────────────────────────────┤
-│ ░░░░ │                                                │
-│ Rail │  Contenu de la route (Outlet)                  │
-│ icons│                                                │
-│  +   │  ← largeur fluide, max 1280px, marges          │
-│ tabs │     éditoriales conservées                     │
-└──────┴───────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│ ÉDITION DU 5 JUIN · Ethi                                     │
+│                                                              │
+│ Ton portefeuille gagne +0,42 % aujourd'hui, porté par        │
+│ Climat. 1 ligne dérive de +1,8 pt vs cible — un              │
+│ rééquilibrage léger suffirait.                               │
+│                                                              │
+│ ─── 3 signaux ────────────────────────────────────────       │
+│ • Drift allocation     • Opportunité ESG     • Marché       │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-- **Rail gauche** (72 px, collapsible) : icônes des 5 sections + séparateur or + raccourcis (Comparatif, Méthodologie). Reprend les pictos sobres existants de `BottomNavigation`. Tooltip au hover.
-- **Topbar** : marque "seedow" + sélecteur de portefeuille amélioré (voir 1.3) + ⌘K + cloche alertes + toggle Simple/Expert + réglages.
-- **Mobile** (< 768 px) : on garde **strictement** le rendu actuel (`AppHeader` + `BottomNavigation`). Le shell desktop ne s'active qu'à `md:` et au-dessus.
+Contenu :
+- **Eyebrow** : date du jour + "Ethi" en or.
+- **Phrase d'ouverture** générée à partir de la valorisation du jour (perf, thème leader).
+- **3 chips de signaux** déterministes calculés côté client à partir du portefeuille existant :
+  - Drift d'allocation (écart vs cible > 1.5 pt)
+  - Opportunité ESG (asset best-in-class non détenu sur thème actif)
+  - Climat marché (jour vert/rouge marqué, > 1 %)
+- Clic sur un chip → ouvre l'Ethi bubble avec le contexte pré-rempli.
 
-Les pages perdent leur `AppHeader` redondant et reçoivent à la place un `PageHeader` plus léger (eyebrow + titre + sous-titre, sans bouton réglages/toggle/cloche qui montent dans la topbar).
+Pas d'appel IA : tout est dérivé de l'engine `lib/portfolio` et de `usePortfolioValuation`. Cohérent avec le ton sobre, zéro hallucination.
 
-### 1.2 Command Palette ⌘K (cmdk via `components/ui/command.tsx`)
-Une seule entrée pour **tout retrouver en 1 raccourci**, structurée en sections :
-- **Aller à** : Dashboard, Portfolio, Comparatif, Profil, Discover, Ethi, Méthodologie, Réglages.
-- **Portefeuille actif** : switcher rapide entre tes portefeuilles (avec valorisation à droite).
-- **Actions** : "Simuler un objectif", "Lancer un stress-test krach -30 %", "Marquer toutes les alertes lues", "Exporter PDF trimestriel" (si dispo).
-- **Glossaire** : recherche dans les termes (PEA, SFDR, Sharpe…) → ouvre la fiche.
-- **Aide** : "Comment lire mes KPI ?", "Comprendre la fiscalité PEA/AV/CTO".
+## 2. Certificat d'impact partageable
 
-Ouverture clavier ⌘K / Ctrl+K, et bouton visible dans la topbar.
+Bouton "Télécharger mon certificat" dans la section impact du portefeuille (`/portfolio`, près de `ImpactRibbon`). Génère un PDF A4 paysage en pur client (`@react-pdf/renderer` ou impression HTML → `window.print()` sur une route dédiée `/portfolio/certificat`).
 
-### 1.3 Sélecteur de portefeuille enrichi
-Le dropdown actuel devient un **mini-panneau** avec, par ligne :
-- nom + tag enveloppe (PEA/AV/CTO),
-- valorisation en or, delta 30 j,
-- mini-sparkline 6 mois (Recharts),
-- badge "actif".
+Mise en page éditoriale :
+- En-tête : "seedow" + numéro de certificat + date.
+- KPI géants : CO₂ évité, arbres équivalents, énergie verte, score d'impact (`KPIFigure` réutilisé).
+- Filet or, eyebrow "Certificat d'impact · Édition personnelle".
+- Pied : méthodologie courte + URL de vérification (`seedow.life/methodologie`).
 
-Footer du panneau : "+ Nouveau portefeuille" et "Comparer ce portefeuille au MSCI World" (raccourci vers /comparatif).
+Bonus partage : bouton "Copier le lien" qui copie l'URL de la page `/portfolio/certificat` (lecture seule, non publique — protégée auth).
 
-### 1.4 Fil d'Ariane contextuel
-Pour les écrans imbriqués (fiche holding ouverte, comparaison à 2 actifs, simulateur en mode "objectif") on affiche un fil léger sous la topbar — pas de carte, juste typo éditoriale, séparateur or `›`.
+## 3. Moments waouh transversaux
 
-### 1.5 États de chargement / vide / erreur unifiés
-- **Skeleton KPIFigure** : version grise du composant avec animation shimmer subtile (max 600 ms).
-- **Empty state éditorial** : eyebrow + phrase + 1 CTA — exemple Discover sans favoris : « Tu n'as encore rien mis en favori. Explore les fiches pour bâtir ta sélection. »
-- **Erreur** : carte crème avec filet or, message clair, bouton "Recharger".
+Trois signatures discrètes qui parlent toutes la même langue Emerald Prestige :
 
----
+- **KPIFigure animé** : compteur tabulaire qui anime de 0 vers la valeur cible au mount (300 ms, ease-out, `tabular-nums` stable, pas de jitter). Halo or très léger au survol.
+- **Filet or progressif** : `.gold-rule` qui se dessine de gauche à droite quand sa section entre dans le viewport (IntersectionObserver, 600 ms).
+- **Confettis or sobres** : 12 particules dorées discrètes après un investissement réussi ou un téléchargement de certificat (toast `sonner` + canvas léger, 1.2 s). Désactivés si `prefers-reduced-motion`.
 
-## Acte 2 — Moments « waouh » signature
-
-Cinq interactions soignées qui élèvent le produit sans bruit visuel.
-
-### 2.1 Projection Simulator — scrubber interactif sur la courbe
-Aujourd'hui le simulateur calcule, on lit le KPI final. Demain : **on glisse le curseur sur la courbe** et 4 KPI (nominal / réel / versé / plus-value) se mettent à jour en temps réel pour l'année survolée. Halo or sur le point actif, ligne pointillée verticale. Sur clavier : ←/→ pour avancer d'un an, Shift+←/→ pour 5 ans.
-
-### 2.2 Comparatif — split view drag-to-compare
-Le `/comparatif` actuel est statique. On passe à un **diff-view** :
-- Colonne gauche = portefeuille actif, colonne droite = MSCI World (ou autre).
-- Chaque ligne (perf 1Y/3Y/5Y, vol, Sharpe, ESG, TER) affiche **les deux valeurs + une barre delta** centrée sur zéro (vert si tu surperformes, neutre sinon).
-- Drag-and-drop d'un actif depuis le portefeuille vers la colonne droite pour le comparer ad-hoc.
-
-### 2.3 Decision Timeline — frise verticale animée
-La timeline existe mais est plate. On la convertit en **frise verticale** avec :
-- ligne or continue à gauche,
-- points pulsés sur les décisions récentes (< 7 j),
-- groupement par mois avec sticky-header éditorial,
-- au hover sur un événement : carte latérale qui pousse depuis la droite (Sheet) avec le détail (avant/après, cause, lien vers la fiche).
-
-### 2.4 Allocation breakdown — treemap interactif
-Le `AllocationBreakdown` actuel est une liste. On ajoute un **treemap responsive** au-dessus :
-- tuiles dimensionnées par poids, couleur graduée vert profond → or selon ESG,
-- au hover : agrandissement subtil + tooltip KPI,
-- clic = ouvre `HoldingDetailSheet`.
-La liste reste en dessous pour les utilisateurs qui préfèrent lire les chiffres (basculement via toggle Simple/Expert).
-
-### 2.5 Alertes — panneau latéral inbox
-La cloche ouvre aujourd'hui un menu déroulant court. On la convertit en **Sheet droit type "inbox" e-mail** :
-- onglets : Toutes / Non lues / Critiques,
-- chaque alerte avec eyebrow (catégorie) + titre + résumé + CTA contextuel,
-- swipe-out / bouton ✕ pour dismiss,
-- footer "Tout marquer lu" + lien vers réglages des seuils d'alerte.
-
-### 2.6 Transitions de route éditoriales
-Entre deux routes : fade rapide (160 ms) + glissement vertical de 6 px sur le titre — pas plus, pour rester sobre. Utilise `framer-motion` (déjà dispo via shadcn).
-
----
-
-## Acte 3 — Détails qui font la différence
-
-- **Raccourcis clavier visibles** : g+d (dashboard), g+p (portfolio), g+c (comparatif), ⌘K (palette), ? (cheat sheet).
-- **Tooltips éducatifs** sur tous les KPI : icône `ⓘ` discrète à droite du label, contenu = définition courte + lien "En savoir plus" qui ouvre le Glossary.
-- **Toasts cohérents** (sonner) : succès en or, erreur en rouge ink, info en vert profond — toujours alignés bas-droite, durée 4 s.
-- **Focus rings** harmonisés : un seul style `ring-1 ring-moss-1 ring-offset-1`.
-- **Smooth scroll** sur les ancres méthodologie + scroll-restoration TanStack activée globalement.
-
----
+Toutes les animations respectent le hook `useFocusMode` / `prefersReducedMotion` déjà en place.
 
 ## Détails techniques
 
-**Architecture** :
-- Créer `src/components/layout/AppShell.tsx` (shell desktop) monté dans `__root.tsx` derrière un `md:` breakpoint.
-- Créer `src/components/layout/RailNav.tsx` (rail gauche) + `src/components/layout/TopBar.tsx`.
-- Créer `src/components/layout/PageHeader.tsx` (version allégée de l'`AppHeader` actuel — eyebrow + titre + sous-titre + sectionNumber).
-- Migrer les 12 routes : retirer `<AppHeader>` (sauf en mobile via fallback), brancher `<PageHeader>`.
-- Conserver `AppHeader` et `BottomNavigation` pour `< md`.
+**Fichiers créés**
+- `src/components/dashboard/EthiBriefing.tsx` — bandeau briefing + logique signaux.
+- `src/lib/portfolio/signals.ts` — calcul pur des 3 signaux à partir du `PortfolioResult`.
+- `src/components/portfolio/ImpactCertificate.tsx` — bouton + déclenchement.
+- `src/routes/portfolio.certificat.tsx` — route imprimable (layout A4, full-bleed comme `/auth`).
+- `src/components/ui/AnimatedFigure.tsx` — wrapper d'animation pour `KPIFigure`.
+- `src/components/ui/GoldRuleReveal.tsx` — filet or animé au scroll.
+- `src/lib/confetti.ts` — utilitaire canvas léger (≈ 1 ko).
 
-**Command Palette** :
-- `src/components/layout/CommandPalette.tsx` utilisant `cmdk` (déjà dans `components/ui/command.tsx`).
-- Provider global dans `__root.tsx` avec listener `useEffect` sur `keydown` (e.metaKey/ctrlKey + k).
+**Fichiers modifiés**
+- `src/routes/dashboard.tsx` — insère `EthiBriefing` en tête.
+- `src/routes/portfolio.tsx` — ajoute le CTA certificat près de `ImpactRibbon`.
+- `src/components/ui/KPIFigure.tsx` — opt-in `animate` prop.
+- `src/components/layout/AppShell.tsx` — ajoute `/portfolio/certificat` à `fullBleed`.
 
-**Interactions signature** :
-- Scrubber : `useState<number>` pour `hoverYear`, `onMouseMove` sur le `<ResponsiveContainer>` Recharts (calcul x → year).
-- Treemap : `Treemap` de Recharts (déjà installé).
-- Sheet inbox : composant `Sheet` shadcn (déjà dans `components/ui/sheet.tsx`).
-- Transitions : `motion.div` avec `initial`/`animate`/`exit`, montés au niveau de l'`Outlet`.
+**Dépendances** : aucune nouvelle si on imprime via `window.print()`. Sinon `@react-pdf/renderer` (~120 ko) — à confirmer en build.
 
-**Garde-fous** :
-- Aucune modification de la palette ni des polices.
-- Aucune migration BDD.
-- `KPIFigure`, `EditorialSection`, `.gold-rule` réutilisés tels quels.
-- Le header "seedow" en texte reste identique sur mobile et dans la topbar desktop.
-- Toutes les sommes restent à 2 décimales.
-
-**Hors scope** :
-- Refonte visuelle des contenus (textes, illustrations).
-- Mobile (passe 2, déjà actée).
-- Notifications e-mail.
-- Mode sombre.
-
----
-
-## Ordre de livraison
-
-1. **Shell desktop** (rail + topbar + PageHeader + migration des 12 routes) — la fondation, débloque tout le reste.
-2. **Command Palette ⌘K** + raccourcis clavier — gain d'usage immédiat.
-3. **Sélecteur de portefeuille enrichi** + fil d'Ariane.
-4. **Scrubber simulateur** + **treemap allocation** (2 moments waouh à fort impact visuel sur le dashboard).
-5. **Comparatif diff-view** + **timeline frise**.
-6. **Alertes inbox** + transitions de route + états vides/erreur unifiés.
-7. Polissage final : tooltips KPI, focus rings, toasts.
-
-Chaque étape est livrable indépendamment — tu peux valider au fil de l'eau et arrêter quand tu estimes qu'on en a fait assez.
+**Périmètre exclu** (à proposer en passes suivantes)
+- Page publique sociale anonymisée (nécessite RLS + URL publique → chantier auth).
+- Briefing IA via Lovable AI (coût + latence, pas demi-journée).
+- Onboarding guidé interactif (séparé pour ne pas mélanger les flux).

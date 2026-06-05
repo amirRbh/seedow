@@ -10,7 +10,10 @@ import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/ethi")({
-  validateSearch: (s: Record<string, unknown>) => ({ intent: (s.intent as string | undefined) ?? undefined }),
+  validateSearch: (s: Record<string, unknown>) => ({
+    intent: (s.intent as string | undefined) ?? undefined,
+    q: (s.q as string | undefined) ?? undefined,
+  }),
   component: Ethi,
 });
 
@@ -21,7 +24,7 @@ interface Message {
 }
 
 function Ethi() {
-  const { intent } = Route.useSearch();
+  const { intent, q } = Route.useSearch();
   const { user } = useAuth();
   const { portfolio, loading: pfLoading } = useActivePortfolio();
   const depositsTotal = 0;
@@ -63,6 +66,11 @@ function Ethi() {
     }
     setMessages([{ id: "welcome", role: "assistant", content: greeting }]);
   }, [intent, dataLoading, portfolio, depositsTotal, firstName, valuation.pnl, valuation.hasQuotes]);
+
+  // Pré-remplit l'input quand la page est ouverte avec ?q=... (depuis le briefing).
+  useEffect(() => {
+    if (q && q.trim().length > 0) setInput(q);
+  }, [q]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
