@@ -111,6 +111,10 @@ function Dashboard() {
           <JourneySteps active="tracking" />
         </div>
 
+        <EthiBriefing />
+
+
+
 
 
         <motion.section
