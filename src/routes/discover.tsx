@@ -169,7 +169,8 @@ function Discover() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.04 }}
-                className="paper-card p-3.5 flex items-center gap-3 leaf-hover hover:shadow-leaf transition-shadow"
+                onClick={() => setDetailAsset(asset)}
+                className="paper-card p-3.5 flex items-center gap-3 leaf-hover hover:shadow-leaf transition-shadow cursor-pointer"
               >
                 <div
                   className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 shadow-leaf"
