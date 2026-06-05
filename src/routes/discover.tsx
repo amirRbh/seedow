@@ -6,6 +6,8 @@ import { AppHeader } from "@/components/navigation/AppHeader";
 import { SeedCard } from "@/components/discover/SeedCard";
 import { ThemeFilter } from "@/components/discover/ThemeFilter";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
+import { AssetDetailSheet } from "@/components/discover/AssetDetailSheet";
+import type { MockAsset } from "@/lib/mockGarden";
 import { MOCK_ASSETS } from "@/lib/mockGarden";
 import { supabase } from "@/integrations/supabase/client";
 
