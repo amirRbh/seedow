@@ -6,6 +6,8 @@ import { AppHeader } from "@/components/navigation/AppHeader";
 import { SeedCard } from "@/components/discover/SeedCard";
 import { ThemeFilter } from "@/components/discover/ThemeFilter";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
+import { AssetDetailSheet } from "@/components/discover/AssetDetailSheet";
+import type { MockAsset } from "@/lib/mockGarden";
 import { MOCK_ASSETS } from "@/lib/mockGarden";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -25,6 +27,7 @@ function Discover() {
   const [viewMode, setViewMode] = useState<"swipe" | "list">("swipe");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [planted, setPlanted] = useState<string[]>([]);
+  const [detailAsset, setDetailAsset] = useState<MockAsset | null>(null);
 
   const assets = useMemo(() => {
     if (activeTheme === "all") return MOCK_ASSETS;
@@ -145,7 +148,15 @@ function Discover() {
                   </button>
                 </div>
 
-                <p className="text-center text-[11px] text-ink-3 mt-4">Glisse pour trier · Investir débloque le versement immédiat</p>
+                <button
+                  type="button"
+                  onClick={() => setDetailAsset(current)}
+                  className="mt-4 mx-auto block text-[11px] font-semibold text-ink-2 underline underline-offset-4 decoration-paper-3 hover:decoration-ink"
+                >
+                  Voir la fiche détaillée
+                </button>
+                <p className="text-center text-[11px] text-ink-3 mt-2">Glisse pour trier · Touche la fiche pour tout savoir avant d'investir</p>
+
 
               </>
             )}
@@ -158,7 +169,8 @@ function Discover() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.04 }}
-                className="paper-card p-3.5 flex items-center gap-3 leaf-hover hover:shadow-leaf transition-shadow"
+                onClick={() => setDetailAsset(asset)}
+                className="paper-card p-3.5 flex items-center gap-3 leaf-hover hover:shadow-leaf transition-shadow cursor-pointer"
               >
                 <div
                   className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 shadow-leaf"
@@ -183,24 +195,31 @@ function Discover() {
                   </p>
                   <p className="text-[9px] text-ink-3 mt-1">prix unitaire</p>
                 </div>
-                <InvestDialog
-                  label={`Investir dans ${asset.ticker}`}
-                  defaultAmount={100}
-                  trigger={
-                    <button
-                      type="button"
-                      className="flex-shrink-0 h-9 px-3.5 rounded-full bg-ink text-paper text-[10px] font-semibold uppercase tracking-[0.12em] hover:bg-ink-2 transition-colors"
-                    >
-                      Investir
-                    </button>
-                  }
-                />
-
+                <div onClick={(e) => e.stopPropagation()} className="flex-shrink-0">
+                  <InvestDialog
+                    label={`Investir dans ${asset.ticker}`}
+                    defaultAmount={100}
+                    trigger={
+                      <button
+                        type="button"
+                        className="h-9 px-3.5 rounded-full bg-ink text-paper text-[10px] font-semibold uppercase tracking-[0.12em] hover:bg-ink-2 transition-colors"
+                      >
+                        Investir
+                      </button>
+                    }
+                  />
+                </div>
               </motion.div>
             ))}
           </div>
         )}
       </div>
+
+      <AssetDetailSheet
+        open={detailAsset !== null}
+        onOpenChange={(o) => !o && setDetailAsset(null)}
+        asset={detailAsset}
+      />
 
       <BottomNavigation />
     </motion.div>
