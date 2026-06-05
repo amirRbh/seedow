@@ -15,6 +15,7 @@ import { ProjectionSimulator } from "@/components/dashboard/ProjectionSimulator"
 import { EthiBriefing } from "@/components/dashboard/EthiBriefing";
 
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
+import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/dashboard")({
