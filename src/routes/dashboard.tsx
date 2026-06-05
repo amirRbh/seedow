@@ -141,6 +141,12 @@ function Dashboard() {
             {gain.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} € · {returnPct.toFixed(2)}%
             <span className="text-ink-3 font-normal ml-1">depuis la plantation</span>
           </div>
+
+          {portfolio && (
+            <div className="mt-5">
+              <InvestDialog label="Investir" defaultAmount={200} />
+            </div>
+          )}
         </motion.section>
 
         <motion.section
