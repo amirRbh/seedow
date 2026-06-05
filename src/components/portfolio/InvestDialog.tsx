@@ -151,7 +151,7 @@ export function InvestDialog({ trigger, defaultAmount = 200, label = "Investir" 
                 Carte
               </TabsTrigger>
               <TabsTrigger value="applepay" className="text-[12px]">
-                 Pay
+                Apple Pay
               </TabsTrigger>
               <TabsTrigger value="sepa" className="text-[12px]">
                 Virement
