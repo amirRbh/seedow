@@ -29,13 +29,22 @@ const fmtEur = (n: number) =>
 export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
   if (!asset) return null;
 
-  const co2Per100 = asset.co2_factor_per_1k_eur * 0.1 * 12;
-  const kwhPer100 = asset.energy_factor_per_1k_eur * 0.1 * 12;
   const risk = asset.risk_level ?? 4;
   const riskInfo = RISK_LABELS[risk];
 
   // Risques propres au type d'actif
   const risksList = buildRisks(asset);
+
+  // Calcul d'impact par palier (versement mensuel sur 1 an)
+  const TIERS = [50, 100, 200] as const;
+  function impactFor(monthly: number) {
+    const annualK = (monthly * 12) / 1000;
+    return {
+      co2: asset.co2_factor_per_1k_eur * annualK,
+      kwh: asset.energy_factor_per_1k_eur * annualK,
+      trees: Math.round(annualK * 4.2), // ~4,2 arbres équivalents par tranche de 1 k€
+    };
+  }
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -84,15 +93,56 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
             )}
           </section>
 
-          {/* Impact pour 100 € */}
+          {/* Impact par paliers */}
           <section>
             <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold mb-3">
-              Aperçu de l'impact · 100 € sur 1 an
+              Aperçu de l'impact · versement mensuel sur 1 an
             </p>
             <div className="grid grid-cols-3 gap-2.5">
-              <StatTile value={asset.overall_esg_score.toFixed(1)} unit="/10" label="Score ESG" tone="moss" />
-              <StatTile value={co2Per100.toFixed(1)} unit="kg" label="CO₂ évité" />
-              <StatTile value={Math.round(kwhPer100).toString()} unit="kWh" label="Énergie verte" />
+              {TIERS.map((tier) => {
+                const imp = impactFor(tier);
+                return (
+                  <div
+                    key={tier}
+                    className="bg-paper-2 rounded-xl p-3 border border-paper-3 text-center"
+                  >
+                    <p className="font-value text-xl leading-none text-ink">
+                      {fmtEur(tier)}
+                      <span className="text-[10px] text-ink-3 ml-0.5 font-sans">/mois</span>
+                    </p>
+                    <div className="mt-3 space-y-2">
+                      <div>
+                        <p className="font-value text-[15px] text-moss-1 leading-none">
+                          {imp.co2.toFixed(1)}
+                          <span className="text-[9px] text-ink-3 ml-0.5 font-sans">kg</span>
+                        </p>
+                        <p className="text-[9px] text-ink-3 mt-0.5 font-medium uppercase tracking-wider">
+                          CO₂ évité
+                        </p>
+                      </div>
+                      <div className="h-px bg-paper-3" />
+                      <div>
+                        <p className="font-value text-[15px] text-ink leading-none">
+                          {Math.round(imp.kwh)}
+                          <span className="text-[9px] text-ink-3 ml-0.5 font-sans">kWh</span>
+                        </p>
+                        <p className="text-[9px] text-ink-3 mt-0.5 font-medium uppercase tracking-wider">
+                          Énergie verte
+                        </p>
+                      </div>
+                      <div className="h-px bg-paper-3" />
+                      <div>
+                        <p className="font-value text-[15px] text-ink leading-none">
+                          ~{imp.trees}
+                        </p>
+                        <p className="text-[9px] text-ink-3 mt-0.5 font-medium uppercase tracking-wider">
+                          Arbres équivalents
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
             <div className="grid grid-cols-3 gap-2.5 mt-2.5">
               <MiniBar label="Climat" value={asset.climate_score} />
