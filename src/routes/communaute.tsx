@@ -73,7 +73,7 @@ function CommunautePage() {
 
   return (
     <div className="min-h-screen bg-paper pb-24 md:pb-12">
-      <AppHeader />
+      <AppHeader eyebrow="Communauté" title="Stratégies partagées" />
       <div className="mx-auto max-w-6xl px-4 md:px-8">
         <EditorialSection
           eyebrow="Communauté"

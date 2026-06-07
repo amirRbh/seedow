@@ -68,7 +68,7 @@ function GoalDetail() {
 
   return (
     <div className="min-h-screen bg-paper pb-24 md:pb-12">
-      <AppHeader />
+      <AppHeader eyebrow="Objectif" title={goal.name} />
       <div className="mx-auto max-w-3xl px-4 md:px-8">
         <Link to="/objectifs" className="text-[11px] uppercase tracking-[0.18em] text-ink-3 hover:text-ink">
           ← Tous les objectifs

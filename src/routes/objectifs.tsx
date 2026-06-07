@@ -36,7 +36,7 @@ function ObjectifsPage() {
 
   return (
     <div className="min-h-screen bg-paper pb-24 md:pb-12">
-      <AppHeader />
+      <AppHeader eyebrow="Cap" title="Objectifs" />
       <div className="mx-auto max-w-5xl px-4 md:px-8">
         <EditorialSection
           eyebrow="Objectifs financiers"
