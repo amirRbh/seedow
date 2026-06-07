@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { AlertCircle, RefreshCw } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { AlertCircle, RefreshCw, X } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { triggerMarketRefresh } from "@/lib/market/refresh.functions";
 
@@ -28,19 +28,41 @@ function computeStaleness(latestQuoteAt: string | null, hasQuotes: boolean) {
   return "critical" as const;
 }
 
+const SESSION_DISMISS_KEY = "seedow:market-banner-dismissed";
+
 export function MarketFreshnessBanner({ latestQuoteAt, hasQuotes, onRefreshed }: Props) {
   const refresh = useServerFn(triggerMarketRefresh);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [dismissed, setDismissed] = useState(false);
+
+  // Auto-dismiss par session (sessionStorage) — la bannière ne réapparaît pas
+  // tant que l'utilisateur n'a pas rechargé l'onglet.
+  useEffect(() => {
+    try {
+      setDismissed(sessionStorage.getItem(SESSION_DISMISS_KEY) === "1");
+    } catch {
+      // ignore
+    }
+  }, []);
 
   const staleness = useMemo(
     () => computeStaleness(latestQuoteAt, hasQuotes),
     [latestQuoteAt, hasQuotes],
   );
 
-  if (staleness === "fresh") return null;
+  if (staleness === "fresh" || dismissed) return null;
 
   const isCritical = staleness === "critical";
+
+  const onDismiss = () => {
+    setDismissed(true);
+    try {
+      sessionStorage.setItem(SESSION_DISMISS_KEY, "1");
+    } catch {
+      // ignore
+    }
+  };
   const tone = isCritical
     ? "border-rust/40 bg-[oklch(0.97_0.02_45)] text-rust"
     : "border-paper-3 bg-paper-2 text-ink-2";
@@ -88,6 +110,14 @@ export function MarketFreshnessBanner({ latestQuoteAt, hasQuotes, onRefreshed }:
       >
         <RefreshCw className={`w-3 h-3 ${busy ? "animate-spin" : ""}`} />
         Rafraîchir
+      </button>
+      <button
+        type="button"
+        onClick={onDismiss}
+        aria-label="Masquer cet avertissement"
+        className="text-current opacity-60 hover:opacity-100 transition-opacity flex-shrink-0 p-1"
+      >
+        <X className="w-3.5 h-3.5" />
       </button>
     </div>
   );
