@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { GrowthComparison } from "@/components/roots/GrowthComparison";
-import { TimelineEvent } from "@/components/roots/TimelineEvent";
 import { BadgesCard } from "@/components/garden/SeasonalBadges";
 import { AllocationBreakdown } from "@/components/portfolio/AllocationBreakdown";
 import { PortfolioMetricsCard } from "@/components/portfolio/PortfolioMetricsCard";
@@ -12,7 +11,9 @@ import { MarketFreshnessBanner } from "@/components/portfolio/MarketFreshnessBan
 import { ImpactCertificate } from "@/components/portfolio/ImpactCertificate";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { ShareToggle } from "@/components/community/ShareToggle";
-
+import { ImpactRibbon } from "@/components/garden/ImpactRibbon";
+import { ComparatifPanel } from "@/components/portfolio/ComparatifPanel";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ExplainerCard } from "@/components/ui/ExplainerCard";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
@@ -31,14 +32,11 @@ export const Route = createFileRoute("/portfolio")({
   component: Portfolio,
 });
 
-function monthLabel(d: Date) {
-  return d.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
-}
-
 function Portfolio() {
   const { portfolio, loading } = useActivePortfolio();
   const valuation = usePortfolioValuation();
   const { isSimple } = useViewMode();
+
   if (loading) {
     return (
       <div className="min-h-screen bg-paper flex items-center justify-center">
@@ -71,8 +69,12 @@ function Portfolio() {
   const gain = valuation.pnl;
   const returnPct = valuation.returnPct;
 
-  const generated = new Date(portfolio.generated_at);
-  const monthKey = `${generated.getFullYear()}-${String(generated.getMonth()).padStart(2, "0")}`;
+  const co2 = portfolio.metrics?.co2_avoided_tons
+    ? Number(((portfolio.metrics.co2_avoided_tons * Math.max(totalInvested, 1)) / 10000).toFixed(2))
+    : 0;
+  const trees = Math.round(co2 * 45);
+  const energy = Math.round(totalInvested / 5);
+  const esgScore = portfolio.metrics?.esg_score ? Number((portfolio.metrics.esg_score / 10).toFixed(1)) : 0;
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
@@ -91,95 +93,79 @@ function Portfolio() {
         />
 
         <section className="px-5 pt-4">
-          <PortfolioHistoryChart />
+          <Tabs defaultValue="performance">
+            <TabsList className="w-full grid grid-cols-4 h-auto bg-paper-2 p-1">
+              <TabsTrigger value="performance" className="text-[11px] uppercase tracking-[0.12em]">Perf</TabsTrigger>
+              <TabsTrigger value="allocation" className="text-[11px] uppercase tracking-[0.12em]">Allocation</TabsTrigger>
+              <TabsTrigger value="impact" className="text-[11px] uppercase tracking-[0.12em]">Impact</TabsTrigger>
+              <TabsTrigger value="comparatif" className="text-[11px] uppercase tracking-[0.12em]">vs Marché</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="performance" className="pt-5 space-y-5">
+              <PortfolioHistoryChart />
+              <GrowthComparison
+                currentValue={totalValue}
+                invested={totalInvested}
+                gain={gain}
+                returnPct={returnPct}
+                lastUpdated={valuation.latestQuoteAt}
+                onRefresh={() => valuation.refresh()}
+                refreshing={valuation.loading}
+              />
+              <div className="flex flex-wrap gap-2">
+                <InvestDialog label="Investir" defaultAmount={200} />
+                <InvestDialog
+                  label="Verser mensuel"
+                  defaultAmount={50}
+                  trigger={
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1.5 h-10 px-5 rounded-full border border-paper-3 bg-paper text-ink text-[12px] font-semibold uppercase tracking-[0.14em] hover:bg-paper-2 transition-colors"
+                    >
+                      Verser mensuel
+                    </button>
+                  }
+                />
+              </div>
+            </TabsContent>
+
+            <TabsContent value="allocation" className="pt-5 space-y-5">
+              <AllocationBreakdown
+                holdings={portfolio.holdings}
+                totalAmount={totalInvested}
+                valuedHoldings={valuation.holdings}
+              />
+              <BadgesCard badges={MOCK_BADGES} />
+            </TabsContent>
+
+            <TabsContent value="impact" className="pt-5 space-y-5">
+              <ImpactRibbon
+                co2Avoided={co2}
+                treesEquivalent={trees}
+                energyFinanced={energy}
+                esgScore={esgScore}
+              />
+              <div className="space-y-3">
+                <h2 className="text-sm font-semibold text-ink">Indicateurs clés</h2>
+                {isSimple && (
+                  <ExplainerCard tone="moss" dismissKey="portfolio-metrics-simple">
+                    L'essentiel : croissance attendue, score ESG et CO₂ évité. Active <span className="font-semibold">Expert</span> en haut pour tout voir.
+                  </ExplainerCard>
+                )}
+                <PortfolioMetricsCard metrics={portfolio.metrics} />
+              </div>
+              <ImpactCertificate />
+            </TabsContent>
+
+            <TabsContent value="comparatif" className="pt-5">
+              <ComparatifPanel />
+            </TabsContent>
+          </Tabs>
         </section>
 
-        <section className="px-5 pt-4">
-          <GrowthComparison
-            currentValue={totalValue}
-            invested={totalInvested}
-            gain={gain}
-            returnPct={returnPct}
-            lastUpdated={valuation.latestQuoteAt}
-            onRefresh={() => valuation.refresh()}
-            refreshing={valuation.loading}
-          />
-          <div className="mt-4 flex flex-wrap gap-2">
-            <InvestDialog label="Investir" defaultAmount={200} />
-            <InvestDialog
-              label="Verser mensuel"
-              defaultAmount={50}
-              trigger={
-                <button
-                  type="button"
-                  className="inline-flex items-center gap-1.5 h-10 px-5 rounded-full border border-paper-3 bg-paper text-ink text-[12px] font-semibold uppercase tracking-[0.14em] hover:bg-paper-2 transition-colors"
-                >
-                  Verser mensuel
-                </button>
-              }
-            />
-          </div>
-        </section>
-
-
-
-        <section className="px-5 pt-6 space-y-3">
-          <h2 className="text-sm font-semibold text-ink">Indicateurs clés</h2>
-          {isSimple && (
-            <ExplainerCard tone="moss">
-              On garde l'essentiel : croissance attendue, impact écologique et CO₂ évité. Active <span className="font-semibold">Expert</span> en haut pour voir tous les détails financiers.
-            </ExplainerCard>
-          )}
-          <PortfolioMetricsCard metrics={portfolio.metrics} />
-        </section>
-
-        <section className="px-5 pt-6">
-          <AllocationBreakdown
-            holdings={portfolio.holdings}
-            totalAmount={totalInvested}
-            valuedHoldings={valuation.holdings}
-          />
-        </section>
-
-        <section className="px-5 pt-6">
-          <ImpactCertificate />
-        </section>
-
-        <section className="px-5 pt-6">
-          <ShareToggle />
-        </section>
-
-
-        <section className="px-5 pt-6">
-          <BadgesCard badges={MOCK_BADGES} />
-        </section>
-
+        {/* Partage anonyme — ligne discrète en pied */}
         <section className="px-5 pt-8">
-          <h2 className="text-sm font-semibold text-ink mb-4">Historique du portefeuille</h2>
-
-          <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold mb-2 mt-1">Aujourd'hui</p>
-          <TimelineEvent
-            type="gain"
-            title="Ton portefeuille est en hausse"
-            subtitle={`Score ESG ${portfolio.metrics?.esg_score ? (portfolio.metrics.esg_score).toFixed(0) : "—"}/100 · ${portfolio.holdings.length} positions`}
-            badge={`${returnPct >= 0 ? "+" : ""}${returnPct.toFixed(1)}%`}
-            badgeVariant={returnPct >= 0 ? "gain" : "loss"}
-            impactChips={[
-              `${portfolio.metrics?.co2_avoided_tons?.toFixed(2) ?? "—"}t CO₂ évité / 10k€`,
-              `Vol. ${portfolio.metrics?.volatility ? (portfolio.metrics.volatility * 100).toFixed(1) : "—"}%`,
-            ]}
-          />
-
-          <div className="mt-4">
-            <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold mb-2 capitalize">{monthLabel(generated)}</p>
-            <TimelineEvent
-              type="soil"
-              title="Capital initial déposé"
-              subtitle={`${totalInvested.toLocaleString("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
-              badge="Dépôt"
-              badgeVariant="soil"
-            />
-          </div>
+          <ShareToggle />
         </section>
       </div>
       <BottomNavigation />

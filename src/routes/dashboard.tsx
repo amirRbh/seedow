@@ -4,24 +4,17 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { GardenVisualization, type GardenPlant } from "@/components/garden/GardenVisualization";
-import { ImpactRibbon } from "@/components/garden/ImpactRibbon";
 import { useLexicon } from "@/hooks/useLexicon";
 import { useAuth } from "@/hooks/useAuth";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
-
-import { JourneySteps } from "@/components/navigation/JourneySteps";
-import { ProjectionSimulator } from "@/components/dashboard/ProjectionSimulator";
-import { EthiBriefing } from "@/components/dashboard/EthiBriefing";
-
+import { NextStepCard } from "@/components/dashboard/NextStepCard";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/dashboard")({
   beforeLoad: async () => {
-    // La session Supabase vit dans localStorage : on ne peut la lire que côté client.
-    // Côté serveur (SSR/prerender), on laisse passer — le client refera le check.
     if (typeof window === "undefined") return;
     const { data } = await supabase.auth.getSession();
     if (!data.session) {
@@ -57,9 +50,6 @@ function Dashboard() {
     }
   }, [portfolio, portfolios.length]);
 
-  // Redirection vers l'onboarding pilotée par l'état explicite de la requête,
-  // pas par un délai. On attend que les listes (portefeuilles + portefeuille actif)
-  // soient résolues, puis on redirige uniquement si aucun portefeuille n'existe.
   useEffect(() => {
     if (pfListLoading || loading) return;
     if (hasSeenPortfolioRef.current) return;
@@ -87,42 +77,23 @@ function Dashboard() {
     [portfolio],
   );
 
-  // Valeur du portefeuille basée uniquement sur l'initial_amount déclaré + cours.
   const totalInvested = valuation.totalInvested || (portfolio?.initial_amount ?? 0);
   const totalValue = valuation.currentValue || totalInvested;
   const gain = valuation.pnl;
   const returnPct = valuation.returnPct;
   const isGrowing = gain >= 0;
 
-  const co2 = portfolio?.metrics?.co2_avoided_tons
-    ? Number(((portfolio.metrics.co2_avoided_tons * Math.max(totalInvested, 1)) / 10000).toFixed(2))
-    : 0;
-  const trees = Math.round(co2 * 45);
-  const energy = Math.round(totalInvested / 5);
-  const esgScore = portfolio?.metrics?.esg_score
-    ? Number((portfolio.metrics.esg_score / 10).toFixed(1))
-    : 0;
-
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
       <div className="max-w-lg mx-auto pb-28">
         <AppHeader eyebrow={greeting} title={userName} showPortfolioSelector />
 
-        <div className="pt-2">
-          <JourneySteps active="tracking" />
-        </div>
-
-        <EthiBriefing />
-
-
-
-
-
+        {/* 1. Bloc valeur */}
         <motion.section
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="px-5 pt-8"
+          className="px-5 pt-6"
         >
           <p className="text-[11px] uppercase tracking-wider text-ink-3 font-medium">{L.labels.total_value}</p>
           <h2 className="font-value text-6xl text-ink leading-none mt-1">
@@ -139,7 +110,7 @@ function Dashboard() {
             </svg>
             {isGrowing ? "+" : ""}
             {gain.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} € · {returnPct.toFixed(2)}%
-            <span className="text-ink-3 font-normal ml-1">depuis la plantation</span>
+            <span className="text-ink-3 font-normal ml-1">depuis le départ</span>
           </div>
 
           {portfolio && (
@@ -149,31 +120,18 @@ function Dashboard() {
           )}
         </motion.section>
 
-        <motion.section
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="px-5 pt-6"
-        >
-          <ImpactRibbon
-            co2Avoided={co2}
-            treesEquivalent={trees}
-            energyFinanced={energy}
-            esgScore={esgScore}
-          />
-        </motion.section>
-
+        {/* 2. Aperçu portefeuille */}
         <motion.section
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.35 }}
-          className="px-5 pt-6"
+          transition={{ delay: 0.25 }}
+          className="px-5 pt-8"
         >
           {loading ? (
-            <p className="text-[12px] text-ink-3">Chargement de votre portefeuille…</p>
+            <p className="text-[12px] text-ink-3">Chargement de ton portefeuille…</p>
           ) : plants.length === 0 ? (
             <div className="border border-dashed border-paper-3 rounded p-6 text-center">
-              <p className="text-[13px] text-ink-2 mb-3">Votre portefeuille est encore vide.</p>
+              <p className="text-[13px] text-ink-2 mb-3">Ton portefeuille est encore vide.</p>
               <Link
                 to="/onboarding"
                 search={{ new: undefined }}
@@ -191,26 +149,15 @@ function Dashboard() {
           )}
         </motion.section>
 
+        {/* 3. Prochaine étape — une seule carte contextuelle */}
+        <NextStepCard />
 
-        {portfolio && (
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-          >
-            <ProjectionSimulator
-              initialAmount={totalValue || totalInvested || 1000}
-              expectedReturn={portfolio.metrics?.expected_return ?? 0.05}
-              volatility={portfolio.metrics?.volatility ?? 0.12}
-            />
-          </motion.div>
-        )}
-
+        {/* 4. Lien Voir le détail */}
         <motion.section
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="px-5 pt-5"
+          transition={{ delay: 0.45 }}
+          className="px-5 pt-6"
         >
           <Link
             to="/portfolio"
@@ -218,7 +165,7 @@ function Dashboard() {
           >
             <div className="text-left">
               <p className="text-sm font-semibold text-ink">Voir le détail</p>
-              <p className="text-xs text-ink-3 mt-0.5">Allocation, performance et historique</p>
+              <p className="text-xs text-ink-3 mt-0.5">Performance, allocation, impact, comparatif</p>
             </div>
             <svg viewBox="0 0 24 24" className="w-5 h-5 text-ink-3" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M9 6l6 6-6 6" />
@@ -231,4 +178,3 @@ function Dashboard() {
     </motion.div>
   );
 }
-
