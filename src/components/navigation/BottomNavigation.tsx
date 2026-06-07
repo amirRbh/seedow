@@ -1,28 +1,25 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
 
-type IconKey = "portefeuille" | "analyse" | "ethi" | "decouvrir" | "profil";
+type IconKey = "portefeuille" | "analyse" | "objectifs" | "decouvrir" | "ethi";
 
 type NavItem = {
-  key: "garden" | "roots" | "profil" | "ethi" | "discover";
+  key: string;
   path: string;
   label: string;
   icon: IconKey;
 };
 
 const NAV_ITEMS: NavItem[] = [
-  { key: "garden", path: "/dashboard", label: "Vue", icon: "portefeuille" },
-  { key: "roots", path: "/portfolio", label: "Analyse", icon: "analyse" },
-  { key: "profil", path: "/profil", label: "Profil", icon: "profil" },
-  { key: "ethi", path: "/ethi", label: "Ethi", icon: "ethi" },
+  { key: "dashboard", path: "/dashboard", label: "Accueil", icon: "portefeuille" },
+  { key: "portfolio", path: "/portfolio", label: "Portefeuille", icon: "analyse" },
+  { key: "objectifs", path: "/objectifs", label: "Objectifs", icon: "objectifs" },
   { key: "discover", path: "/discover", label: "Explorer", icon: "decouvrir" },
+  { key: "ethi", path: "/ethi", label: "Ethi", icon: "ethi" },
 ];
 
 /**
- * Barre de navigation éditoriale.
- * — Filet 1px en haut, fond papier translucide.
- * — Item actif souligné d'un filet emerald (un seul accent par écran).
- * — Icônes neutres (trait 1.8), pas d'ombre, pas de pastille colorée, pas de loop d'animation.
+ * Barre de navigation éditoriale — 5 entrées alignées sur le rail desktop.
  */
 export function BottomNavigation() {
   const location = useLocation();
@@ -71,19 +68,17 @@ export function BottomNavigation() {
 }
 
 function NavIcon({ type }: { type: IconKey }) {
-  const sw = 1.8;
   const common = {
     viewBox: "0 0 24 24",
     className: "w-[18px] h-[18px]",
     fill: "none",
     stroke: "currentColor",
-    strokeWidth: sw,
+    strokeWidth: 1.8,
     strokeLinecap: "round" as const,
     strokeLinejoin: "round" as const,
   };
   switch (type) {
     case "portefeuille":
-      // Rectangle sobre = portefeuille / wallet
       return (
         <svg {...common}>
           <rect x="3" y="6" width="18" height="13" rx="1.5" />
@@ -92,7 +87,6 @@ function NavIcon({ type }: { type: IconKey }) {
         </svg>
       );
     case "analyse":
-      // Histogramme = analyse / lecture des chiffres
       return (
         <svg {...common}>
           <path d="M3 21h18" />
@@ -102,27 +96,25 @@ function NavIcon({ type }: { type: IconKey }) {
           <path d="M21 21V9" />
         </svg>
       );
+    case "objectifs":
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="9" />
+          <circle cx="12" cy="12" r="5" />
+          <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+        </svg>
+      );
     case "ethi":
-      // Bulle conversation neutre
       return (
         <svg {...common}>
           <path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0 1 1 21 12Z" />
         </svg>
       );
     case "decouvrir":
-      // Boussole sobre
       return (
         <svg {...common}>
           <circle cx="12" cy="12" r="9" />
           <path d="m15 9-2 4-4 2 2-4 4-2Z" />
-        </svg>
-      );
-    case "profil":
-      // Silhouette sobre
-      return (
-        <svg {...common}>
-          <circle cx="12" cy="8" r="4" />
-          <path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" />
         </svg>
       );
   }

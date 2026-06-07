@@ -20,18 +20,15 @@ type NavItem = {
 };
 
 const PRIMARY: NavItem[] = [
-  { key: "dashboard", path: "/dashboard", label: "Vue d'ensemble", icon: "portefeuille", shortcut: "g d" },
-  { key: "portfolio", path: "/portfolio", label: "Analyse portefeuille", icon: "analyse", shortcut: "g p" },
+  { key: "dashboard", path: "/dashboard", label: "Accueil", icon: "portefeuille", shortcut: "g d" },
+  { key: "portfolio", path: "/portfolio", label: "Portefeuille", icon: "analyse", shortcut: "g p" },
   { key: "objectifs", path: "/objectifs", label: "Objectifs", icon: "comparatif", shortcut: "g o" },
-  { key: "communaute", path: "/communaute", label: "Communauté", icon: "profil" },
-  { key: "profil", path: "/profil", label: "Profil investisseur", icon: "profil" },
+  { key: "discover", path: "/discover", label: "Explorer", icon: "decouvrir" },
   { key: "ethi", path: "/ethi", label: "Ethi (assistant)", icon: "ethi" },
-  { key: "discover", path: "/discover", label: "Explorer les actifs", icon: "decouvrir" },
 ];
 
-
 const SECONDARY: NavItem[] = [
-  { key: "comparatif", path: "/comparatif", label: "Comparatif", icon: "comparatif", shortcut: "g c" },
+  { key: "profil", path: "/profil", label: "Profil investisseur", icon: "profil" },
   { key: "methodologie", path: "/methodologie", label: "Méthodologie", icon: "methodologie" },
 ];
 
@@ -157,9 +154,8 @@ function NavIcon({ type }: { type: IconKey }) {
     case "comparatif":
       return (
         <svg {...common}>
-          <path d="M12 3v18" />
-          <path d="M5 8h4l-2 6h4" />
-          <path d="M19 8h-4l2 6h-4" />
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 7v5l3 2" />
         </svg>
       );
     case "methodologie":
