@@ -336,6 +336,118 @@ export type Database = {
         }
         Relationships: []
       }
+      financial_goals: {
+        Row: {
+          created_at: string
+          goal_type: Database["public"]["Enums"]["goal_type"]
+          id: string
+          initial_capital: number
+          monthly_contribution: number
+          name: string
+          portfolio_id: string | null
+          target_amount: number
+          target_date: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          goal_type?: Database["public"]["Enums"]["goal_type"]
+          id?: string
+          initial_capital?: number
+          monthly_contribution?: number
+          name: string
+          portfolio_id?: string | null
+          target_amount: number
+          target_date: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          goal_type?: Database["public"]["Enums"]["goal_type"]
+          id?: string
+          initial_capital?: number
+          monthly_contribution?: number
+          name?: string
+          portfolio_id?: string | null
+          target_amount?: number
+          target_date?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "financial_goals_portfolio_id_fkey"
+            columns: ["portfolio_id"]
+            isOneToOne: false
+            referencedRelation: "portfolios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      portfolio_shares: {
+        Row: {
+          carbon_intensity: number | null
+          causes: string[]
+          esg_score: number | null
+          exclusions: string[]
+          expected_return: number | null
+          horizon_years: number
+          id: string
+          portfolio_id: string
+          public_handle: string
+          risk_target: number
+          shared_at: string
+          updated_at: string
+          user_id: string
+          volatility: number | null
+          weights: Json
+        }
+        Insert: {
+          carbon_intensity?: number | null
+          causes?: string[]
+          esg_score?: number | null
+          exclusions?: string[]
+          expected_return?: number | null
+          horizon_years: number
+          id?: string
+          portfolio_id: string
+          public_handle: string
+          risk_target: number
+          shared_at?: string
+          updated_at?: string
+          user_id: string
+          volatility?: number | null
+          weights?: Json
+        }
+        Update: {
+          carbon_intensity?: number | null
+          causes?: string[]
+          esg_score?: number | null
+          exclusions?: string[]
+          expected_return?: number | null
+          horizon_years?: number
+          id?: string
+          portfolio_id?: string
+          public_handle?: string
+          risk_target?: number
+          shared_at?: string
+          updated_at?: string
+          user_id?: string
+          volatility?: number | null
+          weights?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "portfolio_shares_portfolio_id_fkey"
+            columns: ["portfolio_id"]
+            isOneToOne: true
+            referencedRelation: "portfolios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       portfolios: {
         Row: {
           cause_intensity: Json
@@ -403,6 +515,7 @@ export type Database = {
           display_name: string | null
           id: string
           onboarding_completed: boolean
+          public_handle: string | null
           updated_at: string
         }
         Insert: {
@@ -411,6 +524,7 @@ export type Database = {
           display_name?: string | null
           id: string
           onboarding_completed?: boolean
+          public_handle?: string | null
           updated_at?: string
         }
         Update: {
@@ -419,6 +533,7 @@ export type Database = {
           display_name?: string | null
           id?: string
           onboarding_completed?: boolean
+          public_handle?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -520,6 +635,12 @@ export type Database = {
         | "jeux"
         | "animaux"
         | "fast-fashion"
+      goal_type:
+        | "retirement"
+        | "real_estate"
+        | "studies"
+        | "safety_net"
+        | "other"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -695,6 +816,13 @@ export const Constants = {
         "jeux",
         "animaux",
         "fast-fashion",
+      ],
+      goal_type: [
+        "retirement",
+        "real_estate",
+        "studies",
+        "safety_net",
+        "other",
       ],
     },
   },
