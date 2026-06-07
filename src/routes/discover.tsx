@@ -57,6 +57,18 @@ function Discover() {
       <div className="max-w-lg mx-auto pb-28">
         <AppHeader eyebrow="Découvrir" title="Quels actifs ?" />
 
+        <div className="px-5 pt-2 pb-3">
+          <Tabs defaultValue="explorer">
+            <TabsList className="w-full grid grid-cols-2 h-auto bg-paper-2 p-1">
+              <TabsTrigger value="explorer" className="text-[11px] uppercase tracking-[0.12em]">Explorer</TabsTrigger>
+              <TabsTrigger value="communaute" className="text-[11px] uppercase tracking-[0.12em]">Communauté</TabsTrigger>
+            </TabsList>
+            <TabsContent value="communaute" className="pt-4">
+              <CommunityPanel />
+            </TabsContent>
+            <TabsContent value="explorer" className="pt-2">
+
+
         <div className="px-5 pb-2 flex items-center justify-between gap-3">
           {planted.length > 0 ? (
             <div className="flex items-center gap-1.5 text-[11px] text-moss-1 font-semibold bg-moss-5 px-2.5 py-1 rounded-full border border-moss-4">
