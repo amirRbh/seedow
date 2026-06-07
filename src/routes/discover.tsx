@@ -7,6 +7,8 @@ import { SeedCard } from "@/components/discover/SeedCard";
 import { ThemeFilter } from "@/components/discover/ThemeFilter";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { AssetDetailSheet } from "@/components/discover/AssetDetailSheet";
+import { CommunityPanel } from "@/components/community/CommunityPanel";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import type { MockAsset } from "@/lib/mockGarden";
 import { MOCK_ASSETS } from "@/lib/mockGarden";
 import { supabase } from "@/integrations/supabase/client";
