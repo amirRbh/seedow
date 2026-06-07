@@ -77,7 +77,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         if (key === "d") { e.preventDefault(); navigate({ to: "/dashboard" }); return; }
         if (key === "p") { e.preventDefault(); navigate({ to: "/portfolio" }); return; }
         if (key === "c") { e.preventDefault(); navigate({ to: "/comparatif" }); return; }
+        if (key === "o") { e.preventDefault(); navigate({ to: "/objectifs" }); return; }
       }
+
     };
 
     window.addEventListener("keydown", onKey);

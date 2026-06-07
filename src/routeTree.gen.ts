@@ -13,14 +13,17 @@ import { Route as ReglagesRouteImport } from './routes/reglages'
 import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as ObjectifsRouteImport } from './routes/objectifs'
 import { Route as MethodologieRouteImport } from './routes/methodologie'
 import { Route as EthiRouteImport } from './routes/ethi'
 import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ComparatifRouteImport } from './routes/comparatif'
+import { Route as CommunauteRouteImport } from './routes/communaute'
 import { Route as CertificatRouteImport } from './routes/certificat'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ObjectifsGoalIdRouteImport } from './routes/objectifs.$goalId'
 import { Route as HooksRefreshMarketDataRouteImport } from './routes/hooks/refresh-market-data'
 import { Route as ApiEthiRouteImport } from './routes/api.ethi'
 
@@ -42,6 +45,11 @@ const PortfolioRoute = PortfolioRouteImport.update({
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ObjectifsRoute = ObjectifsRouteImport.update({
+  id: '/objectifs',
+  path: '/objectifs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MethodologieRoute = MethodologieRouteImport.update({
@@ -69,6 +77,11 @@ const ComparatifRoute = ComparatifRouteImport.update({
   path: '/comparatif',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CommunauteRoute = CommunauteRouteImport.update({
+  id: '/communaute',
+  path: '/communaute',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CertificatRoute = CertificatRouteImport.update({
   id: '/certificat',
   path: '/certificat',
@@ -83,6 +96,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ObjectifsGoalIdRoute = ObjectifsGoalIdRouteImport.update({
+  id: '/$goalId',
+  path: '/$goalId',
+  getParentRoute: () => ObjectifsRoute,
 } as any)
 const HooksRefreshMarketDataRoute = HooksRefreshMarketDataRouteImport.update({
   id: '/hooks/refresh-market-data',
@@ -99,50 +117,59 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/certificat': typeof CertificatRoute
+  '/communaute': typeof CommunauteRoute
   '/comparatif': typeof ComparatifRoute
   '/dashboard': typeof DashboardRoute
   '/discover': typeof DiscoverRoute
   '/ethi': typeof EthiRoute
   '/methodologie': typeof MethodologieRoute
+  '/objectifs': typeof ObjectifsRouteWithChildren
   '/onboarding': typeof OnboardingRoute
   '/portfolio': typeof PortfolioRoute
   '/profil': typeof ProfilRoute
   '/reglages': typeof ReglagesRoute
   '/api/ethi': typeof ApiEthiRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
+  '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/certificat': typeof CertificatRoute
+  '/communaute': typeof CommunauteRoute
   '/comparatif': typeof ComparatifRoute
   '/dashboard': typeof DashboardRoute
   '/discover': typeof DiscoverRoute
   '/ethi': typeof EthiRoute
   '/methodologie': typeof MethodologieRoute
+  '/objectifs': typeof ObjectifsRouteWithChildren
   '/onboarding': typeof OnboardingRoute
   '/portfolio': typeof PortfolioRoute
   '/profil': typeof ProfilRoute
   '/reglages': typeof ReglagesRoute
   '/api/ethi': typeof ApiEthiRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
+  '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/certificat': typeof CertificatRoute
+  '/communaute': typeof CommunauteRoute
   '/comparatif': typeof ComparatifRoute
   '/dashboard': typeof DashboardRoute
   '/discover': typeof DiscoverRoute
   '/ethi': typeof EthiRoute
   '/methodologie': typeof MethodologieRoute
+  '/objectifs': typeof ObjectifsRouteWithChildren
   '/onboarding': typeof OnboardingRoute
   '/portfolio': typeof PortfolioRoute
   '/profil': typeof ProfilRoute
   '/reglages': typeof ReglagesRoute
   '/api/ethi': typeof ApiEthiRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
+  '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -150,60 +177,71 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/certificat'
+    | '/communaute'
     | '/comparatif'
     | '/dashboard'
     | '/discover'
     | '/ethi'
     | '/methodologie'
+    | '/objectifs'
     | '/onboarding'
     | '/portfolio'
     | '/profil'
     | '/reglages'
     | '/api/ethi'
     | '/hooks/refresh-market-data'
+    | '/objectifs/$goalId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
     | '/certificat'
+    | '/communaute'
     | '/comparatif'
     | '/dashboard'
     | '/discover'
     | '/ethi'
     | '/methodologie'
+    | '/objectifs'
     | '/onboarding'
     | '/portfolio'
     | '/profil'
     | '/reglages'
     | '/api/ethi'
     | '/hooks/refresh-market-data'
+    | '/objectifs/$goalId'
   id:
     | '__root__'
     | '/'
     | '/auth'
     | '/certificat'
+    | '/communaute'
     | '/comparatif'
     | '/dashboard'
     | '/discover'
     | '/ethi'
     | '/methodologie'
+    | '/objectifs'
     | '/onboarding'
     | '/portfolio'
     | '/profil'
     | '/reglages'
     | '/api/ethi'
     | '/hooks/refresh-market-data'
+    | '/objectifs/$goalId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   CertificatRoute: typeof CertificatRoute
+  CommunauteRoute: typeof CommunauteRoute
   ComparatifRoute: typeof ComparatifRoute
   DashboardRoute: typeof DashboardRoute
   DiscoverRoute: typeof DiscoverRoute
   EthiRoute: typeof EthiRoute
   MethodologieRoute: typeof MethodologieRoute
+  ObjectifsRoute: typeof ObjectifsRouteWithChildren
   OnboardingRoute: typeof OnboardingRoute
   PortfolioRoute: typeof PortfolioRoute
   ProfilRoute: typeof ProfilRoute
@@ -242,6 +280,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/objectifs': {
+      id: '/objectifs'
+      path: '/objectifs'
+      fullPath: '/objectifs'
+      preLoaderRoute: typeof ObjectifsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/methodologie': {
       id: '/methodologie'
       path: '/methodologie'
@@ -277,6 +322,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ComparatifRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/communaute': {
+      id: '/communaute'
+      path: '/communaute'
+      fullPath: '/communaute'
+      preLoaderRoute: typeof CommunauteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/certificat': {
       id: '/certificat'
       path: '/certificat'
@@ -298,6 +350,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/objectifs/$goalId': {
+      id: '/objectifs/$goalId'
+      path: '/$goalId'
+      fullPath: '/objectifs/$goalId'
+      preLoaderRoute: typeof ObjectifsGoalIdRouteImport
+      parentRoute: typeof ObjectifsRoute
+    }
     '/hooks/refresh-market-data': {
       id: '/hooks/refresh-market-data'
       path: '/hooks/refresh-market-data'
@@ -315,15 +374,29 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface ObjectifsRouteChildren {
+  ObjectifsGoalIdRoute: typeof ObjectifsGoalIdRoute
+}
+
+const ObjectifsRouteChildren: ObjectifsRouteChildren = {
+  ObjectifsGoalIdRoute: ObjectifsGoalIdRoute,
+}
+
+const ObjectifsRouteWithChildren = ObjectifsRoute._addFileChildren(
+  ObjectifsRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   CertificatRoute: CertificatRoute,
+  CommunauteRoute: CommunauteRoute,
   ComparatifRoute: ComparatifRoute,
   DashboardRoute: DashboardRoute,
   DiscoverRoute: DiscoverRoute,
   EthiRoute: EthiRoute,
   MethodologieRoute: MethodologieRoute,
+  ObjectifsRoute: ObjectifsRouteWithChildren,
   OnboardingRoute: OnboardingRoute,
   PortfolioRoute: PortfolioRoute,
   ProfilRoute: ProfilRoute,

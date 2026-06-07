@@ -1,77 +1,78 @@
-# Plan — Enrichir Seedow : briefing, certificat & moments waouh
+## Deux axes ajoutés à seedow
 
-Trois ajouts qui se renforcent : un **briefing Ethi** intelligent en haut du dashboard, un **certificat d'impact** téléchargeable/partageable, et une couche de **micro-interactions signature** qui les met en scène. Demi-journée, design Emerald Prestige, mobile inchangé (passe 2 si besoin).
+### 1. Objectifs & projections
 
-## 1. Briefing Ethi quotidien (Dashboard)
+Permettre à chaque utilisateur de définir un ou plusieurs objectifs financiers (retraite, achat immobilier, études, fonds de précaution) et de suivre sa progression vs cible.
 
-Bandeau éditorial en haut de `/dashboard`, juste sous le header, qui résume la journée du portefeuille en 3 lignes.
+**Nouvelle entité**
+- Table `financial_goals` (par utilisateur, liée optionnellement à un portefeuille)
+  - nom de l'objectif, type (retraite / achat / études / précaution / autre)
+  - montant cible, date cible
+  - apport mensuel prévu, capital de départ
+  - portefeuille rattaché (optionnel)
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│ ÉDITION DU 5 JUIN · Ethi                                     │
-│                                                              │
-│ Ton portefeuille gagne +0,42 % aujourd'hui, porté par        │
-│ Climat. 1 ligne dérive de +1,8 pt vs cible — un              │
-│ rééquilibrage léger suffirait.                               │
-│                                                              │
-│ ─── 3 signaux ────────────────────────────────────────       │
-│ • Drift allocation     • Opportunité ESG     • Marché       │
-└─────────────────────────────────────────────────────────────┘
-```
+**Écran `/objectifs`**
+- Liste éditoriale des objectifs avec `KPIFigure` : montant cible, % atteint, écart projection.
+- Pour chaque objectif : barre de progression or sur fond crème, échéance, statut (en avance / dans les temps / en retard).
+- Action « Nouvel objectif » → formulaire (nom, type, cible, échéance, apport mensuel, portefeuille).
 
-Contenu :
-- **Eyebrow** : date du jour + "Ethi" en or.
-- **Phrase d'ouverture** générée à partir de la valorisation du jour (perf, thème leader).
-- **3 chips de signaux** déterministes calculés côté client à partir du portefeuille existant :
-  - Drift d'allocation (écart vs cible > 1.5 pt)
-  - Opportunité ESG (asset best-in-class non détenu sur thème actif)
-  - Climat marché (jour vert/rouge marqué, > 1 %)
-- Clic sur un chip → ouvre l'Ethi bubble avec le contexte pré-rempli.
+**Simulateur de projection**
+- Réutilise `useProjection` existant + apport mensuel de l'objectif.
+- Sliders : apport mensuel, horizon, rendement attendu (issu du portefeuille).
+- Graphe projection vs cible (3 scénarios : pessimiste / médian / optimiste, basés sur volatilité du portefeuille).
+- Calcul du « manque » : combien faut-il ajouter par mois pour atteindre la cible à temps.
 
-Pas d'appel IA : tout est dérivé de l'engine `lib/portfolio` et de `usePortfolioValuation`. Cohérent avec le ton sobre, zéro hallucination.
+**Intégration dashboard**
+- Bloc « Objectifs » sur `/dashboard` : top 2 objectifs avec progression et CTA vers `/objectifs`.
 
-## 2. Certificat d'impact partageable
+---
 
-Bouton "Télécharger mon certificat" dans la section impact du portefeuille (`/portfolio`, près de `ImpactRibbon`). Génère un PDF A4 paysage en pur client (`@react-pdf/renderer` ou impression HTML → `window.print()` sur une route dédiée `/portfolio/certificat`).
+### 2. Social & comparaison
 
-Mise en page éditoriale :
-- En-tête : "seedow" + numéro de certificat + date.
-- KPI géants : CO₂ évité, arbres équivalents, énergie verte, score d'impact (`KPIFigure` réutilisé).
-- Filet or, eyebrow "Certificat d'impact · Édition personnelle".
-- Pied : méthodologie courte + URL de vérification (`seedow.life/methodologie`).
+Couche communautaire anonyme pour benchmarker stratégie et impact.
 
-Bonus partage : bouton "Copier le lien" qui copie l'URL de la page `/portfolio/certificat` (lecture seule, non publique — protégée auth).
+**Nouvelles entités**
+- Table `portfolio_shares` : snapshot anonyme partagé volontairement par un utilisateur
+  - allocation (poids par classe d'actifs), causes, exclusions, métriques publiques (rendement attendu, volatilité, score ESG, intensité carbone)
+  - pseudo public (depuis profil), opt-in obligatoire
+- Colonne `public_handle` sur `profiles` (pseudo unique optionnel).
 
-## 3. Moments waouh transversaux
+**Écran `/communaute`**
+- Onglet « Stratégies partagées » : grille de cartes portefeuilles anonymes (pseudo, causes principales, score ESG, rendement attendu, volatilité). Filtres par cause et niveau de risque.
+- Onglet « Classement d'impact » : top 50 portefeuilles par intensité carbone évitée et score ESG (pseudo + métriques, pas de montants).
+- Comparateur : sélection 1–3 portefeuilles partagés vs son propre portefeuille → tableau côte à côte (allocation, ESG, carbone, rendement, volatilité).
 
-Trois signatures discrètes qui parlent toutes la même langue Emerald Prestige :
+**Action depuis `/portfolio`**
+- Toggle « Partager ce portefeuille » dans les réglages du portefeuille → crée/met à jour le snapshot anonyme. Aucun montant utilisateur n'est exposé.
 
-- **KPIFigure animé** : compteur tabulaire qui anime de 0 vers la valeur cible au mount (300 ms, ease-out, `tabular-nums` stable, pas de jitter). Halo or très léger au survol.
-- **Filet or progressif** : `.gold-rule` qui se dessine de gauche à droite quand sa section entre dans le viewport (IntersectionObserver, 600 ms).
-- **Confettis or sobres** : 12 particules dorées discrètes après un investissement réussi ou un téléchargement de certificat (toast `sonner` + canvas léger, 1.2 s). Désactivés si `prefers-reduced-motion`.
+**Intégration dashboard**
+- Encart « Comment vous vous situez » : votre score ESG vs médiane communauté, intensité carbone vs médiane.
 
-Toutes les animations respectent le hook `useFocusMode` / `prefersReducedMotion` déjà en place.
+---
 
-## Détails techniques
+### Détails techniques
 
-**Fichiers créés**
-- `src/components/dashboard/EthiBriefing.tsx` — bandeau briefing + logique signaux.
-- `src/lib/portfolio/signals.ts` — calcul pur des 3 signaux à partir du `PortfolioResult`.
-- `src/components/portfolio/ImpactCertificate.tsx` — bouton + déclenchement.
-- `src/routes/portfolio.certificat.tsx` — route imprimable (layout A4, full-bleed comme `/auth`).
-- `src/components/ui/AnimatedFigure.tsx` — wrapper d'animation pour `KPIFigure`.
-- `src/components/ui/GoldRuleReveal.tsx` — filet or animé au scroll.
-- `src/lib/confetti.ts` — utilitaire canvas léger (≈ 1 ko).
+- **Base de données** : 2 migrations
+  - `financial_goals` (RLS scoped `auth.uid()`, GRANT authenticated + service_role)
+  - `portfolio_shares` (RLS : lecture authenticated globale, write/update/delete `auth.uid() = user_id`) + ajout `public_handle` sur `profiles` (unique, nullable)
+- **Server functions** sous `src/lib/goals/` et `src/lib/community/` (`requireSupabaseAuth`)
+  - `listGoals`, `upsertGoal`, `deleteGoal`, `getGoalProjection`
+  - `togglePortfolioShare`, `listCommunityShares` (avec filtres), `getImpactLeaderboard`, `compareShares`
+- **Routes TanStack**
+  - `src/routes/objectifs.tsx` (liste + dialog d'édition)
+  - `src/routes/objectifs.$goalId.tsx` (détail + simulateur)
+  - `src/routes/communaute.tsx` (layout + onglets via search params)
+- **Composants**
+  - `src/components/goals/GoalCard.tsx`, `GoalProgressBar.tsx`, `GoalSimulator.tsx`, `GoalDialog.tsx`
+  - `src/components/community/SharedPortfolioCard.tsx`, `ImpactLeaderboard.tsx`, `PortfolioComparator.tsx`, `ShareToggle.tsx`
+  - Réutilise `KPIFigure`, `EditorialSection`, `.gold-rule`, mêmes règles typo/lexique sobre.
+- **Navigation** : ajout des entrées « Objectifs » et « Communauté » dans `RailNav` / `BottomNavigation` / `CommandPalette`.
+- **Sécurité** : `portfolio_shares` ne contient jamais de montants ni d'identifiant utilisateur affichable — uniquement `public_handle`. Validation Zod côté serveur sur tout upsert.
 
-**Fichiers modifiés**
-- `src/routes/dashboard.tsx` — insère `EthiBriefing` en tête.
-- `src/routes/portfolio.tsx` — ajoute le CTA certificat près de `ImpactRibbon`.
-- `src/components/ui/KPIFigure.tsx` — opt-in `animate` prop.
-- `src/components/layout/AppShell.tsx` — ajoute `/portfolio/certificat` à `fullBleed`.
+---
 
-**Dépendances** : aucune nouvelle si on imprime via `window.print()`. Sinon `@react-pdf/renderer` (~120 ko) — à confirmer en build.
+### Hors scope
 
-**Périmètre exclu** (à proposer en passes suivantes)
-- Page publique sociale anonymisée (nécessite RLS + URL publique → chantier auth).
-- Briefing IA via Lovable AI (coût + latence, pas demi-journée).
-- Onboarding guidé interactif (séparé pour ne pas mélanger les flux).
+- Pas de messagerie directe entre utilisateurs (à proposer plus tard).
+- Pas de copy-trading (juridiquement sensible).
+- Pas de notifications push (les alertes existantes suffisent pour le rappel d'objectif).

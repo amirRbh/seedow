@@ -11,6 +11,8 @@ import { PortfolioHistoryChart } from "@/components/portfolio/PortfolioHistoryCh
 import { MarketFreshnessBanner } from "@/components/portfolio/MarketFreshnessBanner";
 import { ImpactCertificate } from "@/components/portfolio/ImpactCertificate";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
+import { ShareToggle } from "@/components/community/ShareToggle";
+
 import { ExplainerCard } from "@/components/ui/ExplainerCard";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
@@ -142,6 +144,11 @@ function Portfolio() {
         <section className="px-5 pt-6">
           <ImpactCertificate />
         </section>
+
+        <section className="px-5 pt-6">
+          <ShareToggle />
+        </section>
+
 
         <section className="px-5 pt-6">
           <BadgesCard badges={MOCK_BADGES} />
