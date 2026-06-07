@@ -1,78 +1,110 @@
-## Deux axes ajoutés à seedow
+# Harmonisation Seedow — moins de bruit, plus de clarté
 
-### 1. Objectifs & projections
-
-Permettre à chaque utilisateur de définir un ou plusieurs objectifs financiers (retraite, achat immobilier, études, fonds de précaution) et de suivre sa progression vs cible.
-
-**Nouvelle entité**
-- Table `financial_goals` (par utilisateur, liée optionnellement à un portefeuille)
-  - nom de l'objectif, type (retraite / achat / études / précaution / autre)
-  - montant cible, date cible
-  - apport mensuel prévu, capital de départ
-  - portefeuille rattaché (optionnel)
-
-**Écran `/objectifs`**
-- Liste éditoriale des objectifs avec `KPIFigure` : montant cible, % atteint, écart projection.
-- Pour chaque objectif : barre de progression or sur fond crème, échéance, statut (en avance / dans les temps / en retard).
-- Action « Nouvel objectif » → formulaire (nom, type, cible, échéance, apport mensuel, portefeuille).
-
-**Simulateur de projection**
-- Réutilise `useProjection` existant + apport mensuel de l'objectif.
-- Sliders : apport mensuel, horizon, rendement attendu (issu du portefeuille).
-- Graphe projection vs cible (3 scénarios : pessimiste / médian / optimiste, basés sur volatilité du portefeuille).
-- Calcul du « manque » : combien faut-il ajouter par mois pour atteindre la cible à temps.
-
-**Intégration dashboard**
-- Bloc « Objectifs » sur `/dashboard` : top 2 objectifs avec progression et CTA vers `/objectifs`.
+L'app empile aujourd'hui beaucoup de blocs (dashboard = 7 sections, portfolio = 9, 7 entrées de nav rail + 5 en bottom) et les mêmes infos reviennent à plusieurs endroits (valeur totale, gain, CO₂, boutons Investir). On harmonise sur 4 axes, sans toucher au lexique ni aux tokens visuels.
 
 ---
 
-### 2. Social & comparaison
+## 1. Dashboard allégé — « une seule histoire »
 
-Couche communautaire anonyme pour benchmarker stratégie et impact.
+Cible : un écran qu'on lit en 5 secondes.
 
-**Nouvelles entités**
-- Table `portfolio_shares` : snapshot anonyme partagé volontairement par un utilisateur
-  - allocation (poids par classe d'actifs), causes, exclusions, métriques publiques (rendement attendu, volatilité, score ESG, intensité carbone)
-  - pseudo public (depuis profil), opt-in obligatoire
-- Colonne `public_handle` sur `profiles` (pseudo unique optionnel).
+Sections gardées (dans l'ordre) :
+1. **AppHeader** (greeting + portefeuille actif)
+2. **Bloc valeur** — `KPIFigure` total + delta jour + bouton *Investir*
+3. **Aperçu portefeuille** — `GardenVisualization` compacte (5 lignes max)
+4. **Prochaine étape** — 1 seule carte contextuelle (Ethi signal le + important OU objectif le + proche OU CTA premier dépôt)
+5. **Lien « Voir le détail »** vers `/portfolio`
 
-**Écran `/communaute`**
-- Onglet « Stratégies partagées » : grille de cartes portefeuilles anonymes (pseudo, causes principales, score ESG, rendement attendu, volatilité). Filtres par cause et niveau de risque.
-- Onglet « Classement d'impact » : top 50 portefeuilles par intensité carbone évitée et score ESG (pseudo + métriques, pas de montants).
-- Comparateur : sélection 1–3 portefeuilles partagés vs son propre portefeuille → tableau côte à côte (allocation, ESG, carbone, rendement, volatilité).
+Sections retirées du dashboard (déplacées, pas supprimées) :
+- `JourneySteps` → masqué après onboarding (n'apparaît que si le user n'a fait que 1/3 des étapes)
+- `EthiBriefing` complet → ne garder que le **1er signal** en carte « Prochaine étape ». Le briefing complet vit dans `/ethi`.
+- `ImpactRibbon` (CO₂ / arbres / énergie / ESG) → déplacé dans `/portfolio` onglet Impact (déjà présent ailleurs sous forme de certificat)
+- `ProjectionSimulator` → vit déjà dans `/objectifs` via `GoalSimulator`. On retire du dashboard.
 
-**Action depuis `/portfolio`**
-- Toggle « Partager ce portefeuille » dans les réglages du portefeuille → crée/met à jour le snapshot anonyme. Aucun montant utilisateur n'est exposé.
-
-**Intégration dashboard**
-- Encart « Comment vous vous situez » : votre score ESG vs médiane communauté, intensité carbone vs médiane.
+Gain : 7 sections → 4. Plus aucun doublon avec `/portfolio`.
 
 ---
 
-### Détails techniques
+## 2. Navigation unifiée — 5 entrées au lieu de 9
 
-- **Base de données** : 2 migrations
-  - `financial_goals` (RLS scoped `auth.uid()`, GRANT authenticated + service_role)
-  - `portfolio_shares` (RLS : lecture authenticated globale, write/update/delete `auth.uid() = user_id`) + ajout `public_handle` sur `profiles` (unique, nullable)
-- **Server functions** sous `src/lib/goals/` et `src/lib/community/` (`requireSupabaseAuth`)
-  - `listGoals`, `upsertGoal`, `deleteGoal`, `getGoalProjection`
-  - `togglePortfolioShare`, `listCommunityShares` (avec filtres), `getImpactLeaderboard`, `compareShares`
-- **Routes TanStack**
-  - `src/routes/objectifs.tsx` (liste + dialog d'édition)
-  - `src/routes/objectifs.$goalId.tsx` (détail + simulateur)
-  - `src/routes/communaute.tsx` (layout + onglets via search params)
-- **Composants**
-  - `src/components/goals/GoalCard.tsx`, `GoalProgressBar.tsx`, `GoalSimulator.tsx`, `GoalDialog.tsx`
-  - `src/components/community/SharedPortfolioCard.tsx`, `ImpactLeaderboard.tsx`, `PortfolioComparator.tsx`, `ShareToggle.tsx`
-  - Réutilise `KPIFigure`, `EditorialSection`, `.gold-rule`, mêmes règles typo/lexique sobre.
-- **Navigation** : ajout des entrées « Objectifs » et « Communauté » dans `RailNav` / `BottomNavigation` / `CommandPalette`.
-- **Sécurité** : `portfolio_shares` ne contient jamais de montants ni d'identifiant utilisateur affichable — uniquement `public_handle`. Validation Zod côté serveur sur tout upsert.
+Aujourd'hui : RailNav = 7 primaires + 2 secondaires ; BottomNav = 5 (différentes du rail). Trop de portes d'entrée pour des contenus proches.
+
+**Nouvelle structure (rail desktop ET bottom mobile identiques) :**
+
+| Entrée | Regroupe | Route |
+|---|---|---|
+| Accueil | Dashboard | `/dashboard` |
+| Portefeuille | Analyse + Allocation + Historique + Impact + Comparatif | `/portfolio` (onglets) |
+| Objectifs | Objectifs + projections | `/objectifs` |
+| Explorer | Discover + Communauté (onglets) | `/discover` |
+| Ethi | Assistant | `/ethi` |
+
+Reléguées en secondaire (rail bas + palette ⌘K uniquement, hors bottom-nav) :
+- Profil investisseur, Méthodologie, Réglages
+
+Conséquences : `/comparatif` devient un onglet de `/portfolio` ; `/communaute` devient un onglet de `/discover`. Les routes existantes restent valides (pas de cassure de lien) mais ne sont plus mises en avant dans les nav.
 
 ---
 
-### Hors scope
+## 3. Portefeuille en onglets
 
-- Pas de messagerie directe entre utilisateurs (à proposer plus tard).
-- Pas de copy-trading (juridiquement sensible).
-- Pas de notifications push (les alertes existantes suffisent pour le rappel d'objectif).
+`/portfolio` aujourd'hui = 9 sections empilées sur ~3000 px de scroll. On condense en **4 onglets** (composant `Tabs` shadcn déjà dispo) :
+
+- **Performance** — `PortfolioHistoryChart` + `GrowthComparison` + actions Investir / Verser mensuel
+- **Allocation** — `AllocationBreakdown` + `BadgesCard`
+- **Impact** — `ImpactRibbon` + `PortfolioMetricsCard` (ESG/CO₂) + `ImpactCertificate`
+- **Comparatif** — contenu actuel de `/comparatif` (vs benchmarks)
+
+Persistants en tête (tous onglets) : `AppHeader` + `MarketFreshnessBanner`.
+En pied (tous onglets) : `ShareToggle` (mini ligne discrète, plus une grosse section).
+
+`MarketFreshnessBanner` n'apparaît qu'**une seule fois** par session (cookie), pas à chaque visite.
+
+---
+
+## 4. Mode Simple par défaut + progressive disclosure
+
+Aujourd'hui le `ViewMode` existe (`useViewMode`) mais l'app reste verbeuse même en Simple. On durcit :
+
+- **Default = Simple** (déjà le cas) + toggle Expert plus visible dans `TopBar` (chip à droite, au lieu d'être caché).
+- En Simple : on ne montre que `expected_return`, `esg_score`, `co2_avoided_tons`. Volatilité et Sharpe (`expertOnly`) **vraiment** masqués (aujourd'hui ils sont juste grisés).
+- **ExplainerCard** : aujourd'hui répétés sur 4 pages. Règle nouvelle : un seul `ExplainerCard` par page, et seulement si l'utilisateur n'a pas dismissé (état localStorage `seedow:explainers-dismissed:<key>`).
+- **MetricLabel `?`** : déjà bon, on garde — c'est la forme de progressive disclosure correcte.
+- **Glossaire** déjà dans ⌘K — on ajoute un lien discret « Glossaire » dans le footer de chaque page expert.
+
+---
+
+## Détails techniques
+
+**Fichiers modifiés :**
+- `src/routes/dashboard.tsx` — retirer `EthiBriefing` complet, `ImpactRibbon`, `ProjectionSimulator` ; ajouter `<NextStepCard />` (nouveau, 1 signal max)
+- `src/routes/portfolio.tsx` — refonte en `Tabs` (4 onglets), intégrer le contenu de `/comparatif`
+- `src/routes/discover.tsx` — ajouter `Tabs` (Explorer / Communauté), monter le contenu de `/communaute`
+- `src/components/layout/RailNav.tsx` — 5 entrées primaires + secondaire (Profil, Méthodologie, Réglages)
+- `src/components/navigation/BottomNavigation.tsx` — aligner sur les 5 entrées du rail
+- `src/components/layout/CommandPalette.tsx` — garder toutes les routes (palette reste exhaustive)
+- `src/components/portfolio/PortfolioMetricsCard.tsx` — masquage strict des `expertOnly` en Simple
+- `src/components/portfolio/MarketFreshnessBanner.tsx` — auto-dismiss par session
+- `src/components/ui/ExplainerCard.tsx` — accepter prop `dismissKey` (localStorage)
+- `src/components/layout/TopBar.tsx` — toggle Simple/Expert visible
+
+**Fichiers créés :**
+- `src/components/dashboard/NextStepCard.tsx` — 1 carte contextuelle qui choisit entre : 1er dépôt / objectif proche / signal Ethi prioritaire
+
+**Routes conservées (pas supprimées) :**
+`/comparatif`, `/communaute` restent accessibles via palette ⌘K et liens directs. Aucune cassure de lien.
+
+**Hors scope :**
+- Pas de refonte visuelle (palette, typo, tokens restent identiques)
+- Pas de changement de lexique
+- Pas de nouvelles features
+- Pas de migration BDD
+
+---
+
+## Résultat attendu
+
+- Dashboard : 4 sections, lecture en 5s, plus de doublon avec `/portfolio`.
+- Navigation : 5 entrées partout, mêmes labels rail/bottom, plus de confusion entre 7 portes proches.
+- Portfolio : 1 page à onglets au lieu de 9 sections empilées + 1 page séparée pour Comparatif.
+- Néophyte : Simple par défaut masque vraiment les métriques expertes, ExplainerCard non répétés, aide via tooltips `?` et palette.
