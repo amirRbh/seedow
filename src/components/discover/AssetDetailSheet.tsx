@@ -1,4 +1,6 @@
+import { useState, useCallback } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Slider } from "@/components/ui/slider";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import type { MockAsset } from "@/lib/mockGarden";
 
@@ -26,8 +28,23 @@ const fmtEur = (n: number) =>
     maximumFractionDigits: 2,
   });
 
+function impactFor(
+  monthly: number,
+  co2Factor: number,
+  energyFactor: number
+) {
+  const annualK = (monthly * 12) / 1000;
+  return {
+    co2: co2Factor * annualK,
+    kwh: energyFactor * annualK,
+    trees: Math.round(annualK * 4.2),
+  };
+}
+
 export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
   if (!asset) return null;
+
+  const [monthly, setMonthly] = useState(100);
 
   const risk = asset.risk_level ?? 4;
   const riskInfo = RISK_LABELS[risk];
@@ -35,16 +52,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
   // Risques propres au type d'actif
   const risksList = buildRisks(asset);
 
-  // Calcul d'impact par palier (versement mensuel sur 1 an)
-  const TIERS = [50, 100, 200] as const;
-  function impactFor(monthly: number) {
-    const annualK = (monthly * 12) / 1000;
-    return {
-      co2: asset.co2_factor_per_1k_eur * annualK,
-      kwh: asset.energy_factor_per_1k_eur * annualK,
-      trees: Math.round(annualK * 4.2), // ~4,2 arbres équivalents par tranche de 1 k€
-    };
-  }
+  const imp = impactFor(monthly, asset.co2_factor_per_1k_eur, asset.energy_factor_per_1k_eur);
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -93,57 +101,76 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
             )}
           </section>
 
-          {/* Impact par paliers */}
+          {/* Impact dynamique */}
           <section>
             <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold mb-3">
               Aperçu de l'impact · versement mensuel sur 1 an
             </p>
-            <div className="grid grid-cols-3 gap-2.5">
-              {TIERS.map((tier) => {
-                const imp = impactFor(tier);
-                return (
-                  <div
-                    key={tier}
-                    className="bg-paper-2 rounded-xl p-3 border border-paper-3 text-center"
-                  >
-                    <p className="font-value text-xl leading-none text-ink">
-                      {fmtEur(tier)}
-                      <span className="text-[10px] text-ink-3 ml-0.5 font-sans">/mois</span>
-                    </p>
-                    <div className="mt-3 space-y-2">
-                      <div>
-                        <p className="font-value text-[15px] text-moss-1 leading-none">
-                          {imp.co2.toFixed(1)}
-                          <span className="text-[9px] text-ink-3 ml-0.5 font-sans">kg</span>
-                        </p>
-                        <p className="text-[9px] text-ink-3 mt-0.5 font-medium uppercase tracking-wider">
-                          CO₂ évité
-                        </p>
-                      </div>
-                      <div className="h-px bg-paper-3" />
-                      <div>
-                        <p className="font-value text-[15px] text-ink leading-none">
-                          {Math.round(imp.kwh)}
-                          <span className="text-[9px] text-ink-3 ml-0.5 font-sans">kWh</span>
-                        </p>
-                        <p className="text-[9px] text-ink-3 mt-0.5 font-medium uppercase tracking-wider">
-                          Énergie verte
-                        </p>
-                      </div>
-                      <div className="h-px bg-paper-3" />
-                      <div>
-                        <p className="font-value text-[15px] text-ink leading-none">
-                          ~{imp.trees}
-                        </p>
-                        <p className="text-[9px] text-ink-3 mt-0.5 font-medium uppercase tracking-wider">
-                          Arbres équivalents
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+
+            {/* Montant + slider */}
+            <div className="bg-paper-2 rounded-xl p-4 border border-paper-3 mb-3">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-[11px] text-ink-3 font-medium">Versement mensuel</span>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    min={10}
+                    max={500}
+                    step={10}
+                    value={monthly}
+                    onChange={(e) => {
+                      const v = Math.min(500, Math.max(10, Number(e.target.value) || 0));
+                      setMonthly(v);
+                    }}
+                    className="w-20 h-8 text-right font-value text-[15px] text-ink bg-paper border border-paper-3 rounded-lg px-2 focus:outline-none focus:ring-1 focus:ring-ink-2"
+                  />
+                  <span className="text-[12px] text-ink-3 font-medium">€/mois</span>
+                </div>
+              </div>
+              <Slider
+                min={10}
+                max={500}
+                step={10}
+                value={[monthly]}
+                onValueChange={(val) => setMonthly(val[0])}
+                className="[&_[data-orientation=horizontal]]:bg-paper-3 [&_[data-radix-slider-range]]:bg-moss-1 [&_[data-radix-slider-thumb]]:border-moss-2 [&_[data-radix-slider-thumb]]:bg-paper"
+              />
+              <div className="flex justify-between mt-2">
+                <span className="text-[9px] text-ink-3 font-medium">10 €</span>
+                <span className="text-[9px] text-ink-3 font-medium">500 €</span>
+              </div>
             </div>
+
+            {/* Résultat dynamique */}
+            <div className="grid grid-cols-3 gap-2.5">
+              <div className="bg-paper-2 rounded-xl p-3 border border-paper-3 text-center">
+                <p className="font-value text-xl leading-none text-moss-1">
+                  {imp.co2.toFixed(1)}
+                  <span className="text-[9px] text-ink-3 ml-0.5 font-sans">kg</span>
+                </p>
+                <p className="text-[9px] text-ink-3 mt-1.5 font-medium uppercase tracking-wider">
+                  CO₂ évité
+                </p>
+              </div>
+              <div className="bg-paper-2 rounded-xl p-3 border border-paper-3 text-center">
+                <p className="font-value text-xl leading-none text-ink">
+                  {Math.round(imp.kwh)}
+                  <span className="text-[9px] text-ink-3 ml-0.5 font-sans">kWh</span>
+                </p>
+                <p className="text-[9px] text-ink-3 mt-1.5 font-medium uppercase tracking-wider">
+                  Énergie verte
+                </p>
+              </div>
+              <div className="bg-paper-2 rounded-xl p-3 border border-paper-3 text-center">
+                <p className="font-value text-xl leading-none text-ink">
+                  ~{imp.trees}
+                </p>
+                <p className="text-[9px] text-ink-3 mt-1.5 font-medium uppercase tracking-wider">
+                  Arbres équivalents
+                </p>
+              </div>
+            </div>
+
             <div className="grid grid-cols-3 gap-2.5 mt-2.5">
               <MiniBar label="Climat" value={asset.climate_score} />
               <MiniBar label="Social" value={asset.social_score} />
@@ -271,7 +298,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
           </button>
           <InvestDialog
             label={`Investir dans ${asset.ticker}`}
-            defaultAmount={100}
+            defaultAmount={monthly}
             trigger={
               <button
                 type="button"
