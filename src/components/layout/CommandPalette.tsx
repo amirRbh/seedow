@@ -22,6 +22,8 @@ interface Props {
 const ROUTES: Array<{ path: string; label: string; hint: string; shortcut?: string }> = [
   { path: "/dashboard", label: "Vue d'ensemble", hint: "Tableau de bord", shortcut: "g d" },
   { path: "/portfolio", label: "Analyse portefeuille", hint: "Performance, allocation, historique", shortcut: "g p" },
+  { path: "/objectifs", label: "Objectifs", hint: "Suivre tes cibles d'épargne", shortcut: "g o" },
+  { path: "/communaute", label: "Communauté", hint: "Comparer ta stratégie anonymement" },
   { path: "/comparatif", label: "Comparatif", hint: "Mes actifs vs benchmarks", shortcut: "g c" },
   { path: "/profil", label: "Profil investisseur", hint: "Préférences, horizon, risque" },
   { path: "/ethi", label: "Ethi — assistant", hint: "Réponses sur tes choix" },
@@ -29,6 +31,7 @@ const ROUTES: Array<{ path: string; label: string; hint: string; shortcut?: stri
   { path: "/methodologie", label: "Méthodologie", hint: "Modèles, hypothèses, sources" },
   { path: "/reglages", label: "Réglages", hint: "Compte, notifications, sécurité" },
 ];
+
 
 /**
  * Palette de commandes globale — ouverte par ⌘K / Ctrl+K.
