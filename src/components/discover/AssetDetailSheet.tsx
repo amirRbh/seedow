@@ -298,7 +298,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
           </button>
           <InvestDialog
             label={`Investir dans ${asset.ticker}`}
-            defaultAmount={100}
+            defaultAmount={monthly}
             trigger={
               <button
                 type="button"
