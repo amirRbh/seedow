@@ -1,4 +1,6 @@
+import { useState, useCallback } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Slider } from "@/components/ui/slider";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import type { MockAsset } from "@/lib/mockGarden";
 
