@@ -227,6 +227,9 @@ function Discover() {
             ))}
           </div>
         )}
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
 
       <AssetDetailSheet
