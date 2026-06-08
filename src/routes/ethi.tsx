@@ -5,6 +5,7 @@ import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { EthiBubble } from "@/components/ethi/EthiBubble";
 import { EthiSuggestionChips } from "@/components/ethi/EthiSuggestionChips";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
+import { supabase } from "@/integrations/supabase/client";
 
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { useAuth } from "@/hooks/useAuth";
