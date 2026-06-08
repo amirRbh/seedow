@@ -56,7 +56,7 @@ function AuthPage() {
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}${search.redirect}`,
+            emailRedirectTo: `${window.location.origin}${safeRedirect}`,
             data: { display_name: displayName || email.split("@")[0] },
           },
         });
