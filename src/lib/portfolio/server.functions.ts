@@ -176,7 +176,7 @@ export const generatePortfolio = createServerFn({ method: "POST" })
 
       if (deactivateErr) {
         console.error("[generatePortfolio] deactivate error:", deactivateErr);
-        throw new Error(`Failed to deactivate previous portfolio: ${deactivateErr.message}`);
+        throw new Error("Impossible de désactiver le portefeuille précédent. Réessaie dans un instant.");
       }
     }
 
