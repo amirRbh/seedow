@@ -31,7 +31,8 @@ export const triggerMarketRefresh = createServerFn({ method: "POST" })
 
     if (!res.ok) {
       const text = await res.text().catch(() => "");
-      throw new Error(`Refresh failed: HTTP ${res.status} ${text.slice(0, 200)}`);
+      console.error(`[triggerMarketRefresh] HTTP ${res.status}`, text);
+      throw new Error("Rafraîchissement des prix indisponible. Réessaie plus tard.");
     }
 
     const data = (await res.json()) as {

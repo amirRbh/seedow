@@ -5,9 +5,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 
 
+// Only accept same-origin relative paths: must start with "/" then a non-"/" path char,
+// and must not contain protocol-like chars. Anything else falls back to undefined.
+const isSafeRedirect = (v: unknown): v is string =>
+  typeof v === "string" && /^\/[A-Za-z0-9_\-/.~?=&%#]*$/.test(v) && !v.startsWith("//");
+
 export const Route = createFileRoute("/auth")({
   validateSearch: (search: Record<string, unknown>): { redirect?: string; mode?: "login" | "signup" } => ({
-    redirect: typeof search.redirect === "string" ? search.redirect : undefined,
+    redirect: isSafeRedirect(search.redirect) ? search.redirect : undefined,
     mode: search.mode === "signup" ? "signup" : search.mode === "login" ? "login" : undefined,
   }),
   beforeLoad: async ({ search }) => {
@@ -30,10 +35,12 @@ function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const safeRedirect = search.redirect ?? "/dashboard";
+
   const onGoogle = async () => {
     setError(null);
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: `${window.location.origin}${search.redirect}`,
+      redirect_uri: `${window.location.origin}${safeRedirect}`,
     });
     if (result.error) setError(result.error.message);
   };
@@ -49,7 +56,7 @@ function AuthPage() {
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}${search.redirect}`,
+            emailRedirectTo: `${window.location.origin}${safeRedirect}`,
             data: { display_name: displayName || email.split("@")[0] },
           },
         });

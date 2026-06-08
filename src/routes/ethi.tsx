@@ -5,6 +5,7 @@ import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { EthiBubble } from "@/components/ethi/EthiBubble";
 import { EthiSuggestionChips } from "@/components/ethi/EthiSuggestionChips";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
+import { supabase } from "@/integrations/supabase/client";
 
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { useAuth } from "@/hooks/useAuth";
@@ -121,9 +122,14 @@ function Ethi() {
         };
       })();
 
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
       const res = await fetch("/api/ethi", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({
           messages: next.map((m) => ({ role: m.role, content: m.content })),
           context: ctx,

@@ -1,21 +1,78 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { z } from "zod";
+
+const MessageSchema = z.object({
+  role: z.enum(["system", "user", "assistant"]),
+  content: z.string().min(1).max(4000),
+});
+
+const ContextSchema = z
+  .object({
+    hasPortfolio: z.boolean().optional(),
+    totalValue: z.number().finite().optional(),
+    name: z.string().max(120).optional(),
+    causes: z.array(z.string().max(60)).max(20).optional(),
+    holdings: z
+      .array(
+        z.object({
+          ticker: z.string().max(20),
+          weight: z.number().finite(),
+          value: z.number().finite().optional(),
+        }),
+      )
+      .max(50)
+      .optional(),
+  })
+  .passthrough()
+  .optional();
+
+const BodySchema = z.object({
+  messages: z.array(MessageSchema).min(1).max(40),
+  context: ContextSchema,
+});
 
 export const Route = createFileRoute("/api/ethi")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-      const body = (await request.json()) as {
-        messages: { role: string; content: string }[];
-        context?: unknown;
-      };
-      const apiKey = process.env.LOVABLE_API_KEY;
-      if (!apiKey) {
-        return Response.json({ error: "AI gateway not configured" });
-      }
+        // ── Auth: require a valid Supabase user bearer token ──
+        const authHeader = request.headers.get("authorization") ?? "";
+        const token = authHeader.replace(/^Bearer\s+/i, "").trim();
+        if (!token) {
+          return new Response(JSON.stringify({ error: "Unauthorized" }), {
+            status: 401,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const { data: userData, error: authErr } = await supabaseAdmin.auth.getUser(token);
+        if (authErr || !userData?.user) {
+          return new Response(JSON.stringify({ error: "Unauthorized" }), {
+            status: 401,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
 
-      const contextBlock = body.context
-        ? `\n\n📊 **Contexte portefeuille (JSON, source de vérité)** :\n\`\`\`json\n${JSON.stringify(body.context, null, 2)}\n\`\`\`\nUtilise EXCLUSIVEMENT ces données quand on te parle du portefeuille de l'utilisateur. Ne jamais inventer de ticker, montant, allocation, P&L ou score. Si \`hasPortfolio\` est false, propose d'en créer un. Cite les chiffres tels quels (allocations en %, montants en €).`
-        : "";
+        // ── Validate body ──
+        let body: z.infer<typeof BodySchema>;
+        try {
+          const raw = await request.json();
+          body = BodySchema.parse(raw);
+        } catch {
+          return new Response(JSON.stringify({ error: "Requête invalide." }), {
+            status: 400,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+
+        const apiKey = process.env.LOVABLE_API_KEY;
+        if (!apiKey) {
+          return Response.json({ error: "AI gateway not configured" });
+        }
+
+        const contextBlock = body.context
+          ? `\n\n📊 **Contexte portefeuille (JSON, source de vérité)** :\n\`\`\`json\n${JSON.stringify(body.context, null, 2)}\n\`\`\`\nUtilise EXCLUSIVEMENT ces données quand on te parle du portefeuille de l'utilisateur. Ne jamais inventer de ticker, montant, allocation, P&L ou score. Si \`hasPortfolio\` est false, propose d'en créer un. Cite les chiffres tels quels (allocations en %, montants en €).`
+          : "";
 
         const systemPrompt = `Tu es **Ethi**, le conseiller en investissement responsable de Seedow. Vif, direct, complice — jamais mou, jamais corporate.
 

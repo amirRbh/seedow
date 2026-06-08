@@ -54,8 +54,14 @@ async function loadUniverse(
       .select("asset_a, asset_b, covariance"),
   ]);
 
-  if (assetsRes.error) throw new Error(`assets: ${assetsRes.error.message}`);
-  if (covRes.error) throw new Error(`covariance: ${covRes.error.message}`);
+  if (assetsRes.error) {
+    console.error("[loadUniverse] assets error:", assetsRes.error);
+    throw new Error("Univers d'actifs indisponible.");
+  }
+  if (covRes.error) {
+    console.error("[loadUniverse] covariance error:", covRes.error);
+    throw new Error("Données de covariance indisponibles.");
+  }
 
   const num = (v: unknown): number | null =>
     v == null ? null : Number(v);
@@ -176,7 +182,7 @@ export const generatePortfolio = createServerFn({ method: "POST" })
 
       if (deactivateErr) {
         console.error("[generatePortfolio] deactivate error:", deactivateErr);
-        throw new Error(`Failed to deactivate previous portfolio: ${deactivateErr.message}`);
+        throw new Error("Impossible de désactiver le portefeuille précédent. Réessaie dans un instant.");
       }
     }
 
@@ -232,7 +238,7 @@ export const generatePortfolio = createServerFn({ method: "POST" })
           };
         }
       }
-      throw new Error(`Failed to save portfolio: ${error.message}`);
+      throw new Error("Impossible d'enregistrer le portefeuille. Réessaie dans un instant.");
     }
 
     // Mark onboarding complete
