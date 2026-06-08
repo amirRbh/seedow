@@ -232,7 +232,7 @@ export const generatePortfolio = createServerFn({ method: "POST" })
           };
         }
       }
-      throw new Error(`Failed to save portfolio: ${error.message}`);
+      throw new Error("Impossible d'enregistrer le portefeuille. Réessaie dans un instant.");
     }
 
     // Mark onboarding complete
