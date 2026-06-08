@@ -54,8 +54,14 @@ async function loadUniverse(
       .select("asset_a, asset_b, covariance"),
   ]);
 
-  if (assetsRes.error) throw new Error(`assets: ${assetsRes.error.message}`);
-  if (covRes.error) throw new Error(`covariance: ${covRes.error.message}`);
+  if (assetsRes.error) {
+    console.error("[loadUniverse] assets error:", assetsRes.error);
+    throw new Error("Univers d'actifs indisponible.");
+  }
+  if (covRes.error) {
+    console.error("[loadUniverse] covariance error:", covRes.error);
+    throw new Error("Données de covariance indisponibles.");
+  }
 
   const num = (v: unknown): number | null =>
     v == null ? null : Number(v);
