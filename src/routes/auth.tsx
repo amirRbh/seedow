@@ -35,10 +35,12 @@ function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const safeRedirect = search.redirect ?? "/dashboard";
+
   const onGoogle = async () => {
     setError(null);
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: `${window.location.origin}${search.redirect}`,
+      redirect_uri: `${window.location.origin}${safeRedirect}`,
     });
     if (result.error) setError(result.error.message);
   };
