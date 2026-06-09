@@ -518,10 +518,36 @@ function Step({
   onBack: () => void;
 }) {
   const [selected, setSelected] = useState<string[]>([]);
+  const [enteredAt] = useState(() => Date.now());
+
+  // Tracking : entrée dans l'étape
+  useEffect(() => {
+    void trackPreference({
+      step: "step_entered",
+      payload: { onboarding_step: step.id, index: stepIndex },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step.id]);
 
   const toggle = (id: string) => {
+    const wasSelected = selected.includes(id);
     if (step.multi) setSelected((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
     else setSelected([id]);
+
+    // Tracking : log chaque choix granulaire (best-effort).
+    // Mapping étape → step enum :
+    let trackStep: PreferenceStep | null = null;
+    if (step.id === "values") trackStep = wasSelected ? "cause_dropped" : "cause_picked";
+    else if (step.id === "exclusions") trackStep = wasSelected ? "exclusion_removed" : "exclusion_added";
+    else if (step.id === "objective") trackStep = "objective_picked";
+    else if (step.id === "amount") trackStep = "amount_set";
+    if (trackStep) {
+      void trackPreference({
+        step: trackStep,
+        payload: { value: id, onboarding_step: step.id },
+        dwellMs: Date.now() - enteredAt,
+      });
+    }
   };
 
   return (
