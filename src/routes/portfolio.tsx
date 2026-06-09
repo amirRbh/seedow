@@ -95,9 +95,10 @@ function Portfolio() {
 
         <section className="px-5 pt-4">
           <Tabs defaultValue="performance">
-            <TabsList className="w-full grid grid-cols-4 h-auto bg-paper-2 p-1">
+            <TabsList className="w-full grid grid-cols-5 h-auto bg-paper-2 p-1">
               <TabsTrigger value="performance" className="text-[11px] uppercase tracking-[0.12em]">Perf</TabsTrigger>
               <TabsTrigger value="allocation" className="text-[11px] uppercase tracking-[0.12em]">Allocation</TabsTrigger>
+              <TabsTrigger value="affiner" className="text-[11px] uppercase tracking-[0.12em]">Affiner</TabsTrigger>
               <TabsTrigger value="impact" className="text-[11px] uppercase tracking-[0.12em]">Impact</TabsTrigger>
               <TabsTrigger value="comparatif" className="text-[11px] uppercase tracking-[0.12em]">vs Marché</TabsTrigger>
             </TabsList>
