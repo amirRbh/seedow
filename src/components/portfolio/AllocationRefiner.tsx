@@ -7,6 +7,23 @@ import {
 } from "@/lib/preferences/tracking";
 import { cn } from "@/lib/utils";
 
+interface Holding {
+  id: string;
+  ticker: string;
+  name: string;
+  asset_class: string;
+  weight: number;
+}
+
+interface Snapshot {
+  expected_return: number;
+  volatility: number;
+  esg_score: number;
+  ter: number;
+  by_class: Record<string, number>;
+  top_holdings: Holding[];
+}
+
 interface Row {
   lever: string;
   leverLabel: string;
@@ -14,32 +31,33 @@ interface Row {
   costBps: number;
   esgDelta: number;
   volDelta: number;
-}
-
-interface Baseline {
-  expected_return: number;
-  volatility: number;
-  esg_score: number;
+  alt: Snapshot;
 }
 
 interface Props {
   portfolioId: string;
 }
 
-/**
- * Phase 1.2 — Écran "Affine ton allocation".
- *
- * Coût soft post-onboarding : on n'affiche le bps qu'ICI, après que le
- * portefeuille existe. L'utilisateur garde ou lève chaque contrainte ;
- * chaque clic est tracé via `trackTradeoff` (lever, costBps, accepted).
- */
+const CLASS_LABELS: Record<string, string> = {
+  equity_dev: "Actions développées",
+  equity_em: "Actions émergentes",
+  thematic: "Thématiques",
+  green_bond: "Obligations vertes",
+  social_bond: "Obligations sociales",
+  sov_bond: "Obligations souveraines",
+  reit: "Immobilier",
+  commodity: "Matières premières",
+  cash: "Liquidités",
+};
+
 export function AllocationRefiner({ portfolioId }: Props) {
   const simulate = useServerFn(simulateTradeoffs);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [baseline, setBaseline] = useState<Baseline | null>(null);
+  const [baseline, setBaseline] = useState<Snapshot | null>(null);
   const [rows, setRows] = useState<Row[]>([]);
   const [decided, setDecided] = useState<Record<string, "accepted" | "rejected">>({});
+  const [expanded, setExpanded] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -62,7 +80,7 @@ export function AllocationRefiner({ portfolioId }: Props) {
   }, [portfolioId, simulate]);
 
   const handleDecision = (row: Row, accepted: boolean) => {
-    setDecided((prev) => ({ ...prev, [`${row.lever}|${row.altLabel}`]: accepted ? "accepted" : "rejected" }));
+    setDecided((p) => ({ ...p, [`${row.lever}|${row.altLabel}`]: accepted ? "accepted" : "rejected" }));
     void trackTradeoff({
       lever: row.lever as TradeoffLever,
       leverValue: row.altLabel,
@@ -118,7 +136,7 @@ export function AllocationRefiner({ portfolioId }: Props) {
         {rows.map((row) => {
           const key = `${row.lever}|${row.altLabel}`;
           const decision = decided[key];
-          const positive = row.costBps > 0;
+          const isOpen = expanded === key;
           return (
             <li
               key={key}
@@ -159,12 +177,6 @@ export function AllocationRefiner({ portfolioId }: Props) {
                 </div>
               </div>
 
-              {row.costBps < 0 && (
-                <p className="text-[11px] text-ink-3 leading-relaxed bg-paper-2 rounded px-3 py-2">
-                  Enlever cette exclusion pourrait <span className="text-rust font-medium">baisser</span> le rendement attendu. Elle est aujourd'hui "gratuite" voire bénéfique car elle élimine des actifs peu attractifs en rendement/risk.
-                </p>
-              )}
-
               <div className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-ink-3">
                 <span>
                   ESG&nbsp;
@@ -180,7 +192,16 @@ export function AllocationRefiner({ portfolioId }: Props) {
                     {row.volDelta.toFixed(2)} pt
                   </span>
                 </span>
+                <button
+                  type="button"
+                  onClick={() => setExpanded(isOpen ? null : key)}
+                  className="ml-auto text-[10px] font-semibold uppercase tracking-[0.14em] text-gold hover:text-ink transition-colors"
+                >
+                  {isOpen ? "Masquer avant / après" : "Voir avant / après"}
+                </button>
               </div>
+
+              {isOpen && <BeforeAfter baseline={baseline} alt={row.alt} altLabel={row.altLabel} />}
 
               {!decision ? (
                 <div className="flex gap-2 pt-1">
@@ -212,6 +233,163 @@ export function AllocationRefiner({ portfolioId }: Props) {
       </ul>
     </div>
   );
+}
+
+function BeforeAfter({
+  baseline,
+  alt,
+  altLabel,
+}: {
+  baseline: Snapshot;
+  alt: Snapshot;
+  altLabel: string;
+}) {
+  const metrics: Array<{ label: string; before: string; after: string; deltaLabel: string; positive: boolean | null }> = [
+    metricRow("Rendement attendu", baseline.expected_return * 100, alt.expected_return * 100, "%", 2, true),
+    metricRow("Volatilité", baseline.volatility * 100, alt.volatility * 100, "%", 2, false),
+    metricRow("Score ESG", baseline.esg_score, alt.esg_score, "/100", 1, true),
+    metricRow("Frais (TER)", baseline.ter * 100, alt.ter * 100, "%", 2, false),
+  ];
+
+  const classes = Array.from(
+    new Set([...Object.keys(baseline.by_class), ...Object.keys(alt.by_class)]),
+  )
+    .map((k) => ({
+      key: k,
+      label: CLASS_LABELS[k] ?? k,
+      before: baseline.by_class[k] ?? 0,
+      after: alt.by_class[k] ?? 0,
+    }))
+    .filter((r) => r.before > 0.005 || r.after > 0.005)
+    .sort((a, b) => Math.max(b.before, b.after) - Math.max(a.before, a.after));
+
+  const baseTickers = new Set(baseline.top_holdings.map((h) => h.id));
+  const altTickers = new Set(alt.top_holdings.map((h) => h.id));
+
+  return (
+    <div className="border-t border-paper-3 pt-4 mt-1 space-y-4">
+      <div className="grid grid-cols-[1fr_auto_1fr] gap-2 items-baseline">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-3">Avant — actuel</p>
+        <span className="text-[10px] text-ink-3">vs</span>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-gold text-right">Après — {altLabel}</p>
+      </div>
+
+      <table className="w-full text-[12px]">
+        <tbody>
+          {metrics.map((m) => (
+            <tr key={m.label} className="border-b border-paper-3 last:border-0">
+              <td className="py-1.5 text-ink-3 text-[11px]">{m.label}</td>
+              <td className="py-1.5 text-right tabular-nums text-ink">{m.before}</td>
+              <td className="py-1.5 text-center text-ink-3">→</td>
+              <td className="py-1.5 text-right tabular-nums text-ink">{m.after}</td>
+              <td
+                className={cn(
+                  "py-1.5 pl-3 text-right tabular-nums text-[11px] w-20",
+                  m.positive === null
+                    ? "text-ink-3"
+                    : m.positive
+                      ? "text-moss-2"
+                      : "text-rust",
+                )}
+              >
+                {m.deltaLabel}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <div>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-3 mb-2">
+          Répartition par classe
+        </p>
+        <ul className="space-y-1.5">
+          {classes.map((c) => (
+            <li key={c.key} className="grid grid-cols-[1fr_auto_auto] gap-3 items-center text-[11px]">
+              <span className="text-ink truncate">{c.label}</span>
+              <span className="tabular-nums text-ink-3">{(c.before * 100).toFixed(1)}%</span>
+              <span className="tabular-nums text-gold w-12 text-right">
+                → {(c.after * 100).toFixed(1)}%
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-3 mb-2">
+            Top positions — avant
+          </p>
+          <ul className="space-y-1">
+            {baseline.top_holdings.map((h) => (
+              <li
+                key={h.id}
+                className={cn(
+                  "flex justify-between gap-2 text-[11px]",
+                  !altTickers.has(h.id) && "text-rust",
+                )}
+                title={h.name}
+              >
+                <span className="truncate">{h.ticker}</span>
+                <span className="tabular-nums">{(h.weight * 100).toFixed(1)}%</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-gold mb-2">
+            Top positions — après
+          </p>
+          <ul className="space-y-1">
+            {alt.top_holdings.map((h) => (
+              <li
+                key={h.id}
+                className={cn(
+                  "flex justify-between gap-2 text-[11px]",
+                  !baseTickers.has(h.id) && "text-moss-2",
+                )}
+                title={h.name}
+              >
+                <span className="truncate">{h.ticker}</span>
+                <span className="tabular-nums">{(h.weight * 100).toFixed(1)}%</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      <p className="text-[10px] text-ink-3 leading-relaxed">
+        <span className="text-rust">Rouge</span> = positions qui disparaîtraient.{" "}
+        <span className="text-moss-2">Vert</span> = nouvelles positions introduites.
+      </p>
+    </div>
+  );
+}
+
+function metricRow(
+  label: string,
+  before: number,
+  after: number,
+  unit: string,
+  digits: number,
+  higherIsBetter: boolean,
+) {
+  const delta = after - before;
+  const fmt = (v: number) => `${v.toFixed(digits)} ${unit}`;
+  const sign = delta >= 0 ? "+" : "";
+  const positive =
+    Math.abs(delta) < Math.pow(10, -digits) / 2
+      ? null
+      : higherIsBetter
+        ? delta > 0
+        : delta < 0;
+  return {
+    label,
+    before: fmt(before),
+    after: fmt(after),
+    deltaLabel: `${sign}${delta.toFixed(digits)} ${unit}`,
+    positive,
+  };
 }
 
 function Figure({ label, value }: { label: string; value: string }) {

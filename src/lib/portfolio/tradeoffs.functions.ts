@@ -42,20 +42,36 @@ const EXCLUSION_LABELS: Record<ExclusionTag, string> = {
   "fast-fashion": "Fast-fashion",
 };
 
+interface HoldingSnapshot {
+  id: string;
+  ticker: string;
+  name: string;
+  asset_class: string;
+  weight: number;
+}
+
+interface PortfolioSnapshot {
+  expected_return: number;
+  volatility: number;
+  esg_score: number;
+  ter: number;
+  by_class: Record<string, number>;
+  top_holdings: HoldingSnapshot[];
+}
+
 interface TradeoffRow {
-  /** Identifiant stable du levier (mappé sur l'enum tracking) */
   lever: string;
   leverLabel: string;
-  /** Description courte du contrefactuel ("sans cette exclusion", "+ 2 pts de risque"…) */
   altLabel: string;
-  /** Coût (bps) de rendement attendu du levier actuel par rapport au contrefactuel.
-   *  > 0 = ce levier te coûte ce nombre de bps de rendement attendu.
-   *  < 0 = ce levier améliore aussi le rendement (rare). */
+  /** > 0 = le levier actuel coûte ce nombre de bps de rendement attendu.
+   *  < 0 = le levier améliore aussi le rendement (rare). */
   costBps: number;
-  /** Delta ESG composite (pts sur 100) entre actuel et alternative. > 0 = actuel meilleur. */
+  /** Delta ESG composite (pts sur 100), > 0 = actuel meilleur. */
   esgDelta: number;
   /** Delta volatilité (pts %), > 0 = actuel plus risqué. */
   volDelta: number;
+  /** Snapshot complet du portefeuille alternatif (sans ce levier). */
+  alt: PortfolioSnapshot;
 }
 
 // Cache local universe (Worker-instance scope, ~5 min)
@@ -149,26 +165,58 @@ export const simulateTradeoffs = createServerFn({ method: "POST" })
       params: baseParams,
     });
 
-    const rows: TradeoffRow[] = [];
+    const assetById = new Map(universe.assets.map((a) => [a.id, a]));
+    const snapshot = (r: ReturnType<typeof buildPortfolio>): PortfolioSnapshot => {
+      const top = Object.entries(r.weights)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 6)
+        .map(([id, w]) => {
+          const a = assetById.get(id);
+          return {
+            id,
+            ticker: a?.ticker ?? id.slice(0, 6),
+            name: a?.name ?? "—",
+            asset_class: a?.asset_class ?? "—",
+            weight: w,
+          };
+        });
+      return {
+        expected_return: r.metrics.expected_return,
+        volatility: r.metrics.volatility,
+        esg_score: r.metrics.esg_score,
+        ter: r.metrics.ter,
+        by_class: r.metrics.by_class as Record<string, number>,
+        top_holdings: top,
+      };
+    };
 
-    // Une variante par exclusion active
+    const rows: TradeoffRow[] = [];
+    const pushRow = (
+      lever: string,
+      leverLabel: string,
+      altLabel: string,
+      alt: ReturnType<typeof buildPortfolio>,
+    ) => {
+      rows.push({
+        lever,
+        leverLabel,
+        altLabel,
+        costBps: Math.round((alt.metrics.expected_return - baseline.metrics.expected_return) * 10000),
+        esgDelta: Number((baseline.metrics.esg_score - alt.metrics.esg_score).toFixed(2)),
+        volDelta: Number(((baseline.metrics.volatility - alt.metrics.volatility) * 100).toFixed(2)),
+        alt: snapshot(alt),
+      });
+    };
+
     for (const excl of baseParams.exclusions) {
       const alt = buildPortfolio({
         universe: universe.assets,
         covariance: universe.covariance,
         params: { ...baseParams, exclusions: baseParams.exclusions.filter((e) => e !== excl) },
       });
-      rows.push({
-        lever: EXCLUSION_LEVERS[excl],
-        leverLabel: `Exclusion : ${EXCLUSION_LABELS[excl]}`,
-        altLabel: "Sans cette exclusion",
-        costBps: Math.round((alt.metrics.expected_return - baseline.metrics.expected_return) * 10000),
-        esgDelta: Number((baseline.metrics.esg_score - alt.metrics.esg_score).toFixed(2)),
-        volDelta: Number(((baseline.metrics.volatility - alt.metrics.volatility) * 100).toFixed(2)),
-      });
+      pushRow(EXCLUSION_LEVERS[excl], `Exclusion : ${EXCLUSION_LABELS[excl]}`, "Sans cette exclusion", alt);
     }
 
-    // Risk target : un cran plus défensif, un cran plus offensif
     const riskUp = Math.min(0.30, baseParams.risk_target + 0.02);
     const riskDown = Math.max(0.02, baseParams.risk_target - 0.02);
     if (riskUp !== baseParams.risk_target) {
@@ -177,14 +225,7 @@ export const simulateTradeoffs = createServerFn({ method: "POST" })
         covariance: universe.covariance,
         params: { ...baseParams, risk_target: riskUp },
       });
-      rows.push({
-        lever: "risk_target",
-        leverLabel: "Cible de risque",
-        altLabel: `Plus offensif (+2 pts de vol cible)`,
-        costBps: Math.round((alt.metrics.expected_return - baseline.metrics.expected_return) * 10000),
-        esgDelta: Number((baseline.metrics.esg_score - alt.metrics.esg_score).toFixed(2)),
-        volDelta: Number(((baseline.metrics.volatility - alt.metrics.volatility) * 100).toFixed(2)),
-      });
+      pushRow("risk_target", "Cible de risque", "Plus offensif (+2 pts de vol cible)", alt);
     }
     if (riskDown !== baseParams.risk_target) {
       const alt = buildPortfolio({
@@ -192,22 +233,11 @@ export const simulateTradeoffs = createServerFn({ method: "POST" })
         covariance: universe.covariance,
         params: { ...baseParams, risk_target: riskDown },
       });
-      rows.push({
-        lever: "risk_target",
-        leverLabel: "Cible de risque",
-        altLabel: `Plus défensif (-2 pts de vol cible)`,
-        costBps: Math.round((alt.metrics.expected_return - baseline.metrics.expected_return) * 10000),
-        esgDelta: Number((baseline.metrics.esg_score - alt.metrics.esg_score).toFixed(2)),
-        volDelta: Number(((baseline.metrics.volatility - alt.metrics.volatility) * 100).toFixed(2)),
-      });
+      pushRow("risk_target", "Cible de risque", "Plus défensif (-2 pts de vol cible)", alt);
     }
 
     return {
-      baseline: {
-        expected_return: baseline.metrics.expected_return,
-        volatility: baseline.metrics.volatility,
-        esg_score: baseline.metrics.esg_score,
-      },
+      baseline: snapshot(baseline),
       rows,
     };
   });
