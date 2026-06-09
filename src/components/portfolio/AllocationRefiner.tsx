@@ -129,28 +129,41 @@ export function AllocationRefiner({ portfolioId }: Props) {
               )}
             >
               <div className="flex items-start justify-between gap-3">
-                <div>
+                <div className="min-w-0">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-3">
                     {row.leverLabel}
                   </p>
-                  <p className="text-[13px] text-ink mt-1">vs {row.altLabel}</p>
+                  <p className="text-[13px] text-ink mt-1 truncate">vs {row.altLabel}</p>
                 </div>
                 <div className="text-right shrink-0">
                   <p
                     className={cn(
                       "text-[15px] font-semibold tabular-nums",
-                      positive ? "text-ink" : "text-ink-3",
+                      row.costBps > 0 ? "text-rust" : "text-moss-2",
                     )}
                     style={{ fontVariantNumeric: "tabular-nums" }}
                   >
-                    {positive ? "−" : "+"}
-                    {Math.abs(row.costBps)} bps
+                    {row.costBps > 0
+                      ? `−${row.costBps} bps`
+                      : row.costBps < 0
+                        ? `+${Math.abs(row.costBps)} bps`
+                        : "0 bps"}
                   </p>
                   <p className="text-[10px] uppercase tracking-[0.14em] text-ink-3 mt-0.5">
-                    rendement annuel
+                    {row.costBps > 0
+                      ? "rendement annuel perdu"
+                      : row.costBps < 0
+                        ? "rendement annuel gagné"
+                        : "impact neutre"}
                   </p>
                 </div>
               </div>
+
+              {row.costBps < 0 && (
+                <p className="text-[11px] text-ink-3 leading-relaxed bg-paper-2 rounded px-3 py-2">
+                  Enlever cette exclusion pourrait <span className="text-rust font-medium">baisser</span> le rendement attendu. Elle est aujourd'hui "gratuite" voire bénéfique car elle élimine des actifs peu attractifs en rendement/risk.
+                </p>
+              )}
 
               <div className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-ink-3">
                 <span>
