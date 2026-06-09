@@ -1,110 +1,137 @@
-# Harmonisation Seedow — moins de bruit, plus de clarté
+# Plan global multi-moats — seedow
 
-L'app empile aujourd'hui beaucoup de blocs (dashboard = 7 sections, portfolio = 9, 7 entrées de nav rail + 5 en bottom) et les mêmes infos reviennent à plusieurs endroits (valeur totale, gain, CO₂, boutons Investir). On harmonise sur 4 axes, sans toucher au lexique ni aux tokens visuels.
+Objectif : transformer seedow d'un robo ISR de plus en une plateforme avec **3 actifs défensifs cumulatifs** que ni Goodvest ni Yomoni ne peuvent répliquer sans pivoter leur modèle.
 
----
-
-## 1. Dashboard allégé — « une seule histoire »
-
-Cible : un écran qu'on lit en 5 secondes.
-
-Sections gardées (dans l'ordre) :
-1. **AppHeader** (greeting + portefeuille actif)
-2. **Bloc valeur** — `KPIFigure` total + delta jour + bouton *Investir*
-3. **Aperçu portefeuille** — `GardenVisualization` compacte (5 lignes max)
-4. **Prochaine étape** — 1 seule carte contextuelle (Ethi signal le + important OU objectif le + proche OU CTA premier dépôt)
-5. **Lien « Voir le détail »** vers `/portfolio`
-
-Sections retirées du dashboard (déplacées, pas supprimées) :
-- `JourneySteps` → masqué après onboarding (n'apparaît que si le user n'a fait que 1/3 des étapes)
-- `EthiBriefing` complet → ne garder que le **1er signal** en carte « Prochaine étape ». Le briefing complet vit dans `/ethi`.
-- `ImpactRibbon` (CO₂ / arbres / énergie / ESG) → déplacé dans `/portfolio` onglet Impact (déjà présent ailleurs sous forme de certificat)
-- `ProjectionSimulator` → vit déjà dans `/objectifs` via `GoalSimulator`. On retire du dashboard.
-
-Gain : 7 sections → 4. Plus aucun doublon avec `/portfolio`.
+Le séquencement n'est pas négociable : **#1 alimente #2 qui alimente #3**. Sauter une étape = effet réseau creux.
 
 ---
 
-## 2. Navigation unifiée — 5 entrées au lieu de 9
+## Phase 1 — Moat #1 : flywheel valeurs→portefeuille *(4–6 semaines)*
 
-Aujourd'hui : RailNav = 7 primaires + 2 secondaires ; BottomNav = 5 (différentes du rail). Trop de portes d'entrée pour des contenus proches.
+**Thèse** : chaque onboarding doit produire une donnée que personne d'autre ne collecte. Aujourd'hui on saisit `cause_exposure` à la main → on n'apprend rien.
 
-**Nouvelle structure (rail desktop ET bottom mobile identiques) :**
+### 1.1 Instrumenter chaque choix (semaine 1–2)
+Nouvelle table `preference_events` : un évènement par micro-décision, pas seulement le résultat final.
+- `step` : `cause_picked`, `cause_dropped`, `intensity_set`, `exclusion_added`, `exclusion_removed`, `risk_moved`, `horizon_moved`, `fund_rejected`, `fund_swapped`, `allocation_seen`, `allocation_accepted`, `allocation_regenerated`
+- `payload` jsonb : valeur avant/après, position dans le flow, temps passé sur l'écran
+- `session_id` pour reconstruire les parcours
+- `variant` pour A/B futurs (explications, ordres de causes)
 
-| Entrée | Regroupe | Route |
-|---|---|---|
-| Accueil | Dashboard | `/dashboard` |
-| Portefeuille | Analyse + Allocation + Historique + Impact + Comparatif | `/portfolio` (onglets) |
-| Objectifs | Objectifs + projections | `/objectifs` |
-| Explorer | Discover + Communauté (onglets) | `/discover` |
-| Ethi | Assistant | `/ethi` |
+### 1.2 Capturer les **arbitrages révélés** (semaine 2–3)
+La vraie pépite. À chaque génération, exposer le coût implicite et logger la décision :
+- "Exclure les fossiles te coûte 0,4 pt de rendement attendu — tu confirmes ?" → on log accept/refuse + le delta
+- Idem pour : armement, intensité d'une cause, plancher ESG
+- Stockage : `tradeoff_decisions` (user, portfolio, lever, cost_bps, accepted, alt_chosen)
 
-Reléguées en secondaire (rail bas + palette ⌘K uniquement, hors bottom-nav) :
-- Profil investisseur, Méthodologie, Réglages
+### 1.3 Rejet de fonds (semaine 3)
+Sur la fiche holding : bouton "Pas assez vert pour moi" → ouvre raison (controverse, secteur, score) + suggère un swap. Logge tout dans `fund_rejections`.
 
-Conséquences : `/comparatif` devient un onglet de `/portfolio` ; `/communaute` devient un onglet de `/discover`. Les routes existantes restent valides (pas de cassure de lien) mais ne sont plus mises en avant dans les nav.
+### 1.4 Apprendre `cause_exposure` des préférences révélées (semaine 4–5)
+Job nocturne (server function + pg_cron) :
+- Pour chaque fonds, recalculer son `revealed_cause_exposure` = poids des utilisateurs qui le gardent quand ils déclarent telle cause / poids de ceux qui le rejettent
+- Stocker dans `assets.revealed_cause_exposure` (séparé du déclaratif, pour comparaison)
+- En dessous de N=50 signaux, on garde le déclaratif (cold-start)
 
----
+### 1.5 Dashboard interne d'insights (semaine 5–6)
+Route `/admin/insights` (gate role admin via `user_roles`) :
+- Top co-occurrences de causes
+- Élasticité rendement/exclusion (combien de bps les gens acceptent par exclusion)
+- Funnels d'onboarding par variante d'explication
+- Fonds les plus rejetés et raison dominante
 
-## 3. Portefeuille en onglets
-
-`/portfolio` aujourd'hui = 9 sections empilées sur ~3000 px de scroll. On condense en **4 onglets** (composant `Tabs` shadcn déjà dispo) :
-
-- **Performance** — `PortfolioHistoryChart` + `GrowthComparison` + actions Investir / Verser mensuel
-- **Allocation** — `AllocationBreakdown` + `BadgesCard`
-- **Impact** — `ImpactRibbon` + `PortfolioMetricsCard` (ESG/CO₂) + `ImpactCertificate`
-- **Comparatif** — contenu actuel de `/comparatif` (vs benchmarks)
-
-Persistants en tête (tous onglets) : `AppHeader` + `MarketFreshnessBanner`.
-En pied (tous onglets) : `ShareToggle` (mini ligne discrète, plus une grosse section).
-
-`MarketFreshnessBanner` n'apparaît qu'**une seule fois** par session (cookie), pas à chaque visite.
-
----
-
-## 4. Mode Simple par défaut + progressive disclosure
-
-Aujourd'hui le `ViewMode` existe (`useViewMode`) mais l'app reste verbeuse même en Simple. On durcit :
-
-- **Default = Simple** (déjà le cas) + toggle Expert plus visible dans `TopBar` (chip à droite, au lieu d'être caché).
-- En Simple : on ne montre que `expected_return`, `esg_score`, `co2_avoided_tons`. Volatilité et Sharpe (`expertOnly`) **vraiment** masqués (aujourd'hui ils sont juste grisés).
-- **ExplainerCard** : aujourd'hui répétés sur 4 pages. Règle nouvelle : un seul `ExplainerCard` par page, et seulement si l'utilisateur n'a pas dismissé (état localStorage `seedow:explainers-dismissed:<key>`).
-- **MetricLabel `?`** : déjà bon, on garde — c'est la forme de progressive disclosure correcte.
-- **Glossaire** déjà dans ⌘K — on ajoute un lien discret « Glossaire » dans le footer de chaque page expert.
+**Livrable mesurable** : à la fin de Phase 1, on peut répondre "quand un Français de 25-35 ans coche Climat + Égalité F/H, qu'accepte-t-il de sacrifier en rendement ?" — réponse chiffrée, exclusive.
 
 ---
 
-## Détails techniques
+## Phase 2 — Moat #2 : verdict transparence sur les fonds *(6–8 semaines, démarre semaine 4 en parallèle)*
 
-**Fichiers modifiés :**
-- `src/routes/dashboard.tsx` — retirer `EthiBriefing` complet, `ImpactRibbon`, `ProjectionSimulator` ; ajouter `<NextStepCard />` (nouveau, 1 signal max)
-- `src/routes/portfolio.tsx` — refonte en `Tabs` (4 onglets), intégrer le contenu de `/comparatif`
-- `src/routes/discover.tsx` — ajouter `Tabs` (Explorer / Communauté), monter le contenu de `/communaute`
-- `src/components/layout/RailNav.tsx` — 5 entrées primaires + secondaire (Profil, Méthodologie, Réglages)
-- `src/components/navigation/BottomNavigation.tsx` — aligner sur les 5 entrées du rail
-- `src/components/layout/CommandPalette.tsx` — garder toutes les routes (palette reste exhaustive)
-- `src/components/portfolio/PortfolioMetricsCard.tsx` — masquage strict des `expertOnly` en Simple
-- `src/components/portfolio/MarketFreshnessBanner.tsx` — auto-dismiss par session
-- `src/components/ui/ExplainerCard.tsx` — accepter prop `dismissKey` (localStorage)
-- `src/components/layout/TopBar.tsx` — toggle Simple/Expert visible
+**Thèse** : être l'**arbitre indépendant**, pas le distributeur. Ça construit la marque "tiers de confiance" qui rend l'acquisition organique gratuite.
 
-**Fichiers créés :**
-- `src/components/dashboard/NextStepCard.tsx` — 1 carte contextuelle qui choisit entre : 1er dépôt / objectif proche / signal Ethi prioritaire
+### 2.1 Score transparence par fonds (semaine 4–6)
+Nouvelle table `fund_transparency` :
+- `holdings_disclosure` : fraîcheur + granularité des holdings publiés
+- `sfdr_consistency` : article SFDR vs holdings réels (détection greenwashing)
+- `controversy_count` : sources publiques (RepRisk-like agrégé, ou flux ouvert)
+- `methodology_clarity` : score manuel/LLM sur le prospectus
+- `verdict` : enum `transparent | partiel | opaque | suspect`
 
-**Routes conservées (pas supprimées) :**
-`/comparatif`, `/communaute` restent accessibles via palette ⌘K et liens directs. Aucune cassure de lien.
+### 2.2 Pages publiques `/fonds/$ticker` (semaine 6–8)
+- Route publique SSR (loader → server fn avec `supabaseAdmin`, projection colonnes safe)
+- Head SEO : title/desc/og:image dynamique → canal d'acquisition organique
+- Sections : verdict + justification, holdings top 10, controverses, "ce que seedow en pense"
+- Pas de CTA "acheter" → pose la posture indépendante
 
-**Hors scope :**
-- Pas de refonte visuelle (palette, typo, tokens restent identiques)
-- Pas de changement de lexique
-- Pas de nouvelles features
-- Pas de migration BDD
+### 2.3 Contenu éditorial (semaine 8–10)
+- Route `/decryptages` : 1 article/semaine sur un fonds ou une pratique
+- Format court, signature seedow, ton factuel
+- Backlinks naturels depuis les pages fonds
+
+### 2.4 Cadrage du conflit indépendance↔distribution (semaine 10–12)
+**Point critique** : le jour où seedow distribue, la posture saute. À décider maintenant :
+- Option A : ne jamais devenir distributeur direct → modèle abonnement + courtier partenaire
+- Option B : muraille de Chine — la rédaction "verdict" n'a pas accès aux deals distribution
+- Option C : verdict ouvert même négatif sur les fonds distribués (pari risqué mais ultra défendable)
+À trancher avec toi avant Phase 2.4.
+
+**Livrable mesurable** : 200 fonds notés, 20 pages publiques indexées Google sur "[nom fonds] avis", premier trafic SEO non-marque.
 
 ---
 
-## Résultat attendu
+## Phase 3 — Moat #3 : effet réseau communautaire *(6 semaines, démarre semaine 10)*
 
-- Dashboard : 4 sections, lecture en 5s, plus de doublon avec `/portfolio`.
-- Navigation : 5 entrées partout, mêmes labels rail/bottom, plus de confusion entre 7 portes proches.
-- Portfolio : 1 page à onglets au lieu de 9 sections empilées + 1 page séparée pour Comparatif.
-- Néophyte : Simple par défaut masque vraiment les métriques expertes, ExplainerCard non répétés, aide via tooltips `?` et palette.
+**Thèse** : le produit doit s'**améliorer** quand un user de plus arrive. Aujourd'hui `portfolio_shares` est statique → c'est de la galerie, pas du réseau.
+
+### 3.1 Paniers thématiques émergents (semaine 10–12)
+- Job : clusteriser les `portfolio_shares` par signature (causes + exclusions + risk bucket)
+- Surfacer les top 5 clusters comme "paniers communauté" sur `/discover`
+- Chaque panier = allocation moyenne + nombre de membres + perf agrégée
+- Onboarding peut démarrer depuis un panier ("commence comme 1 247 personnes qui partagent tes valeurs")
+
+### 3.2 Suivre des pairs (semaine 12–14)
+- Table `follows` (anonymisée via `public_handle` déjà en place)
+- Feed perso : "3 personnes que tu suis ont ajouté l'exclusion fast-fashion cette semaine"
+- Notification opt-in (alerts existant)
+
+### 3.3 Benchmark vs pairs (semaine 14–16)
+- Sur `/portfolio` : "Ton ESG vs médiane des profils similaires : +12 pts. Ton rendement attendu : −0,3 pt."
+- Sélection des pairs : même cluster Phase 3.1
+- Renforce le moat #1 (encore plus de signal sur les arbitrages)
+
+**Livrable mesurable** : 30 % des nouveaux onboardings démarrent depuis un panier communauté ; rétention M3 +X pts vs cohorte pré-Phase 3.
+
+---
+
+## Dépendances et anti-patterns
+
+```text
+Phase 1 (events + arbitrages)
+   │
+   ├──► alimente Phase 3 (clusters basés sur signaux révélés, pas déclaratif)
+   │
+   └──► alimente Phase 2 (rejets de fonds = signal transparence)
+
+Phase 2 (verdicts + SEO)
+   │
+   └──► canal d'acquisition pour Phase 3 (sinon clusters vides)
+```
+
+**À ne PAS faire** :
+- Lancer Phase 3 avant Phase 1 → clusters basés sur déclaratif = bruit
+- Mettre le statut régulé en avant marketing (cf. Moat #5 — c'est du table stakes)
+- Mélanger distribution et verdicts dans la même UI tant que 2.4 n'est pas tranché
+- Toucher au lexique "jardin/graines" (retiré, ne pas revenir)
+
+## Technique — points d'attention
+
+- **Tables**: `preference_events`, `tradeoff_decisions`, `fund_rejections`, `fund_transparency`, `follows`, `portfolio_clusters` → toutes avec RLS scoped `auth.uid()` + GRANT explicites (cf. règles projet)
+- **Jobs** : pg_cron + server fn pour recalcul nocturne clusters & revealed_cause_exposure (pattern `apikey` header déjà en place via CRON_SECRET hérité)
+- **Admin** : table `user_roles` + `has_role()` (déjà la règle projet) pour `/admin/insights`
+- **SEO Phase 2** : routes publiques `/fonds/$ticker` avec head() dynamique par loader — pas de gate auth, pas de `requireSupabaseAuth` dans le loader
+- **Privacy** : `portfolio_shares` projection colonnes safe déjà en place — étendre le même pattern à `follows` et clusters
+
+## Ce qu'il faut décider avec toi avant build
+
+1. **2.4 indépendance vs distribution** : option A / B / C ?
+2. **Sources controverses** (Phase 2.1) : flux gratuit type GDELT ou budget pour data provider ?
+3. **Friction onboarding** (Phase 1.2) : montrer les arbitrages chiffrés peut faire chuter la conversion court terme — on assume ?
+4. **Admin role** : créer le système `user_roles` maintenant (Phase 1.5) ou attendre ?

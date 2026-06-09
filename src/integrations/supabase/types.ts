@@ -386,6 +386,57 @@ export type Database = {
           },
         ]
       }
+      fund_rejections: {
+        Row: {
+          asset_id: string
+          context: Json
+          id: string
+          occurred_at: string
+          portfolio_id: string | null
+          reason: string
+          reason_detail: string | null
+          swap_asset_id: string | null
+          user_id: string
+        }
+        Insert: {
+          asset_id: string
+          context?: Json
+          id?: string
+          occurred_at?: string
+          portfolio_id?: string | null
+          reason: string
+          reason_detail?: string | null
+          swap_asset_id?: string | null
+          user_id: string
+        }
+        Update: {
+          asset_id?: string
+          context?: Json
+          id?: string
+          occurred_at?: string
+          portfolio_id?: string | null
+          reason?: string
+          reason_detail?: string | null
+          swap_asset_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fund_rejections_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fund_rejections_swap_asset_id_fkey"
+            columns: ["swap_asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       portfolio_shares: {
         Row: {
           carbon_intensity: number | null
@@ -508,6 +559,42 @@ export type Database = {
         }
         Relationships: []
       }
+      preference_events: {
+        Row: {
+          dwell_ms: number | null
+          id: string
+          occurred_at: string
+          payload: Json
+          portfolio_id: string | null
+          session_id: string | null
+          step: string
+          user_id: string
+          variant: string | null
+        }
+        Insert: {
+          dwell_ms?: number | null
+          id?: string
+          occurred_at?: string
+          payload?: Json
+          portfolio_id?: string | null
+          session_id?: string | null
+          step: string
+          user_id: string
+          variant?: string | null
+        }
+        Update: {
+          dwell_ms?: number | null
+          id?: string
+          occurred_at?: string
+          payload?: Json
+          portfolio_id?: string | null
+          session_id?: string | null
+          step?: string
+          user_id?: string
+          variant?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -580,6 +667,51 @@ export type Database = {
           started_at?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      tradeoff_decisions: {
+        Row: {
+          accepted: boolean
+          alt_chosen: string | null
+          context: Json
+          cost_bps: number | null
+          esg_delta: number | null
+          id: string
+          lever: string
+          lever_value: string | null
+          occurred_at: string
+          portfolio_id: string | null
+          user_id: string
+          vol_delta: number | null
+        }
+        Insert: {
+          accepted: boolean
+          alt_chosen?: string | null
+          context?: Json
+          cost_bps?: number | null
+          esg_delta?: number | null
+          id?: string
+          lever: string
+          lever_value?: string | null
+          occurred_at?: string
+          portfolio_id?: string | null
+          user_id: string
+          vol_delta?: number | null
+        }
+        Update: {
+          accepted?: boolean
+          alt_chosen?: string | null
+          context?: Json
+          cost_bps?: number | null
+          esg_delta?: number | null
+          id?: string
+          lever?: string
+          lever_value?: string | null
+          occurred_at?: string
+          portfolio_id?: string | null
+          user_id?: string
+          vol_delta?: number | null
         }
         Relationships: []
       }
