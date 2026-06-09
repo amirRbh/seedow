@@ -819,7 +819,10 @@ function PlantingScene({ onEnter, answers, mode = "replace", name }: { onEnter: 
                 ))}
             </ul>
             <button
-              onClick={onEnter}
+              onClick={() => {
+                void trackPreference({ step: "allocation_accepted", payload: { position_count: selected.length } });
+                onEnter();
+              }}
               className="mt-8 w-full py-3 rounded-full bg-ink text-paper font-semibold text-[13px] hover:bg-moss-2 transition-colors flex items-center justify-center gap-2"
             >
               Accéder au tableau de bord
