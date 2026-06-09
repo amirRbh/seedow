@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { generatePortfolio } from "@/lib/portfolio/server.functions";
 import { callAuthed } from "@/lib/authedServerFn";
+import { trackPreference, type PreferenceStep } from "@/lib/preferences/tracking";
 import type { CauseTag, ExclusionTag } from "@/lib/portfolio/types";
 
 export const Route = createFileRoute("/onboarding")({
