@@ -715,12 +715,40 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          granted_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          granted_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          granted_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
       get_vault_secret: { Args: { secret_name: string }; Returns: string }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       alert_kind:
@@ -731,6 +759,7 @@ export type Database = {
         | "fresh_quotes"
         | "concentration"
       alert_severity: "info" | "warn" | "alert"
+      app_role: "admin" | "user"
       asset_class:
         | "equity_dev"
         | "equity_em"
@@ -909,6 +938,7 @@ export const Constants = {
         "concentration",
       ],
       alert_severity: ["info", "warn", "alert"],
+      app_role: ["admin", "user"],
       asset_class: [
         "equity_dev",
         "equity_em",
