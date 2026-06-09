@@ -176,6 +176,7 @@ export async function trackFundRejection(args: TrackFundRejectionArgs): Promise<
   try {
     const userId = await getUserId();
     if (!userId) return;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { error } = await supabase.from("fund_rejections").insert({
       user_id: userId,
       portfolio_id: args.portfolioId ?? null,
@@ -184,7 +185,7 @@ export async function trackFundRejection(args: TrackFundRejectionArgs): Promise<
       reason_detail: args.reasonDetail ?? null,
       swap_asset_id: args.swapAssetId ?? null,
       context: args.context ?? {},
-    });
+    } as any);
     if (error) console.warn("[trackFundRejection]", error.message);
   } catch (e) {
     console.warn("[trackFundRejection] fatal", e);
