@@ -110,6 +110,11 @@ function Onboarding() {
   const completeStep = async (selected: string[]) => {
     const step = STEPS[stepIndex];
     setAnswers((a) => ({ ...a, [step.id]: selected }));
+    // Tracking : log la complétion de chaque étape (best-effort, ne bloque pas).
+    void trackPreference({
+      step: "step_completed",
+      payload: { onboarding_step: step.id, selected, count: selected.length },
+    });
     if (stepIndex < STEPS.length - 1) {
       setStepIndex((i) => i + 1);
     } else {
