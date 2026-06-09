@@ -153,6 +153,7 @@ export async function trackTradeoff(args: TrackTradeoffArgs): Promise<void> {
   try {
     const userId = await getUserId();
     if (!userId) return;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { error } = await supabase.from("tradeoff_decisions").insert({
       user_id: userId,
       portfolio_id: args.portfolioId ?? null,
@@ -164,7 +165,7 @@ export async function trackTradeoff(args: TrackTradeoffArgs): Promise<void> {
       accepted: args.accepted,
       alt_chosen: args.altChosen ?? null,
       context: args.context ?? {},
-    });
+    } as any);
     if (error) console.warn("[trackTradeoff]", error.message);
   } catch (e) {
     console.warn("[trackTradeoff] fatal", e);
