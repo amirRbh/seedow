@@ -133,6 +133,7 @@ export async function trackPreference(args: TrackPreferenceArgs): Promise<void> 
   try {
     const userId = await getUserId();
     if (!userId) return; // pré-auth : on jette silencieusement
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { error } = await supabase.from("preference_events").insert({
       user_id: userId,
       session_id: getSessionId(),
@@ -141,7 +142,7 @@ export async function trackPreference(args: TrackPreferenceArgs): Promise<void> 
       payload: args.payload ?? {},
       variant: getVariant(),
       dwell_ms: args.dwellMs ?? null,
-    });
+    } as any);
     if (error) console.warn("[trackPreference]", error.message);
   } catch (e) {
     console.warn("[trackPreference] fatal", e);
