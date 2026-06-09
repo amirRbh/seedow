@@ -710,6 +710,19 @@ function PlantingScene({ onEnter, answers, mode = "replace", name }: { onEnter: 
         setWeights(result.weights as Record<string, number>);
         setInitialAmount(amount);
         setPhase("reveal");
+        // Tracking : allocation présentée à l'utilisateur
+        void trackPreference({
+          step: "allocation_seen",
+          portfolioId: result.portfolio_id,
+          payload: {
+            position_count: result.selected.length,
+            causes,
+            exclusions,
+            risk_target: risk,
+            horizon_years: horizon,
+            initial_amount: amount,
+          },
+        });
       } catch (err) {
         if (cancelled) return;
         console.error("[onboarding] generate:", err);
