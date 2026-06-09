@@ -146,7 +146,123 @@ export function HoldingDetailSheet({ open, onClose, holding, valued }: Props) {
             </div>
           </div>
         </div>
+
+        {/* Phase 1.3 — Rejet de fonds (signal de préférence révélée) */}
+        <FundRejectionCard holding={holding} />
       </SheetContent>
     </Sheet>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// Carte "Pas assez vert pour moi" — capture le rejet utilisateur
+// pour alimenter le flywheel valeurs→portefeuille.
+// ─────────────────────────────────────────────────────────
+const REJECTION_REASONS: { id: FundRejectionReason; label: string }[] = [
+  { id: "controversy", label: "Controverse(s) connue(s)" },
+  { id: "excluded_sector", label: "Secteur exclu pour moi" },
+  { id: "low_esg_score", label: "Score ESG insuffisant" },
+  { id: "low_env_score", label: "Pilier environnemental faible" },
+  { id: "low_social_score", label: "Pilier social faible" },
+  { id: "low_gov_score", label: "Gouvernance faible" },
+  { id: "high_carbon", label: "Empreinte carbone trop élevée" },
+  { id: "opaque_holdings", label: "Holdings opaques" },
+  { id: "other", label: "Autre raison" },
+];
+
+function FundRejectionCard({ holding }: { holding: ActiveHolding }) {
+  const [open, setOpen] = useState(false);
+  const [reason, setReason] = useState<FundRejectionReason | null>(null);
+  const [detail, setDetail] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  if (submitted) {
+    return (
+      <div className="mt-3 paper-card p-4 border border-paper-3">
+        <p className="text-[12px] text-ink leading-relaxed">
+          Merci. Ton signal est enregistré — il alimentera la sélection automatique des fonds pour les profils proches du tien.
+        </p>
+      </div>
+    );
+  }
+
+  if (!open) {
+    return (
+      <div className="mt-3 text-center">
+        <button
+          onClick={() => setOpen(true)}
+          className="text-[11px] uppercase tracking-[0.18em] text-ink-3 hover:text-ink font-semibold transition-colors"
+        >
+          Pas assez vert pour moi ?
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-3 paper-card p-4 border border-paper-3">
+      <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
+        Pourquoi ce fonds ne te convient pas
+      </p>
+      <p className="text-[11px] text-ink-3 mb-3">
+        Ton retour reste privé. On s'en sert pour mieux composer les portefeuilles des utilisateurs qui partagent tes valeurs.
+      </p>
+      <div className="space-y-1.5">
+        {REJECTION_REASONS.map((r) => (
+          <label
+            key={r.id}
+            className={`flex items-center gap-2 p-2 rounded border cursor-pointer text-[12px] ${
+              reason === r.id ? "border-ink bg-ink/5" : "border-paper-3 hover:border-ink/40"
+            }`}
+          >
+            <input
+              type="radio"
+              name="reject-reason"
+              checked={reason === r.id}
+              onChange={() => setReason(r.id)}
+              className="accent-ink"
+            />
+            <span className="text-ink">{r.label}</span>
+          </label>
+        ))}
+      </div>
+      {reason && (
+        <textarea
+          value={detail}
+          onChange={(e) => setDetail(e.target.value.slice(0, 280))}
+          placeholder="Précise si tu veux (optionnel)…"
+          className="mt-3 w-full px-3 py-2 text-[12px] border border-paper-3 rounded resize-none focus:border-ink focus:outline-none"
+          rows={2}
+        />
+      )}
+      <div className="mt-3 flex items-center gap-2">
+        <button
+          disabled={!reason || busy}
+          onClick={async () => {
+            if (!reason) return;
+            setBusy(true);
+            await trackFundRejection({
+              assetId: holding.id,
+              reason,
+              reasonDetail: detail.trim() || null,
+              context: { ticker: holding.ticker, allocation_pct: holding.allocationPct },
+            });
+            setBusy(false);
+            setSubmitted(true);
+            toast.success("Signal enregistré");
+          }}
+          className="flex-1 py-2 rounded-full bg-ink text-paper text-[12px] font-semibold hover:bg-moss-2 transition-colors disabled:opacity-30"
+        >
+          {busy ? "Envoi…" : "Valider"}
+        </button>
+        <button
+          onClick={() => { setOpen(false); setReason(null); setDetail(""); }}
+          className="px-4 py-2 text-[12px] text-ink-3 hover:text-ink transition-colors"
+        >
+          Annuler
+        </button>
+      </div>
+    </div>
   );
 }
