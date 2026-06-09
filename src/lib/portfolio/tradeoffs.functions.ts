@@ -42,20 +42,36 @@ const EXCLUSION_LABELS: Record<ExclusionTag, string> = {
   "fast-fashion": "Fast-fashion",
 };
 
+interface HoldingSnapshot {
+  id: string;
+  ticker: string;
+  name: string;
+  asset_class: string;
+  weight: number;
+}
+
+interface PortfolioSnapshot {
+  expected_return: number;
+  volatility: number;
+  esg_score: number;
+  ter: number;
+  by_class: Record<string, number>;
+  top_holdings: HoldingSnapshot[];
+}
+
 interface TradeoffRow {
-  /** Identifiant stable du levier (mappé sur l'enum tracking) */
   lever: string;
   leverLabel: string;
-  /** Description courte du contrefactuel ("sans cette exclusion", "+ 2 pts de risque"…) */
   altLabel: string;
-  /** Coût (bps) de rendement attendu du levier actuel par rapport au contrefactuel.
-   *  > 0 = ce levier te coûte ce nombre de bps de rendement attendu.
-   *  < 0 = ce levier améliore aussi le rendement (rare). */
+  /** > 0 = le levier actuel coûte ce nombre de bps de rendement attendu.
+   *  < 0 = le levier améliore aussi le rendement (rare). */
   costBps: number;
-  /** Delta ESG composite (pts sur 100) entre actuel et alternative. > 0 = actuel meilleur. */
+  /** Delta ESG composite (pts sur 100), > 0 = actuel meilleur. */
   esgDelta: number;
   /** Delta volatilité (pts %), > 0 = actuel plus risqué. */
   volDelta: number;
+  /** Snapshot complet du portefeuille alternatif (sans ce levier). */
+  alt: PortfolioSnapshot;
 }
 
 // Cache local universe (Worker-instance scope, ~5 min)
