@@ -13,6 +13,7 @@ import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { ShareToggle } from "@/components/community/ShareToggle";
 import { ImpactRibbon } from "@/components/garden/ImpactRibbon";
 import { ComparatifPanel } from "@/components/portfolio/ComparatifPanel";
+import { AllocationRefiner } from "@/components/portfolio/AllocationRefiner";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ExplainerCard } from "@/components/ui/ExplainerCard";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
