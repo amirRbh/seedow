@@ -140,6 +140,10 @@ function Portfolio() {
               <BadgesCard badges={MOCK_BADGES} />
             </TabsContent>
 
+            <TabsContent value="affiner" className="pt-5">
+              <AllocationRefiner portfolioId={portfolio.id} />
+            </TabsContent>
+
             <TabsContent value="impact" className="pt-5 space-y-5">
               <ImpactRibbon
                 co2Avoided={co2}
