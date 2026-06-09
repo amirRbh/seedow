@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { generatePortfolio } from "@/lib/portfolio/server.functions";
 import { callAuthed } from "@/lib/authedServerFn";
+import { trackPreference, type PreferenceStep } from "@/lib/preferences/tracking";
 import type { CauseTag, ExclusionTag } from "@/lib/portfolio/types";
 
 export const Route = createFileRoute("/onboarding")({
@@ -109,6 +110,11 @@ function Onboarding() {
   const completeStep = async (selected: string[]) => {
     const step = STEPS[stepIndex];
     setAnswers((a) => ({ ...a, [step.id]: selected }));
+    // Tracking : log la complétion de chaque étape (best-effort, ne bloque pas).
+    void trackPreference({
+      step: "step_completed",
+      payload: { onboarding_step: step.id, selected, count: selected.length },
+    });
     if (stepIndex < STEPS.length - 1) {
       setStepIndex((i) => i + 1);
     } else {
@@ -512,10 +518,36 @@ function Step({
   onBack: () => void;
 }) {
   const [selected, setSelected] = useState<string[]>([]);
+  const [enteredAt] = useState(() => Date.now());
+
+  // Tracking : entrée dans l'étape
+  useEffect(() => {
+    void trackPreference({
+      step: "step_entered",
+      payload: { onboarding_step: step.id, index: stepIndex },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step.id]);
 
   const toggle = (id: string) => {
+    const wasSelected = selected.includes(id);
     if (step.multi) setSelected((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
     else setSelected([id]);
+
+    // Tracking : log chaque choix granulaire (best-effort).
+    // Mapping étape → step enum :
+    let trackStep: PreferenceStep | null = null;
+    if (step.id === "values") trackStep = wasSelected ? "cause_dropped" : "cause_picked";
+    else if (step.id === "exclusions") trackStep = wasSelected ? "exclusion_removed" : "exclusion_added";
+    else if (step.id === "objective") trackStep = "objective_picked";
+    else if (step.id === "amount") trackStep = "amount_set";
+    if (trackStep) {
+      void trackPreference({
+        step: trackStep,
+        payload: { value: id, onboarding_step: step.id },
+        dwellMs: Date.now() - enteredAt,
+      });
+    }
   };
 
   return (
@@ -678,6 +710,19 @@ function PlantingScene({ onEnter, answers, mode = "replace", name }: { onEnter: 
         setWeights(result.weights as Record<string, number>);
         setInitialAmount(amount);
         setPhase("reveal");
+        // Tracking : allocation présentée à l'utilisateur
+        void trackPreference({
+          step: "allocation_seen",
+          portfolioId: result.portfolio_id,
+          payload: {
+            position_count: result.selected.length,
+            causes,
+            exclusions,
+            risk_target: risk,
+            horizon_years: horizon,
+            initial_amount: amount,
+          },
+        });
       } catch (err) {
         if (cancelled) return;
         console.error("[onboarding] generate:", err);
@@ -774,7 +819,10 @@ function PlantingScene({ onEnter, answers, mode = "replace", name }: { onEnter: 
                 ))}
             </ul>
             <button
-              onClick={onEnter}
+              onClick={() => {
+                void trackPreference({ step: "allocation_accepted", payload: { position_count: selected.length } });
+                onEnter();
+              }}
               className="mt-8 w-full py-3 rounded-full bg-ink text-paper font-semibold text-[13px] hover:bg-moss-2 transition-colors flex items-center justify-center gap-2"
             >
               Accéder au tableau de bord
