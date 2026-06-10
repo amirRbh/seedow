@@ -18,22 +18,33 @@ export interface ValuedHolding {
   quoteAt: string | null;
 }
 
+export interface ValuationConsistency {
+  viewValue: number;        // somme des current_value renvoyés par la vue SQL
+  expectedValue: number;    // recalcul côté client (poids × prix / prix d'entrée)
+  deltaAbs: number;         // |view - expected| en €
+  deltaPct: number;         // écart relatif vs totalInvested, en %
+  threshold: number;        // seuil d'alerte (%)
+  warn: boolean;            // true si deltaPct > threshold
+}
+
 export interface PortfolioValuation {
-  // Money figures (deposits-aware: includes settled deposits beyond initial_amount)
-  totalInvested: number;     // initial_amount of active portfolio + settled deposits
-  currentValue: number;      // sum of holdings.currentValue rescaled to totalInvested
-  pnl: number;               // currentValue - totalInvested
-  returnPct: number;         // pnl / totalInvested * 100
-  // Composition
+  totalInvested: number;
+  currentValue: number;
+  pnl: number;
+  returnPct: number;
   holdings: ValuedHolding[];
-  // Meta
-  hasQuotes: boolean;        // false until refresh-market-data runs at least once
+  hasQuotes: boolean;
   oldestQuoteAt: string | null;
   latestQuoteAt: string | null;
+  consistency: ValuationConsistency | null;
   loading: boolean;
   error: string | null;
   refresh: () => void;
 }
+
+// Seuil par défaut : un écart supérieur à 0.5% du capital investi est suspect
+// (au-delà du bruit d'arrondi numérique entre la vue SQL et le recalcul JS).
+const CONSISTENCY_THRESHOLD_PCT = 0.5;
 
 interface ViewRow {
   portfolio_id: string;
