@@ -8,6 +8,7 @@ import { AllocationBreakdown } from "@/components/portfolio/AllocationBreakdown"
 import { PortfolioMetricsCard } from "@/components/portfolio/PortfolioMetricsCard";
 import { PortfolioHistoryChart } from "@/components/portfolio/PortfolioHistoryChart";
 import { MarketFreshnessBanner } from "@/components/portfolio/MarketFreshnessBanner";
+import { ValuationConsistencyBanner } from "@/components/portfolio/ValuationConsistencyBanner";
 import { ImpactCertificate } from "@/components/portfolio/ImpactCertificate";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { ShareToggle } from "@/components/community/ShareToggle";
@@ -92,6 +93,7 @@ function Portfolio() {
           hasQuotes={valuation.hasQuotes}
           onRefreshed={() => valuation.refresh()}
         />
+        <ValuationConsistencyBanner consistency={valuation.consistency} />
 
         <section className="px-5 pt-4">
           <Tabs defaultValue="performance">
