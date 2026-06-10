@@ -154,6 +154,32 @@ export function usePortfolioValuation(): PortfolioValuation {
   const oldestQuoteAt = hasQuotes ? sortedQuotes[0] : null;
   const latestQuoteAt = hasQuotes ? sortedQuotes[sortedQuotes.length - 1] : null;
 
+  // ── Cohérence vue SQL vs recalcul JS ─────────────────────
+  // La vue `portfolio_holdings_valued` calcule current_value côté SQL.
+  // On le re-dérive ici depuis (poids × prix / prix d'entrée) pour détecter
+  // toute dérive (vue désynchronisée, quote partielle, arrondi anormal…).
+  const viewValue = rows.reduce((s, r) => s + num(r.current_value), 0);
+  const expectedValue = holdings.reduce((s, h) => s + h.currentValue, 0);
+  const deltaAbs = Math.abs(viewValue - expectedValue);
+  const deltaPct = totalInvested > 0 ? (deltaAbs / totalInvested) * 100 : 0;
+  const consistency: ValuationConsistency | null = rows.length > 0
+    ? {
+        viewValue,
+        expectedValue,
+        deltaAbs,
+        deltaPct,
+        threshold: CONSISTENCY_THRESHOLD_PCT,
+        warn: deltaPct > CONSISTENCY_THRESHOLD_PCT,
+      }
+    : null;
+
+  if (consistency?.warn && typeof window !== "undefined") {
+    console.warn(
+      `[usePortfolioValuation] Écart vue/recalcul ${deltaPct.toFixed(2)}% ` +
+        `(vue=${viewValue.toFixed(2)}€, attendu=${expectedValue.toFixed(2)}€)`,
+    );
+  }
+
   return {
     totalInvested,
     currentValue,
@@ -163,6 +189,7 @@ export function usePortfolioValuation(): PortfolioValuation {
     hasQuotes,
     oldestQuoteAt,
     latestQuoteAt,
+    consistency,
     loading,
     error,
     refresh,
