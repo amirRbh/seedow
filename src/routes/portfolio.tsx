@@ -93,6 +93,7 @@ function Portfolio() {
           hasQuotes={valuation.hasQuotes}
           onRefreshed={() => valuation.refresh()}
         />
+        <ValuationConsistencyBanner consistency={valuation.consistency} />
 
         <section className="px-5 pt-4">
           <Tabs defaultValue="performance">
