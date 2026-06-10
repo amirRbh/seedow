@@ -381,6 +381,13 @@ export type Database = {
             foreignKeyName: "financial_goals_portfolio_id_fkey"
             columns: ["portfolio_id"]
             isOneToOne: false
+            referencedRelation: "portfolio_holdings_valued"
+            referencedColumns: ["portfolio_id"]
+          },
+          {
+            foreignKeyName: "financial_goals_portfolio_id_fkey"
+            columns: ["portfolio_id"]
+            isOneToOne: false
             referencedRelation: "portfolios"
             referencedColumns: ["id"]
           },
@@ -490,6 +497,13 @@ export type Database = {
           weights?: Json
         }
         Relationships: [
+          {
+            foreignKeyName: "portfolio_shares_portfolio_id_fkey"
+            columns: ["portfolio_id"]
+            isOneToOne: true
+            referencedRelation: "portfolio_holdings_valued"
+            referencedColumns: ["portfolio_id"]
+          },
           {
             foreignKeyName: "portfolio_shares_portfolio_id_fkey"
             columns: ["portfolio_id"]
@@ -738,7 +752,24 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      portfolio_holdings_valued: {
+        Row: {
+          asset_class: Database["public"]["Enums"]["asset_class"] | null
+          asset_id: string | null
+          current_price: number | null
+          current_value: number | null
+          entry_price: number | null
+          invested_in_holding: number | null
+          name: string | null
+          portfolio_id: string | null
+          quote_fetched_at: string | null
+          ticker: string | null
+          total_invested: number | null
+          user_id: string | null
+          weight: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       get_vault_secret: { Args: { secret_name: string }; Returns: string }
