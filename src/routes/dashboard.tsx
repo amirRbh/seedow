@@ -12,6 +12,9 @@ import { NextStepCard } from "@/components/dashboard/NextStepCard";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { supabase } from "@/integrations/supabase/client";
+import { BetaBanner } from "@/components/beta/BetaBanner";
+import { RealInvestmentInterestCard } from "@/components/beta/RealInvestmentInterestCard";
+import { FeedbackButton } from "@/components/beta/FeedbackButton";
 
 export const Route = createFileRoute("/dashboard")({
   beforeLoad: async () => {
