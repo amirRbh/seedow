@@ -1,5 +1,7 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts, useRouterState } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
+import "@/i18n";
 import { LexiconProvider } from "@/hooks/useLexicon";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ViewModeProvider } from "@/hooks/useViewMode";
@@ -13,14 +15,15 @@ import { AppShell } from "@/components/layout/AppShell";
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
+  const { t } = useTranslation();
   return (
     <div className="flex min-h-screen items-center justify-center bg-paper px-4">
       <div className="max-w-md text-center">
         <h1 className="font-value text-7xl text-ink">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-ink">Page introuvable</h2>
-        <p className="mt-2 text-sm text-ink-3">Retourne à ton portefeuille pour continuer.</p>
+        <h2 className="mt-4 text-xl font-semibold text-ink">{t("root.not_found_title")}</h2>
+        <p className="mt-2 text-sm text-ink-3">{t("root.not_found_desc")}</p>
         <div className="mt-6">
-          <Link to="/" className="btn-plant">Retour à l'accueil</Link>
+          <Link to="/" className="btn-plant">{t("root.back_home")}</Link>
         </div>
       </div>
     </div>

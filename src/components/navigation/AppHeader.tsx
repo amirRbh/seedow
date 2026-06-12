@@ -1,7 +1,9 @@
 import { Link } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { useViewMode } from "@/hooks/useViewMode";
 import { PortfolioSelector } from "@/components/garden/PortfolioSelector";
 import { AlertsBell } from "@/components/alerts/AlertsBell";
+import { LanguageToggle } from "@/components/LanguageToggle";
 import { cn } from "@/lib/utils";
 
 interface AppHeaderProps {
@@ -37,23 +39,25 @@ export function AppHeader({
   hideViewToggle = false,
   showPortfolioSelector = false,
 }: AppHeaderProps) {
+  const { t } = useTranslation();
   return (
     <header className="px-5 pt-6 pb-5">
       <div className="md:hidden flex items-center justify-between border-b border-paper-3 pb-3">
         <Link
           to="/dashboard"
-          aria-label="Seedow — retour à ton portefeuille"
+          aria-label={t("nav.back_to_portfolio")}
           className="inline-flex items-center outline-none rounded-sm focus-visible:ring-2 focus-visible:ring-moss-1"
         >
           <span className="font-value text-lg text-ink tracking-tight">seedow</span>
         </Link>
         <div className="flex items-center gap-2">
+          <LanguageToggle />
           {!hideViewToggle && <ViewModeToggle />}
           <AlertsBell />
           {!hideSettings && (
             <Link
               to="/reglages"
-              aria-label="Ouvrir tes réglages"
+              aria-label={t("nav.open_settings")}
               className={cn(
                 "flex items-center justify-center w-9 h-9 rounded-full border border-paper-3 text-ink-2",
                 "transition-colors duration-150 hover:text-ink hover:border-ink-3",
@@ -100,11 +104,12 @@ export function AppHeader({
 }
 
 function ViewModeToggle() {
+  const { t } = useTranslation();
   const { mode, setMode } = useViewMode();
   return (
     <div
       role="group"
-      aria-label="Niveau de détail"
+      aria-label={t("view_mode.label")}
       className="inline-flex items-center h-7 rounded-full border border-paper-3 bg-paper overflow-hidden"
     >
       <button
@@ -117,7 +122,7 @@ function ViewModeToggle() {
           mode === "simple" ? "bg-ink text-paper" : "text-ink-3 hover:text-ink",
         )}
       >
-        Simple
+        {t("view_mode.simple")}
       </button>
       <button
         type="button"
@@ -129,7 +134,7 @@ function ViewModeToggle() {
           mode === "expert" ? "bg-ink text-paper" : "text-ink-3 hover:text-ink",
         )}
       >
-        Expert
+        {t("view_mode.expert")}
       </button>
     </div>
   );

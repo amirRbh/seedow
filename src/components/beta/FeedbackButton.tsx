@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useRouterState } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { submitBetaFeedback } from "@/lib/beta/beta.functions";
 import { callAuthed } from "@/lib/authedServerFn";
 import { useAuth } from "@/hooks/useAuth";
@@ -16,6 +17,7 @@ import {
  * Bouton flottant feedback bêta — visible uniquement quand authentifié.
  */
 export function FeedbackButton() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
@@ -57,9 +59,9 @@ export function FeedbackButton() {
         type="button"
         onClick={() => setOpen(true)}
         className="fixed bottom-24 right-4 z-30 px-3.5 py-2 rounded-full bg-ink text-paper text-[11px] font-semibold uppercase tracking-[0.18em] shadow-lg hover:bg-ink-2 transition-colors"
-        aria-label="Donner un retour"
+        aria-label={t("beta.feedback_btn_aria")}
       >
-        Feedback
+        {t("beta.feedback_btn")}
       </button>
       <Dialog
         open={open}
@@ -72,27 +74,27 @@ export function FeedbackButton() {
           {done ? (
             <>
               <DialogHeader>
-                <DialogTitle>Merci pour ton retour.</DialogTitle>
+                <DialogTitle>{t("beta.feedback_thanks_title")}</DialogTitle>
                 <DialogDescription>
-                  Chaque message est lu personnellement pendant la phase bêta.
+                  {t("beta.feedback_thanks_desc")}
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter>
-                <button onClick={() => setOpen(false)} className="btn-plant">Fermer</button>
+                <button onClick={() => setOpen(false)} className="btn-plant">{t("common.close")}</button>
               </DialogFooter>
             </>
           ) : (
             <>
               <DialogHeader>
-                <DialogTitle>Ton retour façonne le produit</DialogTitle>
+                <DialogTitle>{t("beta.feedback_title")}</DialogTitle>
                 <DialogDescription>
-                  3 questions max. Anonyme côté équipe sauf si tu veux qu'on te recontacte.
+                  {t("beta.feedback_desc")}
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-5 py-2">
                 <div>
                   <label className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold">
-                    Recommanderais-tu Seedow ? (0 = non, 10 = oui)
+                    {t("beta.feedback_nps_label")}
                   </label>
                   <div className="grid grid-cols-11 gap-1 mt-2">
                     {Array.from({ length: 11 }).map((_, i) => (
@@ -114,7 +116,7 @@ export function FeedbackButton() {
 
                 <div>
                   <label className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold">
-                    Qu'est-ce qui te bloque ?
+                    {t("beta.feedback_blocker")}
                   </label>
                   <textarea
                     value={blocker}
@@ -127,7 +129,7 @@ export function FeedbackButton() {
 
                 <div>
                   <label className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold">
-                    Ce que tu aimerais voir
+                    {t("beta.feedback_wish")}
                   </label>
                   <textarea
                     value={wish}
@@ -144,7 +146,7 @@ export function FeedbackButton() {
                   disabled={submitting || (nps === null && !blocker && !wish)}
                   className="btn-plant w-full justify-center disabled:opacity-40"
                 >
-                  {submitting ? "Envoi…" : "Envoyer"}
+                  {submitting ? t("beta.feedback_sending") : t("common.submit")}
                 </button>
               </DialogFooter>
             </>
