@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight, Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { BetaCounter } from "@/components/beta/BetaCounter";
 
 const SITE_URL = "https://seedow.life";
 
