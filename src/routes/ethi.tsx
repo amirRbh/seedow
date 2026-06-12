@@ -26,6 +26,7 @@ interface Message {
 }
 
 function Ethi() {
+  const { t } = useTranslation();
   const { intent, q } = Route.useSearch();
   const { user } = useAuth();
   const { portfolio, loading: pfLoading } = useActivePortfolio();
