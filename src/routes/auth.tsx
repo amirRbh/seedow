@@ -191,7 +191,13 @@ function AuthPage() {
             disabled={loading}
             className="btn-plant w-full justify-center disabled:opacity-50"
           >
-            {loading ? "Veuillez patienter…" : mode === "login" ? "Se connecter" : "Créer le compte"}
+            {loading
+              ? "Veuillez patienter…"
+              : mode === "login"
+                ? "Se connecter"
+                : betaFull
+                  ? "Rejoindre la liste d'attente"
+                  : "Créer le compte (démo)"}
           </button>
         </form>
 
@@ -199,7 +205,7 @@ function AuthPage() {
           {mode === "login" ? "Pas encore de compte ? " : "Déjà inscrit ? "}
           <button
             type="button"
-            onClick={() => setMode(mode === "login" ? "signup" : "login")}
+            onClick={() => { setMode(mode === "login" ? "signup" : "login"); setWaitlistDone(null); }}
             className="text-ink underline-offset-4 hover:underline font-medium"
           >
             {mode === "login" ? "Créer un compte" : "Se connecter"}
