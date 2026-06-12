@@ -104,10 +104,10 @@ function Dashboard() {
           transition={{ delay: 0.1 }}
           className="px-5 pt-6"
         >
-          <p className="text-[11px] uppercase tracking-wider text-ink-3 font-medium">{L.labels.total_value}</p>
+          <p className="text-[11px] uppercase tracking-wider text-ink-3 font-medium">{t("dashboard.total_value")}</p>
           <h2 className="font-value text-6xl text-ink leading-none mt-1">
             <sup className="text-2xl align-super mr-1">€</sup>
-            {totalValue.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {totalValue.toLocaleString(lang === "en" ? "en-US" : "fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </h2>
           <div
             className={`inline-flex items-center gap-1.5 mt-3 px-3 py-1 rounded-full text-xs font-semibold ${
@@ -118,15 +118,15 @@ function Dashboard() {
               {isGrowing ? <polyline points="2,12 6,7 10,9 14,3" /> : <polyline points="2,4 6,9 10,7 14,13" />}
             </svg>
             {isGrowing ? "+" : ""}
-            {gain.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} € · {returnPct.toFixed(2)}%
-            <span className="text-ink-3 font-normal ml-1">depuis le départ</span>
+            {formatCurrency(gain, lang)} · {returnPct.toFixed(2)}%
+            <span className="text-ink-3 font-normal ml-1">{t("dashboard.since_start")}</span>
           </div>
 
           {portfolio && (
             <div className="mt-5">
-              <InvestDialog label="Investir (démo)" defaultAmount={200} />
+              <InvestDialog label={t("dashboard.invest_demo")} defaultAmount={200} />
               <p className="text-[10px] text-ink-3 mt-2 uppercase tracking-wider">
-                Mode démo · capital virtuel
+                {t("dashboard.demo_mode_capital")}
               </p>
             </div>
           )}
