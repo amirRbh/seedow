@@ -4,7 +4,6 @@ import { useAuth } from "@/hooks/useAuth";
 
 export interface PortfolioShareRow {
   id: string;
-  user_id: string;
   portfolio_id: string;
   public_handle: string;
   causes: string[];
@@ -19,6 +18,10 @@ export interface PortfolioShareRow {
   shared_at: string;
   updated_at: string;
 }
+
+// Safe columns: excludes user_id (PII) which is no longer readable by clients.
+const SHARE_COLUMNS =
+  "id, portfolio_id, public_handle, causes, exclusions, risk_target, horizon_years, weights, expected_return, volatility, esg_score, carbon_intensity, shared_at, updated_at";
 
 export function useCommunityShares(filter?: { cause?: string; risk?: "low" | "mid" | "high" }) {
   const [shares, setShares] = useState<PortfolioShareRow[]>([]);
