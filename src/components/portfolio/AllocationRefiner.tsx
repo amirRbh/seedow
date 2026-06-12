@@ -246,9 +246,19 @@ function BeforeAfter({
   baseline: Snapshot;
   alt: Snapshot;
   altLabel: string;
-  t: (k: string) => string;
+  t: (k: string, opts?: Record<string, unknown>) => string;
 }) {
-  // labels translated via t() in BeforeAfter
+  const CLASS_LABELS: Record<string, string> = {
+    equity_dev: t("asset_class.equity_dev"),
+    equity_em: t("asset_class.equity_em"),
+    thematic: t("asset_class.thematic"),
+    green_bond: t("asset_class.green_bond"),
+    social_bond: t("asset_class.social_bond"),
+    sov_bond: t("asset_class.sov_bond"),
+    reit: t("asset_class.reit"),
+    commodity: t("asset_class.commodity"),
+    cash: t("asset_class.cash"),
+  };
   const metrics: Array<{ label: string; before: string; after: string; deltaLabel: string; positive: boolean | null }> = [
     metricRow(t("allocation_refiner.expected_return"), baseline.expected_return * 100, alt.expected_return * 100, "%", 2, true),
     metricRow(t("allocation_refiner.volatility"), baseline.volatility * 100, alt.volatility * 100, "%", 2, false),
@@ -265,6 +275,7 @@ function BeforeAfter({
       before: baseline.by_class[k] ?? 0,
       after: alt.by_class[k] ?? 0,
     }))
+
     .filter((r) => r.before > 0.005 || r.after > 0.005)
     .sort((a, b) => Math.max(b.before, b.after) - Math.max(a.before, a.after));
 

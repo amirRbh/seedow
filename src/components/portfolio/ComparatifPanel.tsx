@@ -207,7 +207,7 @@ function CompareRow({ label, term, seedowValue, msciValue, seedowWins, note, bar
       </div>
       <div className="mt-2 grid grid-cols-2 gap-4">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.18em] text-gold font-semibold mb-1">{t("comparatif_panel.you")}</p>
+          <p className="text-[10px] uppercase tracking-[0.18em] text-gold font-semibold mb-1">Seedow</p>
           <p className={cn("kpi-figure text-xl tabular-nums", seedowWins ? "text-ink" : "text-ink-2")}>
             {seedowValue}
             {seedowWins && <span aria-hidden="true" className="ml-1.5 text-gold text-xs">●</span>}
