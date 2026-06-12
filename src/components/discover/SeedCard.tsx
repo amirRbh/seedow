@@ -149,7 +149,7 @@ export function SeedCard({ asset, static: isStatic }: SeedCardProps) {
                 {/* {t("seed_card:identity_card")} */}
                 <div>
                   <p className="text-[10px] uppercase tracking-[0.14em] text-ink-3 font-semibold mb-2">
-                    Carte d'identité
+                    {t("seed_card:id_card")}
                   </p>
                   <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[11px]">
                     {asset.issuer && <IdRow label={t("seed_card:issuer")} value={asset.issuer} />}

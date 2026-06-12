@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { RailNav } from "./RailNav";
 import { TopBar } from "./TopBar";
@@ -128,6 +129,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 }
 
 function FocusToggle({ focus, onToggle }: { focus: boolean; onToggle: () => void }) {
+  const { t } = useTranslation();
   return (
     <Tooltip>
       <TooltipTrigger asChild>
@@ -135,7 +137,7 @@ function FocusToggle({ focus, onToggle }: { focus: boolean; onToggle: () => void
           type="button"
           onClick={onToggle}
           aria-pressed={focus}
-          aria-label={focus ? "Quitter le mode focus" : "Activer le mode focus"}
+          aria-label={focus ? t("focus_mode.exit") : t("focus_mode.enter")}
           className={cn(
             "hidden md:flex fixed top-3 right-4 z-50 items-center gap-1.5 h-8 px-3 rounded-full",
             "border text-[11px] font-semibold uppercase tracking-[0.18em] transition-all duration-200",
@@ -150,7 +152,7 @@ function FocusToggle({ focus, onToggle }: { focus: boolean; onToggle: () => void
         </button>
       </TooltipTrigger>
       <TooltipContent side="left" sideOffset={8} className="text-[11px]">
-        {focus ? "Réafficher le chrome" : "Masquer la barre et le rail"}
+        {focus ? t("focus_mode.show_chrome") : t("focus_mode.hide_chrome")}
         <kbd className="ml-2 text-[9px] text-ink-3 font-mono">.</kbd>
       </TooltipContent>
     </Tooltip>

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 import {
   CommandDialog,
@@ -19,18 +20,7 @@ interface Props {
   onOpenChange: (open: boolean) => void;
 }
 
-const ROUTES: Array<{ path: string; label: string; hint: string; shortcut?: string }> = [
-  { path: "/dashboard", label: "Vue d'ensemble", hint: "Tableau de bord", shortcut: "g d" },
-  { path: "/portfolio", label: "Analyse portefeuille", hint: "Performance, allocation, historique", shortcut: "g p" },
-  { path: "/objectifs", label: "Objectifs", hint: "Suivre tes cibles d'épargne", shortcut: "g o" },
-  { path: "/communaute", label: "Communauté", hint: "Comparer ta stratégie anonymement" },
-  { path: "/comparatif", label: "Comparatif", hint: "Mes actifs vs benchmarks", shortcut: "g c" },
-  { path: "/profil", label: "Profil investisseur", hint: "Préférences, horizon, risque" },
-  { path: "/ethi", label: "Ethi — assistant", hint: "Réponses sur tes choix" },
-  { path: "/discover", label: "Explorer", hint: "Découvrir des actifs" },
-  { path: "/methodologie", label: "Méthodologie", hint: "Modèles, hypothèses, sources" },
-  { path: "/reglages", label: "Réglages", hint: "Compte, notifications, sécurité" },
-];
+
 
 
 /**
@@ -38,7 +28,20 @@ const ROUTES: Array<{ path: string; label: string; hint: string; shortcut?: stri
  * Navigation, switch de portefeuille, actions, glossaire, aide.
  */
 export function CommandPalette({ open, onOpenChange }: Props) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
+  const ROUTES = [
+    { path: "/dashboard", label: t("command_palette.routes.dashboard_label"), hint: t("command_palette.routes.dashboard_hint"), shortcut: "g d" },
+    { path: "/portfolio", label: t("command_palette.routes.portfolio_label"), hint: t("command_palette.routes.portfolio_hint"), shortcut: "g p" },
+    { path: "/objectifs", label: t("command_palette.routes.objectifs_label"), hint: t("command_palette.routes.objectifs_hint"), shortcut: "g o" },
+    { path: "/communaute", label: t("command_palette.routes.communaute_label"), hint: t("command_palette.routes.communaute_hint") },
+    { path: "/comparatif", label: t("command_palette.routes.comparatif_label"), hint: t("command_palette.routes.comparatif_hint"), shortcut: "g c" },
+    { path: "/profil", label: t("command_palette.routes.profil_label"), hint: t("command_palette.routes.profil_hint") },
+    { path: "/ethi", label: t("command_palette.routes.ethi_label"), hint: t("command_palette.routes.ethi_hint") },
+    { path: "/discover", label: t("command_palette.routes.discover_label"), hint: t("command_palette.routes.discover_hint") },
+    { path: "/methodologie", label: t("command_palette.routes.methodologie_label"), hint: t("command_palette.routes.methodologie_hint") },
+    { path: "/reglages", label: t("command_palette.routes.reglages_label"), hint: t("command_palette.routes.reglages_hint") },
+  ];
   const router = useRouter();
   const { portfolios, activeId, setActiveId } = useUserPortfolios();
   const { unread, markAllRead } = useAlerts();
@@ -63,14 +66,14 @@ export function CommandPalette({ open, onOpenChange }: Props) {
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
       <CommandInput
-        placeholder="Rechercher une page, un portefeuille, un terme…"
+        placeholder={t("command_palette.placeholder")}
         value={value}
         onValueChange={setValue}
       />
       <CommandList>
-        <CommandEmpty>Aucun résultat.</CommandEmpty>
+        <CommandEmpty>{t("command_palette.empty")}</CommandEmpty>
 
-        <CommandGroup heading="Aller à">
+        <CommandGroup heading={t("command_palette.heading_navigate")}>
           {ROUTES.map((r) => (
             <CommandItem
               key={r.path}
@@ -94,25 +97,25 @@ export function CommandPalette({ open, onOpenChange }: Props) {
         {portfolios.length > 1 && (
           <>
             <CommandSeparator />
-            <CommandGroup heading="Portefeuilles">
+            <CommandGroup heading={t("command_palette.heading_portfolios")}>
               {portfolios.map((p) => (
                 <CommandItem
                   key={p.id}
                   value={`portfolio ${p.name}`}
                   onSelect={() => {
                     setActiveId(p.id);
-                    toast.success(`Portefeuille actif : ${p.name}`);
+                    toast.success(t("command_palette.portfolio_switched", { name: p.name }));
                     close();
                   }}
                 >
                   <span className="flex flex-col">
                     <span className="text-[13px] text-ink font-medium">{p.name}</span>
                     <span className="text-[11px] text-ink-3">
-                      Capital initial {p.initial_amount.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
+                      {t("command_palette.capital_initial", { amount: p.initial_amount.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) })}
                     </span>
                   </span>
                   {p.id === activeId && (
-                    <span className="ml-auto text-[10px] uppercase tracking-[0.18em] text-gold">Actif</span>
+                    <span className="ml-auto text-[10px] uppercase tracking-[0.18em] text-gold">{t("command_palette.active")}</span>
                   )}
                 </CommandItem>
               ))}
@@ -121,7 +124,7 @@ export function CommandPalette({ open, onOpenChange }: Props) {
         )}
 
         <CommandSeparator />
-        <CommandGroup heading="Actions">
+        <CommandGroup heading={t("command_palette.heading_actions")}>
           <CommandItem
             value="action simulateur objectif"
             onSelect={() => {
@@ -133,8 +136,8 @@ export function CommandPalette({ open, onOpenChange }: Props) {
               close();
             }}
           >
-            <span className="text-[13px] text-ink">Simuler un objectif</span>
-            <span className="ml-auto text-[11px] text-ink-3">Simulateur</span>
+            <span className="text-[13px] text-ink">{t("command_palette.action_simulate")}</span>
+            <span className="ml-auto text-[11px] text-ink-3">{t("command_palette.hint_simulator")}</span>
           </CommandItem>
           <CommandItem
             value="action stress test krach"
@@ -147,36 +150,36 @@ export function CommandPalette({ open, onOpenChange }: Props) {
               close();
             }}
           >
-            <span className="text-[13px] text-ink">Lancer un stress-test (krach -30 %)</span>
-            <span className="ml-auto text-[11px] text-ink-3">Simulateur</span>
+            <span className="text-[13px] text-ink">{t("command_palette.action_stress")}</span>
+            <span className="ml-auto text-[11px] text-ink-3">{t("command_palette.hint_simulator")}</span>
           </CommandItem>
           <CommandItem
             value="action marquer alertes lues"
             disabled={unread === 0}
             onSelect={async () => {
               await markAllRead();
-              toast.success("Toutes les alertes sont marquées comme lues.");
+              toast.success(t("command_palette.alerts_read_toast"));
               close();
             }}
           >
-            <span className="text-[13px] text-ink">Marquer toutes les alertes comme lues</span>
-            <span className="ml-auto text-[11px] text-ink-3">{unread} non lue{unread > 1 ? "s" : ""}</span>
+            <span className="text-[13px] text-ink">{t("command_palette.action_mark_read")}</span>
+            <span className="ml-auto text-[11px] text-ink-3">{t(unread > 1 ? "command_palette.alerts_unread_other" : "command_palette.alerts_unread_one", { count: unread })}</span>
           </CommandItem>
           <CommandItem
             value="action invalider cache router refresh"
             onSelect={async () => {
               await router.invalidate();
-              toast.success("Données rafraîchies.");
+              toast.success(t("command_palette.data_refreshed"));
               close();
             }}
           >
-            <span className="text-[13px] text-ink">Rafraîchir les données</span>
-            <span className="ml-auto text-[11px] text-ink-3">Recharger</span>
+            <span className="text-[13px] text-ink">{t("command_palette.action_refresh")}</span>
+            <span className="ml-auto text-[11px] text-ink-3">{t("command_palette.action_refresh_hint")}</span>
           </CommandItem>
         </CommandGroup>
 
         <CommandSeparator />
-        <CommandGroup heading="Glossaire">
+        <CommandGroup heading={t("command_palette.heading_glossary")}>
           {glossaryEntries.map((g) => (
             <CommandItem
               key={g.key}
@@ -193,22 +196,22 @@ export function CommandPalette({ open, onOpenChange }: Props) {
         </CommandGroup>
 
         <CommandSeparator />
-        <CommandGroup heading="Aide">
+        <CommandGroup heading={t("command_palette.heading_help")}>
           <CommandItem value="help raccourcis clavier" onSelect={() => {
-            toast("Raccourcis clavier", {
-              description: "⌘K palette · g d Dashboard · g p Portfolio · g c Comparatif · ? cette aide",
+            toast(t("command_palette.help_shortcuts"), {
+              description: t("command_palette.shortcuts_desc"),
             });
             close();
           }}>
-            <span className="text-[13px] text-ink">Voir les raccourcis clavier</span>
+            <span className="text-[13px] text-ink">{t("command_palette.help_shortcuts")}</span>
             <kbd className="ml-auto text-[10px] text-ink-3 font-mono">?</kbd>
           </CommandItem>
           <CommandItem value="help comprendre kpi" onSelect={() => {
             navigate({ to: "/methodologie" });
             close();
           }}>
-            <span className="text-[13px] text-ink">Comprendre mes KPI</span>
-            <span className="ml-auto text-[11px] text-ink-3">Méthodologie</span>
+            <span className="text-[13px] text-ink">{t("command_palette.help_kpi")}</span>
+            <span className="ml-auto text-[11px] text-ink-3">{t("command_palette.hint_methodology")}</span>
           </CommandItem>
         </CommandGroup>
       </CommandList>

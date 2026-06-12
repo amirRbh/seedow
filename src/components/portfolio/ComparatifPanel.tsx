@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { KPIFigure } from "@/components/ui/KPIFigure";
 import { Glossary } from "@/components/ui/Glossary";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
@@ -35,11 +36,12 @@ function PerfMedaillon({ value, max, accent }: { value: number; max: number; acc
  * Panneau Comparatif — utilisable standalone (/comparatif) ou en onglet (/portfolio).
  */
 export function ComparatifPanel() {
+  const { t } = useTranslation();
   const { portfolio } = useActivePortfolio();
   const valuation = usePortfolioValuation();
 
   if (!portfolio) {
-    return <p className="text-[12px] text-ink-3">Aucun portefeuille actif.</p>;
+    return <p className="text-[12px] text-ink-3">{t("comparatif_panel.no_active")}</p>;
   }
 
   const metrics = portfolio.metrics;
@@ -71,29 +73,29 @@ export function ComparatifPanel() {
       <div className="grid grid-cols-2 gap-4">
         <KPIFigure
           size="sm"
-          label="Capital simulé à 10 ans"
+          label={t("comparatif_panel.simulated_10y")}
           value={seedow10y.toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
           unit="€"
           accent
-          hint={`Sur ${capital.toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })} € investis`}
+          hint={t("comparatif_panel.on_invested", { amount: capital.toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 }) })}
         />
         <KPIFigure
           size="sm"
-          label="Écart vs MSCI World"
+          label={t("comparatif_panel.gap_msci")}
           value={`${delta10y >= 0 ? "+" : ""}${delta10y.toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`}
           unit="€"
-          hint={delta10y >= 0 ? "Au-dessus du benchmark" : "En-dessous du benchmark"}
+          hint={delta10y >= 0 ? t("comparatif_panel.above_benchmark") : t("comparatif_panel.below_benchmark")}
         />
       </div>
 
       <div className="mt-8">
         <div className="gold-rule mb-5" />
-        <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold mb-3">Face à face</p>
-        <h2 className="font-value text-2xl text-ink leading-tight">Les chiffres, sans filtre</h2>
+        <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold mb-3">{t("comparatif_panel.face_to_face")}</p>
+        <h2 className="font-value text-2xl text-ink leading-tight">{t("comparatif_panel.no_filter")}</h2>
 
         <div className="mt-6 border-t border-b border-paper-3 divide-y divide-paper-3">
           <CompareRow
-            label="Performance attendue"
+            label={t("comparatif_panel.expected_perf")}
             term="MSCIWorld"
             seedowValue={`${(seedow.expectedReturn * 100).toFixed(1)} %`}
             msciValue={`${(MSCI_WORLD.expectedReturn * 100).toFixed(1)} %`}
@@ -101,39 +103,39 @@ export function ComparatifPanel() {
             bar={<PerfMedaillon value={seedow.expectedReturn} max={Math.max(seedow.expectedReturn, MSCI_WORLD.expectedReturn)} accent />}
           />
           <CompareRow
-            label="Volatilité"
+            label={t("comparatif_panel.volatility")}
             term="Volatilite"
             seedowValue={`${(seedow.volatility * 100).toFixed(1)} %`}
             msciValue={`${(MSCI_WORLD.volatility * 100).toFixed(1)} %`}
             seedowWins={seedow.volatility <= MSCI_WORLD.volatility}
-            note="Plus bas = parcours plus stable"
+            note={t("comparatif_panel.lower_stable")}
           />
           <CompareRow
-            label="Frais annuels"
+            label={t("comparatif_panel.annual_fees")}
             term="TER"
             seedowValue={`${(seedow.ter * 100).toFixed(2)} %`}
             msciValue={`${(MSCI_WORLD.ter * 100).toFixed(2)} %`}
             seedowWins={seedow.ter <= MSCI_WORLD.ter}
-            note="Plus bas = plus de rendement net"
+            note={t("comparatif_panel.lower_net")}
           />
           <CompareRow
-            label="Score d'impact"
+            label={t("comparatif_panel.impact_score")}
             term="ESG"
             seedowValue={`${seedow.esgScore.toFixed(0)} / 100`}
             msciValue={`${MSCI_WORLD.esgScore} / 100`}
             seedowWins={seedow.esgScore >= MSCI_WORLD.esgScore}
-            note="Plus haut = pratiques plus durables"
+            note={t("comparatif_panel.higher_durable")}
           />
           <CompareRow
-            label="Intensité carbone"
+            label={t("comparatif_panel.carbon_intensity")}
             term="CO2"
             seedowValue={`${seedow.carbonIntensityGperEur.toFixed(0)} g/€`}
             msciValue={`${MSCI_WORLD.carbonIntensityGperEur} g/€`}
             seedowWins={seedow.carbonIntensityGperEur <= MSCI_WORLD.carbonIntensityGperEur}
-            note="Émissions par euro investi"
+            note={t("comparatif_panel.per_euro")}
           />
           <CompareRow
-            label="Classification"
+            label={t("comparatif_panel.classification")}
             term="SFDR"
             seedowValue={seedow.sfdr}
             msciValue={MSCI_WORLD.sfdr}
@@ -144,35 +146,31 @@ export function ComparatifPanel() {
 
       <div className="mt-10">
         <div className="gold-rule mb-5" />
-        <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold mb-3">Impact concret</p>
-        <h2 className="font-value text-2xl text-ink leading-tight">Ce que tu évites chaque année</h2>
+        <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold mb-3">{t("comparatif_panel.concrete_impact")}</p>
+        <h2 className="font-value text-2xl text-ink leading-tight">{t("comparatif_panel.avoided_per_year")}</h2>
         <div className="mt-6 grid grid-cols-2 gap-4 border-t border-paper-3 pt-5">
           <KPIFigure
             size="md"
-            label="CO₂ évité"
+            label={t("comparatif_panel.co2_avoided")}
             value={co2EvitedKg.toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
             unit="kg/an"
             accent
-            hint={`≈ ${Math.round(co2EvitedKg / 120)} trajets Paris→Lyon en voiture`}
+            hint={t("comparatif_panel.paris_lyon_trips", { count: Math.round(co2EvitedKg / 120) })}
           />
           <KPIFigure
             size="md"
-            label="Frais économisés"
+            label={t("comparatif_panel.saved_fees")}
             value={`${Math.max(0, (MSCI_WORLD.ter - seedow.ter) * capital).toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`}
             unit="€/an"
-            hint={`Pour ${capital.toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })} € investis`}
+            hint={t("comparatif_panel.for_invested", { amount: capital.toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 }) })}
           />
         </div>
       </div>
 
       <div className="mt-10 border-t border-paper-3 pt-5">
-        <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">Méthodologie</p>
+        <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">{t("comparatif_panel.methodology")}</p>
         <p className="text-[12px] text-ink-2 leading-relaxed">
-          Le benchmark utilise les caractéristiques moyennes d'un ETF{" "}
-          <Glossary term="MSCIWorld">MSCI World</Glossary> UCITS (IWDA / EUNL) : performance
-          annualisée long terme de 7,2 % (net dividendes), volatilité 15,5 %,{" "}
-          <Glossary term="TER">TER</Glossary> 0,20 %, score MSCI ESG ~52, intensité carbone
-          165 gCO₂e par euro investi.
+          {t("comparatif_panel.methodology_body")}
         </p>
         <Link
           to="/methodologie"
@@ -209,7 +207,7 @@ function CompareRow({ label, term, seedowValue, msciValue, seedowWins, note, bar
       </div>
       <div className="mt-2 grid grid-cols-2 gap-4">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.18em] text-gold font-semibold mb-1">Toi</p>
+          <p className="text-[10px] uppercase tracking-[0.18em] text-gold font-semibold mb-1">{t("comparatif_panel.you")}</p>
           <p className={cn("kpi-figure text-xl tabular-nums", seedowWins ? "text-ink" : "text-ink-2")}>
             {seedowValue}
             {seedowWins && <span aria-hidden="true" className="ml-1.5 text-gold text-xs">●</span>}
