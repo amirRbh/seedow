@@ -62,6 +62,24 @@ export type Database = {
         }
         Relationships: []
       }
+      app_config: {
+        Row: {
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
       asset_covariance: {
         Row: {
           asset_a: string
@@ -264,6 +282,60 @@ export type Database = {
           updated_at?: string
           volatility?: number
           yahoo_symbol?: string | null
+        }
+        Relationships: []
+      }
+      beta_events: {
+        Row: {
+          created_at: string
+          event: string
+          id: string
+          payload: Json | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event: string
+          id?: string
+          payload?: Json | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event?: string
+          id?: string
+          payload?: Json | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      beta_feedback: {
+        Row: {
+          blocker: string | null
+          created_at: string
+          id: string
+          nps: number | null
+          route_when_sent: string | null
+          user_id: string
+          wish: string | null
+        }
+        Insert: {
+          blocker?: string | null
+          created_at?: string
+          id?: string
+          nps?: number | null
+          route_when_sent?: string | null
+          user_id: string
+          wish?: string | null
+        }
+        Update: {
+          blocker?: string | null
+          created_at?: string
+          id?: string
+          nps?: number | null
+          route_when_sent?: string | null
+          user_id?: string
+          wish?: string | null
         }
         Relationships: []
       }
@@ -639,6 +711,51 @@ export type Database = {
         }
         Relationships: []
       }
+      real_investment_intents: {
+        Row: {
+          amount: number
+          contact_email: string | null
+          created_at: string
+          frequency: string
+          id: string
+          portfolio_id: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          contact_email?: string | null
+          created_at?: string
+          frequency: string
+          id?: string
+          portfolio_id?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          contact_email?: string | null
+          created_at?: string
+          frequency?: string
+          id?: string
+          portfolio_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "real_investment_intents_portfolio_id_fkey"
+            columns: ["portfolio_id"]
+            isOneToOne: false
+            referencedRelation: "portfolio_holdings_valued"
+            referencedColumns: ["portfolio_id"]
+          },
+          {
+            foreignKeyName: "real_investment_intents_portfolio_id_fkey"
+            columns: ["portfolio_id"]
+            isOneToOne: false
+            referencedRelation: "portfolios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       scheduled_contributions: {
         Row: {
           amount: number
@@ -747,6 +864,27 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      waitlist: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          source: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          source?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          source?: string | null
         }
         Relationships: []
       }

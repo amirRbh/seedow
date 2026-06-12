@@ -12,6 +12,9 @@ import { NextStepCard } from "@/components/dashboard/NextStepCard";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { supabase } from "@/integrations/supabase/client";
+import { BetaBanner } from "@/components/beta/BetaBanner";
+import { RealInvestmentInterestCard } from "@/components/beta/RealInvestmentInterestCard";
+import { FeedbackButton } from "@/components/beta/FeedbackButton";
 
 export const Route = createFileRoute("/dashboard")({
   beforeLoad: async () => {
@@ -85,6 +88,7 @@ function Dashboard() {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
+      <BetaBanner />
       <div className="max-w-lg mx-auto pb-28">
         <AppHeader eyebrow={greeting} title={userName} showPortfolioSelector />
 
@@ -115,7 +119,10 @@ function Dashboard() {
 
           {portfolio && (
             <div className="mt-5">
-              <InvestDialog label="Investir" defaultAmount={200} />
+              <InvestDialog label="Investir (démo)" defaultAmount={200} />
+              <p className="text-[10px] text-ink-3 mt-2 uppercase tracking-wider">
+                Mode démo · capital virtuel
+              </p>
             </div>
           )}
         </motion.section>
@@ -152,6 +159,10 @@ function Dashboard() {
         {/* 3. Prochaine étape — une seule carte contextuelle */}
         <NextStepCard />
 
+        {/* 3b. Capture intention investissement réel */}
+        {portfolio && <RealInvestmentInterestCard />}
+
+
         {/* 4. Lien Voir le détail */}
         <motion.section
           initial={{ opacity: 0 }}
@@ -175,6 +186,7 @@ function Dashboard() {
       </div>
 
       <BottomNavigation />
+      <FeedbackButton />
     </motion.div>
   );
 }

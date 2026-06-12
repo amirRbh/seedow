@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight, Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { BetaCounter } from "@/components/beta/BetaCounter";
 
 const SITE_URL = "https://seedow.life";
 
@@ -166,6 +167,15 @@ function Landing() {
               <Link to="/methodologie" className="btn-harvest">
                 Méthodologie
               </Link>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8, duration: 0.6 }}
+              className="mt-10 max-w-xs"
+            >
+              <BetaCounter />
             </motion.div>
           </div>
 

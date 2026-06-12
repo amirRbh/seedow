@@ -1,0 +1,87 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState, type FormEvent } from "react";
+import { joinWaitlist } from "@/lib/beta/beta.functions";
+
+export const Route = createFileRoute("/waitlist")({
+  head: () => ({
+    meta: [
+      { title: "Liste d'attente — Seedow" },
+      {
+        name: "description",
+        content: "La phase bêta de Seedow est complète. Inscris-toi sur la liste d'attente pour être notifié·e dès qu'une place se libère.",
+      },
+      { property: "og:title", content: "Liste d'attente — Seedow" },
+      { property: "og:description", content: "Phase bêta complète. Inscris-toi pour la prochaine vague." },
+    ],
+  }),
+  component: WaitlistPage,
+});
+
+function WaitlistPage() {
+  const [email, setEmail] = useState("");
+  const [position, setPosition] = useState<number | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const onSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setSubmitting(true);
+    try {
+      const res = await joinWaitlist({ data: { email, source: "waitlist_page" } });
+      setPosition(res.position);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erreur");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-paper flex items-center justify-center px-6 py-12">
+      <div className="w-full max-w-md">
+        <Link to="/" className="block text-[10px] uppercase tracking-[0.22em] text-ink-3 font-medium hover:text-ink transition-colors mb-6">
+          ← Retour
+        </Link>
+        <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold mb-3">
+          Phase bêta complète
+        </p>
+        <h1 className="font-display text-3xl text-ink leading-tight">
+          Les 300 places sont prises.
+        </h1>
+        <p className="text-[13px] text-ink-2 mt-3 leading-relaxed">
+          Laisse ton email — tu seras prévenu·e dès qu'une place se libère ou qu'on ouvre la prochaine vague de testeurs.
+        </p>
+
+        {position !== null ? (
+          <div className="mt-8 p-6 border border-paper-3 rounded-2xl bg-paper-2">
+            <p className="text-[10px] uppercase tracking-[0.22em] text-ink-3 font-semibold">
+              Tu es inscrit·e
+            </p>
+            <p className="font-value text-4xl text-ink mt-2">#{position}</p>
+            <p className="text-[12px] text-ink-3 mt-2">sur la liste d'attente</p>
+          </div>
+        ) : (
+          <form onSubmit={onSubmit} className="mt-8 space-y-3">
+            <input
+              type="email"
+              required
+              placeholder="Ton email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-3 py-2.5 rounded border border-paper-3 bg-paper text-[13px] focus:border-ink focus:outline-none"
+            />
+            {error && <p className="text-[12px] text-rust">{error}</p>}
+            <button
+              type="submit"
+              disabled={submitting}
+              className="btn-plant w-full justify-center disabled:opacity-50"
+            >
+              {submitting ? "Envoi…" : "Rejoindre la liste"}
+            </button>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+}

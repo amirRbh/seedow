@@ -1,8 +1,11 @@
 import { createFileRoute, Link, useNavigate, redirect } from "@tanstack/react-router";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
+import { useBetaCapacity } from "@/hooks/useBetaCapacity";
+import { joinWaitlist } from "@/lib/beta/beta.functions";
+
 
 
 // Only accept same-origin relative paths: must start with "/" then a non-"/" path char,
@@ -28,14 +31,25 @@ export const Route = createFileRoute("/auth")({
 function AuthPage() {
   const search = Route.useSearch();
   const navigate = useNavigate();
+  const { capacity } = useBetaCapacity();
   const [mode, setMode] = useState<"login" | "signup">(search.mode ?? "login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [waitlistDone, setWaitlistDone] = useState<number | null>(null);
 
   const safeRedirect = search.redirect ?? "/dashboard";
+  const betaFull = mode === "signup" && capacity?.full === true;
+
+  // Si la bêta est pleine et qu'on est en signup, redirige vers /waitlist auto
+  useEffect(() => {
+    if (mode === "signup" && capacity?.full) {
+      // on laisse l'utilisateur sur la page mais on affiche le formulaire waitlist
+    }
+  }, [mode, capacity?.full]);
+
 
   const onGoogle = async () => {
     setError(null);
@@ -52,6 +66,12 @@ function AuthPage() {
 
     try {
       if (mode === "signup") {
+        // Re-check capacity au moment de l'envoi pour éviter les courses
+        if (betaFull) {
+          const res = await joinWaitlist({ data: { email, source: "auth_signup_full" } });
+          setWaitlistDone(res.position);
+          return;
+        }
         const { error: err } = await supabase.auth.signUp({
           email,
           password,
@@ -73,6 +93,7 @@ function AuthPage() {
     }
   };
 
+
   return (
     <div className="min-h-screen bg-paper flex items-center justify-center px-6 py-12">
       <motion.div
@@ -87,13 +108,30 @@ function AuthPage() {
           ← Retour
         </Link>
         <h1 className="font-value text-3xl text-ink mt-6 leading-tight">
-          {mode === "login" ? "Connexion" : "Créer un compte"}
+          {waitlistDone !== null
+            ? "Inscription sur liste d'attente"
+            : mode === "login"
+              ? "Connexion"
+              : betaFull
+                ? "Bêta complète — liste d'attente"
+                : "Créer un compte"}
         </h1>
         <p className="text-[13px] text-ink-2 mt-2">
-          {mode === "login"
-            ? "Accédez à votre espace de gestion."
-            : "Quelques secondes pour commencer."}
+          {waitlistDone !== null
+            ? `Tu es #${waitlistDone} sur la liste. On te prévient dès qu'une place se libère.`
+            : mode === "login"
+              ? "Accédez à votre espace de gestion."
+              : betaFull
+                ? "Les 300 places de la phase bêta sont prises. Laisse ton email pour la prochaine vague."
+                : "Phase de test — aucune transaction réelle. Mode démo uniquement."}
         </p>
+
+        {mode === "signup" && capacity && !betaFull && waitlistDone === null && (
+          <p className="mt-4 text-[10px] uppercase tracking-[0.18em] text-ink-3">
+            Places restantes : <span className="text-ink font-semibold">{capacity.slotsLeft}</span> / {capacity.cap}
+          </p>
+        )}
+
 
         <button
           onClick={onGoogle}
@@ -153,7 +191,13 @@ function AuthPage() {
             disabled={loading}
             className="btn-plant w-full justify-center disabled:opacity-50"
           >
-            {loading ? "Veuillez patienter…" : mode === "login" ? "Se connecter" : "Créer le compte"}
+            {loading
+              ? "Veuillez patienter…"
+              : mode === "login"
+                ? "Se connecter"
+                : betaFull
+                  ? "Rejoindre la liste d'attente"
+                  : "Créer le compte (démo)"}
           </button>
         </form>
 
@@ -161,7 +205,7 @@ function AuthPage() {
           {mode === "login" ? "Pas encore de compte ? " : "Déjà inscrit ? "}
           <button
             type="button"
-            onClick={() => setMode(mode === "login" ? "signup" : "login")}
+            onClick={() => { setMode(mode === "login" ? "signup" : "login"); setWaitlistDone(null); }}
             className="text-ink underline-offset-4 hover:underline font-medium"
           >
             {mode === "login" ? "Créer un compte" : "Se connecter"}

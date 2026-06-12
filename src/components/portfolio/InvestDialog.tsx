@@ -31,7 +31,7 @@ interface Props {
  * Met à jour `portfolios.initial_amount` (capital déclaratif) pour simuler
  * le versement, puis rafraîchit le portefeuille actif et la valorisation.
  */
-export function InvestDialog({ trigger, defaultAmount = 200, label = "Investir" }: Props) {
+export function InvestDialog({ trigger, defaultAmount = 200, label = "Investir (démo)" }: Props) {
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState<number>(defaultAmount);
   const [method, setMethod] = useState<Method>("card");
