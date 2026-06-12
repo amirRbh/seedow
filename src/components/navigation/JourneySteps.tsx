@@ -1,13 +1,8 @@
 import { Link } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 
 export type JourneyStepKey = "values" | "portfolio" | "tracking";
-
-const STEPS: { key: JourneyStepKey; label: string; to: string; n: string }[] = [
-  { key: "values", label: "Tes valeurs", to: "/profil", n: "01" },
-  { key: "portfolio", label: "Ton portefeuille", to: "/portfolio", n: "02" },
-  { key: "tracking", label: "Ton suivi", to: "/dashboard", n: "03" },
-];
 
 interface Props {
   /** Étape actuelle — surlignée. */
@@ -16,14 +11,18 @@ interface Props {
   compact?: boolean;
 }
 
-/**
- * Bandeau « parcours » — repère persistant : valeurs → portefeuille → suivi.
- * Affiché en haut du dashboard, onboarding et profil pour ancrer la vision globale.
- */
 export function JourneySteps({ active, compact = false }: Props) {
+  const { t } = useTranslation();
+  
+  const STEPS: { key: JourneyStepKey; label: string; to: string; n: string }[] = [
+    { key: "values", label: t("journey_steps.values"), to: "/profil", n: "01" },
+    { key: "portfolio", label: t("journey_steps.portfolio"), to: "/portfolio", n: "02" },
+    { key: "tracking", label: t("journey_steps.tracking"), to: "/dashboard", n: "03" },
+  ];
+
   return (
     <nav
-      aria-label="Parcours d'investissement"
+      aria-label={t("journey_steps.aria")}
       className={cn(
         "flex items-stretch gap-2",
         !compact && "px-5 pb-2",
