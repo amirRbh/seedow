@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { EthiBubble } from "@/components/ethi/EthiBubble";
 import { EthiSuggestionChips } from "@/components/ethi/EthiSuggestionChips";
@@ -25,6 +26,7 @@ interface Message {
 }
 
 function Ethi() {
+  const { t } = useTranslation();
   const { intent, q } = Route.useSearch();
   const { user } = useAuth();
   const { portfolio, loading: pfLoading } = useActivePortfolio();
@@ -136,10 +138,10 @@ function Ethi() {
         }),
       });
       const json = (await res.json()) as { content?: string; error?: string };
-      const reply = json.content ?? json.error ?? "Désolée, je n'arrive pas à répondre.";
+      const reply = json.content ?? json.error ?? t("ethi.error_no_response");
       setMessages((prev) => [...prev, { id: `a-${Date.now()}`, role: "assistant", content: reply }]);
     } catch {
-      setMessages((prev) => [...prev, { id: `a-${Date.now()}`, role: "assistant", content: "Désolée, problème de connexion." }]);
+      setMessages((prev) => [...prev, { id: `a-${Date.now()}`, role: "assistant", content: t("ethi.error_connection") }]);
     } finally {
       setIsLoading(false);
     }
@@ -156,13 +158,13 @@ function Ethi() {
               </svg>
             </div>
             <div className="min-w-0">
-              <p className="text-[10px] uppercase tracking-wider text-paper/40 font-semibold">Ton conseiller</p>
+              <p className="text-[10px] uppercase tracking-wider text-paper/40 font-semibold">{t("ethi.your_advisor")}</p>
               <h1 className="font-value text-2xl">Ethi</h1>
             </div>
           </div>
           <Link
             to="/reglages"
-            aria-label="Réglages"
+            aria-label={t("ethi.settings")}
             className="flex items-center justify-center w-9 h-9 rounded-full border border-paper/15 text-paper/70 hover:text-paper hover:border-paper/40 transition-colors flex-shrink-0"
           >
             <svg viewBox="0 0 24 24" className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
@@ -198,7 +200,7 @@ function Ethi() {
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Demande quelque chose à Ethi…"
+              placeholder={t("ethi.input_placeholder")}
               className="flex-1 bg-transparent outline-none text-sm text-paper placeholder:text-paper/40 py-2"
               disabled={isLoading}
             />
@@ -206,7 +208,7 @@ function Ethi() {
               type="submit"
               disabled={!input.trim() || isLoading}
               className="w-9 h-9 rounded-full bg-moss-2 hover:bg-moss-1 text-paper flex items-center justify-center disabled:opacity-30 transition-colors"
-              aria-label="Envoyer"
+              aria-label={t("ethi.send")}
             >
               <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14M13 5l7 7-7 7" />

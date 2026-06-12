@@ -1,6 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence, type PanInfo } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { SeedCard } from "@/components/discover/SeedCard";
@@ -11,6 +12,8 @@ import { CommunityPanel } from "@/components/community/CommunityPanel";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import type { MockAsset } from "@/lib/mockGarden";
 import { MOCK_ASSETS } from "@/lib/mockGarden";
+import { useLang } from "@/hooks/useLang";
+import { formatCurrency } from "@/lib/format";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/discover")({
@@ -25,6 +28,8 @@ export const Route = createFileRoute("/discover")({
 });
 
 function Discover() {
+  const { t } = useTranslation();
+  const { lang } = useLang();
   const [activeTheme, setActiveTheme] = useState("all");
   const [viewMode, setViewMode] = useState<"swipe" | "list">("swipe");
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -55,13 +60,13 @@ function Discover() {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
       <div className="max-w-lg mx-auto pb-28">
-        <AppHeader eyebrow="Découvrir" title="Quels actifs ?" />
+        <AppHeader eyebrow={t("discover.eyebrow")} title={t("discover.title")} />
 
         <div className="px-5 pt-2 pb-3">
           <Tabs defaultValue="explorer">
             <TabsList className="w-full grid grid-cols-2 h-auto bg-paper-2 p-1">
-              <TabsTrigger value="explorer" className="text-[11px] uppercase tracking-[0.12em]">Explorer</TabsTrigger>
-              <TabsTrigger value="communaute" className="text-[11px] uppercase tracking-[0.12em]">Communauté</TabsTrigger>
+              <TabsTrigger value="explorer" className="text-[11px] uppercase tracking-[0.12em]">{t("discover.tab_explore")}</TabsTrigger>
+              <TabsTrigger value="communaute" className="text-[11px] uppercase tracking-[0.12em]">{t("discover.tab_community")}</TabsTrigger>
             </TabsList>
             <TabsContent value="communaute" className="pt-4">
               <CommunityPanel />
@@ -74,7 +79,7 @@ function Discover() {
             <div className="flex items-center gap-1.5 text-[11px] text-moss-1 font-semibold bg-moss-5 px-2.5 py-1 rounded-full border border-moss-4">
               <span>✓</span>
               <span>
-                {planted.length} actif{planted.length > 1 ? "s" : ""} sélectionné{planted.length > 1 ? "s" : ""}
+                {t(planted.length > 1 ? "discover.selected_other" : "discover.selected_one", { count: planted.length })}
               </span>
             </div>
           ) : (
@@ -85,13 +90,13 @@ function Discover() {
               onClick={() => setViewMode("swipe")}
               className={`px-3 py-1 rounded-full transition-all ${viewMode === "swipe" ? "bg-card text-ink shadow-leaf" : "text-ink-3"}`}
             >
-              Swipe
+              {t("discover.swipe")}
             </button>
             <button
               onClick={() => setViewMode("list")}
               className={`px-3 py-1 rounded-full transition-all ${viewMode === "list" ? "bg-card text-ink shadow-leaf" : "text-ink-3"}`}
             >
-              Liste
+              {t("discover.list")}
             </button>
           </div>
         </div>
@@ -105,9 +110,9 @@ function Discover() {
           <div className="px-5">
             {!current ? (
               <div className="pt-12 text-center">
-                <p className="font-value text-3xl text-ink">Tu as tout vu !</p>
-                <p className="text-sm text-ink-3 mt-3">Tu as parcouru tous les actifs de ce thème.</p>
-                <button onClick={reset} className="btn-plant mt-8">Recommencer</button>
+                <p className="font-value text-3xl text-ink">{t("discover.all_seen_title")}</p>
+                <p className="text-sm text-ink-3 mt-3">{t("discover.all_seen_desc")}</p>
+                <button onClick={reset} className="btn-plant mt-8">{t("discover.restart")}</button>
               </div>
             ) : (
               <>
@@ -136,26 +141,26 @@ function Discover() {
                 </div>
 
                 <div className="flex justify-center items-center gap-3 mt-6">
-                  <button onClick={() => handleSwipe("pass")} aria-label="Passer" className="w-14 h-14 rounded-full bg-card border border-paper-3 flex items-center justify-center hover:border-rust transition-all active:scale-95">
+                  <button onClick={() => handleSwipe("pass")} aria-label={t("discover.pass")} className="w-14 h-14 rounded-full bg-card border border-paper-3 flex items-center justify-center hover:border-rust transition-all active:scale-95">
                     <svg viewBox="0 0 24 24" className="w-5 h-5 text-ink-3" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
                   </button>
                   <InvestDialog
-                    label={`Investir dans ${current.ticker}`}
+                    label={t("discover.invest_in", { ticker: current.ticker })}
                     defaultAmount={100}
                     trigger={
                       <button
                         type="button"
-                        aria-label="Investir"
+                        aria-label={t("discover.invest")}
                         className="h-14 px-5 rounded-full bg-ink text-paper text-[12px] font-semibold uppercase tracking-[0.14em] hover:bg-ink-2 transition-colors flex items-center gap-2 active:scale-95"
                       >
                         <svg viewBox="0 0 16 16" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.4}>
                           <path d="M8 3v10M3 8h10" />
                         </svg>
-                        Investir
+                        {t("discover.invest")}
                       </button>
                     }
                   />
-                  <button onClick={() => handleSwipe("plant")} aria-label="Sélectionner" className="w-14 h-14 rounded-full bg-moss-1 text-paper flex items-center justify-center hover:bg-moss-2 transition-all active:scale-95">
+                  <button onClick={() => handleSwipe("plant")} aria-label={t("discover.select")} className="w-14 h-14 rounded-full bg-moss-1 text-paper flex items-center justify-center hover:bg-moss-2 transition-all active:scale-95">
                     <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M20 6L9 17l-5-5" />
                     </svg>
@@ -167,9 +172,9 @@ function Discover() {
                   onClick={() => setDetailAsset(current)}
                   className="mt-4 mx-auto block text-[11px] font-semibold text-ink-2 underline underline-offset-4 decoration-paper-3 hover:decoration-ink"
                 >
-                  Voir la fiche détaillée
+                  {t("discover.see_card")}
                 </button>
-                <p className="text-center text-[11px] text-ink-3 mt-2">Glisse pour trier · Touche la fiche pour tout savoir avant d'investir</p>
+                <p className="text-center text-[11px] text-ink-3 mt-2">{t("discover.swipe_hint")}</p>
 
 
               </>
@@ -205,20 +210,20 @@ function Discover() {
                 </div>
                 <div className="text-right flex-shrink-0">
                   <p className="font-value text-base text-ink leading-none">
-                    {asset.current_price.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 })}
+                    {formatCurrency(asset.current_price, lang).replace(/[.,]00\s?€/, " €")}
                   </p>
-                  <p className="text-[9px] text-ink-3 mt-1">prix unitaire</p>
+                  <p className="text-[9px] text-ink-3 mt-1">{t("discover.unit_price")}</p>
                 </div>
                 <div onClick={(e) => e.stopPropagation()} className="flex-shrink-0">
                   <InvestDialog
-                    label={`Investir dans ${asset.ticker}`}
+                    label={t("discover.invest_in", { ticker: asset.ticker })}
                     defaultAmount={100}
                     trigger={
                       <button
                         type="button"
                         className="h-9 px-3.5 rounded-full bg-ink text-paper text-[10px] font-semibold uppercase tracking-[0.12em] hover:bg-ink-2 transition-colors"
                       >
-                        Investir
+                        {t("discover.invest")}
                       </button>
                     }
                   />
