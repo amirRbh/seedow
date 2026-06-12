@@ -1,11 +1,11 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { computeProjection, solveMonthlyForGoal } from "@/hooks/useProjection";
 import { Slider } from "@/components/ui/slider";
 import { KPIFigure } from "@/components/ui/KPIFigure";
+import { formatCurrency } from "@/lib/format";
+import { useLang } from "@/hooks/useLang";
 import type { FinancialGoal } from "@/hooks/useFinancialGoals";
-
-const fmtEur = (n: number) =>
-  n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 function yearsBetween(from: Date, to: Date) {
   return Math.max(0.5, (to.getTime() - from.getTime()) / (365.25 * 24 * 3600 * 1000));
@@ -16,6 +16,8 @@ export function GoalSimulator({ goal, annualReturn = 0.055, volatility = 0.12 }:
   annualReturn?: number;
   volatility?: number;
 }) {
+  const { t } = useTranslation();
+  const { lang } = useLang();
   const years = yearsBetween(new Date(), new Date(goal.target_date));
   const [monthly, setMonthly] = useState(goal.monthly_contribution);
 
@@ -49,13 +51,13 @@ export function GoalSimulator({ goal, annualReturn = 0.055, volatility = 0.12 }:
 
   return (
     <div className="rounded-lg border border-paper-3 bg-paper p-6">
-      <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gold mb-4">Simulateur</p>
+      <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gold mb-4">{t("goal.sim_eyebrow")}</p>
 
       <div className="space-y-5">
         <div>
           <div className="flex items-baseline justify-between mb-2">
-            <span className="text-[11px] uppercase tracking-[0.18em] text-ink-3">Apport mensuel</span>
-            <span className="font-value text-xl text-ink tabular-nums">{fmtEur(monthly)} €</span>
+            <span className="text-[11px] uppercase tracking-[0.18em] text-ink-3">{t("goal.sim_monthly_label")}</span>
+            <span className="font-value text-xl text-ink tabular-nums">{formatCurrency(monthly, lang)}</span>
           </div>
           <Slider
             value={[monthly]}
@@ -65,37 +67,35 @@ export function GoalSimulator({ goal, annualReturn = 0.055, volatility = 0.12 }:
             step={10}
           />
           <p className="mt-2 text-xs text-ink-3">
-            Horizon estimé : <span className="text-ink tabular-nums">{years.toFixed(1)} ans</span> · Rendement médian{" "}
+            {t("goal.sim_horizon")} <span className="text-ink tabular-nums">{years.toFixed(1)} {t("common.years")}</span> · {t("goal.sim_median_return")}{" "}
             <span className="text-ink tabular-nums">{(annualReturn * 100).toFixed(1)} %</span>
           </p>
         </div>
 
         <div className="grid grid-cols-3 gap-4 border-t border-paper-3 pt-5">
-          <KPIFigure size="sm" label="Pessimiste" value={fmtEur(scenarios.pess.finalValue)} unit="€" />
-          <KPIFigure size="sm" label="Médian" value={fmtEur(scenarios.med.finalValue)} unit="€" accent />
-          <KPIFigure size="sm" label="Optimiste" value={fmtEur(scenarios.opt.finalValue)} unit="€" />
+          <KPIFigure size="sm" label={t("goal.sim_scenario_pess")} value={formatCurrency(scenarios.pess.finalValue, lang)} />
+          <KPIFigure size="sm" label={t("goal.sim_scenario_med")} value={formatCurrency(scenarios.med.finalValue, lang)} accent />
+          <KPIFigure size="sm" label={t("goal.sim_scenario_opt")} value={formatCurrency(scenarios.opt.finalValue, lang)} />
         </div>
 
         <div className="rounded-md bg-paper-2 px-4 py-3 text-sm">
           <p className="text-ink-3 text-xs uppercase tracking-[0.18em] font-semibold mb-1">
-            Pour atteindre {fmtEur(goal.target_amount)} €
+            {t("goal.sim_to_reach", { amount: formatCurrency(goal.target_amount, lang) })}
           </p>
           {needed.feasible ? (
             <p className="text-ink">
-              Apport mensuel requis :{" "}
-              <span className="font-value text-lg tabular-nums">{fmtEur(needed.monthlyRequired)} €</span>
+              {t("goal.sim_required")}{" "}
+              <span className="font-value text-lg tabular-nums">{formatCurrency(needed.monthlyRequired, lang)}</span>
               {gap > 0 ? (
                 <span className="ml-2 text-rose-600 text-xs">
-                  (manque {fmtEur(gap)} € / mois)
+                  {t("goal.sim_gap", { amount: formatCurrency(gap, lang) })}
                 </span>
               ) : (
-                <span className="ml-2 text-emerald-700 text-xs">objectif tenu</span>
+                <span className="ml-2 text-emerald-700 text-xs">{t("goal.sim_met")}</span>
               )}
             </p>
           ) : (
-            <p className="text-rose-600">
-              Objectif difficile à atteindre dans le délai. Augmente l'horizon ou la cible.
-            </p>
+            <p className="text-rose-600">{t("goal.sim_unreachable")}</p>
           )}
         </div>
       </div>

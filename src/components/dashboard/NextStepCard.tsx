@@ -1,35 +1,34 @@
 import { useMemo } from "react";
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { useFinancialGoals } from "@/hooks/useFinancialGoals";
 import { computeBriefing } from "@/lib/portfolio/signals";
+import { formatCurrency } from "@/lib/format";
+import { useLang } from "@/hooks/useLang";
 import { cn } from "@/lib/utils";
 
-/**
- * Carte "Prochaine étape" — une seule action contextuelle.
- * Priorité : 1er dépôt manquant > objectif proche > signal Ethi prioritaire.
- */
 export function NextStepCard() {
+  const { t } = useTranslation();
+  const { lang } = useLang();
   const { portfolio } = useActivePortfolio();
   const valuation = usePortfolioValuation();
   const { goals } = useFinancialGoals();
 
   const card = useMemo(() => {
-    // 1) Pas encore investi → CTA premier dépôt
     if (!portfolio || portfolio.holdings.length === 0) {
       return {
-        eyebrow: "Prochaine étape",
-        title: "Faire ton premier investissement",
-        detail: "Choisis un actif aligné avec tes valeurs.",
+        eyebrow: t("next_step.eyebrow"),
+        title: t("next_step.first_invest_title"),
+        detail: t("next_step.first_invest_detail"),
         to: "/discover" as const,
-        cta: "Explorer les actifs",
+        cta: t("next_step.first_invest_cta"),
         tone: "gold" as const,
       };
     }
 
-    // 2) Objectif le plus proche
     const upcoming = goals
       .filter((g) => g.target_date)
       .sort((a, b) => a.target_date.localeCompare(b.target_date))[0];
@@ -43,17 +42,19 @@ export function NextStepCard() {
       );
       if (months <= 36) {
         return {
-          eyebrow: "Ton objectif",
+          eyebrow: t("next_step.your_goal"),
           title: upcoming.name,
-          detail: `Cible ${upcoming.target_amount.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} € · ${months} mois restants`,
+          detail: t("next_step.goal_detail", {
+            amount: formatCurrency(upcoming.target_amount, lang),
+            months,
+          }),
           to: "/objectifs" as const,
-          cta: "Suivre l'objectif",
+          cta: t("next_step.follow_goal"),
           tone: "moss" as const,
         };
       }
     }
 
-    // 3) Signal Ethi prioritaire
     const briefing = computeBriefing({
       portfolio,
       holdings: valuation.holdings,
@@ -64,15 +65,15 @@ export function NextStepCard() {
       return {
         eyebrow: signal.label,
         title: signal.detail,
-        detail: "Demander à Ethi ce que ça veut dire pour toi.",
+        detail: t("next_step.signal_detail"),
         to: "/ethi" as const,
-        cta: "Parler à Ethi",
+        cta: t("next_step.talk_to_ethi"),
         tone: signal.tone === "rust" ? ("rust" as const) : ("neutral" as const),
       };
     }
 
     return null;
-  }, [portfolio, goals, valuation.holdings, valuation.returnPct]);
+  }, [portfolio, goals, valuation.holdings, valuation.returnPct, t, lang]);
 
   if (!card) return null;
 

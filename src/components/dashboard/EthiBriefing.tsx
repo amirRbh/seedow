@@ -1,16 +1,14 @@
 import { motion } from "framer-motion";
 import { useMemo } from "react";
 import { Link } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { computeBriefing, type BriefingSignal } from "@/lib/portfolio/signals";
 import { GoldRuleReveal } from "@/components/ui/GoldRuleReveal";
+import { formatDate } from "@/lib/format";
+import { useLang } from "@/hooks/useLang";
 import { cn } from "@/lib/utils";
-
-const DATE_FMT: Intl.DateTimeFormatOptions = {
-  day: "numeric",
-  month: "long",
-};
 
 const TONE: Record<BriefingSignal["tone"], string> = {
   gold: "border-gold/40 text-ink bg-gold/5 hover:bg-gold/10",
@@ -20,6 +18,8 @@ const TONE: Record<BriefingSignal["tone"], string> = {
 };
 
 export function EthiBriefing() {
+  const { t } = useTranslation();
+  const { lang } = useLang();
   const { portfolio } = useActivePortfolio();
   const { holdings, returnPct } = usePortfolioValuation();
 
@@ -28,7 +28,7 @@ export function EthiBriefing() {
     [portfolio, holdings, returnPct],
   );
 
-  const date = new Date().toLocaleDateString("fr-FR", DATE_FMT);
+  const date = formatDate(new Date(), lang, { day: "numeric", month: "long" });
 
   if (!portfolio) return null;
 
@@ -42,13 +42,13 @@ export function EthiBriefing() {
       <article className="paper-card p-5 md:p-6">
         <header className="flex items-center justify-between gap-3">
           <p className="eyebrow">
-            Édition du {date} <span className="text-ink-3 mx-1.5">·</span> Ethi
+            {t("ethi_briefing.edition_of", { date })} <span className="text-ink-3 mx-1.5">·</span> Ethi
           </p>
           <Link
             to="/ethi"
             className="text-[10px] uppercase tracking-[0.18em] font-semibold text-ink-3 hover:text-ink transition-colors"
           >
-            Parler à Ethi →
+            {t("ethi_briefing.talk_to_ethi")}
           </Link>
         </header>
 
@@ -61,7 +61,7 @@ export function EthiBriefing() {
         {briefing.signals.length > 0 && (
           <div className="mt-5">
             <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold mb-3">
-              {briefing.signals.length} signal{briefing.signals.length > 1 ? "s" : ""} du jour
+              {t("ethi_briefing.signals", { count: briefing.signals.length, defaultValue: `${briefing.signals.length} signals` })}
             </p>
             <div className="flex flex-wrap gap-2">
               {briefing.signals.map((s, i) => (
