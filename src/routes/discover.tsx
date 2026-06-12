@@ -141,26 +141,26 @@ function Discover() {
                 </div>
 
                 <div className="flex justify-center items-center gap-3 mt-6">
-                  <button onClick={() => handleSwipe("pass")} aria-label="Passer" className="w-14 h-14 rounded-full bg-card border border-paper-3 flex items-center justify-center hover:border-rust transition-all active:scale-95">
+                  <button onClick={() => handleSwipe("pass")} aria-label={t("discover.pass")} className="w-14 h-14 rounded-full bg-card border border-paper-3 flex items-center justify-center hover:border-rust transition-all active:scale-95">
                     <svg viewBox="0 0 24 24" className="w-5 h-5 text-ink-3" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
                   </button>
                   <InvestDialog
-                    label={`Investir dans ${current.ticker}`}
+                    label={t("discover.invest_in", { ticker: current.ticker })}
                     defaultAmount={100}
                     trigger={
                       <button
                         type="button"
-                        aria-label="Investir"
+                        aria-label={t("discover.invest")}
                         className="h-14 px-5 rounded-full bg-ink text-paper text-[12px] font-semibold uppercase tracking-[0.14em] hover:bg-ink-2 transition-colors flex items-center gap-2 active:scale-95"
                       >
                         <svg viewBox="0 0 16 16" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.4}>
                           <path d="M8 3v10M3 8h10" />
                         </svg>
-                        Investir
+                        {t("discover.invest")}
                       </button>
                     }
                   />
-                  <button onClick={() => handleSwipe("plant")} aria-label="Sélectionner" className="w-14 h-14 rounded-full bg-moss-1 text-paper flex items-center justify-center hover:bg-moss-2 transition-all active:scale-95">
+                  <button onClick={() => handleSwipe("plant")} aria-label={t("discover.select")} className="w-14 h-14 rounded-full bg-moss-1 text-paper flex items-center justify-center hover:bg-moss-2 transition-all active:scale-95">
                     <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M20 6L9 17l-5-5" />
                     </svg>
@@ -172,9 +172,9 @@ function Discover() {
                   onClick={() => setDetailAsset(current)}
                   className="mt-4 mx-auto block text-[11px] font-semibold text-ink-2 underline underline-offset-4 decoration-paper-3 hover:decoration-ink"
                 >
-                  Voir la fiche détaillée
+                  {t("discover.see_card")}
                 </button>
-                <p className="text-center text-[11px] text-ink-3 mt-2">Glisse pour trier · Touche la fiche pour tout savoir avant d'investir</p>
+                <p className="text-center text-[11px] text-ink-3 mt-2">{t("discover.swipe_hint")}</p>
 
 
               </>
