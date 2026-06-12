@@ -23,7 +23,7 @@ export function LanguageToggle({ className }: LanguageToggleProps) {
       className={cn("inline-flex items-center gap-2", className)}
     >
       {options.map((opt, idx) => {
-        const active = lang === opt;
+        const active = mounted && lang === opt;
         return (
           <span key={opt} className="inline-flex items-center gap-2">
             {idx > 0 && (
