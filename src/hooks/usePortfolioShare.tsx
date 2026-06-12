@@ -33,7 +33,7 @@ export function useCommunityShares(filter?: { cause?: string; risk?: "low" | "mi
     (async () => {
       const { data, error } = await supabase
         .from("portfolio_shares")
-        .select("*")
+        .select(SHARE_COLUMNS)
         .order("shared_at", { ascending: false })
         .limit(60);
       if (cancelled) return;
@@ -73,7 +73,7 @@ export function useImpactLeaderboard() {
     (async () => {
       const { data, error } = await supabase
         .from("portfolio_shares")
-        .select("*")
+        .select(SHARE_COLUMNS)
         .order("esg_score", { ascending: false, nullsFirst: false })
         .limit(50);
       if (cancelled) return;
@@ -103,7 +103,7 @@ export function useMyShare(portfolioId: string | null) {
     (async () => {
       const { data, error } = await supabase
         .from("portfolio_shares")
-        .select("*")
+        .select(SHARE_COLUMNS)
         .eq("portfolio_id", portfolioId)
         .maybeSingle();
       if (cancelled) return;
