@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useLang } from "@/hooks/useLang";
 import type { Lang } from "@/i18n";
@@ -12,6 +13,8 @@ interface LanguageToggleProps {
  */
 export function LanguageToggle({ className }: LanguageToggleProps) {
   const { lang, setLang } = useLang();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const options: Lang[] = ["fr", "en"];
   return (
     <div
