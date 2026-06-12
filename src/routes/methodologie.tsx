@@ -115,9 +115,12 @@ function MethodologyPage() {
   return (
     <div className="min-h-screen bg-paper text-ink">
       <header className="max-w-6xl mx-auto px-6 pt-10 pb-8 border-b border-paper-3">
-        <Link to="/dashboard" className="text-[10px] uppercase tracking-[0.18em] text-ink-3 hover:text-ink transition-colors">
-          ← Tableau de bord
-        </Link>
+        <div className="flex items-center justify-between">
+          <Link to="/dashboard" className="text-[10px] uppercase tracking-[0.18em] text-ink-3 hover:text-ink transition-colors">
+            ← Tableau de bord
+          </Link>
+          <LanguageToggle />
+        </div>
         <h1 className="font-value text-4xl mt-4">Méthodologie</h1>
         <p className="text-[14px] text-ink-2 mt-3 max-w-2xl leading-relaxed">
           Cinq étapes, transparentes et reproductibles. Ajustez les paramètres en bas de page pour observer le portefeuille recomposé en direct.
