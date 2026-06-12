@@ -1,10 +1,12 @@
 import { createFileRoute, Link, useNavigate, redirect } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { useBetaCapacity } from "@/hooks/useBetaCapacity";
 import { joinWaitlist } from "@/lib/beta/beta.functions";
+import { LanguageToggle } from "@/components/LanguageToggle";
 
 
 
@@ -29,6 +31,7 @@ export const Route = createFileRoute("/auth")({
 });
 
 function AuthPage() {
+  const { t } = useTranslation();
   const search = Route.useSearch();
   const navigate = useNavigate();
   const { capacity } = useBetaCapacity();
@@ -43,13 +46,11 @@ function AuthPage() {
   const safeRedirect = search.redirect ?? "/dashboard";
   const betaFull = mode === "signup" && capacity?.full === true;
 
-  // Si la bêta est pleine et qu'on est en signup, redirige vers /waitlist auto
   useEffect(() => {
     if (mode === "signup" && capacity?.full) {
-      // on laisse l'utilisateur sur la page mais on affiche le formulaire waitlist
+      // affichage formulaire waitlist
     }
   }, [mode, capacity?.full]);
-
 
   const onGoogle = async () => {
     setError(null);
@@ -66,7 +67,6 @@ function AuthPage() {
 
     try {
       if (mode === "signup") {
-        // Re-check capacity au moment de l'envoi pour éviter les courses
         if (betaFull) {
           const res = await joinWaitlist({ data: { email, source: "auth_signup_full" } });
           setWaitlistDone(res.position);
@@ -87,12 +87,11 @@ function AuthPage() {
       }
       navigate({ to: search.redirect ?? "/dashboard" });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur d'authentification");
+      setError(err instanceof Error ? err.message : t("auth.auth_error"));
     } finally {
       setLoading(false);
     }
   };
-
 
   return (
     <div className="min-h-screen bg-paper flex items-center justify-center px-6 py-12">
@@ -101,37 +100,39 @@ function AuthPage() {
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-sm"
       >
-        <Link to="/" className="inline-flex items-center mb-6" aria-label="Seedow">
-          <span className="font-value text-lg text-ink tracking-tight">seedow</span>
-        </Link>
+        <div className="flex items-center justify-between mb-6">
+          <Link to="/" className="inline-flex items-center" aria-label="Seedow">
+            <span className="font-value text-lg text-ink tracking-tight">seedow</span>
+          </Link>
+          <LanguageToggle />
+        </div>
         <Link to="/" className="block text-[10px] uppercase tracking-[0.18em] text-ink-3 font-medium hover:text-ink transition-colors">
-          ← Retour
+          ← {t("common.back")}
         </Link>
         <h1 className="font-value text-3xl text-ink mt-6 leading-tight">
           {waitlistDone !== null
-            ? "Inscription sur liste d'attente"
+            ? t("auth.title_waitlisted")
             : mode === "login"
-              ? "Connexion"
+              ? t("auth.title_login")
               : betaFull
-                ? "Bêta complète — liste d'attente"
-                : "Créer un compte"}
+                ? t("auth.title_beta_full")
+                : t("auth.title_signup")}
         </h1>
         <p className="text-[13px] text-ink-2 mt-2">
           {waitlistDone !== null
-            ? `Tu es #${waitlistDone} sur la liste. On te prévient dès qu'une place se libère.`
+            ? t("auth.desc_waitlisted", { position: waitlistDone })
             : mode === "login"
-              ? "Accédez à votre espace de gestion."
+              ? t("auth.desc_login")
               : betaFull
-                ? "Les 300 places de la phase bêta sont prises. Laisse ton email pour la prochaine vague."
-                : "Phase de test — aucune transaction réelle. Mode démo uniquement."}
+                ? t("auth.desc_beta_full")
+                : t("auth.desc_signup")}
         </p>
 
         {mode === "signup" && capacity && !betaFull && waitlistDone === null && (
           <p className="mt-4 text-[10px] uppercase tracking-[0.18em] text-ink-3">
-            Places restantes : <span className="text-ink font-semibold">{capacity.slotsLeft}</span> / {capacity.cap}
+            {t("auth.slots_remaining")} : <span className="text-ink font-semibold">{capacity.slotsLeft}</span> / {capacity.cap}
           </p>
         )}
-
 
         <button
           onClick={onGoogle}
@@ -143,12 +144,12 @@ function AuthPage() {
             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
           </svg>
-          Continuer avec Google
+          {t("auth.continue_google")}
         </button>
 
         <div className="my-5 flex items-center gap-3">
           <div className="flex-1 h-px bg-paper-3" />
-          <span className="text-[10px] uppercase tracking-[0.15em] text-ink-3">ou</span>
+          <span className="text-[10px] uppercase tracking-[0.15em] text-ink-3">{t("common.or")}</span>
           <div className="flex-1 h-px bg-paper-3" />
         </div>
 
@@ -156,7 +157,7 @@ function AuthPage() {
           {mode === "signup" && (
             <input
               type="text"
-              placeholder="Nom"
+              placeholder={t("auth.name_placeholder")}
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
               className="w-full px-3 py-2.5 rounded border border-paper-3 bg-paper text-[13px] text-ink placeholder-ink-3 focus:border-ink focus:outline-none transition-colors"
@@ -164,7 +165,7 @@ function AuthPage() {
           )}
           <input
             type="email"
-            placeholder="Adresse email"
+            placeholder={t("auth.email_placeholder")}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -173,7 +174,7 @@ function AuthPage() {
           />
           <input
             type="password"
-            placeholder="Mot de passe"
+            placeholder={t("auth.password_placeholder")}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -192,23 +193,23 @@ function AuthPage() {
             className="btn-plant w-full justify-center disabled:opacity-50"
           >
             {loading
-              ? "Veuillez patienter…"
+              ? t("common.please_wait")
               : mode === "login"
-                ? "Se connecter"
+                ? t("auth.btn_login")
                 : betaFull
-                  ? "Rejoindre la liste d'attente"
-                  : "Créer le compte (démo)"}
+                  ? t("auth.btn_waitlist")
+                  : t("auth.btn_signup")}
           </button>
         </form>
 
         <p className="mt-6 text-[12px] text-ink-3 text-center">
-          {mode === "login" ? "Pas encore de compte ? " : "Déjà inscrit ? "}
+          {mode === "login" ? t("auth.no_account") : t("auth.have_account")}
           <button
             type="button"
             onClick={() => { setMode(mode === "login" ? "signup" : "login"); setWaitlistDone(null); }}
             className="text-ink underline-offset-4 hover:underline font-medium"
           >
-            {mode === "login" ? "Créer un compte" : "Se connecter"}
+            {mode === "login" ? t("auth.to_signup") : t("auth.to_login")}
           </button>
         </p>
       </motion.div>

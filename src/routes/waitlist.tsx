@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 import { joinWaitlist } from "@/lib/beta/beta.functions";
+import { LanguageToggle } from "@/components/LanguageToggle";
 
 export const Route = createFileRoute("/waitlist")({
   head: () => ({
@@ -18,6 +20,7 @@ export const Route = createFileRoute("/waitlist")({
 });
 
 function WaitlistPage() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [position, setPosition] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -31,7 +34,7 @@ function WaitlistPage() {
       const res = await joinWaitlist({ data: { email, source: "waitlist_page" } });
       setPosition(res.position);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur");
+      setError(err instanceof Error ? err.message : t("common.error"));
     } finally {
       setSubmitting(false);
     }
@@ -40,33 +43,36 @@ function WaitlistPage() {
   return (
     <div className="min-h-screen bg-paper flex items-center justify-center px-6 py-12">
       <div className="w-full max-w-md">
-        <Link to="/" className="block text-[10px] uppercase tracking-[0.22em] text-ink-3 font-medium hover:text-ink transition-colors mb-6">
-          ← Retour
-        </Link>
+        <div className="flex items-center justify-between mb-6">
+          <Link to="/" className="block text-[10px] uppercase tracking-[0.22em] text-ink-3 font-medium hover:text-ink transition-colors">
+            ← {t("common.back")}
+          </Link>
+          <LanguageToggle />
+        </div>
         <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold mb-3">
-          Phase bêta complète
+          {t("waitlist.eyebrow")}
         </p>
         <h1 className="font-display text-3xl text-ink leading-tight">
-          Les 300 places sont prises.
+          {t("waitlist.title")}
         </h1>
         <p className="text-[13px] text-ink-2 mt-3 leading-relaxed">
-          Laisse ton email — tu seras prévenu·e dès qu'une place se libère ou qu'on ouvre la prochaine vague de testeurs.
+          {t("waitlist.desc")}
         </p>
 
         {position !== null ? (
           <div className="mt-8 p-6 border border-paper-3 rounded-2xl bg-paper-2">
             <p className="text-[10px] uppercase tracking-[0.22em] text-ink-3 font-semibold">
-              Tu es inscrit·e
+              {t("waitlist.registered")}
             </p>
             <p className="font-value text-4xl text-ink mt-2">#{position}</p>
-            <p className="text-[12px] text-ink-3 mt-2">sur la liste d'attente</p>
+            <p className="text-[12px] text-ink-3 mt-2">{t("waitlist.on_list")}</p>
           </div>
         ) : (
           <form onSubmit={onSubmit} className="mt-8 space-y-3">
             <input
               type="email"
               required
-              placeholder="Ton email"
+              placeholder={t("waitlist.email_placeholder")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-3 py-2.5 rounded border border-paper-3 bg-paper text-[13px] focus:border-ink focus:outline-none"
@@ -77,7 +83,7 @@ function WaitlistPage() {
               disabled={submitting}
               className="btn-plant w-full justify-center disabled:opacity-50"
             >
-              {submitting ? "Envoi…" : "Rejoindre la liste"}
+              {submitting ? t("waitlist.submitting") : t("waitlist.btn_join")}
             </button>
           </form>
         )}
