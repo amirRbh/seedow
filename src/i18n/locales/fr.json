@@ -146,5 +146,29 @@
     "feedback_blocker": "Qu'est-ce qui te bloque ?",
     "feedback_wish": "Ce que tu aimerais voir",
     "feedback_sending": "Envoi…"
+  },
+  "bottom_nav": {
+    "home": "Accueil",
+    "portfolio": "Portefeuille",
+    "objectives": "Objectifs",
+    "explore": "Explorer",
+    "ethi": "Ethi",
+    "aria": "Navigation principale"
+  },
+  "dashboard": {
+    "greeting_morning": "Belle matinée",
+    "greeting_afternoon": "Bel après-midi",
+    "greeting_evening": "Belle soirée",
+    "greeting_fallback": "Bonjour",
+    "welcome": "Bienvenue",
+    "total_value": "Valeur totale",
+    "since_start": "depuis le départ",
+    "invest_demo": "Investir (démo)",
+    "demo_mode_capital": "Mode démo · capital virtuel",
+    "loading_portfolio": "Chargement de ton portefeuille…",
+    "empty_portfolio": "Ton portefeuille est encore vide.",
+    "first_investment": "Faire mon premier investissement",
+    "see_detail": "Voir le détail",
+    "see_detail_desc": "Performance, allocation, impact, comparatif"
   }
 }
