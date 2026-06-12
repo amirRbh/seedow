@@ -1,4 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
@@ -19,34 +20,35 @@ type NavItem = {
   shortcut?: string;
 };
 
-const PRIMARY: NavItem[] = [
-  { key: "dashboard", path: "/dashboard", label: "Accueil", icon: "portefeuille", shortcut: "g d" },
-  { key: "portfolio", path: "/portfolio", label: "Portefeuille", icon: "analyse", shortcut: "g p" },
-  { key: "objectifs", path: "/objectifs", label: "Objectifs", icon: "comparatif", shortcut: "g o" },
-  { key: "discover", path: "/discover", label: "Explorer", icon: "decouvrir" },
-  { key: "ethi", path: "/ethi", label: "Ethi (assistant)", icon: "ethi" },
-];
 
-const SECONDARY: NavItem[] = [
-  { key: "profil", path: "/profil", label: "Profil investisseur", icon: "profil" },
-  { key: "methodologie", path: "/methodologie", label: "Méthodologie", icon: "methodologie" },
-];
 
 /**
  * Rail vertical desktop — 64px de large, icônes sobres, tooltip au hover.
  * Mobile : rien (le `BottomNavigation` existant prend le relais).
  */
 export function RailNav() {
+  const { t } = useTranslation();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const PRIMARY: NavItem[] = [
+    { key: "dashboard", path: "/dashboard", label: t("rail_nav.home"), icon: "portefeuille", shortcut: "g d" },
+    { key: "portfolio", path: "/portfolio", label: t("nav.portfolio"), icon: "analyse", shortcut: "g p" },
+    { key: "objectifs", path: "/objectifs", label: t("nav.objectives"), icon: "comparatif", shortcut: "g o" },
+    { key: "discover", path: "/discover", label: t("bottom_nav.explore"), icon: "decouvrir" },
+    { key: "ethi", path: "/ethi", label: t("rail_nav.ethi_assistant"), icon: "ethi" },
+  ];
+  const SECONDARY: NavItem[] = [
+    { key: "profil", path: "/profil", label: t("rail_nav.investor_profile"), icon: "profil" },
+    { key: "methodologie", path: "/methodologie", label: t("nav.methodology"), icon: "methodologie" },
+  ];
   return (
     <aside
-      aria-label="Navigation principale"
+      aria-label={t("rail_nav.aria")}
       className="hidden md:flex fixed left-0 top-0 bottom-0 z-40 w-16 flex-col items-center bg-paper border-r border-paper-3 pt-3 pb-4"
     >
       {/* Marque compacte */}
       <Link
         to="/dashboard"
-        aria-label="Seedow — accueil"
+        aria-label={t("rail_nav.seedow_home")}
         className="flex items-center justify-center w-10 h-10 mb-2 outline-none rounded-sm focus-visible:ring-2 focus-visible:ring-moss-1"
       >
         <span className="font-value text-[14px] text-ink tracking-tight leading-none">s</span>

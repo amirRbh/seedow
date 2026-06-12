@@ -85,7 +85,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
           {/* {t("asset_detail:summary")} */}
           <section>
             <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold mb-2">
-              Résumé
+              {t("asset_detail_sheet.summary")}
             </p>
             <p className="text-[13px] text-ink-2 leading-relaxed">{asset.description}</p>
             {asset.tags.length > 0 && (
@@ -237,18 +237,18 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
           {/* {t("asset_detail:identity_card")} */}
           <section>
             <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold mb-2">
-              Carte d'identité
+              {t("asset_detail_sheet.id_card")}
             </p>
             <div className="grid grid-cols-2 gap-x-4 gap-y-0 text-[12px]">
-              {asset.issuer && <IdRow label="Émetteur" value={asset.issuer} />}
-              {asset.domicile && <IdRow label="Domicile" value={asset.domicile} />}
-              {asset.currency && <IdRow label="Devise" value={asset.currency} />}
+              {asset.issuer && <IdRow label={t("asset_detail_sheet.issuer")} value={asset.issuer} />}
+              {asset.domicile && <IdRow label={t("asset_detail_sheet.domicile")} value={asset.domicile} />}
+              {asset.currency && <IdRow label={t("asset_detail_sheet.currency")} value={asset.currency} />}
               {typeof asset.ter_pct === "number" && (
-                <IdRow label="Frais (TER)" value={formatPercent(asset.ter_pct / 100, lang)} />
+                <IdRow label={t("asset_detail_sheet.fees")} value={formatPercent(asset.ter_pct / 100, lang)} />
               )}
               {asset.dividend_policy && (
                 <IdRow
-                  label="Dividendes"
+                  label={t("asset_detail_sheet.dividends")}
                   value={
                     asset.dividend_policy +
                     (asset.dividend_yield_pct
@@ -258,13 +258,13 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                 />
               )}
               {asset.inception_year && (
-                <IdRow label="Créé en" value={asset.inception_year.toString()} />
+                <IdRow label={t("asset_detail_sheet.created_in")} value={asset.inception_year.toString()} />
               )}
               {asset.benchmark && asset.benchmark !== "—" && (
-                <IdRow label="Indice" value={asset.benchmark} />
+                <IdRow label={t("asset_detail_sheet.index")} value={asset.benchmark} />
               )}
               {typeof asset.holdings_count === "number" && (
-                <IdRow label="Lignes" value={formatNumber(asset.holdings_count, lang)} />
+                <IdRow label={t("asset_detail_sheet.lines")} value={formatNumber(asset.holdings_count, lang)} />
               )}
             </div>
           </section>
@@ -272,7 +272,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
           {asset.top_holdings && asset.top_holdings.length > 0 && (
             <section>
               <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold mb-2">
-                Principales positions
+                {t("asset_detail_sheet.top_positions")}
               </p>
               <div className="flex flex-wrap gap-1.5">
                 {asset.top_holdings.map((h) => (

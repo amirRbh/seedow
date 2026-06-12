@@ -1,4 +1,5 @@
 import type { ActivePortfolioMetrics } from "@/hooks/useActivePortfolio";
+import { useTranslation } from "react-i18next";
 import { useViewMode } from "@/hooks/useViewMode";
 import { MetricLabel } from "@/components/ui/MetricLabel";
 
@@ -18,52 +19,53 @@ interface Item {
 }
 
 export function PortfolioMetricsCard({ metrics }: Props) {
+  const { t } = useTranslation();
   const { isSimple } = useViewMode();
   if (!metrics) return null;
 
   const items: Item[] = [
     {
-      label: "Performance estimée",
-      hint: "Combien ton portefeuille pourrait croître chaque année en moyenne. Estimation, pas une garantie.",
+      label: t("portfolio_metrics.expected_perf"),
+      hint: t("portfolio_metrics.expected_perf_hint"),
       value: `${(metrics.expected_return * 100).toFixed(1)}%`,
-      sub: "par an",
+      sub: t("portfolio_metrics.per_year"),
       tone: "moss",
     },
     {
-      label: "Score d'impact",
-      hint: "Note ESG (Environnement, Social, Gouvernance) moyenne du portefeuille. Plus c'est haut, mieux c'est.",
+      label: t("portfolio_metrics.impact_score"),
+      hint: t("portfolio_metrics.impact_score_hint"),
       value: `${metrics.esg_score.toFixed(0)}`,
-      sub: "sur 100",
+      sub: t("portfolio_metrics.out_of_100"),
       tone: "bloom",
     },
     {
-      label: "CO₂ évité",
-      hint: "Tonnes de CO₂ que ton investissement aide à éviter par tranche de 10 000 € investis chaque année.",
+      label: t("portfolio_metrics.co2_avoided"),
+      hint: t("portfolio_metrics.co2_hint"),
       value: `${metrics.co2_avoided_tons.toFixed(2)}t`,
-      sub: "/ 10k€",
+      sub: t("portfolio_metrics.per_10k"),
       tone: "moss",
     },
     {
-      label: "Variations possibles",
-      hint: "Volatilité : à quel point ton portefeuille peut bouger d'un mois à l'autre. Plus haut = plus de hauts et de bas.",
+      label: t("portfolio_metrics.possible_variations"),
+      hint: t("portfolio_metrics.volatility_hint"),
       value: `${(metrics.volatility * 100).toFixed(1)}%`,
-      sub: "par an",
+      sub: t("portfolio_metrics.per_year"),
       tone: "peach",
       expertOnly: true,
     },
     {
-      label: "Qualité du rendement",
-      hint: "Ratio de Sharpe : mesure si la performance vaut le risque pris. Au-dessus de 1 = très bon.",
+      label: t("portfolio_metrics.return_quality"),
+      hint: t("portfolio_metrics.sharpe_hint"),
       value: metrics.sharpe.toFixed(2),
-      sub: "Sharpe",
+      sub: t("portfolio_metrics.sharpe"),
       tone: "sky",
       expertOnly: true,
     },
     {
-      label: "Frais annuels",
-      hint: "TER : pourcentage prélevé chaque année par les fonds. Plus c'est bas, mieux c'est.",
+      label: t("portfolio_metrics.annual_fees"),
+      hint: t("portfolio_metrics.ter_hint"),
       value: `${(metrics.ter * 100).toFixed(2)}%`,
-      sub: "par an",
+      sub: t("portfolio_metrics.per_year"),
       tone: "ink",
       expertOnly: true,
     },

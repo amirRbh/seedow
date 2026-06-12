@@ -6,6 +6,7 @@ import {
   type TradeoffLever,
 } from "@/lib/preferences/tracking";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 interface Holding {
   id: string;
@@ -38,19 +39,21 @@ interface Props {
   portfolioId: string;
 }
 
-const CLASS_LABELS: Record<string, string> = {
-  equity_dev: "Actions développées",
-  equity_em: "Actions émergentes",
-  thematic: "Thématiques",
-  green_bond: "Obligations vertes",
-  social_bond: "Obligations sociales",
-  sov_bond: "Obligations souveraines",
-  reit: "Immobilier",
-  commodity: "Matières premières",
-  cash: "Liquidités",
-};
+
 
 export function AllocationRefiner({ portfolioId }: Props) {
+  const { t } = useTranslation();
+  const CLASS_LABELS: Record<string, string> = {
+    equity_dev: t("asset_class.equity_dev"),
+    equity_em: t("asset_class.equity_em"),
+    thematic: t("asset_class.thematic"),
+    green_bond: t("asset_class.green_bond"),
+    social_bond: t("asset_class.social_bond"),
+    sov_bond: t("asset_class.sov_bond"),
+    reit: t("asset_class.reit"),
+    commodity: t("asset_class.commodity"),
+    cash: t("asset_class.cash"),
+  };
   const simulate = useServerFn(simulateTradeoffs);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -71,7 +74,7 @@ export function AllocationRefiner({ portfolioId }: Props) {
       })
       .catch((e: unknown) => {
         if (cancelled) return;
-        setError(e instanceof Error ? e.message : "Simulation indisponible.");
+        setError(e instanceof Error ? e.message : t("allocation_refiner.simulation_unavailable"));
       })
       .finally(() => !cancelled && setLoading(false));
     return () => {
@@ -96,7 +99,7 @@ export function AllocationRefiner({ portfolioId }: Props) {
   if (loading) {
     return (
       <div className="border border-paper-3 rounded p-6 text-center">
-        <p className="text-[12px] text-ink-3">Mesure du coût de tes arbitrages…</p>
+        <p className="text-[12px] text-ink-3">{t("allocation_refiner.loading")}</p>
       </div>
     );
   }
@@ -110,7 +113,7 @@ export function AllocationRefiner({ portfolioId }: Props) {
   if (!baseline || rows.length === 0) {
     return (
       <div className="border border-paper-3 rounded p-6">
-        <p className="text-[12px] text-ink-3">Aucun arbitrage notable détecté sur ce portefeuille.</p>
+        <p className="text-[12px] text-ink-3">{t("allocation_refiner.empty")}</p>
       </div>
     );
   }
@@ -118,18 +121,17 @@ export function AllocationRefiner({ portfolioId }: Props) {
   return (
     <div className="space-y-5">
       <header className="space-y-2">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gold">Phase préférence</p>
-        <h2 className="text-lg font-semibold text-ink leading-tight">Affine ton allocation</h2>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gold">{t("allocation_refiner.eyebrow")}</p>
+        <h2 className="text-lg font-semibold text-ink leading-tight">{t("allocation_refiner.title")}</h2>
         <p className="text-[12px] text-ink-2 leading-relaxed">
-          Chaque contrainte que tu poses a un coût mesurable. Garde-la si elle compte plus que le rendement
-          qu'elle te coûte, lève-la sinon. Tes choix nourrissent notre modèle.
+          {t("allocation_refiner.desc")}
         </p>
       </header>
 
       <div className="grid grid-cols-3 gap-3 border-y border-paper-3 py-3">
-        <Figure label="Rendement attendu" value={`${(baseline.expected_return * 100).toFixed(2)} %`} />
-        <Figure label="Volatilité" value={`${(baseline.volatility * 100).toFixed(2)} %`} />
-        <Figure label="Score ESG" value={`${baseline.esg_score.toFixed(1)} / 100`} />
+        <Figure label={t("allocation_refiner.expected_return")} value={`${(baseline.expected_return * 100).toFixed(2)} %`} />
+        <Figure label={t("allocation_refiner.volatility")} value={`${(baseline.volatility * 100).toFixed(2)} %`} />
+        <Figure label={t("allocation_refiner.esg_score")} value={`${baseline.esg_score.toFixed(1)} / 100`} />
       </div>
 
       <ul className="space-y-3">
@@ -197,11 +199,11 @@ export function AllocationRefiner({ portfolioId }: Props) {
                   onClick={() => setExpanded(isOpen ? null : key)}
                   className="ml-auto text-[10px] font-semibold uppercase tracking-[0.14em] text-gold hover:text-ink transition-colors"
                 >
-                  {isOpen ? "Masquer avant / après" : "Voir avant / après"}
+                  {isOpen ? t("allocation_refiner.hide_before_after") : t("allocation_refiner.show_before_after")}
                 </button>
               </div>
 
-              {isOpen && <BeforeAfter baseline={baseline} alt={row.alt} altLabel={row.altLabel} />}
+              {isOpen && <BeforeAfter baseline={baseline} alt={row.alt} altLabel={row.altLabel} t={t} />}
 
               {!decision ? (
                 <div className="flex gap-2 pt-1">
@@ -210,21 +212,21 @@ export function AllocationRefiner({ portfolioId }: Props) {
                     onClick={() => handleDecision(row, true)}
                     className="flex-1 h-9 px-3 rounded border border-ink bg-ink text-paper text-[11px] font-semibold uppercase tracking-[0.14em] hover:bg-ink/90 transition-colors"
                   >
-                    Garder
+                    {t("allocation_refiner.keep")}
                   </button>
                   <button
                     type="button"
                     onClick={() => handleDecision(row, false)}
                     className="flex-1 h-9 px-3 rounded border border-paper-3 text-ink text-[11px] font-semibold uppercase tracking-[0.14em] hover:bg-paper-2 transition-colors"
                   >
-                    Lever
+                    {t("allocation_refiner.lift")}
                   </button>
                 </div>
               ) : (
                 <p className="text-[11px] text-ink-3 italic">
                   {decision === "accepted"
-                    ? "Conservé. Arbitrage accepté."
-                    : "Marqué à lever. On t'aidera à recalculer."}
+                    ? t("allocation_refiner.accepted")
+                    : t("allocation_refiner.to_lift")}
                 </p>
               )}
             </li>
@@ -239,16 +241,19 @@ function BeforeAfter({
   baseline,
   alt,
   altLabel,
+  t,
 }: {
   baseline: Snapshot;
   alt: Snapshot;
   altLabel: string;
+  t: (k: string) => string;
 }) {
+  // labels translated via t() in BeforeAfter
   const metrics: Array<{ label: string; before: string; after: string; deltaLabel: string; positive: boolean | null }> = [
-    metricRow("Rendement attendu", baseline.expected_return * 100, alt.expected_return * 100, "%", 2, true),
-    metricRow("Volatilité", baseline.volatility * 100, alt.volatility * 100, "%", 2, false),
-    metricRow("Score ESG", baseline.esg_score, alt.esg_score, "/100", 1, true),
-    metricRow("Frais (TER)", baseline.ter * 100, alt.ter * 100, "%", 2, false),
+    metricRow(t("allocation_refiner.expected_return"), baseline.expected_return * 100, alt.expected_return * 100, "%", 2, true),
+    metricRow(t("allocation_refiner.volatility"), baseline.volatility * 100, alt.volatility * 100, "%", 2, false),
+    metricRow(t("allocation_refiner.esg_score"), baseline.esg_score, alt.esg_score, "/100", 1, true),
+    metricRow(t("allocation_refiner.fees"), baseline.ter * 100, alt.ter * 100, "%", 2, false),
   ];
 
   const classes = Array.from(
@@ -271,7 +276,7 @@ function BeforeAfter({
       <div className="grid grid-cols-[1fr_auto_1fr] gap-2 items-baseline">
         <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-3">Avant — actuel</p>
         <span className="text-[10px] text-ink-3">vs</span>
-        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-gold text-right">Après — {altLabel}</p>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-gold text-right">{t("allocation_refiner.after_label", { label: altLabel })}</p>
       </div>
 
       <table className="w-full text-[12px]">
@@ -301,7 +306,7 @@ function BeforeAfter({
 
       <div>
         <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-3 mb-2">
-          Répartition par classe
+          {t("allocation_refiner.by_class")}
         </p>
         <ul className="space-y-1.5">
           {classes.map((c) => (
@@ -319,7 +324,7 @@ function BeforeAfter({
       <div className="grid grid-cols-2 gap-4">
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-3 mb-2">
-            Top positions — avant
+            {t("allocation_refiner.top_before")}
           </p>
           <ul className="space-y-1">
             {baseline.top_holdings.map((h) => (
@@ -339,7 +344,7 @@ function BeforeAfter({
         </div>
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-gold mb-2">
-            Top positions — après
+            {t("allocation_refiner.top_after")}
           </p>
           <ul className="space-y-1">
             {alt.top_holdings.map((h) => (
@@ -359,8 +364,8 @@ function BeforeAfter({
         </div>
       </div>
       <p className="text-[10px] text-ink-3 leading-relaxed">
-        <span className="text-rust">Rouge</span> = positions qui disparaîtraient.{" "}
-        <span className="text-moss-2">Vert</span> = nouvelles positions introduites.
+        <span className="text-rust">{t("allocation_refiner.removed_note")}</span>{" "}
+        <span className="text-moss-2">{t("allocation_refiner.added_note")}</span>
       </p>
     </div>
   );

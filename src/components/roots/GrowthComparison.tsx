@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { useMemo, useState } from "react";
 import { RefreshCw, TrendingUp, TrendingDown } from "lucide-react";
 import { usePortfolioHistory } from "@/hooks/usePortfolioHistory";
@@ -15,25 +16,27 @@ interface GrowthComparisonProps {
 
 type Range = 30 | 90 | 365;
 
-function formatRelative(iso: string | null | undefined): string {
-  if (!iso) return "Aucune donnée de marché";
-  const d = new Date(iso);
-  const diff = Date.now() - d.getTime();
-  const min = Math.floor(diff / 60000);
-  if (min < 1) return "à l'instant";
-  if (min < 60) return `il y a ${min} min`;
-  const h = Math.floor(min / 60);
-  if (h < 24) return `il y a ${h} h`;
-  const days = Math.floor(h / 24);
-  if (days < 7) return `il y a ${days} j`;
-  return d.toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
-}
+
 
 const eur = (n: number) =>
   n.toLocaleString("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 export function GrowthComparison({ currentValue, invested, gain, returnPct, lastUpdated, onRefresh, refreshing }: GrowthComparisonProps) {
+  const { t } = useTranslation();
   const isGrowing = gain >= 0;
+  const formatRelative = (iso: string | null | undefined): string => {
+    if (!iso) return t("growth_comparison.no_data");
+    const d = new Date(iso);
+    const diff = Date.now() - d.getTime();
+    const min = Math.floor(diff / 60000);
+    if (min < 1) return "< 1 min";
+    if (min < 60) return `${min} min`;
+    const h = Math.floor(min / 60);
+    if (h < 24) return `${h}h`;
+    const days = Math.floor(h / 24);
+    if (days < 7) return `${days}j`;
+    return d.toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
+  };
   const [range, setRange] = useState<Range>(90);
   const { points, loading: histLoading, hasHistory } = usePortfolioHistory(invested, range);
   const [localBusy, setLocalBusy] = useState(false);
@@ -54,12 +57,12 @@ export function GrowthComparison({ currentValue, invested, gain, returnPct, last
       {/* Header : gain principal */}
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold">Ta croissance</p>
+          <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold">{t("growth_comparison.your_growth")}</p>
           <p className="font-value text-3xl text-ink mt-1">
             {isGrowing ? "+" : ""}
             {gain.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
           </p>
-          <p className="text-[11px] text-ink-3 mt-0.5">depuis ton premier dépôt</p>
+          <p className="text-[11px] text-ink-3 mt-0.5">{t("growth_comparison.since_first_deposit")}</p>
         </div>
         <div className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold ${isGrowing ? "bg-moss-5 text-moss-1" : "bg-[oklch(0.93_0.05_45)] text-rust"}`}>
           {isGrowing ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
@@ -70,7 +73,7 @@ export function GrowthComparison({ currentValue, invested, gain, returnPct, last
 
       {/* Mini-graph d'historique */}
       <div className="mt-4">
-        <Sparkline points={points} invested={invested} isGrowing={isGrowing} loading={histLoading} hasHistory={hasHistory} />
+        <Sparkline points={points} invested={invested} isGrowing={isGrowing} loading={histLoading} hasHistory={hasHistory} t={t} />
         <div className="mt-2 flex items-center justify-between">
           <div className="flex gap-1">
             {([30, 90, 365] as Range[]).map((r) => (
@@ -88,7 +91,7 @@ export function GrowthComparison({ currentValue, invested, gain, returnPct, last
           </div>
           {hasHistory && points.length > 0 && (
             <p className="text-[10px] text-ink-3">
-              {new Date(points[0].date).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })} → aujourd'hui
+              {new Date(points[0].date).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })} → {t("growth_comparison.today")}
             </p>
           )}
         </div>
@@ -97,13 +100,13 @@ export function GrowthComparison({ currentValue, invested, gain, returnPct, last
       {/* Détails montants — libellés clairs */}
       <div className="mt-5 grid grid-cols-2 gap-3">
         <AmountTile
-          label="Montant investi"
-          hint="Ce que tu as déposé"
+          label={t("growth_comparison.amount_invested")}
+          hint={t("growth_comparison.what_deposited")}
           value={eur(invested)}
         />
         <AmountTile
-          label="Valeur actuelle"
-          hint="Valeur de marché"
+          label={t("growth_comparison.current_value")}
+          hint={t("growth_comparison.market_value")}
           value={eur(currentValue)}
           accent={isGrowing ? "moss" : "rust"}
         />
@@ -112,7 +115,7 @@ export function GrowthComparison({ currentValue, invested, gain, returnPct, last
       {(onRefresh || lastUpdated !== undefined) && (
         <div className="mt-4 pt-3 border-t border-paper-2 flex items-center justify-between gap-3">
           <p className="text-[11px] text-ink-3">
-            <span className="text-ink-3">Mis à jour </span>
+            <span className="text-ink-3">{t("growth_comparison.updated")}</span>
             <span className="font-medium text-ink-2">{formatRelative(lastUpdated)}</span>
           </p>
           {onRefresh && (
@@ -121,10 +124,10 @@ export function GrowthComparison({ currentValue, invested, gain, returnPct, last
               onClick={handleRefresh}
               disabled={busy}
               className="inline-flex items-center gap-1.5 text-[11px] font-medium text-ink-2 hover:text-ink px-2.5 py-1 rounded-full border border-paper-3 hover:border-ink-3 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              aria-label="Recalculer la croissance"
+              aria-label={t("growth_comparison.aria_recalculate")}
             >
               <RefreshCw className={`w-3 h-3 ${busy ? "animate-spin" : ""}`} />
-              {busy ? "Mise à jour…" : "Recalculer"}
+              {busy ? t("growth_comparison.updating") : t("growth_comparison.recalculate")}
             </button>
           )}
         </div>
@@ -161,12 +164,14 @@ function Sparkline({
   isGrowing,
   loading,
   hasHistory,
+  t,
 }: {
   points: { date: string; value: number }[];
   invested: number;
   isGrowing: boolean;
   loading: boolean;
   hasHistory: boolean;
+  t: (k: string) => string;
 }) {
   const W = 320;
   const H = 64;
@@ -201,7 +206,7 @@ function Sparkline({
   if (!hasHistory) {
     return (
       <div className="h-16 rounded-md border border-dashed border-paper-3 flex items-center justify-center">
-        <p className="text-[11px] text-ink-3">Historique en cours de constitution…</p>
+        <p className="text-[11px] text-ink-3">{t("growth_comparison.building_history")}</p>
       </div>
     );
   }
@@ -210,7 +215,7 @@ function Sparkline({
   const fill = isGrowing ? "oklch(0.55 0.12 150 / 0.12)" : "oklch(0.55 0.15 30 / 0.12)";
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-16" preserveAspectRatio="none" role="img" aria-label="Évolution de la valeur du portefeuille">
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-16" preserveAspectRatio="none" role="img" aria-label={t("growth_comparison.chart_aria")}>
       {/* baseline = montant investi */}
       <line
         x1={0}
