@@ -115,7 +115,10 @@ function Dashboard() {
 
           {portfolio && (
             <div className="mt-5">
-              <InvestDialog label="Investir" defaultAmount={200} />
+              <InvestDialog label="Investir (démo)" defaultAmount={200} />
+              <p className="text-[10px] text-ink-3 mt-2 uppercase tracking-wider">
+                Mode démo · capital virtuel
+              </p>
             </div>
           )}
         </motion.section>
