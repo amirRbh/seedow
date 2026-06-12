@@ -110,9 +110,9 @@ function Discover() {
           <div className="px-5">
             {!current ? (
               <div className="pt-12 text-center">
-                <p className="font-value text-3xl text-ink">Tu as tout vu !</p>
-                <p className="text-sm text-ink-3 mt-3">Tu as parcouru tous les actifs de ce thème.</p>
-                <button onClick={reset} className="btn-plant mt-8">Recommencer</button>
+                <p className="font-value text-3xl text-ink">{t("discover.all_seen_title")}</p>
+                <p className="text-sm text-ink-3 mt-3">{t("discover.all_seen_desc")}</p>
+                <button onClick={reset} className="btn-plant mt-8">{t("discover.restart")}</button>
               </div>
             ) : (
               <>
