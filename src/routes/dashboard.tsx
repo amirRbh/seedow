@@ -159,6 +159,10 @@ function Dashboard() {
         {/* 3. Prochaine étape — une seule carte contextuelle */}
         <NextStepCard />
 
+        {/* 3b. Capture intention investissement réel */}
+        {portfolio && <RealInvestmentInterestCard />}
+
+
         {/* 4. Lien Voir le détail */}
         <motion.section
           initial={{ opacity: 0 }}
