@@ -244,7 +244,7 @@ function PreferencesSection() {
         >
           <div className="flex items-baseline justify-between mb-3">
             <p className="text-[10px] uppercase tracking-[0.15em] text-ink-3 font-medium">
-              Aperçu live
+              {t("reglages.preview_eyebrow")}
             </p>
             <div className="flex gap-3 text-[11px] text-ink-3">
               <span>{t("reglages.preview_esg")} <span className="text-ink font-value tabular-nums">{preview.esg.toFixed(1)}</span></span>
@@ -351,7 +351,7 @@ function PreferencesSection() {
 
       <Block title={t("reglages.block_horizon")}>
         <div className="flex items-baseline justify-between mb-2">
-          <span className="text-[12px] text-ink-2">Durée d'investissement</span>
+          <span className="text-[12px] text-ink-2">{t("reglages.horizon_label")}</span>
           <span className="text-[13px] font-medium tabular-nums">{t("reglages.years", { n: horizon })}</span>
         </div>
         <input
@@ -383,10 +383,7 @@ function PreferencesSection() {
         />
       </Block>
 
-      <p className="text-[11px] text-ink-3 leading-relaxed">
-        Toute modification déclenche un recalcul automatique de votre portefeuille selon le pipeline complet
-        (exclusions → best-in-class → optimisation Markowitz contrainte → tilts par convictions).
-      </p>
+      <p className="text-[11px] text-ink-3 leading-relaxed">{t("reglages.auto_recalc_note")}</p>
     </div>
   );
 }
@@ -447,7 +444,7 @@ function ProfileSection({ email, onSignOut }: { email: string; onSignOut: () => 
           onClick={() => navigate({ to: "/auth" })}
           className="text-[13px] text-ink-2 hover:text-ink underline-offset-2 hover:underline"
         >
-          Changer mon mot de passe
+          {t("reglages.change_password")}
         </button>
       </Block>
 
@@ -459,7 +456,7 @@ function ProfileSection({ email, onSignOut }: { email: string; onSignOut: () => 
           }}
           className="px-4 py-2 text-[12px] font-medium border border-paper-3 text-ink rounded hover:border-ink transition-colors"
         >
-          Se déconnecter
+          {t("reglages.sign_out")}
         </button>
       </Block>
     </div>
@@ -481,20 +478,19 @@ function NotificationsSection() {
       <Block title={t("reglages.block_email_notifs")}>
         <ToggleRow label={t("reglages.notif_recap")} checked={emailNotif} onChange={setEmailNotif} />
         <ToggleRow label={t("reglages.notif_market")} checked={marketAlerts} onChange={setMarketAlerts} />
-        <ToggleRow label="Rapport d'impact mensuel" checked={reportMonthly} onChange={setReportMonthly} />
+        <ToggleRow label={t("reglages.notif_report")} checked={reportMonthly} onChange={setReportMonthly} />
       </Block>
 
       <Block title={t("reglages.block_privacy")}>
         <p className="text-[12px] text-ink-2 leading-relaxed mb-3">
-          Vos données restent strictement confidentielles. Vous pouvez exporter ou supprimer
-          l'ensemble de vos informations à tout moment.
+          {t("reglages.privacy_desc")}
         </p>
         <div className="flex flex-wrap gap-2">
           <button className="px-3 py-1.5 text-[12px] border border-paper-3 rounded hover:border-ink transition-colors">
-            Exporter mes données
+            {t("reglages.export_data")}
           </button>
           <button className="px-3 py-1.5 text-[12px] border border-paper-3 text-rust rounded hover:border-rust transition-colors">
-            Supprimer mon compte
+            {t("reglages.delete_account")}
           </button>
         </div>
       </Block>
@@ -545,19 +541,16 @@ function MarketDataBlock() {
     try {
       const res = await refresh();
       setState("ok");
-      setMsg(`${res.ok} actif(s) mis à jour${res.failed ? `, ${res.failed} en échec` : ""}.`);
+      setMsg(t("reglages.methodology.market_data.refresh_success", { ok: res.ok }) + (res.failed ? `, ${t("reglages.methodology.market_data.refresh_failed", { failed: res.failed })}` : "") + ".");
     } catch (e) {
       setState("error");
-      setMsg(e instanceof Error ? e.message : "Erreur de rafraîchissement");
+      setMsg(e instanceof Error ? e.message : t("reglages.methodology.market_data.refresh_error"));
     }
   };
 
   return (
     <Block title={t("reglages.methodology.market_data.title")}>
-      <p className="text-[12px] text-ink-2 leading-relaxed mb-3">
-        Les prix sont rafraîchis automatiquement chaque jour ouvré en fin de séance.
-        Tu peux forcer une mise à jour immédiate ici.
-      </p>
+      <p className="text-[12px] text-ink-2 leading-relaxed mb-3">{t("reglages.methodology.market_data.desc")}</p>
       <button
         onClick={onClick}
         disabled={state === "loading"}
@@ -605,12 +598,9 @@ function CronHealthBlock() {
   return (
     <Block title={t("reglages.methodology.health.title")}>
       {loading ? (
-        <p className="text-[12px] text-ink-3">Chargement de l'historique…</p>
+        <p className="text-[12px] text-ink-3">{t("reglages.methodology.health.loading")}</p>
       ) : runs.length === 0 ? (
-        <p className="text-[12px] text-ink-3">
-          Aucune exécution journalisée pour l'instant. Force un rafraîchissement ci-dessus
-          pour démarrer le suivi.
-        </p>
+        <p className="text-[12px] text-ink-3">{t("reglages.methodology.health.empty")}</p>
       ) : (
         <>
           <div className="flex items-center gap-2 mb-3">
@@ -624,7 +614,7 @@ function CronHealthBlock() {
               }`}
             />
             <p className="text-[12px] text-ink-2">
-              Dernier succès&nbsp;:
+              {t("reglages.methodology.health.last_success")}
               <span className="text-ink font-medium ml-1">
                 {ageHours != null ? t("reglages.methodology.health.ago_hours", { count: ageHours }) : t("reglages.methodology.health.never")}
               </span>
@@ -675,94 +665,70 @@ function MethodologySection() {
       <MarketDataBlock />
       <CronHealthBlock />
       <Block title={t("reglages.methodology.pipeline.title")}>
-        <p className="text-[12px] text-ink-2 leading-relaxed mb-4">
-          Six étapes traçables : profilage, univers investissable, exclusions sectorielles, filtres
-          best-in-class ESG, optimisation Markowitz contrainte (plancher ESG, budget de risque, bornes
-          de poids), puis tilt pré-optimisation des rendements attendus selon vos causes. Le simulateur
-          interactif et la documentation détaillée sont sur la page dédiée.
-        </p>
+        <p className="text-[12px] text-ink-2 leading-relaxed mb-4">{t("reglages.methodology.pipeline.desc")}</p>
         <Link
           to="/methodologie"
           className="inline-flex items-center gap-2 text-[12px] font-medium text-ink underline-offset-2 hover:underline"
         >
-          Consulter la méthodologie complète
+          {t("reglages.methodology.pipeline.link")}
           <span aria-hidden>→</span>
         </Link>
       </Block>
 
       <Block title={t("reglages.methodology.sources.title")}>
         <ul className="text-[12px] text-ink-2 space-y-1.5 leading-relaxed">
-          <li>{t("reglages.methodology.sources.esg")} (E/S/G) : MSCI ESG Research, Sustainalytics, ESG Book, Yahoo Sustainability</li>
-          <li>{t("reglages.methodology.sources.carbon")} (gCO₂e/€ investi) : Trucost, ISS ESG, Yahoo Sustainability — avec date et provider stockés par actif</li>
-          <li>{t("reglages.methodology.sources.sfdr")} : prospectus émetteurs (iShares, Lyxor, Amundi)</li>
-          <li>{t("reglages.methodology.sources.prices")} : Yahoo Finance, séries historiques 5 ans, covariances recalculées hebdomadairement</li>
+          <li>{t("reglages.methodology.sources.esg")}</li>
+          <li>{t("reglages.methodology.sources.carbon")}</li>
+          <li>{t("reglages.methodology.sources.sfdr")}</li>
+          <li>{t("reglages.methodology.sources.prices")}</li>
         </ul>
       </Block>
 
       <Block title={t("reglages.methodology.esg_composite.title")}>
-        <p className="text-[12px] text-ink-2 leading-relaxed mb-4">
-          Le score ESG va de <span className="font-value">0</span> à <span className="font-value">100</span>.
-          Au lieu d'une moyenne fixe 40/40/20, <span className="font-medium text-ink">les piliers E, S et G
-          sont repondérés en fonction des causes que vous activez</span> dans vos préférences. Le score reflète
-          ainsi ce qui compte vraiment pour vous.
-        </p>
+        <p className="text-[12px] text-ink-2 leading-relaxed mb-4">{t("reglages.methodology.esg_composite.desc_1")} {t("reglages.methodology.esg_composite.desc_2")}</p>
 
         <div className="space-y-4">
           <div>
             <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
-              1. Trois piliers indépendants
+              {t("reglages.methodology.esg_composite.pillars_title")}
             </p>
             <ul className="text-[12px] text-ink-2 space-y-1.5 leading-relaxed">
               <li>
                 <span className="font-medium text-ink">Environnement (E)</span> — {t("reglages.methodology.esg_composite.pillar_e")} scope 1-2-3,
-                intensité carbone, eau, déchets, exposition renouvelables.
+                {t("reglages.methodology.esg_composite.pillar_e")}
               </li>
               <li>
-                <span className="font-medium text-ink">Social (S)</span> — {t("reglages.methodology.esg_composite.pillar_s")}, conditions de
-                travail, égalité F/H, sécurité produit, relations communautés.
+                <span className="font-medium text-ink">Social (S)</span> — {t("reglages.methodology.esg_composite.pillar_s")} {t("reglages.methodology.esg_composite.pillar_s")}
               </li>
               <li>
-                <span className="font-medium text-ink">Gouvernance (G)</span> — {t("reglages.methodology.esg_composite.pillar_g")},
-                rémunération dirigeants, éthique fiscale, transparence, anti-corruption.
+                <span className="font-medium text-ink">Gouvernance (G)</span> — {t("reglages.methodology.esg_composite.pillar_g")} {t("reglages.methodology.esg_composite.pillar_g")}
               </li>
             </ul>
-            <p className="text-[11px] text-ink-3 mt-2 leading-relaxed">
-              Quand un pilier n'est pas publié pour un actif, on retombe automatiquement sur le score ESG
-              global comme valeur de repli (fallback documenté).
-            </p>
+            <p className="text-[11px] text-ink-3 mt-2 leading-relaxed">{t("reglages.methodology.esg_composite.fallback_note")}</p>
           </div>
 
           <div>
             <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
-              2. Mapping causes → piliers (codé en dur)
+              {t("reglages.methodology.esg_composite.mapping_title")}
             </p>
             <ul className="text-[12px] text-ink-2 space-y-1.5 leading-relaxed">
               <li>• <span className="font-medium text-ink">{t("reglages.methodology.esg_composite.mapping_e")}</span></li>
               <li>• <span className="font-medium text-ink">{t("reglages.methodology.esg_composite.mapping_s")}</span></li>
               <li>• <span className="font-medium text-ink">{t("reglages.methodology.esg_composite.mapping_sg")}</span></li>
             </ul>
-            <p className="text-[11px] text-ink-3 mt-2 leading-relaxed">
-              Sans cause active, on revient à la pondération neutre 40/40/20. Plus vous activez de causes
-              liées à un pilier, plus son poids dans le score composite augmente.
-            </p>
+            <p className="text-[11px] text-ink-3 mt-2 leading-relaxed">{t("reglages.methodology.esg_composite.mapping_note")}</p>
           </div>
 
           <div>
             <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
-              3. Score du portefeuille
+              {t("reglages.methodology.esg_composite.portfolio_title")}
             </p>
-            <p className="text-[12px] text-ink-2 leading-relaxed">
-              C'est la <span className="font-medium text-ink">moyenne pondérée</span> du score composite de
-              chaque ligne par son poids. Un plancher ESG par défaut de <span className="font-value">70</span>
-              est imposé à l'optimiseur ; s'il ne trouve aucune solution réalisable, le plancher est relâché
-              et un drapeau <span className="font-mono text-[11px]">esg_floor_relaxed</span> est levé pour
-              transparence.
-            </p>
+            <p className="text-[12px] text-ink-2 leading-relaxed">{t("reglages.methodology.esg_composite.portfolio_desc")}</p>
           </div>
 
           <div className="pt-2 border-t border-paper-3">
             <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
-              Échelle de lecture
+              {t("reglages.methodology.esg_composite.scale_title")}
             </p>
             <div className="grid grid-cols-4 gap-1.5 text-[10px]">
               <div className="rounded border border-paper-3 p-2">
@@ -785,36 +751,23 @@ function MethodologySection() {
           </div>
         </div>
 
-        <p className="text-[11px] text-ink-3 leading-relaxed mt-4 pt-3 border-t border-paper-3">
-          ⚠️ Une note ESG reste une <span className="font-medium">estimation</span> dépendante de la qualité
-          des données publiées. Chaque actif stocke la <span className="font-medium">source</span> du score
-          (<span className="font-mono text-[11px]">esg_score_source</span>) pour auditabilité.
-        </p>
+        <p className="text-[11px] text-ink-3 leading-relaxed mt-4 pt-3 border-t border-paper-3">{t("reglages.methodology.esg_composite.warning")}</p>
       </Block>
 
       <Block title={t("reglages.methodology.carbon.title")}>
-        <p className="text-[12px] text-ink-2 leading-relaxed mb-3">
-          Deux indicateurs cohabitent volontairement, le temps que la couverture en données réelles atteigne
-          100% du portefeuille :
-        </p>
+        <p className="text-[12px] text-ink-2 leading-relaxed mb-3">{t("reglages.methodology.carbon.desc")}</p>
         <ul className="text-[12px] text-ink-2 space-y-2 leading-relaxed">
           <li>
             • <span className="font-medium text-ink">CO₂ évité (heuristique)</span> — {t("reglages.methodology.carbon.avoided")} indicative
-            dérivée du score ESG composite. Pratique pour comparer deux portefeuilles, pas une figure
-            réglementaire.
           </li>
           <li>
-            • <span className="font-medium text-ink">Intensité carbone réelle</span> — {t("reglages.methodology.carbon.intensity")} pondérée des
-            <span className="font-mono text-[11px]"> gCO₂e/€ investi/an</span> sur la part du portefeuille
-            réellement couverte par un provider (champs <span className="font-mono text-[11px]">carbon_intensity_*</span>
-            avec source et date de mise à jour). Un indicateur de couverture est affiché dans la page
-            méthodologie.
+            • <span className="font-medium text-ink">Intensité carbone réelle</span> — {t("reglages.methodology.carbon.intensity")}
           </li>
         </ul>
 
         <div className="mt-4 rounded border border-paper-3 bg-paper-2 p-3">
           <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
-            Couverture faible ? Voici quoi faire
+            {t("reglages.methodology.carbon.coverage_title")}
           </p>
           <ul className="text-[12px] text-ink-2 space-y-1.5 leading-relaxed mb-3">
             <li>{t("reglages.methodology.carbon.coverage_low")} à l'heuristique CO₂ évité, l'intensité réelle n'est pas représentative.</li>
@@ -825,27 +778,18 @@ function MethodologySection() {
             to="/methodologie"
             className="inline-flex items-center gap-2 text-[12px] font-medium text-ink underline-offset-2 hover:underline"
           >
-            Voir la couverture de mon portefeuille
+            {t("reglages.methodology.carbon.coverage_link")}
             <span aria-hidden>→</span>
           </Link>
         </div>
       </Block>
 
       <Block title={t("reglages.methodology.optimization.title")}>
-        <p className="text-[12px] text-ink-2 leading-relaxed">
-          Maximisation de l'utilité moyenne-variance avec contraintes : somme des poids = 1, poids ≥ 0,
-          plancher par actif, plafond par actif et par classe, budget de risque (volatilité cible),
-          plancher ESG composite. Les <span className="font-medium text-ink">rendements attendus sont tiltés
-          en amont</span> selon vos causes (single-tilt pré-optimisation) — pas de double-tilt en sortie pour
-          ne pas biaiser la frontière efficiente.
-        </p>
+        <p className="text-[12px] text-ink-2 leading-relaxed">{t("reglages.methodology.optimization.desc")}</p>
       </Block>
 
       <Block title={t("reglages.methodology.version.title")}>
-        <p className="text-[12px] text-ink-2">
-          Méthodologie <span className="font-value">v1.1</span> · piliers E/S/G pondérés par causes,
-          intensité carbone réelle, traçabilité des sources. Révisée trimestriellement.
-        </p>
+        <p className="text-[12px] text-ink-2">{t("reglages.methodology.version.desc")}</p>
       </Block>
     </div>
   );
@@ -867,18 +811,19 @@ function Block({ title, children }: { title: string; children: React.ReactNode }
 }
 
 function StatusBanner({ status, errorMsg }: { status: "idle" | "saving" | "saved" | "error"; errorMsg: string | null }) {
+  const { t } = useTranslation();
   const label = useMemo(() => {
     switch (status) {
       case "saving":
-        return "Recalcul en cours…";
+        return t("reglages_inline.status_saving");
       case "saved":
-        return "Portefeuille mis à jour";
+        return t("reglages_inline.status_saved");
       case "error":
         return errorMsg ?? "Erreur";
       default:
         return null;
     }
-  }, [status, errorMsg]);
+  }, [status, errorMsg, t]);
 
   if (!label) return null;
 
