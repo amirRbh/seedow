@@ -30,25 +30,27 @@ export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
 });
 
-function getGreeting(hour: number) {
-  if (hour < 12) return "Belle matinée";
-  if (hour < 18) return "Bel après-midi";
-  return "Belle soirée";
+function getGreetingKey(hour: number) {
+  if (hour < 12) return "dashboard.greeting_morning";
+  if (hour < 18) return "dashboard.greeting_afternoon";
+  return "dashboard.greeting_evening";
 }
 
 function Dashboard() {
   const { L } = useLexicon();
+  const { t } = useTranslation();
+  const { lang } = useLang();
   const navigate = useNavigate();
   const { user } = useAuth();
   const { portfolio, loading } = useActivePortfolio();
   const { portfolios, loading: pfListLoading } = useUserPortfolios();
   const valuation = usePortfolioValuation();
-  const [greeting, setGreeting] = useState("Bonjour");
+  const [greeting, setGreeting] = useState(t("dashboard.greeting_fallback"));
   const hasSeenPortfolioRef = useRef(false);
 
   useEffect(() => {
-    setGreeting(getGreeting(new Date().getHours()));
-  }, []);
+    setGreeting(t(getGreetingKey(new Date().getHours())));
+  }, [t]);
 
   useEffect(() => {
     if (portfolio || portfolios.length > 0) {
