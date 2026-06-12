@@ -180,8 +180,8 @@ function Dashboard() {
             className="w-full flex items-center justify-between p-4 rounded-2xl bg-paper-2 hover:bg-paper-3 transition-colors"
           >
             <div className="text-left">
-              <p className="text-sm font-semibold text-ink">Voir le détail</p>
-              <p className="text-xs text-ink-3 mt-0.5">Performance, allocation, impact, comparatif</p>
+              <p className="text-sm font-semibold text-ink">{t("dashboard.see_detail")}</p>
+              <p className="text-xs text-ink-3 mt-0.5">{t("dashboard.see_detail_desc")}</p>
             </div>
             <svg viewBox="0 0 24 24" className="w-5 h-5 text-ink-3" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M9 6l6 6-6 6" />
