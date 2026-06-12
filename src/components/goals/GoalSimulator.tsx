@@ -17,7 +17,7 @@ export function GoalSimulator({ goal, annualReturn = 0.055, volatility = 0.12 }:
   volatility?: number;
 }) {
   const { t } = useTranslation();
-  const lang = useLang();
+  const { lang } = useLang();
   const years = yearsBetween(new Date(), new Date(goal.target_date));
   const [monthly, setMonthly] = useState(goal.monthly_contribution);
 

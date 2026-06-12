@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 
 export function NextStepCard() {
   const { t } = useTranslation();
-  const lang = useLang();
+  const { lang } = useLang();
   const { portfolio } = useActivePortfolio();
   const valuation = usePortfolioValuation();
   const { goals } = useFinancialGoals();

@@ -19,7 +19,7 @@ const TONE: Record<BriefingSignal["tone"], string> = {
 
 export function EthiBriefing() {
   const { t } = useTranslation();
-  const lang = useLang();
+  const { lang } = useLang();
   const { portfolio } = useActivePortfolio();
   const { holdings, returnPct } = usePortfolioValuation();
 

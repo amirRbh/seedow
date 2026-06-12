@@ -23,7 +23,7 @@ function estimateCurrent(goal: FinancialGoal): number {
 
 export function GoalCard({ goal, onEdit }: { goal: FinancialGoal; onEdit: () => void }) {
   const { t } = useTranslation();
-  const lang = useLang();
+  const { lang } = useLang();
   const current = estimateCurrent(goal);
   const pct = Math.min(100, Math.max(0, (current / goal.target_amount) * 100));
   const target = new Date(goal.target_date);

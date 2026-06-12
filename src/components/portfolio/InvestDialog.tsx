@@ -30,7 +30,7 @@ interface Props {
 
 export function InvestDialog({ trigger, defaultAmount = 200, label }: Props) {
   const { t } = useTranslation();
-  const lang = useLang();
+  const { lang } = useLang();
   const resolvedLabel = label ?? t("invest_dialog.default_label");
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState<number>(defaultAmount);
