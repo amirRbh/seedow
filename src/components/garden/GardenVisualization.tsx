@@ -47,9 +47,6 @@ export function GardenVisualization({
 }: GardenVisualizationProps) {
   const { t } = useTranslation();
   const { lang } = useLang();
-  onPlantClick,
-  onEmptySlotClick,
-}: GardenVisualizationProps) {
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
 
