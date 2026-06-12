@@ -60,13 +60,13 @@ function Discover() {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
       <div className="max-w-lg mx-auto pb-28">
-        <AppHeader eyebrow="Découvrir" title="Quels actifs ?" />
+        <AppHeader eyebrow={t("discover.eyebrow")} title={t("discover.title")} />
 
         <div className="px-5 pt-2 pb-3">
           <Tabs defaultValue="explorer">
             <TabsList className="w-full grid grid-cols-2 h-auto bg-paper-2 p-1">
-              <TabsTrigger value="explorer" className="text-[11px] uppercase tracking-[0.12em]">Explorer</TabsTrigger>
-              <TabsTrigger value="communaute" className="text-[11px] uppercase tracking-[0.12em]">Communauté</TabsTrigger>
+              <TabsTrigger value="explorer" className="text-[11px] uppercase tracking-[0.12em]">{t("discover.tab_explore")}</TabsTrigger>
+              <TabsTrigger value="communaute" className="text-[11px] uppercase tracking-[0.12em]">{t("discover.tab_community")}</TabsTrigger>
             </TabsList>
             <TabsContent value="communaute" className="pt-4">
               <CommunityPanel />
@@ -79,7 +79,7 @@ function Discover() {
             <div className="flex items-center gap-1.5 text-[11px] text-moss-1 font-semibold bg-moss-5 px-2.5 py-1 rounded-full border border-moss-4">
               <span>✓</span>
               <span>
-                {planted.length} actif{planted.length > 1 ? "s" : ""} sélectionné{planted.length > 1 ? "s" : ""}
+                {t(planted.length > 1 ? "discover.selected_other" : "discover.selected_one", { count: planted.length })}
               </span>
             </div>
           ) : (
@@ -90,13 +90,13 @@ function Discover() {
               onClick={() => setViewMode("swipe")}
               className={`px-3 py-1 rounded-full transition-all ${viewMode === "swipe" ? "bg-card text-ink shadow-leaf" : "text-ink-3"}`}
             >
-              Swipe
+              {t("discover.swipe")}
             </button>
             <button
               onClick={() => setViewMode("list")}
               className={`px-3 py-1 rounded-full transition-all ${viewMode === "list" ? "bg-card text-ink shadow-leaf" : "text-ink-3"}`}
             >
-              Liste
+              {t("discover.list")}
             </button>
           </div>
         </div>
