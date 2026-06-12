@@ -23,6 +23,7 @@ import { Route as ComparatifRouteImport } from './routes/comparatif'
 import { Route as CommunauteRouteImport } from './routes/communaute'
 import { Route as CertificatRouteImport } from './routes/certificat'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ObjectifsGoalIdRouteImport } from './routes/objectifs.$goalId'
 import { Route as HooksRefreshMarketDataRouteImport } from './routes/hooks/refresh-market-data'
@@ -99,6 +100,10 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -120,9 +125,9 @@ const ApiEthiRoute = ApiEthiRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAdminBetaRoute = AuthenticatedAdminBetaRouteImport.update({
-  id: '/_authenticated/admin/beta',
+  id: '/admin/beta',
   path: '/admin/beta',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -170,6 +175,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/certificat': typeof CertificatRoute
   '/communaute': typeof CommunauteRoute
@@ -235,6 +241,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/auth'
     | '/certificat'
     | '/communaute'
@@ -257,6 +264,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   CertificatRoute: typeof CertificatRoute
   CommunauteRoute: typeof CommunauteRoute
@@ -273,7 +281,6 @@ export interface RootRouteChildren {
   WaitlistRoute: typeof WaitlistRoute
   ApiEthiRoute: typeof ApiEthiRoute
   HooksRefreshMarketDataRoute: typeof HooksRefreshMarketDataRoute
-  AuthenticatedAdminBetaRoute: typeof AuthenticatedAdminBetaRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -376,6 +383,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -409,10 +423,21 @@ declare module '@tanstack/react-router' {
       path: '/admin/beta'
       fullPath: '/admin/beta'
       preLoaderRoute: typeof AuthenticatedAdminBetaRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminBetaRoute: typeof AuthenticatedAdminBetaRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminBetaRoute: AuthenticatedAdminBetaRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 interface ObjectifsRouteChildren {
   ObjectifsGoalIdRoute: typeof ObjectifsGoalIdRoute
@@ -428,6 +453,7 @@ const ObjectifsRouteWithChildren = ObjectifsRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   CertificatRoute: CertificatRoute,
   CommunauteRoute: CommunauteRoute,
@@ -444,7 +470,6 @@ const rootRouteChildren: RootRouteChildren = {
   WaitlistRoute: WaitlistRoute,
   ApiEthiRoute: ApiEthiRoute,
   HooksRefreshMarketDataRoute: HooksRefreshMarketDataRoute,
-  AuthenticatedAdminBetaRoute: AuthenticatedAdminBetaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
