@@ -1,105 +1,63 @@
-# Plan — Lancement MVP test 300 testeurs
+# Plan i18n FR/EN — toute l'app
 
-Objectif : ouvrir l'app à 300 personnes **cette semaine**, en mode **paper trading** (argent virtuel), pour valider l'onboarding, la pertinence des allocations ESG et la willingness to pay. Inscription libre **cappée à 300**, puis waitlist auto. Bouton "Investir pour de vrai" qui capture l'intérêt.
+## Approche
 
-L'app fait déjà 90% du job (portefeuilles, allocations, valuation sur vrais cours, dashboard, comparatif). Il manque surtout : le **cap d'accès**, le **framing "démo"**, la **capture d'intention d'investissement réel**, et un **feedback in-app** léger.
+`react-i18next` avec deux fichiers de traduction (`fr.json`, `en.json`) organisés par namespace = page. Détection auto au premier chargement (`navigator.language`), préférence ensuite stockée dans `localStorage` (`seedow.lang`). Toggle FR | EN dans le header global, présent sur toutes les pages.
 
----
+## Stack technique
 
-## 1. Cap à 300 inscrits + waitlist
+- `react-i18next` + `i18next` + `i18next-browser-languagedetector`
+- Provider monté dans `src/routes/__root.tsx`
+- Hook `useTranslation()` dans chaque composant
+- Format monétaire / dates : `Intl.NumberFormat(lang === 'en' ? 'en-US' : 'fr-FR', ...)` via un util `formatCurrency()` centralisé qui lit la langue courante.
 
-- Nouvelle table `waitlist` (email, created_at, source, position).
-- Table `app_config` (clé/valeur) avec `beta_cap = 300` et `beta_status = 'open' | 'closed'`, modifiable sans redeploy.
-- À l'inscription (`/auth` signup) : server function `checkBetaCapacity` qui compte les profils existants. Si `count >= cap` → l'inscription est bloquée et l'email part en waitlist avec sa position.
-- Page `/waitlist` : confirmation + position dans la file + estimation.
-- Petit compteur public "X / 300 places prises" sur la landing pour créer la rareté.
+## Composants nouveaux
 
-## 2. Framing "compte démo" partout
+- `src/i18n/index.ts` — init i18next, détection, fallback FR
+- `src/i18n/locales/fr.json` + `en.json` — tous les strings organisés par namespace : `common`, `nav`, `landing`, `auth`, `waitlist`, `dashboard`, `portfolio`, `objectifs`, `methodologie`, `certificat`, `reglages`, `onboarding`, `admin`, `beta`
+- `src/components/LanguageToggle.tsx` — pastille FR | EN sobre dans le style Emerald Prestige (eyebrow uppercase or, ligne or sous l'option active)
+- `src/lib/format.ts` — `formatCurrency(amount)`, `formatDate(date)` qui réagissent à la langue
+- `src/hooks/useLang.ts` — petit wrapper qui retourne `lang` courant et `setLang()`
 
-- Bandeau permanent fin en haut du dashboard : `Mode démo — capital virtuel, cours réels. Aucun argent investi.` Style discret (paper-2, eyebrow or).
-- Réécrire les CTA `Investir` → `Investir (démo)` dans `InvestDialog`, `NextStepCard`, dashboard.
-- Page `/methodologie` : ajouter une section "Pourquoi un mode démo pendant la bêta".
-- Footer auth : mention "Phase de test — aucune transaction réelle".
+## Toggle dans le header
 
-## 3. Capture "Je veux investir pour de vrai"
+Placé à droite du wordmark "seedow" sur **toutes** les pages (landing, auth, waitlist, et toutes les routes `_authenticated`). Style : `FR · EN` avec ligne or sous l'option active, tracking 0.22em uppercase, cohérent avec les eyebrows existants. Pas d'icônes drapeaux.
 
-- Nouveau composant `RealInvestmentInterestCard` placé sur le dashboard sous `NextStepCard` et dans le détail portefeuille.
-- Bouton `Je veux investir pour de vrai` → dialog qui demande : montant envisagé (slider 100–10000€), fréquence (one-shot / mensuel), email de contact (pré-rempli).
-- Table `real_investment_intents` (user_id, amount, frequency, created_at, portfolio_id).
-- Confirmation : "Tu seras prévenu·e dès l'ouverture des comptes réels." → signal direct de **willingness to pay**.
+## Périmètre des pages à traduire
 
-## 4. Feedback in-app léger
+Routes publiques :
+- `/` (landing, BetaCounter, sections)
+- `/auth`, `/waitlist`, `/methodologie`, `/certificat`, `/share/$handle` (si publique)
 
-- Bouton flottant `Feedback` en bas à droite (visible sur toutes les pages auth).
-- Dialog 3 questions max : 1 NPS (0–10), 1 texte libre "Qu'est-ce qui te bloque ?", 1 texte libre "Ce que tu aimerais voir".
-- Table `beta_feedback` (user_id, nps, blocker, wish, route_when_sent, created_at).
-- Trigger automatique : après création du 1er portefeuille (modal différée 24h), et après 3 visites du dashboard.
+Routes connectées :
+- `/dashboard`, `/portfolio`, `/objectifs`, `/onboarding`, `/reglages`, `/historique`, `/communaute`, `/impact`, `/journal`, `/profil`
+- `/admin/beta`
 
-## 5. Analytics testeurs (basique)
+Composants partagés (header, footer, banners, dialogs, FeedbackButton, BetaBanner, RealInvestmentInterestCard, InvestDialog, ValuationConsistencyBanner, EditorialSection eyebrows, AppNav, KPIFigure labels…)
 
-- Table `beta_events` (user_id, event, payload, created_at) — events critiques : `signup`, `onboarding_step_X`, `portfolio_created`, `invest_demo_clicked`, `real_invest_intent`, `feedback_submitted`.
-- Server function `logBetaEvent` appelée aux points clés (déjà partiellement couvert par `decision_events` et `preference_events` — on étend, on ne duplique pas).
-- Page admin `/admin/beta` (réservée role `admin`) : compteur inscrits / 300, conversion onboarding → portefeuille, NPS moyen, liste des intents d'investissement réel.
+## Stratégie d'exécution
 
-## 6. Onboarding ajustements minimaux
+Pour ne pas casser l'app pendant la migration, je procède **page par page**, en gardant le FR fonctionnel à chaque étape :
 
-- 1er écran onboarding : ajouter le contexte "Tu fais partie des 300 testeurs. Ton retour façonne le produit."
-- Dernier écran onboarding : remplacer "Investir" par "Créer mon portefeuille démo" pour clarifier.
+1. **Setup** (J1) : installer deps, créer `i18n/index.ts`, monter provider, créer `LanguageToggle`, l'insérer dans tous les headers, créer `formatCurrency`/`formatDate` localisés. À ce stade, EN affiche les strings FR (fallback) sauf pour les éléments du toggle.
+2. **Surfaces publiques** (J1) : landing, auth, waitlist, methodologie, certificat — strings extraits, fichier `en.json` rempli.
+3. **App connectée — core** (J2) : dashboard, portfolio, onboarding, objectifs.
+4. **App connectée — secondaires** (J2) : reglages, historique, communaute, impact, journal, profil.
+5. **Banners & dialogs partagés** (J2) : BetaBanner, FeedbackButton, RealInvestmentInterestCard, InvestDialog, ValuationConsistencyBanner.
+6. **Admin** (J2) : `/admin/beta`.
+7. **QA** : parcourir chaque route dans les deux langues, vérifier qu'aucun string FR n'est resté, vérifier formats `1 234,56 €` (FR) vs `€1,234.56` (EN).
 
-## 7. Comms & accès
+## Ce qui ne change pas
 
-- Page landing (`/`) : ajouter section "Phase bêta — 300 places" avec compteur live + lien signup.
-- Email de bienvenue (template auth Lovable) : explication mode démo + lien feedback + invitation à inviter 1 ami.
-- Rien à faire côté domaine (déjà `seedow.life`).
+- Pas de traduction des **données** en base (noms d'actifs, descriptions ISIN, alertes générées server-side, decision_events). Ces strings restent en FR — c'est du contenu métier.
+- Pas de fichiers `*.functions.ts` modifiés (le serveur reste FR pour les messages d'erreur techniques, qui ne sont pas affichés à l'utilisateur final).
+- Lexique financier sobre conservé (pas de retour à "garden/seeds").
+- Pas de SEO multilingue (`hreflang`, routes `/en/…`) — c'est hors scope pour un MVP test de 300 personnes.
 
----
+## Volume estimé
 
-## Détails techniques
+~600-800 clés de traduction, ~40 fichiers à éditer. C'est gros mais sans risque : chaque fichier est un remplacement texte → `t('key')`.
 
-**Nouvelles tables (1 migration)** :
-- `waitlist`, `app_config`, `real_investment_intents`, `beta_feedback`, `beta_events`
-- RLS : `waitlist` insert anon OK / select admin ; `app_config` select public / write admin ; les 3 autres = user_id auth.uid() + admin read.
-- GRANT explicites par rôle.
+## Question avant lancement
 
-**Server functions** (`src/lib/beta/*.functions.ts`) :
-- `checkBetaCapacity()` — public, retourne `{ slotsTaken, cap, status }`.
-- `joinWaitlist({ email })` — public.
-- `submitRealInvestmentIntent(...)` — auth.
-- `submitBetaFeedback(...)` — auth.
-- `logBetaEvent(...)` — auth.
-- `getBetaAdminStats()` — auth + `has_role('admin')`.
-
-**Composants** :
-- `src/components/beta/BetaBanner.tsx`
-- `src/components/beta/RealInvestmentInterestCard.tsx` + dialog
-- `src/components/beta/FeedbackButton.tsx` + dialog
-- `src/components/beta/BetaCounter.tsx` (landing)
-
-**Routes** :
-- `src/routes/waitlist.tsx` (public)
-- `src/routes/_authenticated/admin.beta.tsx` (admin only)
-
-**Modifs existantes** :
-- `src/routes/auth.tsx` — check capacity avant signup
-- `src/routes/index.tsx` — section bêta + compteur
-- `src/routes/dashboard.tsx` — bandeau + carte intent + bouton feedback
-- `src/components/portfolio/InvestDialog.tsx` — label "(démo)"
-- `src/routes/onboarding.tsx` — copy ajustée
-
-**Ce qu'on NE fait PAS dans ce sprint** :
-- Aucune intégration courtier / PSAN (la waitlist suffit pour mesurer l'intent).
-- Pas de KYC, pas de paiement.
-- Pas de refonte de l'engine d'allocation — il est déjà solide.
-- Pas de mobile native — la PWA actuelle suffit pour 300 testeurs.
-
----
-
-## Planning indicatif (5 jours ouvrés)
-
-- **J1** : Migration DB + server functions + cap inscription + page waitlist.
-- **J2** : Bandeau démo + relabel CTA + RealInvestmentInterestCard.
-- **J3** : Feedback button + dialog + table + intégration onboarding.
-- **J4** : Page admin `/admin/beta` + analytics events + landing bêta.
-- **J5** : QA bout-en-bout, polish copy, publish.
-
-Veux-tu que je lance l'implémentation tel quel, ou tu veux ajuster un point (par ex. monter le cap, ajouter parrainage, ou demander un montant min sur l'intent réel) ?
+C'est un gros chantier (~3-4h de travail effectif côté agent). Je lance tel quel, ou tu préfères qu'on fasse en deux temps : **(1) infra + toggle + surfaces publiques aujourd'hui**, puis **(2) app connectée plus tard** une fois la phase de test démarrée ?
