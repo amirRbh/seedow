@@ -1,6 +1,7 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { JourneySteps } from "@/components/navigation/JourneySteps";
@@ -11,6 +12,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
+import { useLang } from "@/hooks/useLang";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/profil")({
@@ -34,7 +36,7 @@ export const Route = createFileRoute("/profil")({
   component: ProfilPage,
 });
 
-const CAUSE_LABELS: Record<string, string> = {
+const CAUSE_LABELS_FR: Record<string, string> = {
   climat: "Climat",
   biodiversite: "Biodiversité",
   humain: "Droits humains",
@@ -45,13 +47,31 @@ const CAUSE_LABELS: Record<string, string> = {
   social: "Humain",
   governance: "Éthique",
 };
-
-const EXCLUSION_LABELS: Record<string, string> = {
+const CAUSE_LABELS_EN: Record<string, string> = {
+  climat: "Climate",
+  biodiversite: "Biodiversity",
+  humain: "Human rights",
+  egalite: "Gender equality",
+  tech: "Ethical tech",
+  circulaire: "Circular economy",
+  eau: "Water",
+  social: "Human",
+  governance: "Ethics",
+};
+const EXCLUSION_LABELS_FR: Record<string, string> = {
   fossiles: "Énergies fossiles",
   armes: "Armement",
   tabac: "Tabac",
   jeux: "Jeux d'argent",
   animaux: "Tests animaux",
+  "fast-fashion": "Fast fashion",
+};
+const EXCLUSION_LABELS_EN: Record<string, string> = {
+  fossiles: "Fossil fuels",
+  armes: "Weapons",
+  tabac: "Tobacco",
+  jeux: "Gambling",
+  animaux: "Animal testing",
   "fast-fashion": "Fast fashion",
 };
 
@@ -63,13 +83,16 @@ interface ProfileMeta {
 }
 
 function ProfilPage() {
+  const { t } = useTranslation();
+  const { lang } = useLang();
+  const CAUSE_LABELS = lang === "en" ? CAUSE_LABELS_EN : CAUSE_LABELS_FR;
+  const EXCLUSION_LABELS = lang === "en" ? EXCLUSION_LABELS_EN : EXCLUSION_LABELS_FR;
   const { user } = useAuth();
   const { portfolio } = useActivePortfolio();
   const { portfolios } = useUserPortfolios();
   const valuation = usePortfolioValuation();
   const [meta, setMeta] = useState<ProfileMeta | null>(null);
 
-  // Récupère causes/exclusions/risque du portefeuille actif
   useEffect(() => {
     if (!user || !portfolio?.id) {
       setMeta(null);
@@ -95,8 +118,8 @@ function ProfilPage() {
 
   const userName = useMemo(() => {
     const m = user?.user_metadata as { display_name?: string; full_name?: string } | undefined;
-    return m?.display_name || m?.full_name || user?.email?.split("@")[0] || "Investisseur";
-  }, [user]);
+    return m?.display_name || m?.full_name || user?.email?.split("@")[0] || t("profile.default_name");
+  }, [user, t]);
 
   const totalInvested = valuation.totalInvested || (portfolio?.initial_amount ?? 0);
   const currentValue = valuation.currentValue || totalInvested;
@@ -104,6 +127,7 @@ function ProfilPage() {
   const esg = portfolio?.metrics?.esg_score ?? 0;
   const positions = portfolio?.holdings.length ?? 0;
   const riskPct = meta ? (meta.risk_target * 100).toFixed(1) : "—";
+  const numLocale = lang === "en" ? "en-US" : "fr-FR";
 
   return (
     <motion.div
@@ -113,9 +137,9 @@ function ProfilPage() {
     >
       <div className="max-w-lg mx-auto pb-28">
         <AppHeader
-          eyebrow="Ton profil"
+          eyebrow={t("profile.eyebrow")}
           title={userName}
-          subtitle="Tes valeurs, ton portefeuille et ta progression — vue d'ensemble."
+          subtitle={t("profile.subtitle")}
         />
 
         <div className="pt-2">
@@ -127,31 +151,28 @@ function ProfilPage() {
           <div className="grid grid-cols-2 gap-4 border-t border-paper-3 pt-5">
             <KPIFigure
               size="sm"
-              label="Capital investi"
-              value={totalInvested.toLocaleString("fr-FR", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
+              label={t("profile.kpi_invested")}
+              value={totalInvested.toLocaleString(numLocale, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               unit="€"
             />
             <KPIFigure
               size="sm"
-              label="Performance"
+              label={t("profile.kpi_performance")}
               value={`${returnPct >= 0 ? "+" : ""}${returnPct.toFixed(2)}`}
               unit="%"
               accent={returnPct >= 0}
             />
             <KPIFigure
               size="sm"
-              label="Score d'impact"
+              label={t("profile.kpi_impact")}
               value={esg.toFixed(0)}
               unit="/100"
             />
             <KPIFigure
               size="sm"
-              label="Positions"
+              label={t("profile.kpi_positions")}
               value={positions}
-              unit={positions > 1 ? "actifs" : "actif"}
+              unit={positions > 1 ? t("profile.asset_other") : t("profile.asset_one")}
             />
           </div>
         </section>
@@ -160,15 +181,15 @@ function ProfilPage() {
         <section className="px-5 pt-10">
           <div className="gold-rule mb-5" />
           <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold mb-3">
-            01 · Tes valeurs
+            {t("profile.values_eyebrow")}
           </p>
           <h2 className="font-value text-2xl text-ink leading-tight">
-            Ce que tu finances — et ce que tu refuses
+            {t("profile.values_title")}
           </h2>
 
           <div className="mt-5">
             <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
-              Causes soutenues
+              {t("profile.causes_supported")}
             </p>
             {meta && meta.causes.length > 0 ? (
               <div className="flex flex-wrap gap-2">
@@ -182,13 +203,13 @@ function ProfilPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-ink-3">Aucune cause définie pour ce portefeuille.</p>
+              <p className="text-sm text-ink-3">{t("profile.no_causes")}</p>
             )}
           </div>
 
           <div className="mt-5">
             <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
-              Exclusions
+              {t("profile.exclusions")}
             </p>
             {meta && meta.exclusions.length > 0 ? (
               <div className="flex flex-wrap gap-2">
@@ -202,7 +223,7 @@ function ProfilPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-ink-3">Aucune exclusion définie.</p>
+              <p className="text-sm text-ink-3">{t("profile.no_exclusions")}</p>
             )}
           </div>
 
@@ -211,7 +232,7 @@ function ProfilPage() {
             search={{ new: 1 }}
             className="mt-6 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-ink hover:text-moss-1 transition-colors"
           >
-            Ajuster mes valeurs
+            {t("profile.adjust_values")}
             <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M5 12h14M13 5l7 7-7 7" />
             </svg>
@@ -222,22 +243,22 @@ function ProfilPage() {
         <section className="px-5 pt-10">
           <div className="gold-rule mb-5" />
           <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold mb-3">
-            02 · Ton portefeuille
+            {t("profile.portfolio_eyebrow")}
           </p>
           <h2 className="font-value text-2xl text-ink leading-tight">
-            Structure et niveau de risque
+            {t("profile.portfolio_title")}
           </h2>
 
           <dl className="mt-5 divide-y divide-paper-3 border-t border-b border-paper-3">
-            <Row label="Portefeuille actif" value={portfolio?.name ?? "—"} />
-            <Row label="Nombre de portefeuilles" value={`${portfolios.length} / 3`} />
+            <Row label={t("profile.active_portfolio")} value={portfolio?.name ?? "—"} />
+            <Row label={t("profile.portfolio_count")} value={`${portfolios.length} / 3`} />
             <Row
-              label={<><Glossary term="Volatilite">Volatilité</Glossary> cible</>}
+              label={<><Glossary term="Volatilite">Volatilité</Glossary> {t("profile.target_volatility_suffix")}</>}
               value={`${riskPct} %`}
             />
             <Row
-              label={<Glossary term="Horizon">Horizon</Glossary>}
-              value={meta ? `${meta.horizon_years} ans` : "—"}
+              label={<Glossary term="Horizon">{t("profile.horizon")}</Glossary>}
+              value={meta ? t("profile.years", { n: meta.horizon_years }) : "—"}
             />
           </dl>
 
@@ -245,7 +266,7 @@ function ProfilPage() {
             to="/portfolio"
             className="mt-5 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-ink hover:text-moss-1 transition-colors"
           >
-            Voir l'allocation détaillée
+            {t("profile.see_allocation")}
             <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M5 12h14M13 5l7 7-7 7" />
             </svg>
@@ -256,27 +277,27 @@ function ProfilPage() {
         <section className="px-5 pt-10">
           <div className="gold-rule mb-5" />
           <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold mb-3">
-            03 · Ta progression
+            {t("profile.progress_eyebrow")}
           </p>
           <h2 className="font-value text-2xl text-ink leading-tight">
-            Là où tu en es
+            {t("profile.progress_title")}
           </h2>
 
           <ul className="mt-5 space-y-3">
             <ProgressItem
               done
-              label="Tes valeurs sont définies"
-              detail={`${meta?.causes.length ?? 0} causes · ${meta?.exclusions.length ?? 0} exclusions`}
+              label={t("profile.progress_values_done")}
+              detail={t("profile.progress_values_detail", { causes: meta?.causes.length ?? 0, exclusions: meta?.exclusions.length ?? 0 })}
             />
             <ProgressItem
               done={positions > 0}
-              label="Ton portefeuille est constitué"
-              detail={positions > 0 ? `${positions} positions actives` : "Constitue ton premier portefeuille"}
+              label={t("profile.progress_portfolio_done")}
+              detail={positions > 0 ? t("profile.progress_portfolio_detail_active", { n: positions }) : t("profile.progress_portfolio_detail_empty")}
             />
             <ProgressItem
               done={currentValue > totalInvested}
-              label="Ta performance est positive"
-              detail={`${returnPct >= 0 ? "+" : ""}${returnPct.toFixed(2)} % depuis le départ`}
+              label={t("profile.progress_perf_done")}
+              detail={t("profile.progress_perf_detail", { value: `${returnPct >= 0 ? "+" : ""}${returnPct.toFixed(2)}` })}
             />
           </ul>
         </section>
@@ -285,13 +306,13 @@ function ProfilPage() {
         <section className="px-5 pt-10">
           <div className="gold-rule mb-5" />
           <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold mb-3">
-            04 · Tes décisions
+            {t("profile.decisions_eyebrow")}
           </p>
           <h2 className="font-value text-2xl text-ink leading-tight">
-            La mémoire de ton parcours
+            {t("profile.decisions_title")}
           </h2>
           <p className="text-sm text-ink-3 mt-2">
-            Chaque arbitrage, exclusion ou rééquilibrage laisse une trace.
+            {t("profile.decisions_desc")}
           </p>
           <DecisionTimeline />
         </section>
@@ -303,18 +324,18 @@ function ProfilPage() {
             className="block border-t border-paper-3 pt-5 group"
           >
             <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold mb-2">
-              Comparatif
+              {t("profile.comparison_eyebrow")}
             </p>
             <div className="flex items-baseline justify-between gap-4">
               <h3 className="font-value text-xl text-ink leading-tight group-hover:text-moss-1 transition-colors">
-                Ton portefeuille vs <Glossary term="MSCIWorld">MSCI World</Glossary>
+                {t("profile.comparison_title_pre")} <Glossary term="MSCIWorld">MSCI World</Glossary>
               </h3>
               <svg viewBox="0 0 24 24" className="w-5 h-5 text-ink-3 shrink-0" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M9 6l6 6-6 6" />
               </svg>
             </div>
             <p className="text-sm text-ink-3 mt-2">
-              Performance, frais, score d'impact, CO₂ — les chiffres face à face.
+              {t("profile.comparison_desc")}
             </p>
           </Link>
         </section>
