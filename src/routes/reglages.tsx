@@ -1,4 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
+import { useLang } from "@/hooks/useLang";
+import { formatCurrency } from "@/lib/format";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useServerFn } from "@tanstack/react-start";
@@ -43,6 +46,7 @@ const EXCLUSIONS: { id: ExclusionTag; label: string }[] = [
 type SectionKey = "profil" | "portefeuille" | "notifications" | "methodologie";
 
 function ReglagesPage() {
+  const { t } = useTranslation();
   const { user, loading: authLoading, signOut } = useAuth();
   const navigate = useNavigate();
   const [section, setSection] = useState<SectionKey>("portefeuille");
@@ -54,7 +58,7 @@ function ReglagesPage() {
   if (authLoading || !user) {
     return (
       <div className="min-h-screen bg-paper flex items-center justify-center">
-        <p className="text-[12px] text-ink-3">Chargement…</p>
+        <p className="text-[12px] text-ink-3">{t("common.loading")}</p>
       </div>
     );
   }
@@ -63,9 +67,9 @@ function ReglagesPage() {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
       <div className="max-w-lg mx-auto pb-28">
         <AppHeader
-          eyebrow="Espace personnel"
-          title="Réglages"
-          subtitle="Profil, préférences, transparence."
+          eyebrow={t("reglages.eyebrow")}
+          title={t("reglages.title")}
+          subtitle={t("reglages.subtitle")}
           hideSettings
         />
 
@@ -74,10 +78,10 @@ function ReglagesPage() {
           <div className="flex gap-1 -mb-px overflow-x-auto scrollbar-hide">
             {(
               [
-                ["portefeuille", "Portefeuille"],
-                ["profil", "Profil"],
-                ["notifications", "Notifications"],
-                ["methodologie", "Méthodologie"],
+                ["portefeuille", t("reglages.tab_portfolio")],
+                ["profil", t("reglages.tab_profile")],
+                ["notifications", t("reglages.tab_notifications")],
+                ["methodologie", t("reglages.tab_methodology")],
               ] as const
             ).map(([key, label]) => (
               <button
@@ -112,6 +116,8 @@ function ReglagesPage() {
 // ─────────────────────────────────────────────────────────
 
 function PreferencesSection() {
+  const { t } = useTranslation();
+  const { lang } = useLang();
   const { user } = useAuth();
   const generate = useServerFn(generatePortfolio);
 
@@ -222,7 +228,7 @@ function PreferencesSection() {
   };
 
   if (loadingInitial) {
-    return <p className="text-[12px] text-ink-3">Chargement de vos préférences…</p>;
+    return <p className="text-[12px] text-ink-3">{t("reglages.loading_prefs")}</p>;
   }
 
   return (
@@ -241,8 +247,8 @@ function PreferencesSection() {
               Aperçu live
             </p>
             <div className="flex gap-3 text-[11px] text-ink-3">
-              <span>ESG <span className="text-ink font-value tabular-nums">{preview.esg.toFixed(1)}</span></span>
-              <span>TER <span className="text-ink font-value tabular-nums">{(preview.ter * 100).toFixed(2)}%</span></span>
+              <span>{t("reglages.preview_esg")} <span className="text-ink font-value tabular-nums">{preview.esg.toFixed(1)}</span></span>
+              <span>{t("reglages.preview_ter")} <span className="text-ink font-value tabular-nums">{(preview.ter * 100).toFixed(2)}%</span></span>
             </div>
           </div>
           <ul className="space-y-1.5">
@@ -259,7 +265,7 @@ function PreferencesSection() {
         </motion.div>
       )}
 
-      <Block title="Causes & intensité">
+      <Block title={t("reglages.block_causes")}>
         <div className="space-y-3">
           {CAUSES.map((c) => {
             const active = causes.includes(c.id);
@@ -302,7 +308,7 @@ function PreferencesSection() {
         </div>
       </Block>
 
-      <Block title="Exclusions sectorielles">
+      <Block title={t("reglages.block_exclusions")}>
         <div className="grid grid-cols-2 gap-2">
           {EXCLUSIONS.map((e) => {
             const active = exclusions.includes(e.id);
@@ -322,9 +328,9 @@ function PreferencesSection() {
         </div>
       </Block>
 
-      <Block title="Risque cible">
+      <Block title={t("reglages.block_risk")}>
         <div className="flex items-baseline justify-between mb-2">
-          <span className="text-[12px] text-ink-2">Volatilité annuelle visée</span>
+          <span className="text-[12px] text-ink-2">{t("reglages.risk_label")}</span>
           <span className="text-[13px] font-medium tabular-nums">{(risk * 100).toFixed(1)}%</span>
         </div>
         <input
@@ -337,16 +343,16 @@ function PreferencesSection() {
           className="w-full accent-ink"
         />
         <div className="flex justify-between text-[10px] text-ink-3 mt-1">
-          <span>Prudent</span>
-          <span>Équilibré</span>
-          <span>Dynamique</span>
+          <span>{t("reglages.risk_prudent")}</span>
+          <span>{t("reglages.risk_balanced")}</span>
+          <span>{t("reglages.risk_dynamic")}</span>
         </div>
       </Block>
 
-      <Block title="Horizon">
+      <Block title={t("reglages.block_horizon")}>
         <div className="flex items-baseline justify-between mb-2">
           <span className="text-[12px] text-ink-2">Durée d'investissement</span>
-          <span className="text-[13px] font-medium tabular-nums">{horizon} ans</span>
+          <span className="text-[13px] font-medium tabular-nums">{t("reglages.years", { n: horizon })}</span>
         </div>
         <input
           type="range"
@@ -359,11 +365,11 @@ function PreferencesSection() {
         />
       </Block>
 
-      <Block title="Montant initial">
+      <Block title={t("reglages.block_initial")}>
         <div className="flex items-baseline justify-between mb-2">
-          <span className="text-[12px] text-ink-2">Capital de référence</span>
+          <span className="text-[12px] text-ink-2">{t("reglages.initial_label")}</span>
           <span className="text-[13px] font-medium tabular-nums">
-            {amount.toLocaleString("fr-FR")} €
+            {formatCurrency(amount, lang)}
           </span>
         </div>
         <input
@@ -390,6 +396,7 @@ function PreferencesSection() {
 // ─────────────────────────────────────────────────────────
 
 function ProfileSection({ email, onSignOut }: { email: string; onSignOut: () => Promise<void> }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [displayName, setDisplayName] = useState("");
   const [savingName, setSavingName] = useState(false);
@@ -411,11 +418,11 @@ function ProfileSection({ email, onSignOut }: { email: string; onSignOut: () => 
 
   return (
     <div className="space-y-6">
-      <Block title="Identité">
-        <label className="text-[11px] text-ink-3 block mb-1">Adresse email</label>
+      <Block title={t("reglages.block_identity")}>
+        <label className="text-[11px] text-ink-3 block mb-1">{t("reglages.email_label")}</label>
         <p className="text-[13px] text-ink mb-4">{email}</p>
 
-        <label className="text-[11px] text-ink-3 block mb-1">Nom affiché</label>
+        <label className="text-[11px] text-ink-3 block mb-1">{t("reglages.display_name_label")}</label>
         <div className="flex gap-2">
           <input
             type="text"
@@ -423,19 +430,19 @@ function ProfileSection({ email, onSignOut }: { email: string; onSignOut: () => 
             onChange={(e) => setDisplayName(e.target.value)}
             maxLength={60}
             className="flex-1 border border-paper-3 rounded px-3 py-2 text-[13px] focus:border-ink outline-none transition-colors"
-            placeholder="Votre nom"
+            placeholder={t("reglages.display_name_placeholder")}
           />
           <button
             onClick={saveName}
             disabled={savingName}
             className="px-4 py-2 text-[12px] font-medium border border-ink text-ink rounded hover:bg-ink hover:text-paper transition-colors disabled:opacity-50"
           >
-            {savingName ? "…" : "Enregistrer"}
+            {savingName ? "…" : t("reglages.save")}
           </button>
         </div>
       </Block>
 
-      <Block title="Sécurité">
+      <Block title={t("reglages.block_security")}>
         <button
           onClick={() => navigate({ to: "/auth" })}
           className="text-[13px] text-ink-2 hover:text-ink underline-offset-2 hover:underline"
@@ -444,7 +451,7 @@ function ProfileSection({ email, onSignOut }: { email: string; onSignOut: () => 
         </button>
       </Block>
 
-      <Block title="Session">
+      <Block title={t("reglages.block_session")}>
         <button
           onClick={async () => {
             await onSignOut();
@@ -464,19 +471,20 @@ function ProfileSection({ email, onSignOut }: { email: string; onSignOut: () => 
 // ─────────────────────────────────────────────────────────
 
 function NotificationsSection() {
+  const { t } = useTranslation();
   const [emailNotif, setEmailNotif] = useState(true);
   const [marketAlerts, setMarketAlerts] = useState(false);
   const [reportMonthly, setReportMonthly] = useState(true);
 
   return (
     <div className="space-y-6">
-      <Block title="Notifications email">
-        <ToggleRow label="Récapitulatifs et nouveautés" checked={emailNotif} onChange={setEmailNotif} />
-        <ToggleRow label="Alertes de marché significatives" checked={marketAlerts} onChange={setMarketAlerts} />
+      <Block title={t("reglages.block_email_notifs")}>
+        <ToggleRow label={t("reglages.notif_recap")} checked={emailNotif} onChange={setEmailNotif} />
+        <ToggleRow label={t("reglages.notif_market")} checked={marketAlerts} onChange={setMarketAlerts} />
         <ToggleRow label="Rapport d'impact mensuel" checked={reportMonthly} onChange={setReportMonthly} />
       </Block>
 
-      <Block title="Confidentialité">
+      <Block title={t("reglages.block_privacy")}>
         <p className="text-[12px] text-ink-2 leading-relaxed mb-3">
           Vos données restent strictement confidentielles. Vous pouvez exporter ou supprimer
           l'ensemble de vos informations à tout moment.
@@ -526,6 +534,7 @@ function ToggleRow({
 // ─────────────────────────────────────────────────────────
 
 function MarketDataBlock() {
+  const { t } = useTranslation();
   const refresh = useServerFn(triggerMarketRefresh);
   const [state, setState] = useState<"idle" | "loading" | "ok" | "error">("idle");
   const [msg, setMsg] = useState<string | null>(null);
@@ -544,7 +553,7 @@ function MarketDataBlock() {
   };
 
   return (
-    <Block title="Données de marché">
+    <Block title={t("reglages.methodology.market_data.title")}>
       <p className="text-[12px] text-ink-2 leading-relaxed mb-3">
         Les prix sont rafraîchis automatiquement chaque jour ouvré en fin de séance.
         Tu peux forcer une mise à jour immédiate ici.
@@ -554,7 +563,7 @@ function MarketDataBlock() {
         disabled={state === "loading"}
         className="px-4 py-2 text-[12px] font-medium border border-ink text-ink rounded hover:bg-ink hover:text-paper transition-colors disabled:opacity-50"
       >
-        {state === "loading" ? "Rafraîchissement…" : "Rafraîchir les prix maintenant"}
+        {state === "loading" ? t("reglages.methodology.market_data.refreshing") : t("reglages.methodology.market_data.refresh")}
       </button>
       {msg && (
         <p className={`text-[11px] mt-2 ${state === "error" ? "text-rust" : "text-ink-3"}`}>
@@ -566,6 +575,8 @@ function MarketDataBlock() {
 }
 
 function CronHealthBlock() {
+  const { t } = useTranslation();
+  const { lang } = useLang();
   const fetchRuns = useServerFn(getRecentCronRuns);
   const [runs, setRuns] = useState<CronRunEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -592,7 +603,7 @@ function CronHealthBlock() {
     : null;
 
   return (
-    <Block title="Santé des données">
+    <Block title={t("reglages.methodology.health.title")}>
       {loading ? (
         <p className="text-[12px] text-ink-3">Chargement de l'historique…</p>
       ) : runs.length === 0 ? (
@@ -615,7 +626,7 @@ function CronHealthBlock() {
             <p className="text-[12px] text-ink-2">
               Dernier succès&nbsp;:
               <span className="text-ink font-medium ml-1">
-                {ageHours != null ? `il y a ${ageHours}h` : "jamais"}
+                {ageHours != null ? t("reglages.methodology.health.ago_hours", { count: ageHours }) : t("reglages.methodology.health.never")}
               </span>
             </p>
           </div>
@@ -635,7 +646,7 @@ function CronHealthBlock() {
                   }`}
                 />
                 <span className="text-ink-3 tabular-nums w-28 flex-shrink-0">
-                  {new Date(r.ran_at).toLocaleString("fr-FR", {
+                  {new Date(r.ran_at).toLocaleString(lang === "fr" ? "fr-FR" : "en-US", {
                     day: "2-digit",
                     month: "short",
                     hour: "2-digit",
@@ -658,11 +669,12 @@ function CronHealthBlock() {
 }
 
 function MethodologySection() {
+  const { t } = useTranslation();
   return (
     <div className="space-y-6">
       <MarketDataBlock />
       <CronHealthBlock />
-      <Block title="Pipeline de construction">
+      <Block title={t("reglages.methodology.pipeline.title")}>
         <p className="text-[12px] text-ink-2 leading-relaxed mb-4">
           Six étapes traçables : profilage, univers investissable, exclusions sectorielles, filtres
           best-in-class ESG, optimisation Markowitz contrainte (plancher ESG, budget de risque, bornes
@@ -678,16 +690,16 @@ function MethodologySection() {
         </Link>
       </Block>
 
-      <Block title="Sources de données">
+      <Block title={t("reglages.methodology.sources.title")}>
         <ul className="text-[12px] text-ink-2 space-y-1.5 leading-relaxed">
-          <li>• Scores ESG par pilier (E/S/G) : MSCI ESG Research, Sustainalytics, ESG Book, Yahoo Sustainability</li>
-          <li>• Intensité carbone (gCO₂e/€ investi) : Trucost, ISS ESG, Yahoo Sustainability — avec date et provider stockés par actif</li>
-          <li>• Classification SFDR : prospectus émetteurs (iShares, Lyxor, Amundi)</li>
-          <li>• Prix et volatilités : Yahoo Finance, séries historiques 5 ans, covariances recalculées hebdomadairement</li>
+          <li>{t("reglages.methodology.sources.esg")} (E/S/G) : MSCI ESG Research, Sustainalytics, ESG Book, Yahoo Sustainability</li>
+          <li>{t("reglages.methodology.sources.carbon")} (gCO₂e/€ investi) : Trucost, ISS ESG, Yahoo Sustainability — avec date et provider stockés par actif</li>
+          <li>{t("reglages.methodology.sources.sfdr")} : prospectus émetteurs (iShares, Lyxor, Amundi)</li>
+          <li>{t("reglages.methodology.sources.prices")} : Yahoo Finance, séries historiques 5 ans, covariances recalculées hebdomadairement</li>
         </ul>
       </Block>
 
-      <Block title="Score ESG composite, pondéré par vos causes">
+      <Block title={t("reglages.methodology.esg_composite.title")}>
         <p className="text-[12px] text-ink-2 leading-relaxed mb-4">
           Le score ESG va de <span className="font-value">0</span> à <span className="font-value">100</span>.
           Au lieu d'une moyenne fixe 40/40/20, <span className="font-medium text-ink">les piliers E, S et G
@@ -702,15 +714,15 @@ function MethodologySection() {
             </p>
             <ul className="text-[12px] text-ink-2 space-y-1.5 leading-relaxed">
               <li>
-                <span className="font-medium text-ink">Environnement (E)</span> — émissions CO₂ scope 1-2-3,
+                <span className="font-medium text-ink">Environnement (E)</span> — {t("reglages.methodology.esg_composite.pillar_e")} scope 1-2-3,
                 intensité carbone, eau, déchets, exposition renouvelables.
               </li>
               <li>
-                <span className="font-medium text-ink">Social (S)</span> — droits humains, conditions de
+                <span className="font-medium text-ink">Social (S)</span> — {t("reglages.methodology.esg_composite.pillar_s")}, conditions de
                 travail, égalité F/H, sécurité produit, relations communautés.
               </li>
               <li>
-                <span className="font-medium text-ink">Gouvernance (G)</span> — indépendance du conseil,
+                <span className="font-medium text-ink">Gouvernance (G)</span> — {t("reglages.methodology.esg_composite.pillar_g")},
                 rémunération dirigeants, éthique fiscale, transparence, anti-corruption.
               </li>
             </ul>
@@ -725,9 +737,9 @@ function MethodologySection() {
               2. Mapping causes → piliers (codé en dur)
             </p>
             <ul className="text-[12px] text-ink-2 space-y-1.5 leading-relaxed">
-              <li>• <span className="font-medium text-ink">Climat, Biodiversité, Économie circulaire</span> → boostent le pilier <span className="font-medium">E</span></li>
-              <li>• <span className="font-medium text-ink">Droits humains, Égalité F/H</span> → boostent le pilier <span className="font-medium">S</span></li>
-              <li>• <span className="font-medium text-ink">Tech éthique</span> → boostent les piliers <span className="font-medium">S et G</span></li>
+              <li>• <span className="font-medium text-ink">{t("reglages.methodology.esg_composite.mapping_e")}</li>
+              <li>• <span className="font-medium text-ink">{t("reglages.methodology.esg_composite.mapping_s")}</li>
+              <li>• <span className="font-medium text-ink">{t("reglages.methodology.esg_composite.mapping_sg")}</li>
             </ul>
             <p className="text-[11px] text-ink-3 mt-2 leading-relaxed">
               Sans cause active, on revient à la pondération neutre 40/40/20. Plus vous activez de causes
@@ -755,19 +767,19 @@ function MethodologySection() {
             <div className="grid grid-cols-4 gap-1.5 text-[10px]">
               <div className="rounded border border-paper-3 p-2">
                 <p className="font-value text-ink">0–40</p>
-                <p className="text-ink-3">Faible</p>
+                <p className="text-ink-3">{t("reglages.methodology.esg_composite.scale_low")}</p>
               </div>
               <div className="rounded border border-paper-3 p-2">
                 <p className="font-value text-ink">40–60</p>
-                <p className="text-ink-3">Moyen</p>
+                <p className="text-ink-3">{t("reglages.methodology.esg_composite.scale_medium")}</p>
               </div>
               <div className="rounded border border-moss-4 bg-moss-5 p-2">
                 <p className="font-value text-moss-1">60–80</p>
-                <p className="text-moss-1">Bon</p>
+                <p className="text-moss-1">{t("reglages.methodology.esg_composite.scale_good")}</p>
               </div>
               <div className="rounded border border-moss-2 bg-moss-5 p-2">
                 <p className="font-value text-moss-1">80–100</p>
-                <p className="text-moss-1">Excellent</p>
+                <p className="text-moss-1">{t("reglages.methodology.esg_composite.scale_excellent")}</p>
               </div>
             </div>
           </div>
@@ -780,19 +792,19 @@ function MethodologySection() {
         </p>
       </Block>
 
-      <Block title="Empreinte carbone : heuristique + réelle">
+      <Block title={t("reglages.methodology.carbon.title")}>
         <p className="text-[12px] text-ink-2 leading-relaxed mb-3">
           Deux indicateurs cohabitent volontairement, le temps que la couverture en données réelles atteigne
           100% du portefeuille :
         </p>
         <ul className="text-[12px] text-ink-2 space-y-2 leading-relaxed">
           <li>
-            • <span className="font-medium text-ink">CO₂ évité (heuristique)</span> — estimation indicative
+            • <span className="font-medium text-ink"CO₂ évité (heuristique)</span> — {t("reglages.methodology.carbon.avoided")} indicative
             dérivée du score ESG composite. Pratique pour comparer deux portefeuilles, pas une figure
             réglementaire.
           </li>
           <li>
-            • <span className="font-medium text-ink">Intensité carbone réelle</span> — moyenne pondérée des
+            • <span className="font-medium text-ink"Intensité carbone réelle</span> — {t("reglages.methodology.carbon.intensity")} pondérée des
             <span className="font-mono text-[11px]"> gCO₂e/€ investi/an</span> sur la part du portefeuille
             réellement couverte par un provider (champs <span className="font-mono text-[11px]">carbon_intensity_*</span>
             avec source et date de mise à jour). Un indicateur de couverture est affiché dans la page
@@ -805,9 +817,9 @@ function MethodologySection() {
             Couverture faible ? Voici quoi faire
           </p>
           <ul className="text-[12px] text-ink-2 space-y-1.5 leading-relaxed mb-3">
-            <li>• <span className="font-medium text-ink">&lt; 30%</span> — fiez-vous à l'heuristique CO₂ évité, l'intensité réelle n'est pas représentative.</li>
-            <li>• <span className="font-medium text-ink">30–70%</span> — lecture indicative, à recouper avec l'ESG composite.</li>
-            <li>• <span className="font-medium text-ink">≥ 70%</span> — chiffre fiable, utilisable pour reporting interne.</li>
+            <li>{t("reglages.methodology.carbon.coverage_low")} à l'heuristique CO₂ évité, l'intensité réelle n'est pas représentative.</li>
+            <li>{t("reglages.methodology.carbon.coverage_medium")} indicative, à recouper avec l'ESG composite.</li>
+            <li>{t("reglages.methodology.carbon.coverage_high")} fiable, utilisable pour reporting interne.</li>
           </ul>
           <Link
             to="/methodologie"
@@ -819,7 +831,7 @@ function MethodologySection() {
         </div>
       </Block>
 
-      <Block title="Optimisation Markowitz contrainte">
+      <Block title={t("reglages.methodology.optimization.title")}>
         <p className="text-[12px] text-ink-2 leading-relaxed">
           Maximisation de l'utilité moyenne-variance avec contraintes : somme des poids = 1, poids ≥ 0,
           plancher par actif, plafond par actif et par classe, budget de risque (volatilité cible),
@@ -829,7 +841,7 @@ function MethodologySection() {
         </p>
       </Block>
 
-      <Block title="Version du moteur">
+      <Block title={t("reglages.methodology.version.title")}>
         <p className="text-[12px] text-ink-2">
           Méthodologie <span className="font-value">v1.1</span> · piliers E/S/G pondérés par causes,
           intensité carbone réelle, traçabilité des sources. Révisée trimestriellement.

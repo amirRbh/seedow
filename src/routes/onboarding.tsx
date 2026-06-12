@@ -1,3 +1,6 @@
+import { useTranslation, Trans } from "react-i18next";
+import { useLang } from "@/hooks/useLang";
+import { formatCurrency } from "@/lib/format";
 import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -26,54 +29,45 @@ const STEPS = [
   {
     id: "values" as const,
     multi: true,
-    ethiMessage:
-      "Salut, moi c'est Ethi ✨ Je vais t'aider à composer ton portefeuille aujourd'hui. Dis-moi d'abord : qu'est-ce qui compte vraiment pour toi ?",
-    question: "Choisis tes causes — tu peux en prendre plusieurs.",
     options: [
-      { id: "climat", label: "Climat", icon: "☀️", desc: "Transition énergétique" },
-      { id: "biodiversite", label: "Biodiversité", icon: "🌿", desc: "Forêts, océans, espèces" },
-      { id: "humain", label: "Droits humains", icon: "🤝", desc: "Travail digne, égalité" },
-      { id: "egalite", label: "Égalité F/H", icon: "⚖️", desc: "Parité, équité salariale" },
-      { id: "tech", label: "Tech éthique", icon: "🧠", desc: "IA responsable" },
-      { id: "circulaire", label: "Économie circulaire", icon: "♻️", desc: "Zéro déchet" },
+      { id: "climat", icon: "☀️" },
+      { id: "biodiversite", icon: "🌿" },
+      { id: "humain", icon: "🤝" },
+      { id: "egalite", icon: "⚖️" },
+      { id: "tech", icon: "🧠" },
+      { id: "circulaire", icon: "♻️" },
     ],
   },
   {
     id: "exclusions" as const,
     multi: true,
-    ethiMessage: "Parfait 💚 Et à l'inverse, qu'est-ce que tu refuses absolument de financer ?",
-    question: "Ces secteurs seront totalement exclus.",
     options: [
-      { id: "fossiles", label: "Énergies fossiles", icon: "🛢️" },
-      { id: "armes", label: "Armement", icon: "🔫" },
-      { id: "tabac", label: "Tabac", icon: "🚬" },
-      { id: "jeux", label: "Jeux d'argent", icon: "🎰" },
-      { id: "animaux", label: "Tests animaux", icon: "🐇" },
-      { id: "fast-fashion", label: "Fast fashion", icon: "👗" },
+      { id: "fossiles", icon: "🛢️" },
+      { id: "armes", icon: "🔫" },
+      { id: "tabac", icon: "🚬" },
+      { id: "jeux", icon: "🎰" },
+      { id: "animaux", icon: "🐇" },
+      { id: "fast-fashion", icon: "👗" },
     ],
   },
   {
     id: "objective" as const,
     multi: false,
-    ethiMessage: "Bien noté. Maintenant : pour quel objectif veux-tu faire grandir ce capital ?",
-    question: "Ton objectif principal",
     options: [
-      { id: "retraite", label: "Préparer ma retraite", icon: "🏖️", desc: "20+ ans" },
-      { id: "maison", label: "Acheter une maison", icon: "🏠", desc: "5-10 ans" },
-      { id: "court", label: "Un projet bientôt", icon: "🎯", desc: "1-3 ans" },
-      { id: "epargne", label: "Juste épargner", icon: "💰", desc: "Sans échéance" },
+      { id: "retraite", icon: "🏖️" },
+      { id: "maison", icon: "🏠" },
+      { id: "court", icon: "🎯" },
+      { id: "epargne", icon: "💰" },
     ],
   },
   {
     id: "amount" as const,
     multi: false,
-    ethiMessage: "Combien veux-tu investir pour commencer ? On peut commencer petit.",
-    question: "Ton premier dépôt",
     options: [
-      { id: "10", label: "10 €", icon: "🌱", desc: "Je teste tranquille" },
-      { id: "50", label: "50 €", icon: "🌿", desc: "Un engagement sérieux" },
-      { id: "100", label: "100 €", icon: "🌳", desc: "Un vrai démarrage" },
-      { id: "500", label: "500 €", icon: "🍃", desc: "Un démarrage ambitieux" },
+      { id: "10", icon: "🌱" },
+      { id: "50", icon: "🌿" },
+      { id: "100", icon: "🌳" },
+      { id: "500", icon: "🍃" },
     ],
   },
 ];
@@ -186,6 +180,7 @@ function NameGardenStep({
   onConfirm: (name: string) => void;
   onBack: () => void;
 }) {
+  const { t } = useTranslation();
   const [name, setName] = useState(initialName);
   return (
     <motion.div
@@ -199,34 +194,36 @@ function NameGardenStep({
         <button
           onClick={onBack}
           className="w-9 h-9 rounded-full flex items-center justify-center text-paper/50 hover:text-paper transition-colors"
-          aria-label="Retour"
+          aria-label={t("onboarding.step.back")}
         >
           <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
             <path d="M15 6l-6 6 6 6" />
           </svg>
         </button>
-        <span className="text-[11px] text-paper/40 font-semibold">Nomme ton portefeuille</span>
+        <span className="text-[11px] text-paper/40 font-semibold">{t("onboarding.naming.title")}</span>
       </div>
       <div className="px-6 pt-12 pb-12 max-w-md mx-auto w-full flex-1">
-        <h2 className="font-value text-3xl text-paper">Comment s'appelle ce portefeuille ?</h2>
+        <h2 className="font-value text-3xl text-paper">{t("onboarding.naming.question")}</h2>
         <p className="text-[13px] text-paper/60 mt-2">
-          Donne-lui un nom qui te parle — par exemple <em>Climat</em>, <em>Retraite</em>, <em>Tech responsable</em>…
+          <Trans i18nKey="onboarding.naming.description">
+            Donne-lui un nom qui te parle — par exemple <em>Climat</em>, <em>Retraite</em>, <em>Tech responsable</em>…
+          </Trans>
         </p>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value.slice(0, 40))}
-          placeholder="Mon portefeuille climat"
+          placeholder={t("onboarding.naming.placeholder")}
           autoFocus
           className="mt-8 w-full px-4 py-4 rounded-2xl border border-paper/15 bg-paper/5 text-paper text-[16px] placeholder-paper/30 focus:border-paper/40 focus:outline-none transition-colors"
         />
         <p className="mt-2 text-[10px] text-paper/40 text-right">{name.length}/40</p>
 
         <button
-          onClick={() => onConfirm(name.trim() || "Mon portefeuille")}
+          onClick={() => onConfirm(name.trim() || t("onboarding.naming.default_name"))}
           className="mt-8 w-full py-4 rounded-full bg-paper text-ink font-semibold text-sm hover:bg-moss-5 hover:text-moss-1 transition-colors"
         >
-          Valider ce portefeuille
+          {t("onboarding.naming.validate")}
         </button>
       </div>
     </motion.div>
@@ -237,6 +234,7 @@ function NameGardenStep({
 // Account creation step — inline, after questions, before generation
 // ─────────────────────────────────────────────────────────
 function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () => void }) {
+  const { t } = useTranslation();
   const [mode, setMode] = useState<"signup" | "login">("signup");
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
@@ -268,7 +266,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
         });
         if (err) throw err;
         if (!data.session) {
-          throw new Error("Compte créé. Vérifie ton email pour finaliser puis reviens.");
+          throw new Error(t("onboarding.account.verify_email"));
         }
       } else {
         const { error: err } = await supabase.auth.signInWithPassword({ email, password });
@@ -276,7 +274,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
       }
       onAuthed();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur d'authentification");
+      setError(err instanceof Error ? err.message : t("onboarding.account.auth_error"));
     } finally {
       setLoading(false);
     }
@@ -294,13 +292,13 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
         <button
           onClick={onBack}
           className="w-9 h-9 rounded-full flex items-center justify-center text-paper/50 hover:text-paper transition-colors"
-          aria-label="Retour"
+          aria-label={t("onboarding.step.back")}
         >
           <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
             <path d="M15 6l-6 6 6 6" />
           </svg>
         </button>
-        <span className="text-[11px] text-paper/40 font-semibold">Dernière étape</span>
+        <span className="text-[11px] text-paper/40 font-semibold">{t("onboarding.account.eyebrow")}</span>
       </div>
 
       <div className="px-6 pt-10 pb-12 max-w-md mx-auto w-full flex-1">
@@ -315,15 +313,15 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
             </svg>
           </div>
           <div className="flex-1 bg-paper/10 text-paper text-[13px] rounded-2xl rounded-bl-sm px-4 py-3 leading-relaxed">
-            Top, j'ai tout ce qu'il faut ✨ Crée ton compte en 10 secondes pour que je sauvegarde ton portefeuille.
+            {t("onboarding.account.ethi_message")}
           </div>
         </motion.div>
 
         <h2 className="font-value text-2xl text-paper pt-8">
-          {mode === "signup" ? "Crée ton compte" : "Connecte-toi"}
+          {mode === "signup" ? t("onboarding.account.title_signup") : t("onboarding.account.title_login")}
         </h2>
         <p className="text-[12px] text-paper/60 mt-1.5">
-          Tes réponses sont prêtes. Plus qu'un pas pour démarrer.
+          {t("onboarding.account.description")}
         </p>
 
         <button
@@ -336,7 +334,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
           </svg>
-          Continuer avec Google
+          {t("onboarding.account.continue_google")}
         </button>
 
         <div className="my-4 flex items-center gap-3">
@@ -349,7 +347,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
           {mode === "signup" && (
             <input
               type="text"
-              placeholder="Prénom"
+              placeholder={t("onboarding.account.firstname_placeholder")}
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
               className="w-full px-3.5 py-3 rounded-xl border border-paper/15 bg-paper/5 text-[13px] text-paper placeholder-paper/40 focus:border-paper/40 focus:outline-none transition-colors"
@@ -357,7 +355,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
           )}
           <input
             type="email"
-            placeholder="Adresse email"
+            placeholder={t("onboarding.account.email_placeholder")}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -366,7 +364,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
           />
           <input
             type="password"
-            placeholder="Mot de passe (8 caractères min.)"
+            placeholder={t("onboarding.account.password_placeholder")}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -383,21 +381,21 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
             className="w-full py-3.5 rounded-full bg-paper text-ink font-semibold text-[13px] hover:bg-moss-5 hover:text-moss-1 transition-colors disabled:opacity-40 disabled:cursor-not-allowed mt-2"
           >
             {loading
-              ? "Veuillez patienter…"
+              ? t("onboarding.account.waiting")
               : mode === "signup"
-                ? "Créer mon compte et investir"
-                : "Se connecter et investir"}
+                ? t("onboarding.account.btn_signup")
+                : t("onboarding.account.btn_login")}
           </button>
         </form>
 
         <p className="mt-5 text-[12px] text-paper/50 text-center">
-          {mode === "signup" ? "Déjà un compte ? " : "Pas encore de compte ? "}
+          {mode === "signup" ? t("onboarding.account.already_account") + " " : t("onboarding.account.no_account") + " "}
           <button
             type="button"
             onClick={() => setMode(mode === "signup" ? "login" : "signup")}
             className="text-paper underline-offset-4 hover:underline font-medium"
           >
-            {mode === "signup" ? "Se connecter" : "Créer un compte"}
+            {mode === "signup" ? t("onboarding.account.link_login") : t("onboarding.account.link_signup")}
           </button>
         </p>
       </div>
@@ -406,6 +404,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
 }
 
 function Intro({ onStart }: { onStart: () => void }) {
+  const { t } = useTranslation();
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -439,7 +438,7 @@ function Intro({ onStart }: { onStart: () => void }) {
         transition={{ delay: 0.6 }}
         className="text-[10px] uppercase tracking-[0.18em] text-paper/50 font-medium"
       >
-        Conseiller en allocation
+        {t("onboarding.intro.eyebrow")}
       </motion.p>
       <motion.h1
         initial={{ opacity: 0, y: 8 }}
@@ -447,7 +446,7 @@ function Intro({ onStart }: { onStart: () => void }) {
         transition={{ delay: 0.8 }}
         className="font-value text-4xl text-paper text-center mt-3 leading-tight max-w-md"
       >
-        Composons votre portefeuille.
+        {t("onboarding.intro.title")}
       </motion.h1>
       <motion.p
         initial={{ opacity: 0 }}
@@ -455,7 +454,7 @@ function Intro({ onStart }: { onStart: () => void }) {
         transition={{ delay: 1.1 }}
         className="text-[13px] text-paper/60 text-center mt-5 max-w-sm leading-relaxed"
       >
-        Quatre questions, deux minutes. Ethi structure une allocation alignée sur vos convictions et vos exclusions.
+        {t("onboarding.intro.description")}
       </motion.p>
 
       {/* Récap du parcours en 3 temps */}
@@ -466,9 +465,9 @@ function Intro({ onStart }: { onStart: () => void }) {
         className="mt-10 grid grid-cols-3 gap-3 max-w-sm w-full"
       >
         {[
-          { n: "01", l: "Tes valeurs" },
-          { n: "02", l: "Ton portefeuille" },
-          { n: "03", l: "Ton suivi" },
+          { n: "01", l: t("onboarding.intro.step_01") },
+          { n: "02", l: t("onboarding.intro.step_02") },
+          { n: "03", l: t("onboarding.intro.step_03") },
         ].map((s, i) => (
           <li
             key={s.n}
@@ -495,7 +494,7 @@ function Intro({ onStart }: { onStart: () => void }) {
         onClick={onStart}
         className="mt-12 px-7 py-3 rounded bg-paper text-ink font-medium text-[13px] tracking-wide hover:bg-paper-2 transition-colors flex items-center gap-2"
       >
-        Commencer
+        {t("onboarding.intro.start")}
         <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
           <path d="M5 12h14M13 5l7 7-7 7" />
         </svg>
@@ -517,6 +516,7 @@ function Step({
   onComplete: (ids: string[]) => void;
   onBack: () => void;
 }) {
+  const { t } = useTranslation();
   const [selected, setSelected] = useState<string[]>([]);
   const [enteredAt] = useState(() => Date.now());
 
@@ -562,7 +562,7 @@ function Step({
         <button
           onClick={onBack}
           className="w-9 h-9 rounded-full flex items-center justify-center text-paper/50 hover:text-paper transition-colors"
-          aria-label="Retour"
+          aria-label={t("onboarding.step.back")}
         >
           <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
             <path d="M15 6l-6 6 6 6" />
@@ -579,7 +579,7 @@ function Step({
           ))}
         </div>
         <span className="text-[11px] text-paper/40 font-semibold min-w-[28px] text-right">
-          {stepIndex + 1}/{totalSteps}
+          {t("onboarding.step.progress", { current: stepIndex + 1, total: totalSteps })}
         </span>
       </div>
 
@@ -596,7 +596,7 @@ function Step({
             </svg>
           </div>
           <div className="flex-1 bg-paper/10 text-paper text-[13px] rounded-2xl rounded-bl-sm px-4 py-3 leading-relaxed">
-            {step.ethiMessage}
+            {t(`onboarding.steps.${step.id}.ethiMessage`)}
           </div>
         </motion.div>
 
@@ -606,7 +606,7 @@ function Step({
           transition={{ delay: 0.3 }}
           className="font-value text-2xl text-paper pt-8"
         >
-          {step.question}
+          {t(`onboarding.steps.${step.id}.question`)}
         </motion.h2>
 
         <div className="pt-5 pb-32 space-y-2.5">
@@ -627,9 +627,9 @@ function Step({
                   {option.icon}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-paper">{option.label}</p>
-                  {"desc" in option && option.desc && (
-                    <p className="text-[11px] text-paper/50 mt-0.5">{option.desc}</p>
+                  <p className="text-sm font-semibold text-paper">{t(`onboarding.steps.${step.id}.${option.id}`)}</p>
+                  {step.id !== "exclusions" && (
+                    <p className="text-[11px] text-paper/50 mt-0.5">{t(`onboarding.steps.${step.id}.${option.id}_desc`)}</p>
                   )}
                 </div>
                 <div
@@ -656,7 +656,7 @@ function Step({
             onClick={() => onComplete(selected)}
             className="w-full py-4 rounded-full bg-paper text-ink font-semibold text-sm hover:bg-moss-5 hover:text-moss-1 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           >
-            Continuer
+            {t("onboarding.step.continue")}
           </button>
         </div>
       </div>
@@ -675,6 +675,8 @@ interface SelectedAsset {
 }
 
 function PlantingScene({ onEnter, answers, mode = "replace", name }: { onEnter: () => void; answers: Answers; mode?: "replace" | "create"; name?: string }) {
+  const { t } = useTranslation();
+  const { lang } = useLang();
   const generate = useServerFn(generatePortfolio);
   const [phase, setPhase] = useState<"loading" | "reveal" | "error">("loading");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -726,7 +728,7 @@ function PlantingScene({ onEnter, answers, mode = "replace", name }: { onEnter: 
       } catch (err) {
         if (cancelled) return;
         console.error("[onboarding] generate:", err);
-        setErrorMsg(err instanceof Error ? err.message : "Erreur lors de la génération");
+        setErrorMsg(err instanceof Error ? err.message : t("onboarding.planting.error_fallback"));
         setPhase("error");
       }
     })();
@@ -753,16 +755,16 @@ function PlantingScene({ onEnter, answers, mode = "replace", name }: { onEnter: 
                 className="absolute inset-y-0 w-1/2 bg-ink"
               />
             </div>
-            <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-medium">Composition en cours</p>
-            <p className="font-value text-2xl text-ink mt-3">Structuration du portefeuille</p>
-            <p className="text-[12px] text-ink-3 mt-2">Optimisation Markowitz contrainte</p>
+            <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-medium">{t("onboarding.planting.loading_eyebrow")}</p>
+            <p className="font-value text-2xl text-ink mt-3">{t("onboarding.planting.loading_title")}</p>
+            <p className="text-[12px] text-ink-3 mt-2">{t("onboarding.planting.loading_desc")}</p>
           </motion.div>
         )}
 
         {phase === "error" && (
           <motion.div key="e" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-md text-center">
-            <p className="text-[10px] uppercase tracking-[0.18em] text-rust font-medium">Erreur</p>
-            <h2 className="font-value text-2xl text-ink mt-3">Impossible de générer le portefeuille</h2>
+            <p className="text-[10px] uppercase tracking-[0.18em] text-rust font-medium">{t("onboarding.planting.error_eyebrow")}</p>
+            <h2 className="font-value text-2xl text-ink mt-3">{t("onboarding.planting.error_title")}</h2>
             <p className="text-[12px] text-ink-3 mt-3 break-words">{errorMsg}</p>
             <button
               onClick={() => {
@@ -773,7 +775,7 @@ function PlantingScene({ onEnter, answers, mode = "replace", name }: { onEnter: 
               }}
               className="mt-6 px-5 py-2.5 text-[13px] font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
             >
-              Réessayer
+              {t("common.retry")}
             </button>
           </motion.div>
         )}
@@ -781,12 +783,11 @@ function PlantingScene({ onEnter, answers, mode = "replace", name }: { onEnter: 
         {phase === "reveal" && (
           <motion.div key="r" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
             <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-medium text-center">
-              Allocation cible
+              {t("onboarding.planting.reveal_eyebrow")}
             </p>
-            <p className="font-value text-2xl text-ink text-center mt-2 mb-6">Votre portefeuille</p>
+            <p className="font-value text-2xl text-ink text-center mt-2 mb-6">{t("onboarding.planting.reveal_title")}</p>
             <p className="text-[11px] text-ink-3 text-center mb-6">
-              {selected.length} positions · capital de référence{" "}
-              {initialAmount.toLocaleString("fr-FR")} €
+              {t("onboarding.planting.reveal_summary", { count: selected.length, amount: formatCurrency(initialAmount, lang) })}
             </p>
             <ul className="divide-y divide-paper-3 border-t border-b border-paper-3">
               {selected
@@ -825,7 +826,7 @@ function PlantingScene({ onEnter, answers, mode = "replace", name }: { onEnter: 
               }}
               className="mt-8 w-full py-3 rounded-full bg-ink text-paper font-semibold text-[13px] hover:bg-moss-2 transition-colors flex items-center justify-center gap-2"
             >
-              Accéder au tableau de bord
+              {t("onboarding.planting.dashboard_cta")}
               <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                 <path d="M5 12h14M13 5l7 7-7 7" />
               </svg>
