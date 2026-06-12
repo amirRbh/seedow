@@ -1,4 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
+import { useLang } from "@/hooks/useLang";
+import { formatPercent, formatNumber } from "@/lib/format";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useServerFn } from "@tanstack/react-start";
@@ -16,35 +19,45 @@ export const Route = createFileRoute("/methodologie")({
   component: MethodologyPage,
 });
 
-const CAUSES: { id: CauseTag; label: string }[] = [
-  { id: "climat", label: "Climat" },
-  { id: "biodiversite", label: "Biodiversité" },
-  { id: "humain", label: "Droits humains" },
-  { id: "egalite", label: "Égalité F/H" },
-  { id: "tech", label: "Tech éthique" },
-  { id: "circulaire", label: "Économie circulaire" },
-];
-
-const EXCLUSIONS: { id: ExclusionTag; label: string }[] = [
-  { id: "fossiles", label: "Énergies fossiles" },
-  { id: "armes", label: "Armement" },
-  { id: "tabac", label: "Tabac" },
-  { id: "jeux", label: "Jeux d'argent" },
-  { id: "animaux", label: "Tests animaux" },
-  { id: "fast-fashion", label: "Fast fashion" },
-];
-
-const STAGES = [
-  { id: 1, name: "Profilage", desc: "Causes, exclusions, horizon, risque cible." },
-  { id: 2, name: "Univers", desc: "~40 actifs multi-classes : actions, obligations vertes, thématiques, REIT, monétaire." },
-  { id: 3, name: "Filtres", desc: "Exclusions sectorielles dures, puis best-in-class ESG (top 50% par classe — médiane)." },
-  { id: 4, name: "Convictions", desc: "Ajustement linéaire des rendements attendus selon vos causes (≤ +1,5% par cause). Pas de Black-Litterman complet." },
-  { id: 5, name: "Optimisation", desc: "Markowitz contraint : max rendement / variance, bornes par classe et plancher ESG composite pondéré E/S/G selon vos causes." },
-];
-
 type SimResult = Awaited<ReturnType<typeof simulatePortfolio>>;
 
 function MethodologyPage() {
+  const { t } = useTranslation();
+  const { lang } = useLang();
+
+  const CAUSES: { id: CauseTag; label: string }[] = [
+    { id: "climat", label: t("methodologie:causes.climat") },
+    { id: "biodiversite", label: t("methodologie:causes.biodiversite") },
+    { id: "humain", label: t("methodologie:causes.humain") },
+    { id: "egalite", label: t("methodologie:causes.egalite") },
+    { id: "tech", label: t("methodologie:causes.tech") },
+    { id: "circulaire", label: t("methodologie:causes.circulaire") },
+  ];
+
+  const EXCLUSIONS: { id: ExclusionTag; label: string }[] = [
+    { id: "fossiles", label: t("methodologie:exclusions.fossiles") },
+    { id: "armes", label: t("methodologie:exclusions.armes") },
+    { id: "tabac", label: t("methodologie:exclusions.tabac") },
+    { id: "jeux", label: t("methodologie:exclusions.jeux") },
+    { id: "animaux", label: t("methodologie:exclusions.animaux") },
+    { id: "fast-fashion", label: t("methodologie:exclusions.fast-fashion") },
+  ];
+
+  const STAGES = [
+    { id: 1, name: t("methodologie:stages.1_name"), desc: t("methodologie:stages.1_desc") },
+    { id: 2, name: t("methodologie:stages.2_name"), desc: t("methodologie:stages.2_desc") },
+    { id: 3, name: t("methodologie:stages.3_name"), desc: t("methodologie:stages.3_desc") },
+    { id: 4, name: t("methodologie:stages.4_name"), desc: t("methodologie:stages.4_desc") },
+    { id: 5, name: t("methodologie:stages.5_name"), desc: t("methodologie:stages.5_desc") },
+  ];
+  const { t } = useTranslation();
+  const { lang } = useLang();
+
+  
+
+  
+
+  
   const simulate = useServerFn(simulatePortfolio);
 
   // Default state
@@ -118,20 +131,20 @@ function MethodologyPage() {
       <header className="max-w-6xl mx-auto px-6 pt-10 pb-8 border-b border-paper-3">
         <div className="flex items-center justify-between">
           <Link to="/dashboard" className="text-[10px] uppercase tracking-[0.18em] text-ink-3 hover:text-ink transition-colors">
-            ← Tableau de bord
+            {t("methodologie:back_dashboard")}
           </Link>
           <LanguageToggle />
         </div>
-        <h1 className="font-value text-4xl mt-4">Méthodologie</h1>
+        <h1 className="font-value text-4xl mt-4">{t("methodologie:title")}</h1>
         <p className="text-[14px] text-ink-2 mt-3 max-w-2xl leading-relaxed">
-          Cinq étapes, transparentes et reproductibles. Ajustez les paramètres en bas de page pour observer le portefeuille recomposé en direct.
+          {t("methodologie:intro")}
         </p>
       </header>
 
       {/* Pipeline visualization */}
       <section className="max-w-6xl mx-auto px-6 py-12">
         <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-medium mb-8">
-          Pipeline de construction
+          {t("methodologie:pipeline_title")}
         </p>
         <ol className="grid grid-cols-1 md:grid-cols-5 gap-px bg-paper-3 border border-paper-3">
           {STAGES.map((s) => (
@@ -148,11 +161,11 @@ function MethodologyPage() {
       <section className="max-w-6xl mx-auto px-6 pb-24">
         <div className="border-t border-paper-3 pt-10">
           <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-medium">
-            Simulateur interactif
+            {t("methodologie:simulator_eyebrow")}
           </p>
-          <h2 className="font-value text-3xl mt-2">Composez votre portefeuille</h2>
+          <h2 className="font-value text-3xl mt-2">{t("methodologie:simulator_title")}</h2>
           <p className="text-[13px] text-ink-2 mt-2 max-w-2xl">
-            Toute modification ci-dessous recalcule l'allocation selon le pipeline complet.
+            {t("methodologie:simulator_desc")}
           </p>
         </div>
 
@@ -160,7 +173,7 @@ function MethodologyPage() {
           {/* Controls */}
           <div className="space-y-8">
             {/* Causes */}
-            <Block title="Causes & intensité">
+            <Block title={t("methodologie:causes_title")}>
               <div className="space-y-3">
                 {CAUSES.map((c) => {
                   const active = causes.includes(c.id);
@@ -199,7 +212,7 @@ function MethodologyPage() {
             </Block>
 
             {/* Exclusions */}
-            <Block title="Exclusions sectorielles">
+            <Block title={t("methodologie:exclusions_title")}>
               <div className="grid grid-cols-2 gap-2">
                 {EXCLUSIONS.map((e) => {
                   const active = exclusions.includes(e.id);
@@ -220,9 +233,9 @@ function MethodologyPage() {
             </Block>
 
             {/* Risk & horizon */}
-            <Block title="Risque cible">
+            <Block title={t("methodologie:risk_title")}>
               <div className="flex items-baseline justify-between mb-2">
-                <span className="text-[12px] text-ink-2">Volatilité annuelle visée</span>
+                <span className="text-[12px] text-ink-2">{t("methodologie:volatility_label")}</span>
                 <span className="text-[13px] font-medium tabular-nums">{(risk * 100).toFixed(1)}%</span>
               </div>
               <input
@@ -235,16 +248,16 @@ function MethodologyPage() {
                 className="w-full accent-ink"
               />
               <div className="flex justify-between text-[10px] text-ink-3 mt-1">
-                <span>Prudent</span>
-                <span>Équilibré</span>
-                <span>Dynamique</span>
+                <span>{t("methodologie:risk_prudent")}</span>
+                <span>{t("methodologie:risk_balanced")}</span>
+                <span>{t("methodologie:risk_dynamic")}</span>
               </div>
             </Block>
 
-            <Block title="Horizon">
+            <Block title={t("methodologie:horizon_title")}>
               <div className="flex items-baseline justify-between mb-2">
-                <span className="text-[12px] text-ink-2">Durée d'investissement</span>
-                <span className="text-[13px] font-medium tabular-nums">{horizon} ans</span>
+                <span className="text-[12px] text-ink-2">{t("methodologie:horizon_label")}</span>
+                <span className="text-[13px] font-medium tabular-nums">{t("methodologie:horizon_years", { count: horizon })}</span>
               </div>
               <input
                 type="range"
@@ -263,27 +276,26 @@ function MethodologyPage() {
             {/* ESG floor warning */}
             {result?.esg_floor_relaxed && (
               <div className="border border-rust/30 bg-rust/5 px-4 py-3 text-[12px] text-ink-2 leading-relaxed">
-                <p className="font-value text-[13px] text-rust mb-1">Plancher ESG relâché</p>
-                Avec ces contraintes, l'optimiseur n'a pas trouvé de portefeuille satisfaisant le score ESG minimum de 70/100.
-                Le plancher a été levé pour produire une allocation viable. Le score affiché ci-dessous est le score réel obtenu.
+                <p className="font-value text-[13px] text-rust mb-1">{t("methodologie:esg_floor_relaxed_title")}</p>
+                {t("methodologie:esg_floor_relaxed_desc")}
               </div>
             )}
             {/* Metrics */}
             <div className="border-t border-b border-paper-3 divide-y divide-paper-3">
-              <MetricRow label="Rendement attendu" value={result ? `${(result.metrics.expected_return * 100).toFixed(2)}%` : "—"} hint="Brut, annualisé" />
-              <MetricRow label="Volatilité estimée" value={result ? `${(result.metrics.volatility * 100).toFixed(2)}%` : "—"} hint="Annualisée" />
-              <MetricRow label="Ratio de Sharpe" value={result ? result.metrics.sharpe.toFixed(2) : "—"} hint="Net de frais et taux sans risque" />
-              <MetricRow label="Score ESG" value={result ? `${result.metrics.esg_score.toFixed(0)} / 100` : "—"} hint="Composite E/S/G pondéré par causes" />
-              <MetricRow label="Frais courants" value={result ? `${(result.metrics.ter * 100).toFixed(2)}%` : "—"} hint="TER moyen pondéré" />
-              <MetricRow label="CO₂ évité (heuristique)" value={result ? `${result.metrics.co2_avoided_tons.toFixed(2)} t / 10k€` : "—"} hint="Estimation indicative basée sur l'ESG" />
+              <MetricRow label={t("methodologie:metric_return")} value={result ? formatPercent(result.metrics.expected_return, lang) : "—"} hint={t("methodologie:metric_return_hint")} />
+              <MetricRow label={t("methodologie:metric_volatility")} value={result ? formatPercent(result.metrics.volatility, lang) : "—"} hint={t("methodologie:metric_volatility_hint")} />
+              <MetricRow label={t("methodologie:metric_sharpe")} value={result ? formatNumber(result.metrics.sharpe, lang) : "—"} hint={t("methodologie:metric_sharpe_hint")} />
+              <MetricRow label={t("methodologie:metric_esg")} value={result ? `${formatNumber(result.metrics.esg_score, lang, 0)} / 100` : "—"} hint={t("methodologie:metric_esg_hint")} />
+              <MetricRow label={t("methodologie:metric_fees")} value={result ? formatPercent(result.metrics.ter, lang) : "—"} hint={t("methodologie:metric_fees_hint")} />
+              <MetricRow label={t("methodologie:metric_co2")} value={result ? `${formatNumber(result.metrics.co2_avoided_tons, lang)} t / 10k€` : "—"} hint={t("methodologie:metric_co2_hint")} />
               <MetricRow
-                label="Intensité carbone réelle"
+                label={t("methodologie:metric_carbon_intensity")}
                 value={
                   result?.metrics.carbon_intensity_gco2e_per_eur != null
-                    ? `${result.metrics.carbon_intensity_gco2e_per_eur.toFixed(0)} gCO₂e/€/an`
-                    : "Donnée indisponible"
+                    ? `${formatNumber(result.metrics.carbon_intensity_gco2e_per_eur, lang, 0)} gCO₂e/€/an`
+                    : t("methodologie:metric_carbon_unavailable")
                 }
-                hint="Moyenne pondérée sur les actifs couverts"
+                hint={t("methodologie:metric_carbon_intensity_hint")}
               />
             </div>
 
@@ -296,9 +308,9 @@ function MethodologyPage() {
             {/* Holdings */}
             <div>
               <div className="flex items-baseline justify-between border-b border-paper-3 pb-2">
-                <p className="text-[10px] uppercase tracking-[0.12em] text-ink-3 font-medium">Allocation</p>
+                <p className="text-[10px] uppercase tracking-[0.12em] text-ink-3 font-medium">{t("methodologie:allocation_title")}</p>
                 <p className="text-[10px] text-ink-3">
-                  {loading ? "Recalcul…" : `${sortedWeights.length} positions`}
+                  {loading ? t("methodologie:loading") : t("methodologie:positions_count", { count: sortedWeights.length })}
                 </p>
               </div>
               <ul className="divide-y divide-paper-3">
@@ -324,7 +336,7 @@ function MethodologyPage() {
                 ))}
                 {!loading && sortedWeights.length === 0 && (
                   <li className="py-6 text-center text-[12px] text-ink-3">
-                    Aucune position retenue avec ces contraintes.
+                    {t("methodologie:no_positions")}
                   </li>
                 )}
               </ul>
@@ -334,7 +346,7 @@ function MethodologyPage() {
             {result && (
               <div>
                 <p className="text-[10px] uppercase tracking-[0.12em] text-ink-3 font-medium border-b border-paper-3 pb-2 mb-3">
-                  Répartition par classe
+                  {t("methodologie:breakdown_title")}
                 </p>
                 <ul className="space-y-1.5">
                   {Object.entries(result.metrics.by_class)
@@ -357,6 +369,24 @@ function MethodologyPage() {
 }
 
 const ASSET_CLASS_LABEL: Record<string, string> = {
+    equity_dev: t("methodologie:asset_classes.equity_dev"),
+    equity_em: t("methodologie:asset_classes.equity_em"),
+    thematic: t("methodologie:asset_classes.thematic"),
+    green_bond: t("methodologie:asset_classes.green_bond"),
+    social_bond: t("methodologie:asset_classes.social_bond"),
+    sov_bond: t("methodologie:asset_classes.sov_bond"),
+    reit: t("methodologie:asset_classes.reit"),
+    commodity: t("methodologie:asset_classes.commodity"),
+    cash: t("methodologie:asset_classes.cash"),
+    equity_dev: t("methodologie:asset_classes.equity_dev"),
+    equity_em: t("methodologie:asset_classes.equity_em"),
+    thematic: t("methodologie:asset_classes.thematic"),
+    green_bond: t("methodologie:asset_classes.green_bond"),
+    social_bond: t("methodologie:asset_classes.social_bond"),
+    sov_bond: t("methodologie:asset_classes.sov_bond"),
+    reit: t("methodologie:asset_classes.reit"),
+    commodity: t("methodologie:asset_classes.commodity"),
+    cash: t("methodologie:asset_classes.cash"),
   equity_dev: "Actions développées",
   equity_em: "Actions émergentes",
   thematic: "Thématiques",

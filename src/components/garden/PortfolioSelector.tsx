@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
+import { useTranslation } from "react-i18next";
 
 /**
  * Dropdown selector to switch between the user's active portfolios (max 3).
@@ -9,6 +10,7 @@ import { useUserPortfolios } from "@/hooks/useUserPortfolios";
  * Hides itself entirely when the user has zero or one portfolio (degenerate UI).
  */
 export function PortfolioSelector({ compact = false }: { compact?: boolean }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { portfolios, activeId, setActiveId, canCreateMore, loading } = useUserPortfolios();
   const [open, setOpen] = useState(false);
@@ -91,12 +93,12 @@ export function PortfolioSelector({ compact = false }: { compact?: boolean }) {
                   className="w-full flex items-center gap-2 px-3 py-2.5 text-left text-[12px] text-moss-1 hover:bg-moss-5/30 font-medium"
                 >
                   <span className="w-4 h-4 rounded-full border border-moss-1 flex items-center justify-center text-[10px] leading-none">+</span>
-                  Nouveau portefeuille
+                  {t("portfolio_selector:new_portfolio")}
                   <span className="ml-auto text-[9px] text-ink-3">{portfolios.length}/3</span>
                 </button>
               ) : (
                 <div className="px-3 py-2 text-[10px] text-ink-3 text-center">
-                  Limite de 3 portefeuilles atteinte
+                  {t("portfolio_selector:limit_reached")}
                 </div>
               )}
             </div>

@@ -1,11 +1,16 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useLexicon } from "@/hooks/useLexicon";
+import { useTranslation } from "react-i18next";
+import { useLang } from "@/hooks/useLang";
+import { formatCurrency } from "@/lib/format";
 
 interface IntentCardsProps {
   wallet?: { balance: number; currency: string } | null;
 }
 
 export function IntentCards({ wallet }: IntentCardsProps) {
+  const { t } = useTranslation();
+  const { lang } = useLang();
   const navigate = useNavigate();
   const { L } = useLexicon();
   const balance = wallet?.balance ?? 0;
@@ -14,11 +19,11 @@ export function IntentCards({ wallet }: IntentCardsProps) {
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold">Que veux-tu faire ?</p>
+        <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold">{t("intent_cards:what_to_do")}</p>
         <p className="text-[11px] text-ink-3">
-          Solde dispo :{" "}
+          {t("intent_cards:available_balance")}{" "}
           <span className="text-ink font-semibold">
-            {balance.toLocaleString("fr-FR", { style: "currency", currency, minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {formatCurrency(balance, lang)}
           </span>
         </p>
       </div>
@@ -26,7 +31,7 @@ export function IntentCards({ wallet }: IntentCardsProps) {
       <div className="grid grid-cols-3 gap-2.5">
         <IntentCard
           label={L.actions.plant}
-          hint="Investir plus"
+          hint={t("intent_cards:plant_hint")}
           variant="primary"
           onClick={() => navigate({ to: "/discover" })}
           icon={
@@ -39,7 +44,7 @@ export function IntentCards({ wallet }: IntentCardsProps) {
         />
         <IntentCard
           label={L.actions.water}
-          hint="Dépôt récurrent"
+          hint={t("intent_cards:water_hint")}
           variant="muted"
           onClick={() => navigate({ to: "/discover" })}
           icon={
@@ -50,7 +55,7 @@ export function IntentCards({ wallet }: IntentCardsProps) {
         />
         <IntentCard
           label={L.actions.replant}
-          hint="Avec Ethi"
+          hint={t("intent_cards:replant_hint")}
           variant="ethi"
           onClick={() => navigate({ to: "/ethi", search: { intent: "rebalance" } as never })}
           icon={

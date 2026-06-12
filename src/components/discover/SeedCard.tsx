@@ -1,4 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
+import { useLang } from "@/hooks/useLang";
+import { formatCurrency, formatNumber, formatPercent } from "@/lib/format";
 import { useState } from "react";
 import type { MockAsset } from "@/lib/mockGarden";
 
@@ -8,6 +11,8 @@ interface SeedCardProps {
 }
 
 export function SeedCard({ asset, static: isStatic }: SeedCardProps) {
+  const { t } = useTranslation();
+  const { lang } = useLang();
   const [showDetails, setShowDetails] = useState(false);
   const esg = asset.overall_esg_score;
   const co2Per100 = asset.co2_factor_per_1k_eur * 0.1;
@@ -55,7 +60,7 @@ export function SeedCard({ asset, static: isStatic }: SeedCardProps) {
               {asset.name}
             </h3>
             <p className="font-value text-base text-ink-2 mt-0.5">
-              {asset.current_price.toLocaleString("fr-FR", { style: "currency", currency: "EUR" })}
+              {formatCurrency(asset.current_price, lang)}
             </p>
           </div>
         </div>
@@ -71,17 +76,17 @@ export function SeedCard({ asset, static: isStatic }: SeedCardProps) {
         {/* Impact 100 € — toujours visible en premier */}
         <div>
           <p className="text-[10px] uppercase tracking-[0.14em] text-ink-3 font-semibold mb-3">
-            Si tu plantes 100 € ici
+            {t("seed_card:if_you_plant")}
           </p>
           <div className="grid grid-cols-3 gap-2.5">
-            <ImpactStat value={esg.toFixed(1)} unit="/10" label="Impact ESG" tone="moss" />
-            <ImpactStat value={`${(co2Per100 * 12).toFixed(1)}`} unit="kg" label="CO₂ évité/an" />
-            <ImpactStat value={Math.round(kwhPer100 * 12).toString()} unit="kWh" label="Énergie verte/an" />
+            <ImpactStat value={esg.toFixed(1)} unit="/10" label={t("seed_card:impact_esg")} tone="moss" />
+            <ImpactStat value={`${(co2Per100 * 12).toFixed(1)}`} unit="kg" label={t("seed_card:co2_avoided")} />
+            <ImpactStat value={Math.round(kwhPer100 * 12).toString()} unit="kWh" label={t("seed_card:green_energy")} />
           </div>
 
           <div className="mt-4">
             <div className="flex justify-between items-baseline mb-2">
-              <span className="text-[11px] text-ink-3 font-medium">Alignement ESG</span>
+              <span className="text-[11px] text-ink-3 font-medium">{t("seed_card:esg_alignment")}</span>
               <span className="text-xs font-bold text-moss-1">{esg.toFixed(1)}/10</span>
             </div>
             <div className="h-1.5 bg-paper-2 rounded-full overflow-hidden">
@@ -117,7 +122,7 @@ export function SeedCard({ asset, static: isStatic }: SeedCardProps) {
           }}
           className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-full bg-paper-2 hover:bg-paper-3 border border-paper-3 text-[11px] font-semibold text-ink-2 transition-colors"
         >
-          {showDetails ? "Masquer les détails" : "Voir plus de détails"}
+          {showDetails ? t("seed_card:hide_details") : t("seed_card:show_details")}
           <svg
             viewBox="0 0 24 24"
             className={`w-3 h-3 transition-transform ${showDetails ? "rotate-180" : ""}`}
@@ -141,21 +146,21 @@ export function SeedCard({ asset, static: isStatic }: SeedCardProps) {
               className="overflow-hidden"
             >
               <div className="space-y-5 pb-1">
-                {/* Carte d'identité */}
+                {/* {t("seed_card:identity_card")} */}
                 <div>
                   <p className="text-[10px] uppercase tracking-[0.14em] text-ink-3 font-semibold mb-2">
                     Carte d'identité
                   </p>
                   <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[11px]">
-                    {asset.issuer && <IdRow label="Émetteur" value={asset.issuer} />}
-                    {asset.domicile && <IdRow label="Domicile" value={asset.domicile} />}
-                    {asset.currency && <IdRow label="Devise" value={asset.currency} />}
+                    {asset.issuer && <IdRow label={t("seed_card:issuer")} value={asset.issuer} />}
+                    {asset.domicile && <IdRow label={t("seed_card:domicile")} value={asset.domicile} />}
+                    {asset.currency && <IdRow label={t("seed_card:currency")} value={asset.currency} />}
                     {typeof asset.ter_pct === "number" && (
-                      <IdRow label="Frais (TER)" value={`${asset.ter_pct.toFixed(2)} %`} />
+                      <IdRow label={t("seed_card:fees")} value={formatPercent(asset.ter_pct / 100, lang)} />
                     )}
                     {asset.dividend_policy && (
                       <IdRow
-                        label="Dividendes"
+                        label={t("seed_card:dividends")}
                         value={
                           asset.dividend_policy +
                           (asset.dividend_yield_pct ? ` · ${asset.dividend_yield_pct.toFixed(1)} %` : "")
@@ -163,16 +168,16 @@ export function SeedCard({ asset, static: isStatic }: SeedCardProps) {
                       />
                     )}
                     {typeof asset.risk_level === "number" && (
-                      <IdRow label="Risque" value={`${asset.risk_level}/7`} />
+                      <IdRow label={t("seed_card:risk")} value={`${asset.risk_level}/7`} />
                     )}
                     {asset.inception_year && (
-                      <IdRow label="Créé en" value={asset.inception_year.toString()} />
+                      <IdRow label={t("seed_card:created_in")} value={asset.inception_year.toString()} />
                     )}
                     {asset.benchmark && asset.benchmark !== "—" && (
-                      <IdRow label="Indice" value={asset.benchmark} />
+                      <IdRow label={t("seed_card:index")} value={asset.benchmark} />
                     )}
                     {typeof asset.holdings_count === "number" && (
-                      <IdRow label="Lignes" value={asset.holdings_count.toLocaleString("fr-FR")} />
+                      <IdRow label={t("seed_card:holdings")} value={formatNumber(asset.holdings_count, lang)} />
                     )}
                   </div>
                 </div>
@@ -180,7 +185,7 @@ export function SeedCard({ asset, static: isStatic }: SeedCardProps) {
                 {asset.top_holdings && asset.top_holdings.length > 0 && (
                   <div>
                     <p className="text-[10px] uppercase tracking-[0.14em] text-ink-3 font-semibold mb-2">
-                      Principales positions
+                      {t("seed_card:top_holdings")}
                     </p>
                     <div className="flex flex-wrap gap-1.5">
                       {asset.top_holdings.map((h) => (
@@ -198,7 +203,7 @@ export function SeedCard({ asset, static: isStatic }: SeedCardProps) {
                 {asset.sector_breakdown && asset.sector_breakdown.length > 1 && (
                   <div>
                     <p className="text-[10px] uppercase tracking-[0.14em] text-ink-3 font-semibold mb-2">
-                      Répartition sectorielle
+                      {t("seed_card:sector_breakdown")}
                     </p>
                     <Breakdown items={asset.sector_breakdown} color="var(--moss-1)" />
                   </div>
@@ -207,7 +212,7 @@ export function SeedCard({ asset, static: isStatic }: SeedCardProps) {
                 {asset.geo_breakdown && asset.geo_breakdown.length > 1 && (
                   <div>
                     <p className="text-[10px] uppercase tracking-[0.14em] text-ink-3 font-semibold mb-2">
-                      Répartition géographique
+                      {t("seed_card:geo_breakdown")}
                     </p>
                     <Breakdown items={asset.geo_breakdown} color="var(--sky)" />
                   </div>
@@ -216,7 +221,7 @@ export function SeedCard({ asset, static: isStatic }: SeedCardProps) {
                 {asset.exclusions && asset.exclusions.length > 0 && (
                   <div>
                     <p className="text-[10px] uppercase tracking-[0.14em] text-ink-3 font-semibold mb-2">
-                      Exclusions
+                      {t("seed_card:exclusions")}
                     </p>
                     <div className="flex flex-wrap gap-1.5">
                       {asset.exclusions.map((e) => (

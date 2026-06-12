@@ -1,4 +1,5 @@
 import { lexicon } from "@/lib/lexicon";
+import { useTranslation } from "react-i18next";
 
 interface ThemeFilterProps {
   active: string;
@@ -6,8 +7,9 @@ interface ThemeFilterProps {
 }
 
 export function ThemeFilter({ active, onChange }: ThemeFilterProps) {
+  const { t } = useTranslation();
   const themes = [
-    { id: "all", label: "Tout", icon: "✧" },
+    { id: "all", label: t("theme_filter:all"), icon: "✧" },
     ...Object.entries(lexicon.themes).map(([id, t]) => ({ id, label: t.label, icon: t.icon })),
   ];
 

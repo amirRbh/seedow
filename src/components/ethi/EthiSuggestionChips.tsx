@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 interface EthiSuggestionChipsProps {
   onSelect: (q: string) => void;
@@ -6,9 +7,19 @@ interface EthiSuggestionChipsProps {
 }
 
 export function EthiSuggestionChips({ onSelect, hasGarden }: EthiSuggestionChipsProps) {
+  const { t } = useTranslation();
   const suggestions = hasGarden
-    ? ["Analyse mon portefeuille", "Quel actif ajouter ?", "Mon impact carbone ?", "Comment optimiser ?"]
-    : ["Comment commencer ?", "C'est quoi un ETF ESG ?", "Combien minimum pour investir ?"];
+    ? [
+      t("ethi_chips:analyse_portfolio"),
+      t("ethi_chips:what_asset"),
+      t("ethi_chips:carbon_impact"),
+      t("ethi_chips:how_optimize")
+    ]
+    : [
+      t("ethi_chips:how_start"),
+      t("ethi_chips:what_esg_etf"),
+      t("ethi_chips:minimum_invest")
+    ];
 
   return (
     <div className="flex flex-wrap gap-2 justify-end">

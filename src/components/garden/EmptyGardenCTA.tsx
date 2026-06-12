@@ -1,7 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 export function EmptyGardenCTA({ userName }: { userName: string }) {
+  const { t } = useTranslation();
   return (
     <div className="max-w-lg mx-auto px-8 pt-20 pb-32">
       <motion.div
@@ -34,21 +36,21 @@ export function EmptyGardenCTA({ userName }: { userName: string }) {
       </motion.div>
 
       <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-medium">
-        Bienvenue, {userName}
+        {t("empty_garden:welcome", { name: userName })}
       </p>
       <h1 className="font-value text-3xl text-ink mt-2 leading-tight">
-        Composez votre premier portefeuille.
+        {t("empty_garden:title")}
       </h1>
       <p className="text-sm text-ink-2 mt-4 max-w-md leading-relaxed">
-        Quatre questions pour définir vos convictions. Ethi structure ensuite une allocation alignée sur vos critères.
+        {t("empty_garden:desc")}
       </p>
 
       <div className="mt-10 flex items-center gap-4">
         <Link to="/onboarding" search={{ new: undefined }} className="btn-plant">
-          Démarrer
+          {t("empty_garden:start")}
         </Link>
         <Link to="/discover" className="text-[13px] text-ink-3 hover:text-ink transition-colors underline-offset-4 hover:underline">
-          Explorer les actifs
+          {t("empty_garden:explore")}
         </Link>
       </div>
     </div>
