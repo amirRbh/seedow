@@ -167,6 +167,15 @@ function Landing() {
                 Méthodologie
               </Link>
             </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8, duration: 0.6 }}
+              className="mt-10 max-w-xs"
+            >
+              <BetaCounter />
+            </motion.div>
           </div>
 
           <motion.div
