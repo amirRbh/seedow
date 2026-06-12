@@ -210,20 +210,20 @@ function Discover() {
                 </div>
                 <div className="text-right flex-shrink-0">
                   <p className="font-value text-base text-ink leading-none">
-                    {asset.current_price.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 })}
+                    {formatCurrency(asset.current_price, lang).replace(/[.,]00\s?€/, " €")}
                   </p>
-                  <p className="text-[9px] text-ink-3 mt-1">prix unitaire</p>
+                  <p className="text-[9px] text-ink-3 mt-1">{t("discover.unit_price")}</p>
                 </div>
                 <div onClick={(e) => e.stopPropagation()} className="flex-shrink-0">
                   <InvestDialog
-                    label={`Investir dans ${asset.ticker}`}
+                    label={t("discover.invest_in", { ticker: asset.ticker })}
                     defaultAmount={100}
                     trigger={
                       <button
                         type="button"
                         className="h-9 px-3.5 rounded-full bg-ink text-paper text-[10px] font-semibold uppercase tracking-[0.12em] hover:bg-ink-2 transition-colors"
                       >
-                        Investir
+                        {t("discover.invest")}
                       </button>
                     }
                   />
