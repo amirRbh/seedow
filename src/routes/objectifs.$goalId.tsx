@@ -1,5 +1,6 @@
 import { createFileRoute, redirect, Link, useParams, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
@@ -8,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { GoalSimulator } from "@/components/goals/GoalSimulator";
 import { GOAL_TYPE_LABEL, type FinancialGoal } from "@/hooks/useFinancialGoals";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
+import { useLang } from "@/hooks/useLang";
+import { formatDate } from "@/lib/format";
 
 export const Route = createFileRoute("/objectifs/$goalId")({
   beforeLoad: async ({ params }) => {
@@ -21,6 +24,8 @@ export const Route = createFileRoute("/objectifs/$goalId")({
 });
 
 function GoalDetail() {
+  const { t } = useTranslation();
+  const { lang } = useLang();
   const { goalId } = useParams({ from: "/objectifs/$goalId" });
   const navigate = useNavigate();
   const { portfolio } = useActivePortfolio();
@@ -52,31 +57,32 @@ function GoalDetail() {
   }, [goalId]);
 
   if (loading) {
-    return <div className="min-h-screen bg-paper p-10"><p className="text-ink-3">Chargement…</p></div>;
+    return <div className="min-h-screen bg-paper p-10"><p className="text-ink-3">{t("objectives.loading")}</p></div>;
   }
   if (!goal) {
     return (
       <div className="min-h-screen bg-paper p-10 text-center">
-        <p className="font-value text-2xl text-ink">Objectif introuvable</p>
-        <Button className="mt-4" onClick={() => navigate({ to: "/objectifs" })}>Retour</Button>
+        <p className="font-value text-2xl text-ink">{t("objectives.goal_not_found")}</p>
+        <Button className="mt-4" onClick={() => navigate({ to: "/objectifs" })}>{t("objectives.back")}</Button>
       </div>
     );
   }
 
   const annualReturn = portfolio?.metrics?.expected_return ?? 0.055;
   const volatility = portfolio?.metrics?.volatility ?? 0.12;
+  const dueDate = formatDate(goal.target_date, lang, { month: "long", year: "numeric" });
 
   return (
     <div className="min-h-screen bg-paper pb-24 md:pb-12">
-      <AppHeader eyebrow="Objectif" title={goal.name} />
+      <AppHeader eyebrow={t("objectives.eyebrow_goal")} title={goal.name} />
       <div className="mx-auto max-w-3xl px-4 md:px-8">
         <Link to="/objectifs" className="text-[11px] uppercase tracking-[0.18em] text-ink-3 hover:text-ink">
-          ← Tous les objectifs
+          {t("objectives.all_goals")}
         </Link>
         <EditorialSection
           eyebrow={GOAL_TYPE_LABEL[goal.goal_type]}
           title={goal.name}
-          kicker={`Échéance ${new Date(goal.target_date).toLocaleDateString("fr-FR", { month: "long", year: "numeric" })}`}
+          kicker={t("objectives.due", { date: dueDate })}
         >
           <GoalSimulator goal={goal} annualReturn={annualReturn} volatility={volatility} />
         </EditorialSection>
