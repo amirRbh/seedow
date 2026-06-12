@@ -158,13 +158,13 @@ function Ethi() {
               </svg>
             </div>
             <div className="min-w-0">
-              <p className="text-[10px] uppercase tracking-wider text-paper/40 font-semibold">Ton conseiller</p>
+              <p className="text-[10px] uppercase tracking-wider text-paper/40 font-semibold">{t("ethi.your_advisor")}</p>
               <h1 className="font-value text-2xl">Ethi</h1>
             </div>
           </div>
           <Link
             to="/reglages"
-            aria-label="Réglages"
+            aria-label={t("ethi.settings")}
             className="flex items-center justify-center w-9 h-9 rounded-full border border-paper/15 text-paper/70 hover:text-paper hover:border-paper/40 transition-colors flex-shrink-0"
           >
             <svg viewBox="0 0 24 24" className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
