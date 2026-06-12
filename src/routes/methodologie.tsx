@@ -50,8 +50,8 @@ function MethodologyPage() {
     { id: 4, name: t("methodologie:stages.4_name"), desc: t("methodologie:stages.4_desc") },
     { id: 5, name: t("methodologie:stages.5_name"), desc: t("methodologie:stages.5_desc") },
   ];
-  const { t } = useTranslation();
-  const { lang } = useLang();
+
+
 
   
 
