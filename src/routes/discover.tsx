@@ -1,6 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence, type PanInfo } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { SeedCard } from "@/components/discover/SeedCard";
@@ -11,6 +12,8 @@ import { CommunityPanel } from "@/components/community/CommunityPanel";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import type { MockAsset } from "@/lib/mockGarden";
 import { MOCK_ASSETS } from "@/lib/mockGarden";
+import { useLang } from "@/hooks/useLang";
+import { formatCurrency } from "@/lib/format";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/discover")({
