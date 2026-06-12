@@ -108,13 +108,30 @@ function AuthPage() {
           ← Retour
         </Link>
         <h1 className="font-value text-3xl text-ink mt-6 leading-tight">
-          {mode === "login" ? "Connexion" : "Créer un compte"}
+          {waitlistDone !== null
+            ? "Inscription sur liste d'attente"
+            : mode === "login"
+              ? "Connexion"
+              : betaFull
+                ? "Bêta complète — liste d'attente"
+                : "Créer un compte"}
         </h1>
         <p className="text-[13px] text-ink-2 mt-2">
-          {mode === "login"
-            ? "Accédez à votre espace de gestion."
-            : "Quelques secondes pour commencer."}
+          {waitlistDone !== null
+            ? `Tu es #${waitlistDone} sur la liste. On te prévient dès qu'une place se libère.`
+            : mode === "login"
+              ? "Accédez à votre espace de gestion."
+              : betaFull
+                ? "Les 300 places de la phase bêta sont prises. Laisse ton email pour la prochaine vague."
+                : "Phase de test — aucune transaction réelle. Mode démo uniquement."}
         </p>
+
+        {mode === "signup" && capacity && !betaFull && waitlistDone === null && (
+          <p className="mt-4 text-[10px] uppercase tracking-[0.18em] text-ink-3">
+            Places restantes : <span className="text-ink font-semibold">{capacity.slotsLeft}</span> / {capacity.cap}
+          </p>
+        )}
+
 
         <button
           onClick={onGoogle}
