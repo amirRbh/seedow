@@ -28,6 +28,8 @@ export const Route = createFileRoute("/discover")({
 });
 
 function Discover() {
+  const { t } = useTranslation();
+  const { lang } = useLang();
   const [activeTheme, setActiveTheme] = useState("all");
   const [viewMode, setViewMode] = useState<"swipe" | "list">("swipe");
   const [currentIndex, setCurrentIndex] = useState(0);
