@@ -737,9 +737,9 @@ function MethodologySection() {
               2. Mapping causes → piliers (codé en dur)
             </p>
             <ul className="text-[12px] text-ink-2 space-y-1.5 leading-relaxed">
-              <li>• <span className="font-medium text-ink">{t("reglages.methodology.esg_composite.mapping_e")}</li>
-              <li>• <span className="font-medium text-ink">{t("reglages.methodology.esg_composite.mapping_s")}</li>
-              <li>• <span className="font-medium text-ink">{t("reglages.methodology.esg_composite.mapping_sg")}</li>
+              <li>• <span className="font-medium text-ink">{t("reglages.methodology.esg_composite.mapping_e")}</span></li>
+              <li>• <span className="font-medium text-ink">{t("reglages.methodology.esg_composite.mapping_s")}</span></li>
+              <li>• <span className="font-medium text-ink">{t("reglages.methodology.esg_composite.mapping_sg")}</span></li>
             </ul>
             <p className="text-[11px] text-ink-3 mt-2 leading-relaxed">
               Sans cause active, on revient à la pondération neutre 40/40/20. Plus vous activez de causes
@@ -799,12 +799,12 @@ function MethodologySection() {
         </p>
         <ul className="text-[12px] text-ink-2 space-y-2 leading-relaxed">
           <li>
-            • <span className="font-medium text-ink"CO₂ évité (heuristique)</span> — {t("reglages.methodology.carbon.avoided")} indicative
+            • <span className="font-medium text-ink">CO₂ évité (heuristique)</span> — {t("reglages.methodology.carbon.avoided")} indicative
             dérivée du score ESG composite. Pratique pour comparer deux portefeuilles, pas une figure
             réglementaire.
           </li>
           <li>
-            • <span className="font-medium text-ink"Intensité carbone réelle</span> — {t("reglages.methodology.carbon.intensity")} pondérée des
+            • <span className="font-medium text-ink">Intensité carbone réelle</span> — {t("reglages.methodology.carbon.intensity")} pondérée des
             <span className="font-mono text-[11px]"> gCO₂e/€ investi/an</span> sur la part du portefeuille
             réellement couverte par un provider (champs <span className="font-mono text-[11px]">carbon_intensity_*</span>
             avec source et date de mise à jour). Un indicateur de couverture est affiché dans la page
