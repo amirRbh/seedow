@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
@@ -11,11 +12,8 @@ import {
 } from "@/hooks/usePortfolioShare";
 import { supabase } from "@/integrations/supabase/client";
 
-/**
- * Toggle « Partager anonymement ce portefeuille » à placer dans /portfolio.
- * Aucun montant n'est exposé — seulement allocation, causes, métriques publiques.
- */
 export function ShareToggle() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { portfolio } = useActivePortfolio();
   const { share, refresh } = useMyShare(portfolio?.id ?? null);
@@ -41,7 +39,7 @@ export function ShareToggle() {
     try {
       if (!next) {
         await unsharePortfolio(portfolio.id);
-        toast.success("Partage désactivé.");
+        toast.success(t("share_toggle.unshared"));
       } else {
         const ph = handle ?? (await fetchOrCreatePublicHandle(user.id));
         setHandle(ph);
@@ -66,11 +64,11 @@ export function ShareToggle() {
           esgScore: portfolio.metrics?.esg_score ?? null,
           carbonIntensity: portfolio.metrics?.co2_avoided_tons ?? null,
         });
-        toast.success(`Partagé en tant que @${ph}.`);
+        toast.success(t("share_toggle.shared", { handle: ph }));
       }
       refresh();
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Erreur");
+      toast.error(e instanceof Error ? e.message : t("share_toggle.error"));
     } finally {
       setBusy(false);
     }
@@ -81,12 +79,11 @@ export function ShareToggle() {
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gold mb-1">
-            Communauté
+            {t("share_toggle.eyebrow")}
           </p>
-          <p className="font-value text-lg text-ink">Partager ce portefeuille anonymement</p>
+          <p className="font-display text-lg text-ink">{t("share_toggle.title")}</p>
           <p className="mt-2 text-xs text-ink-3 max-w-md">
-            Seuls allocation, causes et métriques publiques sont visibles. Aucun montant
-            n'est partagé. Pseudo affiché : <span className="text-ink font-medium">@{handle ?? "—"}</span>
+            {t("share_toggle.description")} <span className="text-ink font-medium">@{handle ?? "—"}</span>
           </p>
         </div>
         <Switch checked={enabled} onCheckedChange={onToggle} disabled={busy} />

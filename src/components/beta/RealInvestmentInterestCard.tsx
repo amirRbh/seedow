@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/useAuth";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { submitRealInvestmentIntent } from "@/lib/beta/beta.functions";
@@ -12,12 +13,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useLang } from "@/hooks/useLang";
+import { formatCurrency, formatNumber } from "@/lib/format";
 
-/**
- * Carte "Je veux investir pour de vrai" — capture la willingness to pay.
- * À placer sur le dashboard et la page portefeuille.
- */
 export function RealInvestmentInterestCard() {
+  const { t } = useTranslation();
+  const { lang } = useLang();
   const { user } = useAuth();
   const { portfolio } = useActivePortfolio();
   const [open, setOpen] = useState(false);
@@ -40,7 +41,7 @@ export function RealInvestmentInterestCard() {
       });
       setDone(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur");
+      setError(err instanceof Error ? err.message : t("common.error"));
     } finally {
       setSubmitting(false);
     }
@@ -50,45 +51,45 @@ export function RealInvestmentInterestCard() {
     <section className="px-5 pt-6">
       <div className="rounded-2xl border border-paper-3 bg-paper-2 p-5">
         <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold">
-          Passer au réel
+          {t("real_invest_interest.eyebrow")}
         </p>
         <h3 className="font-display text-lg text-ink mt-2 leading-snug">
-          Tu veux investir pour de vrai cette allocation ?
+          {t("real_invest_interest.title")}
         </h3>
         <p className="text-[12px] text-ink-3 mt-1.5 leading-relaxed">
-          Indique ton intention — nous te préviendrons dès l'ouverture des comptes réels chez notre courtier partenaire.
+          {t("real_invest_interest.description")}
         </p>
         <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) setDone(false); }}>
           <DialogTrigger asChild>
             <button className="btn-plant mt-4">
-              Je veux investir pour de vrai
+              {t("real_invest_interest.cta")}
             </button>
           </DialogTrigger>
           <DialogContent className="max-w-md">
             {done ? (
               <>
                 <DialogHeader>
-                  <DialogTitle>Merci — ton intention est enregistrée.</DialogTitle>
+                  <DialogTitle>{t("real_invest_interest.success_title")}</DialogTitle>
                   <DialogDescription>
-                    Nous te contacterons par email dès que l'investissement réel sera disponible. Ton retour nous aide à prioriser le partenaire courtier.
+                    {t("real_invest_interest.success_desc")}
                   </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
-                  <button onClick={() => setOpen(false)} className="btn-plant">Fermer</button>
+                  <button onClick={() => setOpen(false)} className="btn-plant">{t("common.close")}</button>
                 </DialogFooter>
               </>
             ) : (
               <>
                 <DialogHeader>
-                  <DialogTitle>Investir pour de vrai</DialogTitle>
+                  <DialogTitle>{t("real_invest_interest.dialog_title")}</DialogTitle>
                   <DialogDescription>
-                    Pas de paiement maintenant — juste un signal pour qu'on prépare la suite.
+                    {t("real_invest_interest.dialog_desc")}
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-5 py-2">
                   <div>
                     <label className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold">
-                      Montant envisagé
+                      {t("real_invest_interest.envisaged_amount")}
                     </label>
                     <div className="flex items-center gap-3 mt-2">
                       <input
@@ -101,19 +102,19 @@ export function RealInvestmentInterestCard() {
                         className="flex-1 accent-gold"
                       />
                       <span className="font-value text-lg text-ink tabular-nums w-24 text-right">
-                        {amount.toLocaleString("fr-FR")} €
+                        {formatCurrency(amount, lang, { maximumFractionDigits: 0 })}
                       </span>
                     </div>
                   </div>
 
                   <div>
                     <label className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold">
-                      Fréquence
+                      {t("real_invest_interest.frequency")}
                     </label>
                     <div className="grid grid-cols-2 gap-2 mt-2">
                       {([
-                        { v: "one_shot", l: "Une fois" },
-                        { v: "monthly", l: "Chaque mois" },
+                        { v: "one_shot", l: t("real_invest_interest.one_shot") },
+                        { v: "monthly", l: t("real_invest_interest.monthly") },
                       ] as const).map((opt) => (
                         <button
                           key={opt.v}
@@ -133,7 +134,7 @@ export function RealInvestmentInterestCard() {
 
                   <div>
                     <label className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold">
-                      Email de contact
+                      {t("real_invest_interest.contact_email")}
                     </label>
                     <input
                       type="email"
@@ -151,7 +152,7 @@ export function RealInvestmentInterestCard() {
                     disabled={submitting}
                     className="btn-plant w-full justify-center disabled:opacity-50"
                   >
-                    {submitting ? "Envoi…" : "Envoyer mon intention"}
+                    {submitting ? t("common.sending") : t("real_invest_interest.submit")}
                   </button>
                 </DialogFooter>
               </>

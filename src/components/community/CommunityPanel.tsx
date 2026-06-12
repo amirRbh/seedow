@@ -1,45 +1,46 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useCommunityShares, useImpactLeaderboard, type PortfolioShareRow } from "@/hooks/usePortfolioShare";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
-
-const fmt = (n: number | null, suffix = "") =>
-  n == null ? "—" : `${n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}${suffix}`;
+import { useLang } from "@/hooks/useLang";
+import { formatNumber, formatPercent } from "@/lib/format";
 
 function ShareCard({ s }: { s: PortfolioShareRow }) {
+  const { t } = useTranslation();
+  const { lang } = useLang();
   return (
     <article className="rounded-lg border border-paper-3 bg-paper p-5 hover:shadow-sm transition-shadow">
       <div className="flex items-baseline justify-between">
         <p className="font-value text-lg text-ink">@{s.public_handle}</p>
         <span className="text-[10px] uppercase tracking-[0.18em] text-gold">
-          {(s.risk_target * 100).toFixed(0)} % risque
+          {formatNumber(s.risk_target * 100, lang, { maximumFractionDigits: 0 })} % {t("community_panel.risk")}
         </span>
       </div>
       <p className="mt-1 text-xs text-ink-3">
-        Horizon {s.horizon_years} ans · {s.causes.slice(0, 3).join(", ") || "Aucune cause"}
+        {t("community_panel.horizon", { defaultValue: "Horizon" })} {s.horizon_years} {t("community_panel.years")} · {s.causes.slice(0, 3).join(", ") || t("community_panel.no_cause")}
       </p>
       <div className="mt-4 grid grid-cols-3 gap-2 border-t border-paper-3 pt-3 text-xs">
         <div>
           <p className="text-ink-3 uppercase tracking-[0.16em] text-[10px]">ESG</p>
-          <p className="font-value text-ink tabular-nums">{fmt(s.esg_score)}</p>
+          <p className="font-value text-ink tabular-nums">{s.esg_score ? formatNumber(s.esg_score, lang, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "—"}</p>
         </div>
         <div>
-          <p className="text-ink-3 uppercase tracking-[0.16em] text-[10px]">Rdt attendu</p>
-          <p className="font-value text-ink tabular-nums">{fmt(s.expected_return ? s.expected_return * 100 : null, " %")}</p>
+          <p className="text-ink-3 uppercase tracking-[0.16em] text-[10px]">{t("community_panel.expected_return")}</p>
+          <p className="font-value text-ink tabular-nums">{s.expected_return ? formatPercent(s.expected_return, lang) : "—"}</p>
         </div>
         <div>
-          <p className="text-ink-3 uppercase tracking-[0.16em] text-[10px]">Volatilité</p>
-          <p className="font-value text-ink tabular-nums">{fmt(s.volatility ? s.volatility * 100 : null, " %")}</p>
+          <p className="text-ink-3 uppercase tracking-[0.16em] text-[10px]">{t("allocation_refiner.volatility")}</p>
+          <p className="font-value text-ink tabular-nums">{s.volatility ? formatPercent(s.volatility, lang) : "—"}</p>
         </div>
       </div>
     </article>
   );
 }
 
-/**
- * Panneau Communauté — réutilisable dans /communaute (standalone) et dans /discover (onglet).
- */
 export function CommunityPanel() {
+  const { t } = useTranslation();
+  const { lang } = useLang();
   const [cause, setCause] = useState<string | undefined>(undefined);
   const { shares, loading } = useCommunityShares({ cause });
   const { rows: leaderboard, loading: lbLoading } = useImpactLeaderboard();
@@ -56,15 +57,15 @@ export function CommunityPanel() {
     <div>
       {myESG != null && median != null && (
         <div className="mb-6 rounded-lg border border-paper-3 bg-paper-2 p-4">
-          <p className="text-[10px] uppercase tracking-[0.22em] text-gold mb-2">Où tu te situes</p>
+          <p className="text-[10px] uppercase tracking-[0.22em] text-gold mb-2">{t("community_panel.where_you_stand")}</p>
           <p className="text-sm text-ink">
-            Ton score ESG :{" "}
-            <span className="font-value text-lg tabular-nums">{myESG.toFixed(2)}</span> · médiane communauté :{" "}
-            <span className="font-value text-lg tabular-nums">{median.toFixed(2)}</span>{" "}
+            {t("community_panel.your_esg_score")}{" "}
+            <span className="font-value text-lg tabular-nums">{formatNumber(myESG, lang, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span> · {t("community_panel.community_median")}{" "}
+            <span className="font-value text-lg tabular-nums">{formatNumber(median, lang, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>{" "}
             {myESG >= median ? (
-              <span className="text-emerald-700 text-xs uppercase tracking-[0.18em] font-semibold ml-2">au-dessus</span>
+              <span className="text-emerald-700 text-xs uppercase tracking-[0.18em] font-semibold ml-2">{t("community_panel.above")}</span>
             ) : (
-              <span className="text-ink-3 text-xs uppercase tracking-[0.18em] font-semibold ml-2">en dessous</span>
+              <span className="text-ink-3 text-xs uppercase tracking-[0.18em] font-semibold ml-2">{t("community_panel.below")}</span>
             )}
           </p>
         </div>
@@ -72,8 +73,8 @@ export function CommunityPanel() {
 
       <Tabs defaultValue="shares">
         <TabsList>
-          <TabsTrigger value="shares">Stratégies partagées</TabsTrigger>
-          <TabsTrigger value="leaderboard">Classement d'impact</TabsTrigger>
+          <TabsTrigger value="shares">{t("community_panel.tab_shares")}</TabsTrigger>
+          <TabsTrigger value="leaderboard">{t("community_panel.tab_leaderboard")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="shares" className="pt-6">
@@ -82,7 +83,7 @@ export function CommunityPanel() {
               <button
                 onClick={() => setCause(undefined)}
                 className={`text-[11px] uppercase tracking-[0.16em] px-3 py-1 rounded-full border ${!cause ? "bg-ink text-paper border-ink" : "border-paper-3 text-ink-3 hover:text-ink"}`}
-              >Toutes</button>
+              >{t("community_panel.all")}</button>
               {causes.map((c) => (
                 <button
                   key={c}
@@ -94,12 +95,12 @@ export function CommunityPanel() {
           )}
 
           {loading ? (
-            <p className="text-ink-3">Chargement…</p>
+            <p className="text-ink-3">{t("community_panel.loading")}</p>
           ) : shares.length === 0 ? (
             <div className="rounded-lg border border-dashed border-paper-3 p-10 text-center">
-              <p className="font-value text-xl text-ink">Aucune stratégie partagée pour l'instant</p>
+              <p className="font-value text-xl text-ink">{t("community_panel.no_shares")}</p>
               <p className="mt-2 text-sm text-ink-3">
-                Sois le premier — active le partage anonyme depuis ton portefeuille.
+                {t("community_panel.be_the_first")}
               </p>
             </div>
           ) : (
@@ -111,7 +112,7 @@ export function CommunityPanel() {
 
         <TabsContent value="leaderboard" className="pt-6">
           {lbLoading ? (
-            <p className="text-ink-3">Chargement…</p>
+            <p className="text-ink-3">{t("community_panel.loading")}</p>
           ) : (
             <ol className="divide-y divide-paper-3 rounded-lg border border-paper-3 bg-paper">
               {leaderboard.map((r, i) => (
@@ -119,15 +120,15 @@ export function CommunityPanel() {
                   <span className="font-value text-lg text-gold tabular-nums w-8">{i + 1}</span>
                   <span className="flex-1 text-ink font-medium">@{r.public_handle}</span>
                   <span className="text-xs text-ink-3 tabular-nums">
-                    ESG <span className="text-ink font-value">{fmt(r.esg_score)}</span>
+                    ESG <span className="text-ink font-value">{r.esg_score ? formatNumber(r.esg_score, lang, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "—"}</span>
                   </span>
                   <span className="text-xs text-ink-3 tabular-nums hidden sm:inline">
-                    CO₂ <span className="text-ink font-value">{fmt(r.carbon_intensity)}</span>
+                    CO₂ <span className="text-ink font-value">{r.carbon_intensity ? formatNumber(r.carbon_intensity, lang, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "—"}</span>
                   </span>
                 </li>
               ))}
               {leaderboard.length === 0 && (
-                <li className="p-6 text-center text-ink-3 text-sm">Pas encore de classement.</li>
+                <li className="p-6 text-center text-ink-3 text-sm">{t("community_panel.no_leaderboard")}</li>
               )}
             </ol>
           )}

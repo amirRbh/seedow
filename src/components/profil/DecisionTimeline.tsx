@@ -1,34 +1,32 @@
+import { useTranslation } from "react-i18next";
 import { useDecisionHistory, type DecisionType } from "@/hooks/useDecisionHistory";
 import { cn } from "@/lib/utils";
-
-const TYPE_TONE: Record<DecisionType, { dot: string; label: string }> = {
-  creation: { dot: "bg-ink", label: "Création" },
-  cause: { dot: "bg-moss-1", label: "Cause" },
-  exclusion: { dot: "bg-rust", label: "Exclusion" },
-  horizon: { dot: "bg-gold", label: "Horizon" },
-  risk: { dot: "bg-gold", label: "Risque" },
-  rebalance: { dot: "bg-moss-2", label: "Rééquilibrage" },
-  contribution: { dot: "bg-gold", label: "Versement" },
-};
-
-const fmtDate = (iso: string) =>
-  new Date(iso).toLocaleDateString("fr-FR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+import { useLang } from "@/hooks/useLang";
+import { formatDate } from "@/lib/format";
 
 export function DecisionTimeline() {
+  const { t } = useTranslation();
+  const { lang } = useLang();
   const { decisions, loading } = useDecisionHistory();
 
+  const TYPE_TONE: Record<DecisionType, { dot: string; label: string }> = {
+    creation: { dot: "bg-ink", label: t("decision_timeline.creation") },
+    cause: { dot: "bg-moss-1", label: t("decision_timeline.cause") },
+    exclusion: { dot: "bg-rust", label: t("decision_timeline.exclusion") },
+    horizon: { dot: "bg-gold", label: t("decision_timeline.horizon") },
+    risk: { dot: "bg-gold", label: t("decision_timeline.risk") },
+    rebalance: { dot: "bg-moss-2", label: t("decision_timeline.rebalance") },
+    contribution: { dot: "bg-gold", label: t("decision_timeline.contribution") },
+  };
+
   if (loading) {
-    return <p className="text-[12px] text-ink-3 mt-3">Chargement de l'historique…</p>;
+    return <p className="text-[12px] text-ink-3 mt-3">{t("decision_timeline.loading")}</p>;
   }
 
   if (decisions.length === 0) {
     return (
       <p className="text-sm text-ink-3 mt-3">
-        Aucune décision enregistrée pour ce portefeuille.
+        {t("decision_timeline.empty")}
       </p>
     );
   }
@@ -55,7 +53,7 @@ export function DecisionTimeline() {
                 dateTime={d.date}
                 className="text-[10px] text-ink-3 tabular-nums uppercase tracking-wider"
               >
-                {fmtDate(d.date)}
+                {formatDate(d.date, lang, { day: "numeric", month: "long", year: "numeric" })}
               </time>
             </div>
             <p className="text-sm font-medium text-ink leading-snug">{d.title}</p>

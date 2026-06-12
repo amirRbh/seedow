@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { useTranslation, Trans } from "react-i18next";
 import { KPIFigure } from "@/components/ui/KPIFigure";
 import {
   PROJECTION_BOUNDS,
@@ -11,6 +12,8 @@ import {
   type StressEvent,
 } from "@/hooks/useProjection";
 import { cn } from "@/lib/utils";
+import { useLang } from "@/hooks/useLang";
+import { formatCurrency, formatPercent, formatNumber } from "@/lib/format";
 
 interface Props {
   initialAmount: number;
@@ -22,43 +25,13 @@ const HORIZONS = [5, 10, 20] as const;
 type Horizon = (typeof HORIZONS)[number];
 
 type Scenario = "prudent" | "central" | "optimiste";
-const SCENARIOS: { key: Scenario; label: string; sigma: number }[] = [
-  { key: "prudent", label: "Prudent", sigma: -0.5 },
-  { key: "central", label: "Central", sigma: 0 },
-  { key: "optimiste", label: "Optimiste", sigma: +0.5 },
-];
 
 type Mode = "contribute" | "goal";
 type StressKey = "none" | "crash" | "pause" | "inflation";
-const ENVELOPES: { key: Envelope; label: string }[] = [
-  { key: "pea", label: "PEA" },
-  { key: "av", label: "Assurance-Vie" },
-  { key: "cto", label: "CTO" },
-];
-
-const fmtEur0 = (n: number) =>
-  n.toLocaleString("fr-FR", {
-    style: "currency",
-    currency: "EUR",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  });
-
-const fmtEur2 = (n: number) =>
-  n.toLocaleString("fr-FR", {
-    style: "currency",
-    currency: "EUR",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-
-const fmtPct = (n: number, digits = 1) =>
-  `${(n * 100).toLocaleString("fr-FR", {
-    minimumFractionDigits: digits,
-    maximumFractionDigits: digits,
-  })} %`;
 
 export function ProjectionSimulator({ initialAmount, expectedReturn, volatility }: Props) {
+  const { t } = useTranslation();
+  const { lang } = useLang();
   const [mode, setMode] = useState<Mode>("contribute");
   const [monthly, setMonthly] = useState(100);
   const [horizon, setHorizon] = useState<Horizon>(10);
@@ -67,6 +40,18 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
   const [stressKey, setStressKey] = useState<StressKey>("none");
   const [targetCapital, setTargetCapital] = useState(50_000);
   const [inflation] = useState(0.02);
+
+  const SCENARIOS: { key: Scenario; label: string; sigma: number }[] = [
+    { key: "prudent", label: t("projection_simulator.prudent"), sigma: -0.5 },
+    { key: "central", label: t("projection_simulator.central"), sigma: 0 },
+    { key: "optimiste", label: t("projection_simulator.optimistic"), sigma: +0.5 },
+  ];
+
+  const ENVELOPES: { key: Envelope; label: string }[] = [
+    { key: "pea", label: t("projection_simulator.pea") },
+    { key: "av", label: t("projection_simulator.av") },
+    { key: "cto", label: t("projection_simulator.cto") },
+  ];
 
   const baseReturn = useMemo(
     () =>
@@ -80,7 +65,7 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
     [volatility],
   );
 
-  const sigma = SCENARIOS.find((s) => s.key === scenario)!.sigma;
+  const sigma = SCENARIOS.find((s) => s.key === scenario)?.sigma ?? 0;
   const rawAnnualReturn = baseReturn + sigma * vol;
 
   const { input: safe } = useMemo(
@@ -167,22 +152,22 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
     <section className="px-5 pt-10" aria-labelledby="simulator-title">
       <div className="gold-rule mb-5" />
       <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold mb-3">
-        Projection
+        {t("projection_simulator.projection_eyebrow", { defaultValue: "Projection" })}
       </p>
-      <h2 id="simulator-title" className="font-value text-2xl text-ink leading-tight">
-        {mode === "contribute" ? "Et si tu versais chaque mois ?" : "Quel versement pour ton objectif ?"}
+      <h2 id="simulator-title" className="font-display text-2xl text-ink leading-tight">
+        {mode === "contribute" ? t("projection_simulator.contribute_title") : t("projection_simulator.goal_title")}
       </h2>
       <p className="text-sm text-ink-3 mt-2">
         {mode === "contribute"
-          ? `Capital projeté sur ${safe.years} ans à partir de ${fmtEur2(safe.initial)}.`
-          : `Versement requis pour atteindre ta cible en ${safe.years} ans.`}
+          ? t("projection_simulator.contribute_desc", { years: safe.years, initial: formatCurrency(safe.initial, lang) })
+          : t("projection_simulator.goal_desc", { years: safe.years })}
       </p>
 
       {/* Mode switch */}
-      <div role="tablist" aria-label="Mode du simulateur" className="mt-5 inline-flex border border-paper-3 rounded-full p-1">
+      <div role="tablist" aria-label={t("projection_simulator.simulator_mode_aria", { defaultValue: "Mode du simulateur" })} className="mt-5 inline-flex border border-paper-3 rounded-full p-1">
         {([
-          { key: "contribute", label: "Je verse" },
-          { key: "goal", label: "J'ai un objectif" },
+          { key: "contribute", label: t("projection_simulator.tab_contribute") },
+          { key: "goal", label: t("projection_simulator.tab_goal") },
         ] as const).map((m) => {
           const active = mode === m.key;
           return (
@@ -211,10 +196,10 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
                 htmlFor="proj-monthly"
                 className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold"
               >
-                Versement mensuel
+                {t("projection_simulator.monthly_deposit")}
               </label>
               <span className="kpi-figure text-xl text-ink tabular-nums">
-                {safe.monthly} <span className="text-sm text-ink-3 font-sans">€</span>
+                {formatNumber(safe.monthly, lang, { maximumFractionDigits: 0 })} <span className="text-sm text-ink-3 font-sans">€</span>
               </span>
             </div>
             <input
@@ -237,8 +222,7 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
             </div>
             {monthlyInvalid && (
               <p role="alert" className="mt-2 text-[11px] text-rust">
-                Versement borné entre {PROJECTION_BOUNDS.monthlyMin} € et{" "}
-                {PROJECTION_BOUNDS.monthlyMax} €.
+                {t("projection_simulator.monthly_invalid", { min: PROJECTION_BOUNDS.monthlyMin, max: PROJECTION_BOUNDS.monthlyMax })}
               </p>
             )}
           </div>
@@ -248,7 +232,7 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
               htmlFor="proj-target"
               className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold block mb-2"
             >
-              Capital cible (€ d'aujourd'hui hors inflation)
+              {t("projection_simulator.target_capital")}
             </label>
             <input
               id="proj-target"
@@ -266,9 +250,9 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
         {/* Horizon */}
         <div>
           <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
-            Horizon d'investissement
+            {t("projection_simulator.investment_horizon")}
           </p>
-          <div role="radiogroup" aria-label="Horizon" className="flex gap-2">
+          <div role="radiogroup" aria-label={t("projection_simulator.investment_horizon")} className="flex gap-2">
             {HORIZONS.map((h) => {
               const active = horizon === h;
               return (
@@ -285,7 +269,7 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
                       : "border-paper-3 text-ink-2 hover:border-ink-3",
                   )}
                 >
-                  {h} ans
+                  {h} {t("projection_simulator.years_label")}
                 </button>
               );
             })}
@@ -295,9 +279,9 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
         {/* Scénario */}
         <div>
           <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
-            Scénario de marché
+            {t("projection_simulator.market_scenario")}
           </p>
-          <div role="radiogroup" aria-label="Scénario" className="flex gap-2">
+          <div role="radiogroup" aria-label={t("projection_simulator.market_scenario")} className="flex gap-2">
             {SCENARIOS.map((s) => {
               const active = scenario === s.key;
               return (
@@ -324,9 +308,9 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
         {/* Enveloppe fiscale */}
         <div>
           <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
-            Enveloppe fiscale
+            {t("projection_simulator.tax_envelope")}
           </p>
-          <div role="radiogroup" aria-label="Enveloppe" className="flex gap-2">
+          <div role="radiogroup" aria-label={t("projection_simulator.tax_envelope")} className="flex gap-2">
             {ENVELOPES.map((e) => {
               const active = envelope === e.key;
               return (
@@ -354,14 +338,14 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
         {mode === "contribute" && (
           <div>
             <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
-              Test de résistance
+              {t("projection_simulator.stress_test")}
             </p>
-            <div role="radiogroup" aria-label="Stress" className="flex flex-wrap gap-2">
+            <div role="radiogroup" aria-label={t("projection_simulator.stress_test")} className="flex flex-wrap gap-2">
               {([
-                { key: "none", label: "Aucun" },
-                { key: "crash", label: "Krach −30 %" },
-                { key: "pause", label: "Pause 2 ans" },
-                { key: "inflation", label: "Inflation 5 %" },
+                { key: "none", label: t("projection_simulator.none") },
+                { key: "crash", label: t("projection_simulator.crash") },
+                { key: "pause", label: t("projection_simulator.pause") },
+                { key: "inflation", label: t("projection_simulator.inflation_stress") },
               ] as const).map((s) => {
                 const active = stressKey === s.key;
                 return (
@@ -392,37 +376,37 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
         <div className="mt-8 border-t border-paper-3 pt-6">
           <KPIFigure
             size="lg"
-            label="Capital projeté (brut)"
-            value={fmtEur0(result.finalValue)}
-            hint={`Pouvoir d'achat équivalent aujourd'hui : ${fmtEur0(result.finalValueReal)} (infl. ${fmtPct(safe.inflation, 1)})`}
+            label={t("projection_simulator.projected_capital_brut")}
+            value={formatCurrency(result.finalValue, lang, { maximumFractionDigits: 0 })}
+            hint={t("projection_simulator.purchasing_power", { value: formatCurrency(result.finalValueReal, lang, { maximumFractionDigits: 0 }), inflation: formatPercent(safe.inflation, lang) })}
             accent
           />
 
           <div className="grid grid-cols-2 gap-4 mt-6">
             <KPIFigure
               size="sm"
-              label="Net après fiscalité"
-              value={fmtEur0(tax.netFinalValue)}
-              hint={`${ENVELOPES.find((e) => e.key === envelope)!.label} · impôt ${fmtEur0(tax.tax)}`}
+              label={t("projection_simulator.net_after_tax")}
+              value={formatCurrency(tax.netFinalValue, lang, { maximumFractionDigits: 0 })}
+              hint={`${ENVELOPES.find((e) => e.key === envelope)!.label} · ${t("projection_simulator.tax_amount", { tax: formatCurrency(tax.tax, lang, { maximumFractionDigits: 0 }) })}`}
             />
             <KPIFigure
               size="sm"
-              label={result.gain >= 0 ? "Plus-value brute" : "Perte estimée"}
-              value={`${result.gain >= 0 ? "+" : ""}${fmtEur0(result.gain)}`}
-              hint={`Total versé : ${fmtEur0(result.totalContributed)}`}
+              label={result.gain >= 0 ? t("projection_simulator.gross_gain") : t("projection_simulator.estimated_loss")}
+              value={`${result.gain >= 0 ? "+" : ""}${formatCurrency(result.gain, lang, { maximumFractionDigits: 0 })}`}
+              hint={t("projection_simulator.total_contributed", { total: formatCurrency(result.totalContributed, lang, { maximumFractionDigits: 0 }) })}
             />
           </div>
 
           {stressedResult && (
             <div className="mt-5 p-4 bg-paper-2 border-l-2 border-rust rounded-r">
               <p className="text-[10px] uppercase tracking-[0.18em] text-rust font-semibold mb-1">
-                Sous stress
+                {t("projection_simulator.under_stress")}
               </p>
               <p className="text-sm text-ink">
-                Capital projeté : <span className="font-value tabular-nums">{fmtEur0(stressedResult.finalValue)}</span>{" "}
+                {t("projection_simulator.projected_capital_brut")} : <span className="font-value tabular-nums">{formatCurrency(stressedResult.finalValue, lang, { maximumFractionDigits: 0 })}</span>{" "}
                 <span className="text-ink-3">
                   ({stressedResult.finalValue - result.finalValue >= 0 ? "+" : ""}
-                  {fmtEur0(stressedResult.finalValue - result.finalValue)} vs central)
+                  {formatCurrency(stressedResult.finalValue - result.finalValue, lang, { maximumFractionDigits: 0 })} {t("projection_simulator.vs_central")})
                 </span>
               </p>
             </div>
@@ -434,18 +418,18 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
             <>
               <KPIFigure
                 size="lg"
-                label="Versement mensuel requis"
-                value={fmtEur0(goal.monthlyRequired)}
+                label={t("projection_simulator.required_monthly")}
+                value={formatCurrency(goal.monthlyRequired, lang, { maximumFractionDigits: 0 })}
                 hint={
                   goal.feasible
-                    ? `Pour atteindre ${fmtEur0(targetCapital)} (${fmtEur0(goal.nominalTarget)} nominal) en ${safe.years} ans`
-                    : `Objectif inatteignable même au plafond ${fmtEur0(PROJECTION_BOUNDS.monthlyMax)}/mois`
+                    ? t("projection_simulator.goal_attain", { target: formatCurrency(targetCapital, lang, { maximumFractionDigits: 0 }), nominal: formatCurrency(goal.nominalTarget, lang, { maximumFractionDigits: 0 }), years: safe.years })
+                    : t("projection_simulator.unattainable", { max: formatCurrency(PROJECTION_BOUNDS.monthlyMax, lang, { maximumFractionDigits: 0 }) })
                 }
                 accent
               />
               {!goal.feasible && (
                 <p role="alert" className="mt-3 text-[12px] text-rust">
-                  Augmente l'horizon, baisse la cible ou choisis un scénario plus optimiste.
+                  {t("projection_simulator.unattainable_hint")}
                 </p>
               )}
             </>
@@ -486,28 +470,16 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
             <Tooltip
               cursor={{ stroke: "var(--paper-3)" }}
               contentStyle={{
-                background: "var(--paper)",
-                border: "1px solid var(--paper-3)",
-                borderRadius: 4,
+                background: "var(--ink)",
+                border: "none",
+                borderRadius: 8,
                 fontSize: 11,
+                padding: "8px 10px",
               }}
-              formatter={(value: number, name) => [
-                fmtEur0(value),
-                name === "withContrib"
-                  ? "Avec versement"
-                  : name === "withoutContrib"
-                    ? "Sans versement"
-                    : "Sous stress",
-              ]}
-              labelFormatter={(y: number) => `${y.toFixed(1)} an${y >= 2 ? "s" : ""}`}
-            />
-            <Area
-              type="monotone"
-              dataKey="withoutContrib"
-              stroke="var(--moss-1)"
-              strokeWidth={1.5}
-              strokeDasharray="3 3"
-              fill="url(#projWithout)"
+              labelStyle={{ color: "var(--paper-2)", marginBottom: 4 }}
+              itemStyle={{ color: "var(--paper)" }}
+              labelFormatter={(y: number) => t("projection_simulator.after_years", { defaultValue: "Après {{count}} ans", count: y })}
+              formatter={(v: number) => formatCurrency(v, lang, { maximumFractionDigits: 0 })}
             />
             <Area
               type="monotone"
@@ -515,6 +487,8 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
               stroke="var(--gold)"
               strokeWidth={2}
               fill="url(#projWith)"
+              dot={false}
+              activeDot={{ r: 4, fill: "var(--gold)" }}
             />
             {stressedResult && (
               <Area
@@ -522,78 +496,22 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
                 dataKey="stressed"
                 stroke="var(--rust)"
                 strokeWidth={2}
-                strokeDasharray="4 2"
                 fill="none"
+                strokeDasharray="4 4"
+                dot={false}
               />
             )}
+            <Area
+              type="monotone"
+              dataKey="withoutContrib"
+              stroke="var(--moss-1)"
+              strokeWidth={1.5}
+              fill="url(#projWithout)"
+              dot={false}
+            />
           </AreaChart>
         </ResponsiveContainer>
       </div>
-
-      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-ink-3">
-        <span className="inline-flex items-center gap-1.5">
-          <span className="w-3 h-[2px] bg-gold rounded-full" /> Avec versement
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span
-            className="w-3 h-[2px] rounded-full"
-            style={{
-              backgroundImage:
-                "repeating-linear-gradient(90deg, var(--moss-1) 0 3px, transparent 3px 6px)",
-            }}
-          />{" "}
-          Sans versement
-        </span>
-        {stressedResult && (
-          <span className="inline-flex items-center gap-1.5">
-            <span
-              className="w-3 h-[2px] rounded-full"
-              style={{
-                backgroundImage:
-                  "repeating-linear-gradient(90deg, var(--rust) 0 4px, transparent 4px 6px)",
-              }}
-            />{" "}
-            Sous stress
-          </span>
-        )}
-      </div>
-
-      {/* Hypothèses */}
-      <details className="mt-5 border-t border-paper-3 pt-4 group">
-        <summary className="text-[11px] uppercase tracking-wider text-ink-2 font-semibold cursor-pointer list-none flex items-center justify-between">
-          Hypothèses de calcul
-          <span className="text-ink-3 transition-transform group-open:rotate-180">▾</span>
-        </summary>
-        <dl className="mt-3 grid grid-cols-2 gap-y-2 gap-x-4 text-[11px]">
-          <dt className="text-ink-3 uppercase tracking-wider">Rendement annualisé</dt>
-          <dd className="text-ink font-medium tabular-nums text-right">
-            {fmtPct(safe.annualReturn, 2)}
-          </dd>
-          <dt className="text-ink-3 uppercase tracking-wider">Taux mensuel équivalent</dt>
-          <dd className="text-ink font-medium tabular-nums text-right">
-            {fmtPct(result.monthlyRate, 3)}
-          </dd>
-          <dt className="text-ink-3 uppercase tracking-wider">Volatilité (réf.)</dt>
-          <dd className="text-ink font-medium tabular-nums text-right">{fmtPct(vol, 1)}</dd>
-          <dt className="text-ink-3 uppercase tracking-wider">Inflation</dt>
-          <dd className="text-ink font-medium tabular-nums text-right">{fmtPct(safe.inflation, 1)}</dd>
-          <dt className="text-ink-3 uppercase tracking-wider">Capitalisation</dt>
-          <dd className="text-ink font-medium text-right">Mensuelle composée</dd>
-          <dt className="text-ink-3 uppercase tracking-wider">Versement</dt>
-          <dd className="text-ink font-medium text-right">Début de mois</dd>
-          <dt className="text-ink-3 uppercase tracking-wider">Fiscalité</dt>
-          <dd className="text-ink font-medium tabular-nums text-right">
-            {fmtPct(tax.rate, 1)} effectif
-          </dd>
-        </dl>
-        <p className="mt-3 text-[11px] text-ink-3 leading-relaxed">
-          Le scénario <em>central</em> reprend le rendement attendu du portefeuille
-          ({fmtPct(baseReturn, 1)}). Prudent / Optimiste : ±0,5 σ de volatilité (±{fmtPct(vol / 2, 1)}).
-          {" "}
-          {tax.note} Indicatif, hors abattements spécifiques, hors moins-values reportables.
-          Les performances passées ne préjugent pas des performances futures.
-        </p>
-      </details>
     </section>
   );
 }
