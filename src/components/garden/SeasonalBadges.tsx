@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 export interface SeasonalBadge {
   id: string;
@@ -10,6 +11,7 @@ export interface SeasonalBadge {
 }
 
 export function BadgesCard({ badges }: { badges: SeasonalBadge[] }) {
+  const { t } = useTranslation();
   const unlocked = badges.filter((b) => b.unlocked);
   const locked = badges.filter((b) => !b.unlocked);
 
@@ -17,9 +19,9 @@ export function BadgesCard({ badges }: { badges: SeasonalBadge[] }) {
     <div className="paper-card p-5">
       <div className="flex items-baseline justify-between mb-4">
         <div>
-          <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold">Jalons</p>
+          <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold">{t("seasonal_badges:milestones")}</p>
           <h3 className="font-value text-2xl text-ink mt-0.5">
-            {unlocked.length} célébré{unlocked.length > 1 ? "s" : ""}
+            {t("seasonal_badges:celebrated", { count: unlocked.length })}
           </h3>
         </div>
         <span className="text-xs text-ink-3">
@@ -53,7 +55,7 @@ export function BadgesCard({ badges }: { badges: SeasonalBadge[] }) {
         ))}
 
         {locked.slice(0, 8 - unlocked.length).map((badge) => (
-          <div key={badge.id} className="flex flex-col items-center gap-1.5 opacity-30" title={`À débloquer : ${badge.description}`}>
+          <div key={badge.id} className="flex flex-col items-center gap-1.5 opacity-30" title={t("seasonal_badges:to_unlock", { desc: badge.description })}>
             <div className="w-12 h-12 rounded-full bg-paper-2 flex items-center justify-center text-xl grayscale">{badge.icon}</div>
             <span className="text-[9px] text-ink-3 text-center line-clamp-2 leading-tight">{badge.name}</span>
           </div>
