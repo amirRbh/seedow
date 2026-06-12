@@ -1,4 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 
 type IconKey = "portefeuille" | "analyse" | "objectifs" | "decouvrir" | "ethi";
@@ -6,16 +7,16 @@ type IconKey = "portefeuille" | "analyse" | "objectifs" | "decouvrir" | "ethi";
 type NavItem = {
   key: string;
   path: string;
-  label: string;
+  labelKey: string;
   icon: IconKey;
 };
 
 const NAV_ITEMS: NavItem[] = [
-  { key: "dashboard", path: "/dashboard", label: "Accueil", icon: "portefeuille" },
-  { key: "portfolio", path: "/portfolio", label: "Portefeuille", icon: "analyse" },
-  { key: "objectifs", path: "/objectifs", label: "Objectifs", icon: "objectifs" },
-  { key: "discover", path: "/discover", label: "Explorer", icon: "decouvrir" },
-  { key: "ethi", path: "/ethi", label: "Ethi", icon: "ethi" },
+  { key: "dashboard", path: "/dashboard", labelKey: "bottom_nav.home", icon: "portefeuille" },
+  { key: "portfolio", path: "/portfolio", labelKey: "bottom_nav.portfolio", icon: "analyse" },
+  { key: "objectifs", path: "/objectifs", labelKey: "bottom_nav.objectives", icon: "objectifs" },
+  { key: "discover", path: "/discover", labelKey: "bottom_nav.explore", icon: "decouvrir" },
+  { key: "ethi", path: "/ethi", labelKey: "bottom_nav.ethi", icon: "ethi" },
 ];
 
 /**
@@ -23,10 +24,11 @@ const NAV_ITEMS: NavItem[] = [
  */
 export function BottomNavigation() {
   const location = useLocation();
+  const { t } = useTranslation();
 
   return (
     <nav
-      aria-label="Navigation principale"
+      aria-label={t("bottom_nav.aria")}
       className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-paper/95 backdrop-blur-xl border-t border-paper-3 safe-area-bottom"
     >
       <div className="flex items-stretch justify-around max-w-lg mx-auto px-2">
@@ -51,7 +53,7 @@ export function BottomNavigation() {
                   isActive ? "font-semibold" : "font-medium",
                 )}
               >
-                {item.label}
+                {t(item.labelKey)}
               </span>
               {isActive && (
                 <span

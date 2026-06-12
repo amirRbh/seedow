@@ -1,10 +1,13 @@
 import { createFileRoute, Link, useNavigate, redirect } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { GardenVisualization, type GardenPlant } from "@/components/garden/GardenVisualization";
 import { useLexicon } from "@/hooks/useLexicon";
+import { useLang } from "@/hooks/useLang";
+import { formatCurrency } from "@/lib/format";
 import { useAuth } from "@/hooks/useAuth";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
@@ -27,25 +30,27 @@ export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
 });
 
-function getGreeting(hour: number) {
-  if (hour < 12) return "Belle matinée";
-  if (hour < 18) return "Bel après-midi";
-  return "Belle soirée";
+function getGreetingKey(hour: number) {
+  if (hour < 12) return "dashboard.greeting_morning";
+  if (hour < 18) return "dashboard.greeting_afternoon";
+  return "dashboard.greeting_evening";
 }
 
 function Dashboard() {
   const { L } = useLexicon();
+  const { t } = useTranslation();
+  const { lang } = useLang();
   const navigate = useNavigate();
   const { user } = useAuth();
   const { portfolio, loading } = useActivePortfolio();
   const { portfolios, loading: pfListLoading } = useUserPortfolios();
   const valuation = usePortfolioValuation();
-  const [greeting, setGreeting] = useState("Bonjour");
+  const [greeting, setGreeting] = useState(t("dashboard.greeting_fallback"));
   const hasSeenPortfolioRef = useRef(false);
 
   useEffect(() => {
-    setGreeting(getGreeting(new Date().getHours()));
-  }, []);
+    setGreeting(t(getGreetingKey(new Date().getHours())));
+  }, [t]);
 
   useEffect(() => {
     if (portfolio || portfolios.length > 0) {
@@ -63,8 +68,8 @@ function Dashboard() {
 
   const userName = useMemo(() => {
     const meta = user?.user_metadata as { display_name?: string; full_name?: string } | undefined;
-    return meta?.display_name || meta?.full_name || user?.email?.split("@")[0] || "Bienvenue";
-  }, [user]);
+    return meta?.display_name || meta?.full_name || user?.email?.split("@")[0] || t("dashboard.welcome");
+  }, [user, t]);
 
   const plants: GardenPlant[] = useMemo(
     () =>
@@ -99,10 +104,10 @@ function Dashboard() {
           transition={{ delay: 0.1 }}
           className="px-5 pt-6"
         >
-          <p className="text-[11px] uppercase tracking-wider text-ink-3 font-medium">{L.labels.total_value}</p>
+          <p className="text-[11px] uppercase tracking-wider text-ink-3 font-medium">{t("dashboard.total_value")}</p>
           <h2 className="font-value text-6xl text-ink leading-none mt-1">
             <sup className="text-2xl align-super mr-1">€</sup>
-            {totalValue.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {totalValue.toLocaleString(lang === "en" ? "en-US" : "fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </h2>
           <div
             className={`inline-flex items-center gap-1.5 mt-3 px-3 py-1 rounded-full text-xs font-semibold ${
@@ -113,15 +118,15 @@ function Dashboard() {
               {isGrowing ? <polyline points="2,12 6,7 10,9 14,3" /> : <polyline points="2,4 6,9 10,7 14,13" />}
             </svg>
             {isGrowing ? "+" : ""}
-            {gain.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} € · {returnPct.toFixed(2)}%
-            <span className="text-ink-3 font-normal ml-1">depuis le départ</span>
+            {formatCurrency(gain, lang)} · {returnPct.toFixed(2)}%
+            <span className="text-ink-3 font-normal ml-1">{t("dashboard.since_start")}</span>
           </div>
 
           {portfolio && (
             <div className="mt-5">
-              <InvestDialog label="Investir (démo)" defaultAmount={200} />
+              <InvestDialog label={t("dashboard.invest_demo")} defaultAmount={200} />
               <p className="text-[10px] text-ink-3 mt-2 uppercase tracking-wider">
-                Mode démo · capital virtuel
+                {t("dashboard.demo_mode_capital")}
               </p>
             </div>
           )}
@@ -135,16 +140,16 @@ function Dashboard() {
           className="px-5 pt-8"
         >
           {loading ? (
-            <p className="text-[12px] text-ink-3">Chargement de ton portefeuille…</p>
+            <p className="text-[12px] text-ink-3">{t("dashboard.loading_portfolio")}</p>
           ) : plants.length === 0 ? (
             <div className="border border-dashed border-paper-3 rounded p-6 text-center">
-              <p className="text-[13px] text-ink-2 mb-3">Ton portefeuille est encore vide.</p>
+              <p className="text-[13px] text-ink-2 mb-3">{t("dashboard.empty_portfolio")}</p>
               <Link
                 to="/onboarding"
                 search={{ new: undefined }}
                 className="inline-block px-4 py-2 text-[12px] font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
               >
-                Faire mon premier investissement
+                {t("dashboard.first_investment")}
               </Link>
             </div>
           ) : (
@@ -175,8 +180,8 @@ function Dashboard() {
             className="w-full flex items-center justify-between p-4 rounded-2xl bg-paper-2 hover:bg-paper-3 transition-colors"
           >
             <div className="text-left">
-              <p className="text-sm font-semibold text-ink">Voir le détail</p>
-              <p className="text-xs text-ink-3 mt-0.5">Performance, allocation, impact, comparatif</p>
+              <p className="text-sm font-semibold text-ink">{t("dashboard.see_detail")}</p>
+              <p className="text-xs text-ink-3 mt-0.5">{t("dashboard.see_detail_desc")}</p>
             </div>
             <svg viewBox="0 0 24 24" className="w-5 h-5 text-ink-3" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M9 6l6 6-6 6" />

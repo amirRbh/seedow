@@ -146,5 +146,29 @@
     "feedback_blocker": "What's blocking you?",
     "feedback_wish": "What you'd like to see",
     "feedback_sending": "Sending…"
+  },
+  "bottom_nav": {
+    "home": "Home",
+    "portfolio": "Portfolio",
+    "objectives": "Goals",
+    "explore": "Explore",
+    "ethi": "Ethi",
+    "aria": "Main navigation"
+  },
+  "dashboard": {
+    "greeting_morning": "Good morning",
+    "greeting_afternoon": "Good afternoon",
+    "greeting_evening": "Good evening",
+    "greeting_fallback": "Hello",
+    "welcome": "Welcome",
+    "total_value": "Total value",
+    "since_start": "since inception",
+    "invest_demo": "Invest (demo)",
+    "demo_mode_capital": "Demo mode · virtual capital",
+    "loading_portfolio": "Loading your portfolio…",
+    "empty_portfolio": "Your portfolio is still empty.",
+    "first_investment": "Make my first investment",
+    "see_detail": "See details",
+    "see_detail_desc": "Performance, allocation, impact, comparison"
   }
 }
