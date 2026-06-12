@@ -66,6 +66,12 @@ function AuthPage() {
 
     try {
       if (mode === "signup") {
+        // Re-check capacity au moment de l'envoi pour éviter les courses
+        if (betaFull) {
+          const res = await joinWaitlist({ data: { email, source: "auth_signup_full" } });
+          setWaitlistDone(res.position);
+          return;
+        }
         const { error: err } = await supabase.auth.signUp({
           email,
           password,
@@ -86,6 +92,7 @@ function AuthPage() {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="min-h-screen bg-paper flex items-center justify-center px-6 py-12">
