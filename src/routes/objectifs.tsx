@@ -1,5 +1,6 @@
 import { createFileRoute, redirect, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
@@ -27,6 +28,7 @@ export const Route = createFileRoute("/objectifs")({
 });
 
 function ObjectifsPage() {
+  const { t } = useTranslation();
   const { goals, loading, refresh } = useFinancialGoals();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<FinancialGoal | null>(null);
@@ -36,25 +38,25 @@ function ObjectifsPage() {
 
   return (
     <div className="min-h-screen bg-paper pb-24 md:pb-12">
-      <AppHeader eyebrow="Cap" title="Objectifs" />
+      <AppHeader eyebrow={t("objectives.eyebrow_cap")} title={t("objectives.title")} />
       <div className="mx-auto max-w-5xl px-4 md:px-8">
         <EditorialSection
-          eyebrow="Objectifs financiers"
-          title="Vise précis, suis ta trajectoire."
-          kicker="Retraite, achat, études — donne un cap à ton épargne et mesure l'écart à la cible."
+          eyebrow={t("objectives.section_eyebrow")}
+          title={t("objectives.section_title")}
+          kicker={t("objectives.section_kicker")}
           number="01"
         >
           <div className="flex justify-end mb-6">
-            <Button onClick={openNew}>Nouvel objectif</Button>
+            <Button onClick={openNew}>{t("objectives.new_goal")}</Button>
           </div>
 
           {loading ? (
-            <p className="text-ink-3 text-sm">Chargement…</p>
+            <p className="text-ink-3 text-sm">{t("objectives.loading")}</p>
           ) : goals.length === 0 ? (
             <div className="rounded-lg border border-dashed border-paper-3 bg-paper p-10 text-center">
-              <p className="font-value text-xl text-ink">Aucun objectif pour l'instant</p>
-              <p className="mt-2 text-sm text-ink-3">Crée ton premier objectif pour visualiser ta progression.</p>
-              <Button className="mt-6" onClick={openNew}>Créer un objectif</Button>
+              <p className="font-value text-xl text-ink">{t("objectives.empty_title")}</p>
+              <p className="mt-2 text-sm text-ink-3">{t("objectives.empty_desc")}</p>
+              <Button className="mt-6" onClick={openNew}>{t("objectives.create_goal")}</Button>
             </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-2">
@@ -66,8 +68,8 @@ function ObjectifsPage() {
 
           <div className="gold-rule my-10" />
           <p className="text-xs text-ink-3">
-            Estimations indicatives à 5 %/an. Voir{" "}
-            <Link to="/methodologie" className="underline">méthodologie</Link>.
+            {t("objectives.estimates_note")}{" "}
+            <Link to="/methodologie" className="underline">{t("objectives.methodology_link")}</Link>.
           </p>
         </EditorialSection>
       </div>
