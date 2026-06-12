@@ -1,10 +1,13 @@
 import { createFileRoute, Link, useNavigate, redirect } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { GardenVisualization, type GardenPlant } from "@/components/garden/GardenVisualization";
 import { useLexicon } from "@/hooks/useLexicon";
+import { useLang } from "@/hooks/useLang";
+import { formatCurrency } from "@/lib/format";
 import { useAuth } from "@/hooks/useAuth";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
