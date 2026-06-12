@@ -1,5 +1,6 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { GrowthComparison } from "@/components/roots/GrowthComparison";
@@ -20,6 +21,8 @@ import { ExplainerCard } from "@/components/ui/ExplainerCard";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { useViewMode } from "@/hooks/useViewMode";
+import { useLang } from "@/hooks/useLang";
+import { formatCurrency } from "@/lib/format";
 import { supabase } from "@/integrations/supabase/client";
 import { MOCK_BADGES } from "@/lib/mockGarden";
 
@@ -35,6 +38,8 @@ export const Route = createFileRoute("/portfolio")({
 });
 
 function Portfolio() {
+  const { t } = useTranslation();
+  const { lang } = useLang();
   const { portfolio, loading } = useActivePortfolio();
   const valuation = usePortfolioValuation();
   const { isSimple } = useViewMode();
@@ -42,7 +47,7 @@ function Portfolio() {
   if (loading) {
     return (
       <div className="min-h-screen bg-paper flex items-center justify-center">
-        <p className="text-[12px] text-ink-3">Chargement du portefeuille…</p>
+        <p className="text-[12px] text-ink-3">{t("portfolio.loading")}</p>
       </div>
     );
   }
@@ -51,12 +56,12 @@ function Portfolio() {
     return (
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
         <div className="max-w-lg mx-auto pb-28">
-          <AppHeader eyebrow="Détails" title="Mon portefeuille" />
+          <AppHeader eyebrow={t("portfolio.details")} title={t("portfolio.my_portfolio")} />
           <div className="px-5 pt-8">
             <div className="border border-dashed border-paper-3 rounded p-6 text-center">
-              <p className="text-[13px] text-ink-2 mb-3">Aucun portefeuille actif pour le moment.</p>
+              <p className="text-[13px] text-ink-2 mb-3">{t("portfolio.no_active")}</p>
               <Link to="/onboarding" search={{ new: undefined }} className="inline-block px-4 py-2 text-[12px] font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors">
-                Démarrer l'onboarding
+                {t("portfolio.start_onboarding")}
               </Link>
             </div>
           </div>
@@ -78,13 +83,16 @@ function Portfolio() {
   const energy = Math.round(totalInvested / 5);
   const esgScore = portfolio.metrics?.esg_score ? Number((portfolio.metrics.esg_score / 10).toFixed(1)) : 0;
 
+  const linesLabel = t(portfolio.holdings.length > 1 ? "portfolio.lines_other" : "portfolio.lines_one", { count: portfolio.holdings.length });
+  const subtitle = `${linesLabel} · ${formatCurrency(totalValue, lang)}`;
+
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
       <div className="max-w-lg mx-auto pb-28">
         <AppHeader
-          eyebrow="Détails"
-          title="Mon portefeuille"
-          subtitle={`${portfolio.holdings.length} ligne${portfolio.holdings.length > 1 ? "s" : ""} · ${totalValue.toLocaleString("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+          eyebrow={t("portfolio.details")}
+          title={t("portfolio.my_portfolio")}
+          subtitle={subtitle}
           showPortfolioSelector
         />
 
@@ -98,11 +106,11 @@ function Portfolio() {
         <section className="px-5 pt-4">
           <Tabs defaultValue="performance">
             <TabsList className="w-full grid grid-cols-5 h-auto bg-paper-2 p-1">
-              <TabsTrigger value="performance" className="text-[11px] uppercase tracking-[0.12em]">Perf</TabsTrigger>
-              <TabsTrigger value="allocation" className="text-[11px] uppercase tracking-[0.12em]">Allocation</TabsTrigger>
-              <TabsTrigger value="affiner" className="text-[11px] uppercase tracking-[0.12em]">Affiner</TabsTrigger>
-              <TabsTrigger value="impact" className="text-[11px] uppercase tracking-[0.12em]">Impact</TabsTrigger>
-              <TabsTrigger value="comparatif" className="text-[11px] uppercase tracking-[0.12em]">vs Marché</TabsTrigger>
+              <TabsTrigger value="performance" className="text-[11px] uppercase tracking-[0.12em]">{t("portfolio.tab_perf")}</TabsTrigger>
+              <TabsTrigger value="allocation" className="text-[11px] uppercase tracking-[0.12em]">{t("portfolio.tab_allocation")}</TabsTrigger>
+              <TabsTrigger value="affiner" className="text-[11px] uppercase tracking-[0.12em]">{t("portfolio.tab_refine")}</TabsTrigger>
+              <TabsTrigger value="impact" className="text-[11px] uppercase tracking-[0.12em]">{t("portfolio.tab_impact")}</TabsTrigger>
+              <TabsTrigger value="comparatif" className="text-[11px] uppercase tracking-[0.12em]">{t("portfolio.tab_vs_market")}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="performance" className="pt-5 space-y-5">
@@ -117,16 +125,16 @@ function Portfolio() {
                 refreshing={valuation.loading}
               />
               <div className="flex flex-wrap gap-2">
-                <InvestDialog label="Investir" defaultAmount={200} />
+                <InvestDialog label={t("portfolio.invest")} defaultAmount={200} />
                 <InvestDialog
-                  label="Verser mensuel"
+                  label={t("portfolio.monthly_deposit")}
                   defaultAmount={50}
                   trigger={
                     <button
                       type="button"
                       className="inline-flex items-center gap-1.5 h-10 px-5 rounded-full border border-paper-3 bg-paper text-ink text-[12px] font-semibold uppercase tracking-[0.14em] hover:bg-paper-2 transition-colors"
                     >
-                      Verser mensuel
+                      {t("portfolio.monthly_deposit")}
                     </button>
                   }
                 />
@@ -154,10 +162,10 @@ function Portfolio() {
                 esgScore={esgScore}
               />
               <div className="space-y-3">
-                <h2 className="text-sm font-semibold text-ink">Indicateurs clés</h2>
+                <h2 className="text-sm font-semibold text-ink">{t("portfolio.key_indicators")}</h2>
                 {isSimple && (
                   <ExplainerCard tone="moss" dismissKey="portfolio-metrics-simple">
-                    L'essentiel : croissance attendue, score ESG et CO₂ évité. Active <span className="font-semibold">Expert</span> en haut pour tout voir.
+                    {t("portfolio.simple_explainer_pre")} <span className="font-semibold">{t("portfolio.simple_explainer_expert")}</span> {t("portfolio.simple_explainer_post")}
                   </ExplainerCard>
                 )}
                 <PortfolioMetricsCard metrics={portfolio.metrics} />
