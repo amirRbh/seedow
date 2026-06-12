@@ -1,8 +1,11 @@
 import { createFileRoute, Link, useNavigate, redirect } from "@tanstack/react-router";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
+import { useBetaCapacity } from "@/hooks/useBetaCapacity";
+import { joinWaitlist } from "@/lib/beta/beta.functions";
+
 
 
 // Only accept same-origin relative paths: must start with "/" then a non-"/" path char,
