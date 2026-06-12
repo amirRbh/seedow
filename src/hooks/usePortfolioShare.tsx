@@ -4,7 +4,6 @@ import { useAuth } from "@/hooks/useAuth";
 
 export interface PortfolioShareRow {
   id: string;
-  user_id: string;
   portfolio_id: string;
   public_handle: string;
   causes: string[];
@@ -20,6 +19,10 @@ export interface PortfolioShareRow {
   updated_at: string;
 }
 
+// Safe columns: excludes user_id (PII) which is no longer readable by clients.
+const SHARE_COLUMNS =
+  "id, portfolio_id, public_handle, causes, exclusions, risk_target, horizon_years, weights, expected_return, volatility, esg_score, carbon_intensity, shared_at, updated_at";
+
 export function useCommunityShares(filter?: { cause?: string; risk?: "low" | "mid" | "high" }) {
   const [shares, setShares] = useState<PortfolioShareRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,7 +33,7 @@ export function useCommunityShares(filter?: { cause?: string; risk?: "low" | "mi
     (async () => {
       const { data, error } = await supabase
         .from("portfolio_shares")
-        .select("*")
+        .select(SHARE_COLUMNS)
         .order("shared_at", { ascending: false })
         .limit(60);
       if (cancelled) return;
@@ -70,7 +73,7 @@ export function useImpactLeaderboard() {
     (async () => {
       const { data, error } = await supabase
         .from("portfolio_shares")
-        .select("*")
+        .select(SHARE_COLUMNS)
         .order("esg_score", { ascending: false, nullsFirst: false })
         .limit(50);
       if (cancelled) return;
@@ -100,7 +103,7 @@ export function useMyShare(portfolioId: string | null) {
     (async () => {
       const { data, error } = await supabase
         .from("portfolio_shares")
-        .select("*")
+        .select(SHARE_COLUMNS)
         .eq("portfolio_id", portfolioId)
         .maybeSingle();
       if (cancelled) return;
