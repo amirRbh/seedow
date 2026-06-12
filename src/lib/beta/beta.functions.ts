@@ -134,7 +134,7 @@ export const logBetaEvent = createServerFn({ method: "POST" })
     await supabaseAdmin.from("beta_events").insert({
       user_id: data.userId ?? null,
       event: data.event,
-      payload: data.payload ?? null,
+      payload: (data.payload ?? null) as never,
     });
     return { ok: true };
   });
