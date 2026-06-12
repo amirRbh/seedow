@@ -31,14 +31,25 @@ export const Route = createFileRoute("/auth")({
 function AuthPage() {
   const search = Route.useSearch();
   const navigate = useNavigate();
+  const { capacity } = useBetaCapacity();
   const [mode, setMode] = useState<"login" | "signup">(search.mode ?? "login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [waitlistDone, setWaitlistDone] = useState<number | null>(null);
 
   const safeRedirect = search.redirect ?? "/dashboard";
+  const betaFull = mode === "signup" && capacity?.full === true;
+
+  // Si la bêta est pleine et qu'on est en signup, redirige vers /waitlist auto
+  useEffect(() => {
+    if (mode === "signup" && capacity?.full) {
+      // on laisse l'utilisateur sur la page mais on affiche le formulaire waitlist
+    }
+  }, [mode, capacity?.full]);
+
 
   const onGoogle = async () => {
     setError(null);
