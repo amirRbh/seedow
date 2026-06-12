@@ -102,7 +102,7 @@ export function RealInvestmentInterestCard() {
                         className="flex-1 accent-gold"
                       />
                       <span className="font-value text-lg text-ink tabular-nums w-24 text-right">
-                        {formatCurrency(amount, lang, { maximumFractionDigits: 0 })}
+                        {formatCurrency(amount, lang)}
                       </span>
                     </div>
                   </div>

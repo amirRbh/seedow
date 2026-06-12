@@ -377,8 +377,8 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
           <KPIFigure
             size="lg"
             label={t("projection_simulator.projected_capital_brut")}
-            value={formatCurrency(result.finalValue, lang, { maximumFractionDigits: 0 })}
-            hint={t("projection_simulator.purchasing_power", { value: formatCurrency(result.finalValueReal, lang, { maximumFractionDigits: 0 }), inflation: formatPercent(safe.inflation, lang) })}
+            value={formatCurrency(result.finalValue, lang)}
+            hint={t("projection_simulator.purchasing_power", { value: formatCurrency(result.finalValueReal, lang), inflation: formatPercent(safe.inflation, lang) })}
             accent
           />
 
@@ -386,14 +386,14 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
             <KPIFigure
               size="sm"
               label={t("projection_simulator.net_after_tax")}
-              value={formatCurrency(tax.netFinalValue, lang, { maximumFractionDigits: 0 })}
-              hint={`${ENVELOPES.find((e) => e.key === envelope)!.label} · ${t("projection_simulator.tax_amount", { tax: formatCurrency(tax.tax, lang, { maximumFractionDigits: 0 }) })}`}
+              value={formatCurrency(tax.netFinalValue, lang)}
+              hint={`${ENVELOPES.find((e) => e.key === envelope)!.label} · ${t("projection_simulator.tax_amount", { tax: formatCurrency(tax.tax, lang) })}`}
             />
             <KPIFigure
               size="sm"
               label={result.gain >= 0 ? t("projection_simulator.gross_gain") : t("projection_simulator.estimated_loss")}
-              value={`${result.gain >= 0 ? "+" : ""}${formatCurrency(result.gain, lang, { maximumFractionDigits: 0 })}`}
-              hint={t("projection_simulator.total_contributed", { total: formatCurrency(result.totalContributed, lang, { maximumFractionDigits: 0 }) })}
+              value={`${result.gain >= 0 ? "+" : ""}${formatCurrency(result.gain, lang)}`}
+              hint={t("projection_simulator.total_contributed", { total: formatCurrency(result.totalContributed, lang) })}
             />
           </div>
 
@@ -403,10 +403,10 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
                 {t("projection_simulator.under_stress")}
               </p>
               <p className="text-sm text-ink">
-                {t("projection_simulator.projected_capital_brut")} : <span className="font-value tabular-nums">{formatCurrency(stressedResult.finalValue, lang, { maximumFractionDigits: 0 })}</span>{" "}
+                {t("projection_simulator.projected_capital_brut")} : <span className="font-value tabular-nums">{formatCurrency(stressedResult.finalValue, lang)}</span>{" "}
                 <span className="text-ink-3">
                   ({stressedResult.finalValue - result.finalValue >= 0 ? "+" : ""}
-                  {formatCurrency(stressedResult.finalValue - result.finalValue, lang, { maximumFractionDigits: 0 })} {t("projection_simulator.vs_central")})
+                  {formatCurrency(stressedResult.finalValue - result.finalValue, lang)} {t("projection_simulator.vs_central")})
                 </span>
               </p>
             </div>
@@ -419,11 +419,11 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
               <KPIFigure
                 size="lg"
                 label={t("projection_simulator.required_monthly")}
-                value={formatCurrency(goal.monthlyRequired, lang, { maximumFractionDigits: 0 })}
+                value={formatCurrency(goal.monthlyRequired, lang)}
                 hint={
                   goal.feasible
-                    ? t("projection_simulator.goal_attain", { target: formatCurrency(targetCapital, lang, { maximumFractionDigits: 0 }), nominal: formatCurrency(goal.nominalTarget, lang, { maximumFractionDigits: 0 }), years: safe.years })
-                    : t("projection_simulator.unattainable", { max: formatCurrency(PROJECTION_BOUNDS.monthlyMax, lang, { maximumFractionDigits: 0 }) })
+                    ? t("projection_simulator.goal_attain", { target: formatCurrency(targetCapital, lang), nominal: formatCurrency(goal.nominalTarget, lang), years: safe.years })
+                    : t("projection_simulator.unattainable", { max: formatCurrency(PROJECTION_BOUNDS.monthlyMax, lang) })
                 }
                 accent
               />
@@ -479,7 +479,7 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
               labelStyle={{ color: "var(--paper-2)", marginBottom: 4 }}
               itemStyle={{ color: "var(--paper)" }}
               labelFormatter={(y: number) => t("projection_simulator.after_years", { defaultValue: "Après {{count}} ans", count: y })}
-              formatter={(v: number) => formatCurrency(v, lang, { maximumFractionDigits: 0 })}
+              formatter={(v: number) => formatCurrency(v, lang)}
             />
             <Area
               type="monotone"
