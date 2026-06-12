@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { useViewMode } from "@/hooks/useViewMode";
 import { PortfolioSelector } from "@/components/garden/PortfolioSelector";
 import { AlertsBell } from "@/components/alerts/AlertsBell";
+import { LanguageToggle } from "@/components/LanguageToggle";
 import { cn } from "@/lib/utils";
 
 interface TopBarProps {
@@ -14,6 +16,7 @@ interface TopBarProps {
  * Affiche : marque "seedow", sélecteur de portefeuille, bouton ⌘K, cloche, toggle Simple/Expert, réglages.
  */
 export function TopBar({ onOpenCommand }: TopBarProps) {
+  const { t } = useTranslation();
   const [isMac, setIsMac] = useState(false);
   useEffect(() => {
     setIsMac(/Mac|iPod|iPhone|iPad/.test(navigator.platform));
@@ -23,11 +26,12 @@ export function TopBar({ onOpenCommand }: TopBarProps) {
       <div className="flex items-center gap-4">
         <Link
           to="/dashboard"
-          aria-label="Seedow — retour à ton portefeuille"
+          aria-label={t("nav.back_to_portfolio")}
           className="inline-flex items-center outline-none rounded-sm focus-visible:ring-2 focus-visible:ring-moss-1"
         >
           <span className="font-value text-[17px] text-ink tracking-tight">seedow</span>
         </Link>
+        <LanguageToggle />
         <span className="h-5 w-px bg-paper-3" aria-hidden="true" />
         <PortfolioSelector />
       </div>
@@ -41,10 +45,10 @@ export function TopBar({ onOpenCommand }: TopBarProps) {
             "text-[12px] text-ink-3 hover:text-ink hover:border-ink-3 transition-colors duration-150",
             "outline-none focus-visible:ring-2 focus-visible:ring-moss-1",
           )}
-          aria-label="Ouvrir la palette de commandes (Cmd+K)"
+          aria-label={t("nav.open_command_palette")}
         >
           <SearchIcon />
-          <span className="font-medium">Rechercher</span>
+          <span className="font-medium">{t("nav.search")}</span>
           <kbd
             suppressHydrationWarning
             className="ml-3 inline-flex items-center gap-0.5 h-5 px-1.5 rounded border border-paper-3 bg-paper text-[10px] text-ink-3 font-mono"
@@ -57,7 +61,7 @@ export function TopBar({ onOpenCommand }: TopBarProps) {
         <AlertsBell />
         <Link
           to="/reglages"
-          aria-label="Ouvrir tes réglages"
+          aria-label={t("nav.open_settings")}
           className={cn(
             "flex items-center justify-center w-9 h-9 rounded-full border border-paper-3 text-ink-2",
             "transition-colors duration-150 hover:text-ink hover:border-ink-3",
@@ -72,11 +76,12 @@ export function TopBar({ onOpenCommand }: TopBarProps) {
 }
 
 function ViewModeToggle() {
+  const { t } = useTranslation();
   const { mode, setMode } = useViewMode();
   return (
     <div
       role="group"
-      aria-label="Niveau de détail"
+      aria-label={t("view_mode.label")}
       className="inline-flex items-center h-7 rounded-full border border-paper-3 bg-paper overflow-hidden"
     >
       <button
@@ -89,7 +94,7 @@ function ViewModeToggle() {
           mode === "simple" ? "bg-ink text-paper" : "text-ink-3 hover:text-ink",
         )}
       >
-        Simple
+        {t("view_mode.simple")}
       </button>
       <button
         type="button"
@@ -101,7 +106,7 @@ function ViewModeToggle() {
           mode === "expert" ? "bg-ink text-paper" : "text-ink-3 hover:text-ink",
         )}
       >
-        Expert
+        {t("view_mode.expert")}
       </button>
     </div>
   );
