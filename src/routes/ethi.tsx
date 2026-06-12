@@ -138,10 +138,10 @@ function Ethi() {
         }),
       });
       const json = (await res.json()) as { content?: string; error?: string };
-      const reply = json.content ?? json.error ?? "Désolée, je n'arrive pas à répondre.";
+      const reply = json.content ?? json.error ?? t("ethi.error_no_response");
       setMessages((prev) => [...prev, { id: `a-${Date.now()}`, role: "assistant", content: reply }]);
     } catch {
-      setMessages((prev) => [...prev, { id: `a-${Date.now()}`, role: "assistant", content: "Désolée, problème de connexion." }]);
+      setMessages((prev) => [...prev, { id: `a-${Date.now()}`, role: "assistant", content: t("ethi.error_connection") }]);
     } finally {
       setIsLoading(false);
     }
