@@ -200,7 +200,7 @@ function Ethi() {
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Demande quelque chose à Ethi…"
+              placeholder={t("ethi.input_placeholder")}
               className="flex-1 bg-transparent outline-none text-sm text-paper placeholder:text-paper/40 py-2"
               disabled={isLoading}
             />
@@ -208,7 +208,7 @@ function Ethi() {
               type="submit"
               disabled={!input.trim() || isLoading}
               className="w-9 h-9 rounded-full bg-moss-2 hover:bg-moss-1 text-paper flex items-center justify-center disabled:opacity-30 transition-colors"
-              aria-label="Envoyer"
+              aria-label={t("ethi.send")}
             >
               <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14M13 5l7 7-7 7" />
