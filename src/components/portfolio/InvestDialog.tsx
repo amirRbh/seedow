@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import {
   Dialog,
   DialogContent,
@@ -15,6 +16,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { fireConfetti } from "@/lib/confetti";
+import { formatCurrency } from "@/lib/format";
+import { useLang } from "@/hooks/useLang";
 import { cn } from "@/lib/utils";
 
 type Method = "card" | "applepay" | "sepa";
@@ -22,16 +25,13 @@ type Method = "card" | "applepay" | "sepa";
 interface Props {
   trigger?: React.ReactNode;
   defaultAmount?: number;
-  /** Préfixe le bouton par défaut. */
   label?: string;
 }
 
-/**
- * InvestDialog — maquette UI réaliste pour investir, SANS débit réel.
- * Met à jour `portfolios.initial_amount` (capital déclaratif) pour simuler
- * le versement, puis rafraîchit le portefeuille actif et la valorisation.
- */
-export function InvestDialog({ trigger, defaultAmount = 200, label = "Investir (démo)" }: Props) {
+export function InvestDialog({ trigger, defaultAmount = 200, label }: Props) {
+  const { t } = useTranslation();
+  const lang = useLang();
+  const resolvedLabel = label ?? t("invest_dialog.default_label");
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState<number>(defaultAmount);
   const [method, setMethod] = useState<Method>("card");
@@ -39,7 +39,6 @@ export function InvestDialog({ trigger, defaultAmount = 200, label = "Investir (
   const { portfolio, refresh: refreshPortfolio } = useActivePortfolio();
   const valuation = usePortfolioValuation();
 
-  // Champs carte (purement maquette)
   const [cardNumber, setCardNumber] = useState("");
   const [cardExp, setCardExp] = useState("");
   const [cardCvc, setCardCvc] = useState("");
@@ -57,7 +56,6 @@ export function InvestDialog({ trigger, defaultAmount = 200, label = "Investir (
     if (!portfolio) return;
     setSubmitting(true);
     try {
-      // Simule un délai réseau pour rendre l'expérience crédible
       await new Promise((r) => setTimeout(r, method === "applepay" ? 600 : 900));
 
       const newAmount = (portfolio.initial_amount || 0) + amount;
@@ -73,18 +71,16 @@ export function InvestDialog({ trigger, defaultAmount = 200, label = "Investir (
       const rect = e.currentTarget.getBoundingClientRect();
       fireConfetti({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
 
-      toast.success(
-        `Investissement de ${amount.toLocaleString("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 })} enregistré`,
-        { description: "Maquette : aucun débit réel n'a été effectué." },
-      );
+      toast.success(t("invest_dialog.toast_success", { amount: formatCurrency(amount, lang) }), {
+        description: t("invest_dialog.toast_success_desc"),
+      });
       setOpen(false);
-      // Reset léger
       setCardNumber("");
       setCardExp("");
       setCardCvc("");
       setIban("");
     } catch (err) {
-      toast.error("Impossible d'enregistrer l'investissement", {
+      toast.error(t("invest_dialog.toast_error"), {
         description: err instanceof Error ? err.message : undefined,
       });
     } finally {
@@ -95,22 +91,21 @@ export function InvestDialog({ trigger, defaultAmount = 200, label = "Investir (
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        {trigger ?? <DefaultTrigger label={label} />}
+        {trigger ?? <DefaultTrigger label={resolvedLabel} />}
       </DialogTrigger>
       <DialogContent className="bg-paper border-paper-3 sm:max-w-md">
         <DialogHeader>
-          <p className="eyebrow">Versement</p>
-          <DialogTitle className="font-display text-2xl text-ink mt-1">{label}</DialogTitle>
+          <p className="eyebrow">{t("invest_dialog.eyebrow")}</p>
+          <DialogTitle className="font-display text-2xl text-ink mt-1">{resolvedLabel}</DialogTitle>
           <DialogDescription className="text-ink-3 text-[13px]">
-            Maquette d'expérience — aucun débit n'est réalisé. Le capital déclaré du portefeuille
-            sera mis à jour pour refléter le versement.
+            {t("invest_dialog.description")}
           </DialogDescription>
         </DialogHeader>
 
         <div className="mt-2 space-y-4">
           <div>
             <Label className="text-[11px] uppercase tracking-[0.18em] text-ink-3 font-semibold">
-              Montant
+              {t("invest_dialog.amount")}
             </Label>
             <div className="mt-2 flex items-center gap-2">
               <div className="relative flex-1">
@@ -148,19 +143,19 @@ export function InvestDialog({ trigger, defaultAmount = 200, label = "Investir (
           <Tabs value={method} onValueChange={(v) => setMethod(v as Method)}>
             <TabsList className="grid grid-cols-3 w-full bg-paper-2 border border-paper-3">
               <TabsTrigger value="card" className="text-[12px]">
-                Carte
+                {t("invest_dialog.tab_card")}
               </TabsTrigger>
               <TabsTrigger value="applepay" className="text-[12px]">
-                Apple Pay
+                {t("invest_dialog.tab_applepay")}
               </TabsTrigger>
               <TabsTrigger value="sepa" className="text-[12px]">
-                Virement
+                {t("invest_dialog.tab_sepa")}
               </TabsTrigger>
             </TabsList>
 
             <TabsContent value="card" className="mt-4 space-y-3">
               <div>
-                <Label className="text-[11px] text-ink-3">Numéro de carte</Label>
+                <Label className="text-[11px] text-ink-3">{t("invest_dialog.card_number")}</Label>
                 <Input
                   inputMode="numeric"
                   autoComplete="cc-number"
@@ -173,7 +168,7 @@ export function InvestDialog({ trigger, defaultAmount = 200, label = "Investir (
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <Label className="text-[11px] text-ink-3">Expiration</Label>
+                  <Label className="text-[11px] text-ink-3">{t("invest_dialog.card_exp")}</Label>
                   <Input
                     inputMode="numeric"
                     autoComplete="cc-exp"
@@ -185,7 +180,7 @@ export function InvestDialog({ trigger, defaultAmount = 200, label = "Investir (
                   />
                 </div>
                 <div>
-                  <Label className="text-[11px] text-ink-3">CVC</Label>
+                  <Label className="text-[11px] text-ink-3">{t("invest_dialog.card_cvc")}</Label>
                   <Input
                     inputMode="numeric"
                     autoComplete="cc-csc"
@@ -202,17 +197,17 @@ export function InvestDialog({ trigger, defaultAmount = 200, label = "Investir (
             <TabsContent value="applepay" className="mt-4">
               <div className="rounded-md border border-paper-3 bg-paper-2 p-4 text-center">
                 <p className="text-[11px] uppercase tracking-[0.18em] text-ink-3 font-semibold">
-                  Paiement express
+                  {t("invest_dialog.applepay_eyebrow")}
                 </p>
                 <p className="mt-2 text-sm text-ink-2">
-                  Valide avec Face ID, Touch ID ou ton code après confirmation.
+                  {t("invest_dialog.applepay_desc")}
                 </p>
               </div>
             </TabsContent>
 
             <TabsContent value="sepa" className="mt-4 space-y-3">
               <div>
-                <Label className="text-[11px] text-ink-3">IBAN</Label>
+                <Label className="text-[11px] text-ink-3">{t("invest_dialog.iban")}</Label>
                 <Input
                   placeholder="FR76 ____ ____ ____ ____ ____ ___"
                   value={iban}
@@ -222,7 +217,7 @@ export function InvestDialog({ trigger, defaultAmount = 200, label = "Investir (
                 />
               </div>
               <p className="text-[11px] text-ink-3">
-                Délai de règlement habituel : 1 à 2 jours ouvrés. Maquette uniquement.
+                {t("invest_dialog.sepa_note")}
               </p>
             </TabsContent>
           </Tabs>
@@ -243,23 +238,17 @@ export function InvestDialog({ trigger, defaultAmount = 200, label = "Investir (
               <Spinner />
             ) : method === "applepay" ? (
               <>
-                <AppleLogo /> Payer
+                <AppleLogo /> {t("invest_dialog.pay")}
               </>
             ) : (
               <>
-                Confirmer{" "}
-                {amount.toLocaleString("fr-FR", {
-                  style: "currency",
-                  currency: "EUR",
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
+                {t("invest_dialog.confirm")} {formatCurrency(amount, lang)}
               </>
             )}
           </button>
 
           <p className="text-[10px] text-ink-3 text-center leading-relaxed">
-            Démo sans débit réel · Données chiffrées, jamais stockées
+            {t("invest_dialog.footer_note")}
           </p>
         </div>
       </DialogContent>

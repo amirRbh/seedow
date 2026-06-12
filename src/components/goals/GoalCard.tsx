@@ -1,15 +1,14 @@
 import { Link } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { Progress } from "@/components/ui/progress";
-import { GOAL_TYPE_LABEL, type FinancialGoal } from "@/hooks/useFinancialGoals";
-
-const fmtEur = (n: number) =>
-  n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+import { type FinancialGoal } from "@/hooks/useFinancialGoals";
+import { formatCurrency, formatDate } from "@/lib/format";
+import { useLang } from "@/hooks/useLang";
 
 function monthsBetween(from: Date, to: Date) {
   return Math.max(0, (to.getFullYear() - from.getFullYear()) * 12 + (to.getMonth() - from.getMonth()));
 }
 
-/** Projection simple : capital initial + apport mensuel à 5 %/an pour estimer la trajectoire. */
 function estimateCurrent(goal: FinancialGoal): number {
   const start = new Date(goal.created_at);
   const now = new Date();
@@ -23,6 +22,8 @@ function estimateCurrent(goal: FinancialGoal): number {
 }
 
 export function GoalCard({ goal, onEdit }: { goal: FinancialGoal; onEdit: () => void }) {
+  const { t } = useTranslation();
+  const lang = useLang();
   const current = estimateCurrent(goal);
   const pct = Math.min(100, Math.max(0, (current / goal.target_amount) * 100));
   const target = new Date(goal.target_date);
@@ -30,24 +31,26 @@ export function GoalCard({ goal, onEdit }: { goal: FinancialGoal; onEdit: () => 
   const yearsLeft = (monthsLeft / 12).toFixed(1);
   const status: { label: string; tone: string } =
     pct >= 100
-      ? { label: "Objectif atteint", tone: "text-emerald-700" }
+      ? { label: t("goal.status_reached"), tone: "text-emerald-700" }
       : monthsLeft <= 0
-        ? { label: "Échéance dépassée", tone: "text-rose-600" }
+        ? { label: t("goal.status_overdue"), tone: "text-rose-600" }
         : pct / 100 >= (1 - monthsLeft / Math.max(1, monthsBetween(new Date(goal.created_at), target)))
-          ? { label: "En avance", tone: "text-emerald-700" }
-          : { label: "Dans les temps", tone: "text-ink-3" };
+          ? { label: t("goal.status_ahead"), tone: "text-emerald-700" }
+          : { label: t("goal.status_on_track"), tone: "text-ink-3" };
 
   return (
     <article className="rounded-lg border border-paper-3 bg-paper p-6 transition-shadow hover:shadow-sm">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gold">
-            {GOAL_TYPE_LABEL[goal.goal_type]}
+            {t(`goal.type_${goal.goal_type}`)}
           </p>
           <h3 className="mt-2 font-value text-2xl text-ink leading-tight">{goal.name}</h3>
           <p className="mt-1 text-xs text-ink-3">
-            Échéance : {target.toLocaleDateString("fr-FR", { month: "long", year: "numeric" })} ·{" "}
-            {yearsLeft} an{Number(yearsLeft) > 1 ? "s" : ""} restant{Number(yearsLeft) > 1 ? "s" : ""}
+            {t("goal.due_label", {
+              date: formatDate(target, lang, { month: "long", year: "numeric" }),
+              years: yearsLeft,
+            })}
           </p>
         </div>
         <button
@@ -55,14 +58,14 @@ export function GoalCard({ goal, onEdit }: { goal: FinancialGoal; onEdit: () => 
           onClick={onEdit}
           className="text-[11px] uppercase tracking-[0.18em] text-ink-3 hover:text-ink"
         >
-          Modifier
+          {t("common.edit")}
         </button>
       </div>
 
       <div className="mt-5">
         <div className="flex items-baseline justify-between text-sm">
-          <span className="font-value text-ink text-lg tabular-nums">{fmtEur(current)} €</span>
-          <span className="text-ink-3 tabular-nums">/ {fmtEur(goal.target_amount)} €</span>
+          <span className="font-value text-ink text-lg tabular-nums">{formatCurrency(current, lang)}</span>
+          <span className="text-ink-3 tabular-nums">/ {formatCurrency(goal.target_amount, lang)}</span>
         </div>
         <Progress value={pct} className="mt-2 h-1.5 bg-paper-3 [&>div]:bg-gold" />
         <div className="mt-2 flex items-center justify-between text-[11px]">
@@ -73,9 +76,9 @@ export function GoalCard({ goal, onEdit }: { goal: FinancialGoal; onEdit: () => 
 
       <div className="mt-5 flex items-center justify-between border-t border-paper-3 pt-4 text-xs text-ink-3">
         <span>
-          Apport mensuel{" "}
+          {t("goal.monthly_label")}{" "}
           <span className="text-ink font-medium tabular-nums">
-            {fmtEur(goal.monthly_contribution)} €
+            {formatCurrency(goal.monthly_contribution, lang)}
           </span>
         </span>
         <Link
@@ -83,7 +86,7 @@ export function GoalCard({ goal, onEdit }: { goal: FinancialGoal; onEdit: () => 
           params={{ goalId: goal.id }}
           className="text-ink hover:text-gold uppercase tracking-[0.18em] font-semibold"
         >
-          Simuler →
+          {t("goal.simulate")}
         </Link>
       </div>
     </article>

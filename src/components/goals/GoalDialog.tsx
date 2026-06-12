@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -6,8 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
-import { upsertGoal, deleteGoal, GOAL_TYPE_LABEL, type FinancialGoal, type GoalType } from "@/hooks/useFinancialGoals";
+import { upsertGoal, deleteGoal, type FinancialGoal, type GoalType } from "@/hooks/useFinancialGoals";
 import { toast } from "sonner";
+
+const GOAL_TYPES: GoalType[] = ["retirement", "real_estate", "studies", "safety_net", "other"];
 
 interface Props {
   open: boolean;
@@ -17,6 +20,7 @@ interface Props {
 }
 
 export function GoalDialog({ open, onOpenChange, goal, onSaved }: Props) {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { portfolios } = useUserPortfolios();
   const [saving, setSaving] = useState(false);
@@ -58,7 +62,7 @@ export function GoalDialog({ open, onOpenChange, goal, onSaved }: Props) {
   const save = async () => {
     if (!user) return;
     if (!name.trim()) {
-      toast.error("Donne un nom à ton objectif.");
+      toast.error(t("goal.name_required"));
       return;
     }
     setSaving(true);
@@ -76,11 +80,11 @@ export function GoalDialog({ open, onOpenChange, goal, onSaved }: Props) {
         },
         user.id,
       );
-      toast.success(goal ? "Objectif mis à jour." : "Objectif créé.");
+      toast.success(goal ? t("goal.saved") : t("goal.created"));
       onSaved();
       onOpenChange(false);
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Erreur");
+      toast.error(e instanceof Error ? e.message : t("common.error"));
     } finally {
       setSaving(false);
     }
@@ -88,15 +92,15 @@ export function GoalDialog({ open, onOpenChange, goal, onSaved }: Props) {
 
   const remove = async () => {
     if (!goal) return;
-    if (!confirm("Supprimer cet objectif ?")) return;
+    if (!confirm(t("goal.confirm_delete"))) return;
     setSaving(true);
     try {
       await deleteGoal(goal.id);
-      toast.success("Objectif supprimé.");
+      toast.success(t("goal.deleted"));
       onSaved();
       onOpenChange(false);
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Erreur");
+      toast.error(e instanceof Error ? e.message : t("common.error"));
     } finally {
       setSaving(false);
     }
@@ -107,25 +111,25 @@ export function GoalDialog({ open, onOpenChange, goal, onSaved }: Props) {
       <DialogContent className="max-w-md bg-paper">
         <DialogHeader>
           <DialogTitle className="font-value text-2xl text-ink">
-            {goal ? "Modifier l'objectif" : "Nouvel objectif"}
+            {goal ? t("goal.dialog_title_edit") : t("goal.dialog_title_new")}
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
           <div>
             <Label htmlFor="goal-name" className="text-[11px] uppercase tracking-[0.18em] text-ink-3">
-              Nom
+              {t("goal.name")}
             </Label>
-            <Input id="goal-name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex. Retraite à 60 ans" maxLength={80} />
+            <Input id="goal-name" value={name} onChange={(e) => setName(e.target.value)} placeholder={t("goal.name_placeholder")} maxLength={80} />
           </div>
 
           <div>
-            <Label className="text-[11px] uppercase tracking-[0.18em] text-ink-3">Type</Label>
+            <Label className="text-[11px] uppercase tracking-[0.18em] text-ink-3">{t("goal.type")}</Label>
             <Select value={type} onValueChange={(v) => setType(v as GoalType)}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                {(Object.keys(GOAL_TYPE_LABEL) as GoalType[]).map((k) => (
-                  <SelectItem key={k} value={k}>{GOAL_TYPE_LABEL[k]}</SelectItem>
+                {GOAL_TYPES.map((k) => (
+                  <SelectItem key={k} value={k}>{t(`goal.type_${k}`)}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -133,32 +137,32 @@ export function GoalDialog({ open, onOpenChange, goal, onSaved }: Props) {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label className="text-[11px] uppercase tracking-[0.18em] text-ink-3">Montant cible (€)</Label>
+              <Label className="text-[11px] uppercase tracking-[0.18em] text-ink-3">{t("goal.target_amount")}</Label>
               <Input type="number" min={0} step={1000} value={target} onChange={(e) => setTarget(Number(e.target.value))} />
             </div>
             <div>
-              <Label className="text-[11px] uppercase tracking-[0.18em] text-ink-3">Échéance</Label>
+              <Label className="text-[11px] uppercase tracking-[0.18em] text-ink-3">{t("goal.due_date")}</Label>
               <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label className="text-[11px] uppercase tracking-[0.18em] text-ink-3">Apport mensuel (€)</Label>
+              <Label className="text-[11px] uppercase tracking-[0.18em] text-ink-3">{t("goal.monthly_contribution")}</Label>
               <Input type="number" min={0} step={10} value={monthly} onChange={(e) => setMonthly(Number(e.target.value))} />
             </div>
             <div>
-              <Label className="text-[11px] uppercase tracking-[0.18em] text-ink-3">Capital de départ (€)</Label>
+              <Label className="text-[11px] uppercase tracking-[0.18em] text-ink-3">{t("goal.initial_capital")}</Label>
               <Input type="number" min={0} step={100} value={initial} onChange={(e) => setInitial(Number(e.target.value))} />
             </div>
           </div>
 
           <div>
-            <Label className="text-[11px] uppercase tracking-[0.18em] text-ink-3">Portefeuille rattaché</Label>
+            <Label className="text-[11px] uppercase tracking-[0.18em] text-ink-3">{t("goal.attached_portfolio")}</Label>
             <Select value={portfolioId} onValueChange={setPortfolioId}>
-              <SelectTrigger><SelectValue placeholder="Aucun" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={t("goal.none")} /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="none">Aucun</SelectItem>
+                <SelectItem value="none">{t("goal.none")}</SelectItem>
                 {portfolios.map((p) => (
                   <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
                 ))}
@@ -170,12 +174,12 @@ export function GoalDialog({ open, onOpenChange, goal, onSaved }: Props) {
         <DialogFooter className="flex sm:justify-between gap-2">
           {goal ? (
             <Button type="button" variant="ghost" onClick={remove} disabled={saving} className="text-rose-600 hover:text-rose-700">
-              Supprimer
+              {t("common.delete")}
             </Button>
           ) : <span />}
           <div className="flex gap-2">
-            <Button variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>Annuler</Button>
-            <Button onClick={save} disabled={saving}>{goal ? "Enregistrer" : "Créer"}</Button>
+            <Button variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>{t("common.cancel")}</Button>
+            <Button onClick={save} disabled={saving}>{goal ? t("common.save") : t("common.create")}</Button>
           </div>
         </DialogFooter>
       </DialogContent>
