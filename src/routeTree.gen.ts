@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WaitlistRouteImport } from './routes/waitlist'
 import { Route as ReglagesRouteImport } from './routes/reglages'
 import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
@@ -26,7 +27,13 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ObjectifsGoalIdRouteImport } from './routes/objectifs.$goalId'
 import { Route as HooksRefreshMarketDataRouteImport } from './routes/hooks/refresh-market-data'
 import { Route as ApiEthiRouteImport } from './routes/api.ethi'
+import { Route as AuthenticatedAdminBetaRouteImport } from './routes/_authenticated/admin.beta'
 
+const WaitlistRoute = WaitlistRouteImport.update({
+  id: '/waitlist',
+  path: '/waitlist',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReglagesRoute = ReglagesRouteImport.update({
   id: '/reglages',
   path: '/reglages',
@@ -112,6 +119,11 @@ const ApiEthiRoute = ApiEthiRouteImport.update({
   path: '/api/ethi',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminBetaRoute = AuthenticatedAdminBetaRouteImport.update({
+  id: '/_authenticated/admin/beta',
+  path: '/admin/beta',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -128,9 +140,11 @@ export interface FileRoutesByFullPath {
   '/portfolio': typeof PortfolioRoute
   '/profil': typeof ProfilRoute
   '/reglages': typeof ReglagesRoute
+  '/waitlist': typeof WaitlistRoute
   '/api/ethi': typeof ApiEthiRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
+  '/admin/beta': typeof AuthenticatedAdminBetaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -147,9 +161,11 @@ export interface FileRoutesByTo {
   '/portfolio': typeof PortfolioRoute
   '/profil': typeof ProfilRoute
   '/reglages': typeof ReglagesRoute
+  '/waitlist': typeof WaitlistRoute
   '/api/ethi': typeof ApiEthiRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
+  '/admin/beta': typeof AuthenticatedAdminBetaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -167,9 +183,11 @@ export interface FileRoutesById {
   '/portfolio': typeof PortfolioRoute
   '/profil': typeof ProfilRoute
   '/reglages': typeof ReglagesRoute
+  '/waitlist': typeof WaitlistRoute
   '/api/ethi': typeof ApiEthiRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
+  '/_authenticated/admin/beta': typeof AuthenticatedAdminBetaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -188,9 +206,11 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/profil'
     | '/reglages'
+    | '/waitlist'
     | '/api/ethi'
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
+    | '/admin/beta'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -207,9 +227,11 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/profil'
     | '/reglages'
+    | '/waitlist'
     | '/api/ethi'
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
+    | '/admin/beta'
   id:
     | '__root__'
     | '/'
@@ -226,9 +248,11 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/profil'
     | '/reglages'
+    | '/waitlist'
     | '/api/ethi'
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
+    | '/_authenticated/admin/beta'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -246,12 +270,21 @@ export interface RootRouteChildren {
   PortfolioRoute: typeof PortfolioRoute
   ProfilRoute: typeof ProfilRoute
   ReglagesRoute: typeof ReglagesRoute
+  WaitlistRoute: typeof WaitlistRoute
   ApiEthiRoute: typeof ApiEthiRoute
   HooksRefreshMarketDataRoute: typeof HooksRefreshMarketDataRoute
+  AuthenticatedAdminBetaRoute: typeof AuthenticatedAdminBetaRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/waitlist': {
+      id: '/waitlist'
+      path: '/waitlist'
+      fullPath: '/waitlist'
+      preLoaderRoute: typeof WaitlistRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reglages': {
       id: '/reglages'
       path: '/reglages'
@@ -371,6 +404,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiEthiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin/beta': {
+      id: '/_authenticated/admin/beta'
+      path: '/admin/beta'
+      fullPath: '/admin/beta'
+      preLoaderRoute: typeof AuthenticatedAdminBetaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -401,9 +441,21 @@ const rootRouteChildren: RootRouteChildren = {
   PortfolioRoute: PortfolioRoute,
   ProfilRoute: ProfilRoute,
   ReglagesRoute: ReglagesRoute,
+  WaitlistRoute: WaitlistRoute,
   ApiEthiRoute: ApiEthiRoute,
   HooksRefreshMarketDataRoute: HooksRefreshMarketDataRoute,
+  AuthenticatedAdminBetaRoute: AuthenticatedAdminBetaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
