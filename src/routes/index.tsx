@@ -1,50 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ArrowRight, Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { BetaCounter } from "@/components/beta/BetaCounter";
+import { LanguageToggle } from "@/components/LanguageToggle";
 
 const SITE_URL = "https://seedow.life";
 
-const FAQS = [
-  {
-    q: "Que fait Seedow exactement ?",
-    a: "Seedow audite ton portefeuille existant sous l'angle ESG. Tu saisis tes lignes (ISIN ou ticker, montant ou %), on calcule un score moyen pondéré, un taux de couverture des données et on identifie les angles morts. Aucune promesse de placement — seulement de la lecture.",
-  },
-  {
-    q: "D'où viennent les scores ESG ?",
-    a: "Les données proviennent de fournisseurs publics (Yahoo Finance ESG, MSCI ESG quand disponible). Chaque score affiche sa source et sa date. Les lignes non couvertes sont marquées « non auditables » — pas masquées.",
-  },
-  {
-    q: "Est-ce gratuit ?",
-    a: "L'audit est gratuit. À terme, Seedow proposera un service payant de réalignement (recommandations actionnables, suivi). L'audit lui-même restera ouvert.",
-  },
-  {
-    q: "Mes données sont-elles protégées ?",
-    a: "Aucune donnée bancaire n'est stockée. Tu saisis manuellement tes lignes. Tu peux exporter ou supprimer ton compte à tout moment.",
-  },
-];
-
-const PILLARS = [
-  {
-    n: "01",
-    title: "Audit",
-    body: "Score ESG pondéré sur ton portefeuille réel. Pas de simulation, pas de classement marketing.",
-  },
-  {
-    n: "02",
-    title: "Transparence",
-    body: "Chaque chiffre indique sa source et sa date. La méthodologie est publique et reproductible.",
-  },
-  {
-    n: "03",
-    title: "Trous assumés",
-    body: "Les lignes non couvertes restent visibles. Un audit honnête vaut mieux qu'une moyenne trompeuse.",
-  },
-];
-
-const MANIFESTO = "Ton épargne raconte une histoire. Nous la lisons à haute voix.";
+const FAQ_KEYS = ["1", "2", "3", "4"] as const;
+const PILLAR_KEYS = ["1", "2", "3"] as const;
+const PILLAR_NUMBERS = { "1": "01", "2": "02", "3": "03" } as const;
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -75,18 +42,6 @@ export const Route = createFileRoute("/")({
           description: "Audit ESG transparent pour ton portefeuille.",
         }),
       },
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: FAQS.map((f) => ({
-            "@type": "Question",
-            name: f.q,
-            acceptedAnswer: { "@type": "Answer", text: f.a },
-          })),
-        }),
-      },
     ],
   }),
   component: Landing,
@@ -95,10 +50,10 @@ export const Route = createFileRoute("/")({
 const easeOut = [0.22, 1, 0.36, 1] as [number, number, number, number];
 
 function Landing() {
+  const { t } = useTranslation();
   const [isAuthed, setIsAuthed] = useState<boolean | null>(null);
   const heroRef = useRef<HTMLDivElement>(null);
 
-  // Scroll progress sur le hero pour contraction du wordmark
   const { scrollY } = useScroll();
   const heroProgress = useTransform(scrollY, [0, 600], [0, 1]);
   const heroScale = useSpring(useTransform(heroProgress, [0, 1], [1, 0.18]), { stiffness: 90, damping: 24 });
@@ -118,7 +73,7 @@ function Landing() {
       <StickyHeader isAuthed={isAuthed} />
 
       <main>
-        {/* ════ 01. HERO plein écran ════ */}
+        {/* HERO */}
         <section
           ref={heroRef}
           className="relative min-h-screen flex flex-col justify-between px-6 md:px-12 pt-32 pb-16 border-b border-ink/10"
@@ -130,7 +85,7 @@ function Landing() {
               transition={{ duration: 0.6 }}
               className="eyebrow mb-10"
             >
-              N°01 — Édition 2026 · Audit ESG
+              {t("landing.eyebrow_edition")}
             </motion.p>
 
             <motion.div
@@ -147,7 +102,7 @@ function Landing() {
               transition={{ duration: 0.8, delay: 0.3, ease: easeOut }}
               className="mt-12 text-xl md:text-3xl max-w-3xl leading-[1.3] text-ink-2 font-display font-medium tracking-tight"
             >
-              L'audit ESG de ton épargne.
+              {t("landing.subtitle")}
             </motion.p>
 
             <motion.div
@@ -161,11 +116,11 @@ function Landing() {
                 search={isAuthed ? undefined : { redirect: "/onboarding", mode: "signup" }}
                 className="btn-plant group"
               >
-                {isAuthed ? "Mon espace" : "Auditer mon portefeuille"}
+                {isAuthed ? t("nav.my_space") : t("nav.audit_my_portfolio")}
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Link>
               <Link to="/methodologie" className="btn-harvest">
-                Méthodologie
+                {t("nav.methodology")}
               </Link>
             </motion.div>
 
@@ -185,64 +140,61 @@ function Landing() {
             transition={{ delay: 1, duration: 1.2 }}
             className="max-w-7xl mx-auto w-full flex items-end justify-between gap-6 text-[10px] uppercase tracking-[0.22em] text-ink-3"
           >
-            <span>Aucune donnée bancaire stockée</span>
-            <span className="hidden md:inline">Méthodologie publique</span>
-            <span className="hidden md:inline">Sources documentées</span>
+            <span>{t("landing.ribbon_no_bank")}</span>
+            <span className="hidden md:inline">{t("landing.ribbon_method")}</span>
+            <span className="hidden md:inline">{t("landing.ribbon_sources")}</span>
             <ScrollHint />
           </motion.div>
         </section>
 
-        {/* ════ 02. MANIFESTE — révélation mot par mot ════ */}
         <ManifestoSection />
-
-        {/* ════ 03. DÉMO INTERACTIVE inline ════ */}
         <DemoAuditSection />
 
-        {/* ════ 04. TROIS PILIERS ════ */}
+        {/* PILIERS */}
         <section className="max-w-7xl mx-auto px-6 md:px-12 py-32 border-t border-ink/10">
           <div className="grid md:grid-cols-12 gap-12 mb-16">
             <div className="md:col-span-3">
-              <p className="eyebrow mb-4">Ce qui nous distingue</p>
+              <p className="eyebrow mb-4">{t("landing.pillars_eyebrow")}</p>
             </div>
             <h2 className="md:col-span-9 display-lg">
-              Trois engagements,
+              {t("landing.pillars_title_a")}
               <br />
-              <span className="text-gold">aucun compromis.</span>
+              <span className="text-gold">{t("landing.pillars_title_b")}</span>
             </h2>
           </div>
           <div className="gold-rule mb-16" />
           <div className="grid md:grid-cols-3 gap-12 md:gap-16">
-            {PILLARS.map((p, i) => (
+            {PILLAR_KEYS.map((k, i) => (
               <motion.article
-                key={p.title}
+                key={k}
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{ duration: 0.7, delay: i * 0.1, ease: easeOut }}
               >
                 <p className="font-display text-xs tracking-[0.25em] text-gold tabular-nums mb-6">
-                  {p.n}
+                  {PILLAR_NUMBERS[k]}
                 </p>
-                <h3 className="display-lg text-3xl md:text-4xl mb-4">{p.title}</h3>
-                <p className="text-ink-2 leading-relaxed">{p.body}</p>
+                <h3 className="display-lg text-3xl md:text-4xl mb-4">{t(`landing.pillars.${k}_title`)}</h3>
+                <p className="text-ink-2 leading-relaxed">{t(`landing.pillars.${k}_body`)}</p>
               </motion.article>
             ))}
           </div>
         </section>
 
-        {/* ════ 05. MÉTHODOLOGIE teaser ════ */}
+        {/* MÉTHODO TEASER */}
         <section className="bg-ink text-paper py-32">
           <div className="max-w-7xl mx-auto px-6 md:px-12">
             <div className="grid md:grid-cols-12 gap-12 items-end">
               <div className="md:col-span-7">
-                <p className="eyebrow mb-6">Méthodologie</p>
+                <p className="eyebrow mb-6">{t("landing.method_eyebrow")}</p>
                 <h2 className="display-lg text-paper">
-                  Un score se justifie.
+                  {t("landing.method_title_a")}
                   <br />
-                  <span className="text-gold">Le nôtre se vérifie.</span>
+                  <span className="text-gold">{t("landing.method_title_b")}</span>
                 </h2>
                 <p className="mt-8 text-paper-2 max-w-xl leading-relaxed text-lg">
-                  Exclusions sectorielles, scores ESG pondérés, taux de couverture explicite, sources horodatées. Chaque chiffre affiché peut être tracé jusqu'à sa source publique.
+                  {t("landing.method_desc")}
                 </p>
               </div>
               <div className="md:col-span-5 flex md:justify-end">
@@ -250,7 +202,7 @@ function Landing() {
                   to="/methodologie"
                   className="inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.22em] text-gold border-b border-gold pb-2 hover:border-gold-soft hover:text-gold-soft transition-colors"
                 >
-                  Lire la méthodologie complète
+                  {t("landing.method_cta")}
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -258,17 +210,17 @@ function Landing() {
           </div>
         </section>
 
-        {/* ════ 06. FAQ ════ */}
+        {/* FAQ */}
         <section className="max-w-4xl mx-auto px-6 md:px-12 py-32">
           <div className="mb-16">
-            <p className="eyebrow mb-4">Questions</p>
-            <h2 className="display-lg">Tout ce qu'il faut savoir.</h2>
+            <p className="eyebrow mb-4">{t("landing.faq_eyebrow")}</p>
+            <h2 className="display-lg">{t("landing.faq_title")}</h2>
             <div className="gold-rule mt-8" />
           </div>
           <div>
-            {FAQS.map((f, i) => (
+            {FAQ_KEYS.map((k, i) => (
               <motion.details
-                key={f.q}
+                key={k}
                 initial={{ opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
@@ -277,19 +229,19 @@ function Landing() {
               >
                 <summary className="flex items-start justify-between cursor-pointer list-none gap-6">
                   <h3 className="font-display font-semibold text-lg md:text-xl leading-snug group-hover:text-gold transition-colors">
-                    {f.q}
+                    {t(`landing.faqs.q${k}`)}
                   </h3>
                   <span className="text-gold mt-1 group-open:rotate-45 transition-transform duration-400">
                     <Plus className="w-5 h-5" />
                   </span>
                 </summary>
-                <p className="mt-4 text-ink-2 leading-relaxed pr-12">{f.a}</p>
+                <p className="mt-4 text-ink-2 leading-relaxed pr-12">{t(`landing.faqs.a${k}`)}</p>
               </motion.details>
             ))}
           </div>
         </section>
 
-        {/* ════ CTA FINAL ════ */}
+        {/* CTA FINAL */}
         <section className="max-w-7xl mx-auto px-6 md:px-12 pb-32">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -301,18 +253,18 @@ function Landing() {
             <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full blur-[140px] opacity-30 bg-gold" />
             <div className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full blur-[160px] opacity-20 bg-moss-2" />
             <div className="relative z-10 max-w-3xl">
-              <p className="eyebrow mb-6">Accès anticipé</p>
+              <p className="eyebrow mb-6">{t("landing.final_eyebrow")}</p>
               <h2 className="display-lg text-paper mb-8">
-                Ton épargne mérite d'être lue.
+                {t("landing.final_title_a")}
                 <br />
-                <span className="text-gold">Commence par l'auditer.</span>
+                <span className="text-gold">{t("landing.final_title_b")}</span>
               </h2>
               <Link
                 to={isAuthed ? "/dashboard" : "/auth"}
                 search={isAuthed ? undefined : { redirect: "/onboarding", mode: "signup" }}
                 className="inline-flex items-center gap-3 bg-gold text-ink px-10 py-5 font-semibold uppercase tracking-[0.2em] text-xs hover:bg-gold-soft transition-colors"
               >
-                {isAuthed ? "Mon espace" : "Lancer mon audit"}
+                {isAuthed ? t("nav.my_space") : t("landing.final_cta")}
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
@@ -321,10 +273,10 @@ function Landing() {
 
         <footer className="border-t border-ink/10 py-12">
           <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between gap-6 text-xs text-ink-3">
-            <p>© 2026 Seedow — Lecture éditoriale de l'épargne.</p>
+            <p>{t("landing.footer_copy")}</p>
             <div className="flex gap-8">
-              <Link to="/methodologie" className="hover:text-ink transition-colors">Méthodologie</Link>
-              <a href="mailto:hello@seedow.life" className="hover:text-ink transition-colors">Contact</a>
+              <Link to="/methodologie" className="hover:text-ink transition-colors">{t("nav.methodology")}</Link>
+              <a href="mailto:hello@seedow.life" className="hover:text-ink transition-colors">{t("landing.footer_contact")}</a>
             </div>
           </div>
         </footer>
@@ -334,6 +286,7 @@ function Landing() {
 }
 
 function StickyHeader({ isAuthed }: { isAuthed: boolean | null }) {
+  const { t } = useTranslation();
   const { scrollY } = useScroll();
   const bg = useTransform(scrollY, [0, 400], ["rgba(245, 240, 224, 0)", "rgba(245, 240, 224, 0.92)"]);
   const borderColor = useTransform(scrollY, [0, 400], ["rgba(6, 78, 59, 0)", "rgba(6, 78, 59, 0.12)"]);
@@ -344,26 +297,28 @@ function StickyHeader({ isAuthed }: { isAuthed: boolean | null }) {
       className="fixed top-0 left-0 right-0 z-40 backdrop-blur-xl"
     >
       <motion.div style={{ borderColor }} className="border-b">
-
         <nav className="max-w-7xl mx-auto flex justify-between items-center px-6 md:px-12 py-5">
-          <Link to="/" className="font-display font-bold text-xl tracking-tight uppercase">
-            seedow<span className="text-gold">.</span>
-          </Link>
+          <div className="flex items-center gap-6">
+            <Link to="/" className="font-display font-bold text-xl tracking-tight uppercase">
+              seedow<span className="text-gold">.</span>
+            </Link>
+            <LanguageToggle />
+          </div>
           <div className="flex items-center gap-6 md:gap-10 text-[10px] font-semibold uppercase tracking-[0.22em]">
             <Link to="/methodologie" className="hidden sm:inline-block hover:text-gold transition-colors">
-              Méthodologie
+              {t("nav.methodology")}
             </Link>
             {isAuthed ? (
               <Link to="/dashboard" className="bg-ink text-paper px-5 py-3 hover:bg-ink-2 transition-colors">
-                Mon espace
+                {t("nav.my_space")}
               </Link>
             ) : (
               <>
                 <Link to="/auth" search={{ redirect: "/dashboard", mode: "login" }} className="hover:text-gold transition-colors">
-                  Connexion
+                  {t("nav.login")}
                 </Link>
                 <Link to="/auth" search={{ redirect: "/onboarding", mode: "signup" }} className="bg-ink text-paper px-5 py-3 hover:bg-ink-2 transition-colors">
-                  Auditer
+                  {t("nav.audit")}
                 </Link>
               </>
             )}
@@ -375,9 +330,10 @@ function StickyHeader({ isAuthed }: { isAuthed: boolean | null }) {
 }
 
 function ScrollHint() {
+  const { t } = useTranslation();
   return (
     <div className="flex items-center gap-2 text-ink-3">
-      <span>Défile</span>
+      <span>{t("landing.scroll")}</span>
       <motion.span
         animate={{ y: [0, 4, 0] }}
         transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
@@ -390,13 +346,15 @@ function ScrollHint() {
 }
 
 function ManifestoSection() {
-  const words = MANIFESTO.split(" ");
+  const { t } = useTranslation();
+  const manifesto = t("landing.manifesto_text");
+  const words = manifesto.split(" ");
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 80%", "end 50%"] });
 
   return (
     <section ref={ref} className="max-w-7xl mx-auto px-6 md:px-12 py-32 md:py-48">
-      <p className="eyebrow mb-12">Manifeste</p>
+      <p className="eyebrow mb-12">{t("landing.manifesto_eyebrow")}</p>
       <p className="display-lg leading-[1.1] max-w-5xl">
         {words.map((word, i) => {
           const start = i / words.length;
@@ -427,16 +385,16 @@ function ManifestoWord({
   );
 }
 
-// Mini-démo : l'utilisateur tape un ticker, on lui montre un mini-verdict animé
 const DEMO_DATA: Record<string, { name: string; esg: number; coverage: number; sectors: string[] }> = {
   AAPL: { name: "Apple Inc.", esg: 72, coverage: 98, sectors: ["Tech"] },
-  TSLA: { name: "Tesla Inc.", esg: 58, coverage: 92, sectors: ["Auto", "Énergie"] },
-  TTE: { name: "TotalEnergies", esg: 34, coverage: 95, sectors: ["Énergie fossile"] },
-  MC: { name: "LVMH", esg: 64, coverage: 88, sectors: ["Luxe"] },
-  NESN: { name: "Nestlé", esg: 56, coverage: 90, sectors: ["Agro"] },
+  TSLA: { name: "Tesla Inc.", esg: 58, coverage: 92, sectors: ["Auto", "Energy"] },
+  TTE: { name: "TotalEnergies", esg: 34, coverage: 95, sectors: ["Fossil energy"] },
+  MC: { name: "LVMH", esg: 64, coverage: 88, sectors: ["Luxury"] },
+  NESN: { name: "Nestlé", esg: 56, coverage: 90, sectors: ["Food"] },
 };
 
 function DemoAuditSection() {
+  const { t } = useTranslation();
   const [ticker, setTicker] = useState("AAPL");
   const [committed, setCommitted] = useState("AAPL");
 
@@ -447,14 +405,14 @@ function DemoAuditSection() {
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="grid md:grid-cols-12 gap-12 mb-16">
           <div className="md:col-span-5">
-            <p className="eyebrow mb-4">Démo live</p>
+            <p className="eyebrow mb-4">{t("landing.demo_eyebrow")}</p>
             <h2 className="display-lg">
-              Essaie maintenant.
+              {t("landing.demo_title_a")}
               <br />
-              <span className="text-gold">Sans inscription.</span>
+              <span className="text-gold">{t("landing.demo_title_b")}</span>
             </h2>
             <p className="mt-6 text-ink-2 leading-relaxed">
-              Tape un ticker, lis ce que ton portefeuille raconterait. Un avant-goût de l'audit complet.
+              {t("landing.demo_desc")}
             </p>
           </div>
           <div className="md:col-span-7">
@@ -468,12 +426,12 @@ function DemoAuditSection() {
               <input
                 value={ticker}
                 onChange={(e) => setTicker(e.target.value)}
-                placeholder="AAPL, TSLA, TTE, MC, NESN…"
+                placeholder={t("landing.demo_placeholder")}
                 className="flex-1 bg-transparent border-b-2 border-ink/20 focus:border-gold outline-none px-1 py-4 font-display text-2xl uppercase tracking-wider placeholder:text-ink-3/50"
-                aria-label="Ticker à auditer"
+                aria-label={t("landing.demo_input_label")}
               />
               <button type="submit" className="btn-plant">
-                Auditer
+                {t("nav.audit")}
               </button>
             </form>
 
@@ -485,11 +443,11 @@ function DemoAuditSection() {
                 transition={{ duration: 0.6, ease: easeOut }}
                 className="grid grid-cols-3 gap-8 md:gap-12"
               >
-                <AnimatedKPI value={data.esg} label="Score ESG" suffix="/100" accent />
-                <AnimatedKPI value={data.coverage} label="Couverture" suffix="%" />
+                <AnimatedKPI value={data.esg} label={t("landing.demo_kpi_esg")} suffix="/100" accent />
+                <AnimatedKPI value={data.coverage} label={t("landing.demo_kpi_coverage")} suffix="%" />
                 <div>
                   <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-ink-3 mb-3">
-                    Secteurs
+                    {t("landing.demo_sectors")}
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {data.sectors.map((s) => (
@@ -497,13 +455,13 @@ function DemoAuditSection() {
                     ))}
                   </div>
                   <p className="mt-4 text-xs text-ink-3 leading-relaxed">
-                    {data.name} · données démo, audit complet sur ton portefeuille réel.
+                    {t("landing.demo_data_note", { name: data.name })}
                   </p>
                 </div>
               </motion.div>
             ) : (
               <p className="text-ink-3 text-sm">
-                Ticker inconnu en démo. Essaie AAPL, TSLA, TTE, MC ou NESN.
+                {t("landing.demo_unknown")}
               </p>
             )}
           </div>
