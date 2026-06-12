@@ -53,7 +53,7 @@ export function BottomNavigation() {
                   isActive ? "font-semibold" : "font-medium",
                 )}
               >
-                {item.label}
+                {t(item.labelKey)}
               </span>
               {isActive && (
                 <span
