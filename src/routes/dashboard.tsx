@@ -68,8 +68,8 @@ function Dashboard() {
 
   const userName = useMemo(() => {
     const meta = user?.user_metadata as { display_name?: string; full_name?: string } | undefined;
-    return meta?.display_name || meta?.full_name || user?.email?.split("@")[0] || "Bienvenue";
-  }, [user]);
+    return meta?.display_name || meta?.full_name || user?.email?.split("@")[0] || t("dashboard.welcome");
+  }, [user, t]);
 
   const plants: GardenPlant[] = useMemo(
     () =>
