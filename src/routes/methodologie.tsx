@@ -285,14 +285,14 @@ function MethodologyPage() {
               <MetricRow label={t("methodologie:metric_return")} value={result ? formatPercent(result.metrics.expected_return, lang) : "—"} hint={t("methodologie:metric_return_hint")} />
               <MetricRow label={t("methodologie:metric_volatility")} value={result ? formatPercent(result.metrics.volatility, lang) : "—"} hint={t("methodologie:metric_volatility_hint")} />
               <MetricRow label={t("methodologie:metric_sharpe")} value={result ? formatNumber(result.metrics.sharpe, lang) : "—"} hint={t("methodologie:metric_sharpe_hint")} />
-              <MetricRow label={t("methodologie:metric_esg")} value={result ? `${formatNumber(result.metrics.esg_score, lang, 0)} / 100` : "—"} hint={t("methodologie:metric_esg_hint")} />
+              <MetricRow label={t("methodologie:metric_esg")} value={result ? `${formatNumber(result.metrics.esg_score, lang, { maximumFractionDigits: 0 })} / 100` : "—"} hint={t("methodologie:metric_esg_hint")} />
               <MetricRow label={t("methodologie:metric_fees")} value={result ? formatPercent(result.metrics.ter, lang) : "—"} hint={t("methodologie:metric_fees_hint")} />
               <MetricRow label={t("methodologie:metric_co2")} value={result ? `${formatNumber(result.metrics.co2_avoided_tons, lang)} t / 10k€` : "—"} hint={t("methodologie:metric_co2_hint")} />
               <MetricRow
                 label={t("methodologie:metric_carbon_intensity")}
                 value={
                   result?.metrics.carbon_intensity_gco2e_per_eur != null
-                    ? `${formatNumber(result.metrics.carbon_intensity_gco2e_per_eur, lang, 0)} gCO₂e/€/an`
+                    ? `${formatNumber(result.metrics.carbon_intensity_gco2e_per_eur, lang, { maximumFractionDigits: 0 })} gCO₂e/€/an`
                     : t("methodologie:metric_carbon_unavailable")
                 }
                 hint={t("methodologie:metric_carbon_intensity_hint")}
@@ -369,24 +369,6 @@ function MethodologyPage() {
 }
 
 const ASSET_CLASS_LABEL: Record<string, string> = {
-    equity_dev: t("methodologie:asset_classes.equity_dev"),
-    equity_em: t("methodologie:asset_classes.equity_em"),
-    thematic: t("methodologie:asset_classes.thematic"),
-    green_bond: t("methodologie:asset_classes.green_bond"),
-    social_bond: t("methodologie:asset_classes.social_bond"),
-    sov_bond: t("methodologie:asset_classes.sov_bond"),
-    reit: t("methodologie:asset_classes.reit"),
-    commodity: t("methodologie:asset_classes.commodity"),
-    cash: t("methodologie:asset_classes.cash"),
-    equity_dev: t("methodologie:asset_classes.equity_dev"),
-    equity_em: t("methodologie:asset_classes.equity_em"),
-    thematic: t("methodologie:asset_classes.thematic"),
-    green_bond: t("methodologie:asset_classes.green_bond"),
-    social_bond: t("methodologie:asset_classes.social_bond"),
-    sov_bond: t("methodologie:asset_classes.sov_bond"),
-    reit: t("methodologie:asset_classes.reit"),
-    commodity: t("methodologie:asset_classes.commodity"),
-    cash: t("methodologie:asset_classes.cash"),
   equity_dev: "Actions développées",
   equity_em: "Actions émergentes",
   thematic: "Thématiques",
