@@ -186,6 +186,7 @@ function Dashboard() {
       </div>
 
       <BottomNavigation />
+      <FeedbackButton />
     </motion.div>
   );
 }
