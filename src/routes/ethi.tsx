@@ -28,6 +28,7 @@ interface Message {
 
 function Ethi() {
   const { t } = useTranslation();
+  const { lang } = useLang();
   const { intent, q } = Route.useSearch();
   const { user } = useAuth();
   const { portfolio, loading: pfLoading } = useActivePortfolio();
@@ -43,7 +44,7 @@ function Ethi() {
   const firstName =
     (user?.user_metadata?.display_name as string | undefined)?.split(" ")[0] ??
     user?.email?.split("@")[0] ??
-    "toi";
+    (lang === "en" ? "there" : "toi");
 
   useEffect(() => {
     if (dataLoading) {
@@ -55,7 +56,21 @@ function Ethi() {
     const pnl = valuation.pnl;
     const pnlStr = `${pnl >= 0 ? "+" : ""}${pnl.toFixed(0)} €`;
     let greeting = "";
-    if (intent === "rebalance") {
+    if (lang === "en") {
+      if (intent === "rebalance") {
+        greeting = hasGarden
+          ? `Hey ${firstName} — rebalancing time? I'll review your **${portfolio!.holdings.length} lines** and flag what to adjust.`
+          : `Hey ${firstName} — no portfolio to rebalance yet. Want to build one?`;
+      } else if (!hasGarden) {
+        greeting = `Hi ${firstName} ✨ Your portfolio isn't built yet. Tell me what matters to you, I'll compose it in 2 min.`;
+      } else if (invested > 0 && valuation.hasQuotes) {
+        greeting = `${firstName}, your portfolio sits at **€${invested.toFixed(0)}** invested, **${portfolio!.holdings.length} lines** and a P&L of **${pnlStr}** 📈. Ready for the next move?`;
+      } else if (invested > 0) {
+        greeting = `${firstName}, your portfolio holds **€${invested.toFixed(0)}** invested across **${portfolio!.holdings.length} lines**. Ready for the next move?`;
+      } else {
+        greeting = `Hi ${firstName} ✨ Your portfolio is ready but not funded yet. Want to schedule a first deposit?`;
+      }
+    } else if (intent === "rebalance") {
       greeting = hasGarden
         ? `Hop ${firstName} — on rééquilibre ? Je passe en revue tes **${portfolio!.holdings.length} lignes** et je te dis quoi ajuster.`
         : `Hop ${firstName} — pas encore de portefeuille à rééquilibrer. On en construit un ?`;
@@ -69,7 +84,7 @@ function Ethi() {
       greeting = `Salut ${firstName} ✨ Ton portefeuille est prêt mais pas encore alimenté. On programme un premier versement ?`;
     }
     setMessages([{ id: "welcome", role: "assistant", content: greeting }]);
-  }, [intent, dataLoading, portfolio, depositsTotal, firstName, valuation.pnl, valuation.hasQuotes]);
+  }, [intent, dataLoading, portfolio, depositsTotal, firstName, valuation.pnl, valuation.hasQuotes, lang]);
 
   // Pré-remplit l'input quand la page est ouverte avec ?q=... (depuis le briefing).
   useEffect(() => {
