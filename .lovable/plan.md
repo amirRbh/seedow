@@ -1,63 +1,85 @@
-# Plan i18n FR/EN — toute l'app
+## Objectif
 
-## Approche
+Faire d'Ethi un vrai conseiller : à l'ouverture il **diagnostique** ton portefeuille avec des chiffres concrets, ses réponses suivent un canevas **Constat → Impact → Action**, et il sait simuler proprement des scénarios (versement, choc marché, horizon).
 
-`react-i18next` avec deux fichiers de traduction (`fr.json`, `en.json`) organisés par namespace = page. Détection auto au premier chargement (`navigator.language`), préférence ensuite stockée dans `localStorage` (`seedow.lang`). Toggle FR | EN dans le header global, présent sur toutes les pages.
+---
 
-## Stack technique
+## 1. Briefing d'ouverture proactif (client)
 
-- `react-i18next` + `i18next` + `i18next-browser-languagedetector`
-- Provider monté dans `src/routes/__root.tsx`
-- Hook `useTranslation()` dans chaque composant
-- Format monétaire / dates : `Intl.NumberFormat(lang === 'en' ? 'en-US' : 'fr-FR', ...)` via un util `formatCurrency()` centralisé qui lit la langue courante.
+Remplacer le message d'accueil actuel (1 phrase générique) par un **briefing structuré** calculé côté client à partir du portefeuille déjà chargé. Aucune nouvelle table, aucun appel IA pour le briefing — c'est déterministe et instantané.
 
-## Composants nouveaux
+Le briefing contient :
+- **En-tête** : valeur actuelle, P&L, retour %.
+- **2 à 4 observations** générées par des règles simples (`src/lib/ethi/diagnostics.ts`, nouveau fichier) :
+  - Concentration : une ligne pèse > 30 % → flag.
+  - Doublons sectoriels/géographiques : > 60 % sur une même région ou catégorie.
+  - TER moyen élevé (> 0,4 %).
+  - Score ESG faible (< 60) ou très bon (> 80) → ton positif.
+  - Volatilité vs profil (si dispo).
+  - Pas de versement récent / portefeuille non alimenté.
+- **3 chips d'action contextuelles** (remplacent les suggestions actuelles génériques) : "Diagnostique mon portefeuille", "Simule +100 €/mois pendant 10 ans", "Et si le marché baisse de 20 % ?", etc., adaptées aux flags détectés.
 
-- `src/i18n/index.ts` — init i18next, détection, fallback FR
-- `src/i18n/locales/fr.json` + `en.json` — tous les strings organisés par namespace : `common`, `nav`, `landing`, `auth`, `waitlist`, `dashboard`, `portfolio`, `objectifs`, `methodologie`, `certificat`, `reglages`, `onboarding`, `admin`, `beta`
-- `src/components/LanguageToggle.tsx` — pastille FR | EN sobre dans le style Emerald Prestige (eyebrow uppercase or, ligne or sous l'option active)
-- `src/lib/format.ts` — `formatCurrency(amount)`, `formatDate(date)` qui réagissent à la langue
-- `src/hooks/useLang.ts` — petit wrapper qui retourne `lang` courant et `setLang()`
+FR + EN. Format markdown court (KPI gras + liste de 2-4 puces).
 
-## Toggle dans le header
+## 2. Canevas de réponse Constat → Impact → Action
 
-Placé à droite du wordmark "seedow" sur **toutes** les pages (landing, auth, waitlist, et toutes les routes `_authenticated`). Style : `FR · EN` avec ligne or sous l'option active, tracking 0.22em uppercase, cohérent avec les eyebrows existants. Pas d'icônes drapeaux.
+Mettre à jour les system prompts (`src/routes/api.ethi.ts`) pour imposer la structure suivante sur **chaque réponse non triviale** :
 
-## Périmètre des pages à traduire
+```
+**Constat.** <1 phrase, chiffrée si possible>
+**Impact.** <1 phrase : pourquoi ça compte pour toi>
+**Action.** <1 phrase actionnable, + éventuel tag [deposit:…] ou [seed:…]>
+```
 
-Routes publiques :
-- `/` (landing, BetaCounter, sections)
-- `/auth`, `/waitlist`, `/methodologie`, `/certificat`, `/share/$handle` (si publique)
+Pour les questions purement informatives (ex : "c'est quoi le Sharpe ?"), Ethi répond librement mais reste court (≤ 4 phrases).
 
-Routes connectées :
-- `/dashboard`, `/portfolio`, `/objectifs`, `/onboarding`, `/reglages`, `/historique`, `/communaute`, `/impact`, `/journal`, `/profil`
-- `/admin/beta`
+## 3. Simulations chiffrées robustes
 
-Composants partagés (header, footer, banners, dialogs, FeedbackButton, BetaBanner, RealInvestmentInterestCard, InvestDialog, ValuationConsistencyBanner, EditorialSection eyebrows, AppNav, KPIFigure labels…)
+Aujourd'hui les calculs d'intérêts composés sont délégués au LLM → résultats incohérents. On bascule sur un **tool côté serveur** appelé via une boucle simple :
 
-## Stratégie d'exécution
+- Ajouter dans `api.ethi.ts` la détection d'intent simulation (regex sur mots-clés "simul", "si je place", "dans X ans", "si le marché", "horizon", "krach") **OU** étendre le prompt pour que le LLM renvoie un tag `[sim:<json>]` que le serveur intercepte, calcule, et réinjecte.
+- Choix retenu (plus simple, déterministe) : créer un endpoint `createServerFn` `runSimulation` (`src/lib/ethi/simulation.functions.ts`) qui prend `{ monthly, initial, years, annualReturnLow, annualReturnHigh, shockPct? }` et renvoie une fourchette + valeur médiane via formule intérêts composés mensuelle. Côté client, on détecte les patterns simples dans l'input (ou les chips ouvrent un mini-formulaire) → appel direct + injection du résultat formaté dans le chat sous forme de bulle assistant.
+- Garde-fou : toute simulation se termine par le disclaimer en italique (déjà dans le prompt).
 
-Pour ne pas casser l'app pendant la migration, je procède **page par page**, en gardant le FR fonctionnel à chaque étape :
+## 4. Contexte envoyé au LLM enrichi
 
-1. **Setup** (J1) : installer deps, créer `i18n/index.ts`, monter provider, créer `LanguageToggle`, l'insérer dans tous les headers, créer `formatCurrency`/`formatDate` localisés. À ce stade, EN affiche les strings FR (fallback) sauf pour les éléments du toggle.
-2. **Surfaces publiques** (J1) : landing, auth, waitlist, methodologie, certificat — strings extraits, fichier `en.json` rempli.
-3. **App connectée — core** (J2) : dashboard, portfolio, onboarding, objectifs.
-4. **App connectée — secondaires** (J2) : reglages, historique, communaute, impact, journal, profil.
-5. **Banners & dialogs partagés** (J2) : BetaBanner, FeedbackButton, RealInvestmentInterestCard, InvestDialog, ValuationConsistencyBanner.
-6. **Admin** (J2) : `/admin/beta`.
-7. **QA** : parcourir chaque route dans les deux langues, vérifier qu'aucun string FR n'est resté, vérifier formats `1 234,56 €` (FR) vs `€1,234.56` (EN).
+Étendre `ctx` côté `ethi.tsx` avec les agrégats utiles au diagnostic (déjà calculables, pas de backend) :
+- `topHoldingPct`, `topRegionPct`, `topCategoryPct`.
+- `diagnostics`: tableau des flags détectés (même règles que §1) → le LLM s'appuie dessus au lieu de réinventer.
 
-## Ce qui ne change pas
+## 5. UX du chat
 
-- Pas de traduction des **données** en base (noms d'actifs, descriptions ISIN, alertes générées server-side, decision_events). Ces strings restent en FR — c'est du contenu métier.
-- Pas de fichiers `*.functions.ts` modifiés (le serveur reste FR pour les messages d'erreur techniques, qui ne sont pas affichés à l'utilisateur final).
-- Lexique financier sobre conservé (pas de retour à "garden/seeds").
-- Pas de SEO multilingue (`hreflang`, routes `/en/…`) — c'est hors scope pour un MVP test de 300 personnes.
+- Garder la bulle de bienvenue actuelle mais y rendre **les chips d'action contextuelles** (composant `EthiSuggestionChips` étendu pour accepter une liste dynamique).
+- Sur clic d'une chip "simulation", ouvrir un mini-formulaire inline (3 champs : montant mensuel, durée, rendement) plutôt qu'envoyer une question vague.
+- Ne pas toucher au design (palette/typo Emerald Prestige conservés).
 
-## Volume estimé
+---
 
-~600-800 clés de traduction, ~40 fichiers à éditer. C'est gros mais sans risque : chaque fichier est un remplacement texte → `t('key')`.
+## Détails techniques
 
-## Question avant lancement
+**Fichiers créés**
+- `src/lib/ethi/diagnostics.ts` — règles de flags + générateur de briefing (pur, testable, FR/EN).
+- `src/lib/ethi/simulation.functions.ts` — `createServerFn` `runSimulation` (formule VF = P×(((1+r)^n − 1)/r) + initial×(1+r)^n, fourchette low/high, choc optionnel).
+- `src/components/ethi/EthiBriefing.tsx` — bloc d'accueil (KPIs + observations + chips).
+- `src/components/ethi/SimulationForm.tsx` — mini-form inline.
 
-C'est un gros chantier (~3-4h de travail effectif côté agent). Je lance tel quel, ou tu préfères qu'on fasse en deux temps : **(1) infra + toggle + surfaces publiques aujourd'hui**, puis **(2) app connectée plus tard** une fois la phase de test démarrée ?
+**Fichiers modifiés**
+- `src/routes/ethi.tsx` — remplacer le `useEffect` du message d'accueil par `EthiBriefing` ; enrichir `ctx` ; gérer l'appel `runSimulation` et l'injection du résultat ; passer les chips dynamiques.
+- `src/routes/api.ethi.ts` — system prompts FR/EN : imposer Constat/Impact/Action, expliquer que `context.diagnostics` est la source de vérité, retirer l'instruction "fais le calcul toi-même" (remplacée par "si simulation demandée sans chiffres déjà fournis dans le contexte, propose le mini-formulaire").
+- `src/components/ethi/EthiSuggestionChips.tsx` — accepter `chips: string[]` en prop.
+- `src/i18n/locales/fr.json` + `en.json` — clés `ethi.briefing.*`, `ethi.diagnostics.*`, `ethi.simulation.*`.
+
+**Hors scope**
+- Pas de nouvelle table en base.
+- Pas de changement de modèle IA (on garde `gemini-2.5-flash`).
+- Pas de refonte visuelle (design system Emerald Prestige conservé).
+- Pas de tool-calling AI SDK (overkill ici, on garde fetch direct + detection client).
+
+---
+
+## Vérification
+
+1. Ouvrir `/ethi` avec un portefeuille concentré → vérifier que le briefing flag la concentration avec le bon %.
+2. Cliquer la chip "Simule +100 €/mois 10 ans" → vérifier fourchette cohérente (autour de 14k–16k €) et disclaimer présent.
+3. Poser une question libre ("dois-je investir plus ?") → vérifier le format Constat/Impact/Action.
+4. Tester EN : briefing + simulation + format respectés en anglais.
