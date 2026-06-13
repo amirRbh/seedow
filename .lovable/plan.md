@@ -1,85 +1,84 @@
-## Objectif
+# Refonte /discover — Screener financier
 
-Faire d'Ethi un vrai conseiller : à l'ouverture il **diagnostique** ton portefeuille avec des chiffres concrets, ses réponses suivent un canevas **Constat → Impact → Action**, et il sait simuler proprement des scénarios (versement, choc marché, horizon).
+## Problème
 
----
+La page actuelle est un Tinder d'actifs : on swipe à gauche/droite sur des cartes "Plant/Pass" sans aucune info pour trancher (perf, frais, volatilité absents). Aucune valeur ajoutée pour une décision d'investissement, et le lexique "planter / graine" contredit la mémoire projet (lexique jardin retiré).
 
-## 1. Briefing d'ouverture proactif (client)
+## Direction validée
 
-Remplacer le message d'accueil actuel (1 phrase générique) par un **briefing structuré** calculé côté client à partir du portefeuille déjà chargé. Aucune nouvelle table, aucun appel IA pour le briefing — c'est déterministe et instantané.
+- **Rôle** : screener financier sérieux (filtres, tri, recherche)
+- **Mode swipe** : supprimé
+- **Action carte** : ouvre la fiche détaillée (pas d'investissement direct depuis la liste)
 
-Le briefing contient :
-- **En-tête** : valeur actuelle, P&L, retour %.
-- **2 à 4 observations** générées par des règles simples (`src/lib/ethi/diagnostics.ts`, nouveau fichier) :
-  - Concentration : une ligne pèse > 30 % → flag.
-  - Doublons sectoriels/géographiques : > 60 % sur une même région ou catégorie.
-  - TER moyen élevé (> 0,4 %).
-  - Score ESG faible (< 60) ou très bon (> 80) → ton positif.
-  - Volatilité vs profil (si dispo).
-  - Pas de versement récent / portefeuille non alimenté.
-- **3 chips d'action contextuelles** (remplacent les suggestions actuelles génériques) : "Diagnostique mon portefeuille", "Simule +100 €/mois pendant 10 ans", "Et si le marché baisse de 20 % ?", etc., adaptées aux flags détectés.
+## Nouvelle structure
 
-FR + EN. Format markdown court (KPI gras + liste de 2-4 puces).
-
-## 2. Canevas de réponse Constat → Impact → Action
-
-Mettre à jour les system prompts (`src/routes/api.ethi.ts`) pour imposer la structure suivante sur **chaque réponse non triviale** :
-
+```text
+┌─ AppHeader (eyebrow + titre) ────────────────────────┐
+│  Onglets : Explorer · Communauté                     │
+├──────────────────────────────────────────────────────┤
+│  [🔍 Recherche ticker/nom..........................] │
+│  [Catégorie ▾] [Risque ▾] [Frais ▾] [ESG ▾] [Région]│  ← filtres déroulants
+│  Tri : Pertinence | ESG | Frais | Perf 1Y | A→Z      │
+│  N résultats · [✕ Réinitialiser]                     │
+├──────────────────────────────────────────────────────┤
+│  Tableau / liste dense                               │
+│  ┌────────────────────────────────────────────────┐  │
+│  │ IWRD  iShares Core MSCI World                  │  │
+│  │ ETF · Monde · SRRI 4 · TER 0,20 %              │  │
+│  │ ESG 8,1  ·  92,40 €  ·  Voir fiche →           │  │
+│  └────────────────────────────────────────────────┘  │
+│  …                                                   │
+└──────────────────────────────────────────────────────┘
 ```
-**Constat.** <1 phrase, chiffrée si possible>
-**Impact.** <1 phrase : pourquoi ça compte pour toi>
-**Action.** <1 phrase actionnable, + éventuel tag [deposit:…] ou [seed:…]>
-```
 
-Pour les questions purement informatives (ex : "c'est quoi le Sharpe ?"), Ethi répond librement mais reste court (≤ 4 phrases).
+Clic sur une ligne → ouvre `AssetDetailSheet` (déjà existant). L'investissement se fait depuis la fiche.
 
-## 3. Simulations chiffrées robustes
+## Filtres (dérivés du modèle `MockAsset`)
 
-Aujourd'hui les calculs d'intérêts composés sont délégués au LLM → résultats incohérents. On bascule sur un **tool côté serveur** appelé via une boucle simple :
+- **Catégorie** : ETF, Action, Fonds, Obligation… (multi-select via dropdown)
+- **Risque SRRI** : slider 1 → 7 (max)
+- **Frais TER** : slider 0 → 1 % max
+- **ESG** : slider score minimum 0 → 10
+- **Région** : dominante du `geo_breakdown` (Europe, Monde, US, Émergents)
+- **Recherche texte** : ticker + nom + issuer
 
-- Ajouter dans `api.ethi.ts` la détection d'intent simulation (regex sur mots-clés "simul", "si je place", "dans X ans", "si le marché", "horizon", "krach") **OU** étendre le prompt pour que le LLM renvoie un tag `[sim:<json>]` que le serveur intercepte, calcule, et réinjecte.
-- Choix retenu (plus simple, déterministe) : créer un endpoint `createServerFn` `runSimulation` (`src/lib/ethi/simulation.functions.ts`) qui prend `{ monthly, initial, years, annualReturnLow, annualReturnHigh, shockPct? }` et renvoie une fourchette + valeur médiane via formule intérêts composés mensuelle. Côté client, on détecte les patterns simples dans l'input (ou les chips ouvrent un mini-formulaire) → appel direct + injection du résultat formaté dans le chat sous forme de bulle assistant.
-- Garde-fou : toute simulation se termine par le disclaimer en italique (déjà dans le prompt).
+Tous combinables. Compteur de résultats temps réel. Bouton "Réinitialiser" si ≥1 filtre actif.
 
-## 4. Contexte envoyé au LLM enrichi
+## Tri
 
-Étendre `ctx` côté `ethi.tsx` avec les agrégats utiles au diagnostic (déjà calculables, pas de backend) :
-- `topHoldingPct`, `topRegionPct`, `topCategoryPct`.
-- `diagnostics`: tableau des flags détectés (même règles que §1) → le LLM s'appuie dessus au lieu de réinventer.
+- Pertinence (défaut, ordre du mock)
+- ESG ↓ / ↑
+- Frais TER ↑
+- Prix ↑ / ↓
+- A → Z
 
-## 5. UX du chat
+## Composants
 
-- Garder la bulle de bienvenue actuelle mais y rendre **les chips d'action contextuelles** (composant `EthiSuggestionChips` étendu pour accepter une liste dynamique).
-- Sur clic d'une chip "simulation", ouvrir un mini-formulaire inline (3 champs : montant mensuel, durée, rendement) plutôt qu'envoyer une question vague.
-- Ne pas toucher au design (palette/typo Emerald Prestige conservés).
+**À créer** :
+- `src/components/discover/AssetScreener.tsx` — barre filtres + tri + recherche, état local
+- `src/components/discover/AssetRow.tsx` — ligne dense uniforme (remplace la double UI swipe/list)
+- `src/lib/discover/filters.ts` — helpers purs `applyFilters`, `applySort`, `dominantRegion`
 
----
+**À modifier** :
+- `src/routes/discover.tsx` — supprime swipe, currentIndex, planted, viewMode toggle, handleDrag, handleSwipe. Remplace par `<AssetScreener />` dans l'onglet Explorer.
+- `src/i18n/locales/fr.json` + `en.json` — clés `discover.filters.*`, `discover.sort.*`, `discover.results_count`, `discover.reset`, `discover.search_placeholder`. Retirer les clés mortes (`swipe`, `pass`, `select`, `restart`, `all_seen_*`, `swipe_hint`, `selected_one/other`).
+
+**À supprimer** :
+- `src/components/discover/SeedCard.tsx` (carte swipe Tinder, lexique "graine")
+- `src/components/discover/ThemeFilter.tsx` (remplacé par filtres screener)
+- Ré-utilise `AssetDetailSheet.tsx` tel quel (déjà la fiche complète).
 
 ## Détails techniques
 
-**Fichiers créés**
-- `src/lib/ethi/diagnostics.ts` — règles de flags + générateur de briefing (pur, testable, FR/EN).
-- `src/lib/ethi/simulation.functions.ts` — `createServerFn` `runSimulation` (formule VF = P×(((1+r)^n − 1)/r) + initial×(1+r)^n, fourchette low/high, choc optionnel).
-- `src/components/ethi/EthiBriefing.tsx` — bloc d'accueil (KPIs + observations + chips).
-- `src/components/ethi/SimulationForm.tsx` — mini-form inline.
+- Vocabulaire respecte la mémoire : "actifs", "filtrer", "comparer", "fiche". Aucun "planter / graine / jardin".
+- Style Emerald Prestige : eyebrow or uppercase, KPI `font-value`, séparateurs `.gold-rule`, montants `formatCurrency` (2 décimales).
+- Filtres = `Popover` shadcn pour mobile-friendly, dropdowns compacts (≤ `max-w-lg`).
+- Pas de Tabs Explorer/Communauté changeants — on garde la structure Tabs existante.
+- Aucun changement DB / backend / API.
 
-**Fichiers modifiés**
-- `src/routes/ethi.tsx` — remplacer le `useEffect` du message d'accueil par `EthiBriefing` ; enrichir `ctx` ; gérer l'appel `runSimulation` et l'injection du résultat ; passer les chips dynamiques.
-- `src/routes/api.ethi.ts` — system prompts FR/EN : imposer Constat/Impact/Action, expliquer que `context.diagnostics` est la source de vérité, retirer l'instruction "fais le calcul toi-même" (remplacée par "si simulation demandée sans chiffres déjà fournis dans le contexte, propose le mini-formulaire").
-- `src/components/ethi/EthiSuggestionChips.tsx` — accepter `chips: string[]` en prop.
-- `src/i18n/locales/fr.json` + `en.json` — clés `ethi.briefing.*`, `ethi.diagnostics.*`, `ethi.simulation.*`.
+## Hors scope
 
-**Hors scope**
-- Pas de nouvelle table en base.
-- Pas de changement de modèle IA (on garde `gemini-2.5-flash`).
-- Pas de refonte visuelle (design system Emerald Prestige conservé).
-- Pas de tool-calling AI SDK (overkill ici, on garde fetch direct + detection client).
-
----
-
-## Vérification
-
-1. Ouvrir `/ethi` avec un portefeuille concentré → vérifier que le briefing flag la concentration avec le bon %.
-2. Cliquer la chip "Simule +100 €/mois 10 ans" → vérifier fourchette cohérente (autour de 14k–16k €) et disclaimer présent.
-3. Poser une question libre ("dois-je investir plus ?") → vérifier le format Constat/Impact/Action.
-4. Tester EN : briefing + simulation + format respectés en anglais.
+- Pas de comparateur côte-à-côte (option 2 non choisie).
+- Pas de recommandations personnalisées Ethi (option 3 non choisie).
+- Pas de migration des `MOCK_ASSETS` vers la vraie table `assets` (autre chantier).
+- Pas de tests automatisés ajoutés.
