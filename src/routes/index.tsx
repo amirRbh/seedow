@@ -16,16 +16,16 @@ const PILLAR_NUMBERS = { "1": "01", "2": "02", "3": "03" } as const;
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Seedow — L'audit ESG de ton épargne" },
+      { title: "Seedow — L'analyse d'impact de ton épargne" },
       {
         name: "description",
         content:
-          "Saisis ton portefeuille, obtiens un audit ESG transparent : score pondéré, taux de couverture, angles morts assumés. Aucune promesse de placement.",
+          "Saisis ton portefeuille, obtiens une analyse transparente : score pondéré, taux de couverture, angles morts assumés. Aucune promesse de placement.",
       },
-      { property: "og:title", content: "Seedow — L'audit ESG de ton épargne" },
+      { property: "og:title", content: "Seedow — L'analyse d'impact de ton épargne" },
       {
         property: "og:description",
-        content: "Audit ESG transparent. Saisis ton portefeuille, lis ce qu'il finance vraiment.",
+        content: "Analyse transparente. Saisis ton portefeuille, lis ce qu'il finance vraiment.",
       },
       { property: "og:url", content: SITE_URL },
       { property: "og:type", content: "website" },
@@ -39,7 +39,7 @@ export const Route = createFileRoute("/")({
           "@type": "Organization",
           name: "Seedow",
           url: SITE_URL,
-          description: "Audit ESG transparent pour ton portefeuille.",
+          description: "Analyse transparente pour ton portefeuille.",
         }),
       },
     ],

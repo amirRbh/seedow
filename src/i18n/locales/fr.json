@@ -47,11 +47,11 @@
     "expert": "Expert"
   },
   "landing": {
-    "meta_title": "Seedow — L'audit ESG de ton épargne",
-    "meta_desc": "Saisis ton portefeuille, obtiens un audit ESG transparent : score pondéré, taux de couverture, angles morts assumés. Aucune promesse de placement.",
-    "og_desc": "Audit ESG transparent. Saisis ton portefeuille, lis ce qu'il finance vraiment.",
-    "eyebrow_edition": "N°01 — Édition 2026 · Audit ESG",
-    "subtitle": "L'audit ESG de ton épargne.",
+    "meta_title": "Seedow — L'analyse d'impact de ton épargne",
+    "meta_desc": "Saisis ton portefeuille, obtiens une analyse transparente : score pondéré, taux de couverture, angles morts assumés. Aucune promesse de placement.",
+    "og_desc": "Analyse transparente. Saisis ton portefeuille, lis ce qu'il finance vraiment.",
+    "eyebrow_edition": "N°01 — Édition 2026 · Analyse d'impact",
+    "subtitle": "L'analyse d'impact de ton épargne.",
     "ribbon_no_bank": "Aucune donnée bancaire stockée",
     "ribbon_method": "Méthodologie publique",
     "ribbon_sources": "Sources documentées",
