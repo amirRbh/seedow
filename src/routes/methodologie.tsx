@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { useServerFn } from "@tanstack/react-start";
 import { simulatePortfolio } from "@/lib/portfolio/server.functions";
 import { LanguageToggle } from "@/components/LanguageToggle";
+import { MetricLabel } from "@/components/ui/MetricLabel";
 import type { CauseTag, ExclusionTag } from "@/lib/portfolio/types";
 
 export const Route = createFileRoute("/methodologie")({
@@ -44,23 +45,27 @@ function MethodologyPage() {
   ];
 
   const STAGES = [
-    { id: 1, name: t("methodologie:stages.1_name"), desc: t("methodologie:stages.1_desc") },
-    { id: 2, name: t("methodologie:stages.2_name"), desc: t("methodologie:stages.2_desc") },
-    { id: 3, name: t("methodologie:stages.3_name"), desc: t("methodologie:stages.3_desc") },
-    { id: 4, name: t("methodologie:stages.4_name"), desc: t("methodologie:stages.4_desc") },
-    { id: 5, name: t("methodologie:stages.5_name"), desc: t("methodologie:stages.5_desc") },
+    { id: 1, name: t("methodologie:stages.1_name"), desc: t("methodologie:stages.1_desc"), tip: t("methodologie:tips.stage_1") },
+    { id: 2, name: t("methodologie:stages.2_name"), desc: t("methodologie:stages.2_desc"), tip: t("methodologie:tips.stage_2") },
+    { id: 3, name: t("methodologie:stages.3_name"), desc: t("methodologie:stages.3_desc"), tip: t("methodologie:tips.stage_3") },
+    { id: 4, name: t("methodologie:stages.4_name"), desc: t("methodologie:stages.4_desc"), tip: t("methodologie:tips.stage_4") },
+    { id: 5, name: t("methodologie:stages.5_name"), desc: t("methodologie:stages.5_desc"), tip: t("methodologie:tips.stage_5") },
   ];
 
+  const ASSET_CLASS_LABEL: Record<string, string> = {
+    equity_dev: t("methodologie:asset_classes.equity_dev"),
+    equity_em: t("methodologie:asset_classes.equity_em"),
+    thematic: t("methodologie:asset_classes.thematic"),
+    green_bond: t("methodologie:asset_classes.green_bond"),
+    social_bond: t("methodologie:asset_classes.social_bond"),
+    sov_bond: t("methodologie:asset_classes.sov_bond"),
+    reit: t("methodologie:asset_classes.reit"),
+    commodity: t("methodologie:asset_classes.commodity"),
+    cash: t("methodologie:asset_classes.cash"),
+  };
 
-
-  
-
-  
-
-  
   const simulate = useServerFn(simulatePortfolio);
 
-  // Default state
   const [causes, setCauses] = useState<CauseTag[]>(["climat", "biodiversite"]);
   const [intensity, setIntensity] = useState<Record<string, number>>({
     climat: 0.7, biodiversite: 0.5,
@@ -73,7 +78,6 @@ function MethodologyPage() {
   const [loading, setLoading] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Debounced simulation
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     setLoading(true);
@@ -141,6 +145,28 @@ function MethodologyPage() {
         </p>
       </header>
 
+      {/* Reading guide for beginners */}
+      <section className="max-w-6xl mx-auto px-6 pt-10">
+        <div className="border border-paper-3 bg-paper-2/40 p-6 md:p-8 grid md:grid-cols-[1fr_1.2fr] gap-6 md:gap-10">
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-medium">
+              {t("methodologie:reading_eyebrow")}
+            </p>
+            <h2 className="font-value text-2xl mt-2">{t("methodologie:reading_title")}</h2>
+          </div>
+          <div className="space-y-3 text-[13px] text-ink-2 leading-relaxed">
+            <p>{t("methodologie:reading_p1")}</p>
+            <p>{t("methodologie:reading_p2")}</p>
+            <div className="pt-3 border-t border-paper-3 grid sm:grid-cols-2 gap-x-6 gap-y-2 text-[12px]">
+              <p><span className="font-value text-ink">·</span> {t("methodologie:glossary.markowitz")}</p>
+              <p><span className="font-value text-ink">·</span> {t("methodologie:glossary.best_in_class")}</p>
+              <p><span className="font-value text-ink">·</span> {t("methodologie:glossary.ter")}</p>
+              <p><span className="font-value text-ink">·</span> {t("methodologie:glossary.esg_acro")}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Pipeline visualization */}
       <section className="max-w-6xl mx-auto px-6 py-12">
         <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-medium mb-8">
@@ -150,7 +176,9 @@ function MethodologyPage() {
           {STAGES.map((s) => (
             <li key={s.id} className="bg-paper p-5">
               <span className="font-value text-[11px] text-ink-3 tabular-nums">0{s.id}</span>
-              <h3 className="font-value text-[16px] text-ink mt-1">{s.name}</h3>
+              <h3 className="font-value text-[16px] text-ink mt-1">
+                <MetricLabel label={s.name} hint={s.tip} />
+              </h3>
               <p className="text-[12px] text-ink-2 mt-2 leading-relaxed">{s.desc}</p>
             </li>
           ))}
@@ -172,8 +200,7 @@ function MethodologyPage() {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-10 mt-10">
           {/* Controls */}
           <div className="space-y-8">
-            {/* Causes */}
-            <Block title={t("methodologie:causes_title")}>
+            <Block title={t("methodologie:causes_title")} tip={t("methodologie:tips.causes")}>
               <div className="space-y-3">
                 {CAUSES.map((c) => {
                   const active = causes.includes(c.id);
@@ -211,8 +238,7 @@ function MethodologyPage() {
               </div>
             </Block>
 
-            {/* Exclusions */}
-            <Block title={t("methodologie:exclusions_title")}>
+            <Block title={t("methodologie:exclusions_title")} tip={t("methodologie:tips.exclusions")}>
               <div className="grid grid-cols-2 gap-2">
                 {EXCLUSIONS.map((e) => {
                   const active = exclusions.includes(e.id);
@@ -232,8 +258,7 @@ function MethodologyPage() {
               </div>
             </Block>
 
-            {/* Risk & horizon */}
-            <Block title={t("methodologie:risk_title")}>
+            <Block title={t("methodologie:risk_title")} tip={t("methodologie:tips.risk")}>
               <div className="flex items-baseline justify-between mb-2">
                 <span className="text-[12px] text-ink-2">{t("methodologie:volatility_label")}</span>
                 <span className="text-[13px] font-medium tabular-nums">{(risk * 100).toFixed(1)}%</span>
@@ -254,7 +279,7 @@ function MethodologyPage() {
               </div>
             </Block>
 
-            <Block title={t("methodologie:horizon_title")}>
+            <Block title={t("methodologie:horizon_title")} tip={t("methodologie:tips.horizon")}>
               <div className="flex items-baseline justify-between mb-2">
                 <span className="text-[12px] text-ink-2">{t("methodologie:horizon_label")}</span>
                 <span className="text-[13px] font-medium tabular-nums">{t("methodologie:horizon_years", { count: horizon })}</span>
@@ -273,42 +298,42 @@ function MethodologyPage() {
 
           {/* Result */}
           <div className="lg:sticky lg:top-6 lg:self-start space-y-6">
-            {/* ESG floor warning */}
             {result?.esg_floor_relaxed && (
               <div className="border border-rust/30 bg-rust/5 px-4 py-3 text-[12px] text-ink-2 leading-relaxed">
                 <p className="font-value text-[13px] text-rust mb-1">{t("methodologie:esg_floor_relaxed_title")}</p>
                 {t("methodologie:esg_floor_relaxed_desc")}
               </div>
             )}
-            {/* Metrics */}
             <div className="border-t border-b border-paper-3 divide-y divide-paper-3">
-              <MetricRow label={t("methodologie:metric_return")} value={result ? formatPercent(result.metrics.expected_return, lang) : "—"} hint={t("methodologie:metric_return_hint")} />
-              <MetricRow label={t("methodologie:metric_volatility")} value={result ? formatPercent(result.metrics.volatility, lang) : "—"} hint={t("methodologie:metric_volatility_hint")} />
-              <MetricRow label={t("methodologie:metric_sharpe")} value={result ? formatNumber(result.metrics.sharpe, lang) : "—"} hint={t("methodologie:metric_sharpe_hint")} />
-              <MetricRow label={t("methodologie:metric_esg")} value={result ? `${formatNumber(result.metrics.esg_score, lang, { maximumFractionDigits: 0 })} / 100` : "—"} hint={t("methodologie:metric_esg_hint")} />
-              <MetricRow label={t("methodologie:metric_fees")} value={result ? formatPercent(result.metrics.ter, lang) : "—"} hint={t("methodologie:metric_fees_hint")} />
-              <MetricRow label={t("methodologie:metric_co2")} value={result ? `${formatNumber(result.metrics.co2_avoided_tons, lang)} t / 10k€` : "—"} hint={t("methodologie:metric_co2_hint")} />
+              <MetricRow label={t("methodologie:metric_return")} tip={t("methodologie:tips.return")} value={result ? formatPercent(result.metrics.expected_return, lang) : "—"} sub={t("methodologie:metric_return_hint")} />
+              <MetricRow label={t("methodologie:metric_volatility")} tip={t("methodologie:tips.volatility")} value={result ? formatPercent(result.metrics.volatility, lang) : "—"} sub={t("methodologie:metric_volatility_hint")} />
+              <MetricRow label={t("methodologie:metric_sharpe")} tip={t("methodologie:tips.sharpe")} value={result ? formatNumber(result.metrics.sharpe, lang) : "—"} sub={t("methodologie:metric_sharpe_hint")} />
+              <MetricRow label={t("methodologie:metric_esg")} tip={t("methodologie:tips.esg")} value={result ? `${formatNumber(result.metrics.esg_score, lang, { maximumFractionDigits: 0 })} / 100` : "—"} sub={t("methodologie:metric_esg_hint")} />
+              <MetricRow label={t("methodologie:metric_fees")} tip={t("methodologie:tips.fees")} value={result ? formatPercent(result.metrics.ter, lang) : "—"} sub={t("methodologie:metric_fees_hint")} />
+              <MetricRow label={t("methodologie:metric_co2")} tip={t("methodologie:tips.co2")} value={result ? `${formatNumber(result.metrics.co2_avoided_tons, lang)} t / 10k€` : "—"} sub={t("methodologie:metric_co2_hint")} />
               <MetricRow
                 label={t("methodologie:metric_carbon_intensity")}
+                tip={t("methodologie:tips.carbon_intensity")}
                 value={
                   result?.metrics.carbon_intensity_gco2e_per_eur != null
                     ? `${formatNumber(result.metrics.carbon_intensity_gco2e_per_eur, lang, { maximumFractionDigits: 0 })} gCO₂e/€/an`
                     : t("methodologie:metric_carbon_unavailable")
                 }
-                hint={t("methodologie:metric_carbon_intensity_hint")}
+                sub={t("methodologie:metric_carbon_intensity_hint")}
               />
             </div>
 
-            {/* Carbon coverage indicator */}
             <CarbonCoverage
               coverage={result?.metrics.carbon_intensity_coverage ?? 0}
               hasRealData={result?.metrics.carbon_intensity_gco2e_per_eur != null}
+              t={t}
             />
 
-            {/* Holdings */}
             <div>
               <div className="flex items-baseline justify-between border-b border-paper-3 pb-2">
-                <p className="text-[10px] uppercase tracking-[0.12em] text-ink-3 font-medium">{t("methodologie:allocation_title")}</p>
+                <p className="text-[10px] uppercase tracking-[0.12em] text-ink-3 font-medium">
+                  <MetricLabel label={t("methodologie:allocation_title")} hint={t("methodologie:tips.allocation")} />
+                </p>
                 <p className="text-[10px] text-ink-3">
                   {loading ? t("methodologie:loading") : t("methodologie:positions_count", { count: sortedWeights.length })}
                 </p>
@@ -342,11 +367,10 @@ function MethodologyPage() {
               </ul>
             </div>
 
-            {/* Class breakdown */}
             {result && (
               <div>
                 <p className="text-[10px] uppercase tracking-[0.12em] text-ink-3 font-medium border-b border-paper-3 pb-2 mb-3">
-                  {t("methodologie:breakdown_title")}
+                  <MetricLabel label={t("methodologie:breakdown_title")} hint={t("methodologie:tips.breakdown")} />
                 </p>
                 <ul className="space-y-1.5">
                   {Object.entries(result.metrics.by_class)
@@ -368,42 +392,40 @@ function MethodologyPage() {
   );
 }
 
-const ASSET_CLASS_LABEL: Record<string, string> = {
-  equity_dev: "Actions développées",
-  equity_em: "Actions émergentes",
-  thematic: "Thématiques",
-  green_bond: "Obligations vertes",
-  social_bond: "Obligations sociales",
-  sov_bond: "Obligations souveraines",
-  reit: "Immobilier",
-  commodity: "Matières premières",
-  cash: "Monétaire",
-};
-
-function Block({ title, children }: { title: string; children: React.ReactNode }) {
+function Block({ title, tip, children }: { title: string; tip?: string; children: React.ReactNode }) {
   return (
     <div>
       <p className="text-[10px] uppercase tracking-[0.15em] text-ink-3 font-medium border-b border-paper-3 pb-2 mb-3">
-        {title}
+        <MetricLabel label={title} hint={tip} />
       </p>
       {children}
     </div>
   );
 }
 
-function MetricRow({ label, value, hint }: { label: string; value: string; hint?: string }) {
+function MetricRow({ label, value, sub, tip }: { label: string; value: string; sub?: string; tip?: string }) {
   return (
     <div className="flex items-baseline justify-between py-2.5">
       <div>
-        <p className="text-[12px] text-ink">{label}</p>
-        {hint && <p className="text-[10px] text-ink-3 mt-0.5">{hint}</p>}
+        <p className="text-[12px] text-ink">
+          <MetricLabel label={label} hint={tip} />
+        </p>
+        {sub && <p className="text-[10px] text-ink-3 mt-0.5">{sub}</p>}
       </div>
       <span className="font-value text-[15px] tabular-nums">{value}</span>
     </div>
   );
 }
 
-function CarbonCoverage({ coverage, hasRealData }: { coverage: number; hasRealData: boolean }) {
+function CarbonCoverage({
+  coverage,
+  hasRealData,
+  t,
+}: {
+  coverage: number;
+  hasRealData: boolean;
+  t: (k: string, opts?: Record<string, unknown>) => string;
+}) {
   const pct = Math.round(Math.max(0, Math.min(1, coverage)) * 100);
 
   let tone: "low" | "partial" | "good";
@@ -416,18 +438,21 @@ function CarbonCoverage({ coverage, hasRealData }: { coverage: number; hasRealDa
 
   const advice =
     !hasRealData || pct === 0
-      ? "Aucun actif du portefeuille n'expose encore d'intensité carbone réelle. Le chiffre affiché est l'heuristique ESG. Pour une mesure auditable, complétez les champs carbon_intensity_gco2e_per_eur depuis un fournisseur (MSCI, Trucost, ISS, Yahoo Sustainability)."
+      ? t("methodologie:carbon_coverage_advice_none")
       : pct < 30
-      ? "Couverture trop faible pour publier un chiffre fiable. Considérez l'intensité affichée comme indicative et priorisez l'ingestion des actifs les plus pondérés."
+      ? t("methodologie:carbon_coverage_advice_low")
       : pct < 70
-      ? "Couverture partielle : la valeur est extrapolée sur la part renseignée du portefeuille. Complétez les actifs manquants pour fiabiliser la mesure."
-      : "Couverture suffisante pour un reporting indicatif. Vérifiez la fraîcheur des sources (carbon_intensity_updated_at).";
+      ? t("methodologie:carbon_coverage_advice_mid")
+      : t("methodologie:carbon_coverage_advice_high");
 
   return (
     <div className="border border-paper-3 p-4">
       <div className="flex items-baseline justify-between">
         <p className="text-[10px] uppercase tracking-[0.12em] text-ink-3 font-medium">
-          Couverture donnée carbone
+          <MetricLabel
+            label={t("methodologie:carbon_coverage_title")}
+            hint={t("methodologie:tips.carbon_coverage")}
+          />
         </p>
         <span className="font-value text-[14px] tabular-nums">{pct}%</span>
       </div>

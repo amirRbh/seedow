@@ -780,7 +780,44 @@
       "reit": "Real estate",
       "commodity": "Commodities",
       "cash": "Money market"
-    }
+    },
+    "reading_eyebrow": "How to read this page",
+    "reading_title": "In 30 seconds",
+    "reading_p1": "You pick what matters to you (causes), what you refuse (exclusions), how much risk you accept and for how long. We instantly rebuild a concrete portfolio that fits your choices.",
+    "reading_p2": "The figures on the right summarise what this portfolio should return, its risk level, fees and footprint. Hover the « ? » for a plain-language explanation of each term.",
+    "glossary_title": "Mini glossary",
+    "glossary": {
+      "markowitz": "Markowitz: a mathematical recipe that combines assets to target the best possible return for a given level of risk.",
+      "best_in_class": "Best-in-class: we only keep the top half of each category on ESG criteria.",
+      "ter": "TER: annual fees taken from a fund (e.g. 0.20% = €2 per year for €1,000 invested).",
+      "esg_acro": "ESG: Environment, Social, Governance — the three pillars of responsible finance."
+    },
+    "tips": {
+      "stage_1": "Your personal preferences. The raw material for everything else.",
+      "stage_2": "The toolkit: the list of financial products we can pick from (equities, bonds, real estate…).",
+      "stage_3": "First we remove what you refuse (e.g. weapons), then we only keep the top performers of each category on ESG criteria.",
+      "stage_4": "We slightly increase the expected weight of assets aligned with your priority causes. A nudge, not a sledgehammer.",
+      "stage_5": "A mathematical calculation that combines the remaining assets to target the best possible return at the risk level you chose.",
+      "causes": "The topics your money should push forward (climate, biodiversity…). The higher the intensity, the more the portfolio leans towards these topics.",
+      "exclusions": "The sectors you refuse to finance. Ticked = strictly excluded from the portfolio.",
+      "risk": "How much the portfolio value can move from one year to the next. The higher, the more it can rise… and fall.",
+      "horizon": "How long you plan to leave this money invested. The longer, the more variation we can accept.",
+      "return": "What the portfolio could return on average each year, before fees and taxes. Not a guarantee.",
+      "volatility": "The typical size of annual swings. Volatility 10% ≈ portfolio may swing about ±10% over a year.",
+      "sharpe": "Return obtained per unit of risk taken. The higher, the better risk is rewarded. Above 1 is very good.",
+      "esg": "Score out of 100 summarising the environmental, social and governance quality of the portfolio. Higher = stronger impact.",
+      "fees": "Average annual cost of the products held, automatically deducted from performance. Lower is better.",
+      "co2": "Estimated tonnes of CO₂ avoided each year for €10,000 invested, compared to a classic portfolio.",
+      "carbon_intensity": "Grams of CO₂ emitted each year for every euro invested. Real data when the provider publishes it, otherwise unavailable.",
+      "carbon_coverage": "Share of the portfolio for which we have the official carbon data. The higher, the more reliable the figure.",
+      "allocation": "The precise list of products selected and the weight of each one in your portfolio.",
+      "breakdown": "How money is split between major asset families (equities, bonds, real estate…). Good diversification limits surprises."
+    },
+    "carbon_coverage_title": "Carbon data coverage",
+    "carbon_coverage_advice_none": "No portfolio asset publishes official carbon intensity yet. The figure shown remains indicative.",
+    "carbon_coverage_advice_low": "Too few assets publish their carbon footprint. Take the figure with caution.",
+    "carbon_coverage_advice_mid": "Partial coverage: the figure is extrapolated from the documented part of the portfolio.",
+    "carbon_coverage_advice_high": "Good coverage: the figure is reliable for indicative reporting."
   },
   "seed_card": {
     "id_card": "Identity card"
