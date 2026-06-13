@@ -29,6 +29,7 @@ const ContextSchema = z
 const BodySchema = z.object({
   messages: z.array(MessageSchema).min(1).max(40),
   context: ContextSchema,
+  lang: z.enum(["fr", "en"]).optional(),
 });
 
 export const Route = createFileRoute("/api/ethi")({
