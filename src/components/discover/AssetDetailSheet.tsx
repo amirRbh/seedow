@@ -35,13 +35,13 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
   const { lang } = useLang();
 
   const RISK_LABELS: Record<number, { label: string; tone: string }> = {
-    1: { label: t("asset_detail:risk_labels.1"), tone: "text-moss-1" },
-    2: { label: t("asset_detail:risk_labels.2"), tone: "text-moss-1" },
-    3: { label: t("asset_detail:risk_labels.3"), tone: "text-moss-1" },
-    4: { label: t("asset_detail:risk_labels.4"), tone: "text-ink" },
-    5: { label: t("asset_detail:risk_labels.5"), tone: "text-rust" },
-    6: { label: t("asset_detail:risk_labels.6"), tone: "text-rust" },
-    7: { label: t("asset_detail:risk_labels.7"), tone: "text-bloom" },
+    1: { label: t("asset_detail.risk_labels.1"), tone: "text-moss-1" },
+    2: { label: t("asset_detail.risk_labels.2"), tone: "text-moss-1" },
+    3: { label: t("asset_detail.risk_labels.3"), tone: "text-moss-1" },
+    4: { label: t("asset_detail.risk_labels.4"), tone: "text-ink" },
+    5: { label: t("asset_detail.risk_labels.5"), tone: "text-rust" },
+    6: { label: t("asset_detail.risk_labels.6"), tone: "text-rust" },
+    7: { label: t("asset_detail.risk_labels.7"), tone: "text-bloom" },
   };
   if (!asset) return null;
 
@@ -70,7 +70,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                 </SheetTitle>
                 <p className="font-value text-[15px] text-ink-2 mt-1">
                   {formatCurrency(asset.current_price, lang)}
-                  <span className="text-[11px] text-ink-3 ml-1">{t("asset_detail:per_share")}</span>
+                  <span className="text-[11px] text-ink-3 ml-1">{t("asset_detail.per_share")}</span>
                 </p>
               </div>
               <div className="flex items-center gap-1 text-[10px] font-semibold text-moss-1 bg-moss-5 px-2 py-1 rounded-full border border-moss-4 flex-shrink-0">
@@ -82,7 +82,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
         </div>
 
         <div className="px-5 py-5 space-y-6">
-          {/* {t("asset_detail:summary")} */}
+          {/* {t("asset_detail.summary")} */}
           <section>
             <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold mb-2">
               {t("asset_detail_sheet.summary")}
@@ -105,13 +105,13 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
           {/* Impact dynamique */}
           <section>
             <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold mb-3">
-              {t("asset_detail:impact_overview")}
+              {t("asset_detail.impact_overview")}
             </p>
 
             {/* Montant + slider */}
             <div className="bg-paper-2 rounded-xl p-4 border border-paper-3 mb-3">
               <div className="flex items-center justify-between mb-3">
-                <span className="text-[11px] text-ink-3 font-medium">{t("asset_detail:monthly_deposit")}</span>
+                <span className="text-[11px] text-ink-3 font-medium">{t("asset_detail.monthly_deposit")}</span>
                 <div className="flex items-center gap-2">
                   <input
                     type="number"
@@ -125,7 +125,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                     }}
                     className="w-20 h-8 text-right font-value text-[15px] text-ink bg-paper border border-paper-3 rounded-lg px-2 focus:outline-none focus:ring-1 focus:ring-ink-2"
                   />
-                  <span className="text-[12px] text-ink-3 font-medium">{t("asset_detail:per_month")}</span>
+                  <span className="text-[12px] text-ink-3 font-medium">{t("asset_detail.per_month")}</span>
                 </div>
               </div>
               <Slider
@@ -150,7 +150,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                   <span className="text-[9px] text-ink-3 ml-0.5 font-sans">kg</span>
                 </p>
                 <p className="text-[9px] text-ink-3 mt-1.5 font-medium uppercase tracking-wider">
-                  {t("asset_detail:co2_avoided")}
+                  {t("asset_detail.co2_avoided")}
                 </p>
               </div>
               <div className="bg-paper-2 rounded-xl p-3 border border-paper-3 text-center">
@@ -159,7 +159,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                   <span className="text-[9px] text-ink-3 ml-0.5 font-sans">kWh</span>
                 </p>
                 <p className="text-[9px] text-ink-3 mt-1.5 font-medium uppercase tracking-wider">
-                  {t("asset_detail:green_energy")}
+                  {t("asset_detail.green_energy")}
                 </p>
               </div>
               <div className="bg-paper-2 rounded-xl p-3 border border-paper-3 text-center">
@@ -167,26 +167,26 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                   ~{imp.trees}
                 </p>
                 <p className="text-[9px] text-ink-3 mt-1.5 font-medium uppercase tracking-wider">
-                  {t("asset_detail:trees_equivalent")}
+                  {t("asset_detail.trees_equivalent")}
                 </p>
               </div>
             </div>
 
             <div className="grid grid-cols-3 gap-2.5 mt-2.5">
-              <MiniBar label={t("asset_detail:climate")} value={asset.climate_score} />
-              <MiniBar label={t("asset_detail:social")} value={asset.social_score} />
-              <MiniBar label={t("asset_detail:ethics")} value={asset.governance_score} />
+              <MiniBar label={t("asset_detail.climate")} value={asset.climate_score} />
+              <MiniBar label={t("asset_detail.social")} value={asset.social_score} />
+              <MiniBar label={t("asset_detail.ethics")} value={asset.governance_score} />
             </div>
           </section>
 
           {/* Risques */}
           <section>
             <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold mb-2">
-              {t("asset_detail:risks_title")}
+              {t("asset_detail.risks_title")}
             </p>
             <div className="paper-card p-3.5">
               <div className="flex items-center justify-between pb-3 mb-3 border-b border-dashed border-paper-3">
-                <span className="text-[11px] text-ink-3 font-medium">{t("asset_detail:risk_level")}</span>
+                <span className="text-[11px] text-ink-3 font-medium">{t("asset_detail.risk_level")}</span>
                 <div className="flex items-center gap-2">
                   <div className="flex gap-0.5">
                     {[1, 2, 3, 4, 5, 6, 7].map((n) => (
@@ -217,7 +217,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
               {asset.exclusions && asset.exclusions.length > 0 && (
                 <div className="mt-3 pt-3 border-t border-dashed border-paper-3">
                   <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold mb-1.5">
-                    {t("asset_detail:exclusions_applied")}
+                    {t("asset_detail.exclusions_applied")}
                   </p>
                   <div className="flex flex-wrap gap-1.5">
                     {asset.exclusions.map((e) => (
@@ -234,7 +234,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
             </div>
           </section>
 
-          {/* {t("asset_detail:identity_card")} */}
+          {/* {t("asset_detail.identity_card")} */}
           <section>
             <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold mb-2">
               {t("asset_detail_sheet.id_card")}
@@ -295,10 +295,10 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
             onClick={() => onOpenChange(false)}
             className="h-11 px-4 rounded-full bg-paper-2 hover:bg-paper-3 border border-paper-3 text-[12px] font-semibold text-ink-2"
           >
-            {t("common:close")}
+            {t("common.close")}
           </button>
           <InvestDialog
-            label={t("asset_detail:invest_in", { ticker: asset.ticker })}
+            label={t("asset_detail.invest_in", { ticker: asset.ticker })}
             defaultAmount={monthly}
             trigger={
               <button
@@ -308,7 +308,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                 <svg viewBox="0 0 16 16" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.4}>
                   <path d="M8 3v10M3 8h10" />
                 </svg>
-                {t("asset_detail:invest_now")}
+                {t("asset_detail.invest_now")}
               </button>
             }
           />
@@ -323,45 +323,45 @@ function buildRisks(asset: MockAsset, t: any): { title: string; desc: string }[]
   const risks: { title: string; desc: string }[] = [];
 
   risks.push({
-    title: t("asset_detail:risks.capital_loss_title"),
-    desc: t("asset_detail:risks.capital_loss_desc"),
+    title: t("asset_detail.risks.capital_loss_title"),
+    desc: t("asset_detail.risks.capital_loss_desc"),
   });
 
   if (cat.includes("oblig")) {
     risks.push({
-      title: t("asset_detail:risks.interest_rate_title"),
-      desc: t("asset_detail:risks.interest_rate_desc"),
+      title: t("asset_detail.risks.interest_rate_title"),
+      desc: t("asset_detail.risks.interest_rate_desc"),
     });
     risks.push({
-      title: t("asset_detail:risks.credit_risk_title"),
-      desc: t("asset_detail:risks.credit_risk_desc"),
+      title: t("asset_detail.risks.credit_risk_title"),
+      desc: t("asset_detail.risks.credit_risk_desc"),
     });
   } else if (cat.includes("etf")) {
     risks.push({
-      title: t("asset_detail:risks.market_risk_title"),
-      desc: t("asset_detail:risks.market_risk_desc"),
+      title: t("asset_detail.risks.market_risk_title"),
+      desc: t("asset_detail.risks.market_risk_desc"),
     });
     if (asset.currency && asset.currency !== "EUR") {
       risks.push({
-        title: t("asset_detail:risks.currency_risk_title"),
-        desc: t("asset_detail:risks.currency_risk_desc", { currency: asset.currency }),
+        title: t("asset_detail.risks.currency_risk_title"),
+        desc: t("asset_detail.risks.currency_risk_desc", { currency: asset.currency }),
       });
     }
   } else if (cat.includes("action")) {
     risks.push({
-      title: t("asset_detail:risks.specific_risk_title"),
-      desc: t("asset_detail:risks.specific_risk_desc"),
+      title: t("asset_detail.risks.specific_risk_title"),
+      desc: t("asset_detail.risks.specific_risk_desc"),
     });
     risks.push({
-      title: t("asset_detail:risks.volatility_title"),
-      desc: t("asset_detail:risks.volatility_desc"),
+      title: t("asset_detail.risks.volatility_title"),
+      desc: t("asset_detail.risks.volatility_desc"),
     });
   }
 
   if (asset.themes.includes("tech") || asset.tags.some((t) => /hydro|renouv|clean/i.test(t))) {
     risks.push({
-      title: t("asset_detail:risks.thematic_risk_title"),
-      desc: t("asset_detail:risks.thematic_risk_desc"),
+      title: t("asset_detail.risks.thematic_risk_title"),
+      desc: t("asset_detail.risks.thematic_risk_desc"),
     });
   }
 

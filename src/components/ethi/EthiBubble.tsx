@@ -23,7 +23,7 @@ export function EthiBubble({ role, content, typing }: EthiBubbleProps) {
       className={`flex ${isUser ? "justify-end" : "justify-start"}`}
     >
       <div className={`max-w-[85%] ${isUser ? "ml-auto" : "w-full"}`}>
-        {!isUser && <p className="text-[10px] text-paper/40 font-semibold mb-1.5 ml-1">{t("ethi:your_advisor")}</p>}
+        {!isUser && <p className="text-[10px] text-paper/40 font-semibold mb-1.5 ml-1">{t("ethi.your_advisor")}</p>}
 
         <div
           className={`rounded-2xl px-4 py-3 text-[13px] leading-relaxed ${

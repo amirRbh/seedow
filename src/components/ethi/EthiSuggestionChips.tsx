@@ -10,15 +10,15 @@ export function EthiSuggestionChips({ onSelect, hasGarden }: EthiSuggestionChips
   const { t } = useTranslation();
   const suggestions = hasGarden
     ? [
-      t("ethi_chips:analyse_portfolio"),
-      t("ethi_chips:what_asset"),
-      t("ethi_chips:carbon_impact"),
-      t("ethi_chips:how_optimize")
+      t("ethi_chips.analyse_portfolio"),
+      t("ethi_chips.what_asset"),
+      t("ethi_chips.carbon_impact"),
+      t("ethi_chips.how_optimize")
     ]
     : [
-      t("ethi_chips:how_start"),
-      t("ethi_chips:what_esg_etf"),
-      t("ethi_chips:minimum_invest")
+      t("ethi_chips.how_start"),
+      t("ethi_chips.what_esg_etf"),
+      t("ethi_chips.minimum_invest")
     ];
 
   return (
