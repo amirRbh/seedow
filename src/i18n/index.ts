@@ -19,6 +19,8 @@ void i18n
     supportedLngs: SUPPORTED_LANGS as unknown as string[],
     nonExplicitSupportedLngs: true, // 'en-US' → 'en'
     interpolation: { escapeValue: false },
+    nsSeparator: false,
+    keySeparator: ".",
     detection: {
       order: ["localStorage", "navigator"],
       lookupLocalStorage: "seedow.lang",
