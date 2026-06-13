@@ -1,16 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { EthiBubble } from "@/components/ethi/EthiBubble";
-import { EthiSuggestionChips } from "@/components/ethi/EthiSuggestionChips";
+import { EthiSuggestionChips, type SuggestionChip } from "@/components/ethi/EthiSuggestionChips";
+import { SimulationForm, type SimulationFormValues } from "@/components/ethi/SimulationForm";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { supabase } from "@/integrations/supabase/client";
 
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { useAuth } from "@/hooks/useAuth";
 import { useLang } from "@/hooks/useLang";
+import { buildBriefing } from "@/lib/ethi/diagnostics";
+import { runSimulation, formatSimulation } from "@/lib/ethi/simulation";
 
 export const Route = createFileRoute("/ethi")({
   validateSearch: (s: Record<string, unknown>) => ({
@@ -29,62 +32,35 @@ interface Message {
 function Ethi() {
   const { t } = useTranslation();
   const { lang } = useLang();
-  const { intent, q } = Route.useSearch();
+  const { q } = Route.useSearch();
   const { user } = useAuth();
   const { portfolio, loading: pfLoading } = useActivePortfolio();
-  const depositsTotal = 0;
-  const depLoading = false;
   const valuation = usePortfolioValuation();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showSim, setShowSim] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const dataLoading = pfLoading || depLoading;
+  const dataLoading = pfLoading || valuation.loading;
   const firstName =
     (user?.user_metadata?.display_name as string | undefined)?.split(" ")[0] ??
     user?.email?.split("@")[0] ??
     (lang === "en" ? "there" : "toi");
+
+  const briefing = useMemo(() => {
+    if (dataLoading) return null;
+    return buildBriefing({ firstName, portfolio, valuation, lang });
+  }, [dataLoading, firstName, portfolio, valuation, lang]);
 
   useEffect(() => {
     if (dataLoading) {
       setMessages([{ id: "welcome", role: "assistant", content: "" }]);
       return;
     }
-    const hasGarden = (portfolio?.holdings?.length ?? 0) > 0;
-    const invested = depositsTotal;
-    const pnl = valuation.pnl;
-    const pnlStr = `${pnl >= 0 ? "+" : ""}${pnl.toFixed(0)} €`;
-    let greeting = "";
-    if (lang === "en") {
-      if (intent === "rebalance") {
-        greeting = hasGarden
-          ? `Hey ${firstName} — rebalancing time? I'll review your **${portfolio!.holdings.length} lines** and flag what to adjust.`
-          : `Hey ${firstName} — no portfolio to rebalance yet. Want to build one?`;
-      } else if (!hasGarden) {
-        greeting = `Hi ${firstName} ✨ Your portfolio isn't built yet. Tell me what matters to you, I'll compose it in 2 min.`;
-      } else if (invested > 0 && valuation.hasQuotes) {
-        greeting = `${firstName}, your portfolio sits at **€${invested.toFixed(0)}** invested, **${portfolio!.holdings.length} lines** and a P&L of **${pnlStr}** 📈. Ready for the next move?`;
-      } else if (invested > 0) {
-        greeting = `${firstName}, your portfolio holds **€${invested.toFixed(0)}** invested across **${portfolio!.holdings.length} lines**. Ready for the next move?`;
-      } else {
-        greeting = `Hi ${firstName} ✨ Your portfolio is ready but not funded yet. Want to schedule a first deposit?`;
-      }
-    } else if (intent === "rebalance") {
-      greeting = hasGarden
-        ? `Hop ${firstName} — on rééquilibre ? Je passe en revue tes **${portfolio!.holdings.length} lignes** et je te dis quoi ajuster.`
-        : `Hop ${firstName} — pas encore de portefeuille à rééquilibrer. On en construit un ?`;
-    } else if (!hasGarden) {
-      greeting = `Salut ${firstName} ✨ Ton portefeuille n'est pas encore créé. Dis-moi ce qui compte pour toi, je le compose en 2 min.`;
-    } else if (invested > 0 && valuation.hasQuotes) {
-      greeting = `${firstName}, ton portefeuille tourne sur **${invested.toFixed(0)} €** investis, **${portfolio!.holdings.length} lignes** et un P&L de **${pnlStr}** 📈. On regarde la suite ?`;
-    } else if (invested > 0) {
-      greeting = `${firstName}, ton portefeuille tourne sur **${invested.toFixed(0)} €** investis et **${portfolio!.holdings.length} lignes**. On regarde la suite ?`;
-    } else {
-      greeting = `Salut ${firstName} ✨ Ton portefeuille est prêt mais pas encore alimenté. On programme un premier versement ?`;
-    }
-    setMessages([{ id: "welcome", role: "assistant", content: greeting }]);
-  }, [intent, dataLoading, portfolio, depositsTotal, firstName, valuation.pnl, valuation.hasQuotes, lang]);
+    if (!briefing) return;
+    setMessages([{ id: "welcome", role: "assistant", content: briefing.message }]);
+  }, [dataLoading, briefing]);
 
   // Pré-remplit l'input quand la page est ouverte avec ?q=... (depuis le briefing).
   useEffect(() => {
@@ -105,16 +81,14 @@ function Ethi() {
     setIsLoading(true);
 
     try {
-      // Build a compact portfolio context to ground Ethi's answers.
       const ctx = (() => {
         if (!portfolio || portfolio.holdings.length === 0) {
-          return { hasPortfolio: false, invested: depositsTotal };
+          return { hasPortfolio: false };
         }
         const m = portfolio.metrics;
         return {
           hasPortfolio: true,
           name: portfolio.name,
-          invested: Number(depositsTotal.toFixed(2)),
           currentValue: Number(valuation.currentValue.toFixed(2)),
           pnl: Number(valuation.pnl.toFixed(2)),
           returnPct: Number(valuation.returnPct.toFixed(2)),
@@ -129,6 +103,12 @@ function Ethi() {
                 co2AvoidedTons: +m.co2_avoided_tons.toFixed(2),
               }
             : null,
+          aggregates: briefing?.aggregates ?? null,
+          diagnostics: (briefing?.flags ?? []).map((f) => ({
+            id: f.id,
+            severity: f.severity,
+            ...(f.data ?? {}),
+          })),
           holdings: portfolio.holdings.map((h) => ({
             ticker: h.ticker,
             name: h.name,
@@ -162,6 +142,28 @@ function Ethi() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleChip = (chip: SuggestionChip) => {
+    if (chip.kind === "sim") {
+      setShowSim(true);
+      return;
+    }
+    if (chip.query) send(chip.query);
+  };
+
+  const handleSimSubmit = (values: SimulationFormValues) => {
+    setShowSim(false);
+    const out = runSimulation(values);
+    const formatted = formatSimulation(values, out, lang);
+    const summaryLine = lang === "en"
+      ? `Simulate ${values.monthly}€/mo + ${values.initial}€ over ${values.years} years.`
+      : `Simule ${values.monthly} €/mois + ${values.initial} € sur ${values.years} ans.`;
+    setMessages((prev) => [
+      ...prev,
+      { id: `u-${Date.now()}`, role: "user", content: summaryLine },
+      { id: `a-${Date.now() + 1}`, role: "assistant", content: formatted },
+    ]);
   };
 
   return (
@@ -205,9 +207,18 @@ function Ethi() {
 
       <div className="fixed bottom-[88px] left-0 right-0 z-30 px-5 pointer-events-none">
         <div className="max-w-lg mx-auto pointer-events-auto">
-          {messages.length <= 1 && !isLoading && (
+          {showSim && (
             <div className="mb-3">
-              <EthiSuggestionChips onSelect={send} hasGarden={(portfolio?.holdings.length ?? 0) > 0} />
+              <SimulationForm onSubmit={handleSimSubmit} onCancel={() => setShowSim(false)} />
+            </div>
+          )}
+          {!showSim && messages.length <= 1 && !isLoading && (
+            <div className="mb-3">
+              <EthiSuggestionChips
+                onSelect={handleChip}
+                hasGarden={(portfolio?.holdings.length ?? 0) > 0}
+                chips={briefing?.chips}
+              />
             </div>
           )}
           <form
