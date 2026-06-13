@@ -158,16 +158,27 @@ Reply in English.${contextBlock}`;
             }),
           });
 
-          if (resp.status === 429) return Response.json({ error: "Trop de requêtes, réessaie dans un instant." });
-          if (resp.status === 402) return Response.json({ error: "Crédits AI épuisés. Recharge ton workspace." });
-          if (!resp.ok) return Response.json({ error: "Ethi est indisponible pour le moment." });
+          if (resp.status === 429)
+            return Response.json({
+              error: lang === "en" ? "Too many requests, try again in a moment." : "Trop de requêtes, réessaie dans un instant.",
+            });
+          if (resp.status === 402)
+            return Response.json({
+              error: lang === "en" ? "AI credits exhausted. Top up your workspace." : "Crédits AI épuisés. Recharge ton workspace.",
+            });
+          if (!resp.ok)
+            return Response.json({
+              error: lang === "en" ? "Ethi is unavailable right now." : "Ethi est indisponible pour le moment.",
+            });
 
           const json = (await resp.json()) as { choices?: { message?: { content?: string } }[] };
           const content = json.choices?.[0]?.message?.content ?? "";
           return Response.json({ content });
         } catch (e) {
           console.error("ethi error", e);
-          return Response.json({ error: "Erreur de connexion à Ethi." });
+          return Response.json({
+            error: lang === "en" ? "Connection error to Ethi." : "Erreur de connexion à Ethi.",
+          });
         }
       },
     },
