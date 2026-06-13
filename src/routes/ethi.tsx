@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { useAuth } from "@/hooks/useAuth";
+import { useLang } from "@/hooks/useLang";
 
 export const Route = createFileRoute("/ethi")({
   validateSearch: (s: Record<string, unknown>) => ({
