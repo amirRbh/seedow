@@ -265,7 +265,15 @@
     "send": "Envoyer",
     "input_placeholder": "Demande quelque chose à Ethi…",
     "error_no_response": "Désolée, je n'arrive pas à répondre.",
-    "error_connection": "Désolée, problème de connexion."
+    "error_connection": "Désolée, problème de connexion.",
+    "sim": {
+      "title": "Simulateur",
+      "monthly": "Mensuel",
+      "initial": "Initial",
+      "years": "Durée",
+      "stress": "Inclure un stress-test (−20 %)",
+      "run": "Calculer"
+    }
   },
   "certificate": {
     "meta_title": "Certificat d'impact — Seedow",
