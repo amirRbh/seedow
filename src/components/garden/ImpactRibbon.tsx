@@ -12,15 +12,15 @@ export function ImpactRibbon({ co2Avoided, treesEquivalent, energyFinanced, esgS
   const { t } = useTranslation();
   const co2Label =
     co2Avoided >= 1 ? `${co2Avoided.toFixed(1)}` : `${(co2Avoided * 1000).toFixed(0)}`;
-  const co2Unit = co2Avoided >= 1 ? t("impact_ribbon:tonnes") : t("impact_ribbon:kg");
+  const co2Unit = co2Avoided >= 1 ? t("impact_ribbon.tonnes") : t("impact_ribbon.kg");
   const energyLabel =
     energyFinanced >= 1000 ? `${(energyFinanced / 1000).toFixed(1)}` : `${Math.round(energyFinanced)}`;
   const energyUnit = energyFinanced >= 1000 ? "MWh" : "kWh";
 
   const secondary = [
-    { value: Math.round(treesEquivalent).toString(), label: t("impact_ribbon:trees_label"), icon: "🌳" },
-    { value: `${energyLabel} ${energyUnit}`, label: t("impact_ribbon:energy_label"), icon: "⚡" },
-    { value: esgScore.toFixed(1), label: t("impact_ribbon:impact_score"), icon: "✨" },
+    { value: Math.round(treesEquivalent).toString(), label: t("impact_ribbon.trees_label"), icon: "🌳" },
+    { value: `${energyLabel} ${energyUnit}`, label: t("impact_ribbon.energy_label"), icon: "⚡" },
+    { value: esgScore.toFixed(1), label: t("impact_ribbon.impact_score"), icon: "✨" },
   ];
 
   return (
@@ -36,7 +36,7 @@ export function ImpactRibbon({ co2Avoided, treesEquivalent, energyFinanced, esgS
 
       <div className="relative">
         <p className="text-[10px] uppercase tracking-[0.18em] opacity-70 font-semibold">
-          {t("impact_ribbon:real_impact")}
+          {t("impact_ribbon.real_impact")}
         </p>
 
         {/* Hero CO₂ */}
@@ -45,7 +45,7 @@ export function ImpactRibbon({ co2Avoided, treesEquivalent, energyFinanced, esgS
           <span className="text-lg font-medium opacity-90">{co2Unit}</span>
         </div>
         <p className="text-[13px] opacity-80 mt-1.5">
-          {t("impact_ribbon:co2_avoided_desc")}
+          {t("impact_ribbon.co2_avoided_desc")}
         </p>
 
         {/* Métriques secondaires */}

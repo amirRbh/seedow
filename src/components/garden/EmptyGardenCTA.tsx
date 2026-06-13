@@ -36,21 +36,21 @@ export function EmptyGardenCTA({ userName }: { userName: string }) {
       </motion.div>
 
       <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-medium">
-        {t("empty_garden:welcome", { name: userName })}
+        {t("empty_garden.welcome", { name: userName })}
       </p>
       <h1 className="font-value text-3xl text-ink mt-2 leading-tight">
-        {t("empty_garden:title")}
+        {t("empty_garden.title")}
       </h1>
       <p className="text-sm text-ink-2 mt-4 max-w-md leading-relaxed">
-        {t("empty_garden:desc")}
+        {t("empty_garden.desc")}
       </p>
 
       <div className="mt-10 flex items-center gap-4">
         <Link to="/onboarding" search={{ new: undefined }} className="btn-plant">
-          {t("empty_garden:start")}
+          {t("empty_garden.start")}
         </Link>
         <Link to="/discover" className="text-[13px] text-ink-3 hover:text-ink transition-colors underline-offset-4 hover:underline">
-          {t("empty_garden:explore")}
+          {t("empty_garden.explore")}
         </Link>
       </div>
     </div>

@@ -63,14 +63,14 @@ export function GardenVisualization({
     <div className="w-full">
       <div className="flex items-baseline justify-between mb-2">
         <p className="text-[10px] uppercase tracking-[0.12em] text-ink-3 font-medium">
-          {t("garden_viz:allocation_title", { count: plants.length })}
+          {t("garden_viz.allocation_title", { count: plants.length })}
         </p>
         {rest.length > 0 && (
           <button
             onClick={() => setExpanded((v) => !v)}
             className="text-[11px] text-ink-2 hover:text-ink underline-offset-2 hover:underline"
           >
-            {expanded ? t("garden_viz:show_less") : t("garden_viz:show_all", { count: plants.length })}
+            {expanded ? t("garden_viz.show_less") : t("garden_viz.show_all", { count: plants.length })}
           </button>
         )}
       </div>
@@ -117,7 +117,7 @@ export function GardenVisualization({
           <li className="flex items-center gap-2.5 py-1.5 text-[11px] text-ink-3">
             <span className="w-2 h-2 rounded-full bg-paper-3 flex-shrink-0" />
             <span className="flex-1">
-              {t("garden_viz:other_positions", { count: rest.length })}
+              {t("garden_viz.other_positions", { count: rest.length })}
             </span>
             <span className="tabular-nums w-12 text-right">
               {formatPercent(rest.reduce((s, p) => s + p.allocationPct, 0) / 100, lang, 1)}
@@ -129,8 +129,8 @@ export function GardenVisualization({
           onClick={() => (onEmptySlotClick ? onEmptySlotClick() : navigate({ to: "/discover" }))}
           className="pt-2 mt-1 border-t border-paper-3 cursor-pointer text-ink-3 hover:text-ink transition-colors flex items-center justify-between"
         >
-          <span className="text-[11px] tracking-tight">{t("garden_viz:add_position")}</span>
-          <span className="text-[10px] uppercase tracking-[0.12em]">{t("garden_viz:explore")}</span>
+          <span className="text-[11px] tracking-tight">{t("garden_viz.add_position")}</span>
+          <span className="text-[10px] uppercase tracking-[0.12em]">{t("garden_viz.explore")}</span>
         </li>
       </ul>
     </div>

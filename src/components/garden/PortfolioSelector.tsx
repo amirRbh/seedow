@@ -93,12 +93,12 @@ export function PortfolioSelector({ compact = false }: { compact?: boolean }) {
                   className="w-full flex items-center gap-2 px-3 py-2.5 text-left text-[12px] text-moss-1 hover:bg-moss-5/30 font-medium"
                 >
                   <span className="w-4 h-4 rounded-full border border-moss-1 flex items-center justify-center text-[10px] leading-none">+</span>
-                  {t("portfolio_selector:new_portfolio")}
+                  {t("portfolio_selector.new_portfolio")}
                   <span className="ml-auto text-[9px] text-ink-3">{portfolios.length}/3</span>
                 </button>
               ) : (
                 <div className="px-3 py-2 text-[10px] text-ink-3 text-center">
-                  {t("portfolio_selector:limit_reached")}
+                  {t("portfolio_selector.limit_reached")}
                 </div>
               )}
             </div>
