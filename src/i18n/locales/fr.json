@@ -244,20 +244,38 @@
     "title": "Quels actifs ?",
     "tab_explore": "Explorer",
     "tab_community": "Communauté",
-    "selected_one": "{{count}} actif sélectionné",
-    "selected_other": "{{count}} actifs sélectionnés",
-    "swipe": "Swipe",
-    "list": "Liste",
-    "all_seen_title": "Tu as tout vu !",
-    "all_seen_desc": "Tu as parcouru tous les actifs de ce thème.",
-    "restart": "Recommencer",
-    "pass": "Passer",
-    "select": "Sélectionner",
     "invest": "Investir",
     "invest_in": "Investir dans {{ticker}}",
-    "see_card": "Voir la fiche détaillée",
-    "swipe_hint": "Glisse pour trier · Touche la fiche pour tout savoir avant d'investir",
-    "unit_price": "prix unitaire"
+    "search_placeholder": "Rechercher un ticker, un nom, un émetteur…",
+    "filters_btn": "Filtres",
+    "results_count_one": "{{count}} actif",
+    "results_count_other": "{{count}} actifs",
+    "reset": "Réinitialiser",
+    "empty_title": "Aucun actif ne correspond",
+    "empty_desc": "Ajuste tes filtres pour élargir la sélection.",
+    "row": {
+      "risk": "Risque",
+      "ter": "Frais"
+    },
+    "filters": {
+      "category": "Catégorie",
+      "region": "Région dominante",
+      "risk": "Risque maximum (SRRI)",
+      "risk_hint": "Inclut tous les actifs de risque ≤ {{value}}/7.",
+      "ter": "Frais courants max",
+      "ter_hint": "TER annuel ≤ {{value}} %.",
+      "esg": "Score ESG minimum",
+      "esg_hint": "Score global ≥ {{value}}/10."
+    },
+    "sort": {
+      "label": "Tri",
+      "default": "Pertinence",
+      "esg_desc": "ESG ↓",
+      "ter_asc": "Frais ↑",
+      "price_asc": "Prix ↑",
+      "price_desc": "Prix ↓",
+      "name_asc": "A → Z"
+    }
   },
   "ethi": {
     "your_advisor": "Ton conseiller",
