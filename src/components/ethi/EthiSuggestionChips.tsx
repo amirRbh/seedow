@@ -1,38 +1,47 @@
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
-interface EthiSuggestionChipsProps {
-  onSelect: (q: string) => void;
-  hasGarden: boolean;
+export interface SuggestionChip {
+  label: string;
+  kind?: "sim";
+  query?: string;
 }
 
-export function EthiSuggestionChips({ onSelect, hasGarden }: EthiSuggestionChipsProps) {
+interface EthiSuggestionChipsProps {
+  onSelect: (chip: SuggestionChip) => void;
+  hasGarden: boolean;
+  chips?: SuggestionChip[];
+}
+
+export function EthiSuggestionChips({ onSelect, hasGarden, chips }: EthiSuggestionChipsProps) {
   const { t } = useTranslation();
-  const suggestions = hasGarden
+  const fallback: SuggestionChip[] = hasGarden
     ? [
-      t("ethi_chips.analyse_portfolio"),
-      t("ethi_chips.what_asset"),
-      t("ethi_chips.carbon_impact"),
-      t("ethi_chips.how_optimize")
-    ]
+        { label: t("ethi_chips.analyse_portfolio"), query: t("ethi_chips.analyse_portfolio") },
+        { label: t("ethi_chips.what_asset"), query: t("ethi_chips.what_asset") },
+        { label: t("ethi_chips.carbon_impact"), query: t("ethi_chips.carbon_impact") },
+        { label: t("ethi_chips.how_optimize"), query: t("ethi_chips.how_optimize") },
+      ]
     : [
-      t("ethi_chips.how_start"),
-      t("ethi_chips.what_esg_etf"),
-      t("ethi_chips.minimum_invest")
-    ];
+        { label: t("ethi_chips.how_start"), query: t("ethi_chips.how_start") },
+        { label: t("ethi_chips.what_esg_etf"), query: t("ethi_chips.what_esg_etf") },
+        { label: t("ethi_chips.minimum_invest"), query: t("ethi_chips.minimum_invest") },
+      ];
+
+  const list = chips && chips.length > 0 ? chips : fallback;
 
   return (
     <div className="flex flex-wrap gap-2 justify-end">
-      {suggestions.map((s, i) => (
+      {list.map((c, i) => (
         <motion.button
-          key={s}
+          key={`${c.label}-${i}`}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.08 + 0.2 }}
-          onClick={() => onSelect(s)}
+          onClick={() => onSelect(c)}
           className="bg-paper/10 border border-paper/15 hover:bg-moss-2/30 hover:border-moss-3 rounded-full px-3 py-2 text-[11px] text-paper/80 hover:text-paper transition-all"
         >
-          {s}
+          {c.label}
         </motion.button>
       ))}
     </div>
