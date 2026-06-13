@@ -265,7 +265,15 @@
     "send": "Send",
     "input_placeholder": "Ask Ethi something…",
     "error_no_response": "Sorry, I can't reply right now.",
-    "error_connection": "Sorry, connection issue."
+    "error_connection": "Sorry, connection issue.",
+    "sim": {
+      "title": "Simulator",
+      "monthly": "Monthly",
+      "initial": "Initial",
+      "years": "Horizon",
+      "stress": "Include a stress-test (−20%)",
+      "run": "Compute"
+    }
   },
   "certificate": {
     "meta_title": "Impact certificate — Seedow",
