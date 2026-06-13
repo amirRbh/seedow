@@ -6,25 +6,7 @@ const MessageSchema = z.object({
   content: z.string().min(1).max(4000),
 });
 
-const ContextSchema = z
-  .object({
-    hasPortfolio: z.boolean().optional(),
-    totalValue: z.number().finite().optional(),
-    name: z.string().max(120).optional(),
-    causes: z.array(z.string().max(60)).max(20).optional(),
-    holdings: z
-      .array(
-        z.object({
-          ticker: z.string().max(20),
-          weight: z.number().finite(),
-          value: z.number().finite().optional(),
-        }),
-      )
-      .max(50)
-      .optional(),
-  })
-  .passthrough()
-  .optional();
+const ContextSchema = z.record(z.string(), z.any()).optional();
 
 const BodySchema = z.object({
   messages: z.array(MessageSchema).min(1).max(40),
