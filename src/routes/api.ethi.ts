@@ -75,8 +75,8 @@ export const Route = createFileRoute("/api/ethi")({
 
         const contextBlock = body.context
           ? lang === "en"
-            ? `\n\n📊 **Portfolio context (JSON, source of truth)**:\n\`\`\`json\n${JSON.stringify(body.context, null, 2)}\n\`\`\`\nUse EXCLUSIVELY this data when talking about the user's portfolio. Never invent a ticker, amount, allocation, P&L or score. If \`hasPortfolio\` is false, suggest creating one. Quote figures as-is (allocations in %, amounts in €).`
-            : `\n\n📊 **Contexte portefeuille (JSON, source de vérité)** :\n\`\`\`json\n${JSON.stringify(body.context, null, 2)}\n\`\`\`\nUtilise EXCLUSIVEMENT ces données quand on te parle du portefeuille de l'utilisateur. Ne jamais inventer de ticker, montant, allocation, P&L ou score. Si \`hasPortfolio\` est false, propose d'en créer un. Cite les chiffres tels quels (allocations en %, montants en €).`
+            ? `\n\n📊 **Portfolio context (JSON, source of truth)**:\n\`\`\`json\n${JSON.stringify(body.context, null, 2)}\n\`\`\`\nUse EXCLUSIVELY this data. Never invent a ticker, amount, allocation, P&L or score. The \`diagnostics\` array is the pre-computed truth about this portfolio — quote those numbers verbatim. \`aggregates\` gives top holding/region/category. If \`hasPortfolio\` is false, suggest creating one.`
+            : `\n\n📊 **Contexte portefeuille (JSON, source de vérité)** :\n\`\`\`json\n${JSON.stringify(body.context, null, 2)}\n\`\`\`\nUtilise EXCLUSIVEMENT ces données. Ne jamais inventer de ticker, montant, allocation, P&L ou score. Le tableau \`diagnostics\` est la vérité pré-calculée sur ce portefeuille — cite ses chiffres tels quels. \`aggregates\` donne la top ligne / région / catégorie. Si \`hasPortfolio\` est false, propose d'en créer un.`
           : "";
 
         const systemPromptFR = `Tu es **Ethi**, le conseiller en investissement responsable de Seedow. Vif, direct, complice — jamais mou, jamais corporate.
