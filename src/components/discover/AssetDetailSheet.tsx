@@ -43,9 +43,10 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
     6: { label: t("asset_detail.risk_labels.6"), tone: "text-rust" },
     7: { label: t("asset_detail.risk_labels.7"), tone: "text-bloom" },
   };
-  if (!asset) return null;
 
   const [monthly, setMonthly] = useState(100);
+
+  if (!asset) return null;
 
   const risk = asset.risk_level ?? 4;
   const riskInfo = RISK_LABELS[risk];
