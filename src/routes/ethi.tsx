@@ -151,6 +151,7 @@ function Ethi() {
         body: JSON.stringify({
           messages: next.map((m) => ({ role: m.role, content: m.content })),
           context: ctx,
+          lang,
         }),
       });
       const json = (await res.json()) as { content?: string; error?: string };
