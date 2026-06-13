@@ -48,18 +48,20 @@ function Ethi() {
     user?.email?.split("@")[0] ??
     (lang === "en" ? "there" : "toi");
 
+  const valuationKey = `${valuation.currentValue}|${valuation.pnl}|${valuation.returnPct}|${valuation.hasQuotes}|${valuation.loading}`;
   const briefing = useMemo(() => {
     if (dataLoading) return null;
     return buildBriefing({ firstName, portfolio, valuation, lang });
-  }, [dataLoading, firstName, portfolio, valuation, lang]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataLoading, firstName, portfolio, valuationKey, lang]);
 
   useEffect(() => {
-    if (dataLoading) {
-      setMessages([{ id: "welcome", role: "assistant", content: "" }]);
-      return;
-    }
-    if (!briefing) return;
-    setMessages([{ id: "welcome", role: "assistant", content: briefing.message }]);
+    const welcome = dataLoading ? "" : briefing?.message ?? "";
+    setMessages((prev) => {
+      if (prev.length === 1 && prev[0].id === "welcome" && prev[0].content === welcome) return prev;
+      if (prev.length > 1) return prev; // don't wipe ongoing conversation
+      return [{ id: "welcome", role: "assistant", content: welcome }];
+    });
   }, [dataLoading, briefing]);
 
   // Pré-remplit l'input quand la page est ouverte avec ?q=... (depuis le briefing).
