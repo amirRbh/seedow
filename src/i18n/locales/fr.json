@@ -762,7 +762,44 @@
       "reit": "Immobilier",
       "commodity": "Matières premières",
       "cash": "Monétaire"
-    }
+    },
+    "reading_eyebrow": "Comment lire cette page",
+    "reading_title": "En 30 secondes",
+    "reading_p1": "Vous choisissez ce qui compte pour vous (causes), ce que vous refusez (exclusions), combien de risque vous acceptez et pour combien de temps. Nous recomposons aussitôt un portefeuille concret qui colle à vos choix.",
+    "reading_p2": "Les chiffres à droite résument ce que ce portefeuille devrait rapporter, son niveau de risque, ses frais et son empreinte. Survolez les « ? » pour une explication simple de chaque terme.",
+    "glossary_title": "Mini-glossaire",
+    "glossary": {
+      "markowitz": "Markowitz : recette mathématique qui combine les actifs pour viser le meilleur rendement possible à un niveau de risque donné.",
+      "best_in_class": "Best-in-class : on ne garde que la meilleure moitié de chaque catégorie sur les critères ESG.",
+      "ter": "TER : frais annuels prélevés sur un fonds (ex. 0,20 % = 2 € par an pour 1 000 € investis).",
+      "esg_acro": "ESG : Environnement, Social, Gouvernance — les trois piliers de la finance responsable."
+    },
+    "tips": {
+      "stage_1": "Vos préférences personnelles. C'est la matière première de tout le reste.",
+      "stage_2": "La boîte à outils : la liste des produits financiers parmi lesquels nous piochons (actions, obligations, immobilier…).",
+      "stage_3": "On retire d'abord ce que vous refusez (ex. armement), puis on ne garde que les meilleurs élèves de chaque catégorie sur les critères ESG.",
+      "stage_4": "On augmente légèrement la part attendue des actifs qui collent à vos causes prioritaires. Petit coup de pouce, pas un coup de barre.",
+      "stage_5": "Un calcul mathématique qui combine les actifs restants pour viser le meilleur rendement possible au niveau de risque que vous avez choisi.",
+      "causes": "Les sujets que votre argent doit pousser en priorité (climat, biodiversité…). Plus l'intensité est haute, plus le portefeuille s'oriente vers ces sujets.",
+      "exclusions": "Les secteurs que vous refusez de financer. Cochés = strictement écartés du portefeuille.",
+      "risk": "À quel point la valeur du portefeuille peut bouger d'une année sur l'autre. Plus c'est haut, plus ça peut monter… et descendre.",
+      "horizon": "Pendant combien de temps vous comptez laisser cet argent investi. Plus c'est long, plus on peut accepter de variations.",
+      "return": "Ce que le portefeuille pourrait rapporter en moyenne chaque année, avant frais et impôts. Ce n'est pas une garantie.",
+      "volatility": "L'ampleur typique des variations annuelles. Volatilité 10 % ≈ le portefeuille peut osciller d'environ ±10 % sur un an.",
+      "sharpe": "Rendement obtenu par unité de risque pris. Plus c'est élevé, mieux le risque est rémunéré. Au-dessus de 1, c'est très bon.",
+      "esg": "Note sur 100 qui résume la qualité environnementale, sociale et de gouvernance du portefeuille. Plus c'est haut, plus l'impact est sérieux.",
+      "fees": "Coût annuel moyen des produits détenus, prélevé automatiquement sur la performance. Plus c'est bas, mieux c'est.",
+      "co2": "Estimation des tonnes de CO₂ évitées chaque année pour 10 000 € investis, comparé à un portefeuille classique.",
+      "carbon_intensity": "Grammes de CO₂ émis chaque année pour chaque euro investi. Donnée réelle quand le fournisseur la publie, sinon indisponible.",
+      "carbon_coverage": "Part du portefeuille pour laquelle nous avons la donnée carbone officielle. Plus c'est haut, plus le chiffre est fiable.",
+      "allocation": "La liste précise des produits retenus et le poids de chacun dans votre portefeuille.",
+      "breakdown": "Comment l'argent est réparti entre grandes familles d'actifs (actions, obligations, immobilier…). Une bonne répartition limite les surprises."
+    },
+    "carbon_coverage_title": "Couverture donnée carbone",
+    "carbon_coverage_advice_none": "Aucun actif du portefeuille ne publie encore son intensité carbone officielle. Le chiffre affiché reste une estimation indicative.",
+    "carbon_coverage_advice_low": "Trop peu d'actifs publient leur empreinte carbone. À prendre avec prudence.",
+    "carbon_coverage_advice_mid": "Couverture partielle : le chiffre est extrapolé sur la part renseignée du portefeuille.",
+    "carbon_coverage_advice_high": "Bonne couverture : le chiffre est fiable pour un reporting indicatif."
   },
   "seed_card": {
     "id_card": "Carte d'identité"
