@@ -259,12 +259,16 @@ function Landing() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.8, ease: easeOut }}
-            className="relative overflow-hidden bg-ink text-paper p-12 md:p-24"
+            className="relative overflow-hidden bg-ink text-paper p-12 md:p-24 paper-grain ink-grain"
           >
-            <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full blur-[140px] opacity-30 bg-gold" />
-            <div className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full blur-[160px] opacity-20 bg-moss-2" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,oklch(0.74_0.085_65/0.28),transparent_60%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,oklch(0.38_0.040_145/0.45),transparent_55%)]" />
             <div className="relative z-10 max-w-3xl">
-              <p className="eyebrow mb-6">{t("landing.final_eyebrow")}</p>
+              <p className="eyebrow mb-6 flex items-center gap-3">
+                <span className="tabular-nums text-paper/50">N° 07</span>
+                <span className="h-px w-8 bg-gold/60" />
+                {t("landing.final_eyebrow")}
+              </p>
               <h2 className="display-lg text-paper mb-8">
                 {t("landing.final_title_a")}
                 <br />
@@ -273,10 +277,13 @@ function Landing() {
               <Link
                 to={isAuthed ? "/dashboard" : "/auth"}
                 search={isAuthed ? undefined : { redirect: "/onboarding", mode: "signup" }}
-                className="inline-flex items-center gap-3 bg-gold text-ink px-10 py-5 font-semibold uppercase tracking-[0.2em] text-xs hover:bg-gold-soft transition-colors"
+                className="group relative inline-flex items-center gap-3 bg-gold text-ink px-10 py-5 font-semibold uppercase tracking-[0.2em] text-xs hover:bg-gold-soft transition-colors overflow-hidden"
               >
-                {isAuthed ? t("nav.my_space") : t("landing.final_cta")}
-                <ArrowRight className="w-4 h-4" />
+                <span className="relative z-10 inline-flex items-center gap-3">
+                  {isAuthed ? t("nav.my_space") : t("landing.final_cta")}
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </span>
+                <span aria-hidden className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 gold-shimmer transition-opacity" />
               </Link>
             </div>
           </motion.div>
