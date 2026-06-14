@@ -271,7 +271,68 @@
 }
 
 
-@layer components {
+  /* Matière papier — grain subtil */
+  .paper-grain {
+    position: relative;
+  }
+  .paper-grain::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: var(--paper-grain-url);
+    background-size: 200px 200px;
+    opacity: 0.06;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .paper-grain > * { position: relative; z-index: 1; }
+
+  .ink-grain::before {
+    mix-blend-mode: screen;
+    opacity: 0.05;
+  }
+
+  /* Vignette douce pour sections sombres */
+  .vignette::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 50%, oklch(0 0 0 / 0.35) 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Outline numbers géants façon presse magazine */
+  .outline-number {
+    font-family: var(--font-display);
+    font-weight: 700;
+    -webkit-text-stroke: 1px var(--color-gold);
+    color: transparent;
+    letter-spacing: -0.04em;
+    line-height: 0.85;
+    font-feature-settings: "lnum", "tnum";
+  }
+
+  /* Pulse lent du point or (logo) */
+  @keyframes goldPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.55; transform: scale(0.85); }
+  }
+  .gold-pulse { animation: goldPulse 3.2s ease-in-out infinite; transform-origin: center; display: inline-block; }
+
+  /* Shimmer doré au hover */
+  @keyframes goldShimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  .gold-shimmer {
+    background-image: linear-gradient(110deg, transparent 30%, oklch(1 0 0 / 0.35) 50%, transparent 70%);
+    background-size: 200% 100%;
+    animation: goldShimmer 2.4s ease-in-out infinite;
+  }
+
+
   .paper-card {
     background-color: var(--color-card);
     border: 1px solid var(--color-paper-3);
