@@ -911,7 +911,9 @@
     "equivalence_trips": "≈ {{count}} trajets Paris–Lyon en voiture évités",
     "impact_score_label": "Score impact",
     "see_methodology": "Méthodologie",
-    "see_detail": "Détail de l'impact"
+    "see_detail": "Détail de l'impact",
+    "explainer": "Le CO₂ évité est une estimation indicatrice calculée à partir des scores ESG de chaque ligne. Elle reflète la réduction d'empreinte liée à l'exclusion des émetteurs les plus carbonés et à la sélection best-in-class. Ce n'est pas un chiffre réglementaire — c'est une mesure de direction.",
+    "learn_more": "En savoir plus"
   },
   "intent_cards": {
     "what_to_do": "Que veux-tu faire ?",
