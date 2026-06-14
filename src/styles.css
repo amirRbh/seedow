@@ -147,20 +147,18 @@
 }
 
 .dark {
-  --paper: oklch(0.16 0.020 165);        /* vert nuit */
-  --paper-2: oklch(0.20 0.022 165);
-  --paper-3: oklch(0.28 0.025 165);
-  --paper-inset: oklch(0.32 0.026 165);
-  --ink: oklch(0.96 0.015 90);
-  --ink-2: oklch(0.82 0.020 88);
-  --ink-3: oklch(0.62 0.025 85);
-  --moss-1: oklch(0.82 0.055 158);
-  --moss-2: oklch(0.66 0.060 160);
-  --moss-3: oklch(0.50 0.055 162);
-  --moss-4: oklch(0.34 0.040 164);
-  --moss-5: oklch(0.24 0.028 165);
-  --gold: oklch(0.82 0.115 86);
-  --gold-soft: oklch(0.72 0.090 86);
+  --paper: oklch(0.14 0.006 260);
+  --paper-2: oklch(0.18 0.007 260);
+  --paper-3: oklch(0.24 0.008 260);
+  --paper-inset: oklch(0.28 0.009 260);
+  --ink: oklch(0.96 0.005 100);
+  --ink-2: oklch(0.78 0.006 100);
+  --ink-3: oklch(0.58 0.007 100);
+  --moss-1: oklch(0.72 0.060 155);
+  --moss-2: oklch(0.58 0.055 155);
+  --moss-3: oklch(0.45 0.045 155);
+  --moss-4: oklch(0.30 0.030 155);
+  --moss-5: oklch(0.22 0.020 155);
   --background: var(--paper);
   --foreground: var(--ink);
   --card: var(--paper-2);
