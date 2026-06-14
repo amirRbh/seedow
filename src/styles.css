@@ -6,8 +6,8 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ═══════════════════════════════════════════════════════════════
-   SEEDOW — Forest & Sand
-   Éditorial cinéma. Vert sombre, sable chaud, terracotta or.
+   SEEDOW — Institutional White
+   Papier ivoire, encre neutre, vert forêt désaturé.
    Typo : Space Grotesk (display) + DM Sans (body).
 ═══════════════════════════════════════════════════════════════ */
 
@@ -89,44 +89,42 @@
 }
 
 :root {
-  --radius: 0.375rem;
+  --radius: 0.5rem;
 
-  /* Sable éditorial — papier de revue chaud */
-  --paper: oklch(0.91 0.020 85);         /* #e8e0d0 sable clair, fond principal */
-  --paper-2: oklch(0.94 0.018 85);       /* #f0e9da sable lumière */
-  --paper-3: oklch(0.82 0.022 84);       /* bordures, séparateurs */
-  --paper-inset: oklch(0.78 0.024 83);   /* surface enfoncée */
+  /* Surfaces — ivoire institutionnel, neutre froid */
+  --paper: oklch(0.985 0.003 100);
+  --paper-2: oklch(0.965 0.004 100);
+  --paper-3: oklch(0.925 0.005 100);
+  --paper-inset: oklch(0.895 0.006 100);
 
-  /* Encre = vert sombre forêt */
-  --ink: oklch(0.26 0.025 145);          /* #1e2a1f vert nuit profond */
-  --ink-2: oklch(0.38 0.040 145);        /* #2d4a2f vert forêt */
-  --ink-3: oklch(0.50 0.035 142);        /* tertiaire, mid */
+  /* Encre — quasi-noir neutre */
+  --ink: oklch(0.20 0.008 260);
+  --ink-2: oklch(0.42 0.010 260);
+  --ink-3: oklch(0.60 0.008 260);
 
-  /* Stops verts */
-  --moss-1: oklch(0.32 0.035 145);
-  --moss-2: oklch(0.44 0.045 144);
-  --moss-3: oklch(0.58 0.045 142);
-  --moss-4: oklch(0.74 0.035 140);
-  --moss-5: oklch(0.86 0.024 138);
+  /* Accent unique — vert forêt très désaturé */
+  --moss-1: oklch(0.34 0.045 155);
+  --moss-2: oklch(0.46 0.050 155);
+  --moss-3: oklch(0.62 0.040 155);
+  --moss-4: oklch(0.86 0.020 155);
+  --moss-5: oklch(0.95 0.010 155);
 
-  /* Terracotta-or — accent signature chaud */
-  --gold: oklch(0.74 0.085 65);          /* #d4a574 sable doré */
-  --gold-soft: oklch(0.68 0.090 60);     /* #c89868 hover plus dense */
-
-  /* Accents secondaires */
-  --rust: oklch(0.58 0.140 38);
-  --sky: oklch(0.68 0.075 220);
-  --bloom: oklch(0.65 0.105 305);
-  --peach: oklch(0.82 0.080 60);
+  /* Accents data */
+  --rust: oklch(0.50 0.13 25);
+  --gold: oklch(0.65 0.10 80);
+  --gold-soft: oklch(0.58 0.095 75);
+  --sky: oklch(0.45 0.07 240);
+  --bloom: oklch(0.50 0.10 280);
+  --peach: oklch(0.90 0.04 75);
 
   /* shadcn mapping */
   --background: var(--paper);
   --foreground: var(--ink);
-  --card: var(--paper-2);
+  --card: oklch(1 0 0);
   --card-foreground: var(--ink);
-  --popover: var(--paper-2);
+  --popover: oklch(1 0 0);
   --popover-foreground: var(--ink);
-  --primary: var(--ink);
+  --primary: var(--moss-1);
   --primary-foreground: var(--paper);
   --secondary: var(--paper-2);
   --secondary-foreground: var(--ink-2);
@@ -138,31 +136,29 @@
   --destructive-foreground: var(--paper);
   --border: var(--paper-3);
   --input: var(--paper-3);
-  --ring: var(--gold);
+  --ring: var(--moss-2);
 
-  --shadow-leaf: 0 1px 2px 0 oklch(0.26 0.025 145 / 0.06), 0 1px 3px 0 oklch(0.26 0.025 145 / 0.09);
-  --shadow-deep: 0 18px 48px -18px oklch(0.26 0.025 145 / 0.28);
-  --shadow-soil: inset 0 1px 2px 0 oklch(0.26 0.025 145 / 0.08);
+  --shadow-leaf: 0 1px 2px 0 oklch(0.20 0.008 260 / 0.04), 0 1px 3px 0 oklch(0.20 0.008 260 / 0.06);
+  --shadow-deep: 0 4px 16px -4px oklch(0.20 0.008 260 / 0.10);
+  --shadow-soil: inset 0 1px 2px 0 oklch(0.20 0.008 260 / 0.06);
 
   /* Grain SVG — texture papier discrète */
   --paper-grain-url: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.12  0 0 0 0 0.16  0 0 0 0 0.12  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
 }
 
 .dark {
-  --paper: oklch(0.16 0.020 165);        /* vert nuit */
-  --paper-2: oklch(0.20 0.022 165);
-  --paper-3: oklch(0.28 0.025 165);
-  --paper-inset: oklch(0.32 0.026 165);
-  --ink: oklch(0.96 0.015 90);
-  --ink-2: oklch(0.82 0.020 88);
-  --ink-3: oklch(0.62 0.025 85);
-  --moss-1: oklch(0.82 0.055 158);
-  --moss-2: oklch(0.66 0.060 160);
-  --moss-3: oklch(0.50 0.055 162);
-  --moss-4: oklch(0.34 0.040 164);
-  --moss-5: oklch(0.24 0.028 165);
-  --gold: oklch(0.82 0.115 86);
-  --gold-soft: oklch(0.72 0.090 86);
+  --paper: oklch(0.14 0.006 260);
+  --paper-2: oklch(0.18 0.007 260);
+  --paper-3: oklch(0.24 0.008 260);
+  --paper-inset: oklch(0.28 0.009 260);
+  --ink: oklch(0.96 0.005 100);
+  --ink-2: oklch(0.78 0.006 100);
+  --ink-3: oklch(0.58 0.007 100);
+  --moss-1: oklch(0.72 0.060 155);
+  --moss-2: oklch(0.58 0.055 155);
+  --moss-3: oklch(0.45 0.045 155);
+  --moss-4: oklch(0.30 0.030 155);
+  --moss-5: oklch(0.22 0.020 155);
   --background: var(--paper);
   --foreground: var(--ink);
   --card: var(--paper-2);
