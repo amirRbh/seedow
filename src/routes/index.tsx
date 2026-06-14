@@ -156,7 +156,11 @@ function Landing() {
         <section className="max-w-7xl mx-auto px-6 md:px-12 py-32 border-t border-ink/10">
           <div className="grid md:grid-cols-12 gap-12 mb-16">
             <div className="md:col-span-3">
-              <p className="eyebrow mb-4">{t("landing.pillars_eyebrow")}</p>
+              <p className="eyebrow mb-4 flex items-center gap-3">
+                <span className="tabular-nums text-ink-3">N° 04</span>
+                <span className="h-px w-8 bg-gold/60" />
+                {t("landing.pillars_eyebrow")}
+              </p>
             </div>
             <h2 className="md:col-span-9 display-lg">
               {t("landing.pillars_title_a")}
@@ -164,8 +168,8 @@ function Landing() {
               <span className="text-gold">{t("landing.pillars_title_b")}</span>
             </h2>
           </div>
-          <div className="gold-rule mb-16" />
-          <div className="grid md:grid-cols-3 gap-12 md:gap-16">
+          <div className="gold-rule mb-20" />
+          <div className="grid md:grid-cols-3 gap-12 md:gap-16 relative">
             {PILLAR_KEYS.map((k, i) => (
               <motion.article
                 key={k}
@@ -173,8 +177,9 @@ function Landing() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{ duration: 0.7, delay: i * 0.1, ease: easeOut }}
+                className="relative"
               >
-                <p className="font-display text-xs tracking-[0.25em] text-gold tabular-nums mb-6">
+                <p className="outline-number text-7xl md:text-8xl mb-4 select-none">
                   {PILLAR_NUMBERS[k]}
                 </p>
                 <h3 className="display-lg text-3xl md:text-4xl mb-4">{t(`landing.pillars.${k}_title`)}</h3>
