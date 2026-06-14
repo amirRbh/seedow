@@ -1,116 +1,52 @@
-## Direction retenue
+## Objectif
 
-- **Palette** : Vert sombre & Sable
-  - `--ink: #1e2a1f` (vert nuit, fond sombre & texte principal)
-  - `--ink-2: #2d4a2f` (vert forêt, secondaire)
-  - `--paper: #e8e0d0` (sable clair, fond principal)
-  - `--paper-2: #f0e9da` (sable lumière, alt fond)
-  - `--gold: #d4a574` (terracotta sable, accent)
-  - `--gold-soft: #c89868` (variante hover)
-- **Typo** : on conserve Space Grotesk + DM Sans (verrouillé en mémoire)
-- **Registre** : éditorial cinéma — grandes typos, scroll-driven, révélations lentes, filets fins, grain papier subtil
-- **Motion** : niveau 3/5 — élégant, jamais agressif. Respect de `prefers-reduced-motion`.
-- **Périmètre** : landing en priorité + passe de cohérence sur header, transitions, nav, KPI, séparateurs partout
+Rendre l'impact positif sur la nature beaucoup plus visible — aujourd'hui il n'apparaît que sur `/portfolio` via `ImpactRibbon`, et le dashboard ne montre que la valeur financière. On va le hisser au rang de second pilier narratif du dashboard, juste après la valeur, et lui donner un traitement éditorial cohérent avec la charte sobre (blanc ivoire, encre, or, vert forêt désaturé).
 
-## Ce qui change
+## Changements
 
-### 1. Tokens couleurs (`src/styles.css`)
-Remplacement des variables `--ink`, `--ink-2`, `--paper`, `--paper-2`, `--gold`, `--gold-soft` par les nouveaux hex. Tous les composants existants (boutons, eyebrows, KPI, gold-rule) suivent automatiquement.
+### 1. Nouveau composant `ImpactHero` (signature éditoriale)
 
-### 2. Matière papier (nouveau)
-- Ajout d'une utility `.paper-grain` : overlay SVG de grain très subtil (opacité 0.04) appliqué au body, pour donner une vraie texture de page imprimée.
-- Vignette douce sur les sections sombres (radial-gradient discret aux coins).
+Fichier : `src/components/impact/ImpactHero.tsx`
 
-### 3. Landing (`src/routes/index.tsx`) — passe wow
-- **Hero** : le "seedow." passe en `display-2xl` (clamp jusqu'à ~14rem), tracking resserré, point or animé (pulse lent). L'effet de scale-down au scroll est conservé mais affiné.
-- **Eyebrow numéroté** : tous les eyebrows reçoivent un compteur "N° 01 / 06" tabulaire à côté du label, façon revue éditoriale.
-- **Manifesto** : passage du fade word-by-word à un reveal par ligne avec un filet or qui suit le scroll à gauche du paragraphe.
-- **Démo audit** : transformation en "fiche éditoriale" — fond papier, numéro de série en haut, KPI alignés sur baseline, mini graphe sparkline horizontal sous le score ESG.
-- **Piliers** : grande numérotation `01 / 02 / 03` en outline (font 6xl, stroke 1px or), titre en dessous, filet vertical fin séparateur entre colonnes.
-- **Section méthode** (fond sombre) : ajout d'un grain plus marqué + vignette + un large filet or animé (`GoldRuleReveal` étendu).
-- **CTA final** : remplacement des blurs gold/moss par un dégradé radial sable→vert sombre + grain. Bouton or avec micro-shimmer au hover.
+- Bloc large, fond `paper` avec `paper-grain`, filet `gold-rule` en tête, eyebrow « N° 02 · Impact réel ».
+- Chiffre héro **CO₂ évité** en `KPIFigure` size `xl` (Space Grotesk tabulaire), animé au mount via `AnimatedFigure`.
+- Sous-ligne courte : équivalence concrète auto-choisie (« ≈ X arbres plantés sur 1 an » ou « ≈ Y trajets Paris–Lyon évités ») pour rendre le chiffre tangible.
+- Bandeau de 3 mini-KPI alignés sous un filet or fin : arbres équivalents, énergie verte financée (kWh/MWh), score impact (0–100) — chacun en `KPIFigure` size `sm` avec libellé uppercase tracking 0.22em.
+- Lien discret « Voir la méthodologie » → `/methodologie`, et « Détail de l'impact » → `/portfolio#impact`.
+- **Pas de gradient moss saturé** comme l'actuel `ImpactRibbon` — on reste sur fond papier avec accents or/vert forêt désaturé pour respecter la direction Institutional White.
 
-### 4. Header sticky (`StickyHeader`)
-- Backdrop blur passe de `xl` à `2xl` + filet or animé sous le header au scroll (apparaît à partir de 200px).
-- Logo "seedow." reçoit un point or qui pulse très lentement.
+### 2. Intégration sur le dashboard
 
-### 5. RailNav (`src/components/layout/RailNav.tsx`)
-- Indicateur actif : remplace le fond plein par un filet or vertical à gauche de l'icône + icône en `text-gold`.
-- Hover : transition douce 250ms avec léger scale.
-- Tooltip de label sur hover (déjà présent) restylé en chip papier avec ombre fine.
+Fichier : `src/routes/dashboard.tsx`
 
-### 6. KPIFigure (`src/components/ui/KPIFigure.tsx`)
-- Animation de count-up au reveal (IntersectionObserver, 600ms, easing cubic-out).
-- Suffixe (`€`, `%`, `/100`) plus petit, baseline alignée.
-- Ligne de baseline or fine sous la valeur.
+- Insérer `<ImpactHero />` juste après le bloc valeur (section 1), **avant** l'aperçu portefeuille, pour qu'il soit le deuxième élément vu au scroll.
+- Conditionner à `portfolio && plants.length > 0` (rien à montrer sans investissement).
+- Source des données : `usePortfolioValuation` + `portfolio.metrics` (déjà disponibles), même calcul d'estimation CO₂ que `portfolio.tsx` (`co2_avoided_tons * totalInvested / 10000`).
 
-### 7. EditorialSection (`src/components/ui/EditorialSection.tsx`)
-- Ajout d'un numéro de section optionnel (prop `index`) affiché en outline géant en arrière-plan (opacité 0.06), façon presse magazine.
+### 3. Refonte de `ImpactRibbon` sur `/portfolio`
 
-### 8. Transitions de page
-- Fade + translate-y léger (motion) entre routes, 400ms, easing `[0.22, 1, 0.36, 1]`. Géré dans `__root.tsx` via `AnimatePresence`.
+Fichier : `src/components/garden/ImpactRibbon.tsx`
 
-### 9. Footer
-- Réorganisation 3 colonnes : marque + tagline / liens / mention légale. Filet or en haut.
+- Remplacer le gradient vert saturé `from-moss-1 via-moss-2 to-moss-3` par un traitement papier cohérent : fond `paper-2`, filet or, chiffres en `KPIFigure`, accent or sur le CO₂.
+- Garder l'API (`co2Avoided`, `treesEquivalent`, `energyFinanced`, `esgScore`) pour ne rien casser ailleurs.
+- Retirer les emojis 🌳⚡✨ (incohérents avec le ton éditorial sobre) — remplacer par des micro-pictos SVG fins ou simplement par les labels.
 
-## Hors scope
+### 4. i18n
 
-- Aucun changement de copy / lexique
-- Aucun changement de typo (Space Grotesk + DM Sans conservés)
-- Aucun changement de logique métier, données, routes, auth
-- Pas de Three.js, WebGL, ou lib lourde — Framer Motion suffit
-- Le hero garde son architecture, on l'affine ; pas de refonte structurelle
+Fichier : `src/i18n/locales/{fr,en}.json`
 
-## Diagramme de la nouvelle landing
-
-```text
-┌──────────────────────────────────────────────┐
-│ [header sticky + filet or au scroll]         │
-├──────────────────────────────────────────────┤
-│  N° 01 — ÉDITION 2026                        │
-│                                              │
-│  SEEDOW·                       (scale-down)  │
-│                                              │
-│  Épargner proprement.                        │
-│  [CTA primaire]  [CTA secondaire]            │
-│  [beta counter]                              │
-│                                              │
-│  ── sans banque ── méthode ── sources ── ↓   │
-├──────────────────────────────────────────────┤
-│  N° 02 — MANIFESTO                           │
-│  │ Le manifesto se révèle ligne par ligne    │
-│  │ avec un filet or qui descend à gauche.    │
-├──────────────────────────────────────────────┤
-│  N° 03 — DÉMO  [fiche papier + sparkline]    │
-├──────────────────────────────────────────────┤
-│  N° 04 — PILIERS                             │
-│   01 │  02 │  03   (grands chiffres outline) │
-├──────────────────────────────────────────────┤
-│  N° 05 — MÉTHODE  [fond sombre + grain]      │
-├──────────────────────────────────────────────┤
-│  N° 06 — FAQ                                 │
-├──────────────────────────────────────────────┤
-│  CTA final [radial sable→vert + grain]       │
-├──────────────────────────────────────────────┤
-│  Footer 3 colonnes                           │
-└──────────────────────────────────────────────┘
-```
+- Ajouter `impact_hero.eyebrow`, `impact_hero.headline`, `impact_hero.equivalence_trees`, `impact_hero.equivalence_trips`, `impact_hero.see_methodology`, `impact_hero.see_detail`, labels des 3 mini-KPI.
+- Lexique sobre, sans champ lexical jardin (cf. mémoire projet).
 
 ## Détails techniques
 
-- Grain : SVG inline base64 en background-image, taille 200×200, répété, `mix-blend-mode: multiply` sur fond clair / `screen` sur fond sombre.
-- Count-up KPI : hook custom `useCountUp(target, { duration: 600 })` avec `requestAnimationFrame`, déclenché par IntersectionObserver (once).
-- Transitions de route : `AnimatePresence mode="wait"` autour de `<Outlet />` dans `__root.tsx`. Clé = `location.pathname`.
-- Tous les nouveaux composants respectent `prefers-reduced-motion: reduce` (skip animations, état final immédiat).
-- Mise à jour de `mem://index.md` : palette Emerald Prestige → "Forest & Sand", nouveaux hex.
+- `ImpactHero` lit `usePortfolioValuation()` + `useActivePortfolio()` côté client (déjà fait dans `EthiBriefing`).
+- Équivalence concrète : sélection déterministe basée sur la magnitude du CO₂ (≥ 1 t → trajets longue distance ; < 1 t → arbres). Pas de `Math.random` (hydration-safe).
+- Réutilise `KPIFigure`, `AnimatedFigure`, `.paper-grain`, `.gold-rule` déjà en place.
+- Aucune modification backend / metrics / engine — uniquement présentation.
 
-## Fichiers touchés (estimation)
+## Hors scope
 
-- `src/styles.css` — tokens + utilities grain/vignette
-- `src/routes/index.tsx` — refonte sections landing
-- `src/routes/__root.tsx` — transitions de page + grain global
-- `src/components/layout/RailNav.tsx` — indicateur actif
-- `src/components/ui/KPIFigure.tsx` — count-up
-- `src/components/ui/EditorialSection.tsx` — numéro outline
-- `src/components/ui/GoldRuleReveal.tsx` — variante longue
-- `mem://index.md` + `mem://design/palette` (nouveau) — mise à jour mémoire
+- Pas de nouvelles métriques calculées (biodiversité, eau, etc.) — on travaille avec ce que le moteur fournit déjà.
+- Pas de refonte de `/portfolio` au-delà du restyling de `ImpactRibbon`.
+- Pas de changement sur `EthiBriefing` ni sur le moteur de portefeuille.

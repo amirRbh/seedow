@@ -18,6 +18,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { BetaBanner } from "@/components/beta/BetaBanner";
 import { RealInvestmentInterestCard } from "@/components/beta/RealInvestmentInterestCard";
 import { FeedbackButton } from "@/components/beta/FeedbackButton";
+import { ImpactHero } from "@/components/impact/ImpactHero";
 
 export const Route = createFileRoute("/dashboard")({
   beforeLoad: async () => {
@@ -131,6 +132,9 @@ function Dashboard() {
             </div>
           )}
         </motion.section>
+
+        {/* 1b. Impact nature — mis en avant juste après la valeur */}
+        {portfolio && plants.length > 0 && <ImpactHero />}
 
         {/* 2. Aperçu portefeuille */}
         <motion.section
