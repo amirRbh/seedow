@@ -306,19 +306,20 @@ function Landing() {
 function StickyHeader({ isAuthed }: { isAuthed: boolean | null }) {
   const { t } = useTranslation();
   const { scrollY } = useScroll();
-  const bg = useTransform(scrollY, [0, 400], ["rgba(245, 240, 224, 0)", "rgba(245, 240, 224, 0.92)"]);
-  const borderColor = useTransform(scrollY, [0, 400], ["rgba(6, 78, 59, 0)", "rgba(6, 78, 59, 0.12)"]);
+  const bg = useTransform(scrollY, [0, 400], ["rgba(232, 224, 208, 0)", "rgba(232, 224, 208, 0.88)"]);
+  const ruleOpacity = useTransform(scrollY, [120, 280], [0, 1]);
+  const ruleScale = useTransform(scrollY, [120, 280], [0.2, 1]);
 
   return (
     <motion.header
       style={{ backgroundColor: bg }}
-      className="fixed top-0 left-0 right-0 z-40 backdrop-blur-xl"
+      className="fixed top-0 left-0 right-0 z-40 backdrop-blur-2xl"
     >
-      <motion.div style={{ borderColor }} className="border-b">
+      <div className="relative">
         <nav className="max-w-7xl mx-auto flex justify-between items-center px-6 md:px-12 py-5">
           <div className="flex items-center gap-6">
             <Link to="/" className="font-display font-bold text-xl tracking-tight uppercase">
-              seedow<span className="text-gold">.</span>
+              seedow<span className="text-gold gold-pulse">.</span>
             </Link>
             <LanguageToggle />
           </div>
@@ -342,7 +343,12 @@ function StickyHeader({ isAuthed }: { isAuthed: boolean | null }) {
             )}
           </div>
         </nav>
-      </motion.div>
+        <motion.div
+          style={{ opacity: ruleOpacity, scaleX: ruleScale, transformOrigin: "left center" }}
+          className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold to-transparent"
+          aria-hidden
+        />
+      </div>
     </motion.header>
   );
 }
