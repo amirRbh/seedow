@@ -372,7 +372,7 @@ function ManifestoSection() {
 
   return (
     <section ref={ref} className="max-w-7xl mx-auto px-6 md:px-12 py-32 md:py-48">
-      <p className="eyebrow mb-12">{t("landing.manifesto_eyebrow")}</p>
+      <p className="eyebrow mb-12 flex items-center gap-3"><span className="tabular-nums text-ink-3">N° 02</span><span className="h-px w-8 bg-gold/60" />{t("landing.manifesto_eyebrow")}</p>
       <p className="display-lg leading-[1.1] max-w-5xl">
         {words.map((word, i) => {
           const start = i / words.length;
