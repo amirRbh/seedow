@@ -270,7 +270,7 @@
   }
 }
 
-
+@layer components {
   /* Matière papier — grain subtil */
   .paper-grain {
     position: relative;
