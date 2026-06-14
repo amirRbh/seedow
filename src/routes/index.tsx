@@ -423,7 +423,7 @@ function DemoAuditSection() {
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="grid md:grid-cols-12 gap-12 mb-16">
           <div className="md:col-span-5">
-            <p className="eyebrow mb-4">{t("landing.demo_eyebrow")}</p>
+            <p className="eyebrow mb-4 flex items-center gap-3"><span className="tabular-nums text-ink-3">N° 03</span><span className="h-px w-8 bg-gold/60" />{t("landing.demo_eyebrow")}</p>
             <h2 className="display-lg">
               {t("landing.demo_title_a")}
               <br />
