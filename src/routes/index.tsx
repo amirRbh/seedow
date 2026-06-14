@@ -224,7 +224,7 @@ function Landing() {
         {/* FAQ */}
         <section className="max-w-4xl mx-auto px-6 md:px-12 py-32">
           <div className="mb-16">
-            <p className="eyebrow mb-4">{t("landing.faq_eyebrow")}</p>
+            <p className="eyebrow mb-4 flex items-center gap-3"><span className="tabular-nums text-ink-3">N° 06</span><span className="h-px w-8 bg-gold/60" />{t("landing.faq_eyebrow")}</p>
             <h2 className="display-lg">{t("landing.faq_title")}</h2>
             <div className="gold-rule mt-8" />
           </div>
