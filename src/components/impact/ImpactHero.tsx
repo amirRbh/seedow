@@ -89,6 +89,12 @@ export function ImpactHero() {
             {t("impact_hero.headline")}
           </p>
           <p className="mt-2 text-xs text-ink-3 italic">{equivalence}</p>
+          <p className="mt-3 text-xs text-ink-3 leading-relaxed max-w-md">
+            {t("impact_hero.explainer")}{" "}
+            <Link to="/methodologie" className="underline underline-offset-2 hover:text-gold transition-colors">
+              {t("impact_hero.learn_more")}
+            </Link>
+          </p>
         </div>
 
         {/* Filet or */}
