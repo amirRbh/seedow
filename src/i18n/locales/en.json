@@ -913,13 +913,23 @@
     "explore": "Explore assets"
   },
   "impact_ribbon": {
-    "real_impact": "Your real impact",
-    "co2_avoided_desc": "of CO₂ avoided thanks to your investments",
+    "real_impact": "Real impact",
+    "co2_avoided_desc": "of CO₂ avoided through your investments",
     "tonnes": "tonnes",
     "kg": "kg",
     "trees_label": "Equivalent trees",
     "energy_label": "Green energy financed",
-    "impact_score": "Impact score /10"
+    "impact_score": "Impact score"
+  },
+  "impact_hero": {
+    "eyebrow": "Real impact",
+    "co2_label": "CO₂ avoided (estimate)",
+    "headline": "Every euro invested reduces carbon footprint and funds the transition.",
+    "equivalence_trees": "≈ {{count}} trees absorbing CO₂ for 1 year",
+    "equivalence_trips": "≈ {{count}} Paris–Lyon car trips avoided",
+    "impact_score_label": "Impact score",
+    "see_methodology": "Methodology",
+    "see_detail": "Impact details"
   },
   "intent_cards": {
     "what_to_do": "What do you want to do?",

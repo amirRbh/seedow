@@ -895,13 +895,23 @@
     "explore": "Explorer les actifs"
   },
   "impact_ribbon": {
-    "real_impact": "Ton impact réel",
-    "co2_avoided_desc": "de CO₂ évité grâce à tes investissements",
+    "real_impact": "Impact réel",
+    "co2_avoided_desc": "de CO₂ évité grâce à vos investissements",
     "tonnes": "tonnes",
     "kg": "kg",
     "trees_label": "Arbres équivalents",
     "energy_label": "Énergie verte financée",
-    "impact_score": "Score impact /10"
+    "impact_score": "Score impact"
+  },
+  "impact_hero": {
+    "eyebrow": "Impact réel",
+    "co2_label": "CO₂ évité (estimation)",
+    "headline": "Chaque euro investi réduit l'empreinte carbone et finance la transition.",
+    "equivalence_trees": "≈ {{count}} arbres absorbant du CO₂ pendant 1 an",
+    "equivalence_trips": "≈ {{count}} trajets Paris–Lyon en voiture évités",
+    "impact_score_label": "Score impact",
+    "see_methodology": "Méthodologie",
+    "see_detail": "Détail de l'impact"
   },
   "intent_cards": {
     "what_to_do": "Que veux-tu faire ?",
