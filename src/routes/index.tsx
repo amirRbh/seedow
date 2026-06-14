@@ -190,11 +190,15 @@ function Landing() {
         </section>
 
         {/* MÉTHODO TEASER */}
-        <section className="bg-ink text-paper py-32">
-          <div className="max-w-7xl mx-auto px-6 md:px-12">
+        <section className="relative overflow-hidden bg-ink text-paper py-32 paper-grain ink-grain vignette">
+          <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
             <div className="grid md:grid-cols-12 gap-12 items-end">
               <div className="md:col-span-7">
-                <p className="eyebrow mb-6">{t("landing.method_eyebrow")}</p>
+                <p className="eyebrow mb-6 flex items-center gap-3">
+                  <span className="tabular-nums text-paper/50">N° 05</span>
+                  <span className="h-px w-8 bg-gold/60" />
+                  {t("landing.method_eyebrow")}
+                </p>
                 <h2 className="display-lg text-paper">
                   {t("landing.method_title_a")}
                   <br />
