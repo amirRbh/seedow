@@ -83,8 +83,10 @@ function Landing() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6 }}
-              className="eyebrow mb-10"
+              className="eyebrow mb-10 flex items-center gap-3"
             >
+              <span className="tabular-nums text-ink-3">N° 01</span>
+              <span className="h-px w-8 bg-gold/60" />
               {t("landing.eyebrow_edition")}
             </motion.p>
 
@@ -92,7 +94,7 @@ function Landing() {
               style={{ scale: heroScale, opacity: heroOpacity, y: heroY, transformOrigin: "left center" }}
             >
               <h1 className="display-xl uppercase">
-                seedow<span className="text-gold">.</span>
+                seedow<span className="text-gold gold-pulse">.</span>
               </h1>
             </motion.div>
 
