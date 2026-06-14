@@ -83,8 +83,10 @@ function Landing() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6 }}
-              className="eyebrow mb-10"
+              className="eyebrow mb-10 flex items-center gap-3"
             >
+              <span className="tabular-nums text-ink-3">N° 01</span>
+              <span className="h-px w-8 bg-gold/60" />
               {t("landing.eyebrow_edition")}
             </motion.p>
 
@@ -92,7 +94,7 @@ function Landing() {
               style={{ scale: heroScale, opacity: heroOpacity, y: heroY, transformOrigin: "left center" }}
             >
               <h1 className="display-xl uppercase">
-                seedow<span className="text-gold">.</span>
+                seedow<span className="text-gold gold-pulse">.</span>
               </h1>
             </motion.div>
 
@@ -154,7 +156,11 @@ function Landing() {
         <section className="max-w-7xl mx-auto px-6 md:px-12 py-32 border-t border-ink/10">
           <div className="grid md:grid-cols-12 gap-12 mb-16">
             <div className="md:col-span-3">
-              <p className="eyebrow mb-4">{t("landing.pillars_eyebrow")}</p>
+              <p className="eyebrow mb-4 flex items-center gap-3">
+                <span className="tabular-nums text-ink-3">N° 04</span>
+                <span className="h-px w-8 bg-gold/60" />
+                {t("landing.pillars_eyebrow")}
+              </p>
             </div>
             <h2 className="md:col-span-9 display-lg">
               {t("landing.pillars_title_a")}
@@ -162,8 +168,8 @@ function Landing() {
               <span className="text-gold">{t("landing.pillars_title_b")}</span>
             </h2>
           </div>
-          <div className="gold-rule mb-16" />
-          <div className="grid md:grid-cols-3 gap-12 md:gap-16">
+          <div className="gold-rule mb-20" />
+          <div className="grid md:grid-cols-3 gap-12 md:gap-16 relative">
             {PILLAR_KEYS.map((k, i) => (
               <motion.article
                 key={k}
@@ -171,8 +177,9 @@ function Landing() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{ duration: 0.7, delay: i * 0.1, ease: easeOut }}
+                className="relative"
               >
-                <p className="font-display text-xs tracking-[0.25em] text-gold tabular-nums mb-6">
+                <p className="outline-number text-7xl md:text-8xl mb-4 select-none">
                   {PILLAR_NUMBERS[k]}
                 </p>
                 <h3 className="display-lg text-3xl md:text-4xl mb-4">{t(`landing.pillars.${k}_title`)}</h3>
@@ -183,11 +190,15 @@ function Landing() {
         </section>
 
         {/* MÉTHODO TEASER */}
-        <section className="bg-ink text-paper py-32">
-          <div className="max-w-7xl mx-auto px-6 md:px-12">
+        <section className="relative overflow-hidden bg-ink text-paper py-32 paper-grain ink-grain vignette">
+          <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
             <div className="grid md:grid-cols-12 gap-12 items-end">
               <div className="md:col-span-7">
-                <p className="eyebrow mb-6">{t("landing.method_eyebrow")}</p>
+                <p className="eyebrow mb-6 flex items-center gap-3">
+                  <span className="tabular-nums text-paper/50">N° 05</span>
+                  <span className="h-px w-8 bg-gold/60" />
+                  {t("landing.method_eyebrow")}
+                </p>
                 <h2 className="display-lg text-paper">
                   {t("landing.method_title_a")}
                   <br />
@@ -213,7 +224,7 @@ function Landing() {
         {/* FAQ */}
         <section className="max-w-4xl mx-auto px-6 md:px-12 py-32">
           <div className="mb-16">
-            <p className="eyebrow mb-4">{t("landing.faq_eyebrow")}</p>
+            <p className="eyebrow mb-4 flex items-center gap-3"><span className="tabular-nums text-ink-3">N° 06</span><span className="h-px w-8 bg-gold/60" />{t("landing.faq_eyebrow")}</p>
             <h2 className="display-lg">{t("landing.faq_title")}</h2>
             <div className="gold-rule mt-8" />
           </div>
@@ -248,12 +259,16 @@ function Landing() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.8, ease: easeOut }}
-            className="relative overflow-hidden bg-ink text-paper p-12 md:p-24"
+            className="relative overflow-hidden bg-ink text-paper p-12 md:p-24 paper-grain ink-grain"
           >
-            <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full blur-[140px] opacity-30 bg-gold" />
-            <div className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full blur-[160px] opacity-20 bg-moss-2" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,oklch(0.74_0.085_65/0.28),transparent_60%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,oklch(0.38_0.040_145/0.45),transparent_55%)]" />
             <div className="relative z-10 max-w-3xl">
-              <p className="eyebrow mb-6">{t("landing.final_eyebrow")}</p>
+              <p className="eyebrow mb-6 flex items-center gap-3">
+                <span className="tabular-nums text-paper/50">N° 07</span>
+                <span className="h-px w-8 bg-gold/60" />
+                {t("landing.final_eyebrow")}
+              </p>
               <h2 className="display-lg text-paper mb-8">
                 {t("landing.final_title_a")}
                 <br />
@@ -262,10 +277,13 @@ function Landing() {
               <Link
                 to={isAuthed ? "/dashboard" : "/auth"}
                 search={isAuthed ? undefined : { redirect: "/onboarding", mode: "signup" }}
-                className="inline-flex items-center gap-3 bg-gold text-ink px-10 py-5 font-semibold uppercase tracking-[0.2em] text-xs hover:bg-gold-soft transition-colors"
+                className="group relative inline-flex items-center gap-3 bg-gold text-ink px-10 py-5 font-semibold uppercase tracking-[0.2em] text-xs hover:bg-gold-soft transition-colors overflow-hidden"
               >
-                {isAuthed ? t("nav.my_space") : t("landing.final_cta")}
-                <ArrowRight className="w-4 h-4" />
+                <span className="relative z-10 inline-flex items-center gap-3">
+                  {isAuthed ? t("nav.my_space") : t("landing.final_cta")}
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </span>
+                <span aria-hidden className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 gold-shimmer transition-opacity" />
               </Link>
             </div>
           </motion.div>
@@ -288,19 +306,20 @@ function Landing() {
 function StickyHeader({ isAuthed }: { isAuthed: boolean | null }) {
   const { t } = useTranslation();
   const { scrollY } = useScroll();
-  const bg = useTransform(scrollY, [0, 400], ["rgba(245, 240, 224, 0)", "rgba(245, 240, 224, 0.92)"]);
-  const borderColor = useTransform(scrollY, [0, 400], ["rgba(6, 78, 59, 0)", "rgba(6, 78, 59, 0.12)"]);
+  const bg = useTransform(scrollY, [0, 400], ["rgba(232, 224, 208, 0)", "rgba(232, 224, 208, 0.88)"]);
+  const ruleOpacity = useTransform(scrollY, [120, 280], [0, 1]);
+  const ruleScale = useTransform(scrollY, [120, 280], [0.2, 1]);
 
   return (
     <motion.header
       style={{ backgroundColor: bg }}
-      className="fixed top-0 left-0 right-0 z-40 backdrop-blur-xl"
+      className="fixed top-0 left-0 right-0 z-40 backdrop-blur-2xl"
     >
-      <motion.div style={{ borderColor }} className="border-b">
+      <div className="relative">
         <nav className="max-w-7xl mx-auto flex justify-between items-center px-6 md:px-12 py-5">
           <div className="flex items-center gap-6">
             <Link to="/" className="font-display font-bold text-xl tracking-tight uppercase">
-              seedow<span className="text-gold">.</span>
+              seedow<span className="text-gold gold-pulse">.</span>
             </Link>
             <LanguageToggle />
           </div>
@@ -324,7 +343,12 @@ function StickyHeader({ isAuthed }: { isAuthed: boolean | null }) {
             )}
           </div>
         </nav>
-      </motion.div>
+        <motion.div
+          style={{ opacity: ruleOpacity, scaleX: ruleScale, transformOrigin: "left center" }}
+          className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold to-transparent"
+          aria-hidden
+        />
+      </div>
     </motion.header>
   );
 }
@@ -354,7 +378,7 @@ function ManifestoSection() {
 
   return (
     <section ref={ref} className="max-w-7xl mx-auto px-6 md:px-12 py-32 md:py-48">
-      <p className="eyebrow mb-12">{t("landing.manifesto_eyebrow")}</p>
+      <p className="eyebrow mb-12 flex items-center gap-3"><span className="tabular-nums text-ink-3">N° 02</span><span className="h-px w-8 bg-gold/60" />{t("landing.manifesto_eyebrow")}</p>
       <p className="display-lg leading-[1.1] max-w-5xl">
         {words.map((word, i) => {
           const start = i / words.length;
@@ -405,7 +429,7 @@ function DemoAuditSection() {
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="grid md:grid-cols-12 gap-12 mb-16">
           <div className="md:col-span-5">
-            <p className="eyebrow mb-4">{t("landing.demo_eyebrow")}</p>
+            <p className="eyebrow mb-4 flex items-center gap-3"><span className="tabular-nums text-ink-3">N° 03</span><span className="h-px w-8 bg-gold/60" />{t("landing.demo_eyebrow")}</p>
             <h2 className="display-lg">
               {t("landing.demo_title_a")}
               <br />
