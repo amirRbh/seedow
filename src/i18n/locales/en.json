@@ -929,7 +929,9 @@
     "equivalence_trips": "≈ {{count}} Paris–Lyon car trips avoided",
     "impact_score_label": "Impact score",
     "see_methodology": "Methodology",
-    "see_detail": "Impact details"
+    "see_detail": "Impact details",
+    "explainer": "CO₂ avoided is an indicative estimate derived from each holding's ESG score. It reflects the footprint reduction from excluding the most carbon-intensive issuers and selecting best-in-class assets. Not a regulatory figure — a directional measure.",
+    "learn_more": "Learn more"
   },
   "intent_cards": {
     "what_to_do": "What do you want to do?",
