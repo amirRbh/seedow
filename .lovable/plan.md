@@ -1,52 +1,87 @@
-## Objectif
+## Refonte du storytelling de la landing
 
-Rendre l'impact positif sur la nature beaucoup plus visible — aujourd'hui il n'apparaît que sur `/portfolio` via `ImpactRibbon`, et le dashboard ne montre que la valeur financière. On va le hisser au rang de second pilier narratif du dashboard, juste après la valeur, et lui donner un traitement éditorial cohérent avec la charte sobre (blanc ivoire, encre, or, vert forêt désaturé).
+Réécriture des sections narratives de la landing (`src/routes/index.tsx`) pour incarner la nouvelle question : **« Pourquoi se soucier de ce que finance son argent ? »**. Le ton reste éditorial Institutional White (eyebrow N° XX, gold-rule, paper-grain, display-lg, Space Grotesk). Aucun nouveau composant ni nouvelle page : on remplace uniquement les contenus i18n et on ajoute une section narrative à 4 chapitres entre le manifeste et la démo.
 
-## Changements
+### 1. Hero — nouveau tagline
 
-### 1. Nouveau composant `ImpactHero` (signature éditoriale)
+Remplacer `landing.subtitle` (actuellement « Épargner proprement. ») par :
+- FR : **« Votre argent façonne déjà le monde. Seedow vous montre lequel. »**
+- EN : **« Your money is already shaping the world. Seedow shows you which one. »**
 
-Fichier : `src/components/impact/ImpactHero.tsx`
+Le H1 « seedow. » est conservé. La phrase devient le sous-titre principal du hero (déjà stylé `text-xl md:text-3xl font-display`).
 
-- Bloc large, fond `paper` avec `paper-grain`, filet `gold-rule` en tête, eyebrow « N° 02 · Impact réel ».
-- Chiffre héro **CO₂ évité** en `KPIFigure` size `xl` (Space Grotesk tabulaire), animé au mount via `AnimatedFigure`.
-- Sous-ligne courte : équivalence concrète auto-choisie (« ≈ X arbres plantés sur 1 an » ou « ≈ Y trajets Paris–Lyon évités ») pour rendre le chiffre tangible.
-- Bandeau de 3 mini-KPI alignés sous un filet or fin : arbres équivalents, énergie verte financée (kWh/MWh), score impact (0–100) — chacun en `KPIFigure` size `sm` avec libellé uppercase tracking 0.22em.
-- Lien discret « Voir la méthodologie » → `/methodologie`, et « Détail de l'impact » → `/portfolio#impact`.
-- **Pas de gradient moss saturé** comme l'actuel `ImpactRibbon` — on reste sur fond papier avec accents or/vert forêt désaturé pour respecter la direction Institutional White.
+### 2. Manifeste — phrase forte
 
-### 2. Intégration sur le dashboard
+Remplacer `landing.manifesto_text` (révélé mot-à-mot au scroll) par :
+- FR : « Un portefeuille n'est pas une collection de lignes et de chiffres. C'est un vote. Chaque euro investi soutient une vision du monde. »
+- EN : « A portfolio is not a collection of lines and numbers. It's a statement. Every euro invested supports a vision of the world. »
 
-Fichier : `src/routes/dashboard.tsx`
+### 3. Nouvelle section narrative « N° 03 — Récit » (insérée avant `DemoAuditSection`)
 
-- Insérer `<ImpactHero />` juste après le bloc valeur (section 1), **avant** l'aperçu portefeuille, pour qu'il soit le deuxième élément vu au scroll.
-- Conditionner à `portfolio && plants.length > 0` (rien à montrer sans investissement).
-- Source des données : `usePortfolioValuation` + `portfolio.metrics` (déjà disponibles), même calcul d'estimation CO₂ que `portfolio.tsx` (`co2_avoided_tons * totalInvested / 10000`).
+Quatre chapitres en grille éditoriale (problème → déclic → solution → mission), reprenant fidèlement le texte fourni mais condensé pour le web (2-3 paragraphes courts par chapitre, pas le texte intégral). Structure :
 
-### 3. Refonte de `ImpactRibbon` sur `/portfolio`
+```text
+N° 03 ─── Récit
+┌────────────────────────────────────────────┐
+│  Le problème                               │
+│  Pendant des années, nous avons appris     │
+│  à faire attention à ce que nous           │
+│  consommons. Mais une question reste       │
+│  rarement posée : que finance réellement   │
+│  mon argent quand j'investis ?             │
+├────────────────────────────────────────────┤
+│  Le déclic                                 │
+│  Un portefeuille n'est pas une collection  │
+│  de lignes. C'est un vote.                 │
+├────────────────────────────────────────────┤
+│  La solution                               │
+│  Seedow rend visible ce qui était          │
+│  invisible — l'histoire, l'impact, les     │
+│  valeurs derrière chaque ligne.            │
+├────────────────────────────────────────────┤
+│  La mission                                │
+│  Permettre à chacun de comprendre où va    │
+│  son argent et quel monde il contribue à   │
+│  construire.                               │
+└────────────────────────────────────────────┘
+```
 
-Fichier : `src/components/garden/ImpactRibbon.tsx`
+Mise en forme :
+- Eyebrow `N° 03 · Récit` (or, tracking 0.22em)
+- Chapitres en `grid md:grid-cols-2 gap-12 md:gap-16` (2x2)
+- Titre de chapitre `display-lg text-3xl` + filet `gold-rule` court
+- Corps : `text-ink-2 leading-relaxed` (DM Sans body)
+- `outline-number` (01 → 04) en arrière-plan pour rappeler le code visuel des piliers
+- Animations : `motion.div` avec `whileInView` (fade + slide up, stagger 0.1s)
 
-- Remplacer le gradient vert saturé `from-moss-1 via-moss-2 to-moss-3` par un traitement papier cohérent : fond `paper-2`, filet or, chiffres en `KPIFigure`, accent or sur le CO₂.
-- Garder l'API (`co2Avoided`, `treesEquivalent`, `energyFinanced`, `esgScore`) pour ne rien casser ailleurs.
-- Retirer les emojis 🌳⚡✨ (incohérents avec le ton éditorial sobre) — remplacer par des micro-pictos SVG fins ou simplement par les labels.
+### 4. Renumérotation des sections suivantes
 
-### 4. i18n
+Insertion du `N° 03` décale les eyebrows existantes :
+- Manifeste : reste `N° 02`
+- **Récit : N° 03** (nouveau)
+- Piliers : `N° 04` (déjà ce numéro — OK)
+- Méthodo teaser : `N° 05` (déjà)
+- FAQ : `N° 06` (déjà)
+- CTA final : `N° 07` (déjà)
 
-Fichier : `src/i18n/locales/{fr,en}.json`
+La démo (sans numéro actuellement) reste sans numéro. Aucun changement aux numéros existants — la nouvelle section s'insère pile dans le créneau libre `N° 03`.
 
-- Ajouter `impact_hero.eyebrow`, `impact_hero.headline`, `impact_hero.equivalence_trees`, `impact_hero.equivalence_trips`, `impact_hero.see_methodology`, `impact_hero.see_detail`, labels des 3 mini-KPI.
-- Lexique sobre, sans champ lexical jardin (cf. mémoire projet).
+### 5. Mise à jour des metas SEO
 
-## Détails techniques
+`head()` dans `src/routes/index.tsx` :
+- `title` FR : « Seedow — Votre argent façonne déjà le monde »
+- `description` FR : « Seedow analyse votre portefeuille et vous montre ce que votre argent finance réellement : entreprises, secteurs, valeurs. »
+- équivalents EN dans les meta (gardés statiques en FR ici car le fichier route n'a pas d'i18n SSR ; on aligne sur la langue par défaut de la marque)
 
-- `ImpactHero` lit `usePortfolioValuation()` + `useActivePortfolio()` côté client (déjà fait dans `EthiBriefing`).
-- Équivalence concrète : sélection déterministe basée sur la magnitude du CO₂ (≥ 1 t → trajets longue distance ; < 1 t → arbres). Pas de `Math.random` (hydration-safe).
-- Réutilise `KPIFigure`, `AnimatedFigure`, `.paper-grain`, `.gold-rule` déjà en place.
-- Aucune modification backend / metrics / engine — uniquement présentation.
+### 6. Fichiers modifiés
 
-## Hors scope
+- `src/routes/index.tsx` — nouveau composant `StoryNarrative` (inline) inséré entre `ManifestoSection` et `DemoAuditSection`, mise à jour `head()`.
+- `src/i18n/locales/fr.json` — remplace `landing.subtitle`, `landing.manifesto_text` ; ajoute le bloc `landing.story.*` (eyebrow + 4 chapitres titres/corps).
+- `src/i18n/locales/en.json` — mêmes clés en anglais.
 
-- Pas de nouvelles métriques calculées (biodiversité, eau, etc.) — on travaille avec ce que le moteur fournit déjà.
-- Pas de refonte de `/portfolio` au-delà du restyling de `ImpactRibbon`.
-- Pas de changement sur `EthiBriefing` ni sur le moteur de portefeuille.
+### Hors scope
+
+- Pas de modification des piliers, FAQ, CTA final, méthodo teaser, démo audit (uniquement les sections explicitement narratives).
+- Pas de nouvelle page `/mission`.
+- Pas de modification du dashboard ou de la méthodologie.
+- Pas de nouveau composant réutilisable (la section narrative reste locale à la landing).
