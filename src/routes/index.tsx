@@ -393,6 +393,48 @@ function ManifestoSection() {
   );
 }
 
+function StoryNarrative() {
+  const { t } = useTranslation();
+  return (
+    <section className="max-w-7xl mx-auto px-6 md:px-12 py-32 border-t border-ink/10">
+      <div className="grid md:grid-cols-12 gap-12 mb-16">
+        <div className="md:col-span-3">
+          <p className="eyebrow mb-4 flex items-center gap-3">
+            <span className="tabular-nums text-ink-3">N° 03</span>
+            <span className="h-px w-8 bg-gold/60" />
+            {t("landing.story_eyebrow")}
+          </p>
+        </div>
+        <h2 className="md:col-span-9 display-lg max-w-4xl">
+          {t("landing.subtitle")}
+        </h2>
+      </div>
+      <div className="gold-rule mb-20" />
+      <div className="grid md:grid-cols-2 gap-12 md:gap-20">
+        {STORY_KEYS.map((k, i) => (
+          <motion.article
+            key={k}
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.7, delay: i * 0.1, ease: easeOut }}
+            className="relative"
+          >
+            <p className="outline-number text-7xl md:text-8xl mb-4 select-none">
+              {STORY_NUMBERS[k]}
+            </p>
+            <h3 className="display-lg text-3xl md:text-4xl mb-5">{t(`landing.story.${k}_title`)}</h3>
+            <p className="text-ink-2 leading-relaxed text-base md:text-lg max-w-prose">
+              {t(`landing.story.${k}_body`)}
+            </p>
+          </motion.article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+
 function ManifestoWord({
   word,
   progress,
