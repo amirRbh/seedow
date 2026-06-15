@@ -397,12 +397,7 @@ function StoryNarrative() {
   const { t } = useTranslation();
   return (
     <section className="max-w-7xl mx-auto px-6 md:px-12 py-20 md:py-32 border-t border-ink/10">
-      <p className="eyebrow mb-10 md:mb-14 flex items-center gap-3">
-        <span className="tabular-nums text-ink-3">N° 03</span>
-        <span className="h-px w-8 bg-gold/60" />
-        {t("landing.story_eyebrow")}
-      </p>
-      <div className="gold-rule mb-12 md:mb-20" />
+      <div className="gold-rule mb-12 md:mb-20 mt-8 md:mt-12" />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 md:gap-x-20 gap-y-14 md:gap-y-20">
         {STORY_KEYS.map((k, i) => (
           <motion.article
