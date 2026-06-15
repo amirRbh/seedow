@@ -12,20 +12,22 @@ const SITE_URL = "https://seedow.life";
 const FAQ_KEYS = ["1", "2", "3", "4"] as const;
 const PILLAR_KEYS = ["1", "2", "3"] as const;
 const PILLAR_NUMBERS = { "1": "01", "2": "02", "3": "03" } as const;
+const STORY_KEYS = ["1", "2", "3", "4"] as const;
+const STORY_NUMBERS = { "1": "01", "2": "02", "3": "03", "4": "04" } as const;
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Seedow — Épargner proprement" },
+      { title: "Seedow — Votre argent façonne déjà le monde" },
       {
         name: "description",
         content:
-          "Saisis ton portefeuille, obtiens une analyse transparente : score pondéré, taux de couverture, angles morts assumés. Aucune promesse de placement.",
+          "Seedow analyse votre portefeuille et vous montre ce que votre argent finance vraiment : entreprises, secteurs, valeurs. Une lecture éditoriale, transparente, sans promesse de placement.",
       },
-      { property: "og:title", content: "Seedow — Épargner proprement" },
+      { property: "og:title", content: "Seedow — Votre argent façonne déjà le monde" },
       {
         property: "og:description",
-        content: "Analyse transparente. Saisis ton portefeuille, lis ce qu'il finance vraiment.",
+        content: "Seedow vous montre ce que votre argent finance vraiment. Une lecture transparente de votre portefeuille.",
       },
       { property: "og:url", content: SITE_URL },
       { property: "og:type", content: "website" },
@@ -150,6 +152,7 @@ function Landing() {
         </section>
 
         <ManifestoSection />
+        <StoryNarrative />
         <DemoAuditSection />
 
         {/* PILIERS */}
@@ -389,6 +392,48 @@ function ManifestoSection() {
     </section>
   );
 }
+
+function StoryNarrative() {
+  const { t } = useTranslation();
+  return (
+    <section className="max-w-7xl mx-auto px-6 md:px-12 py-32 border-t border-ink/10">
+      <div className="grid md:grid-cols-12 gap-12 mb-16">
+        <div className="md:col-span-3">
+          <p className="eyebrow mb-4 flex items-center gap-3">
+            <span className="tabular-nums text-ink-3">N° 03</span>
+            <span className="h-px w-8 bg-gold/60" />
+            {t("landing.story_eyebrow")}
+          </p>
+        </div>
+        <h2 className="md:col-span-9 display-lg max-w-4xl">
+          {t("landing.subtitle")}
+        </h2>
+      </div>
+      <div className="gold-rule mb-20" />
+      <div className="grid md:grid-cols-2 gap-12 md:gap-20">
+        {STORY_KEYS.map((k, i) => (
+          <motion.article
+            key={k}
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.7, delay: i * 0.1, ease: easeOut }}
+            className="relative"
+          >
+            <p className="outline-number text-7xl md:text-8xl mb-4 select-none">
+              {STORY_NUMBERS[k]}
+            </p>
+            <h3 className="display-lg text-3xl md:text-4xl mb-5">{t(`landing.story.${k}_title`)}</h3>
+            <p className="text-ink-2 leading-relaxed text-base md:text-lg max-w-prose">
+              {t(`landing.story.${k}_body`)}
+            </p>
+          </motion.article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 
 function ManifestoWord({
   word,
