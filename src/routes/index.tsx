@@ -12,20 +12,22 @@ const SITE_URL = "https://seedow.life";
 const FAQ_KEYS = ["1", "2", "3", "4"] as const;
 const PILLAR_KEYS = ["1", "2", "3"] as const;
 const PILLAR_NUMBERS = { "1": "01", "2": "02", "3": "03" } as const;
+const STORY_KEYS = ["1", "2", "3", "4"] as const;
+const STORY_NUMBERS = { "1": "01", "2": "02", "3": "03", "4": "04" } as const;
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Seedow — Épargner proprement" },
+      { title: "Seedow — Votre argent façonne déjà le monde" },
       {
         name: "description",
         content:
-          "Saisis ton portefeuille, obtiens une analyse transparente : score pondéré, taux de couverture, angles morts assumés. Aucune promesse de placement.",
+          "Seedow analyse votre portefeuille et vous montre ce que votre argent finance vraiment : entreprises, secteurs, valeurs. Une lecture éditoriale, transparente, sans promesse de placement.",
       },
-      { property: "og:title", content: "Seedow — Épargner proprement" },
+      { property: "og:title", content: "Seedow — Votre argent façonne déjà le monde" },
       {
         property: "og:description",
-        content: "Analyse transparente. Saisis ton portefeuille, lis ce qu'il finance vraiment.",
+        content: "Seedow vous montre ce que votre argent finance vraiment. Une lecture transparente de votre portefeuille.",
       },
       { property: "og:url", content: SITE_URL },
       { property: "og:type", content: "website" },
@@ -150,6 +152,7 @@ function Landing() {
         </section>
 
         <ManifestoSection />
+        <StoryNarrative />
         <DemoAuditSection />
 
         {/* PILIERS */}
