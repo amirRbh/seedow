@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { getBetaAdminStats, type BetaAdminStats } from "@/lib/beta/beta.functions";
+import { getBetaAdminStats, type BetaAdminStats, type BetaTester } from "@/lib/beta/beta.functions";
 import { callAuthed } from "@/lib/authedServerFn";
 import { useLang } from "@/hooks/useLang";
 import { formatCurrency, formatDate } from "@/lib/format";
@@ -15,12 +15,25 @@ function AdminBetaPage() {
   const { lang } = useLang();
   const [stats, setStats] = useState<BetaAdminStats | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     callAuthed(getBetaAdminStats, undefined as never)
       .then(setStats)
       .catch((err) => setError(err instanceof Error ? err.message : t("admin_beta.error_fallback")));
   }, [t]);
+
+  const filteredTesters = useMemo(() => {
+    if (!stats) return [];
+    const q = query.trim().toLowerCase();
+    if (!q) return stats.testers;
+    return stats.testers.filter(
+      (tester) =>
+        tester.email?.toLowerCase().includes(q) ||
+        tester.display_name?.toLowerCase().includes(q) ||
+        tester.id.toLowerCase().includes(q),
+    );
+  }, [stats, query]);
 
   if (error) {
     return (
@@ -38,16 +51,49 @@ function AdminBetaPage() {
   }
 
   const dtOpts: Intl.DateTimeFormatOptions = { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" };
+  const dOpts: Intl.DateTimeFormatOptions = { year: "numeric", month: "short", day: "numeric" };
+  const fillPct = Math.round(stats.fillRate * 100);
+  const statusLabel = stats.status === "open" ? t("admin_beta.status_open") : t("admin_beta.status_closed");
+  const statusTone = stats.status === "open" && stats.slotsLeft > 0 ? "text-forest" : "text-rust";
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-12 space-y-10">
-      <header>
-        <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold">{t("admin_beta.eyebrow")}</p>
-        <h1 className="font-display text-3xl text-ink mt-2">{t("admin_beta.title")}</h1>
+    <div className="max-w-6xl mx-auto px-6 py-12 space-y-10">
+      <header className="flex items-end justify-between flex-wrap gap-4">
+        <div>
+          <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold">{t("admin_beta.eyebrow")}</p>
+          <h1 className="font-display text-3xl text-ink mt-2">{t("admin_beta.title")}</h1>
+        </div>
+        <Link to="/dashboard" className="text-[12px] underline text-ink-3 hover:text-ink">
+          {t("admin_beta.back_dashboard")}
+        </Link>
       </header>
 
+      {/* Capacity overview */}
+      <section className="border border-paper-3 rounded-2xl p-6 bg-paper-2/40">
+        <div className="flex items-end justify-between flex-wrap gap-4 mb-4">
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.22em] text-ink-3 font-semibold">{t("admin_beta.capacity_title")}</p>
+            <p className="font-display text-4xl text-ink mt-2 tabular-nums">
+              {stats.signups} <span className="text-ink-3 text-2xl">/ {stats.cap}</span>
+            </p>
+          </div>
+          <div className="text-right">
+            <p className={`text-[12px] uppercase tracking-[0.18em] font-semibold ${statusTone}`}>● {statusLabel}</p>
+            <p className="text-[13px] text-ink-2 mt-1 tabular-nums">
+              {t("admin_beta.slots_left", { count: stats.slotsLeft })}
+            </p>
+          </div>
+        </div>
+        <div className="h-2 w-full bg-paper-3 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-gold transition-all"
+            style={{ width: `${fillPct}%` }}
+          />
+        </div>
+        <p className="text-[11px] text-ink-3 mt-2 tabular-nums">{fillPct}%</p>
+      </section>
+
       <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Kpi label={t("admin_beta.kpi_signups")} value={`${stats.signups} / ${stats.cap}`} />
         <Kpi label={t("admin_beta.kpi_waitlist")} value={String(stats.waitlist)} />
         <Kpi label={t("admin_beta.kpi_portfolios")} value={String(stats.portfoliosCreated)} />
         <Kpi
@@ -64,6 +110,52 @@ function AdminBetaPage() {
           label={t("admin_beta.kpi_conversion")}
           value={stats.signups > 0 ? `${Math.round((stats.portfoliosCreated / stats.signups) * 100)}%` : "—"}
         />
+      </section>
+
+      {/* Testers list */}
+      <section>
+        <div className="flex items-end justify-between flex-wrap gap-3 mb-4">
+          <h2 className="font-display text-lg text-ink">
+            {t("admin_beta.testers_title")}{" "}
+            <span className="text-ink-3 text-[13px] font-normal tabular-nums">({filteredTesters.length})</span>
+          </h2>
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={t("admin_beta.testers_search")}
+            className="text-[13px] border border-paper-3 rounded-lg px-3 py-1.5 bg-paper outline-none focus:border-gold transition-colors w-full sm:w-64"
+          />
+        </div>
+        <div className="border border-paper-3 rounded-2xl overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-[13px]">
+              <thead className="bg-paper-2/60 text-[10px] uppercase tracking-[0.14em] text-ink-3">
+                <tr>
+                  <th className="text-left font-semibold px-4 py-3">{t("admin_beta.col_tester")}</th>
+                  <th className="text-left font-semibold px-4 py-3">{t("admin_beta.col_email")}</th>
+                  <th className="text-left font-semibold px-4 py-3">{t("admin_beta.col_joined")}</th>
+                  <th className="text-left font-semibold px-4 py-3">{t("admin_beta.col_last_seen")}</th>
+                  <th className="text-right font-semibold px-4 py-3">{t("admin_beta.col_portfolios")}</th>
+                  <th className="text-center font-semibold px-4 py-3">{t("admin_beta.col_feedback")}</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-paper-3">
+                {filteredTesters.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="px-4 py-6 text-center text-ink-3">
+                      {t("admin_beta.testers_empty")}
+                    </td>
+                  </tr>
+                ) : (
+                  filteredTesters.map((tester) => (
+                    <TesterRow key={tester.id} tester={tester} dOpts={dOpts} dtOpts={dtOpts} lang={lang} />
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </section>
 
       <section>
@@ -117,6 +209,37 @@ function AdminBetaPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+function TesterRow({
+  tester,
+  dOpts,
+  dtOpts,
+  lang,
+}: {
+  tester: BetaTester;
+  dOpts: Intl.DateTimeFormatOptions;
+  dtOpts: Intl.DateTimeFormatOptions;
+  lang: "fr" | "en";
+}) {
+  const { t } = useTranslation();
+  return (
+    <tr className="hover:bg-paper-2/40 transition-colors">
+      <td className="px-4 py-3">
+        <div className="text-ink">{tester.display_name || <span className="text-ink-3 italic">{t("admin_beta.no_name")}</span>}</div>
+        <div className="text-[10px] text-ink-3 font-mono">{tester.id.slice(0, 8)}…</div>
+      </td>
+      <td className="px-4 py-3 text-ink-2">{tester.email ?? "—"}</td>
+      <td className="px-4 py-3 text-ink-3 tabular-nums">{formatDate(tester.created_at, lang, dOpts)}</td>
+      <td className="px-4 py-3 text-ink-3 tabular-nums">
+        {tester.last_sign_in_at ? formatDate(tester.last_sign_in_at, lang, dtOpts) : "—"}
+      </td>
+      <td className="px-4 py-3 text-right tabular-nums text-ink">{tester.portfolios_count}</td>
+      <td className="px-4 py-3 text-center">
+        {tester.has_feedback ? <span className="text-forest">●</span> : <span className="text-ink-3">—</span>}
+      </td>
+    </tr>
   );
 }
 
