@@ -139,15 +139,29 @@ export const logBetaEvent = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+export interface BetaTester {
+  id: string;
+  email: string | null;
+  display_name: string | null;
+  created_at: string;
+  last_sign_in_at: string | null;
+  portfolios_count: number;
+  has_feedback: boolean;
+}
+
 export interface BetaAdminStats {
   signups: number;
   cap: number;
+  status: "open" | "closed";
+  slotsLeft: number;
+  fillRate: number;
   waitlist: number;
   portfoliosCreated: number;
   realIntents: number;
   realIntentsTotalAmount: number;
   feedbackCount: number;
   npsAverage: number | null;
+  testers: BetaTester[];
   recentIntents: Array<{
     id: string;
     amount: number;
@@ -177,15 +191,21 @@ export const getBetaAdminStats = createServerFn({ method: "GET" })
     const [
       signupsRes,
       capRes,
+      statusRes,
       waitlistRes,
       portfoliosRes,
       intentsRes,
       feedbackRes,
       recentIntentsRes,
       recentFeedbackRes,
+      profilesRes,
+      portfoliosByUserRes,
+      feedbackByUserRes,
+      authUsersRes,
     ] = await Promise.all([
       supabaseAdmin.from("profiles").select("*", { count: "exact", head: true }),
       supabaseAdmin.from("app_config").select("value").eq("key", "beta_cap").maybeSingle(),
+      supabaseAdmin.from("app_config").select("value").eq("key", "beta_status").maybeSingle(),
       supabaseAdmin.from("waitlist").select("*", { count: "exact", head: true }),
       supabaseAdmin.from("portfolios").select("*", { count: "exact", head: true }),
       supabaseAdmin.from("real_investment_intents").select("amount"),
@@ -200,6 +220,14 @@ export const getBetaAdminStats = createServerFn({ method: "GET" })
         .select("id, nps, blocker, wish, created_at")
         .order("created_at", { ascending: false })
         .limit(10),
+      supabaseAdmin
+        .from("profiles")
+        .select("id, display_name, created_at")
+        .order("created_at", { ascending: false })
+        .limit(300),
+      supabaseAdmin.from("portfolios").select("user_id"),
+      supabaseAdmin.from("beta_feedback").select("user_id"),
+      supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 300 }),
     ]);
 
     const intents = intentsRes.data ?? [];
@@ -213,15 +241,54 @@ export const getBetaAdminStats = createServerFn({ method: "GET" })
     const npsAverage =
       npsValues.length > 0 ? npsValues.reduce((s, v) => s + v, 0) / npsValues.length : null;
 
+    const cap = typeof capRes.data?.value === "number" ? capRes.data.value : 300;
+    const status = (statusRes.data?.value === "closed" ? "closed" : "open") as "open" | "closed";
+    const signups = signupsRes.count ?? 0;
+    const slotsLeft = Math.max(0, cap - signups);
+    const fillRate = cap > 0 ? Math.min(1, signups / cap) : 0;
+
+    const portfolioCounts = new Map<string, number>();
+    for (const p of portfoliosByUserRes.data ?? []) {
+      const uid = p.user_id as string;
+      portfolioCounts.set(uid, (portfolioCounts.get(uid) ?? 0) + 1);
+    }
+    const feedbackUsers = new Set(
+      (feedbackByUserRes.data ?? []).map((f) => f.user_id as string),
+    );
+    const authById = new Map<string, { email: string | null; last_sign_in_at: string | null }>();
+    for (const u of authUsersRes.data?.users ?? []) {
+      authById.set(u.id, {
+        email: u.email ?? null,
+        last_sign_in_at: (u.last_sign_in_at as string | null) ?? null,
+      });
+    }
+
+    const testers: BetaTester[] = (profilesRes.data ?? []).map((p) => {
+      const auth = authById.get(p.id as string);
+      return {
+        id: p.id as string,
+        email: auth?.email ?? null,
+        display_name: (p.display_name as string | null) ?? null,
+        created_at: p.created_at as string,
+        last_sign_in_at: auth?.last_sign_in_at ?? null,
+        portfolios_count: portfolioCounts.get(p.id as string) ?? 0,
+        has_feedback: feedbackUsers.has(p.id as string),
+      };
+    });
+
     return {
-      signups: signupsRes.count ?? 0,
-      cap: typeof capRes.data?.value === "number" ? capRes.data.value : 300,
+      signups,
+      cap,
+      status,
+      slotsLeft,
+      fillRate,
       waitlist: waitlistRes.count ?? 0,
       portfoliosCreated: portfoliosRes.count ?? 0,
       realIntents: intents.length,
       realIntentsTotalAmount,
       feedbackCount: fbRows.length,
       npsAverage,
+      testers,
       recentIntents: (recentIntentsRes.data ?? []).map((r) => ({
         id: r.id as string,
         amount: Number(r.amount),
