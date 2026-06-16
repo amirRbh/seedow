@@ -287,7 +287,7 @@ export function buildBriefing({ firstName, portfolio, valuation, lang }: BuildAr
   }
   if (chips.length < 3) {
     chips.push({
-      label: en ? "Full audit" : "Audit complet",
+      label: en ? "Full analysis" : "Analyse complète",
       query: en
         ? "Give me a full diagnostic of my portfolio: strengths, weaknesses, and 3 priority actions."
         : "Fais-moi un diagnostic complet de mon portefeuille : forces, faiblesses, 3 actions prioritaires.",
