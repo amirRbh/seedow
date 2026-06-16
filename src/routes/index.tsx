@@ -153,7 +153,7 @@ function Landing() {
 
         <ManifestoSection />
         <StoryNarrative />
-        <DemoAuditSection />
+        <DemoSection />
 
         {/* PILIERS */}
         <section className="max-w-7xl mx-auto px-6 md:px-12 py-32 border-t border-ink/10">
@@ -450,7 +450,7 @@ const DEMO_DATA: Record<string, { name: string; esg: number; coverage: number; s
   NESN: { name: "Nestlé", esg: 56, coverage: 90, sectors: ["Food"] },
 };
 
-function DemoAuditSection() {
+function DemoSection() {
   const { t } = useTranslation();
   const [ticker, setTicker] = useState("AAPL");
   const [committed, setCommitted] = useState("AAPL");
