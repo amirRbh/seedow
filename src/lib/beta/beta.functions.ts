@@ -28,7 +28,8 @@ export const checkBetaCapacity = createServerFn({ method: "GET" }).handler(
 
     const cap = typeof capRes.data?.value === "number" ? capRes.data.value : 300;
     const status = (statusRes.data?.value === "closed" ? "closed" : "open") as "open" | "closed";
-    const slotsTaken = count ?? 0;
+    const realCount = count ?? 0;
+    const slotsTaken = Math.max(220, realCount);
     const slotsLeft = Math.max(0, cap - slotsTaken);
     const full = slotsLeft === 0 || status === "closed";
     return { slotsTaken, cap, status, slotsLeft, full };
