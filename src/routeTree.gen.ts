@@ -19,6 +19,7 @@ import { Route as MethodologieRouteImport } from './routes/methodologie'
 import { Route as EthiRouteImport } from './routes/ethi'
 import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as CoursRouteImport } from './routes/cours'
 import { Route as ComparatifRouteImport } from './routes/comparatif'
 import { Route as CommunauteRouteImport } from './routes/communaute'
 import { Route as CertificatRouteImport } from './routes/certificat'
@@ -27,6 +28,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ObjectifsGoalIdRouteImport } from './routes/objectifs.$goalId'
 import { Route as HooksRefreshMarketDataRouteImport } from './routes/hooks/refresh-market-data'
+import { Route as CoursSlugRouteImport } from './routes/cours.$slug'
 import { Route as ApiEthiRouteImport } from './routes/api.ethi'
 import { Route as AuthenticatedAdminBetaRouteImport } from './routes/_authenticated/admin.beta'
 
@@ -80,6 +82,11 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CoursRoute = CoursRouteImport.update({
+  id: '/cours',
+  path: '/cours',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ComparatifRoute = ComparatifRouteImport.update({
   id: '/comparatif',
   path: '/comparatif',
@@ -119,6 +126,11 @@ const HooksRefreshMarketDataRoute = HooksRefreshMarketDataRouteImport.update({
   path: '/hooks/refresh-market-data',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CoursSlugRoute = CoursSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => CoursRoute,
+} as any)
 const ApiEthiRoute = ApiEthiRouteImport.update({
   id: '/api/ethi',
   path: '/api/ethi',
@@ -136,6 +148,7 @@ export interface FileRoutesByFullPath {
   '/certificat': typeof CertificatRoute
   '/communaute': typeof CommunauteRoute
   '/comparatif': typeof ComparatifRoute
+  '/cours': typeof CoursRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/discover': typeof DiscoverRoute
   '/ethi': typeof EthiRoute
@@ -147,6 +160,7 @@ export interface FileRoutesByFullPath {
   '/reglages': typeof ReglagesRoute
   '/waitlist': typeof WaitlistRoute
   '/api/ethi': typeof ApiEthiRoute
+  '/cours/$slug': typeof CoursSlugRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
   '/admin/beta': typeof AuthenticatedAdminBetaRoute
@@ -157,6 +171,7 @@ export interface FileRoutesByTo {
   '/certificat': typeof CertificatRoute
   '/communaute': typeof CommunauteRoute
   '/comparatif': typeof ComparatifRoute
+  '/cours': typeof CoursRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/discover': typeof DiscoverRoute
   '/ethi': typeof EthiRoute
@@ -168,6 +183,7 @@ export interface FileRoutesByTo {
   '/reglages': typeof ReglagesRoute
   '/waitlist': typeof WaitlistRoute
   '/api/ethi': typeof ApiEthiRoute
+  '/cours/$slug': typeof CoursSlugRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
   '/admin/beta': typeof AuthenticatedAdminBetaRoute
@@ -180,6 +196,7 @@ export interface FileRoutesById {
   '/certificat': typeof CertificatRoute
   '/communaute': typeof CommunauteRoute
   '/comparatif': typeof ComparatifRoute
+  '/cours': typeof CoursRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/discover': typeof DiscoverRoute
   '/ethi': typeof EthiRoute
@@ -191,6 +208,7 @@ export interface FileRoutesById {
   '/reglages': typeof ReglagesRoute
   '/waitlist': typeof WaitlistRoute
   '/api/ethi': typeof ApiEthiRoute
+  '/cours/$slug': typeof CoursSlugRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
   '/_authenticated/admin/beta': typeof AuthenticatedAdminBetaRoute
@@ -203,6 +221,7 @@ export interface FileRouteTypes {
     | '/certificat'
     | '/communaute'
     | '/comparatif'
+    | '/cours'
     | '/dashboard'
     | '/discover'
     | '/ethi'
@@ -214,6 +233,7 @@ export interface FileRouteTypes {
     | '/reglages'
     | '/waitlist'
     | '/api/ethi'
+    | '/cours/$slug'
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
     | '/admin/beta'
@@ -224,6 +244,7 @@ export interface FileRouteTypes {
     | '/certificat'
     | '/communaute'
     | '/comparatif'
+    | '/cours'
     | '/dashboard'
     | '/discover'
     | '/ethi'
@@ -235,6 +256,7 @@ export interface FileRouteTypes {
     | '/reglages'
     | '/waitlist'
     | '/api/ethi'
+    | '/cours/$slug'
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
     | '/admin/beta'
@@ -246,6 +268,7 @@ export interface FileRouteTypes {
     | '/certificat'
     | '/communaute'
     | '/comparatif'
+    | '/cours'
     | '/dashboard'
     | '/discover'
     | '/ethi'
@@ -257,6 +280,7 @@ export interface FileRouteTypes {
     | '/reglages'
     | '/waitlist'
     | '/api/ethi'
+    | '/cours/$slug'
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
     | '/_authenticated/admin/beta'
@@ -269,6 +293,7 @@ export interface RootRouteChildren {
   CertificatRoute: typeof CertificatRoute
   CommunauteRoute: typeof CommunauteRoute
   ComparatifRoute: typeof ComparatifRoute
+  CoursRoute: typeof CoursRouteWithChildren
   DashboardRoute: typeof DashboardRoute
   DiscoverRoute: typeof DiscoverRoute
   EthiRoute: typeof EthiRoute
@@ -355,6 +380,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cours': {
+      id: '/cours'
+      path: '/cours'
+      fullPath: '/cours'
+      preLoaderRoute: typeof CoursRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/comparatif': {
       id: '/comparatif'
       path: '/comparatif'
@@ -411,6 +443,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HooksRefreshMarketDataRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cours/$slug': {
+      id: '/cours/$slug'
+      path: '/$slug'
+      fullPath: '/cours/$slug'
+      preLoaderRoute: typeof CoursSlugRouteImport
+      parentRoute: typeof CoursRoute
+    }
     '/api/ethi': {
       id: '/api/ethi'
       path: '/api/ethi'
@@ -439,6 +478,16 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface CoursRouteChildren {
+  CoursSlugRoute: typeof CoursSlugRoute
+}
+
+const CoursRouteChildren: CoursRouteChildren = {
+  CoursSlugRoute: CoursSlugRoute,
+}
+
+const CoursRouteWithChildren = CoursRoute._addFileChildren(CoursRouteChildren)
+
 interface ObjectifsRouteChildren {
   ObjectifsGoalIdRoute: typeof ObjectifsGoalIdRoute
 }
@@ -458,6 +507,7 @@ const rootRouteChildren: RootRouteChildren = {
   CertificatRoute: CertificatRoute,
   CommunauteRoute: CommunauteRoute,
   ComparatifRoute: ComparatifRoute,
+  CoursRoute: CoursRouteWithChildren,
   DashboardRoute: DashboardRoute,
   DiscoverRoute: DiscoverRoute,
   EthiRoute: EthiRoute,

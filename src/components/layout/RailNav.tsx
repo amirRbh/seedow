@@ -10,7 +10,8 @@ type IconKey =
   | "decouvrir"
   | "profil"
   | "comparatif"
-  | "methodologie";
+  | "methodologie"
+  | "cours";
 
 type NavItem = {
   key: string;
@@ -38,6 +39,7 @@ export function RailNav() {
   ];
   const SECONDARY: NavItem[] = [
     { key: "profil", path: "/profil", label: t("rail_nav.investor_profile"), icon: "profil" },
+    { key: "cours", path: "/cours", label: "Cours", icon: "cours" },
     { key: "methodologie", path: "/methodologie", label: t("nav.methodology"), icon: "methodologie" },
   ];
   return (
@@ -167,6 +169,14 @@ function NavIcon({ type }: { type: IconKey }) {
           <path d="M8 8h8" />
           <path d="M8 12h8" />
           <path d="M8 16h5" />
+        </svg>
+      );
+    case "cours":
+      return (
+        <svg {...common}>
+          <path d="M4 5a2 2 0 0 1 2-2h11v16H6a2 2 0 0 0-2 2V5Z" />
+          <path d="M8 7h6" />
+          <path d="M8 11h6" />
         </svg>
       );
   }

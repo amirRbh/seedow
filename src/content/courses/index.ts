@@ -24,4 +24,4 @@ export function getNextCourse(slug: string): Course | undefined {
   return COURSES[idx + 1];
 }
 
-export type { Course } from "./types";
+export type { Course, CourseSection, QuizQuestion, Track, Level } from "./types";
