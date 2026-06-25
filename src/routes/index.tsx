@@ -296,6 +296,7 @@ function Landing() {
           <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between gap-6 text-xs text-ink-3">
             <p>{t("landing.footer_copy")}</p>
             <div className="flex gap-8">
+              <Link to="/cours" className="hover:text-ink transition-colors">Cours</Link>
               <Link to="/methodologie" className="hover:text-ink transition-colors">{t("nav.methodology")}</Link>
               <a href="mailto:hello@seedow.life" className="hover:text-ink transition-colors">{t("landing.footer_contact")}</a>
             </div>
@@ -326,8 +327,11 @@ function StickyHeader({ isAuthed }: { isAuthed: boolean | null }) {
             </Link>
             <LanguageToggle />
           </div>
-          <div className="flex items-center gap-6 md:gap-10 text-[10px] font-semibold uppercase tracking-[0.22em]">
-            <Link to="/methodologie" className="hidden sm:inline-block hover:text-gold transition-colors">
+          <div className="flex items-center gap-5 md:gap-8 text-[10px] font-semibold uppercase tracking-[0.22em]">
+            <Link to="/cours" className="hidden sm:inline-block hover:text-gold transition-colors">
+              Cours
+            </Link>
+            <Link to="/methodologie" className="hidden md:inline-block hover:text-gold transition-colors">
               {t("nav.methodology")}
             </Link>
             {isAuthed ? (

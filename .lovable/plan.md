@@ -1,87 +1,86 @@
-## Refonte du storytelling de la landing
+## Section "Cours" — Finance & Finance ESG pour débutants
 
-Réécriture des sections narratives de la landing (`src/routes/index.tsx`) pour incarner la nouvelle question : **« Pourquoi se soucier de ce que finance son argent ? »**. Le ton reste éditorial Institutional White (eyebrow N° XX, gold-rule, paper-grain, display-lg, Space Grotesk). Aucun nouveau composant ni nouvelle page : on remplace uniquement les contenus i18n et on ajoute une section narrative à 4 chapitres entre le manifeste et la démo.
+Nouvel onglet public **Cours** accessible avant inscription : 3 cours gratuits intégralement lisibles + 9 cours verrouillés (aperçu flouté + CTA "Créer un compte gratuit"). Chaque cours = article éditorial long-form + quiz QCM final.
 
-### 1. Hero — nouveau tagline
+### Architecture des routes
 
-Remplacer `landing.subtitle` (actuellement « Épargner proprement. ») par :
-- FR : **« Votre argent façonne déjà le monde. Seedow vous montre lequel. »**
-- EN : **« Your money is already shaping the world. Seedow shows you which one. »**
-
-Le H1 « seedow. » est conservé. La phrase devient le sous-titre principal du hero (déjà stylé `text-xl md:text-3xl font-display`).
-
-### 2. Manifeste — phrase forte
-
-Remplacer `landing.manifesto_text` (révélé mot-à-mot au scroll) par :
-- FR : « Un portefeuille n'est pas une collection de lignes et de chiffres. C'est un vote. Chaque euro investi soutient une vision du monde. »
-- EN : « A portfolio is not a collection of lines and numbers. It's a statement. Every euro invested supports a vision of the world. »
-
-### 3. Nouvelle section narrative « N° 03 — Récit » (insérée avant `DemoAuditSection`)
-
-Quatre chapitres en grille éditoriale (problème → déclic → solution → mission), reprenant fidèlement le texte fourni mais condensé pour le web (2-3 paragraphes courts par chapitre, pas le texte intégral). Structure :
-
-```text
-N° 03 ─── Récit
-┌────────────────────────────────────────────┐
-│  Le problème                               │
-│  Pendant des années, nous avons appris     │
-│  à faire attention à ce que nous           │
-│  consommons. Mais une question reste       │
-│  rarement posée : que finance réellement   │
-│  mon argent quand j'investis ?             │
-├────────────────────────────────────────────┤
-│  Le déclic                                 │
-│  Un portefeuille n'est pas une collection  │
-│  de lignes. C'est un vote.                 │
-├────────────────────────────────────────────┤
-│  La solution                               │
-│  Seedow rend visible ce qui était          │
-│  invisible — l'histoire, l'impact, les     │
-│  valeurs derrière chaque ligne.            │
-├────────────────────────────────────────────┤
-│  La mission                                │
-│  Permettre à chacun de comprendre où va    │
-│  son argent et quel monde il contribue à   │
-│  construire.                               │
-└────────────────────────────────────────────┘
+```
+src/routes/
+  cours.tsx              → /cours        (catalogue + 12 cards)
+  cours.$slug.tsx        → /cours/:slug  (lecture article + quiz)
 ```
 
-Mise en forme :
-- Eyebrow `N° 03 · Récit` (or, tracking 0.22em)
-- Chapitres en `grid md:grid-cols-2 gap-12 md:gap-16` (2x2)
-- Titre de chapitre `display-lg text-3xl` + filet `gold-rule` court
-- Corps : `text-ink-2 leading-relaxed` (DM Sans body)
-- `outline-number` (01 → 04) en arrière-plan pour rappeler le code visuel des piliers
-- Animations : `motion.div` avec `whileInView` (fade + slide up, stagger 0.1s)
+- Public (hors `_authenticated`), SSR-friendly, `head()` SEO par cours (title, description, og).
+- Lien "Cours" ajouté dans le header de la landing (`StickyHeader` dans `src/routes/index.tsx`) entre "Méthodologie" et le CTA, et dans le footer.
+- Une fois connecté, lien "Cours" aussi accessible depuis `AppShell` (rail nav) pour les testeurs.
 
-### 4. Renumérotation des sections suivantes
+### Contenu — 12 cours (style Institutional White, lexique financier sobre)
 
-Insertion du `N° 03` décale les eyebrows existantes :
-- Manifeste : reste `N° 02`
-- **Récit : N° 03** (nouveau)
-- Piliers : `N° 04` (déjà ce numéro — OK)
-- Méthodo teaser : `N° 05` (déjà)
-- FAQ : `N° 06` (déjà)
-- CTA final : `N° 07` (déjà)
+**Piste Finance (6)**
+1. ⭐ *Gratuit* — Les 5 mots à connaître avant d'investir (rendement, risque, volatilité, horizon, liquidité)
+2. ⭐ *Gratuit* — Intérêts composés : la mécanique du temps long
+3. Diversification : pourquoi ne pas mettre tous ses œufs dans le même panier
+4. Actions, obligations, ETF : comprendre les briques de base
+5. Risque & volatilité : lire un drawdown sans paniquer
+6. Frais cachés : ce qui ronge un portefeuille sur 20 ans
 
-La démo (sans numéro actuellement) reste sans numéro. Aucun changement aux numéros existants — la nouvelle section s'insère pile dans le créneau libre `N° 03`.
+**Piste Finance ESG (6)**
+7. ⭐ *Gratuit* — Qu'est-ce que l'ESG ? (E, S, G expliqués simplement)
+8. Greenwashing : 6 signaux d'alerte sur un fonds "vert"
+9. Labels ISR, Greenfin, Article 8/9 SFDR : démêler le vrai du marketing
+10. Exclusions sectorielles : armes, tabac, énergies fossiles
+11. Mesurer l'impact : intensité carbone, score ESG, controverses
+12. Construire un portefeuille aligné avec ses valeurs
 
-### 5. Mise à jour des metas SEO
+### Format d'un cours (long-form + quiz)
 
-`head()` dans `src/routes/index.tsx` :
-- `title` FR : « Seedow — Votre argent façonne déjà le monde »
-- `description` FR : « Seedow analyse votre portefeuille et vous montre ce que votre argent finance réellement : entreprises, secteurs, valeurs. »
-- équivalents EN dans les meta (gardés statiques en FR ici car le fichier route n'a pas d'i18n SSR ; on aligne sur la langue par défaut de la marque)
+Structure type dans un fichier de contenu `src/content/courses/{slug}.ts` :
+```ts
+export const course = {
+  slug, title, eyebrow, readingMinutes, level, track: 'finance' | 'esg', isFree,
+  description, // SEO + card
+  sections: [{ heading, paragraphs: string[], callout? }],
+  keyTakeaways: string[],   // 3-5 puces
+  quiz: [{ question, options: string[], correctIndex, explanation }],
+}
+```
+- Article rendu avec `EditorialSection` + `KPIFigure` + `.gold-rule` + eyebrow numérotation N° XX.
+- Quiz final 4-5 questions, score affiché, possibilité de rejouer. Score sauvegardé en `localStorage` (pas de table DB pour cette V1).
+- En bas : "Cours suivant" + CTA inscription si non connecté.
 
-### 6. Fichiers modifiés
+### Gating (3 gratuits → reste verrouillé)
 
-- `src/routes/index.tsx` — nouveau composant `StoryNarrative` (inline) inséré entre `ManifestoSection` et `DemoAuditSection`, mise à jour `head()`.
-- `src/i18n/locales/fr.json` — remplace `landing.subtitle`, `landing.manifesto_text` ; ajoute le bloc `landing.story.*` (eyebrow + 4 chapitres titres/corps).
-- `src/i18n/locales/en.json` — mêmes clés en anglais.
+- `/cours` : grille de 12 cards. Cards gratuites cliquables → article complet. Cards gated affichent badge "Compte gratuit requis", titre + description visibles, contenu de preview flouté (`backdrop-blur` + masque), bouton "Créer un compte gratuit (sans engagement)".
+- `/cours/:slug` d'un cours gated : 
+  - Visiteur non connecté → on rend les 2 premières sections, puis bloc paywall flouté avec CTA `→ /auth?mode=signup&redirect=/cours/{slug}`.
+  - Connecté → article complet.
+- Détection auth côté client via `useAuth()` (pas de gating SSR — le contenu reste indexable, le gate s'applique après hydratation pour ne pas casser SEO).
 
-### Hors scope
+### Composants nouveaux
 
-- Pas de modification des piliers, FAQ, CTA final, méthodo teaser, démo audit (uniquement les sections explicitement narratives).
-- Pas de nouvelle page `/mission`.
-- Pas de modification du dashboard ou de la méthodologie.
-- Pas de nouveau composant réutilisable (la section narrative reste locale à la landing).
+- `src/components/courses/CourseCard.tsx` — card catalogue (track, niveau, durée, badge gratuit/verrouillé)
+- `src/components/courses/CourseArticle.tsx` — rendu sections + takeaways
+- `src/components/courses/CourseQuiz.tsx` — quiz interactif + score
+- `src/components/courses/CoursePaywall.tsx` — overlay flouté + CTA signup
+- `src/content/courses/index.ts` — registre + 12 fichiers de contenu rédigés
+
+### i18n
+
+Ajouts dans `src/i18n/locales/{fr,en}.json` sous `courses.*` : titre page, sous-titre, filtres piste (Finance / ESG), labels card (gratuit, verrouillé, niveau, min de lecture), labels quiz (valider, score, recommencer, cours suivant), paywall (titre, sous-titre, CTA). Le contenu des cours lui-même reste en français V1 (la base est francophone) — fallback EN sur les titres et description SEO uniquement.
+
+### SEO
+
+- `/cours` : H1 "Apprendre la finance et l'ESG, sans jargon", meta description ciblée débutants.
+- `/cours/:slug` : title et description issus du contenu, og:title, og:description, et structured data `Article` JSON-LD.
+
+### Hors scope (V1)
+
+- Pas de suivi de progression côté DB.
+- Pas de certificats.
+- Pas de génération AI : tout le contenu est rédigé en dur (brouillon livré dans cette implémentation, à corriger ensuite).
+- Pas d'images générées par cours (KPIFigure + typographie suffisent pour le style éditorial).
+
+### Fichiers touchés (résumé)
+
+- **Nouveaux** : `src/routes/cours.tsx`, `src/routes/cours.$slug.tsx`, `src/components/courses/*` (4 fichiers), `src/content/courses/*` (13 fichiers : index + 12 cours).
+- **Modifiés** : `src/routes/index.tsx` (lien header + footer), `src/components/layout/AppShell.tsx` (entrée nav), `src/i18n/locales/{fr,en}.json` (clés `courses.*`).
