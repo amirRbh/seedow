@@ -1,86 +1,43 @@
-## Section "Cours" — Finance & Finance ESG pour débutants
+## Étoffer les 12 cours pour qu'ils soient vraiment complets
 
-Nouvel onglet public **Cours** accessible avant inscription : 3 cours gratuits intégralement lisibles + 9 cours verrouillés (aperçu flouté + CTA "Créer un compte gratuit"). Chaque cours = article éditorial long-form + quiz QCM final.
+### Constat
 
-### Architecture des routes
+Les fichiers actuels de `src/content/courses/*.ts` contiennent un brouillon léger : 4-5 sections de 2 paragraphes chacune, soit ~6 min de lecture annoncées mais ressenties comme "vides". Sur les cours **gated** (non gratuits) consultés sans compte, la route ne montre que les **2 premières sections** avant le paywall — l'effet "y'a pas de contenu" est donc encore plus fort.
 
-```
-src/routes/
-  cours.tsx              → /cours        (catalogue + 12 cards)
-  cours.$slug.tsx        → /cours/:slug  (lecture article + quiz)
-```
+### Objectif
 
-- Public (hors `_authenticated`), SSR-friendly, `head()` SEO par cours (title, description, og).
-- Lien "Cours" ajouté dans le header de la landing (`StickyHeader` dans `src/routes/index.tsx`) entre "Méthodologie" et le CTA, et dans le footer.
-- Une fois connecté, lien "Cours" aussi accessible depuis `AppShell` (rail nav) pour les testeurs.
+Rendre chaque cours réellement complet : un article long-form sérieux (≈ 10-14 min de lecture), avec assez de substance pour que les 2 premières sections (visibles avant paywall sur les cours gated) tiennent déjà debout toutes seules.
 
-### Contenu — 12 cours (style Institutional White, lexique financier sobre)
+### Ce que je vais changer
 
-**Piste Finance (6)**
-1. ⭐ *Gratuit* — Les 5 mots à connaître avant d'investir (rendement, risque, volatilité, horizon, liquidité)
-2. ⭐ *Gratuit* — Intérêts composés : la mécanique du temps long
-3. Diversification : pourquoi ne pas mettre tous ses œufs dans le même panier
-4. Actions, obligations, ETF : comprendre les briques de base
-5. Risque & volatilité : lire un drawdown sans paniquer
-6. Frais cachés : ce qui ronge un portefeuille sur 20 ans
+**1. Réécrire les 12 fichiers `src/content/courses/*.ts`**
 
-**Piste Finance ESG (6)**
-7. ⭐ *Gratuit* — Qu'est-ce que l'ESG ? (E, S, G expliqués simplement)
-8. Greenwashing : 6 signaux d'alerte sur un fonds "vert"
-9. Labels ISR, Greenfin, Article 8/9 SFDR : démêler le vrai du marketing
-10. Exclusions sectorielles : armes, tabac, énergies fossiles
-11. Mesurer l'impact : intensité carbone, score ESG, controverses
-12. Construire un portefeuille aligné avec ses valeurs
+Pour chaque cours, passer de 4-5 sections courtes à **7-9 sections riches** avec :
+- 3 à 5 paragraphes par section (au lieu de 2), exemples chiffrés concrets (€, %, années)
+- Un `callout` éditorial dans la majorité des sections (≥ 4 par cours)
+- Une section "Cas pratique" avec un mini-scénario chiffré
+- Une section "Erreurs fréquentes" (3-5 pièges typiques)
+- `keyTakeaways` étendus à 6-8 puces
+- `quiz` étendu à **6 questions** (au lieu de 4) avec explications plus détaillées
+- `readingMinutes` mis à jour honnêtement (10-14 selon le cours)
 
-### Format d'un cours (long-form + quiz)
+**2. Ajuster la troncature pour les cours gated**
 
-Structure type dans un fichier de contenu `src/content/courses/{slug}.ts` :
-```ts
-export const course = {
-  slug, title, eyebrow, readingMinutes, level, track: 'finance' | 'esg', isFree,
-  description, // SEO + card
-  sections: [{ heading, paragraphs: string[], callout? }],
-  keyTakeaways: string[],   // 3-5 puces
-  quiz: [{ question, options: string[], correctIndex, explanation }],
-}
-```
-- Article rendu avec `EditorialSection` + `KPIFigure` + `.gold-rule` + eyebrow numérotation N° XX.
-- Quiz final 4-5 questions, score affiché, possibilité de rejouer. Score sauvegardé en `localStorage` (pas de table DB pour cette V1).
-- En bas : "Cours suivant" + CTA inscription si non connecté.
+Dans `src/routes/cours.$slug.tsx`, passer de `sections.slice(0, 2)` à `sections.slice(0, 3)` : avec 8 sections par cours, montrer les 3 premières donne un aperçu substantiel (≈ 30 % du contenu) avant le paywall, tout en gardant l'incitation à créer un compte.
 
-### Gating (3 gratuits → reste verrouillé)
+**3. Aucun changement** sur l'architecture, les composants (`CourseArticle`, `CourseQuiz`, `CoursePaywall`), le routing, l'i18n, le SEO ou le gating. Uniquement du contenu + un slice à ajuster.
 
-- `/cours` : grille de 12 cards. Cards gratuites cliquables → article complet. Cards gated affichent badge "Compte gratuit requis", titre + description visibles, contenu de preview flouté (`backdrop-blur` + masque), bouton "Créer un compte gratuit (sans engagement)".
-- `/cours/:slug` d'un cours gated : 
-  - Visiteur non connecté → on rend les 2 premières sections, puis bloc paywall flouté avec CTA `→ /auth?mode=signup&redirect=/cours/{slug}`.
-  - Connecté → article complet.
-- Détection auth côté client via `useAuth()` (pas de gating SSR — le contenu reste indexable, le gate s'applique après hydratation pour ne pas casser SEO).
+### Volume
 
-### Composants nouveaux
+12 cours × ~2 500 mots = ~30 000 mots de rédaction française, livrés en un seul passage. Style conservé : éditorial sobre, lexique financier moderne, pas de jargon gratuit, aligné sur la mémoire "Institutional White".
 
-- `src/components/courses/CourseCard.tsx` — card catalogue (track, niveau, durée, badge gratuit/verrouillé)
-- `src/components/courses/CourseArticle.tsx` — rendu sections + takeaways
-- `src/components/courses/CourseQuiz.tsx` — quiz interactif + score
-- `src/components/courses/CoursePaywall.tsx` — overlay flouté + CTA signup
-- `src/content/courses/index.ts` — registre + 12 fichiers de contenu rédigés
+### Fichiers touchés
 
-### i18n
+- Réécrits : `src/content/courses/01-cinq-mots.ts` → `12-portefeuille-aligne.ts` (12 fichiers)
+- Édité : `src/routes/cours.$slug.tsx` (slice 2 → 3)
 
-Ajouts dans `src/i18n/locales/{fr,en}.json` sous `courses.*` : titre page, sous-titre, filtres piste (Finance / ESG), labels card (gratuit, verrouillé, niveau, min de lecture), labels quiz (valider, score, recommencer, cours suivant), paywall (titre, sous-titre, CTA). Le contenu des cours lui-même reste en français V1 (la base est francophone) — fallback EN sur les titres et description SEO uniquement.
+### Hors scope
 
-### SEO
-
-- `/cours` : H1 "Apprendre la finance et l'ESG, sans jargon", meta description ciblée débutants.
-- `/cours/:slug` : title et description issus du contenu, og:title, og:description, et structured data `Article` JSON-LD.
-
-### Hors scope (V1)
-
-- Pas de suivi de progression côté DB.
-- Pas de certificats.
-- Pas de génération AI : tout le contenu est rédigé en dur (brouillon livré dans cette implémentation, à corriger ensuite).
-- Pas d'images générées par cours (KPIFigure + typographie suffisent pour le style éditorial).
-
-### Fichiers touchés (résumé)
-
-- **Nouveaux** : `src/routes/cours.tsx`, `src/routes/cours.$slug.tsx`, `src/components/courses/*` (4 fichiers), `src/content/courses/*` (13 fichiers : index + 12 cours).
-- **Modifiés** : `src/routes/index.tsx` (lien header + footer), `src/components/layout/AppShell.tsx` (entrée nav), `src/i18n/locales/{fr,en}.json` (clés `courses.*`).
+- Pas d'images générées par cours.
+- Pas de DB de progression / certificats.
+- Pas de traduction EN du corps des cours (titres/descriptions SEO restent comme aujourd'hui).

@@ -57,7 +57,7 @@ function CoursePage() {
   // Pendant le chargement de l'auth, on rend le contenu tronqué côté SSR
   // pour les cours payants ; ça évite un flash et reste cohérent.
   const truncated = !course.isFree && !loading && !isAuthed;
-  const visibleSections = truncated ? course.sections.slice(0, 2) : course.sections;
+  const visibleSections = truncated ? course.sections.slice(0, 3) : course.sections;
 
   return (
     <div className="bg-paper text-ink min-h-screen paper-grain">
