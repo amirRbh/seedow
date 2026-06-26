@@ -6,89 +6,145 @@ export const course: Course = {
   track: "finance",
   level: "debutant",
   isFree: true,
-  readingMinutes: 7,
+  readingMinutes: 12,
   title: "Intérêts composés : la mécanique du temps long",
-  eyebrow: "Bases · Mécanique",
+  eyebrow: "Bases · Mathématiques utiles",
   description:
-    "Pourquoi commencer à 25 ans avec 100 €/mois rapporte plus que commencer à 40 ans avec 300 €/mois. La force que Einstein aurait appelée la 8ème merveille du monde.",
+    "Pourquoi 100 € placés à 7 % deviennent 7 600 € en 50 ans : la mécanique des intérêts composés, expliquée avec des chiffres simples et des cas pratiques.",
   intro:
-    "Les intérêts composés, c'est le moment où vos gains commencent à gagner eux-mêmes des gains. Ça paraît minuscule la première année. Sur 30 ans, ça change la nature même de votre patrimoine.",
+    "Einstein l'aurait appelée « la huitième merveille du monde ». La formule est triviale, ses conséquences sont contre-intuitives. Ce cours explique pourquoi le temps est de loin le plus puissant levier de l'investisseur — bien plus que le choix du « bon » produit.",
   sections: [
     {
-      heading: "La mécanique en une phrase",
+      heading: "La formule en une ligne",
       paragraphs: [
-        "Intérêts simples : vous gagnez chaque année un pourcentage du capital de départ. Intérêts composés : vous gagnez un pourcentage du capital initial PLUS de tous les gains accumulés.",
-        "1 000 € placés à 6 % rapportent 60 € la première année. La deuxième, on ne calcule pas 6 % de 1 000 € mais 6 % de 1 060 €. Soit 63,60 €. La différence semble dérisoire. Continuez 30 ans et le capital atteint environ 5 743 € au lieu de 2 800 € en intérêts simples.",
-      ],
-    },
-    {
-      heading: "Le rôle du temps",
-      paragraphs: [
-        "Investir 100 € par mois pendant 40 ans à 6 % annuel donne ≈ 200 000 €. Les mêmes 100 €/mois pendant 20 ans : ≈ 46 000 €. Doubler la durée multiplie le capital par plus de 4, pas par 2.",
-        "Conclusion : le levier le plus puissant n'est pas le montant épargné, c'est l'année à laquelle vous commencez. Un euro placé à 25 ans vaut plusieurs euros placés à 45 ans.",
+        "Capital final = Capital initial × (1 + rendement annuel) ^ nombre d'années. C'est tout. Le mot « composé » signifie que les intérêts d'une année rapportent à leur tour des intérêts l'année suivante.",
+        "Exemple : 1 000 € placés à 7 % par an deviennent 1 070 € après 1 an. La deuxième année, les 7 % s'appliquent à 1 070 €, pas à 1 000 €. On gagne 74,90 € au lieu de 70 €. L'écart paraît dérisoire — sur 30 ans, il fait toute la différence.",
+        "Sur 30 ans à 7 %, ces 1 000 € deviennent 7 612 €. Sur 50 ans, 29 457 €. La courbe n'est pas une ligne droite : elle accélère avec le temps.",
       ],
       callout:
-        "Commencer petit mais tôt bat presque toujours commencer fort mais tard. Le temps est la seule variable que personne ne peut acheter.",
+        "L'intuition humaine raisonne en ligne droite. Les intérêts composés suivent une exponentielle. C'est pourquoi 95 % des gens sous-estiment ce qu'un placement régulier produit sur 30 ans.",
     },
     {
-      heading: "La règle des 72",
+      heading: "Le coût caché d'attendre 10 ans avant de commencer",
       paragraphs: [
-        "Une approximation utile : divisez 72 par le rendement annuel pour estimer combien d'années il faut pour doubler votre capital. À 6 %, doublement en 12 ans. À 9 %, en 8 ans. À 3 %, en 24 ans.",
-        "Cette règle aide à juger une promesse rapidement. Quand quelqu'un vous parle de « doubler votre argent en 3 ans », il vous parle d'un rendement de 24 % par an — un signal d'alerte, pas une opportunité.",
+        "Cas A : Alex commence à 25 ans, place 200 €/mois pendant 10 ans, puis arrête tout et laisse fructifier. À 65 ans, à 7 % de rendement annuel, il aura ≈ 280 000 €.",
+        "Cas B : Béa commence à 35 ans, place 200 €/mois pendant 30 ans jusqu'à 65 ans. Elle aura placé trois fois plus que Alex en valeur cumulée. À 65 ans, elle aura ≈ 244 000 €.",
+        "Alex a moins versé mais a commencé plus tôt — et il termine devant. Ce n'est pas une astuce de calcul, c'est la nature des intérêts composés. Le temps est l'ingrédient n°1.",
       ],
     },
     {
-      heading: "L'inflation, l'ennemie silencieuse",
+      heading: "Pourquoi 1 % de rendement annuel change tout",
       paragraphs: [
-        "L'inflation érode le pouvoir d'achat de votre capital. À 2 % d'inflation, 1 000 € aujourd'hui valent ≈ 820 € dans 10 ans. Tout rendement doit être lu net d'inflation.",
-        "C'est pourquoi laisser dormir un capital sur un compte courant est en réalité une perte garantie. La passivité a un coût, simplement invisible.",
+        "Sur des durées longues, 1 % de rendement supplémentaire par an semble dérisoire. En réalité, c'est massif.",
+        "1 000 € à 4 % pendant 40 ans → 4 801 €. 1 000 € à 5 % pendant 40 ans → 7 040 €. Soit +46 % de capital final pour 1 point de rendement de plus par an. Sur 50 ans, l'écart dépasse +65 %.",
+        "Conclusion pratique : 1 % de frais en moins par an n'est pas une optimisation cosmétique, c'est un des leviers les plus puissants à votre disposition.",
+      ],
+      callout:
+        "Un fonds maison de banque à 2,5 % de frais annuels vs un ETF à 0,3 % : sur 30 ans, l'écart se compte en dizaines de milliers d'euros. Sur le même rendement brut.",
+    },
+    {
+      heading: "L'effet boule de neige : où elle décolle vraiment",
+      paragraphs: [
+        "Au début, les versements représentent la quasi-totalité du capital. Les intérêts sont marginaux. C'est la phase frustrante : on a l'impression que rien ne se passe.",
+        "Vers la 10e année, la balance bascule : les intérêts annuels approchent puis dépassent les versements annuels. C'est le point d'inflexion psychologique.",
+        "Vers la 20e année, l'effet est spectaculaire : le capital double tous les 10 ans (à 7 %). Sur les 5 dernières années avant la retraite, on peut gagner plus qu'on n'a versé sur 20 ans.",
+      ],
+    },
+    {
+      heading: "La règle de 72 : le calcul mental utile",
+      paragraphs: [
+        "Pour estimer en combien d'années un placement double : 72 ÷ rendement annuel. À 6 %, on double en 12 ans. À 8 %, en 9 ans. À 3 %, en 24 ans.",
+        "Cette règle, approximative mais redoutablement efficace, permet de juger un produit en 5 secondes. Un livret à 3 % double en 24 ans. Un ETF actions à 7 % long terme double en ~10 ans.",
+        "Inversée, elle révèle aussi le coût de l'inflation. À 3 % d'inflation, le pouvoir d'achat de votre euro est divisé par 2 en 24 ans. Garder son argent sur un compte courant à 0 % est donc une perte garantie.",
+      ],
+    },
+    {
+      heading: "Cas pratique : 150 €/mois sur 40 ans",
+      paragraphs: [
+        "Hypothèses : Sami verse 150 €/mois pendant 40 ans (de 25 à 65 ans), soit 72 000 € versés au total. Rendement annuel net moyen : 6 %.",
+        "Résultat : ≈ 298 000 € à 65 ans. Sur les 298 000 €, environ 226 000 € viennent des intérêts composés, et seulement 72 000 € des versements.",
+        "Autrement dit : sur le capital final, 76 % vient du temps et des marchés, 24 % vient de l'effort d'épargne. C'est cette asymétrie qui rend l'investissement régulier si puissant pour des revenus moyens.",
+      ],
+    },
+    {
+      heading: "Erreurs fréquentes",
+      paragraphs: [
+        "1. Croire qu'il faut « beaucoup d'argent pour commencer ». 50 €/mois suffisent pour amorcer la mécanique. C'est le temps, pas la somme initiale, qui fait l'essentiel.",
+        "2. Interrompre les versements quand les marchés baissent. C'est précisément à ce moment-là qu'on achète au meilleur prix les briques qui composeront le plus.",
+        "3. Sous-estimer l'impact des frais. 1 % par an semble négligeable, on a vu : c'est tout sauf négligeable.",
+        "4. Vouloir « rattraper » en prenant plus de risque à 55 ans pour compenser une décennie de retard. C'est statistiquement perdant et émotionnellement intenable.",
       ],
     },
   ],
   keyTakeaways: [
-    "Les gains qui rapportent des gains : c'est non-linéaire.",
-    "Le temps est le levier dominant, pas le montant.",
-    "Règle des 72 : durée de doublement ≈ 72 ÷ rendement.",
-    "Une promesse de doublement rapide cache un rendement absurde.",
-    "Inflation = perte garantie sur capital dormant.",
+    "Capital final = capital × (1 + r)^n : le n compte plus que tout.",
+    "Commencer 10 ans plus tôt bat verser 3× plus longtemps.",
+    "1 % de rendement annuel supplémentaire = +40 à 65 % de capital final sur 40 ans.",
+    "Règle de 72 : doublement en 72 ÷ rendement (%).",
+    "Sur 40 ans, ~75 % du capital final vient des intérêts, ~25 % des versements.",
+    "Couper ses frais de 2 % à 0,3 % est l'optimisation la plus rentable disponible.",
+    "Ne jamais interrompre les versements en baisse de marché : c'est le moment idéal.",
   ],
   quiz: [
     {
-      question: "À 6 % annuel, combien d'années pour doubler 10 000 € ?",
-      options: ["6 ans", "12 ans", "20 ans", "30 ans"],
+      question: "Selon la règle de 72, en combien d'années un placement à 6 % double-t-il ?",
+      options: ["6 ans", "12 ans", "24 ans", "36 ans"],
       correctIndex: 1,
-      explanation: "Règle des 72 : 72 ÷ 6 = 12 ans.",
+      explanation: "72 ÷ 6 = 12. Approximation très utile pour juger un placement de tête.",
     },
     {
-      question: "Commencer à 25 ans plutôt qu'à 40 ans, à mensualité égale, multiplie le capital final…",
-      options: ["Par 1,5", "Par 2", "Par 3 à 5", "Cela ne change rien"],
-      correctIndex: 2,
-      explanation:
-        "Les 15 années supplémentaires d'intérêts composés démultiplient le résultat, typiquement par 3 à 5 selon le rendement.",
-    },
-    {
-      question: "Quelqu'un promet « +24 % par an, garanti ». Vous…",
+      question: "Alex (25 ans, 10 ans de versements) finit devant Béa (35 ans, 30 ans de versements). Pourquoi ?",
       options: [
-        "Investissez immédiatement.",
-        "Vérifiez la documentation puis investissez.",
-        "Considérez ça comme un signal d'arnaque.",
-        "Demandez à diviser le ticket d'entrée.",
+        "Parce qu'Alex a versé plus.",
+        "Parce que le temps composé donne un avantage massif aux 10 premières années.",
+        "Parce que Béa a payé plus de frais.",
+        "Parce qu'Alex a pris plus de risques.",
+      ],
+      correctIndex: 1,
+      explanation:
+        "Les premières années comptent le plus en valeur composée. Démarrer tôt > verser longtemps.",
+    },
+    {
+      question: "1 000 € à 7 % sur 30 ans deviennent environ…",
+      options: ["3 000 €", "5 000 €", "7 600 €", "30 000 €"],
+      correctIndex: 2,
+      explanation: "1 000 × 1,07^30 ≈ 7 612 €. La courbe est exponentielle, pas linéaire.",
+    },
+    {
+      question: "Un fonds à 2,5 % de frais vs un ETF à 0,3 %, sur 30 ans, à rendement brut identique…",
+      options: [
+        "Différence négligeable.",
+        "Différence de quelques centaines d'euros.",
+        "Différence de plusieurs dizaines de milliers d'euros.",
+        "L'ETF perd contre le fonds à cause du tracking error.",
       ],
       correctIndex: 2,
       explanation:
-        "Aucun placement légal et liquide ne garantit 24 % par an. Plus le rendement promis est haut, plus le risque (ou la fraude) l'est.",
+        "2,2 % d'écart annuel composé sur 30 ans = environ 40 % de capital final en moins pour le fonds cher.",
     },
     {
-      question: "Pourquoi laisser 50 000 € sur un compte courant est-il une perte ?",
+      question: "Le meilleur réflexe quand les marchés baissent fortement et qu'on a un horizon de 20 ans ?",
       options: [
-        "Parce que la banque prend des frais.",
+        "Vendre pour limiter la casse.",
+        "Arrêter les versements en attendant que ça remonte.",
+        "Continuer (ou augmenter) les versements réguliers.",
+        "Tout transférer en or.",
+      ],
+      correctIndex: 2,
+      explanation:
+        "En baisse, chaque versement achète plus de parts. Les versements réguliers en marché baissier dopent le rendement final.",
+    },
+    {
+      question: "Pourquoi laisser son argent sur un compte courant à 0 % est une perte garantie ?",
+      options: [
+        "Parce que la banque le confisque.",
         "Parce que l'inflation érode le pouvoir d'achat chaque année.",
-        "Parce que c'est interdit au-delà d'un certain montant.",
-        "Ce n'est pas une perte, c'est neutre.",
+        "Parce que les comptes courants ne sont pas garantis.",
+        "Parce que c'est imposé à 30 %.",
       ],
       correctIndex: 1,
       explanation:
-        "Compte courant ≈ 0 % de rendement. Avec 2 % d'inflation, vous perdez chaque année 2 % de pouvoir d'achat réel.",
+        "À 3 % d'inflation, le pouvoir d'achat est divisé par 2 en 24 ans. Le nominal est stable, le réel s'effondre.",
     },
   ],
 };

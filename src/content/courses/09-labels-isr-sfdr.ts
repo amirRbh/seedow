@@ -6,94 +6,158 @@ export const course: Course = {
   track: "esg",
   level: "intermediaire",
   isFree: false,
-  readingMinutes: 8,
+  readingMinutes: 13,
   title: "Labels ISR, Greenfin, Article 8/9 SFDR",
-  eyebrow: "ESG · Labels",
+  eyebrow: "ESG · Réglementation",
   description:
-    "Quatre étiquettes qui ne disent pas la même chose. Ce que chacune garantit vraiment, et celles qui sont les plus exigeantes.",
+    "Le maquis des labels et catégories de fonds durables : ce qu'ils garantissent vraiment, leurs critères, leurs limites.",
   intro:
-    "Le marché de l'investissement responsable a multiplié les labels. Tous n'ont pas la même rigueur. On les décortique un par un, du plus permissif au plus exigeant.",
+    "ISR, Greenfin, Finansol, Article 8, Article 9, Towards Sustainability, B-Corp, Febelfin… Les labels se multiplient sans se ressembler. Ce cours fait l'inventaire des principaux, explique ce qu'ils contrôlent vraiment, et donne une hiérarchie de confiance.",
   sections: [
     {
-      heading: "ISR (France)",
+      heading: "Le label ISR français (refondu en 2024)",
       paragraphs: [
-        "Label public français créé en 2016, refondu en 2024 pour devenir plus exigeant. Depuis 2024, exclusion obligatoire du charbon et des nouveaux projets fossiles. Le label couvre désormais des centaines de fonds.",
-        "Force : très répandu, accessible aux particuliers via la plupart des assurances-vie. Limite : reste large dans ses exclusions par rapport à des labels plus thématiques.",
-      ],
-    },
-    {
-      heading: "Greenfin (France)",
-      paragraphs: [
-        "Label public français orienté transition écologique. Exclut strictement les fossiles, le nucléaire, et impose un pourcentage minimum de fonds investi dans des activités écologiques (énergies renouvelables, efficacité énergétique, transport propre…).",
-        "Plus exigeant qu'ISR sur la dimension verte, mais plus restreint en nombre de fonds disponibles.",
-      ],
-    },
-    {
-      heading: "Article 8 SFDR (UE)",
-      paragraphs: [
-        "Classification européenne déclarative pour les fonds qui « promeuvent » des caractéristiques environnementales ou sociales. Très large : un fonds qui exclut seulement les armes controversées peut être Article 8.",
-        "Utile comme premier filtre, insuffisant comme garantie d'impact.",
-      ],
-    },
-    {
-      heading: "Article 9 SFDR (UE)",
-      paragraphs: [
-        "Classification européenne pour les fonds qui ont un « objectif d'investissement durable » comme objectif principal. Plus exigeant qu'Article 8, avec obligations de mesure et de reporting.",
-        "Attention : beaucoup de fonds ont été rétrogradés d'Article 9 vers Article 8 en 2023 quand les critères ont été précisés. Vérifier la classification actuelle, pas l'historique.",
+        "Créé en 2016 par le Ministère de l'Économie, le label ISR a longtemps été critiqué pour son laxisme : il a pu être attribué à des fonds détenant TotalEnergies en première ligne. Sa refonte fin 2023 / début 2024 a durci les critères.",
+        "Nouveaux critères : exclusion des entreprises avec plus de 5 % de CA fossile (charbon, pétrole non conventionnel, gaz non conventionnel), exclusion du tabac, alignement transition climatique exigé pour les énergéticiens conservés, suppression des 20 % moins-disants du portefeuille (best-in-universe).",
+        "Conséquence : environ 20 % des fonds labellisés avant 2024 ont perdu le label. C'est désormais un signal plus fiable, sans être un gage absolu d'engagement. Le label est gratuit, ce qui facilite son adoption.",
       ],
       callout:
-        "Aucun label n'est suffisant seul. Croiser label + reporting + exclusions documentées + engagement actionnarial.",
+        "Vérifier la date d'obtention du label ISR. Un fonds labellisé pour la première fois après mars 2024 a satisfait les nouveaux critères. Un fonds labellisé avant doit avoir été renouvelé sous ces nouvelles règles.",
     },
     {
-      heading: "Comment les classer en exigence",
+      heading: "Le label Greenfin (anciennement TEEC)",
       paragraphs: [
-        "Du plus permissif au plus exigeant (en général) : Article 8 < ISR (post-2024) < Article 9 < Greenfin sur la dimension climat. Mais c'est une approximation : un fonds Article 9 mal sélectionné peut être moins crédible qu'un Article 8 sérieux.",
-        "Le label est un point d'entrée, pas une conclusion. La vraie analyse se fait sur les positions, la politique d'exclusion, les objectifs chiffrés, et l'engagement.",
+        "Plus strict que l'ISR sur le volet environnemental. Géré par le Ministère de la Transition écologique. Exclut totalement les énergies fossiles (y compris gaz « transition ») et le nucléaire.",
+        "Cibles obligatoires : 75 % minimum du portefeuille dans des activités contribuant à la transition écologique (énergies renouvelables, efficacité énergétique, transports propres, bâtiments verts, économie circulaire).",
+        "Conséquence : très peu de fonds le portent (< 100 en France), souvent thématiques (infrastructures vertes, immobilier vert). C'est le label le plus exigeant côté E, mais l'univers d'investissement est très restreint et concentré.",
+      ],
+    },
+    {
+      heading: "Le label Finansol (finance solidaire)",
+      paragraphs: [
+        "Label différent : il certifie des produits d'épargne solidaire qui financent des projets à fort impact social ou environnemental (insertion par l'emploi, logement social, agriculture biologique, énergies renouvelables locales).",
+        "Mécanique typique : 5 à 10 % du fonds investi directement dans des entreprises solidaires non cotées, le reste sur des supports classiques ou ESG. Ou option « 100 % solidaire ».",
+        "Univers très réduit, performance souvent inférieure aux marchés (les actifs solidaires non cotés rapportent moins). C'est un choix de cohérence éthique, pas un choix d'optimisation financière.",
+      ],
+    },
+    {
+      heading: "SFDR : la classification européenne (Article 6, 8, 9)",
+      paragraphs: [
+        "SFDR (Sustainable Finance Disclosure Regulation) impose depuis 2021 à tous les fonds vendus en Europe de se déclarer en trois catégories.",
+        "Article 6 : pas d'objectif ESG particulier. Article 8 : promeut des caractéristiques ESG (« light green »). Article 9 : a un objectif explicite d'investissement durable (« dark green »).",
+        "Limite majeure : la définition d'Article 8 est très large, presque tous les fonds européens s'y placent désormais (~50 % de l'encours total). Article 9 est plus restrictif, mais beaucoup ont été reclassés Article 8 en 2023 par prudence après des controverses.",
+      ],
+      callout:
+        "SFDR Article 8 ne dit presque rien sur la qualité ESG du fonds : c'est devenu une norme de marché, pas une distinction. Article 9 reste plus engageant mais la définition est en débat.",
+    },
+    {
+      heading: "Hiérarchie de confiance pratique",
+      paragraphs: [
+        "1. Greenfin → engagement environnemental fort, univers étroit.",
+        "2. ISR refondu (après 2024) → engagement modéré, univers large, refus crédible des fossiles non conventionnels.",
+        "3. Article 9 SFDR → objectif durable explicite, mais à vérifier individuellement.",
+        "4. Article 8 SFDR → minimum syndical, ne vaut que comme point de départ.",
+        "5. Pas de label, pas d'Article → soit un fonds très récent, soit pas du tout positionné ESG.",
+      ],
+    },
+    {
+      heading: "Autres labels européens à connaître",
+      paragraphs: [
+        "Towards Sustainability (Belgique) : label belge créé en 2019, exigeant, exclusions sectorielles claires. Adopté par certains acteurs internationaux.",
+        "Nordic Swan Ecolabel (Scandinavie) : très exigeant côté E, peu courant en France.",
+        "B-Corp : label d'entreprise (et non de fonds) qui certifie une gestion durable globale. Quelques sociétés de gestion européennes sont B-Corp.",
+        "Febelfin (Belgique) et FNG-Siegel (Allemagne, Autriche, Suisse) : labels nationaux respectifs avec exigences variables.",
+      ],
+    },
+    {
+      heading: "Cas pratique : décoder une étiquette",
+      paragraphs: [
+        "Fonds A : Article 8 SFDR, pas de label national. → engagement minimal, à vérifier ligne par ligne.",
+        "Fonds B : Article 8 + label ISR refondu (2024). → engagement modéré crédible, exclusions fossiles non conventionnelles.",
+        "Fonds C : Article 9 + Greenfin. → engagement fort sur l'environnement, univers étroit (renouvelables, transition).",
+        "Fonds D : « Sustainable Growth Fund », ni label ni Article 9, frais 2,2 %. → marketing pur, à éviter pour qui cherche du sérieux.",
       ],
     },
   ],
   keyTakeaways: [
-    "ISR : large, refondu en 2024 avec exclusion charbon/fossiles nouveaux.",
-    "Greenfin : exigeant sur le climat, exclut nucléaire et fossiles.",
-    "Article 8 SFDR : déclaratif, très large.",
-    "Article 9 SFDR : plus exigeant, objectif durable principal.",
-    "Aucun label ne dispense de lire le reporting.",
+    "Label ISR (refondu 2024) = engagement modéré crédible, univers large.",
+    "Greenfin = engagement environnemental fort, univers étroit.",
+    "Finansol = finance solidaire, performance souvent inférieure.",
+    "Article 8 SFDR = minimum syndical européen (~50 % de l'encours).",
+    "Article 9 SFDR = objectif durable explicite, à vérifier individuellement.",
+    "Combinaison label national + Article 9 = signal le plus fiable.",
+    "Aucun label = aucune validation externe, à examiner sans a priori.",
   ],
   quiz: [
     {
-      question: "Quel label exclut strictement le nucléaire ?",
-      options: ["ISR", "Greenfin", "Article 8 SFDR", "Aucun"],
-      correctIndex: 1,
-      explanation: "Greenfin exclut nucléaire et énergies fossiles.",
-    },
-    {
-      question: "Article 8 SFDR garantit-il qu'un fonds a un impact environnemental positif ?",
-      options: ["Oui", "Non, c'est une classification déclarative large", "Uniquement en France", "Seulement depuis 2024"],
-      correctIndex: 1,
-      explanation: "Article 8 = promotion de caractéristiques ESG, pas objectif durable principal.",
-    },
-    {
-      question: "Pourquoi beaucoup de fonds sont passés d'Article 9 à Article 8 en 2023 ?",
+      question: "Le label ISR refondu en 2024 exclut désormais…",
       options: [
-        "Parce qu'ils ont changé de gérant.",
-        "Parce que les critères Article 9 ont été précisés, rendant la classification plus exigeante.",
-        "Parce que la France a changé sa réglementation.",
-        "Parce que les frais étaient trop élevés.",
+        "Toutes les actions cotées.",
+        "Les entreprises avec > 5 % de CA fossile non conventionnel et le tabac.",
+        "Uniquement le tabac.",
+        "Uniquement le secteur bancaire.",
       ],
       correctIndex: 1,
       explanation:
-        "L'UE a précisé en 2022-2023 ce qu'implique un « objectif d'investissement durable ». Beaucoup de fonds ne tenaient plus la définition.",
+        "Refonte 2024 : exclusion charbon, pétrole/gaz non conventionnels, tabac. Plus crédible qu'avant.",
     },
     {
-      question: "Pour évaluer un fonds responsable, on doit…",
+      question: "Le label Greenfin exclut totalement…",
       options: [
-        "Se fier exclusivement au label.",
-        "Croiser label, positions réelles, exclusions, engagement.",
-        "Demander à son conseiller.",
-        "Choisir le plus gros fonds disponible.",
+        "Le secteur tech.",
+        "Les énergies fossiles ET le nucléaire.",
+        "Les entreprises françaises.",
+        "Les ETF.",
       ],
       correctIndex: 1,
-      explanation: "Le label est un point d'entrée, jamais une conclusion.",
+      explanation:
+        "Greenfin = pas de fossiles, pas de nucléaire. C'est le label environnemental le plus strict.",
+    },
+    {
+      question: "Article 8 SFDR signifie…",
+      options: [
+        "Fonds garanti vert.",
+        "Fonds qui promeut des caractéristiques ESG (engagement large et flou).",
+        "Fonds réservé aux experts.",
+        "Fonds 100 % obligataire.",
+      ],
+      correctIndex: 1,
+      explanation: "Article 8 est très large et représente la moitié de l'encours européen. Ne suffit pas à valider l'engagement.",
+    },
+    {
+      question: "Hiérarchie de confiance pour un investisseur attentif ?",
+      options: [
+        "Article 8 > ISR > Greenfin",
+        "Greenfin > ISR refondu > Article 9 > Article 8",
+        "B-Corp > Article 8 > Greenfin",
+        "Aucun label ne vaut rien.",
+      ],
+      correctIndex: 1,
+      explanation: "Greenfin > ISR refondu > Article 9 > Article 8. À combiner avec un audit ligne par ligne.",
+    },
+    {
+      question: "Finansol certifie principalement…",
+      options: [
+        "Des fonds boursiers verts.",
+        "Des produits d'épargne solidaire à fort impact social.",
+        "Des assurances-vie.",
+        "Des cryptomonnaies.",
+      ],
+      correctIndex: 1,
+      explanation:
+        "Finansol = finance solidaire (insertion, logement, agriculture bio, etc.). Logique d'impact, pas d'optimisation.",
+    },
+    {
+      question: "Pourquoi beaucoup de fonds Article 9 ont été reclassés Article 8 en 2023 ?",
+      options: [
+        "Pour augmenter les frais.",
+        "Par prudence après des controverses sur la définition d'« objectif durable ».",
+        "Parce que la réglementation a disparu.",
+        "Pour les rendre obligatoires.",
+      ],
+      correctIndex: 1,
+      explanation:
+        "La définition floue d'Article 9 et le risque de greenwashing ont poussé de nombreux gérants à se rétrograder par prudence juridique.",
     },
   ],
 };
