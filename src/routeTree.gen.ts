@@ -26,6 +26,7 @@ import { Route as CertificatRouteImport } from './routes/certificat'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CoursIndexRouteImport } from './routes/cours.index'
 import { Route as ObjectifsGoalIdRouteImport } from './routes/objectifs.$goalId'
 import { Route as HooksRefreshMarketDataRouteImport } from './routes/hooks/refresh-market-data'
 import { Route as CoursSlugRouteImport } from './routes/cours.$slug'
@@ -116,6 +117,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CoursIndexRoute = CoursIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => CoursRoute,
+} as any)
 const ObjectifsGoalIdRoute = ObjectifsGoalIdRouteImport.update({
   id: '/$goalId',
   path: '/$goalId',
@@ -163,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/cours/$slug': typeof CoursSlugRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
+  '/cours/': typeof CoursIndexRoute
   '/admin/beta': typeof AuthenticatedAdminBetaRoute
 }
 export interface FileRoutesByTo {
@@ -171,7 +178,6 @@ export interface FileRoutesByTo {
   '/certificat': typeof CertificatRoute
   '/communaute': typeof CommunauteRoute
   '/comparatif': typeof ComparatifRoute
-  '/cours': typeof CoursRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/discover': typeof DiscoverRoute
   '/ethi': typeof EthiRoute
@@ -186,6 +192,7 @@ export interface FileRoutesByTo {
   '/cours/$slug': typeof CoursSlugRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
+  '/cours': typeof CoursIndexRoute
   '/admin/beta': typeof AuthenticatedAdminBetaRoute
 }
 export interface FileRoutesById {
@@ -211,6 +218,7 @@ export interface FileRoutesById {
   '/cours/$slug': typeof CoursSlugRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
+  '/cours/': typeof CoursIndexRoute
   '/_authenticated/admin/beta': typeof AuthenticatedAdminBetaRoute
 }
 export interface FileRouteTypes {
@@ -236,6 +244,7 @@ export interface FileRouteTypes {
     | '/cours/$slug'
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
+    | '/cours/'
     | '/admin/beta'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -244,7 +253,6 @@ export interface FileRouteTypes {
     | '/certificat'
     | '/communaute'
     | '/comparatif'
-    | '/cours'
     | '/dashboard'
     | '/discover'
     | '/ethi'
@@ -259,6 +267,7 @@ export interface FileRouteTypes {
     | '/cours/$slug'
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
+    | '/cours'
     | '/admin/beta'
   id:
     | '__root__'
@@ -283,6 +292,7 @@ export interface FileRouteTypes {
     | '/cours/$slug'
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
+    | '/cours/'
     | '/_authenticated/admin/beta'
   fileRoutesById: FileRoutesById
 }
@@ -429,6 +439,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cours/': {
+      id: '/cours/'
+      path: '/'
+      fullPath: '/cours/'
+      preLoaderRoute: typeof CoursIndexRouteImport
+      parentRoute: typeof CoursRoute
+    }
     '/objectifs/$goalId': {
       id: '/objectifs/$goalId'
       path: '/$goalId'
@@ -480,10 +497,12 @@ const AuthenticatedRouteRouteWithChildren =
 
 interface CoursRouteChildren {
   CoursSlugRoute: typeof CoursSlugRoute
+  CoursIndexRoute: typeof CoursIndexRoute
 }
 
 const CoursRouteChildren: CoursRouteChildren = {
   CoursSlugRoute: CoursSlugRoute,
+  CoursIndexRoute: CoursIndexRoute,
 }
 
 const CoursRouteWithChildren = CoursRoute._addFileChildren(CoursRouteChildren)
@@ -524,13 +543,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

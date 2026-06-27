@@ -49,14 +49,12 @@ export const Route = createFileRoute("/cours/$slug")({
 
 function CoursePage() {
   const { course } = Route.useLoaderData();
-  const { user, loading } = useAuth();
-  const isAuthed = !!user;
+  const { user } = useAuth();
+  const isAuthed = course.isFree || !!user;
   const accessible = course.isFree || isAuthed;
   const next = getNextCourse(course.slug);
 
-  // Pendant le chargement de l'auth, on rend le contenu tronqué côté SSR
-  // pour les cours payants ; ça évite un flash et reste cohérent.
-  const truncated = !course.isFree && !loading && !isAuthed;
+  const truncated = !course.isFree && !isAuthed;
   const visibleSections = truncated ? course.sections.slice(0, 3) : course.sections;
 
   return (

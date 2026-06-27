@@ -89,6 +89,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   const fullBleed =
     pathname === "/" ||
+    pathname.startsWith("/cours") ||
     pathname.startsWith("/auth") ||
     pathname.startsWith("/onboarding") ||
     pathname.startsWith("/certificat");
