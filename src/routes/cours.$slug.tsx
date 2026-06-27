@@ -50,7 +50,7 @@ export const Route = createFileRoute("/cours/$slug")({
 function CoursePage() {
   const { course } = Route.useLoaderData();
   const { user, loading } = useAuth();
-  const isAuthed = !!user;
+  const isAuthed = course.isFree || !!user;
   const accessible = course.isFree || isAuthed;
   const next = getNextCourse(course.slug);
 
