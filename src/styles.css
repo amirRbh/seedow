@@ -149,18 +149,20 @@
 
 
 .dark {
-  --paper: oklch(0.14 0.006 260);
-  --paper-2: oklch(0.18 0.007 260);
-  --paper-3: oklch(0.24 0.008 260);
-  --paper-inset: oklch(0.28 0.009 260);
-  --ink: oklch(0.96 0.005 100);
-  --ink-2: oklch(0.78 0.006 100);
-  --ink-3: oklch(0.58 0.007 100);
-  --moss-1: oklch(0.72 0.060 155);
-  --moss-2: oklch(0.58 0.055 155);
-  --moss-3: oklch(0.45 0.045 155);
-  --moss-4: oklch(0.30 0.030 155);
-  --moss-5: oklch(0.22 0.020 155);
+  --paper: oklch(0.18 0.012 150);
+  --paper-2: oklch(0.22 0.014 150);
+  --paper-3: oklch(0.28 0.016 150);
+  --paper-inset: oklch(0.32 0.018 150);
+  --ink: oklch(0.96 0.008 110);
+  --ink-2: oklch(0.78 0.010 110);
+  --ink-3: oklch(0.60 0.012 115);
+  --moss-1: oklch(0.78 0.060 150);
+  --moss-2: oklch(0.64 0.055 150);
+  --moss-3: oklch(0.50 0.045 150);
+  --moss-4: oklch(0.34 0.030 150);
+  --moss-5: oklch(0.24 0.020 150);
+  --gold: oklch(0.72 0.16 145);
+  --gold-soft: oklch(0.64 0.14 148);
   --background: var(--paper);
   --foreground: var(--ink);
   --card: var(--paper-2);
@@ -168,6 +170,7 @@
   --border: var(--paper-3);
   --input: var(--paper-3);
 }
+
 
 @layer base {
   * { border-color: var(--color-border); }
