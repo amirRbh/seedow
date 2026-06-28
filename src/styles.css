@@ -97,10 +97,11 @@
   --paper-3: oklch(0.885 0.012 115);
   --paper-inset: oklch(0.855 0.014 115);
 
-  /* Encre — vert nuit profond */
-  --ink: oklch(0.26 0.025 150);
-  --ink-2: oklch(0.46 0.022 150);
-  --ink-3: oklch(0.62 0.018 145);
+  /* Encre — vert ardoise médium, lecture aérée */
+  --ink: oklch(0.40 0.025 150);
+  --ink-2: oklch(0.55 0.022 150);
+  --ink-3: oklch(0.68 0.018 145);
+
 
   /* Accent principal — sauge désaturée */
   --moss-1: oklch(0.52 0.055 150);
