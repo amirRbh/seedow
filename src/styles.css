@@ -97,10 +97,11 @@
   --paper-3: oklch(0.885 0.012 115);
   --paper-inset: oklch(0.855 0.014 115);
 
-  /* Encre — vert nuit profond */
-  --ink: oklch(0.26 0.025 150);
-  --ink-2: oklch(0.46 0.022 150);
-  --ink-3: oklch(0.62 0.018 145);
+  /* Encre — vert ardoise médium, lecture aérée */
+  --ink: oklch(0.40 0.025 150);
+  --ink-2: oklch(0.55 0.022 150);
+  --ink-3: oklch(0.68 0.018 145);
+
 
   /* Accent principal — sauge désaturée */
   --moss-1: oklch(0.52 0.055 150);
@@ -139,9 +140,10 @@
   --input: var(--paper-3);
   --ring: var(--moss-2);
 
-  --shadow-leaf: 0 1px 2px 0 oklch(0.26 0.025 150 / 0.05), 0 1px 3px 0 oklch(0.26 0.025 150 / 0.07);
-  --shadow-deep: 0 4px 16px -4px oklch(0.26 0.025 150 / 0.12);
-  --shadow-soil: inset 0 1px 2px 0 oklch(0.26 0.025 150 / 0.07);
+  --shadow-leaf: 0 1px 2px 0 oklch(0.26 0.025 150 / 0.06), 0 1px 3px 0 oklch(0.26 0.025 150 / 0.09);
+  --shadow-deep: 0 4px 16px -4px oklch(0.26 0.025 150 / 0.14);
+  --shadow-soil: inset 0 1px 2px 0 oklch(0.26 0.025 150 / 0.08);
+
 
   /* Grain SVG — texture papier discrète */
   --paper-grain-url: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.14  0 0 0 0 0.18  0 0 0 0 0.14  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
