@@ -91,30 +91,31 @@
 :root {
   --radius: 0.5rem;
 
-  /* Surfaces — ivoire institutionnel, neutre froid */
-  --paper: oklch(0.985 0.003 100);
-  --paper-2: oklch(0.965 0.004 100);
-  --paper-3: oklch(0.925 0.005 100);
-  --paper-inset: oklch(0.895 0.006 100);
+  /* Surfaces — pierre ivoire légèrement verdie */
+  --paper: oklch(0.975 0.006 110);
+  --paper-2: oklch(0.945 0.008 110);
+  --paper-3: oklch(0.885 0.012 115);
+  --paper-inset: oklch(0.855 0.014 115);
 
-  /* Encre — quasi-noir neutre */
-  --ink: oklch(0.20 0.008 260);
-  --ink-2: oklch(0.42 0.010 260);
-  --ink-3: oklch(0.60 0.008 260);
+  /* Encre — vert nuit profond */
+  --ink: oklch(0.26 0.025 150);
+  --ink-2: oklch(0.46 0.022 150);
+  --ink-3: oklch(0.62 0.018 145);
 
-  /* Accent unique — vert forêt très désaturé */
-  --moss-1: oklch(0.34 0.045 155);
-  --moss-2: oklch(0.46 0.050 155);
-  --moss-3: oklch(0.62 0.040 155);
-  --moss-4: oklch(0.86 0.020 155);
-  --moss-5: oklch(0.95 0.010 155);
+  /* Accent principal — sauge désaturée */
+  --moss-1: oklch(0.52 0.055 150);
+  --moss-2: oklch(0.62 0.060 150);
+  --moss-3: oklch(0.74 0.045 150);
+  --moss-4: oklch(0.90 0.020 150);
+  --moss-5: oklch(0.96 0.012 150);
 
   /* Accents data */
-  --rust: oklch(0.50 0.13 25);
-  --gold: oklch(0.65 0.10 80);
-  --gold-soft: oklch(0.58 0.095 75);
-  --sky: oklch(0.45 0.07 240);
-  --bloom: oklch(0.50 0.10 280);
+  --rust: oklch(0.52 0.13 35);
+  /* Signature vive — token --gold conservé pour zéro régression, valeur = vert vif "pousse" */
+  --gold: oklch(0.62 0.16 145);
+  --gold-soft: oklch(0.56 0.14 148);
+  --sky: oklch(0.50 0.07 220);
+  --bloom: oklch(0.55 0.09 290);
   --peach: oklch(0.90 0.04 75);
 
   /* shadcn mapping */
@@ -138,27 +139,30 @@
   --input: var(--paper-3);
   --ring: var(--moss-2);
 
-  --shadow-leaf: 0 1px 2px 0 oklch(0.20 0.008 260 / 0.04), 0 1px 3px 0 oklch(0.20 0.008 260 / 0.06);
-  --shadow-deep: 0 4px 16px -4px oklch(0.20 0.008 260 / 0.10);
-  --shadow-soil: inset 0 1px 2px 0 oklch(0.20 0.008 260 / 0.06);
+  --shadow-leaf: 0 1px 2px 0 oklch(0.26 0.025 150 / 0.05), 0 1px 3px 0 oklch(0.26 0.025 150 / 0.07);
+  --shadow-deep: 0 4px 16px -4px oklch(0.26 0.025 150 / 0.12);
+  --shadow-soil: inset 0 1px 2px 0 oklch(0.26 0.025 150 / 0.07);
 
   /* Grain SVG — texture papier discrète */
-  --paper-grain-url: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.12  0 0 0 0 0.16  0 0 0 0 0.12  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
+  --paper-grain-url: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.14  0 0 0 0 0.18  0 0 0 0 0.14  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
 }
 
+
 .dark {
-  --paper: oklch(0.14 0.006 260);
-  --paper-2: oklch(0.18 0.007 260);
-  --paper-3: oklch(0.24 0.008 260);
-  --paper-inset: oklch(0.28 0.009 260);
-  --ink: oklch(0.96 0.005 100);
-  --ink-2: oklch(0.78 0.006 100);
-  --ink-3: oklch(0.58 0.007 100);
-  --moss-1: oklch(0.72 0.060 155);
-  --moss-2: oklch(0.58 0.055 155);
-  --moss-3: oklch(0.45 0.045 155);
-  --moss-4: oklch(0.30 0.030 155);
-  --moss-5: oklch(0.22 0.020 155);
+  --paper: oklch(0.18 0.012 150);
+  --paper-2: oklch(0.22 0.014 150);
+  --paper-3: oklch(0.28 0.016 150);
+  --paper-inset: oklch(0.32 0.018 150);
+  --ink: oklch(0.96 0.008 110);
+  --ink-2: oklch(0.78 0.010 110);
+  --ink-3: oklch(0.60 0.012 115);
+  --moss-1: oklch(0.78 0.060 150);
+  --moss-2: oklch(0.64 0.055 150);
+  --moss-3: oklch(0.50 0.045 150);
+  --moss-4: oklch(0.34 0.030 150);
+  --moss-5: oklch(0.24 0.020 150);
+  --gold: oklch(0.72 0.16 145);
+  --gold-soft: oklch(0.64 0.14 148);
   --background: var(--paper);
   --foreground: var(--ink);
   --card: var(--paper-2);
@@ -166,6 +170,7 @@
   --border: var(--paper-3);
   --input: var(--paper-3);
 }
+
 
 @layer base {
   * { border-color: var(--color-border); }
