@@ -92,16 +92,16 @@
 :root {
   --radius: 0.5rem;
 
-  /* Surfaces — pierre ivoire très lumineux, presque blanc cassé frais */
-  --paper: oklch(0.985 0.004 200);
-  --paper-2: oklch(0.965 0.006 200);
-  --paper-3: oklch(0.920 0.010 205);
-  --paper-inset: oklch(0.890 0.012 205);
+  /* Surfaces — blanc cassé légèrement frais */
+  --paper: oklch(0.975 0.006 195);
+  --paper-2: oklch(0.945 0.010 195);
+  --paper-3: oklch(0.895 0.014 200);
+  --paper-inset: oklch(0.860 0.016 200);
 
-  /* Encre — vert-bleu nuit doux, nettement plus clair et frais */
-  --ink: oklch(0.52 0.025 195);
-  --ink-2: oklch(0.65 0.022 200);
-  --ink-3: oklch(0.76 0.018 205);
+  /* Encre — teal-émeraude profond, frais et dense */
+  --ink: oklch(0.32 0.045 185);
+  --ink-2: oklch(0.48 0.035 190);
+  --ink-3: oklch(0.62 0.028 195);
 
   /* Accent principal — sauge désaturée */
   --moss-1: oklch(0.52 0.055 150);
