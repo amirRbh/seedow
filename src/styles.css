@@ -21,9 +21,10 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
 
-  --font-sans: "DM Sans", system-ui, -apple-system, sans-serif;
-  --font-value: "Space Grotesk", "DM Sans", sans-serif;
-  --font-display: "Space Grotesk", "DM Sans", sans-serif;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-value: "JetBrains Mono", ui-monospace, monospace;
+  --font-display: "Bebas Neue", "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -94,34 +95,39 @@
 :root {
   --radius: 0.5rem;
 
-  /* Surfaces — blanc cassé légèrement frais */
-  --paper: oklch(1 0 0);
-  --paper-2: oklch(0.96 0 0);
-  --paper-3: oklch(0.90 0 0);
-  --paper-inset: oklch(0.85 0 0);
+  /* Surfaces — papier ivoire éditorial */
+  --paper: oklch(0.965 0.008 90);        /* #F5F3EC */
+  --paper-2: oklch(0.925 0.012 88);      /* #E0DCCE */
+  --paper-3: oklch(0.905 0.013 88);      /* #DEDACE */
+  --paper-inset: oklch(0.870 0.014 88);
 
-  /* Encre — teal-émeraude profond, frais et dense */
-  --ink: oklch(0.32 0.045 185);
-  --ink-2: oklch(0.48 0.035 190);
-  --ink-3: oklch(0.62 0.028 195);
+  /* Encre — noir pur, pas de teal */
+  --ink: oklch(0.15 0 0);                /* #0A0A0A */
+  --ink-2: oklch(0.45 0.003 90);         /* #6B6B66 dim */
+  --ink-3: oklch(0.58 0.004 90);
 
-  /* Accent principal — sauge désaturée */
-  --moss-1: oklch(0.52 0.055 150);
-  --moss-2: oklch(0.62 0.060 150);
-  --moss-3: oklch(0.74 0.045 150);
-  --moss-4: oklch(0.90 0.020 150);
-  --moss-5: oklch(0.96 0.012 150);
+  /* Accent principal sobre — gris clair (pour les fonds neutres) */
+  --moss-1: oklch(0.15 0 0);             /* mappé à ink pour primary */
+  --moss-2: oklch(0.30 0 0);
+  --moss-3: oklch(0.58 0.004 90);
+  --moss-4: oklch(0.905 0.013 88);
+  --moss-5: oklch(0.945 0.010 88);
 
-  /* Accents data */
-  --rust: oklch(0.52 0.13 35);
-  /* Signature vive — vert pousse */
-  --gold: oklch(0.62 0.16 145);
-  --gold-soft: oklch(0.56 0.14 148);
-  --sky: oklch(0.50 0.07 220);
-  --bloom: oklch(0.55 0.09 290);
-  --peach: oklch(0.90 0.04 75);
-  /* Second accent frais — bleu glacier */
-  --glacier: oklch(0.78 0.08 210);
+  /* Data colors — palette signal */
+  --rust: oklch(0.58 0.20 18);           /* alert #E0294F */
+  --gold: oklch(0.72 0.20 155);          /* mint #00C77A — signature vive */
+  --gold-soft: oklch(0.68 0.18 155);
+  --sky: oklch(0.60 0.14 230);           /* ice #0099CC */
+  --bloom: oklch(0.52 0.22 305);         /* volt #8B4FE0 */
+  --peach: oklch(0.72 0.16 85);          /* solar #D4A300 */
+  --glacier: oklch(0.60 0.14 230);
+
+  /* Tokens nommés data — utilisables directement */
+  --mint: oklch(0.72 0.20 155);
+  --ice: oklch(0.60 0.14 230);
+  --solar: oklch(0.72 0.16 85);
+  --alert: oklch(0.58 0.20 18);
+  --volt: oklch(0.52 0.22 305);
 
   /* shadcn mapping */
   --background: var(--paper);
