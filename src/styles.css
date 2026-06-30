@@ -261,14 +261,26 @@
     text-transform: uppercase;
   }
 
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+    line-height: 1.02;
+  }
+
   .eyebrow {
     font-family: var(--font-mono);
     font-size: 11px;
-    font-weight: 500;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--color-mint);
+    letter-spacing: 0.18em;
+    color: var(--color-ink-2);
   }
+  .eyebrow--accent { color: var(--color-mint); }
+  .eyebrow--ice { color: var(--color-ice); }
+  .eyebrow--volt { color: var(--color-volt); }
 
   /* Filet — séparateur signature, trait plein flat */
   .gold-rule {
