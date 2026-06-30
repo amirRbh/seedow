@@ -68,6 +68,11 @@
   --color-bloom: var(--bloom);
   --color-peach: var(--peach);
   --color-glacier: var(--glacier);
+  --color-mint: var(--mint);
+  --color-ice: var(--ice);
+  --color-solar: var(--solar);
+  --color-alert: var(--alert);
+  --color-volt: var(--volt);
 
   --shadow-leaf: var(--shadow-leaf);
   --shadow-deep: var(--shadow-deep);
