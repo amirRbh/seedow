@@ -270,20 +270,35 @@
     color: var(--color-mint);
   }
 
-  /* Filet or — séparateur signature */
+  /* Filet — séparateur signature, trait plein flat */
   .gold-rule {
     height: 1px;
-    background: linear-gradient(
-      to right,
-      transparent,
-      var(--color-gold) 12%,
-      var(--color-gold) 88%,
-      transparent
-    );
+    background-color: var(--color-ink);
+    opacity: 1;
   }
   .gold-rule-solid {
     height: 1px;
-    background-color: var(--color-gold);
+    background-color: var(--color-ink);
+  }
+
+  /* Données — chiffres mono large bold */
+  .data-xl {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    font-feature-settings: "tnum", "lnum";
+  }
+  .data-lg {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    line-height: 1;
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+    font-feature-settings: "tnum", "lnum";
   }
 }
 
