@@ -1,19 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { ArrowRight, Plus } from "lucide-react";
+import { useEffect, useState, type FormEvent } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { BetaCounter } from "@/components/beta/BetaCounter";
-import { LanguageToggle } from "@/components/LanguageToggle";
+import { joinWaitlist } from "@/lib/beta/beta.functions";
 
 const SITE_URL = "https://seedow.life";
-
-const FAQ_KEYS = ["1", "2", "3", "4"] as const;
-const PILLAR_KEYS = ["1", "2", "3"] as const;
-const PILLAR_NUMBERS = { "1": "01", "2": "02", "3": "03" } as const;
-const STORY_KEYS = ["1", "2", "3", "4"] as const;
-const STORY_NUMBERS = { "1": "01", "2": "02", "3": "03", "4": "04" } as const;
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -22,541 +12,381 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Seedow analyse votre portefeuille et vous montre ce que votre argent finance vraiment : entreprises, secteurs, valeurs. Une lecture éditoriale, transparente, sans promesse de placement.",
+          "Seedow vous montre ce que votre argent finance vraiment. Investissement ESG, visualisé clairement, expliqué par une IA qui ne vous vend rien.",
       },
       { property: "og:title", content: "Seedow — Votre argent façonne déjà le monde" },
       {
         property: "og:description",
-        content: "Seedow vous montre ce que votre argent finance vraiment. Une lecture transparente de votre portefeuille.",
+        content: "Seedow vous montre ce que votre argent finance vraiment.",
       },
       { property: "og:url", content: SITE_URL },
       { property: "og:type", content: "website" },
     ],
     links: [{ rel: "canonical", href: SITE_URL }],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Organization",
-          name: "Seedow",
-          url: SITE_URL,
-          description: "Analyse transparente pour ton portefeuille.",
-        }),
-      },
-    ],
   }),
   component: Landing,
 });
 
-const easeOut = [0.22, 1, 0.36, 1] as [number, number, number, number];
-
 function Landing() {
-  const { t } = useTranslation();
   const [isAuthed, setIsAuthed] = useState<boolean | null>(null);
-  const heroRef = useRef<HTMLDivElement>(null);
-
-  const { scrollY } = useScroll();
-  const heroProgress = useTransform(scrollY, [0, 600], [0, 1]);
-  const heroScale = useSpring(useTransform(heroProgress, [0, 1], [1, 0.18]), { stiffness: 90, damping: 24 });
-  const heroOpacity = useTransform(heroProgress, [0.3, 0.9], [1, 0]);
-  const heroY = useTransform(heroProgress, [0, 1], [0, -120]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setIsAuthed(!!data.session));
-    const { data: sub } = supabase.auth.onAuthStateChange((_evt, session) => {
-      setIsAuthed(!!session);
-    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => setIsAuthed(!!session));
     return () => sub.subscription.unsubscribe();
   }, []);
 
-  return (
-    <div className="bg-paper text-ink selection:bg-gold selection:text-ink">
-      <StickyHeader isAuthed={isAuthed} />
+  const scrollToCta = () => {
+    document.getElementById("cta")?.scrollIntoView({ behavior: "smooth" });
+    setTimeout(() => document.getElementById("cta-email")?.focus(), 400);
+  };
 
-      <main>
-        {/* HERO */}
-        <section
-          ref={heroRef}
-          className="relative min-h-screen flex flex-col justify-between px-6 md:px-12 pt-32 pb-16 border-b border-ink/10"
+  return (
+    <div className="min-h-screen bg-paper text-ink">
+      {/* NAV */}
+      <nav className="sticky top-0 z-50 border-b border-[var(--paper-3)] backdrop-blur-md bg-[rgba(245,243,236,0.92)]">
+        <div className="max-w-[1100px] mx-auto px-8 py-4 flex justify-between items-center">
+          <Link to="/" className="font-display text-2xl tracking-[0.04em] uppercase">
+            seedow
+          </Link>
+          <button onClick={scrollToCta} className="btn-plant" style={{ padding: "8px 16px", fontSize: 11 }}>
+            Rejoindre la beta
+          </button>
+        </div>
+      </nav>
+
+      {/* HERO */}
+      <section className="max-w-[1100px] mx-auto px-8 pt-24 pb-20 text-center">
+        <span className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.15em] uppercase text-mint border border-mint rounded-full px-3.5 py-1.5 mb-8">
+          <span className="w-1.5 h-1.5 rounded-full bg-mint gold-pulse" />
+          Beta ouverte bientôt
+        </span>
+        <h1
+          className="font-display uppercase mb-7"
+          style={{ fontSize: "clamp(48px, 9vw, 108px)", lineHeight: 0.95, letterSpacing: "0.01em" }}
         >
-          <div className="max-w-7xl mx-auto w-full flex-1 flex flex-col justify-center">
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6 }}
-              className="eyebrow mb-10 flex items-center gap-3"
-            >
-              <span className="tabular-nums text-ink-3">N° 01</span>
-              <span className="h-px w-8 bg-gold/60" />
-              {t("landing.eyebrow_edition")}
-            </motion.p>
+          Votre argent
+          <br />
+          <span className="text-ink">façonne déjà </span>
+          <span className="text-mint">le monde.</span>
+        </h1>
+        <p className="text-[18px] text-ink-2 max-w-[560px] mx-auto mb-10 leading-[1.6]">
+          Seedow vous montre lequel. Investissement ESG, visualisé clairement, expliqué par une IA qui ne vous vend rien.
+        </p>
+        <HeroForm onJump={scrollToCta} />
+        <p className="font-mono text-[10px] text-ink-2 tracking-[0.05em] mt-2">
+          GRATUIT · PLACES LIMITÉES · AUCUNE CARTE REQUISE
+        </p>
+      </section>
 
-            <motion.div
-              style={{ scale: heroScale, opacity: heroOpacity, y: heroY, transformOrigin: "left center" }}
-            >
-              <h1 className="display-xl uppercase">
-                seedow<span className="text-gold gold-pulse">.</span>
-              </h1>
-            </motion.div>
-
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3, ease: easeOut }}
-              className="mt-12 text-xl md:text-3xl max-w-3xl leading-[1.3] text-ink-2 font-display font-medium tracking-tight"
-            >
-              {t("landing.subtitle")}
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.5 }}
-              className="mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-6"
-            >
-              <Link
-                to={isAuthed ? "/dashboard" : "/auth"}
-                search={isAuthed ? undefined : { redirect: "/onboarding", mode: "signup" }}
-                className="btn-plant group"
-              >
-                {isAuthed ? t("nav.my_space") : t("nav.audit_my_portfolio")}
-                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-              </Link>
-              <Link to="/methodologie" className="btn-harvest">
-                {t("nav.methodology")}
-              </Link>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8, duration: 0.6 }}
-              className="mt-10 max-w-xs"
-            >
-              <BetaCounter />
-            </motion.div>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1, duration: 1.2 }}
-            className="max-w-7xl mx-auto w-full flex items-end justify-between gap-6 text-[10px] uppercase tracking-[0.22em] text-ink-3"
-          >
-            <span>{t("landing.ribbon_no_bank")}</span>
-            <span className="hidden md:inline">{t("landing.ribbon_method")}</span>
-            <span className="hidden md:inline">{t("landing.ribbon_sources")}</span>
-            <ScrollHint />
-          </motion.div>
-        </section>
-
-        <ManifestoSection />
-        <StoryNarrative />
-        <DemoSection />
-
-        {/* PILIERS */}
-        <section className="max-w-7xl mx-auto px-6 md:px-12 py-32 border-t border-ink/10">
-          <div className="grid md:grid-cols-12 gap-12 mb-16">
-            <div className="md:col-span-3">
-              <p className="eyebrow mb-4 flex items-center gap-3">
-                <span className="tabular-nums text-ink-3">N° 04</span>
-                <span className="h-px w-8 bg-gold/60" />
-                {t("landing.pillars_eyebrow")}
-              </p>
-            </div>
-            <h2 className="md:col-span-9 display-lg">
-              {t("landing.pillars_title_a")}
-              <br />
-              <span className="text-gold">{t("landing.pillars_title_b")}</span>
-            </h2>
-          </div>
-          <div className="gold-rule mb-20" />
-          <div className="grid md:grid-cols-3 gap-12 md:gap-16 relative">
-            {PILLAR_KEYS.map((k, i) => (
-              <motion.article
-                key={k}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.7, delay: i * 0.1, ease: easeOut }}
-                className="relative"
-              >
-                <p className="outline-number text-7xl md:text-8xl mb-4 select-none">
-                  {PILLAR_NUMBERS[k]}
-                </p>
-                <h3 className="display-lg text-3xl md:text-4xl mb-4">{t(`landing.pillars.${k}_title`)}</h3>
-                <p className="text-ink-2 leading-relaxed">{t(`landing.pillars.${k}_body`)}</p>
-              </motion.article>
-            ))}
-          </div>
-        </section>
-
-        {/* MÉTHODO TEASER */}
-        <section className="relative overflow-hidden bg-ink text-paper py-32 paper-grain ink-grain vignette">
-          <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
-            <div className="grid md:grid-cols-12 gap-12 items-end">
-              <div className="md:col-span-7">
-                <p className="eyebrow mb-6 flex items-center gap-3">
-                  <span className="tabular-nums text-paper/50">N° 05</span>
-                  <span className="h-px w-8 bg-gold/60" />
-                  {t("landing.method_eyebrow")}
-                </p>
-                <h2 className="display-lg text-paper">
-                  {t("landing.method_title_a")}
-                  <br />
-                  <span className="text-gold">{t("landing.method_title_b")}</span>
-                </h2>
-                <p className="mt-8 text-paper-2 max-w-xl leading-relaxed text-lg">
-                  {t("landing.method_desc")}
-                </p>
-              </div>
-              <div className="md:col-span-5 flex md:justify-end">
-                <Link
-                  to="/methodologie"
-                  className="inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.22em] text-gold border-b border-gold pb-2 hover:border-gold-soft hover:text-gold-soft transition-colors"
-                >
-                  {t("landing.method_cta")}
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* FAQ */}
-        <section className="max-w-4xl mx-auto px-6 md:px-12 py-32">
-          <div className="mb-16">
-            <p className="eyebrow mb-4 flex items-center gap-3"><span className="tabular-nums text-ink-3">N° 06</span><span className="h-px w-8 bg-gold/60" />{t("landing.faq_eyebrow")}</p>
-            <h2 className="display-lg">{t("landing.faq_title")}</h2>
-            <div className="gold-rule mt-8" />
-          </div>
-          <div>
-            {FAQ_KEYS.map((k, i) => (
-              <motion.details
-                key={k}
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.5, delay: i * 0.05 }}
-                className="group border-b border-ink/10 py-8 [&_summary::-webkit-details-marker]:hidden"
-              >
-                <summary className="flex items-start justify-between cursor-pointer list-none gap-6">
-                  <h3 className="font-display font-semibold text-lg md:text-xl leading-snug group-hover:text-gold transition-colors">
-                    {t(`landing.faqs.q${k}`)}
-                  </h3>
-                  <span className="text-gold mt-1 group-open:rotate-45 transition-transform duration-400">
-                    <Plus className="w-5 h-5" />
-                  </span>
-                </summary>
-                <p className="mt-4 text-ink-2 leading-relaxed pr-12">{t(`landing.faqs.a${k}`)}</p>
-              </motion.details>
-            ))}
-          </div>
-        </section>
-
-        {/* CTA FINAL */}
-        <section className="max-w-7xl mx-auto px-6 md:px-12 pb-32">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.8, ease: easeOut }}
-            className="relative overflow-hidden bg-ink text-paper p-12 md:p-24 paper-grain ink-grain"
-          >
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,oklch(0.74_0.085_65/0.28),transparent_60%)]" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,oklch(0.38_0.040_145/0.45),transparent_55%)]" />
-            <div className="relative z-10 max-w-3xl">
-              <p className="eyebrow mb-6 flex items-center gap-3">
-                <span className="tabular-nums text-paper/50">N° 07</span>
-                <span className="h-px w-8 bg-gold/60" />
-                {t("landing.final_eyebrow")}
-              </p>
-              <h2 className="display-lg text-paper mb-8">
-                {t("landing.final_title_a")}
-                <br />
-                <span className="text-gold">{t("landing.final_title_b")}</span>
-              </h2>
-              <Link
-                to={isAuthed ? "/dashboard" : "/auth"}
-                search={isAuthed ? undefined : { redirect: "/onboarding", mode: "signup" }}
-                className="group relative inline-flex items-center gap-3 bg-gold text-ink px-10 py-5 font-semibold uppercase tracking-[0.2em] text-xs hover:bg-gold-soft transition-colors overflow-hidden"
-              >
-                <span className="relative z-10 inline-flex items-center gap-3">
-                  {isAuthed ? t("nav.my_space") : t("landing.final_cta")}
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </span>
-                <span aria-hidden className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 gold-shimmer transition-opacity" />
-              </Link>
-            </div>
-          </motion.div>
-        </section>
-
-        <footer className="border-t border-ink/10 py-12">
-          <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between gap-6 text-xs text-ink-3">
-            <p>{t("landing.footer_copy")}</p>
-            <div className="flex gap-8">
-              <Link to="/cours" className="hover:text-ink transition-colors">Cours</Link>
-              <Link to="/methodologie" className="hover:text-ink transition-colors">{t("nav.methodology")}</Link>
-              <a href="mailto:hello@seedow.life" className="hover:text-ink transition-colors">{t("landing.footer_contact")}</a>
-            </div>
-          </div>
-        </footer>
-      </main>
-    </div>
-  );
-}
-
-function StickyHeader({ isAuthed }: { isAuthed: boolean | null }) {
-  const { t } = useTranslation();
-  const { scrollY } = useScroll();
-  const bg = useTransform(scrollY, [0, 400], ["rgba(232, 224, 208, 0)", "rgba(232, 224, 208, 0.88)"]);
-  const ruleOpacity = useTransform(scrollY, [120, 280], [0, 1]);
-  const ruleScale = useTransform(scrollY, [120, 280], [0.2, 1]);
-
-  return (
-    <motion.header
-      style={{ backgroundColor: bg }}
-      className="fixed top-0 left-0 right-0 z-40 backdrop-blur-2xl"
-    >
-      <div className="relative">
-        <nav className="max-w-7xl mx-auto flex justify-between items-center px-6 md:px-12 py-5">
-          <div className="flex items-center gap-6">
-            <Link to="/" className="font-display font-bold text-xl tracking-tight uppercase">
-              seedow<span className="text-gold gold-pulse">.</span>
-            </Link>
-            <LanguageToggle />
-          </div>
-          <div className="flex items-center gap-5 md:gap-8 text-[10px] font-semibold uppercase tracking-[0.22em]">
-            <Link to="/cours" className="hidden sm:inline-block hover:text-gold transition-colors">
-              Cours
-            </Link>
-            <Link to="/methodologie" className="hidden md:inline-block hover:text-gold transition-colors">
-              {t("nav.methodology")}
-            </Link>
-            {isAuthed ? (
-              <Link to="/dashboard" className="bg-ink text-paper px-5 py-3 hover:bg-ink-2 transition-colors">
-                {t("nav.my_space")}
-              </Link>
-            ) : (
-              <>
-                <Link to="/auth" search={{ redirect: "/dashboard", mode: "login" }} className="hover:text-gold transition-colors">
-                  {t("nav.login")}
-                </Link>
-                <Link to="/auth" search={{ redirect: "/onboarding", mode: "signup" }} className="bg-ink text-paper px-5 py-3 hover:bg-ink-2 transition-colors">
-                  {t("nav.audit")}
-                </Link>
-              </>
-            )}
-          </div>
-        </nav>
-        <motion.div
-          style={{ opacity: ruleOpacity, scaleX: ruleScale, transformOrigin: "left center" }}
-          className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold to-transparent"
-          aria-hidden
-        />
-      </div>
-    </motion.header>
-  );
-}
-
-function ScrollHint() {
-  const { t } = useTranslation();
-  return (
-    <div className="flex items-center gap-2 text-ink-3">
-      <span>{t("landing.scroll")}</span>
-      <motion.span
-        animate={{ y: [0, 4, 0] }}
-        transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-        aria-hidden
-      >
-        ↓
-      </motion.span>
-    </div>
-  );
-}
-
-function ManifestoSection() {
-  const { t } = useTranslation();
-  const manifesto = t("landing.manifesto_text");
-  const words = manifesto.split(" ");
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 80%", "end 50%"] });
-
-  return (
-    <section ref={ref} className="max-w-7xl mx-auto px-6 md:px-12 py-32 md:py-48">
-      <p className="eyebrow mb-12 flex items-center gap-3"><span className="tabular-nums text-ink-3">N° 02</span><span className="h-px w-8 bg-gold/60" />{t("landing.manifesto_eyebrow")}</p>
-      <p className="display-lg leading-[1.1] max-w-5xl">
-        {words.map((word, i) => {
-          const start = i / words.length;
-          const end = start + 1 / words.length;
-          return <ManifestoWord key={i} word={word} progress={scrollYProgress} start={start} end={end} />;
-        })}
-      </p>
-    </section>
-  );
-}
-
-function StoryNarrative() {
-  const { t } = useTranslation();
-  return (
-    <section className="max-w-7xl mx-auto px-6 md:px-12 py-20 md:py-32 border-t border-ink/10">
-      <div className="gold-rule mb-12 md:mb-20 mt-8 md:mt-12" />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 md:gap-x-20 gap-y-14 md:gap-y-20">
-        {STORY_KEYS.map((k, i) => (
-          <motion.article
-            key={k}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.7, delay: i * 0.1, ease: easeOut }}
-            className="relative"
-          >
-            <p className="outline-number text-6xl md:text-8xl mb-3 md:mb-4 select-none leading-none">
-              {STORY_NUMBERS[k]}
-            </p>
-            <h3 className="display-lg text-2xl md:text-4xl mb-4 md:mb-5">{t(`landing.story.${k}_title`)}</h3>
-            <p className="text-ink-2 leading-relaxed text-[15px] md:text-lg max-w-prose">
-              {t(`landing.story.${k}_body`)}
-            </p>
-          </motion.article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-
-function ManifestoWord({
-  word,
-  progress,
-  start,
-  end,
-}: {
-  word: string;
-  progress: ReturnType<typeof useScroll>["scrollYProgress"];
-  start: number;
-  end: number;
-}) {
-  const opacity = useTransform(progress, [start, end], [0.15, 1]);
-  return (
-    <motion.span style={{ opacity }} className="inline-block mr-[0.25em]">
-      {word}
-    </motion.span>
-  );
-}
-
-const DEMO_DATA: Record<string, { name: string; esg: number; coverage: number; sectors: string[] }> = {
-  AAPL: { name: "Apple Inc.", esg: 72, coverage: 98, sectors: ["Tech"] },
-  TSLA: { name: "Tesla Inc.", esg: 58, coverage: 92, sectors: ["Auto", "Energy"] },
-  TTE: { name: "TotalEnergies", esg: 34, coverage: 95, sectors: ["Fossil energy"] },
-  MC: { name: "LVMH", esg: 64, coverage: 88, sectors: ["Luxury"] },
-  NESN: { name: "Nestlé", esg: 56, coverage: 90, sectors: ["Food"] },
-};
-
-function DemoSection() {
-  const { t } = useTranslation();
-  const [ticker, setTicker] = useState("AAPL");
-  const [committed, setCommitted] = useState("AAPL");
-
-  const data = useMemo(() => DEMO_DATA[committed.toUpperCase()] ?? null, [committed]);
-
-  return (
-    <section className="bg-paper-2 border-y border-ink/10 py-32">
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <div className="grid md:grid-cols-12 gap-12 mb-16">
-          <div className="md:col-span-5">
-            <p className="eyebrow mb-4 flex items-center gap-3"><span className="tabular-nums text-ink-3">N° 03</span><span className="h-px w-8 bg-gold/60" />{t("landing.demo_eyebrow")}</p>
-            <h2 className="display-lg">
-              {t("landing.demo_title_a")}
-              <br />
-              <span className="text-gold">{t("landing.demo_title_b")}</span>
-            </h2>
-            <p className="mt-6 text-ink-2 leading-relaxed">
-              {t("landing.demo_desc")}
-            </p>
-          </div>
-          <div className="md:col-span-7">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                setCommitted(ticker);
-              }}
-              className="flex gap-3 mb-12"
-            >
-              <input
-                value={ticker}
-                onChange={(e) => setTicker(e.target.value)}
-                placeholder={t("landing.demo_placeholder")}
-                className="flex-1 bg-transparent border-b-2 border-ink/20 focus:border-gold outline-none px-1 py-4 font-display text-2xl uppercase tracking-wider placeholder:text-ink-3/50"
-                aria-label={t("landing.demo_input_label")}
-              />
-              <button type="submit" className="btn-plant">
-                {t("nav.audit")}
-              </button>
-            </form>
-
-            {data ? (
-              <motion.div
-                key={committed}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: easeOut }}
-                className="grid grid-cols-3 gap-8 md:gap-12"
-              >
-                <AnimatedKPI value={data.esg} label={t("landing.demo_kpi_esg")} suffix="/100" accent />
-                <AnimatedKPI value={data.coverage} label={t("landing.demo_kpi_coverage")} suffix="%" />
-                <div>
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-ink-3 mb-3">
-                    {t("landing.demo_sectors")}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {data.sectors.map((s) => (
-                      <span key={s} className="moss-badge">{s}</span>
-                    ))}
-                  </div>
-                  <p className="mt-4 text-xs text-ink-3 leading-relaxed">
-                    {t("landing.demo_data_note", { name: data.name })}
-                  </p>
-                </div>
-              </motion.div>
-            ) : (
-              <p className="text-ink-3 text-sm">
-                {t("landing.demo_unknown")}
-              </p>
-            )}
-          </div>
+      {/* TICKER */}
+      <div className="bg-ink overflow-hidden py-3.5 border-y border-[var(--paper-3)]">
+        <div className="flex gap-12 whitespace-nowrap animate-ticker font-mono text-[12px] text-paper">
+          {Array.from({ length: 2 }).flatMap((_, k) =>
+            TICKER_ITEMS.map((item, i) => (
+              <span key={`${k}-${i}`} className="opacity-85 flex items-center gap-12">
+                {item}
+                <span aria-hidden>·</span>
+              </span>
+            )),
+          )}
         </div>
       </div>
-    </section>
-  );
-}
 
-function AnimatedKPI({ value, label, suffix, accent }: { value: number; label: string; suffix?: string; accent?: boolean }) {
-  const [display, setDisplay] = useState(0);
+      {/* PROBLEM */}
+      <section className="max-w-[1100px] mx-auto px-8 py-24">
+        <p className="eyebrow mb-4">Le problème</p>
+        <h2
+          className="font-display uppercase max-w-[700px] mb-12"
+          style={{ fontSize: "clamp(32px, 5vw, 52px)", lineHeight: 1.05, letterSpacing: "0.01em" }}
+        >
+          Ton épargne finance des choses que tu n'as jamais choisies.
+        </h2>
+        <div className="grid md:grid-cols-3 gap-px bg-[var(--paper-3)] border border-[var(--paper-3)] rounded-2xl overflow-hidden">
+          {PROBLEMS.map((p, i) => (
+            <div key={i} className="bg-paper p-8">
+              <div className="font-mono text-[11px] text-ink-2 mb-6">{String(i + 1).padStart(2, "0")}</div>
+              <div
+                className="font-display mb-2"
+                style={{ fontSize: 44, lineHeight: 1, color: `var(--${p.color})` }}
+              >
+                {p.stat}
+              </div>
+              <p className="text-[14px] text-ink-2 leading-[1.55]">{p.text}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
-  useEffect(() => {
-    let frame = 0;
-    const total = 36;
-    const id = setInterval(() => {
-      frame += 1;
-      const t = Math.min(1, frame / total);
-      const eased = 1 - Math.pow(1 - t, 3);
-      setDisplay(Math.round(value * eased));
-      if (frame >= total) clearInterval(id);
-    }, 16);
-    return () => clearInterval(id);
-  }, [value]);
+      {/* HOW IT WORKS — dark */}
+      <section className="bg-ink text-paper py-24 px-8">
+        <div className="max-w-[1100px] mx-auto">
+          <p className="font-mono text-[11px] tracking-[0.15em] uppercase text-[#888] mb-4">
+            Comment ça marche
+          </p>
+          <h2
+            className="font-display uppercase text-paper mb-12"
+            style={{ fontSize: "clamp(32px, 5vw, 52px)", lineHeight: 1.05, letterSpacing: "0.01em" }}
+          >
+            Trois choses que Seedow fait différemment.
+          </h2>
+          <div className="grid md:grid-cols-3 gap-10">
+            {STEPS.map((s, i) => (
+              <div key={i}>
+                <div
+                  className="w-[52px] h-[52px] rounded-xl flex items-center justify-center mb-6 font-display text-[22px]"
+                  style={{ background: `var(--${s.bg})`, color: s.fg === "paper" ? "var(--color-paper)" : "var(--color-ink)" }}
+                >
+                  {s.icon}
+                </div>
+                <h3 className="font-display text-[24px] tracking-[0.01em] mb-2.5 text-paper uppercase">
+                  {s.title}
+                </h3>
+                <p className="text-[14px] text-[#999] leading-[1.6]">{s.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-  return (
-    <div>
-      <p className={`text-[10px] font-semibold uppercase tracking-[0.22em] mb-3 ${accent ? "text-gold" : "text-ink-3"}`}>
-        {label}
-      </p>
-      <div className="kpi-figure text-5xl md:text-6xl flex items-baseline gap-1">
-        <span>{display}</span>
-        {suffix && <span className="text-base text-ink-3 font-sans">{suffix}</span>}
-      </div>
+      {/* ETHI */}
+      <section className="max-w-[1100px] mx-auto px-8 py-24">
+        <div className="grid md:grid-cols-2 gap-16 items-center">
+          <div>
+            <span className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.1em] uppercase text-volt border border-volt rounded-full px-3.5 py-1.5 mb-6">
+              Ethi · IA intégrée
+            </span>
+            <h3
+              className="font-display uppercase mb-5"
+              style={{ fontSize: "clamp(32px, 4.5vw, 46px)", lineHeight: 1.05 }}
+            >
+              Une IA qui répond.
+              <br />
+              Pas qui vend.
+            </h3>
+            <p className="text-[15px] text-ink-2 leading-[1.65] mb-6">
+              Ethi connaît chaque ligne de ton portefeuille et peut t'expliquer pourquoi une entreprise y est,
+              ce qu'elle fait vraiment, et ce que ça implique. Pas de réponses vagues, pas de pression commerciale.
+            </p>
+            <div
+              className="font-mono text-[13px] text-ink bg-[var(--paper-2)] py-4 px-5 rounded-r-lg"
+              style={{ borderLeft: "3px solid var(--volt)" }}
+            >
+              "Pourquoi j'ai des actions dans une entreprise pétrolière ?" → Ethi te montre la ligne exacte,
+              le pourcentage, et te propose une alternative ESG équivalente.
+            </div>
+          </div>
+          <div
+            className="bg-ink rounded-[20px] p-8 flex flex-col justify-between"
+            style={{ aspectRatio: "4 / 5" }}
+          >
+            <div className="flex flex-col gap-3">
+              <div className="bg-volt text-paper rounded-2xl py-3 px-4 text-[13px] leading-[1.5] max-w-[85%] self-end">
+                C'est quoi cette ligne à 4% dans mon portefeuille ?
+              </div>
+              <div className="bg-[#1a1a1a] text-[#ccc] rounded-2xl py-3 px-4 text-[13px] leading-[1.5] max-w-[85%]">
+                C'est un fonds obligataire vert qui finance des rénovations énergétiques en Europe.
+                Rendement stable, faible volatilité.
+              </div>
+              <div className="bg-volt text-paper rounded-2xl py-3 px-4 text-[13px] leading-[1.5] max-w-[85%] self-end">
+                Et si je veux plus d'impact direct ?
+              </div>
+            </div>
+            <div className="font-mono text-[11px] text-mint">ETHI ÉCRIT···</div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section id="cta" className="max-w-[700px] mx-auto px-8 py-28 text-center">
+        <h2
+          className="font-display uppercase mb-5"
+          style={{ fontSize: "clamp(36px, 6vw, 64px)", lineHeight: 1 }}
+        >
+          Prêt à voir
+          <br />
+          <span className="text-mint">où va ton argent ?</span>
+        </h2>
+        <p className="text-[16px] text-ink-2 mb-9 leading-[1.6]">
+          Rejoins la liste des beta testeurs. Accès anticipé, gratuit, places limitées.
+        </p>
+        <CtaForm isAuthed={isAuthed} />
+      </section>
+
+      {/* FOOTER */}
+      <footer className="border-t border-[var(--paper-3)] py-10 px-8">
+        <div className="max-w-[1100px] mx-auto flex flex-wrap justify-between items-center gap-4">
+          <div className="font-display text-[20px] uppercase">SEEDOW</div>
+          <div className="font-mono text-[11px] text-ink-2 uppercase">
+            Votre argent façonne déjà le monde.
+          </div>
+        </div>
+      </footer>
+
+      <style>{`
+        @keyframes seedow-ticker {
+          from { transform: translateX(0); }
+          to { transform: translateX(-50%); }
+        }
+        .animate-ticker { animation: seedow-ticker 28s linear infinite; }
+        @media (prefers-reduced-motion: reduce) { .animate-ticker { animation: none; } }
+      `}</style>
     </div>
   );
 }
+
+/* ---------- Forms ---------- */
+
+function HeroForm({ onJump }: { onJump: () => void }) {
+  const onSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    onJump();
+  };
+  return (
+    <form
+      onSubmit={onSubmit}
+      className="flex gap-2 max-w-[440px] mx-auto mb-4 bg-ink rounded-full p-[5px] flex-col sm:flex-row"
+      style={{ borderRadius: 100 }}
+    >
+      <input
+        type="email"
+        required
+        placeholder="ton@email.com"
+        className="flex-1 bg-transparent border-0 outline-0 px-4 py-3 text-paper text-[14px] placeholder:text-[#888]"
+      />
+      <button
+        type="submit"
+        className="font-mono text-[12px] font-bold bg-mint text-ink border-0 py-3 px-5 rounded-full cursor-pointer tracking-[0.02em] hover:scale-[1.03] transition-transform"
+      >
+        Rejoindre →
+      </button>
+    </form>
+  );
+}
+
+function CtaForm({ isAuthed }: { isAuthed: boolean | null }) {
+  const [email, setEmail] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [done, setDone] = useState(false);
+  const [position, setPosition] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const onSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setSubmitting(true);
+    try {
+      const res = await joinWaitlist({ data: { email, source: "landing_cta" } });
+      setPosition(res.position);
+      setDone(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Une erreur est survenue.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (isAuthed) {
+    return (
+      <Link to="/dashboard" className="btn-harvest inline-flex">
+        Accéder à mon espace →
+      </Link>
+    );
+  }
+
+  return (
+    <>
+      <form
+        onSubmit={onSubmit}
+        className="flex gap-2 max-w-[440px] mx-auto mb-4 bg-ink p-[5px] flex-col sm:flex-row"
+        style={{ borderRadius: 100 }}
+      >
+        <input
+          id="cta-email"
+          type="email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="ton@email.com"
+          disabled={done}
+          className="flex-1 bg-transparent border-0 outline-0 px-4 py-3 text-paper text-[14px] placeholder:text-[#888]"
+        />
+        <button
+          type="submit"
+          disabled={submitting || done}
+          className="font-mono text-[12px] font-bold border-0 py-3 px-5 rounded-full cursor-pointer tracking-[0.02em] hover:scale-[1.03] transition-transform disabled:opacity-80"
+          style={{
+            background: done ? "var(--color-ink)" : "var(--color-mint)",
+            color: done ? "var(--color-paper)" : "var(--color-ink)",
+            border: done ? "1px solid var(--color-paper)" : "none",
+          }}
+        >
+          {done ? "Inscrit ✓" : submitting ? "…" : "Je rejoins →"}
+        </button>
+      </form>
+      <div className="font-mono text-[11px] text-ink-2">
+        {position !== null ? (
+          <>
+            <span className="text-ink font-bold">#{position}</span> sur la liste · on te contacte très vite
+          </>
+        ) : (
+          <>
+            <span className="text-ink font-bold">312</span> personnes déjà inscrites · lancement dans 1-2 semaines
+          </>
+        )}
+      </div>
+      {error && <p className="text-[12px] text-alert mt-3">{error}</p>}
+    </>
+  );
+}
+
+/* ---------- Content ---------- */
+
+const TICKER_ITEMS = [
+  <><span className="text-mint font-bold">37</span>&nbsp;départements en restriction d'eau cet été</>,
+  <><span className="text-mint font-bold">44%</span>&nbsp;des oiseaux des champs disparus depuis 1989</>,
+  <>plans climat alignés <span className="text-mint font-bold">&nbsp;+3,2°C</span>&nbsp;vs objectif 1,5°C</>,
+  <><span className="text-mint font-bold">450M$</span>&nbsp;de condamnation pour pollution aux PFAS</>,
+];
+
+const PROBLEMS = [
+  {
+    stat: "0%",
+    color: "alert",
+    text: "de visibilité réelle sur ce que financent la plupart des contrats d'assurance-vie classiques.",
+  },
+  {
+    stat: "∞",
+    color: "solar",
+    text: "de jargon financier entre toi et une décision qui devrait pourtant t'appartenir.",
+  },
+  {
+    stat: "1",
+    color: "ice",
+    text: "seule app qui relie concrètement ton portefeuille à son impact réel sur le monde.",
+  },
+];
+
+const STEPS = [
+  {
+    icon: "①",
+    bg: "mint",
+    fg: "ink",
+    title: "Vois ton impact",
+    text: "Ton portefeuille devient une lecture visuelle — chaque investissement a une couleur, une histoire, une réalité concrète derrière lui.",
+  },
+  {
+    icon: "②",
+    bg: "volt",
+    fg: "paper",
+    title: "Comprends avec Ethi",
+    text: "Notre IA intégrée répond à tes questions en clair, sans jargon, sans te pousser vers un produit qu'elle vendrait.",
+  },
+  {
+    icon: "③",
+    bg: "solar",
+    fg: "ink",
+    title: "Investis aligné",
+    text: "Choisis où va ton argent en connaissance de cause — pas après coup, dans un rapport annuel illisible.",
+  },
+];
