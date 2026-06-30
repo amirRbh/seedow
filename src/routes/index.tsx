@@ -45,13 +45,43 @@ function Landing() {
     <div className="min-h-screen bg-paper text-ink">
       {/* NAV */}
       <nav className="sticky top-0 z-50 border-b border-[var(--paper-3)] backdrop-blur-md bg-[rgba(245,243,236,0.92)]">
-        <div className="max-w-[1100px] mx-auto px-8 py-4 flex justify-between items-center">
+        <div className="max-w-[1100px] mx-auto px-6 md:px-8 py-4 flex justify-between items-center gap-4">
           <Link to="/" className="font-display text-2xl tracking-[0.04em] uppercase">
             seedow
           </Link>
-          <button onClick={scrollToCta} className="btn-plant" style={{ padding: "8px 16px", fontSize: 11 }}>
-            Rejoindre la beta
-          </button>
+          <div className="flex items-center gap-3 md:gap-6">
+            <Link
+              to="/cours"
+              className="hidden md:inline-block font-mono text-[11px] uppercase tracking-[0.15em] text-ink-2 hover:text-ink transition-colors"
+            >
+              Cours
+            </Link>
+            <Link
+              to="/methodologie"
+              className="hidden md:inline-block font-mono text-[11px] uppercase tracking-[0.15em] text-ink-2 hover:text-ink transition-colors"
+            >
+              Méthodo
+            </Link>
+            {isAuthed ? (
+              <Link to="/dashboard" className="btn-harvest" style={{ padding: "8px 16px", fontSize: 11 }}>
+                Mon espace →
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/auth"
+                  search={{ redirect: "/dashboard", mode: "login" }}
+                  className="btn-outline-ink"
+                  style={{ padding: "7px 15px", fontSize: 11 }}
+                >
+                  Se connecter
+                </Link>
+                <button onClick={scrollToCta} className="btn-plant" style={{ padding: "8px 16px", fontSize: 11 }}>
+                  Rejoindre la beta
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </nav>
 
@@ -73,11 +103,40 @@ function Landing() {
         <p className="text-[18px] text-ink-2 max-w-[560px] mx-auto mb-10 leading-[1.6]">
           Seedow vous montre lequel. Investissement ESG, visualisé clairement, expliqué par une IA qui ne vous vend rien.
         </p>
-        <HeroForm onJump={scrollToCta} />
-        <p className="font-mono text-[10px] text-ink-2 tracking-[0.05em] mt-2">
-          GRATUIT · PLACES LIMITÉES · AUCUNE CARTE REQUISE
-        </p>
+        {isAuthed ? (
+          <Link to="/dashboard" className="btn-harvest inline-flex" style={{ padding: "14px 28px", fontSize: 13 }}>
+            Accéder à mon espace →
+          </Link>
+        ) : (
+          <HeroForm onJump={scrollToCta} />
+        )}
+        {!isAuthed && (
+          <p className="font-mono text-[10px] text-ink-2 tracking-[0.05em] mt-2">
+            GRATUIT · PLACES LIMITÉES · AUCUNE CARTE REQUISE
+          </p>
+        )}
+        {!isAuthed && (
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-mono text-[11px] tracking-[0.12em] uppercase text-ink-2">
+            <Link
+              to="/auth"
+              search={{ redirect: "/dashboard", mode: "login" }}
+              className="group inline-flex items-center gap-1.5 hover:text-ink transition-colors"
+            >
+              Déjà inscrit·e ? Se connecter
+              <span className="text-mint transition-transform group-hover:translate-x-0.5">→</span>
+            </Link>
+            <span aria-hidden className="text-[var(--paper-3)]">·</span>
+            <Link
+              to="/cours"
+              className="group inline-flex items-center gap-1.5 hover:text-ink transition-colors"
+            >
+              Explorer les cours gratuits
+              <span className="text-ice transition-transform group-hover:translate-x-0.5">→</span>
+            </Link>
+          </div>
+        )}
       </section>
+
 
       {/* TICKER */}
       <div className="bg-ink overflow-hidden py-3.5 border-y border-[var(--paper-3)]">
