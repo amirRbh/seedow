@@ -485,13 +485,14 @@
     font-size: 14px;
   }
 
-  /* KPI éditorial — chiffres en Bebas Neue */
+  /* KPI éditorial — chiffres en JetBrains Mono bold (data terminal) */
   .kpi-figure {
-    font-family: var(--font-display);
-    font-weight: 400;
-    letter-spacing: 0.01em;
-    line-height: 0.95;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
     color: var(--color-ink);
+    font-feature-settings: "tnum", "lnum";
   }
 
   .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom, 0); }
