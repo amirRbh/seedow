@@ -323,12 +323,11 @@
   /* Outline numbers géants façon presse magazine */
   .outline-number {
     font-family: var(--font-display);
-    font-weight: 700;
-    -webkit-text-stroke: 1px var(--color-gold);
+    font-weight: 400;
+    -webkit-text-stroke: 1px var(--color-mint);
     color: transparent;
-    letter-spacing: -0.04em;
+    letter-spacing: 0.01em;
     line-height: 0.85;
-    font-feature-settings: "lnum", "tnum";
   }
 
   /* Pulse lent du point or (logo) */
