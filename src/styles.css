@@ -98,67 +98,67 @@
 }
 
 :root {
-  --radius: 0.5rem;
+  --radius: 0.875rem;
 
-  /* Surfaces — papier ivoire éditorial */
-  --paper: oklch(0.965 0.008 90);        /* #F5F3EC */
-  --paper-2: oklch(0.925 0.012 88);      /* #E0DCCE */
-  --paper-3: oklch(0.905 0.013 88);      /* #DEDACE */
-  --paper-inset: oklch(0.870 0.014 88);
+  /* Surfaces — papier ivoire éditorial (HEX exacts) */
+  --paper: #F5F3EC;
+  --paper-2: #E0DCCE;
+  --paper-3: #DEDACE;
+  --paper-inset: #E0DCCE;
 
-  /* Encre — noir pur, pas de teal */
-  --ink: oklch(0.15 0 0);                /* #0A0A0A */
-  --ink-2: oklch(0.45 0.003 90);         /* #6B6B66 dim */
-  --ink-3: oklch(0.58 0.004 90);
+  /* Encre — noir pur + dim gris */
+  --ink: #0A0A0A;
+  --ink-2: #6B6B66;
+  --ink-3: #6B6B66;
 
-  /* Accent principal sobre — gris clair (pour les fonds neutres) */
-  --moss-1: oklch(0.15 0 0);             /* mappé à ink pour primary */
-  --moss-2: oklch(0.30 0 0);
-  --moss-3: oklch(0.58 0.004 90);
-  --moss-4: oklch(0.905 0.013 88);
-  --moss-5: oklch(0.945 0.010 88);
+  /* Mapping moss → ink/paper pour rétro-compat */
+  --moss-1: #0A0A0A;
+  --moss-2: #2A2A2A;
+  --moss-3: #6B6B66;
+  --moss-4: #DEDACE;
+  --moss-5: #E0DCCE;
 
-  /* Data colors — palette signal */
-  --rust: oklch(0.58 0.20 18);           /* alert #E0294F */
-  --gold: oklch(0.72 0.20 155);          /* mint #00C77A — signature vive */
-  --gold-soft: oklch(0.68 0.18 155);
-  --sky: oklch(0.60 0.14 230);           /* ice #0099CC */
-  --bloom: oklch(0.52 0.22 305);         /* volt #8B4FE0 */
-  --peach: oklch(0.72 0.16 85);          /* solar #D4A300 */
-  --glacier: oklch(0.60 0.14 230);
+  /* Data signal colors (HEX exacts) */
+  --mint: #00C77A;        /* accent primaire */
+  --ice: #0099CC;         /* accent secondaire */
+  --volt: #8B4FE0;        /* accent tertiaire */
+  --alert: #E0294F;       /* warning */
+  --solar: #D4A300;       /* gold highlight */
 
-  /* Tokens nommés data — utilisables directement */
-  --mint: oklch(0.72 0.20 155);
-  --ice: oklch(0.60 0.14 230);
-  --solar: oklch(0.72 0.16 85);
-  --alert: oklch(0.58 0.20 18);
-  --volt: oklch(0.52 0.22 305);
+  /* Aliases legacy */
+  --rust: #E0294F;
+  --gold: #00C77A;        /* gold mappé à mint (signature) */
+  --gold-soft: #00C77A;
+  --sky: #0099CC;
+  --bloom: #8B4FE0;
+  --peach: #D4A300;
+  --glacier: #0099CC;
 
   /* shadcn mapping */
   --background: var(--paper);
   --foreground: var(--ink);
-  --card: oklch(1 0 0);
+  --card: var(--paper-2);
   --card-foreground: var(--ink);
-  --popover: oklch(1 0 0);
+  --popover: var(--paper);
   --popover-foreground: var(--ink);
-  --primary: var(--moss-1);
+  --primary: var(--ink);
   --primary-foreground: var(--paper);
   --secondary: var(--paper-2);
-  --secondary-foreground: var(--ink-2);
+  --secondary-foreground: var(--ink);
   --muted: var(--paper-2);
-  --muted-foreground: var(--ink-3);
-  --accent: var(--moss-5);
-  --accent-foreground: var(--moss-1);
-  --destructive: var(--rust);
+  --muted-foreground: var(--ink-2);
+  --accent: var(--paper-2);
+  --accent-foreground: var(--ink);
+  --destructive: var(--alert);
   --destructive-foreground: var(--paper);
   --border: var(--paper-3);
   --input: var(--paper-3);
-  --ring: var(--moss-2);
+  --ring: var(--ink);
 
-  /* Ombres — vert-bleu dilué, plus léger et frais */
-  --shadow-leaf: 0 1px 2px 0 oklch(0.30 0.02 160 / 0.06), 0 1px 3px 0 oklch(0.30 0.02 160 / 0.09);
-  --shadow-deep: 0 4px 16px -4px oklch(0.30 0.02 160 / 0.14);
-  --shadow-soil: inset 0 1px 2px 0 oklch(0.30 0.02 160 / 0.08);
+  /* Ombres désactivées — design flat éditorial */
+  --shadow-leaf: 0 0 0 0 transparent;
+  --shadow-deep: 0 0 0 0 transparent;
+  --shadow-soil: 0 0 0 0 transparent;
 
   /* Grain SVG — texture papier discrète */
   --paper-grain-url: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.14  0 0 0 0 0.18  0 0 0 0 0.14  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
