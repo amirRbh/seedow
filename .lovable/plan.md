@@ -1,74 +1,68 @@
-# Redesign complet — Editorial Magazine × Data Terminal
+# Landing — adaptation + accès rapides
 
-Application stricte du design system fourni à toute l'app. Objectif : passer d'une inspiration partielle à une exécution totale et cohérente sur tous les écrans.
+Garder l'ossature éditoriale de la nouvelle landing (hero centré, ticker, problem grid, dark how-it-works, feature Ethi, CTA email, footer) mais l'adapter pour exposer clairement deux portes d'entrée gratuites : **Connexion** et **Cours gratuits**.
 
-## 1. Fondations (`src/styles.css`)
+## Changements
 
-Réécriture des tokens pour coller **exactement** aux valeurs HEX fournies :
+### 1. Nav (sticky top)
 
-- `--paper: #F5F3EC` (dominant), `--paper-2: #E0DCCE` (cards), `--paper-3: #DEDACE` (borders), `--paper-inset: #E0DCCE`
-- `--ink: #0A0A0A`, `--ink-2: #6B6B66`, `--ink-3: #6B6B66`
-- Accents signal : `--mint: #00C77A` (primaire), `--ice: #0099CC` (secondaire), `--volt: #8B4FE0` (tertiaire)
-- `--alert: #E0294F`, `--gold: #D4A300` (highlight uniquement, plus signature)
-- **Suppression** des ombres : `--shadow-leaf`, `--shadow-deep`, `--shadow-soil` → `none`
-- **Suppression** des gradients restants (`.gold-rule` → trait plein `--paper-3` ou `--ink`)
-- Border-radius cards : 12–16px (`--radius: 0.875rem`)
+Aujourd'hui : juste un CTA "Rejoindre la beta". Nouveau :
 
-## 2. Typo — règles strictes
+```
+[ SEEDOW ]              Cours · Méthodo · [Se connecter] [Rejoindre la beta ›]
+```
 
-- **Bebas Neue** : tous les `h1/h2/h3`, `.display-*`, `.kpi-figure`, titres de cards éditoriales. UPPERCASE, `letter-spacing: 0.01em`, line-height tight.
-- **Inter** : body, paragraphes, descriptions, inputs, navigation.
-- **JetBrains Mono** : tous les chiffres (montants, %, dates, KPI), labels, eyebrows (10–11px, uppercase, `letter-spacing: 0.15em`), tags, badges, boutons.
+- Liens texte mono uppercase tracking 0.15em : `Cours`, `Méthodo`
+- `Se connecter` → `/auth?mode=login` — style outline ink pill discret
+- `Rejoindre la beta` → scroll vers `#cta` — pill ink rempli (CTA primaire)
+- Si l'utilisateur est déjà loggé : remplace les deux boutons par `Mon espace →` qui mène à `/dashboard`
+- Mobile : nav condensée, liens texte cachés sauf les deux boutons
 
-Renforcement de `.font-value`, `.eyebrow`, `.kpi-figure` + nouvelles classes `.data-xl`, `.data-lg` pour chiffres bold larges.
+### 2. Hero — double porte d'entrée sous le formulaire email
 
-## 3. Composants signature
+Sous le champ email + ligne "GRATUIT · PLACES LIMITÉES", ajouter une ligne discrète mono :
 
-- **Boutons** :
-  - `.btn-plant` : pill `#0A0A0A` bg / `#F5F3EC` text, JetBrains Mono uppercase
-  - `.btn-harvest` : pill mint `#00C77A` bg / `#0A0A0A` text (filled, plus juste outline)
-  - Variante outline ink pour tertiaire
-- **Cards** (`.paper-card`) : bg `#E0DCCE`, border `#DEDACE` 1px, radius 14px, **aucune ombre**
-- **Section sombre** (`.ink-section`) : nouvelle classe, bg `#0A0A0A`, texte `#F5F3EC`, pour hero + CTA blocks + stats clés
-- **Règle 1 accent / section** : on supprime le mix mint+ice+solar dans un même panneau. Chaque section choisit son accent.
+```
+Déjà inscrit·e ? Se connecter →   ·   Explorer les cours gratuits →
+```
 
-## 4. Écrans à refondre
+Petits liens texte mono 11px tracking large, soulignés au hover, accent mint sur la flèche. Ça donne immédiatement deux raccourcis sans casser la hiérarchie du hero.
 
-Application du système écran par écran, sans toucher à la logique :
+### 3. Nouvelle section "Commence gratuitement" (entre Ethi et CTA beta)
 
-1. **Dashboard** (`routes/dashboard.tsx` + `EthiBriefing`, `NextStepCard`, `ProjectionSimulator`) — hero ink, KPI Bebas+Mono, accent mint
-2. **Portfolio** (`routes/portfolio.tsx` + `PortfolioMetricsCard`, `AllocationBreakdown`, `PortfolioHistoryChart`, `HoldingDetailSheet`) — cards paper-2, chiffres mono géants, accent ice
-3. **Asset detail** (`AssetDetailSheet`, `AssetRow`, `AssetScreener`, `routes/discover.tsx`) — layout magazine, accent volt
-4. **Ethi / AI chat** (`routes/ethi.tsx` + `EthiBubble`, `EthiActions`, `SimulationForm`, `EthiSuggestionChips`) — bubbles paper-2, eyebrow mono, accent mint
-5. **Onboarding** (`routes/onboarding.tsx`) — pleine page éditoriale, hero ink, CTA mint filled
-6. **Settings** (`routes/reglages.tsx` + `profil.tsx`) — listes mono labels, dividers paper-3
-7. **Auth** (`routes/auth.tsx`) — split éditorial ink/paper
-8. **Navigation** (`AppHeader`, `BottomNavigation`, `RailNav`, `TopBar`, `AppShell`) — labels mono uppercase, pas d'ombres, point mint pulsant conservé
-9. **Cours** (`routes/cours.*`, `CourseCard`, `CourseArticle`) — magazine layout, accent solar/gold (highlight)
-10. **Objectifs, Comparatif, Communauté, Certificat, Méthodologie, Waitlist, Admin beta** — passage des cards, badges, KPI au système
+Bande paper-2 avec deux cards côte à côte :
 
-## 5. Nettoyage
+- **Card 1 — Les cours gratuits**
+  - Eyebrow mono ice : `Cours · gratuit`
+  - Titre Bebas : "Apprends avant d'investir."
+  - Sous-titre : "12 cours pour décoder la finance responsable, sans jargon. Gratuit, sans inscription requise."
+  - CTA pill outline ice : `Voir les cours →` (`/cours`)
+- **Card 2 — Espace personnel**
+  - Eyebrow mono mint : `Espace · gratuit`
+  - Titre Bebas : "Ton tableau de bord ESG."
+  - Sous-titre : "Crée un compte, simule ton portefeuille, discute avec Ethi. Aucune carte requise."
+  - CTA pill mint filled : `Créer un compte →` (`/auth?mode=signup`) + dessous lien `Déjà inscrit·e ? Se connecter`
 
-- Retirer toutes les ombres résiduelles (`shadow-leaf`, `shadow-sm`, etc.) dans les composants
-- Retirer les gradients (`bg-gradient-*`, `gold-shimmer` désactivé visuellement)
-- Vérifier qu'aucun composant n'utilise `text-white`, `bg-black`, hex en dur — tout passe par tokens
-- Conserver `paper-grain` (texture papier) — colle au feel éditorial
+Règle d'accent respectée : la card cours utilise ice, la card compte utilise mint — accents séparés, pas mélangés.
 
-## 6. Mémoire
+### 4. Footer — étoffer les liens
 
-Mise à jour de `mem://index.md` Core : verrouiller HEX exacts, règle « 1 accent par section », interdiction ombres/gradients, CTA mint = filled.
+Aujourd'hui : juste tagline. Ajout d'une rangée de liens mono uppercase :
 
-## Détails techniques
+```
+SEEDOW    Cours · Méthodo · Se connecter · Rejoindre la beta · Contact
+          VOTRE ARGENT FAÇONNE DÉJÀ LE MONDE.
+```
 
-- Tokens en HEX direct (plus en OKLCH approximatif) pour fidélité parfaite aux valeurs fournies
-- `@theme inline` conservé pour shadcn mapping
-- Les composants shadcn (`button.tsx`, `card.tsx`, `badge.tsx`, `input.tsx`, `tabs.tsx`) gardent leur API mais variants restylés
-- Aucun changement de logique métier, hooks, server functions, schéma DB
-- Build TS vérifié après chaque batch d'écrans
+### 5. État connecté global
 
-## Question avant exécution
+Quand `isAuthed === true`, l'ensemble se simplifie :
+- Hero email form remplacé par un gros CTA `Accéder à mon espace →` (mint filled)
+- CTA beta final remplacé par même bouton
+- Section "Commence gratuitement" garde la card cours, la card compte devient "Aller au dashboard"
 
-Le redesign touche ~40 fichiers. Tu veux que :
-- **(A)** je fasse tout d'un coup (fondations + tous les écrans), gros patch
-- **(B)** je commence par fondations + Dashboard + Portfolio + Ethi (les 3 écrans clés), puis on itère
-- **(C)** un écran spécifique en priorité absolue ?
+## Hors scope
+
+- Pas de refonte du design global (déjà fait)
+- Pas de changement des routes existantes ou de la logique waitlist
+- Pas de modification du système d'auth

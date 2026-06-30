@@ -45,13 +45,43 @@ function Landing() {
     <div className="min-h-screen bg-paper text-ink">
       {/* NAV */}
       <nav className="sticky top-0 z-50 border-b border-[var(--paper-3)] backdrop-blur-md bg-[rgba(245,243,236,0.92)]">
-        <div className="max-w-[1100px] mx-auto px-8 py-4 flex justify-between items-center">
+        <div className="max-w-[1100px] mx-auto px-6 md:px-8 py-4 flex justify-between items-center gap-4">
           <Link to="/" className="font-display text-2xl tracking-[0.04em] uppercase">
             seedow
           </Link>
-          <button onClick={scrollToCta} className="btn-plant" style={{ padding: "8px 16px", fontSize: 11 }}>
-            Rejoindre la beta
-          </button>
+          <div className="flex items-center gap-3 md:gap-6">
+            <Link
+              to="/cours"
+              className="hidden md:inline-block font-mono text-[11px] uppercase tracking-[0.15em] text-ink-2 hover:text-ink transition-colors"
+            >
+              Cours
+            </Link>
+            <Link
+              to="/methodologie"
+              className="hidden md:inline-block font-mono text-[11px] uppercase tracking-[0.15em] text-ink-2 hover:text-ink transition-colors"
+            >
+              Méthodo
+            </Link>
+            {isAuthed ? (
+              <Link to="/dashboard" className="btn-harvest" style={{ padding: "8px 16px", fontSize: 11 }}>
+                Mon espace →
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/auth"
+                  search={{ redirect: "/dashboard", mode: "login" }}
+                  className="btn-outline-ink"
+                  style={{ padding: "7px 15px", fontSize: 11 }}
+                >
+                  Se connecter
+                </Link>
+                <button onClick={scrollToCta} className="btn-plant" style={{ padding: "8px 16px", fontSize: 11 }}>
+                  Rejoindre la beta
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </nav>
 
@@ -73,11 +103,40 @@ function Landing() {
         <p className="text-[18px] text-ink-2 max-w-[560px] mx-auto mb-10 leading-[1.6]">
           Seedow vous montre lequel. Investissement ESG, visualisé clairement, expliqué par une IA qui ne vous vend rien.
         </p>
-        <HeroForm onJump={scrollToCta} />
-        <p className="font-mono text-[10px] text-ink-2 tracking-[0.05em] mt-2">
-          GRATUIT · PLACES LIMITÉES · AUCUNE CARTE REQUISE
-        </p>
+        {isAuthed ? (
+          <Link to="/dashboard" className="btn-harvest inline-flex" style={{ padding: "14px 28px", fontSize: 13 }}>
+            Accéder à mon espace →
+          </Link>
+        ) : (
+          <HeroForm onJump={scrollToCta} />
+        )}
+        {!isAuthed && (
+          <p className="font-mono text-[10px] text-ink-2 tracking-[0.05em] mt-2">
+            GRATUIT · PLACES LIMITÉES · AUCUNE CARTE REQUISE
+          </p>
+        )}
+        {!isAuthed && (
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-mono text-[11px] tracking-[0.12em] uppercase text-ink-2">
+            <Link
+              to="/auth"
+              search={{ redirect: "/dashboard", mode: "login" }}
+              className="group inline-flex items-center gap-1.5 hover:text-ink transition-colors"
+            >
+              Déjà inscrit·e ? Se connecter
+              <span className="text-mint transition-transform group-hover:translate-x-0.5">→</span>
+            </Link>
+            <span aria-hidden className="text-[var(--paper-3)]">·</span>
+            <Link
+              to="/cours"
+              className="group inline-flex items-center gap-1.5 hover:text-ink transition-colors"
+            >
+              Explorer les cours gratuits
+              <span className="text-ice transition-transform group-hover:translate-x-0.5">→</span>
+            </Link>
+          </div>
+        )}
       </section>
+
 
       {/* TICKER */}
       <div className="bg-ink overflow-hidden py-3.5 border-y border-[var(--paper-3)]">
@@ -197,6 +256,90 @@ function Landing() {
         </div>
       </section>
 
+      {/* COMMENCE GRATUITEMENT — deux portes d'entrée */}
+      <section className="bg-[var(--paper-2)] border-y border-[var(--paper-3)] py-24 px-8">
+        <div className="max-w-[1100px] mx-auto">
+          <p className="font-mono text-[11px] tracking-[0.15em] uppercase text-ink-2 mb-3">
+            Commence gratuitement
+          </p>
+          <h2
+            className="font-display uppercase max-w-[700px] mb-12"
+            style={{ fontSize: "clamp(28px, 4vw, 44px)", lineHeight: 1.05, letterSpacing: "0.01em" }}
+          >
+            Deux façons d'entrer. Sans carte, sans engagement.
+          </h2>
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Card cours — accent ice */}
+            <article className="paper-card p-8 md:p-10 bg-paper flex flex-col">
+              <span
+                className="self-start inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.15em] uppercase px-3 py-1 rounded-full border mb-5"
+                style={{ color: "var(--ice)", borderColor: "var(--ice)" }}
+              >
+                Cours · gratuit
+              </span>
+              <h3
+                className="font-display uppercase mb-3"
+                style={{ fontSize: "clamp(24px, 3vw, 34px)", lineHeight: 1.05 }}
+              >
+                Apprends avant d'investir.
+              </h3>
+              <p className="text-[15px] text-ink-2 leading-[1.6] mb-8 flex-1">
+                12 cours pour décoder la finance responsable, sans jargon. Gratuit, sans inscription requise.
+              </p>
+              <Link
+                to="/cours"
+                className="self-start inline-flex items-center gap-2 font-mono text-[12px] font-bold uppercase tracking-[0.08em] rounded-full px-5 py-3 border transition-colors"
+                style={{ color: "var(--ice)", borderColor: "var(--ice)" }}
+              >
+                Voir les cours →
+              </Link>
+            </article>
+
+            {/* Card compte — accent mint */}
+            <article className="paper-card p-8 md:p-10 bg-paper flex flex-col">
+              <span className="self-start inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.15em] uppercase px-3 py-1 rounded-full border border-mint text-mint mb-5">
+                Espace · gratuit
+              </span>
+              <h3
+                className="font-display uppercase mb-3"
+                style={{ fontSize: "clamp(24px, 3vw, 34px)", lineHeight: 1.05 }}
+              >
+                Ton tableau de bord ESG.
+              </h3>
+              <p className="text-[15px] text-ink-2 leading-[1.6] mb-8 flex-1">
+                {isAuthed
+                  ? "Tu es connecté·e. Accède à ton espace, simule ton portefeuille et discute avec Ethi."
+                  : "Crée un compte, simule ton portefeuille, discute avec Ethi. Aucune carte requise."}
+              </p>
+              <div className="flex flex-wrap items-center gap-4">
+                {isAuthed ? (
+                  <Link to="/dashboard" className="btn-harvest inline-flex">
+                    Aller au dashboard →
+                  </Link>
+                ) : (
+                  <>
+                    <Link
+                      to="/auth"
+                      search={{ redirect: "/dashboard", mode: "signup" }}
+                      className="btn-harvest inline-flex"
+                    >
+                      Créer un compte →
+                    </Link>
+                    <Link
+                      to="/auth"
+                      search={{ redirect: "/dashboard", mode: "login" }}
+                      className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-2 hover:text-ink transition-colors"
+                    >
+                      Déjà inscrit·e ? Se connecter →
+                    </Link>
+                  </>
+                )}
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section id="cta" className="max-w-[700px] mx-auto px-8 py-28 text-center">
         <h2
@@ -208,20 +351,38 @@ function Landing() {
           <span className="text-mint">où va ton argent ?</span>
         </h2>
         <p className="text-[16px] text-ink-2 mb-9 leading-[1.6]">
-          Rejoins la liste des beta testeurs. Accès anticipé, gratuit, places limitées.
+          {isAuthed
+            ? "Tu es déjà dans la place. Direct à ton espace."
+            : "Rejoins la liste des beta testeurs. Accès anticipé, gratuit, places limitées."}
         </p>
         <CtaForm isAuthed={isAuthed} />
       </section>
 
       {/* FOOTER */}
       <footer className="border-t border-[var(--paper-3)] py-10 px-8">
-        <div className="max-w-[1100px] mx-auto flex flex-wrap justify-between items-center gap-4">
-          <div className="font-display text-[20px] uppercase">SEEDOW</div>
-          <div className="font-mono text-[11px] text-ink-2 uppercase">
-            Votre argent façonne déjà le monde.
+        <div className="max-w-[1100px] mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <div className="font-display text-[20px] uppercase mb-2">SEEDOW</div>
+            <div className="font-mono text-[11px] text-ink-2 uppercase tracking-[0.1em]">
+              Votre argent façonne déjà le monde.
+            </div>
           </div>
+          <nav className="flex flex-wrap gap-x-6 gap-y-2 font-mono text-[11px] uppercase tracking-[0.15em] text-ink-2">
+            <Link to="/cours" className="hover:text-ink transition-colors">Cours</Link>
+            <Link to="/methodologie" className="hover:text-ink transition-colors">Méthodo</Link>
+            {isAuthed ? (
+              <Link to="/dashboard" className="hover:text-ink transition-colors">Mon espace</Link>
+            ) : (
+              <Link to="/auth" search={{ redirect: "/dashboard", mode: "login" }} className="hover:text-ink transition-colors">
+                Se connecter
+              </Link>
+            )}
+            <a href="#cta" className="hover:text-ink transition-colors">Rejoindre la beta</a>
+            <a href="mailto:hello@seedow.life" className="hover:text-ink transition-colors">Contact</a>
+          </nav>
         </div>
       </footer>
+
 
       <style>{`
         @keyframes seedow-ticker {
