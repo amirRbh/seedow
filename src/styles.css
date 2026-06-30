@@ -6,10 +6,12 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ═══════════════════════════════════════════════════════════════
-   SEEDOW — Clean Tech / Climate Startup
-   Papier ivoire lumineux, encre vert-nuit doux, accent vert pousse
-   + bleu glacier frais. Typo : Space Grotesk (display) + DM Sans (body).
+   SEEDOW — Editorial brut, ESG signal-driven
+   Papier ivoire #F5F3EC, encre noir pur, accent mint vif #00C77A
+   + ice/solar/alert/volt comme data colors. Typo : Bebas Neue (display)
+   + Inter (body) + JetBrains Mono (eyebrows / chiffres / labels).
 ═══════════════════════════════════════════════════════════════ */
+
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
