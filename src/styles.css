@@ -363,37 +363,47 @@
     animation: goldShimmer 2.4s ease-in-out infinite;
   }
 
+  /* Cards — papier flat, radius 14, sans ombre */
   .paper-card {
-    background-color: var(--color-card);
+    background-color: var(--color-paper-2);
     border: 1px solid var(--color-paper-3);
-    border-radius: 0.375rem;
+    border-radius: 14px;
+    box-shadow: none;
   }
 
   .paper-card-inset {
     background: var(--color-paper-2);
     border: 1px solid var(--color-paper-3);
-    border-radius: 0.375rem;
+    border-radius: 14px;
+    box-shadow: none;
   }
+
+  /* Section sombre — high-contrast moments (hero, CTA, key stats) */
+  .ink-section {
+    background-color: var(--color-ink);
+    color: var(--color-paper);
+    border-radius: 16px;
+  }
+  .ink-section .eyebrow { color: var(--color-mint); }
+  .ink-section h1, .ink-section h2, .ink-section h3, .ink-section .display-xl, .ink-section .display-lg, .ink-section .kpi-figure, .ink-section .data-xl, .ink-section .data-lg { color: var(--color-paper); }
 
   .leaf-hover {
     transition: border-color 400ms cubic-bezier(0.32, 0.72, 0, 1),
-                background-color 400ms cubic-bezier(0.32, 0.72, 0, 1),
-                transform 400ms cubic-bezier(0.32, 0.72, 0, 1),
-                box-shadow 400ms cubic-bezier(0.32, 0.72, 0, 1);
+                background-color 400ms cubic-bezier(0.32, 0.72, 0, 1);
   }
-  .leaf-hover:hover { border-color: var(--color-gold); }
+  .leaf-hover:hover { border-color: var(--color-ink); }
 
   /* CTA principal — pill noir éditorial */
   .btn-plant {
     background: var(--color-ink);
     color: var(--color-paper);
     border-radius: 100px;
-    padding: 12px 22px;
+    padding: 12px 24px;
     font-family: var(--font-mono);
     font-size: 12px;
     font-weight: 700;
-    letter-spacing: 0.02em;
-    transition: background 200ms ease, transform 200ms ease, opacity 200ms ease;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     border: none;
     cursor: pointer;
     display: inline-flex;
@@ -401,27 +411,49 @@
     justify-content: center;
     gap: 8px;
   }
-  .btn-plant:hover { opacity: 0.85; transform: translateY(-1px); }
-  .btn-plant:active { transform: scale(0.98); transition-duration: 120ms; }
+  .btn-plant:hover { opacity: 0.85; }
 
-  /* Secondaire — pill mint outline */
+  /* Secondaire — pill mint filled */
   .btn-harvest {
-    background: transparent;
+    background: var(--color-mint);
     color: var(--color-ink);
-    border: 1px solid var(--color-mint);
+    border: none;
     border-radius: 100px;
-    padding: 12px 22px;
+    padding: 12px 24px;
     font-family: var(--font-mono);
     font-size: 12px;
     font-weight: 700;
-    letter-spacing: 0.02em;
-    transition: background 200ms ease, color 200ms ease, transform 200ms ease;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
-  .btn-harvest:hover { background: var(--color-mint); color: var(--color-ink); transform: translateY(-1px); }
-  .btn-harvest:active { transform: scale(0.98); transition-duration: 120ms; }
+  .btn-harvest:hover { opacity: 0.88; }
 
-  /* Badge éditorial — pill outline mono */
+  /* Tertiaire — pill outline ink */
+  .btn-outline-ink {
+    background: transparent;
+    color: var(--color-ink);
+    border: 1px solid var(--color-ink);
+    border-radius: 100px;
+    padding: 11px 23px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-outline-ink:hover { background: var(--color-ink); color: var(--color-paper); }
+
+  /* Badge éditorial — pill mono uppercase */
   .moss-badge {
     display: inline-flex;
     align-items: center;
@@ -430,13 +462,14 @@
     border-radius: 100px;
     font-family: var(--font-mono);
     font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.12em;
+    font-weight: 600;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
     background: transparent;
-    color: var(--color-mint);
-    border: 1px solid var(--color-mint);
+    color: var(--color-ink);
+    border: 1px solid var(--color-paper-3);
   }
+  .moss-badge--accent { color: var(--color-mint); border-color: var(--color-mint); }
 
   .bubble-ethi {
     background: var(--color-paper-2);
