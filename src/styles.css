@@ -93,10 +93,10 @@
   --radius: 0.5rem;
 
   /* Surfaces — blanc cassé légèrement frais */
-  --paper: oklch(0.975 0.006 195);
-  --paper-2: oklch(0.945 0.010 195);
-  --paper-3: oklch(0.895 0.014 200);
-  --paper-inset: oklch(0.860 0.016 200);
+  --paper: oklch(1 0 0);
+  --paper-2: oklch(0.96 0 0);
+  --paper-3: oklch(0.90 0 0);
+  --paper-inset: oklch(0.85 0 0);
 
   /* Encre — teal-émeraude profond, frais et dense */
   --ink: oklch(0.32 0.045 185);
