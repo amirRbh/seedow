@@ -231,42 +231,43 @@
 
   .font-value {
     font-family: var(--font-value);
-    font-weight: 600;
-    letter-spacing: -0.022em;
+    font-weight: 500;
+    letter-spacing: 0.02em;
     font-feature-settings: "lnum", "tnum";
   }
 
   .font-display {
     font-family: var(--font-display);
-    font-weight: 700;
-    letter-spacing: -0.035em;
+    font-weight: 400;
+    letter-spacing: 0.01em;
   }
 
-  /* Échelle éditoriale signature */
+  /* Échelle éditoriale signature — Bebas Neue */
   .display-xl {
     font-family: var(--font-display);
-    font-weight: 600;
-    font-size: clamp(3.5rem, 10vw, 8rem);
-    line-height: 0.92;
-    letter-spacing: -0.045em;
-    font-feature-settings: "lnum", "tnum";
+    font-weight: 400;
+    font-size: clamp(3rem, 9vw, 7rem);
+    line-height: 0.95;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
   }
 
   .display-lg {
     font-family: var(--font-display);
-    font-weight: 600;
-    font-size: clamp(2.25rem, 5vw, 3.75rem);
-    line-height: 0.98;
-    letter-spacing: -0.035em;
+    font-weight: 400;
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    line-height: 1.02;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
   }
 
   .eyebrow {
-    font-family: var(--font-sans);
-    font-size: 10px;
-    font-weight: 600;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.22em;
-    color: var(--color-gold);
+    letter-spacing: 0.15em;
+    color: var(--color-mint);
   }
 
   /* Filet or — séparateur signature */
