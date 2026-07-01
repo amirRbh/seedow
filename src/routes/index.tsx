@@ -250,16 +250,18 @@ function Landing() {
 
           {/* Chat mockup */}
           <div className="mt-16 mx-auto max-w-[560px] flex flex-col gap-3 text-left">
-            {CHAT.map((c, i) => (
-              <div
-                key={i}
-               
-                style={{ animationDelay: `${0.2 + i * 0.18}s` }}
-              >
-                <ChatBubble side={c.side}>{c.text}</ChatBubble>
-              </div>
-            ))}
+            <ChatBubble side="user">C'est quoi cette ligne à 4% dans mon portefeuille ?</ChatBubble>
+            <ChatBubble side="ethi">
+              Un fonds obligataire vert qui finance des rénovations énergétiques en Europe.
+              Rendement stable, faible volatilité.
+            </ChatBubble>
+            <ChatBubble side="user">Et si je veux plus d'impact direct ?</ChatBubble>
+            <ChatBubble side="ethi">
+              Je peux te proposer 3 alternatives équivalentes en risque, avec un score climat
+              supérieur. Tu veux voir ?
+            </ChatBubble>
           </div>
+
         </div>
       </section>
 
