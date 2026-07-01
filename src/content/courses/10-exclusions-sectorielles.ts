@@ -12,26 +12,28 @@ export const course: Course = {
   description:
     "Quels secteurs sont communément exclus des fonds ESG, selon quels seuils, et avec quel impact sur le portefeuille.",
   intro:
-    "L'exclusion sectorielle est l'approche la plus visible et la plus controversée de l'investissement responsable. Ce cours liste les secteurs typiquement exclus, les seuils utilisés, les débats actifs et les conséquences en termes de diversification.",
+    "L'exclusion sectorielle est l'approche la plus visible et la plus controversée de l'investissement responsable. Voici les secteurs typiquement exclus, les seuils utilisés, les débats actifs et les conséquences en termes de diversification.",
+  eli5:
+    "Imagine que tu invites 100 amis à un dîner, mais tu décides à l'avance : pas de fumeurs, pas de vendeurs d'armes, pas de tricheurs. Il te reste peut-être 70 amis à inviter. Pour un fonds, c'est pareil : « exclure un secteur », c'est décider de ne pas financer certaines entreprises, quelles que soient leurs performances. Selon combien tu exclus, ton portefeuille est plus étroit — ou beaucoup plus étroit.",
   sections: [
     {
       heading: "Exclusions normatives (quasi obligatoires)",
       paragraphs: [
-        "Certaines exclusions découlent de conventions internationales et sont appliquées par la quasi-totalité des fonds européens, y compris non labellisés ESG.",
-        "Armes controversées : mines antipersonnel (Convention d'Ottawa, 1997), bombes à sous-munitions (Convention d'Oslo, 2008), armes biologiques et chimiques. Ces exclusions sont devenues le standard de marché.",
+        "Certaines exclusions viennent de conventions internationales et sont appliquées par la quasi-totalité des fonds européens, même non labellisés ESG.",
+        "Armes controversées : mines antipersonnel (Convention d'Ottawa, 1997), bombes à sous-munitions (Convention d'Oslo, 2008), armes biologiques et chimiques. Standard de marché.",
         "Atteinte grave aux droits humains : travail forcé, travail des enfants, violations massives des droits fondamentaux. Critère subjectif mais en théorie présent partout.",
       ],
     },
     {
       heading: "Exclusions sectorielles classiques",
       paragraphs: [
-        "Tabac : exclu par la majorité des fonds ISR, généralement à 0 % (toute production) ou < 5 % du chiffre d'affaires. Le tabac est aussi un secteur en déclin structurel, ce qui simplifie le débat.",
-        "Charbon thermique : exclu progressivement, généralement quand l'extraction ou la production électrique au charbon dépasse 5 à 25 % du CA selon les fonds. Les seuils se durcissent chaque année.",
-        "Pétrole et gaz non conventionnels (sables bitumineux, fracturation hydraulique, forages arctiques) : exclus par les fonds engagés, généralement à des seuils inférieurs à 5 % de CA.",
-        "Armes conventionnelles (non controversées) : armée régulière, défense. Approche variable selon les fonds — certains excluent toute la défense, d'autres uniquement les ventes à des régimes problématiques.",
+        "Tabac : exclu par la majorité des fonds ISR, généralement à 0 % (toute production) ou < 5 % du CA. Secteur en déclin structurel, ce qui simplifie le débat.",
+        "Charbon thermique : exclu progressivement, généralement à partir de 5 à 25 % de CA selon les fonds. Les seuils se durcissent chaque année.",
+        "Pétrole et gaz non conventionnels (sables bitumineux, fracturation hydraulique, forages arctiques) : exclus par les fonds engagés, souvent < 5 % de CA.",
+        "Armes conventionnelles (non controversées) : armée régulière, défense. Approche variable : certains excluent toute la défense, d'autres uniquement les ventes à des régimes problématiques.",
       ],
       callout:
-        "« Pétrole et gaz classiques » (TotalEnergies, Shell, Equinor) ne sont pas toujours exclus, même par les fonds ISR. Les exclusions concernent principalement le charbon et les sources non conventionnelles.",
+        "« Pétrole et gaz classiques » (TotalEnergies, Shell, Equinor) ne sont pas toujours exclus, même par les fonds ISR. Les exclusions concernent surtout le charbon et les sources non conventionnelles.",
     },
     {
       heading: "Le débat sur l'armement",
@@ -39,7 +41,7 @@ export const course: Course = {
         "L'invasion de l'Ukraine en 2022 a relancé un débat majeur : peut-on financer une armée européenne pour défendre une démocratie tout en se déclarant ESG ?",
         "Position 1 (classique) : armement = exclusion par principe, indépendamment de l'usage.",
         "Position 2 (renouvelée depuis 2022) : la défense d'États démocratiques face à des agressions est compatible avec un cadre ESG. Plusieurs grandes sociétés de gestion ont assoupli leur position.",
-        "Conséquence pratique : certains fonds ESG détiennent désormais Rheinmetall, Thales ou BAE Systems. À chacun de décider si c'est cohérent avec ses valeurs.",
+        "Conséquence : certains fonds ESG détiennent désormais Rheinmetall, Thales ou BAE Systems. À chacun de décider si c'est cohérent avec ses valeurs.",
       ],
     },
     {
@@ -50,7 +52,7 @@ export const course: Course = {
         "Greenfin continue d'exclure totalement le nucléaire. ISR refondu ne l'exclut pas par principe. Article 9 SFDR : variable selon le fonds.",
       ],
       callout:
-        "Nucléaire et armement sont les deux clivages majeurs actuels de l'ESG européen. Aucune position n'est universelle — chaque investisseur doit savoir où il place le curseur.",
+        "Nucléaire et armement sont les deux clivages majeurs actuels de l'ESG européen. Aucune position n'est universelle — chaque investisseur doit savoir où il place son curseur.",
     },
     {
       heading: "Autres exclusions parfois pratiquées",
@@ -64,7 +66,7 @@ export const course: Course = {
     {
       heading: "Impact des exclusions sur la diversification",
       paragraphs: [
-        "Exclure 5 à 10 % de l'univers d'investissement (charbon, armes controversées, tabac) a un impact diversification quasi nul. La performance reste très proche d'un indice large.",
+        "Exclure 5 à 10 % de l'univers d'investissement (charbon, armes controversées, tabac) a un impact quasi nul sur la diversification. La performance reste très proche d'un indice large.",
         "Exclure 20 à 30 % (toutes énergies fossiles, défense, nucléaire) commence à concentrer le portefeuille sur certains secteurs (tech, santé, conso non cyclique). Tracking error élevé vs MSCI World, volatilité parfois supérieure.",
         "Exclure plus de 50 % (Greenfin pur) revient à investir dans un univers thématique étroit, avec une volatilité spécifique et un horizon plus long requis.",
       ],
@@ -74,7 +76,7 @@ export const course: Course = {
       paragraphs: [
         "Salma définit ses lignes rouges : aucune entreprise du tabac, aucune énergie fossile, aucun armement (même conventionnel), aucun jeu d'argent.",
         "Elle filtre son univers : MSCI World ESG Leaders + filtre supplémentaire « no fossil fuels » + filtre « no defense ». Reste un univers d'environ 800 entreprises, principalement tech, santé, conso non cyclique, services.",
-        "Impact attendu : tracking error de 4-6 % vs MSCI World, performance probablement supérieure en marché baissier sur le secteur énergie, inférieure si l'énergie surperforme. Volatilité comparable. Acceptable pour son horizon de 20 ans.",
+        "Impact attendu : tracking error de 4-6 % vs MSCI World, performance probablement supérieure en marché baissier sur l'énergie, inférieure si l'énergie surperforme. Volatilité comparable. Acceptable pour son horizon de 20 ans.",
       ],
     },
   ],
@@ -86,6 +88,13 @@ export const course: Course = {
     "Seuils chiffrés (% de CA) sont la mesure clé.",
     "Exclusion < 10 % de l'univers : impact diversification négligeable.",
     "Exclusion > 30 % : tracking error et concentration significatifs.",
+  ],
+  advanced: [
+    "Convention d'Ottawa (mines antipersonnel) : 164 États signataires ; exclusion FCPE/UCITS quasi-universelle en Europe.",
+    "PAB (Paris-Aligned Benchmark) EU : exclusions minimales fossile (charbon > 1 %, pétrole > 10 %, gaz > 50 %), armes controversées, tabac, dommage climatique significatif.",
+    "Screening quantitatif MSCI Business Involvement : seuils multi-critères par secteur avec granularité par filiale.",
+    "Divestment vs engagement : littérature mixte, mais méta-études (Broccardo, Hart, Zingales 2022) plutôt en faveur de l'engagement actionnarial ciblé.",
+    "Tracking error attendu d'un ESG Leaders vs parent : ~1-2 % ; d'un fossil-free : 2-4 % ; d'un thématique clean energy : 8-15 %.",
   ],
   quiz: [
     {

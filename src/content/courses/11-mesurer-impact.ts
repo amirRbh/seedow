@@ -12,25 +12,27 @@ export const course: Course = {
   description:
     "Les principaux indicateurs d'impact ESG : ce qu'ils mesurent vraiment, comment les lire, et pourquoi un seul chiffre ne suffit jamais.",
   intro:
-    "« Notre fonds a un impact positif. » D'accord — combien, mesuré comment, comparé à quoi ? Ce cours détaille les indicateurs ESG les plus utilisés, leurs forces et leurs limites, pour cesser de se contenter de slogans.",
+    "« Notre fonds a un impact positif. » D'accord — combien, mesuré comment, comparé à quoi ? Voici les indicateurs ESG les plus utilisés, leurs forces et leurs limites, pour cesser de se contenter de slogans.",
+  eli5:
+    "Imagine qu'on te dise « ce plat est sain ». Tu voudrais savoir : combien de calories ? De sucre ? De protéines ? Sans chiffres précis, « sain » ne veut rien dire. Pour un fonds « à impact », c'est pareil : on regarde plusieurs indicateurs — combien de CO2 ? Quels scandales ? Combien d'activités vraiment vertes ? Un seul chiffre ne suffit jamais.",
   sections: [
     {
       heading: "Intensité carbone du portefeuille",
       paragraphs: [
         "Mesure : tonnes de CO2 émises par million d'euros de chiffre d'affaires des entreprises détenues, pondérées par leur poids dans le portefeuille. Unité : tCO2 / M€ CA.",
-        "Lecture : un MSCI World classique tourne autour de 130 à 150 tCO2/M€. Un MSCI World ESG Leaders à environ 80-90. Un Paris-Aligned Benchmark à environ 50-60. Un fonds Greenfin pur en dessous de 30.",
-        "Limite majeure : l'intensité carbone est calculée par CA, ce qui favorise les entreprises de services au détriment des industries lourdes — y compris celles qui contribuent à la transition (cimentiers décarbonés, mines de cuivre nécessaire pour les énergies renouvelables).",
+        "Lecture : MSCI World classique ≈ 130-150 tCO2/M€. MSCI World ESG Leaders ≈ 80-90. Paris-Aligned Benchmark ≈ 50-60. Greenfin pur < 30.",
+        "Limite majeure : l'intensité est calculée par CA, ce qui favorise les entreprises de services au détriment des industries lourdes — y compris celles qui contribuent à la transition (cimentiers décarbonés, mines de cuivre nécessaire aux renouvelables).",
       ],
       callout:
-        "Une intensité carbone faible peut traduire un vrai engagement OU simplement une surpondération du secteur tech. Toujours regarder la composition sectorielle en parallèle.",
+        "Une intensité carbone faible peut traduire un vrai engagement OU juste une surpondération du secteur tech. Toujours regarder la composition sectorielle en parallèle.",
     },
     {
       heading: "Scopes 1, 2, 3 : la distinction essentielle",
       paragraphs: [
-        "Scope 1 : émissions directes (combustibles brûlés, véhicules de l'entreprise). Mesurable, fiable.",
+        "Scope 1 : émissions directes de l'entreprise (combustibles brûlés, véhicules d'entreprise). Mesurable, fiable.",
         "Scope 2 : émissions liées à l'énergie achetée (électricité, chauffage). Mesurable, fiable.",
-        "Scope 3 : toute la chaîne de valeur (fournisseurs, transport, usage des produits vendus, fin de vie). Représente souvent 80 à 95 % du total, mais très mal mesuré.",
-        "Beaucoup de fonds publient une intensité carbone scope 1+2 uniquement, ce qui sous-estime massivement l'empreinte réelle. Pour les pétroliers, le scope 3 (combustion du pétrole vendu) est l'essentiel.",
+        "Scope 3 : toute la chaîne (fournisseurs, transport, usage des produits vendus, fin de vie). Représente souvent 80 à 95 % du total, mais très mal mesuré.",
+        "Beaucoup de fonds publient une intensité carbone scope 1+2 uniquement, ce qui sous-estime massivement l'empreinte réelle. Pour un pétrolier, le scope 3 (combustion du pétrole vendu) est l'essentiel.",
       ],
     },
     {
@@ -46,7 +48,7 @@ export const course: Course = {
       paragraphs: [
         "MSCI ESG Rating : note de AAA (leader) à CCC (retardataire), basée sur les risques ESG matériels pour le secteur. Approche « risque pour l'entreprise » plus que « risque créé par l'entreprise ».",
         "Sustainalytics ESG Risk Rating : note l'exposition aux risques ESG non gérés. Plus le score est bas, mieux c'est. Méthode différente, résultats parfois opposés à MSCI.",
-        "ISS, Moody's ESG, S&P Global ESG : encore d'autres méthodologies. Les divergences entre agences sont structurelles et documentées (corrélation ~0,5).",
+        "ISS, Moody's ESG, S&P Global ESG : encore d'autres méthodes. Les divergences sont structurelles et documentées (corrélation ~0,5).",
         "Bonne pratique : ne jamais s'appuyer sur un seul score. Croiser au moins deux sources et comprendre la méthodologie de chacune.",
       ],
       callout:
@@ -55,15 +57,15 @@ export const course: Course = {
     {
       heading: "Controverses : le complément indispensable",
       paragraphs: [
-        "Les agences ESG publient une base de controverses : scandales, procès, accusations crédibles documentées par la presse internationale. Échelle typique de 1 (mineur) à 5 (sévère).",
-        "Une controverse de niveau 4 ou 5 active devrait normalement exclure une entreprise des fonds ESG. En pratique, beaucoup de fonds Article 8 continuent de détenir des entreprises avec des controverses sévères en cours.",
-        "Bonne pratique : vérifier le « controversy score » des 10 plus grosses positions d'un fonds ESG avant d'investir. Outils en ligne disponibles gratuitement (Yahoo Finance Sustainability, Morningstar, MSCI publiques).",
+        "Les agences ESG publient une base de controverses : scandales, procès, accusations crédibles documentées par la presse internationale. Échelle typique 1 (mineur) à 5 (sévère).",
+        "Une controverse de niveau 4 ou 5 active devrait normalement exclure une entreprise des fonds ESG. En pratique, beaucoup de fonds Article 8 continuent d'en détenir avec des controverses sévères en cours.",
+        "Bonne pratique : vérifier le « controversy score » des 10 plus grosses positions d'un fonds ESG avant d'investir. Outils gratuits : Yahoo Finance Sustainability, Morningstar, MSCI publiques.",
       ],
     },
     {
       heading: "Pourcentage aligné taxonomie européenne",
       paragraphs: [
-        "La taxonomie européenne classifie les activités économiques selon leur contribution à six objectifs environnementaux (climat, eau, économie circulaire, etc.). Une activité est « alignée » si elle contribue substantiellement à au moins un objectif sans nuire aux autres.",
+        "La taxonomie européenne classe les activités économiques selon leur contribution à six objectifs environnementaux (climat, eau, économie circulaire, etc.). Une activité est « alignée » si elle contribue substantiellement à au moins un objectif sans nuire aux autres.",
         "Indicateur : % du chiffre d'affaires des entreprises détenues qui est aligné taxonomie. Un MSCI World classique : ~5 %. Un fonds vert : 30 à 70 %. Un fonds infrastructures renouvelables : 90 %+.",
         "Limite : les données sont récentes (2022+), incomplètes, et la taxonomie elle-même fait débat (inclusion du gaz et du nucléaire sous conditions a divisé les acteurs).",
       ],
@@ -85,6 +87,13 @@ export const course: Course = {
     "Controverses niveau 4-5 = signal d'exclusion légitime.",
     "% aligné taxonomie européenne = indicateur récent mais utile.",
     "Aucun chiffre seul ne suffit : combiner plusieurs indicateurs.",
+  ],
+  advanced: [
+    "WACI (Weighted Average Carbon Intensity, TCFD) : Σ (poids_i × tCO2/M€_i) ; standard PAB/CTB européens.",
+    "Financed emissions (PCAF) : émissions attribuées à un fonds en fonction de sa part du financement (equity + dette) ; base pour objectifs SBTi financials.",
+    "ITR (Implied Temperature Rise) : convertit les trajectoires d'émissions en °C ; MSCI, S&P Trucost, ISS proposent des méthodologies concurrentes.",
+    "Taxonomie EU : eligibility (activité listée) ≠ alignment (respecte TSC + DNSH + garanties sociales) ; l'alignment est bien plus rare que l'eligibility.",
+    "Litiges greenwashing (DWS 2022, Vanguard 2023, BNY Mellon 2022) : SEC et BaFin ont sanctionné des mesures d'impact non substantiées.",
   ],
   quiz: [
     {

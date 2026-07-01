@@ -1,47 +1,57 @@
-# Landing "wow" — hero vivant + transitions au scroll
 
-Objectif : donner du souffle à la landing sans casser la ligne Apple. Portée : `src/routes/index.tsx` + ajout d'animations dans `src/styles.css`. Aucune autre partie de l'app n'est touchée.
+# Cours plus clairs : ELI5 + « Aller plus loin »
 
-## 1. Hero — visualisation vivante en fond
+## Objectif
+Rendre les 12 cours Seedow immédiatement compréhensibles par un débutant total, tout en gardant un bonus court pour ceux qui veulent creuser. Pas de refonte visuelle : uniquement du contenu + un petit ajout structurel.
 
-Derrière le titre "Votre argent façonne déjà le monde.", on ajoute une couche d'arrière-plan animée qui *montre* le produit sans le dire.
+## Principes d'écriture
+Chaque cours sera réécrit selon 3 règles :
 
-Composition :
-- Grille floue de ~40 pastilles/barres colorées (mint, ice, volt, gris Apple) réparties en fond, opacité 0.15–0.25, blur léger.
-- Chaque pastille pulse doucement (scale 1 → 1.05, opacity oscillante) avec des délais aléatoires → sensation d'un portefeuille "vivant".
-- 3 chiffres flottants discrets (ex. `+2.4%`, `€1,240`, `CO₂ −18kg`) qui apparaissent/disparaissent en fondu tous les 4–6s à des positions fixes.
-- Un halo radial mint très dilué au centre, derrière le titre, pour concentrer le regard.
-- Titre au-dessus avec un `z-index` clair + fond blanc/70 en radial derrière la typo pour garantir la lisibilité.
+1. **Ouverture ELI5** — chaque cours commence par une analogie du quotidien (tirelire, gâteau à partager, école, potager, panier de courses…) avant tout vocabulaire financier.
+2. **Un exemple chiffré ultra-simple par section** — toujours avec des petits nombres ronds (10 €, 100 €, 1 000 €) avant de montrer l'effet à grande échelle.
+3. **Vocabulaire décodé à la volée** — chaque terme technique (ETF, TER, volatilité, SFDR…) est introduit avec sa « traduction en français normal » entre parenthèses la première fois.
 
-Titre lui-même :
-- Reveal doux au chargement (fade + rise, séquentiel ligne par ligne, ~120ms de décalage).
-- "le monde." reste mint, avec un fin trait mint dessiné en dessous en 0.6s à l'apparition.
+Longueur inchangée ou légèrement réduite : on remplace de la densité par de la clarté, pas par du remplissage.
 
-Rien de JS lourd : tout en CSS keyframes + quelques `animation-delay` inline.
+## Ajout structurel : bloc « Aller plus loin »
+Un nouveau bloc court et optionnel à la fin de l'article, avant les « À retenir ». 3–5 puces max par cours, format dense, pour les lecteurs qui veulent la version avancée (formules exactes, nuances, contre-exemples, chiffres de marché). Volontairement bref pour ne pas alourdir.
 
-## 2. Transitions entre sections
+## Détail technique
 
-Chaque section suivante reçoit :
-- `reveal-on-scroll` : fade-in + translateY(24px → 0) déclenché via `IntersectionObserver` (un petit hook local, ~15 lignes).
-- Les grands chiffres (`0%`, `∞`, `1` dans la section stats) s'animent à l'apparition : fade-in + scale 0.92 → 1, avec un léger décalage entre les trois.
-- Les barres de l'allocation "Ton portefeuille, enfin lisible" grandissent de 0 → hauteur finale sur 800ms à l'entrée dans le viewport.
-- Bulles de chat Ethi apparaissent une par une (150ms d'écart) quand la section entre à l'écran.
+**1. Type `Course` (src/content/courses/types.ts)**
+Ajouter deux champs optionnels :
+```ts
+eli5?: string;              // 1–2 phrases d'analogie simple, affichées sous l'intro
+advanced?: string[];        // 3–5 puces "Aller plus loin"
+```
 
-## 3. Détails de polish
+**2. Composant `CourseArticle` (src/components/courses/CourseArticle.tsx)**
+- Sous le `intro`, si `course.eli5` existe : afficher un petit bloc « En une image » (encart paper-2, typo Inter, italique doux) — visible aussi en mode tronqué (paywall).
+- Avant le bloc « À retenir » (donc masqué en mode tronqué), si `course.advanced` existe : afficher une section « Aller plus loin » avec eyebrow mono + liste dense à puces, séparée par un `gold-rule`.
 
-- Curseur au-dessus du bouton "Rejoindre la beta" : léger scale 1.02 + ombre douce mint.
-- Séparateurs entre sections : au lieu de couleurs de fond franches, on garde les fonds actuels mais on ajoute un `border-top` 1px `#D2D2D7` très discret pour marquer le rythme.
-- Le fond animé du hero se désactive sur `prefers-reduced-motion`.
+**3. Contenu des 12 cours (src/content/courses/01…12-*.ts)**
+Pour chaque fichier :
+- Réécrire `intro` en mode accessible (2–3 phrases, analogie du quotidien).
+- Ajouter `eli5` (1–2 phrases, l'image la plus simple possible).
+- Réécrire les `paragraphs` de chaque section : phrases plus courtes, un exemple chiffré simple d'abord, puis la généralisation.
+- Simplifier les `callout` (ton conversationnel, pas de jargon).
+- Ajouter `advanced` (3–5 puces techniques : formules, sources, nuances).
+- **Ne pas toucher** : `slug`, `number`, `track`, `level`, `isFree`, `readingMinutes`, `title`, `eyebrow`, `description`, `keyTakeaways`, `quiz` (le quiz reste tel quel — c'est le test de compréhension).
 
-## Détails techniques
+Cours concernés (ordre d'index) :
+```text
+01 · cinq-mots              07 · esg-cest-quoi
+02 · interets-composes      08 · greenwashing
+03 · diversification        09 · labels-isr-sfdr
+04 · actions-obligations-etf 10 · exclusions-sectorielles
+05 · risque-volatilite      11 · mesurer-impact
+06 · frais-caches           12 · portefeuille-aligne
+```
 
-- `src/routes/index.tsx` : ajout d'un composant `<HeroLiveBackground />` local (SVG ou div grid absolute), d'un hook `useReveal()` (IntersectionObserver), et wrap des sections avec `<div ref={...} className="reveal">`.
-- `src/styles.css` : ajout des keyframes `pulse-dot`, `float-figure`, `reveal-up`, `grow-bar`, et de la classe `.reveal` (state initial hidden, `.reveal.in-view` visible). Respect de `@media (prefers-reduced-motion: reduce)`.
-- Aucun package ajouté. Pas de librairie d'animation.
-- Pas de changement dans `styles.css` sur les tokens ; on ajoute uniquement des keyframes/classes en fin de fichier.
+## Hors périmètre
+- Pas de changement du hero, de la home, du design system, des routes.
+- Pas de refonte du quiz ni du paywall.
+- Pas de traduction EN (les cours sont FR).
 
-## Ce qui ne bouge PAS
-
-- Palette, typographie, wordmark SEEDOW.
-- Structure des sections (ordre, contenus, CTA).
-- Le reste de l'app (dashboard, cours, portfolio, etc.).
+## Livraison
+Un seul lot : type + composant + 12 fichiers de contenu, réécrits dans le même style éditorial (JetBrains Mono pour les chiffres, ton sobre financier moderne, zéro lexique jardin).
