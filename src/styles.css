@@ -22,8 +22,8 @@
   --radius-3xl: calc(var(--radius) + 12px);
 
   --font-sans: "Inter", system-ui, -apple-system, sans-serif;
-  --font-value: "IBM Plex Mono", ui-monospace, monospace;
-  --font-display: "Bebas Neue", "Inter", sans-serif;
+  --font-value: "Inter", system-ui, sans-serif;
+  --font-display: "Inter", system-ui, -apple-system, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 
   --color-background: var(--background);
