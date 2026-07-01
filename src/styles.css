@@ -233,50 +233,69 @@
   .font-value {
     font-family: var(--font-value);
     font-weight: 500;
-    letter-spacing: 0.02em;
+    letter-spacing: -0.01em;
     font-feature-settings: "lnum", "tnum";
   }
 
   .font-display {
     font-family: var(--font-display);
-    font-weight: 400;
-    letter-spacing: 0.01em;
+    font-weight: 700;
+    letter-spacing: -0.025em;
   }
 
-  /* Échelle éditoriale signature — Bebas Neue */
+  /* Échelle éditoriale — Inter Apple */
   .display-xl {
     font-family: var(--font-display);
-    font-weight: 400;
-    font-size: clamp(3rem, 9vw, 7rem);
-    line-height: 0.95;
-    letter-spacing: 0.01em;
-    text-transform: uppercase;
+    font-weight: 700;
+    font-size: clamp(2.75rem, 7.5vw, 5.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    text-transform: none;
   }
 
   .display-lg {
     font-family: var(--font-display);
-    font-weight: 400;
+    font-weight: 700;
     font-size: clamp(2rem, 5vw, 3.25rem);
-    line-height: 1.02;
-    letter-spacing: 0.01em;
-    text-transform: uppercase;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    text-transform: none;
   }
 
-  h1, h2, h3 {
+  h1 {
     font-family: var(--font-display);
-    font-weight: 400;
-    letter-spacing: 0.01em;
-    text-transform: uppercase;
+    font-weight: 700;
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    text-transform: none;
     color: var(--color-ink);
-    line-height: 1.02;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    line-height: 1.12;
+    letter-spacing: -0.025em;
+    text-transform: none;
+    color: var(--color-ink);
+  }
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.125rem, 2vw, 1.375rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    text-transform: none;
+    color: var(--color-ink);
   }
 
   .eyebrow {
-    font-family: var(--font-mono);
-    font-size: 11px;
+    font-family: var(--font-sans);
+    font-size: 13px;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
+    text-transform: none;
+    letter-spacing: -0.01em;
     color: var(--color-ink-2);
   }
   .eyebrow--accent { color: var(--color-mint); }
@@ -294,22 +313,22 @@
     background-color: var(--color-ink);
   }
 
-  /* Données — chiffres mono large bold */
+  /* Données — chiffres Inter bold Apple */
   .data-xl {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-weight: 700;
     font-size: clamp(2rem, 5vw, 3.5rem);
     line-height: 1;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.035em;
     color: var(--color-ink);
     font-feature-settings: "tnum", "lnum";
   }
   .data-lg {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-weight: 700;
     font-size: clamp(1.5rem, 3vw, 2.25rem);
     line-height: 1;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.03em;
     color: var(--color-ink);
     font-feature-settings: "tnum", "lnum";
   }
