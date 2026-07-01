@@ -101,9 +101,8 @@ function Landing() {
         {/* Massive SEEDOW wordmark en fond */}
         <div
           aria-hidden
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 select-none pointer-events-none whitespace-nowrap"
+          className="absolute inset-x-0 top-[10%] text-center select-none pointer-events-none whitespace-nowrap"
           style={{
-            transform: "translate(-50%, -120%)",
             fontWeight: 900,
             fontSize: "22vw",
             lineHeight: 1,
