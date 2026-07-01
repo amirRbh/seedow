@@ -8,7 +8,13 @@ import { useServerFn } from "@tanstack/react-start";
 import { simulatePortfolio } from "@/lib/portfolio/server.functions";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { MetricLabel } from "@/components/ui/MetricLabel";
-import type { CauseTag, ExclusionTag } from "@/lib/portfolio/types";
+import {
+  DEFAULT_PILLAR_WEIGHTS,
+  MIN_PORTFOLIO_ESG,
+  causeToPillarWeights,
+  type CauseTag,
+  type ExclusionTag,
+} from "@/lib/portfolio/types";
 
 export const Route = createFileRoute("/methodologie")({
   head: () => ({
