@@ -42,41 +42,41 @@ function Landing() {
   };
 
   return (
-    <div className="min-h-screen bg-paper text-ink">
+    <div className="apple-landing min-h-screen">
       {/* NAV */}
-      <nav className="sticky top-0 z-50 border-b border-[var(--paper-3)] backdrop-blur-md bg-[rgba(245,243,236,0.92)]">
-        <div className="max-w-[1100px] mx-auto px-6 md:px-8 py-4 flex justify-between items-center gap-4">
-          <Link to="/" className="font-display text-2xl tracking-[0.04em] uppercase">
+      <nav
+        className="sticky top-0 z-50 backdrop-blur-xl"
+        style={{ background: "rgba(255,255,255,0.72)", borderBottom: "1px solid #d2d2d7" }}
+      >
+        <div className="max-w-[1024px] mx-auto px-6 h-12 flex items-center justify-between">
+          <Link to="/" className="text-[19px] font-semibold tracking-tight text-[color:var(--apple-text)]">
             seedow
           </Link>
-          <div className="flex items-center gap-3 md:gap-6">
-            <Link
-              to="/cours"
-              className="hidden md:inline-block font-mono text-[11px] uppercase tracking-[0.15em] text-ink-2 hover:text-ink transition-colors"
-            >
+          <div className="flex items-center gap-6 text-[13px] text-[color:var(--apple-text)]">
+            <Link to="/cours" className="hidden md:inline opacity-90 hover:opacity-100">
               Cours
             </Link>
-            <Link
-              to="/methodologie"
-              className="hidden md:inline-block font-mono text-[11px] uppercase tracking-[0.15em] text-ink-2 hover:text-ink transition-colors"
-            >
-              Méthodo
+            <Link to="/methodologie" className="hidden md:inline opacity-90 hover:opacity-100">
+              Méthodologie
             </Link>
             {isAuthed ? (
-              <Link to="/dashboard" className="btn-harvest" style={{ padding: "8px 16px", fontSize: 11 }}>
-                Mon espace →
+              <Link to="/dashboard" className="apple-btn-primary" style={{ padding: "6px 14px", fontSize: 13 }}>
+                Mon espace
               </Link>
             ) : (
               <>
                 <Link
                   to="/auth"
                   search={{ redirect: "/dashboard", mode: "login" }}
-                  className="btn-outline-ink"
-                  style={{ padding: "7px 15px", fontSize: 11 }}
+                  className="opacity-90 hover:opacity-100"
                 >
                   Se connecter
                 </Link>
-                <button onClick={scrollToCta} className="btn-plant" style={{ padding: "8px 16px", fontSize: 11 }}>
+                <button
+                  onClick={scrollToCta}
+                  className="apple-btn-primary"
+                  style={{ padding: "6px 14px", fontSize: 13 }}
+                >
                   Rejoindre la beta
                 </button>
               </>
@@ -86,342 +86,277 @@ function Landing() {
       </nav>
 
       {/* HERO */}
-      <section className="max-w-[1100px] mx-auto px-8 pt-24 pb-20 text-center">
-        <span className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.15em] uppercase text-mint border border-mint rounded-full px-3.5 py-1.5 mb-8">
-          <span className="w-1.5 h-1.5 rounded-full bg-mint gold-pulse" />
-          Beta ouverte bientôt
-        </span>
-        <h1
-          className="font-display uppercase mb-7"
-          style={{ fontSize: "clamp(48px, 9vw, 108px)", lineHeight: 0.95, letterSpacing: "0.01em" }}
-        >
+      <section className="text-center px-6 pt-24 pb-20 md:pt-32 md:pb-28">
+        <h1 className="apple-title apple-title-lg mx-auto max-w-[900px]">
           Votre argent
           <br />
-          <span className="text-ink">façonne déjà </span>
-          <span className="text-mint">le monde.</span>
+          façonne déjà{" "}
+          <span style={{ color: "var(--mint)" }}>le monde.</span>
         </h1>
-        <p className="text-[18px] text-ink-2 max-w-[560px] mx-auto mb-10 leading-[1.6]">
-          Seedow vous montre lequel. Investissement ESG, visualisé clairement, expliqué par une IA qui ne vous vend rien.
+        <p className="apple-subtitle mx-auto max-w-[620px] mt-6">
+          Seedow vous montre lequel. Investissement ESG, visualisé clairement,
+          expliqué par une IA qui ne vous vend rien.
         </p>
-        {isAuthed ? (
-          <Link to="/dashboard" className="btn-harvest inline-flex" style={{ padding: "14px 28px", fontSize: 13 }}>
-            Accéder à mon espace →
-          </Link>
-        ) : (
-          <HeroForm onJump={scrollToCta} />
-        )}
-        {!isAuthed && (
-          <p className="font-mono text-[10px] text-ink-2 tracking-[0.05em] mt-2">
-            GRATUIT · PLACES LIMITÉES · AUCUNE CARTE REQUISE
-          </p>
-        )}
-        {!isAuthed && (
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-mono text-[11px] tracking-[0.12em] uppercase text-ink-2">
-            <Link
-              to="/auth"
-              search={{ redirect: "/dashboard", mode: "login" }}
-              className="group inline-flex items-center gap-1.5 hover:text-ink transition-colors"
-            >
-              Déjà inscrit·e ? Se connecter
-              <span className="text-mint transition-transform group-hover:translate-x-0.5">→</span>
+        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 mt-10">
+          {isAuthed ? (
+            <Link to="/dashboard" className="apple-btn-primary">
+              Accéder à mon espace
             </Link>
-            <span aria-hidden className="text-[var(--paper-3)]">·</span>
-            <Link
-              to="/cours"
-              className="group inline-flex items-center gap-1.5 hover:text-ink transition-colors"
-            >
-              Explorer les cours gratuits
-              <span className="text-ice transition-transform group-hover:translate-x-0.5">→</span>
-            </Link>
-          </div>
-        )}
-      </section>
-
-
-      {/* TICKER */}
-      <div className="bg-ink overflow-hidden py-3.5 border-y border-[var(--paper-3)]">
-        <div className="flex gap-12 whitespace-nowrap animate-ticker font-mono text-[12px] text-paper">
-          {Array.from({ length: 2 }).flatMap((_, k) =>
-            TICKER_ITEMS.map((item, i) => (
-              <span key={`${k}-${i}`} className="opacity-85 flex items-center gap-12">
-                {item}
-                <span aria-hidden>·</span>
-              </span>
-            )),
+          ) : (
+            <button onClick={scrollToCta} className="apple-btn-primary">
+              Rejoindre la beta
+            </button>
           )}
-        </div>
-      </div>
-
-      {/* PROBLEM */}
-      <section className="max-w-[1100px] mx-auto px-8 py-24">
-        <p className="eyebrow mb-4">Le problème</p>
-        <h2
-          className="font-display uppercase max-w-[700px] mb-12"
-          style={{ fontSize: "clamp(32px, 5vw, 52px)", lineHeight: 1.05, letterSpacing: "0.01em" }}
-        >
-          Ton épargne finance des choses que tu n'as jamais choisies.
-        </h2>
-        <div className="grid md:grid-cols-3 gap-px bg-[var(--paper-3)] border border-[var(--paper-3)] rounded-2xl overflow-hidden">
-          {PROBLEMS.map((p, i) => (
-            <div key={i} className="bg-paper p-8">
-              <div className="font-mono text-[11px] text-ink-2 mb-6">{String(i + 1).padStart(2, "0")}</div>
-              <div
-                className="font-display mb-2"
-                style={{ fontSize: 44, lineHeight: 1, color: `var(--${p.color})` }}
-              >
-                {p.stat}
-              </div>
-              <p className="text-[14px] text-ink-2 leading-[1.55]">{p.text}</p>
-            </div>
-          ))}
+          <Link to="/cours" className="apple-link">
+            Voir les cours <span aria-hidden>›</span>
+          </Link>
         </div>
       </section>
 
-      {/* HOW IT WORKS — dark */}
-      <section className="bg-ink text-paper py-24 px-8">
-        <div className="max-w-[1100px] mx-auto">
-          <p className="font-mono text-[11px] tracking-[0.15em] uppercase text-[#888] mb-4">
-            Comment ça marche
-          </p>
-          <h2
-            className="font-display uppercase text-paper mb-12"
-            style={{ fontSize: "clamp(32px, 5vw, 52px)", lineHeight: 1.05, letterSpacing: "0.01em" }}
-          >
-            Trois choses que Seedow fait différemment.
+      {/* SECTION — problème / stats */}
+      <section style={{ background: "var(--apple-surface)" }} className="px-6 py-24 md:py-32">
+        <div className="max-w-[980px] mx-auto text-center">
+          <h2 className="apple-title mx-auto max-w-[720px]">
+            Ton épargne finance des choses
+            <br />
+            que tu n'as jamais choisies.
           </h2>
-          <div className="grid md:grid-cols-3 gap-10">
-            {STEPS.map((s, i) => (
+          <p className="apple-subtitle mx-auto max-w-[560px] mt-5">
+            La plupart des contrats d'assurance-vie te laissent dans le flou. Seedow rend visible ce
+            qui l'était pas.
+          </p>
+          <div className="grid md:grid-cols-3 gap-12 md:gap-8 mt-20">
+            {STATS.map((s, i) => (
               <div key={i}>
                 <div
-                  className="w-[52px] h-[52px] rounded-xl flex items-center justify-center mb-6 font-display text-[22px]"
-                  style={{ background: `var(--${s.bg})`, color: s.fg === "paper" ? "var(--color-paper)" : "var(--color-ink)" }}
+                  className="font-semibold"
+                  style={{
+                    fontSize: "clamp(72px, 10vw, 120px)",
+                    lineHeight: 0.9,
+                    letterSpacing: "-0.05em",
+                    color: s.color,
+                  }}
                 >
-                  {s.icon}
+                  {s.figure}
                 </div>
-                <h3 className="font-display text-[24px] tracking-[0.01em] mb-2.5 text-paper uppercase">
-                  {s.title}
-                </h3>
-                <p className="text-[14px] text-[#999] leading-[1.6]">{s.text}</p>
+                <p className="mt-4 text-[15px] leading-[1.45] text-[color:var(--apple-text-2)] max-w-[240px] mx-auto">
+                  {s.text}
+                </p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ETHI */}
-      <section className="max-w-[1100px] mx-auto px-8 py-24">
-        <div className="grid md:grid-cols-2 gap-16 items-center">
-          <div>
-            <span className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.1em] uppercase text-volt border border-volt rounded-full px-3.5 py-1.5 mb-6">
-              Ethi · IA intégrée
-            </span>
-            <h3
-              className="font-display uppercase mb-5"
-              style={{ fontSize: "clamp(32px, 4.5vw, 46px)", lineHeight: 1.05 }}
-            >
-              Une IA qui répond.
-              <br />
-              Pas qui vend.
-            </h3>
-            <p className="text-[15px] text-ink-2 leading-[1.65] mb-6">
-              Ethi connaît chaque ligne de ton portefeuille et peut t'expliquer pourquoi une entreprise y est,
-              ce qu'elle fait vraiment, et ce que ça implique. Pas de réponses vagues, pas de pression commerciale.
-            </p>
-            <div
-              className="font-mono text-[13px] text-ink bg-[var(--paper-2)] py-4 px-5 rounded-r-lg"
-              style={{ borderLeft: "3px solid var(--volt)" }}
-            >
-              "Pourquoi j'ai des actions dans une entreprise pétrolière ?" → Ethi te montre la ligne exacte,
-              le pourcentage, et te propose une alternative ESG équivalente.
-            </div>
-          </div>
+      {/* SECTION — voir ton impact */}
+      <section className="px-6 py-24 md:py-32">
+        <div className="max-w-[980px] mx-auto text-center">
+          <p className="apple-eyebrow" style={{ color: "var(--mint)" }}>
+            Vois ton impact
+          </p>
+          <h2 className="apple-title mx-auto max-w-[720px] mt-3">
+            Ton portefeuille, enfin lisible.
+          </h2>
+          <p className="apple-subtitle mx-auto max-w-[560px] mt-5">
+            Chaque ligne devient une couleur, une histoire, une réalité concrète.
+            Pas un rapport annuel de 80 pages.
+          </p>
+
+          {/* Mockup visuel simplifié */}
           <div
-            className="bg-ink rounded-[20px] p-8 flex flex-col justify-between"
-            style={{ aspectRatio: "4 / 5" }}
+            className="mt-16 mx-auto max-w-[820px] apple-card"
+            style={{ background: "var(--apple-surface)", padding: "48px 32px" }}
           >
-            <div className="flex flex-col gap-3">
-              <div className="bg-volt text-paper rounded-2xl py-3 px-4 text-[13px] leading-[1.5] max-w-[85%] self-end">
-                C'est quoi cette ligne à 4% dans mon portefeuille ?
-              </div>
-              <div className="bg-[#1a1a1a] text-[#ccc] rounded-2xl py-3 px-4 text-[13px] leading-[1.5] max-w-[85%]">
-                C'est un fonds obligataire vert qui finance des rénovations énergétiques en Europe.
-                Rendement stable, faible volatilité.
-              </div>
-              <div className="bg-volt text-paper rounded-2xl py-3 px-4 text-[13px] leading-[1.5] max-w-[85%] self-end">
-                Et si je veux plus d'impact direct ?
-              </div>
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+              {ALLOCATION.map((a, i) => (
+                <div key={i} className="flex flex-col items-center gap-2">
+                  <div
+                    className="w-full rounded-2xl"
+                    style={{ height: `${40 + a.weight * 1.6}px`, background: a.color }}
+                  />
+                  <div className="text-[11px] text-[color:var(--apple-text-2)]">{a.label}</div>
+                  <div className="text-[13px] font-semibold text-[color:var(--apple-text)]">
+                    {a.weight}%
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="font-mono text-[11px] text-mint">ETHI ÉCRIT···</div>
           </div>
         </div>
       </section>
 
-      {/* COMMENCE GRATUITEMENT — deux portes d'entrée */}
-      <section className="bg-[var(--paper-2)] border-y border-[var(--paper-3)] py-24 px-8">
-        <div className="max-w-[1100px] mx-auto">
-          <p className="font-mono text-[11px] tracking-[0.15em] uppercase text-ink-2 mb-3">
-            Commence gratuitement
+      {/* SECTION — Ethi (dark, style Apple) */}
+      <section
+        className="px-6 py-24 md:py-32"
+        style={{ background: "var(--apple-dark)", color: "#ffffff" }}
+      >
+        <div className="max-w-[980px] mx-auto text-center">
+          <p className="apple-eyebrow" style={{ color: "var(--volt)" }}>
+            Ethi
           </p>
           <h2
-            className="font-display uppercase max-w-[700px] mb-12"
-            style={{ fontSize: "clamp(28px, 4vw, 44px)", lineHeight: 1.05, letterSpacing: "0.01em" }}
+            className="apple-title mx-auto max-w-[760px] mt-3"
+            style={{ color: "#ffffff" }}
           >
-            Deux façons d'entrer. Sans carte, sans engagement.
+            Une IA qui répond.
+            <br />
+            Pas qui vend.
           </h2>
+          <p
+            className="apple-subtitle mx-auto max-w-[600px] mt-5"
+            style={{ color: "#a1a1a6" }}
+          >
+            Ethi connaît chaque ligne de ton portefeuille. Pose une question, obtiens une réponse
+            claire. Sans jargon, sans pression commerciale.
+          </p>
+
+          {/* Chat mockup */}
+          <div className="mt-16 mx-auto max-w-[560px] flex flex-col gap-3 text-left">
+            <ChatBubble side="user">
+              C'est quoi cette ligne à 4% dans mon portefeuille ?
+            </ChatBubble>
+            <ChatBubble side="ethi">
+              Un fonds obligataire vert qui finance des rénovations énergétiques en Europe.
+              Rendement stable, faible volatilité.
+            </ChatBubble>
+            <ChatBubble side="user">
+              Et si je veux plus d'impact direct ?
+            </ChatBubble>
+            <ChatBubble side="ethi">
+              Je peux te proposer 3 alternatives équivalentes en risque, avec un score climat
+              supérieur. Tu veux voir ?
+            </ChatBubble>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION — deux façons de commencer */}
+      <section style={{ background: "var(--apple-surface)" }} className="px-6 py-24 md:py-32">
+        <div className="max-w-[980px] mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="apple-title mx-auto max-w-[720px]">
+              Deux façons de commencer.
+            </h2>
+            <p className="apple-subtitle mx-auto max-w-[560px] mt-5">
+              Sans carte, sans engagement.
+            </p>
+          </div>
+
           <div className="grid md:grid-cols-2 gap-6">
-            {/* Card cours — accent ice */}
-            <article className="paper-card p-8 md:p-10 bg-paper flex flex-col">
-              <span
-                className="self-start inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.15em] uppercase px-3 py-1 rounded-full border mb-5"
-                style={{ color: "var(--ice)", borderColor: "var(--ice)" }}
-              >
+            <article className="apple-card p-10 md:p-12 text-center flex flex-col items-center">
+              <p className="apple-eyebrow" style={{ color: "var(--ice)" }}>
                 Cours · gratuit
-              </span>
-              <h3
-                className="font-display uppercase mb-3"
-                style={{ fontSize: "clamp(24px, 3vw, 34px)", lineHeight: 1.05 }}
-              >
+              </p>
+              <h3 className="apple-title mt-2" style={{ fontSize: "clamp(28px, 3.5vw, 40px)" }}>
                 Apprends avant d'investir.
               </h3>
-              <p className="text-[15px] text-ink-2 leading-[1.6] mb-8 flex-1">
-                12 cours pour décoder la finance responsable, sans jargon. Gratuit, sans inscription requise.
+              <p className="apple-subtitle mt-4 max-w-[380px]">
+                12 cours pour décoder la finance responsable, sans jargon.
               </p>
-              <Link
-                to="/cours"
-                className="self-start inline-flex items-center gap-2 font-mono text-[12px] font-bold uppercase tracking-[0.08em] rounded-full px-5 py-3 border transition-colors"
-                style={{ color: "var(--ice)", borderColor: "var(--ice)" }}
-              >
-                Voir les cours →
+              <Link to="/cours" className="apple-link mt-8">
+                Voir les cours <span aria-hidden>›</span>
               </Link>
             </article>
 
-            {/* Card compte — accent mint */}
-            <article className="paper-card p-8 md:p-10 bg-paper flex flex-col">
-              <span className="self-start inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.15em] uppercase px-3 py-1 rounded-full border border-mint text-mint mb-5">
+            <article className="apple-card p-10 md:p-12 text-center flex flex-col items-center">
+              <p className="apple-eyebrow" style={{ color: "var(--mint)" }}>
                 Espace · gratuit
-              </span>
-              <h3
-                className="font-display uppercase mb-3"
-                style={{ fontSize: "clamp(24px, 3vw, 34px)", lineHeight: 1.05 }}
-              >
+              </p>
+              <h3 className="apple-title mt-2" style={{ fontSize: "clamp(28px, 3.5vw, 40px)" }}>
                 Ton tableau de bord ESG.
               </h3>
-              <p className="text-[15px] text-ink-2 leading-[1.6] mb-8 flex-1">
+              <p className="apple-subtitle mt-4 max-w-[380px]">
                 {isAuthed
-                  ? "Tu es connecté·e. Accède à ton espace, simule ton portefeuille et discute avec Ethi."
-                  : "Crée un compte, simule ton portefeuille, discute avec Ethi. Aucune carte requise."}
+                  ? "Accède à ton espace, simule ton portefeuille, discute avec Ethi."
+                  : "Crée un compte, simule ton portefeuille, discute avec Ethi."}
               </p>
-              <div className="flex flex-wrap items-center gap-4">
-                {isAuthed ? (
-                  <Link to="/dashboard" className="btn-harvest inline-flex">
-                    Aller au dashboard →
+              {isAuthed ? (
+                <Link to="/dashboard" className="apple-btn-primary mt-8">
+                  Aller au dashboard
+                </Link>
+              ) : (
+                <div className="flex flex-col items-center gap-3 mt-8">
+                  <Link
+                    to="/auth"
+                    search={{ redirect: "/dashboard", mode: "signup" }}
+                    className="apple-btn-primary"
+                  >
+                    Créer un compte
                   </Link>
-                ) : (
-                  <>
-                    <Link
-                      to="/auth"
-                      search={{ redirect: "/dashboard", mode: "signup" }}
-                      className="btn-harvest inline-flex"
-                    >
-                      Créer un compte →
-                    </Link>
-                    <Link
-                      to="/auth"
-                      search={{ redirect: "/dashboard", mode: "login" }}
-                      className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-2 hover:text-ink transition-colors"
-                    >
-                      Déjà inscrit·e ? Se connecter →
-                    </Link>
-                  </>
-                )}
-              </div>
+                  <Link
+                    to="/auth"
+                    search={{ redirect: "/dashboard", mode: "login" }}
+                    className="apple-link text-[14px]"
+                  >
+                    Déjà inscrit·e ? Se connecter <span aria-hidden>›</span>
+                  </Link>
+                </div>
+              )}
             </article>
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section id="cta" className="max-w-[700px] mx-auto px-8 py-28 text-center">
-        <h2
-          className="font-display uppercase mb-5"
-          style={{ fontSize: "clamp(36px, 6vw, 64px)", lineHeight: 1 }}
-        >
-          Prêt à voir
+      {/* CTA FINAL */}
+      <section id="cta" className="px-6 py-28 md:py-36 text-center">
+        <h2 className="apple-title apple-title-lg mx-auto max-w-[760px]">
+          Prêt à voir où va
           <br />
-          <span className="text-mint">où va ton argent ?</span>
+          <span style={{ color: "var(--mint)" }}>ton argent&nbsp;?</span>
         </h2>
-        <p className="text-[16px] text-ink-2 mb-9 leading-[1.6]">
+        <p className="apple-subtitle mx-auto max-w-[520px] mt-6">
           {isAuthed
             ? "Tu es déjà dans la place. Direct à ton espace."
             : "Rejoins la liste des beta testeurs. Accès anticipé, gratuit, places limitées."}
         </p>
-        <CtaForm isAuthed={isAuthed} />
+        <div className="mt-10">
+          <CtaForm isAuthed={isAuthed} />
+        </div>
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-[var(--paper-3)] py-10 px-8">
-        <div className="max-w-[1100px] mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div>
-            <div className="font-display text-[20px] uppercase mb-2">SEEDOW</div>
-            <div className="font-mono text-[11px] text-ink-2 uppercase tracking-[0.1em]">
-              Votre argent façonne déjà le monde.
-            </div>
-          </div>
-          <nav className="flex flex-wrap gap-x-6 gap-y-2 font-mono text-[11px] uppercase tracking-[0.15em] text-ink-2">
-            <Link to="/cours" className="hover:text-ink transition-colors">Cours</Link>
-            <Link to="/methodologie" className="hover:text-ink transition-colors">Méthodo</Link>
+      <footer
+        className="px-6 py-10 text-[12px] text-[color:var(--apple-text-2)]"
+        style={{ background: "var(--apple-surface)", borderTop: "1px solid #d2d2d7" }}
+      >
+        <div className="max-w-[1024px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>© 2026 Seedow. Votre argent façonne déjà le monde.</div>
+          <nav className="flex flex-wrap gap-x-6 gap-y-2">
+            <Link to="/cours" className="hover:text-[color:var(--apple-text)]">Cours</Link>
+            <Link to="/methodologie" className="hover:text-[color:var(--apple-text)]">Méthodologie</Link>
             {isAuthed ? (
-              <Link to="/dashboard" className="hover:text-ink transition-colors">Mon espace</Link>
+              <Link to="/dashboard" className="hover:text-[color:var(--apple-text)]">Mon espace</Link>
             ) : (
-              <Link to="/auth" search={{ redirect: "/dashboard", mode: "login" }} className="hover:text-ink transition-colors">
+              <Link to="/auth" search={{ redirect: "/dashboard", mode: "login" }} className="hover:text-[color:var(--apple-text)]">
                 Se connecter
               </Link>
             )}
-            <a href="#cta" className="hover:text-ink transition-colors">Rejoindre la beta</a>
-            <a href="mailto:hello@seedow.life" className="hover:text-ink transition-colors">Contact</a>
+            <a href="mailto:hello@seedow.life" className="hover:text-[color:var(--apple-text)]">Contact</a>
           </nav>
         </div>
       </footer>
-
-
-      <style>{`
-        @keyframes seedow-ticker {
-          from { transform: translateX(0); }
-          to { transform: translateX(-50%); }
-        }
-        .animate-ticker { animation: seedow-ticker 28s linear infinite; }
-        @media (prefers-reduced-motion: reduce) { .animate-ticker { animation: none; } }
-      `}</style>
     </div>
   );
 }
 
-/* ---------- Forms ---------- */
+/* ---------- Sub-components ---------- */
 
-function HeroForm({ onJump }: { onJump: () => void }) {
-  const onSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    onJump();
-  };
+function ChatBubble({ side, children }: { side: "user" | "ethi"; children: React.ReactNode }) {
+  const isUser = side === "user";
   return (
-    <form
-      onSubmit={onSubmit}
-      className="flex gap-2 max-w-[440px] mx-auto mb-4 bg-ink rounded-full p-[5px] flex-col sm:flex-row"
-      style={{ borderRadius: 100 }}
-    >
-      <input
-        type="email"
-        required
-        placeholder="ton@email.com"
-        className="flex-1 bg-transparent border-0 outline-0 px-4 py-3 text-paper text-[14px] placeholder:text-[#888]"
-      />
-      <button
-        type="submit"
-        className="font-mono text-[12px] font-bold bg-mint text-ink border-0 py-3 px-5 rounded-full cursor-pointer tracking-[0.02em] hover:scale-[1.03] transition-transform"
+    <div className={isUser ? "self-end" : "self-start"} style={{ maxWidth: "85%" }}>
+      <div
+        className="text-[15px] leading-[1.4] px-5 py-3"
+        style={{
+          background: isUser ? "var(--mint)" : "var(--apple-dark-2)",
+          color: "#ffffff",
+          borderRadius: 22,
+          marginLeft: isUser ? "auto" : 0,
+        }}
       >
-        Rejoindre →
-      </button>
-    </form>
+        {children}
+      </div>
+    </div>
   );
 }
 
@@ -449,8 +384,8 @@ function CtaForm({ isAuthed }: { isAuthed: boolean | null }) {
 
   if (isAuthed) {
     return (
-      <Link to="/dashboard" className="btn-harvest inline-flex">
-        Accéder à mon espace →
+      <Link to="/dashboard" className="apple-btn-primary">
+        Accéder à mon espace
       </Link>
     );
   }
@@ -459,8 +394,7 @@ function CtaForm({ isAuthed }: { isAuthed: boolean | null }) {
     <>
       <form
         onSubmit={onSubmit}
-        className="flex gap-2 max-w-[440px] mx-auto mb-4 bg-ink p-[5px] flex-col sm:flex-row"
-        style={{ borderRadius: 100 }}
+        className="flex flex-col sm:flex-row gap-3 max-w-[460px] mx-auto items-center justify-center"
       >
         <input
           id="cta-email"
@@ -470,84 +404,59 @@ function CtaForm({ isAuthed }: { isAuthed: boolean | null }) {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="ton@email.com"
           disabled={done}
-          className="flex-1 bg-transparent border-0 outline-0 px-4 py-3 text-paper text-[14px] placeholder:text-[#888]"
+          className="apple-input w-full sm:w-auto sm:flex-1"
         />
         <button
           type="submit"
           disabled={submitting || done}
-          className="font-mono text-[12px] font-bold border-0 py-3 px-5 rounded-full cursor-pointer tracking-[0.02em] hover:scale-[1.03] transition-transform disabled:opacity-80"
-          style={{
-            background: done ? "var(--color-ink)" : "var(--color-mint)",
-            color: done ? "var(--color-paper)" : "var(--color-ink)",
-            border: done ? "1px solid var(--color-paper)" : "none",
-          }}
+          className="apple-btn-primary disabled:opacity-70"
         >
-          {done ? "Inscrit ✓" : submitting ? "…" : "Je rejoins →"}
+          {done ? "Inscrit ✓" : submitting ? "…" : "Je rejoins"}
         </button>
       </form>
-      <div className="font-mono text-[11px] text-ink-2">
+      <div className="text-[13px] text-[color:var(--apple-text-2)] mt-5">
         {position !== null ? (
           <>
-            <span className="text-ink font-bold">#{position}</span> sur la liste · on te contacte très vite
+            <span className="font-semibold text-[color:var(--apple-text)]">#{position}</span> sur
+            la liste · on te contacte très vite
           </>
         ) : (
           <>
-            <span className="text-ink font-bold">312</span> personnes déjà inscrites · lancement dans 1-2 semaines
+            <span className="font-semibold text-[color:var(--apple-text)]">312</span> personnes déjà
+            inscrites · lancement dans 1-2 semaines
           </>
         )}
       </div>
-      {error && <p className="text-[12px] text-alert mt-3">{error}</p>}
+      {error && <p className="text-[13px] text-red-500 mt-3">{error}</p>}
     </>
   );
 }
 
 /* ---------- Content ---------- */
 
-const TICKER_ITEMS = [
-  <><span className="text-mint font-bold">37</span>&nbsp;départements en restriction d'eau cet été</>,
-  <><span className="text-mint font-bold">44%</span>&nbsp;des oiseaux des champs disparus depuis 1989</>,
-  <>plans climat alignés <span className="text-mint font-bold">&nbsp;+3,2°C</span>&nbsp;vs objectif 1,5°C</>,
-  <><span className="text-mint font-bold">450M$</span>&nbsp;de condamnation pour pollution aux PFAS</>,
-];
-
-const PROBLEMS = [
+const STATS: { figure: string; text: string; color: string }[] = [
   {
-    stat: "0%",
-    color: "alert",
-    text: "de visibilité réelle sur ce que financent la plupart des contrats d'assurance-vie classiques.",
+    figure: "0%",
+    color: "var(--apple-text)",
+    text: "de visibilité réelle sur ce que finance ton assurance-vie classique.",
   },
   {
-    stat: "∞",
-    color: "solar",
-    text: "de jargon financier entre toi et une décision qui devrait pourtant t'appartenir.",
+    figure: "∞",
+    color: "var(--apple-text)",
+    text: "de jargon financier entre toi et une décision qui devrait t'appartenir.",
   },
   {
-    stat: "1",
-    color: "ice",
-    text: "seule app qui relie concrètement ton portefeuille à son impact réel sur le monde.",
+    figure: "1",
+    color: "var(--mint)",
+    text: "seule app qui relie ton portefeuille à son impact réel sur le monde.",
   },
 ];
 
-const STEPS = [
-  {
-    icon: "①",
-    bg: "mint",
-    fg: "ink",
-    title: "Vois ton impact",
-    text: "Ton portefeuille devient une lecture visuelle — chaque investissement a une couleur, une histoire, une réalité concrète derrière lui.",
-  },
-  {
-    icon: "②",
-    bg: "volt",
-    fg: "paper",
-    title: "Comprends avec Ethi",
-    text: "Notre IA intégrée répond à tes questions en clair, sans jargon, sans te pousser vers un produit qu'elle vendrait.",
-  },
-  {
-    icon: "③",
-    bg: "solar",
-    fg: "ink",
-    title: "Investis aligné",
-    text: "Choisis où va ton argent en connaissance de cause — pas après coup, dans un rapport annuel illisible.",
-  },
+const ALLOCATION: { label: string; weight: number; color: string }[] = [
+  { label: "ETF Monde", weight: 32, color: "#1d1d1f" },
+  { label: "Clean Energy", weight: 22, color: "var(--mint)" },
+  { label: "Green Bonds", weight: 18, color: "var(--ice)" },
+  { label: "REIT ESG", weight: 12, color: "var(--volt)" },
+  { label: "Corp Bonds", weight: 10, color: "#86868b" },
+  { label: "Cash", weight: 6, color: "#d2d2d7" },
 ];
