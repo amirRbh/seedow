@@ -96,53 +96,102 @@ function Landing() {
         </div>
       </nav>
 
-      {/* HERO */}
-      <section className="text-center px-6 pt-20 pb-20 md:pt-28 md:pb-28">
+      {/* HERO — Monolith */}
+      <section className="relative overflow-hidden px-6 pt-24 pb-24 md:pt-32 md:pb-32">
+        {/* Massive SEEDOW wordmark en fond */}
         <div
-          className="inline-flex items-center gap-2.5 font-bold text-[color:var(--apple-text)] mb-10"
+          aria-hidden
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 select-none pointer-events-none whitespace-nowrap"
           style={{
-            fontSize: "clamp(56px, 9vw, 112px)",
-            letterSpacing: "-0.045em",
+            transform: "translate(-50%, -120%)",
+            fontWeight: 900,
+            fontSize: "22vw",
             lineHeight: 1,
+            letterSpacing: "-0.06em",
+            color: "#F5F5F7",
           }}
         >
           SEEDOW
-          <span
-            aria-hidden
-            className="inline-block rounded-full"
-            style={{
-              background: "var(--mint)",
-              width: "clamp(10px, 1.6vw, 18px)",
-              height: "clamp(10px, 1.6vw, 18px)",
-              transform: "translateY(0.15em)",
-            }}
-          />
         </div>
-        <h1 className="apple-title apple-title-lg mx-auto max-w-[900px]">
-          Votre argent
-          <br />
-          façonne déjà{" "}
-          <span style={{ color: "var(--mint)" }}>le monde.</span>
-        </h1>
-        <p className="apple-subtitle mx-auto max-w-[620px] mt-6">
-          Seedow vous montre lequel. Investissement ESG, visualisé clairement,
-          expliqué par une IA qui ne vous vend rien.
-        </p>
-        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 mt-10">
-          {isAuthed ? (
-            <Link to="/dashboard" className="apple-btn-primary">
-              Accéder à mon espace
+
+        {/* Glows statiques */}
+        <div
+          aria-hidden
+          className="absolute pointer-events-none rounded-full"
+          style={{
+            width: 384,
+            height: 384,
+            bottom: "-10%",
+            right: "-5%",
+            background: "rgba(29,131,72,0.06)",
+            filter: "blur(120px)",
+          }}
+        />
+        <div
+          aria-hidden
+          className="absolute pointer-events-none rounded-full"
+          style={{
+            width: 384,
+            height: 384,
+            top: "-10%",
+            left: "-5%",
+            background: "rgba(0,113,227,0.06)",
+            filter: "blur(120px)",
+          }}
+        />
+
+        <div className="relative z-10 max-w-6xl mx-auto flex flex-col items-center text-center">
+          {/* Barre mint accent */}
+          <div
+            aria-hidden
+            className="mb-10 rounded-full"
+            style={{ width: 48, height: 4, background: "var(--mint)" }}
+          />
+
+          <h1 className="apple-title apple-title-lg mx-auto max-w-[900px]">
+            Votre argent
+            <br />
+            façonne{" "}
+            <span style={{ color: "var(--mint)" }}>déjà</span> le monde.
+          </h1>
+
+          <p className="apple-subtitle mx-auto max-w-[620px] mt-6">
+            Seedow vous montre lequel. Investissement ESG, visualisé clairement,
+            expliqué par une IA qui ne vous vend rien.
+          </p>
+
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 mt-10">
+            {isAuthed ? (
+              <Link to="/dashboard" className="apple-btn-primary">
+                Accéder à mon espace
+              </Link>
+            ) : (
+              <button onClick={scrollToCta} className="apple-btn-primary">
+                Rejoindre la beta
+              </button>
+            )}
+            <Link to="/cours" className="apple-link">
+              Voir les cours <span aria-hidden>›</span>
             </Link>
-          ) : (
-            <button onClick={scrollToCta} className="apple-btn-primary">
-              Rejoindre la beta
-            </button>
-          )}
-          <Link to="/cours" className="apple-link">
-            Voir les cours <span aria-hidden>›</span>
-          </Link>
+          </div>
+
+          {/* Trust line */}
+          <div
+            className="mt-16 flex items-center gap-4 text-[11px] font-bold uppercase text-[color:var(--apple-text-2)]"
+            style={{ letterSpacing: "0.2em" }}
+          >
+            <span>Impact certifié</span>
+            <span
+              aria-hidden
+              className="inline-block rounded-full"
+              style={{ width: 4, height: 4, background: "#d2d2d7" }}
+            />
+            <span>Zéro greenwashing</span>
+          </div>
         </div>
       </section>
+
+
 
 
 
