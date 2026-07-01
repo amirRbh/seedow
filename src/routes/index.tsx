@@ -148,7 +148,7 @@ function Landing() {
 
       {/* SECTION — problème / stats */}
       <section style={{ background: "var(--apple-surface)" }} className="px-6 py-24 md:py-32">
-        <Reveal className="max-w-[980px] mx-auto text-center">
+        <div className="max-w-[980px] mx-auto text-center">
           <h2 className="apple-title mx-auto max-w-[720px]">
             Ton épargne finance des choses
             <br />
@@ -160,7 +160,7 @@ function Landing() {
           </p>
           <div className="grid md:grid-cols-3 gap-12 md:gap-8 mt-20">
             {STATS.map((s, i) => (
-              <div key={i} className="anim-figure" style={{ animationDelay: `${0.15 + i * 0.12}s` }}>
+              <div key={i} style={{ animationDelay: `${0.15 + i * 0.12}s` }}>
                 <div
                   className="font-semibold"
                   style={{
@@ -178,13 +178,13 @@ function Landing() {
               </div>
             ))}
           </div>
-        </Reveal>
+        </div>
       </section>
 
 
       {/* SECTION — voir ton impact */}
       <section className="px-6 py-24 md:py-32">
-        <Reveal className="max-w-[980px] mx-auto text-center">
+        <div className="max-w-[980px] mx-auto text-center">
           <p className="apple-eyebrow" style={{ color: "var(--mint)" }}>
             Vois ton impact
           </p>
@@ -205,7 +205,7 @@ function Landing() {
               {ALLOCATION.map((a, i) => (
                 <div key={i} className="flex flex-col items-center gap-2">
                   <div
-                    className="w-full rounded-2xl anim-bar"
+                    className="w-full rounded-2xl"
                     style={{
                       height: `${40 + a.weight * 1.6}px`,
                       background: a.color,
@@ -220,7 +220,7 @@ function Landing() {
               ))}
             </div>
           </div>
-        </Reveal>
+        </div>
       </section>
 
       {/* SECTION — Ethi (dark, style Apple) */}
@@ -228,7 +228,7 @@ function Landing() {
         className="px-6 py-24 md:py-32"
         style={{ background: "var(--apple-dark)", color: "#ffffff" }}
       >
-        <Reveal className="max-w-[980px] mx-auto text-center">
+        <div className="max-w-[980px] mx-auto text-center">
           <p className="apple-eyebrow" style={{ color: "var(--volt)" }}>
             Ethi
           </p>
@@ -253,20 +253,20 @@ function Landing() {
             {CHAT.map((c, i) => (
               <div
                 key={i}
-                className="anim-bubble"
+               
                 style={{ animationDelay: `${0.2 + i * 0.18}s` }}
               >
                 <ChatBubble side={c.side}>{c.text}</ChatBubble>
               </div>
             ))}
           </div>
-        </Reveal>
+        </div>
       </section>
 
 
       {/* SECTION — deux façons de commencer */}
       <section style={{ background: "var(--apple-surface)" }} className="px-6 py-24 md:py-32">
-        <Reveal className="max-w-[980px] mx-auto">
+        <div className="max-w-[980px] mx-auto">
           <div className="text-center mb-16">
             <h2 className="apple-title mx-auto max-w-[720px]">
               Deux façons de commencer.
@@ -328,12 +328,12 @@ function Landing() {
               )}
             </article>
           </div>
-        </Reveal>
+        </div>
       </section>
 
       {/* CTA FINAL */}
       <section id="cta" className="px-6 py-28 md:py-36 text-center">
-        <Reveal>
+        <div>
           <h2 className="apple-title apple-title-lg mx-auto max-w-[760px]">
             Prêt à voir où va
             <br />
@@ -347,7 +347,7 @@ function Landing() {
           <div className="mt-10">
             <CtaForm isAuthed={isAuthed} />
           </div>
-        </Reveal>
+        </div>
       </section>
 
 
