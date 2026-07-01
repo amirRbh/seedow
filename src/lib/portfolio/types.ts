@@ -7,6 +7,7 @@ export type AssetClass =
   | "green_bond"
   | "social_bond"
   | "sov_bond"
+  | "corporate_bond"
   | "reit"
   | "commodity"
   | "cash";
@@ -162,7 +163,8 @@ export function getClassBounds(riskTarget: number): Record<AssetClass, ClassBoun
       equity_dev: { min: 0.05, max: 0.20 },
       equity_em: { min: 0.0, max: 0.05 },
       thematic: { min: 0.0, max: 0.05 },
-      green_bond: { min: 0.20, max: 0.45 },
+      green_bond: { min: 0.15, max: 0.40 },
+      corporate_bond: { min: 0.05, max: 0.25 },
       social_bond: { min: 0.05, max: 0.20 },
       sov_bond: { min: 0.20, max: 0.40 },
       reit: { min: 0.0, max: 0.05 },
@@ -176,9 +178,10 @@ export function getClassBounds(riskTarget: number): Record<AssetClass, ClassBoun
       equity_dev: { min: 0.20, max: 0.45 },
       equity_em: { min: 0.0, max: 0.10 },
       thematic: { min: 0.05, max: 0.20 },
-      green_bond: { min: 0.10, max: 0.30 },
+      green_bond: { min: 0.05, max: 0.20 },
+      corporate_bond: { min: 0.05, max: 0.20 },
       social_bond: { min: 0.0, max: 0.15 },
-      sov_bond: { min: 0.05, max: 0.25 },
+      sov_bond: { min: 0.05, max: 0.20 },
       reit: { min: 0.0, max: 0.10 },
       commodity: { min: 0.0, max: 0.08 },
       cash: { min: 0.0, max: 0.10 },
@@ -189,9 +192,10 @@ export function getClassBounds(riskTarget: number): Record<AssetClass, ClassBoun
     equity_dev: { min: 0.30, max: 0.60 },
     equity_em: { min: 0.05, max: 0.20 },
     thematic: { min: 0.10, max: 0.35 },
-    green_bond: { min: 0.05, max: 0.20 },
+    green_bond: { min: 0.00, max: 0.10 },
+    corporate_bond: { min: 0.00, max: 0.10 },
     social_bond: { min: 0.0, max: 0.10 },
-    sov_bond: { min: 0.0, max: 0.15 },
+    sov_bond: { min: 0.0, max: 0.10 },
     reit: { min: 0.0, max: 0.15 },
     commodity: { min: 0.0, max: 0.10 },
     cash: { min: 0.0, max: 0.05 },

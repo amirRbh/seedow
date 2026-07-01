@@ -939,6 +939,7 @@ export type Database = {
         | "reit"
         | "commodity"
         | "cash"
+        | "corporate_bond"
       cause_tag:
         | "climat"
         | "biodiversite"
@@ -1118,6 +1119,7 @@ export const Constants = {
         "reit",
         "commodity",
         "cash",
+        "corporate_bond",
       ],
       cause_tag: [
         "climat",

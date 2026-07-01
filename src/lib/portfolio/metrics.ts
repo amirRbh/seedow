@@ -64,7 +64,7 @@ export function computeMetrics(
 
   const byClass: Record<AssetClass, number> = {
     equity_dev: 0, equity_em: 0, thematic: 0,
-    green_bond: 0, social_bond: 0, sov_bond: 0,
+    green_bond: 0, corporate_bond: 0, social_bond: 0, sov_bond: 0,
     reit: 0, commodity: 0, cash: 0,
   };
   const byRegion: Record<string, number> = {};
