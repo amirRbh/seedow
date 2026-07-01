@@ -141,7 +141,7 @@ function Landing() {
 
       {/* SECTION — problème / stats */}
       <section style={{ background: "var(--apple-surface)" }} className="px-6 py-24 md:py-32">
-        <div className="max-w-[980px] mx-auto text-center">
+        <Reveal className="max-w-[980px] mx-auto text-center">
           <h2 className="apple-title mx-auto max-w-[720px]">
             Ton épargne finance des choses
             <br />
@@ -153,7 +153,7 @@ function Landing() {
           </p>
           <div className="grid md:grid-cols-3 gap-12 md:gap-8 mt-20">
             {STATS.map((s, i) => (
-              <div key={i}>
+              <div key={i} className="anim-figure" style={{ animationDelay: `${0.15 + i * 0.12}s` }}>
                 <div
                   className="font-semibold"
                   style={{
@@ -171,8 +171,9 @@ function Landing() {
               </div>
             ))}
           </div>
-        </div>
+        </Reveal>
       </section>
+
 
       {/* SECTION — voir ton impact */}
       <section className="px-6 py-24 md:py-32">
