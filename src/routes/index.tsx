@@ -259,7 +259,7 @@ function Landing() {
 
       {/* SECTION — deux façons de commencer */}
       <section style={{ background: "var(--apple-surface)" }} className="px-6 py-24 md:py-32">
-        <div className="max-w-[980px] mx-auto">
+        <Reveal className="max-w-[980px] mx-auto">
           <div className="text-center mb-16">
             <h2 className="apple-title mx-auto max-w-[720px]">
               Deux façons de commencer.
@@ -321,25 +321,28 @@ function Landing() {
               )}
             </article>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {/* CTA FINAL */}
       <section id="cta" className="px-6 py-28 md:py-36 text-center">
-        <h2 className="apple-title apple-title-lg mx-auto max-w-[760px]">
-          Prêt à voir où va
-          <br />
-          <span style={{ color: "var(--mint)" }}>ton argent&nbsp;?</span>
-        </h2>
-        <p className="apple-subtitle mx-auto max-w-[520px] mt-6">
-          {isAuthed
-            ? "Tu es déjà dans la place. Direct à ton espace."
-            : "Rejoins la liste des beta testeurs. Accès anticipé, gratuit, places limitées."}
-        </p>
-        <div className="mt-10">
-          <CtaForm isAuthed={isAuthed} />
-        </div>
+        <Reveal>
+          <h2 className="apple-title apple-title-lg mx-auto max-w-[760px]">
+            Prêt à voir où va
+            <br />
+            <span style={{ color: "var(--mint)" }}>ton argent&nbsp;?</span>
+          </h2>
+          <p className="apple-subtitle mx-auto max-w-[520px] mt-6">
+            {isAuthed
+              ? "Tu es déjà dans la place. Direct à ton espace."
+              : "Rejoins la liste des beta testeurs. Accès anticipé, gratuit, places limitées."}
+          </p>
+          <div className="mt-10">
+            <CtaForm isAuthed={isAuthed} />
+          </div>
+        </Reveal>
       </section>
+
 
       {/* FOOTER */}
       <footer
