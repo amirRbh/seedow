@@ -1,57 +1,46 @@
+# Transparence ESG sur /methodologie
 
-# Cours plus clairs : ELI5 + « Aller plus loin »
+Objectif : rendre le process de notation ESG entièrement lisible et honnête sur la page méthodologie, sans toucher au moteur ni aux cours.
 
-## Objectif
-Rendre les 12 cours Seedow immédiatement compréhensibles par un débutant total, tout en gardant un bonus court pour ceux qui veulent creuser. Pas de refonte visuelle : uniquement du contenu + un petit ajout structurel.
+## Ce qu'on ajoute
 
-## Principes d'écriture
-Chaque cours sera réécrit selon 3 règles :
+Une nouvelle section éditoriale **"Notation ESG"**, insérée entre le pipeline (5 étapes) et le simulateur, structurée en 4 blocs :
 
-1. **Ouverture ELI5** — chaque cours commence par une analogie du quotidien (tirelire, gâteau à partager, école, potager, panier de courses…) avant tout vocabulaire financier.
-2. **Un exemple chiffré ultra-simple par section** — toujours avec des petits nombres ronds (10 €, 100 €, 1 000 €) avant de montrer l'effet à grande échelle.
-3. **Vocabulaire décodé à la volée** — chaque terme technique (ETF, TER, volatilité, SFDR…) est introduit avec sa « traduction en français normal » entre parenthèses la première fois.
+### 1. D'où viennent les scores (sources)
+- Liste des fournisseurs utilisés par asset (`esg_score_source` déjà présent dans le schéma : MSCI, Sustainalytics, Yahoo, manual…).
+- Mention explicite : "score agrégé 0–100, normalisé par nos soins pour être comparable entre fournisseurs".
+- Date de fraîcheur (dernière update quotes / ESG si dispo).
 
-Longueur inchangée ou légèrement réduite : on remplace de la densité par de la clarté, pas par du remplissage.
+### 2. La grille — 3 piliers pondérés
+Tableau visuel des 3 piliers (E / S / G) avec :
+- pondération par défaut (**40 / 40 / 20**, cf. `DEFAULT_PILLAR_WEIGHTS`)
+- effet des causes actives (climat/biodiv → +E ; humain/égalité → +S ; tech/circulaire → léger +G), avec la formule `STEP = 0.1` puis renormalisation.
+- fallback : si un pilier manque sur un asset → on utilise le score agrégé pour ce pilier seulement (dégradation douce).
 
-## Ajout structurel : bloc « Aller plus loin »
-Un nouveau bloc court et optionnel à la fin de l'article, avant les « À retenir ». 3–5 puces max par cours, format dense, pour les lecteurs qui veulent la version avancée (formules exactes, nuances, contre-exemples, chiffres de marché). Volontairement bref pour ne pas alourdir.
+Rendu : petit tableau paper-card + une note "les poids se réajustent selon vos convictions".
 
-## Détail technique
+### 3. Comment on construit le portefeuille (côté ESG)
+- **Exclusions dures** (fossiles/armes/tabac/jeux/animaux/fast-fashion) : filtre binaire avant optimisation.
+- **Best-in-class** : on garde les meilleurs quintiles par classe d'actifs sur le score composite.
+- **Plancher ESG** portefeuille : `MIN_PORTFOLIO_ESG = 70` (cf. `types.ts`). Si l'optimiseur ne peut pas l'atteindre → banner "plancher relâché" (déjà géré).
+- **Tilts** : les intensités de causes (0–100 %) réajustent la pondération des piliers et biaisent la sélection thématique.
 
-**1. Type `Course` (src/content/courses/types.ts)**
-Ajouter deux champs optionnels :
-```ts
-eli5?: string;              // 1–2 phrases d'analogie simple, affichées sous l'intro
-advanced?: string[];        // 3–5 puces "Aller plus loin"
-```
+### 4. Limites & honnêteté (bloc encadré)
+- Divergence connue entre agences (corrélation ~0,5 vs 0,99 pour la notation crédit — MIT 2022).
+- Scope 3 souvent absent → intensité carbone couverte à X % du portefeuille (déjà affiché par `CarbonCoverage`, on rappelle ici l'idée).
+- ESG mesure des pratiques, pas l'impact ni l'éthique personnelle.
+- Lien vers les cours 07 (ESG c'est quoi), 08 (Greenwashing), 09 (Labels ISR/SFDR).
 
-**2. Composant `CourseArticle` (src/components/courses/CourseArticle.tsx)**
-- Sous le `intro`, si `course.eli5` existe : afficher un petit bloc « En une image » (encart paper-2, typo Inter, italique doux) — visible aussi en mode tronqué (paywall).
-- Avant le bloc « À retenir » (donc masqué en mode tronqué), si `course.advanced` existe : afficher une section « Aller plus loin » avec eyebrow mono + liste dense à puces, séparée par un `gold-rule`.
+## Structure technique
 
-**3. Contenu des 12 cours (src/content/courses/01…12-*.ts)**
-Pour chaque fichier :
-- Réécrire `intro` en mode accessible (2–3 phrases, analogie du quotidien).
-- Ajouter `eli5` (1–2 phrases, l'image la plus simple possible).
-- Réécrire les `paragraphs` de chaque section : phrases plus courtes, un exemple chiffré simple d'abord, puis la généralisation.
-- Simplifier les `callout` (ton conversationnel, pas de jargon).
-- Ajouter `advanced` (3–5 puces techniques : formules, sources, nuances).
-- **Ne pas toucher** : `slug`, `number`, `track`, `level`, `isFree`, `readingMinutes`, `title`, `eyebrow`, `description`, `keyTakeaways`, `quiz` (le quiz reste tel quel — c'est le test de compréhension).
+- **1 seul fichier édité** : `src/routes/methodologie.tsx` — nouvelle `<section>` insérée avant le simulateur, réutilisant les patterns existants (`border border-paper-3`, `paper-2/40`, eyebrow uppercase, `MetricLabel`).
+- **i18n** : ajout des clés sous `methodologie.esg_grid.*` dans `src/i18n/locales/fr.json` et `en.json` (titres, descriptions, labels tableau, note limites).
+- **Zéro nouveau composant** : tout inline dans la page pour rester léger. Pas de nouveau server function, pas de requête DB (les valeurs `DEFAULT_PILLAR_WEIGHTS`, `MIN_PORTFOLIO_ESG`, `STEP` sont importées depuis `@/lib/portfolio/types`).
+- **Design tokens** : respect strict des règles mémoire — paper/ink/mint uniquement, JetBrains Mono pour les nombres (poids piliers, seuil 70), pas d'ombres, `gold-rule` comme séparateur, badges pill mono uppercase.
 
-Cours concernés (ordre d'index) :
-```text
-01 · cinq-mots              07 · esg-cest-quoi
-02 · interets-composes      08 · greenwashing
-03 · diversification        09 · labels-isr-sfdr
-04 · actions-obligations-etf 10 · exclusions-sectorielles
-05 · risque-volatilite      11 · mesurer-impact
-06 · frais-caches           12 · portefeuille-aligne
-```
+## Hors scope
 
-## Hors périmètre
-- Pas de changement du hero, de la home, du design system, des routes.
-- Pas de refonte du quiz ni du paywall.
-- Pas de traduction EN (les cours sont FR).
-
-## Livraison
-Un seul lot : type + composant + 12 fichiers de contenu, réécrits dans le même style éditorial (JetBrains Mono pour les chiffres, ton sobre financier moderne, zéro lexique jardin).
+- Pas de changement du moteur d'optimisation ni du calcul des scores.
+- Pas de modification des cours ESG existants.
+- Pas de nouvelle page dédiée : tout tient dans /methodologie pour garder la transparence à un clic du dashboard.
+- Pas de refonte du hero ni du reste de la page.
