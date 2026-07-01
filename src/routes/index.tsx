@@ -49,9 +49,19 @@ function Landing() {
         style={{ background: "rgba(255,255,255,0.72)", borderBottom: "1px solid #d2d2d7" }}
       >
         <div className="max-w-[1024px] mx-auto px-6 h-12 flex items-center justify-between">
-          <Link to="/" className="text-[19px] font-semibold tracking-tight text-[color:var(--apple-text)]">
-            seedow
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-[22px] font-bold text-[color:var(--apple-text)]"
+            style={{ letterSpacing: "-0.02em" }}
+          >
+            SEEDOW
+            <span
+              aria-hidden
+              className="inline-block w-[6px] h-[6px] rounded-full"
+              style={{ background: "var(--mint)" }}
+            />
           </Link>
+
           <div className="flex items-center gap-6 text-[13px] text-[color:var(--apple-text)]">
             <Link to="/cours" className="hidden md:inline opacity-90 hover:opacity-100">
               Cours
