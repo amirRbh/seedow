@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { joinWaitlist } from "@/lib/beta/beta.functions";
+
 
 const SITE_URL = "https://seedow.life";
 
@@ -96,36 +97,51 @@ function Landing() {
       </nav>
 
       {/* HERO */}
-      <section className="text-center px-6 pt-24 pb-20 md:pt-32 md:pb-28">
-        <h1 className="apple-title apple-title-lg mx-auto max-w-[900px]">
-          Votre argent
-          <br />
-          façonne déjà{" "}
-          <span style={{ color: "var(--mint)" }}>le monde.</span>
-        </h1>
-        <p className="apple-subtitle mx-auto max-w-[620px] mt-6">
-          Seedow vous montre lequel. Investissement ESG, visualisé clairement,
-          expliqué par une IA qui ne vous vend rien.
-        </p>
-        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 mt-10">
-          {isAuthed ? (
-            <Link to="/dashboard" className="apple-btn-primary">
-              Accéder à mon espace
+      <section className="relative overflow-hidden text-center px-6 pt-24 pb-20 md:pt-32 md:pb-28">
+        <HeroLiveBackground />
+        <div className="relative z-10">
+          <h1 className="apple-title apple-title-lg mx-auto max-w-[900px]">
+            <span className="hero-title-line block" style={{ animationDelay: "0.05s" }}>
+              Votre argent
+            </span>
+            <span className="hero-title-line block" style={{ animationDelay: "0.25s" }}>
+              façonne déjà{" "}
+              <span className="hero-mint-underline" style={{ color: "var(--mint)" }}>
+                le monde.
+              </span>
+            </span>
+          </h1>
+          <p
+            className="apple-subtitle mx-auto max-w-[620px] mt-6 hero-title-line"
+            style={{ animationDelay: "0.55s" }}
+          >
+            Seedow vous montre lequel. Investissement ESG, visualisé clairement,
+            expliqué par une IA qui ne vous vend rien.
+          </p>
+          <div
+            className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 mt-10 hero-title-line"
+            style={{ animationDelay: "0.75s" }}
+          >
+            {isAuthed ? (
+              <Link to="/dashboard" className="apple-btn-primary">
+                Accéder à mon espace
+              </Link>
+            ) : (
+              <button onClick={scrollToCta} className="apple-btn-primary">
+                Rejoindre la beta
+              </button>
+            )}
+            <Link to="/cours" className="apple-link">
+              Voir les cours <span aria-hidden>›</span>
             </Link>
-          ) : (
-            <button onClick={scrollToCta} className="apple-btn-primary">
-              Rejoindre la beta
-            </button>
-          )}
-          <Link to="/cours" className="apple-link">
-            Voir les cours <span aria-hidden>›</span>
-          </Link>
+          </div>
         </div>
       </section>
 
+
       {/* SECTION — problème / stats */}
       <section style={{ background: "var(--apple-surface)" }} className="px-6 py-24 md:py-32">
-        <div className="max-w-[980px] mx-auto text-center">
+        <Reveal className="max-w-[980px] mx-auto text-center">
           <h2 className="apple-title mx-auto max-w-[720px]">
             Ton épargne finance des choses
             <br />
@@ -137,7 +153,7 @@ function Landing() {
           </p>
           <div className="grid md:grid-cols-3 gap-12 md:gap-8 mt-20">
             {STATS.map((s, i) => (
-              <div key={i}>
+              <div key={i} className="anim-figure" style={{ animationDelay: `${0.15 + i * 0.12}s` }}>
                 <div
                   className="font-semibold"
                   style={{
@@ -155,12 +171,13 @@ function Landing() {
               </div>
             ))}
           </div>
-        </div>
+        </Reveal>
       </section>
+
 
       {/* SECTION — voir ton impact */}
       <section className="px-6 py-24 md:py-32">
-        <div className="max-w-[980px] mx-auto text-center">
+        <Reveal className="max-w-[980px] mx-auto text-center">
           <p className="apple-eyebrow" style={{ color: "var(--mint)" }}>
             Vois ton impact
           </p>
@@ -177,12 +194,16 @@ function Landing() {
             className="mt-16 mx-auto max-w-[820px] apple-card"
             style={{ background: "var(--apple-surface)", padding: "48px 32px" }}
           >
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-3 items-end">
               {ALLOCATION.map((a, i) => (
                 <div key={i} className="flex flex-col items-center gap-2">
                   <div
-                    className="w-full rounded-2xl"
-                    style={{ height: `${40 + a.weight * 1.6}px`, background: a.color }}
+                    className="w-full rounded-2xl anim-bar"
+                    style={{
+                      height: `${40 + a.weight * 1.6}px`,
+                      background: a.color,
+                      animationDelay: `${0.1 + i * 0.08}s`,
+                    }}
                   />
                   <div className="text-[11px] text-[color:var(--apple-text-2)]">{a.label}</div>
                   <div className="text-[13px] font-semibold text-[color:var(--apple-text)]">
@@ -192,7 +213,7 @@ function Landing() {
               ))}
             </div>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {/* SECTION — Ethi (dark, style Apple) */}
@@ -200,7 +221,7 @@ function Landing() {
         className="px-6 py-24 md:py-32"
         style={{ background: "var(--apple-dark)", color: "#ffffff" }}
       >
-        <div className="max-w-[980px] mx-auto text-center">
+        <Reveal className="max-w-[980px] mx-auto text-center">
           <p className="apple-eyebrow" style={{ color: "var(--volt)" }}>
             Ethi
           </p>
@@ -222,27 +243,23 @@ function Landing() {
 
           {/* Chat mockup */}
           <div className="mt-16 mx-auto max-w-[560px] flex flex-col gap-3 text-left">
-            <ChatBubble side="user">
-              C'est quoi cette ligne à 4% dans mon portefeuille ?
-            </ChatBubble>
-            <ChatBubble side="ethi">
-              Un fonds obligataire vert qui finance des rénovations énergétiques en Europe.
-              Rendement stable, faible volatilité.
-            </ChatBubble>
-            <ChatBubble side="user">
-              Et si je veux plus d'impact direct ?
-            </ChatBubble>
-            <ChatBubble side="ethi">
-              Je peux te proposer 3 alternatives équivalentes en risque, avec un score climat
-              supérieur. Tu veux voir ?
-            </ChatBubble>
+            {CHAT.map((c, i) => (
+              <div
+                key={i}
+                className="anim-bubble"
+                style={{ animationDelay: `${0.2 + i * 0.18}s` }}
+              >
+                <ChatBubble side={c.side}>{c.text}</ChatBubble>
+              </div>
+            ))}
           </div>
-        </div>
+        </Reveal>
       </section>
+
 
       {/* SECTION — deux façons de commencer */}
       <section style={{ background: "var(--apple-surface)" }} className="px-6 py-24 md:py-32">
-        <div className="max-w-[980px] mx-auto">
+        <Reveal className="max-w-[980px] mx-auto">
           <div className="text-center mb-16">
             <h2 className="apple-title mx-auto max-w-[720px]">
               Deux façons de commencer.
@@ -304,25 +321,28 @@ function Landing() {
               )}
             </article>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {/* CTA FINAL */}
       <section id="cta" className="px-6 py-28 md:py-36 text-center">
-        <h2 className="apple-title apple-title-lg mx-auto max-w-[760px]">
-          Prêt à voir où va
-          <br />
-          <span style={{ color: "var(--mint)" }}>ton argent&nbsp;?</span>
-        </h2>
-        <p className="apple-subtitle mx-auto max-w-[520px] mt-6">
-          {isAuthed
-            ? "Tu es déjà dans la place. Direct à ton espace."
-            : "Rejoins la liste des beta testeurs. Accès anticipé, gratuit, places limitées."}
-        </p>
-        <div className="mt-10">
-          <CtaForm isAuthed={isAuthed} />
-        </div>
+        <Reveal>
+          <h2 className="apple-title apple-title-lg mx-auto max-w-[760px]">
+            Prêt à voir où va
+            <br />
+            <span style={{ color: "var(--mint)" }}>ton argent&nbsp;?</span>
+          </h2>
+          <p className="apple-subtitle mx-auto max-w-[520px] mt-6">
+            {isAuthed
+              ? "Tu es déjà dans la place. Direct à ton espace."
+              : "Rejoins la liste des beta testeurs. Accès anticipé, gratuit, places limitées."}
+          </p>
+          <div className="mt-10">
+            <CtaForm isAuthed={isAuthed} />
+          </div>
+        </Reveal>
       </section>
+
 
       {/* FOOTER */}
       <footer
@@ -364,6 +384,110 @@ function Landing() {
 }
 
 /* ---------- Sub-components ---------- */
+
+function useReveal<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setInView(true);
+      return;
+    }
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            setInView(true);
+            obs.disconnect();
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -80px 0px" },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return { ref, inView };
+}
+
+function Reveal({ children, className = "" }: { children: ReactNode; className?: string }) {
+  const { ref, inView } = useReveal<HTMLDivElement>();
+  return (
+    <div ref={ref} className={`reveal ${inView ? "in-view" : ""} ${className}`}>
+      {children}
+    </div>
+  );
+}
+
+const HERO_DOTS: { top: string; left: string; size: number; color: string; delay: string; op: number }[] = [
+  { top: "12%", left: "8%", size: 14, color: "var(--mint)", delay: "0s", op: 0.22 },
+  { top: "22%", left: "18%", size: 8, color: "var(--ice)", delay: "0.6s", op: 0.18 },
+  { top: "18%", left: "72%", size: 20, color: "var(--volt)", delay: "1.2s", op: 0.16 },
+  { top: "8%", left: "58%", size: 10, color: "var(--mint)", delay: "0.3s", op: 0.2 },
+  { top: "38%", left: "6%", size: 22, color: "var(--ice)", delay: "1.8s", op: 0.14 },
+  { top: "48%", left: "90%", size: 12, color: "var(--mint)", delay: "0.9s", op: 0.2 },
+  { top: "62%", left: "14%", size: 16, color: "var(--volt)", delay: "2.1s", op: 0.15 },
+  { top: "72%", left: "82%", size: 10, color: "var(--mint)", delay: "0.4s", op: 0.22 },
+  { top: "82%", left: "28%", size: 18, color: "var(--ice)", delay: "1.5s", op: 0.16 },
+  { top: "88%", left: "62%", size: 8, color: "var(--volt)", delay: "0.7s", op: 0.18 },
+  { top: "32%", left: "42%", size: 6, color: "#86868b", delay: "1.1s", op: 0.2 },
+  { top: "58%", left: "48%", size: 6, color: "#86868b", delay: "2.4s", op: 0.18 },
+];
+
+const HERO_FIGURES: { top: string; left: string; text: string; color: string; delay: string }[] = [
+  { top: "26%", left: "12%", text: "+2.4%", color: "var(--mint)", delay: "0.5s" },
+  { top: "70%", left: "78%", text: "€1 240", color: "var(--apple-text)", delay: "2.4s" },
+  { top: "78%", left: "18%", text: "CO₂ −18 kg", color: "var(--ice)", delay: "4.3s" },
+];
+
+function HeroLiveBackground() {
+  return (
+    <div className="hero-live-bg" aria-hidden>
+      {HERO_DOTS.map((d, i) => (
+        <span
+          key={i}
+          className="hero-dot"
+          style={
+            {
+              top: d.top,
+              left: d.left,
+              width: d.size,
+              height: d.size,
+              background: d.color,
+              animationDelay: d.delay,
+              "--dot-op": d.op,
+            } as React.CSSProperties
+          }
+        />
+      ))}
+      {HERO_FIGURES.map((f, i) => (
+        <span
+          key={i}
+          className="hero-figure text-[13px] md:text-[15px]"
+          style={{ top: f.top, left: f.left, color: f.color, animationDelay: f.delay }}
+        >
+          {f.text}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+const CHAT: { side: "user" | "ethi"; text: string }[] = [
+  { side: "user", text: "C'est quoi cette ligne à 4% dans mon portefeuille ?" },
+  {
+    side: "ethi",
+    text: "Un fonds obligataire vert qui finance des rénovations énergétiques en Europe. Rendement stable, faible volatilité.",
+  },
+  { side: "user", text: "Et si je veux plus d'impact direct ?" },
+  {
+    side: "ethi",
+    text: "Je peux te proposer 3 alternatives équivalentes en risque, avec un score climat supérieur. Tu veux voir ?",
+  },
+];
+
 
 function ChatBubble({ side, children }: { side: "user" | "ethi"; children: React.ReactNode }) {
   const isUser = side === "user";
