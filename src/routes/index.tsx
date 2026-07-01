@@ -97,32 +97,47 @@ function Landing() {
       </nav>
 
       {/* HERO */}
-      <section className="text-center px-6 pt-24 pb-20 md:pt-32 md:pb-28">
-        <h1 className="apple-title apple-title-lg mx-auto max-w-[900px]">
-          Votre argent
-          <br />
-          façonne déjà{" "}
-          <span style={{ color: "var(--mint)" }}>le monde.</span>
-        </h1>
-        <p className="apple-subtitle mx-auto max-w-[620px] mt-6">
-          Seedow vous montre lequel. Investissement ESG, visualisé clairement,
-          expliqué par une IA qui ne vous vend rien.
-        </p>
-        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 mt-10">
-          {isAuthed ? (
-            <Link to="/dashboard" className="apple-btn-primary">
-              Accéder à mon espace
+      <section className="relative overflow-hidden text-center px-6 pt-24 pb-20 md:pt-32 md:pb-28">
+        <HeroLiveBackground />
+        <div className="relative z-10">
+          <h1 className="apple-title apple-title-lg mx-auto max-w-[900px]">
+            <span className="hero-title-line block" style={{ animationDelay: "0.05s" }}>
+              Votre argent
+            </span>
+            <span className="hero-title-line block" style={{ animationDelay: "0.25s" }}>
+              façonne déjà{" "}
+              <span className="hero-mint-underline" style={{ color: "var(--mint)" }}>
+                le monde.
+              </span>
+            </span>
+          </h1>
+          <p
+            className="apple-subtitle mx-auto max-w-[620px] mt-6 hero-title-line"
+            style={{ animationDelay: "0.55s" }}
+          >
+            Seedow vous montre lequel. Investissement ESG, visualisé clairement,
+            expliqué par une IA qui ne vous vend rien.
+          </p>
+          <div
+            className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 mt-10 hero-title-line"
+            style={{ animationDelay: "0.75s" }}
+          >
+            {isAuthed ? (
+              <Link to="/dashboard" className="apple-btn-primary">
+                Accéder à mon espace
+              </Link>
+            ) : (
+              <button onClick={scrollToCta} className="apple-btn-primary">
+                Rejoindre la beta
+              </button>
+            )}
+            <Link to="/cours" className="apple-link">
+              Voir les cours <span aria-hidden>›</span>
             </Link>
-          ) : (
-            <button onClick={scrollToCta} className="apple-btn-primary">
-              Rejoindre la beta
-            </button>
-          )}
-          <Link to="/cours" className="apple-link">
-            Voir les cours <span aria-hidden>›</span>
-          </Link>
+          </div>
         </div>
       </section>
+
 
       {/* SECTION — problème / stats */}
       <section style={{ background: "var(--apple-surface)" }} className="px-6 py-24 md:py-32">
