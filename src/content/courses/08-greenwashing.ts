@@ -12,50 +12,52 @@ export const course: Course = {
   description:
     "Comment repérer en quelques minutes si un fonds « vert » l'est vraiment, ou s'il fait juste du marketing vert.",
   intro:
-    "Sur les étagères européennes, presque tous les fonds se présentent comme « durables », « responsables », « green », « impact ». La réalité est très inégale. Ce cours liste six signaux d'alerte à vérifier avant de souscrire — ça prend dix minutes et ça évite les pires pièges.",
+    "Sur les étagères européennes, presque tous les fonds se présentent comme « durables », « responsables », « green », « impact ». La réalité est très inégale. Voici six signaux d'alerte à vérifier avant de souscrire — ça prend dix minutes et ça évite les pires pièges.",
+  eli5:
+    "Imagine un jus d'orange étiqueté « 100 % naturel ». Tu retournes la bouteille : au dos, ça dit « sucre, arômes, colorant, 2 % de jus concentré ». C'est du greenwashing : un emballage qui promet une chose, un contenu qui en fait une autre. Pour les fonds « verts », on fait pareil : on retourne l'étiquette et on regarde ce qu'il y a vraiment dedans.",
   sections: [
     {
       heading: "Signal n°1 : un nom marketing sans preuve",
       paragraphs: [
-        "« Green », « Sustainable », « Climate », « Future », « Impact » dans le nom du fonds. Marketing puissant, ne dit rien sur la composition. Beaucoup de fonds renommés ces dernières années n'ont pas changé leur portefeuille d'un iota.",
-        "Vérification : ouvrir la fiche du fonds, regarder les 10 premières lignes (« top holdings »). Si on y trouve TotalEnergies, ExxonMobil, Glencore, Boeing ou Amazon en grandes positions, le nom « vert » est un emballage.",
-        "L'AMF française et l'ESMA européenne ont publié des lignes directrices en 2024 pour limiter ces noms trompeurs. Application progressive — la vigilance reste utile.",
+        "« Green », « Sustainable », « Climate », « Future », « Impact » dans le nom du fonds : marketing puissant, ne dit rien sur la composition. Beaucoup de fonds renommés récemment n'ont pas changé leur portefeuille d'un iota.",
+        "Vérification : ouvrir la fiche du fonds, regarder les 10 premières lignes (« top holdings »). Si tu y trouves TotalEnergies, ExxonMobil, Glencore, Boeing ou Amazon en grosses positions, l'étiquette « vert » est un emballage.",
+        "L'AMF française et l'ESMA européenne ont publié des règles en 2024 pour limiter ces noms trompeurs. Application progressive — la vigilance reste utile.",
       ],
       callout:
-        "Si le nom contient « green » mais que la fiche détaillée n'est pas accessible en deux clics, c'est déjà un mauvais signe en soi.",
+        "Si le nom contient « green » mais que la fiche détaillée n'est pas accessible en deux clics, c'est déjà un mauvais signe.",
     },
     {
-      heading: "Signal n°2 : aucune exclusion sectorielle",
+      heading: "Signal n°2 : aucune exclusion sectorielle claire",
       paragraphs: [
         "Un fonds vraiment engagé exclut généralement certains secteurs : énergies fossiles, armement controversé (mines antipersonnel, bombes à sous-munitions), tabac, charbon, jeux d'argent, parfois pornographie.",
-        "Vérification : chercher dans le DICI (Document d'Information Clé pour l'Investisseur) ou la politique ISR du fonds la liste des exclusions. Pas de liste, ou liste cosmétique (« nous excluons les armes nucléaires interdites par les conventions », ce qui est obligatoire pour tout fonds européen) = signal faible.",
-        "À l'inverse, des seuils précis (« exclusion des entreprises tirant plus de 5 % de leur chiffre d'affaires du charbon ») montrent un effort réel — même si on peut discuter les seuils choisis.",
+        "Vérification : chercher dans le DICI (Document d'Information Clé — la fiche officielle de 2 pages) ou la politique ISR du fonds la liste des exclusions. Pas de liste, ou liste cosmétique (« nous excluons les armes nucléaires interdites », ce qui est déjà obligatoire pour tout fonds européen) = signal faible.",
+        "À l'inverse, des seuils précis (« exclusion des entreprises tirant plus de 5 % de leur CA du charbon ») montrent un effort réel — même si on peut discuter les seuils choisis.",
       ],
     },
     {
       heading: "Signal n°3 : score ESG = seul argument",
       paragraphs: [
-        "Beaucoup de fonds « ESG » se contentent d'acheter les entreprises les mieux notées par une seule agence (souvent MSCI). C'est une approche « best-in-class » qui ne change pas grand-chose à la composition par rapport à un indice classique.",
+        "Beaucoup de fonds « ESG » se contentent d'acheter les entreprises les mieux notées par une seule agence (souvent MSCI). Approche « best-in-class » qui ne change pas grand-chose à la composition par rapport à un indice classique.",
         "Vérification : comparer la composition du fonds « ESG » avec celle de son indice de référence classique. Si l'écart est inférieur à 10 % sur les principales lignes, l'effort « vert » est marginal.",
-        "Un vrai effort se voit dans un « tracking error » significatif vs l'indice classique. Pas de tracking error = pas de vrais choix.",
+        "Un vrai effort se voit dans un « tracking error » significatif (= écart de composition) vs l'indice classique. Pas d'écart = pas de vrais choix.",
       ],
     },
     {
-      heading: "Signal n°4 : pas de transparence sur la méthodologie",
+      heading: "Signal n°4 : pas de transparence sur la méthode",
       paragraphs: [
-        "Un fonds engagé publie sa politique d'exclusion détaillée, sa méthodologie de sélection, les agences ESG utilisées, le nombre d'entreprises éliminées par les filtres, et idéalement un rapport d'impact annuel.",
-        "Vérification : aller sur le site du gérant, chercher la « politique ISR » du fonds. Document inexistant, daté de 2019 jamais mis à jour, ou contenant uniquement des généralités = signal négatif.",
-        "Les bons fonds publient également leur exercice du droit de vote en AG (« voting record »). Un fonds qui ne vote jamais contre les rémunérations excessives ou les stratégies climatiques faibles n'a pas d'effet réel sur la gouvernance.",
+        "Un fonds engagé publie sa politique d'exclusion détaillée, sa méthode de sélection, les agences ESG utilisées, le nombre d'entreprises éliminées par les filtres, et idéalement un rapport d'impact annuel.",
+        "Vérification : aller sur le site du gérant, chercher la « politique ISR » du fonds. Document inexistant, daté de 2019, ou ne contenant que des généralités = signal négatif.",
+        "Les bons fonds publient aussi leur exercice du droit de vote en assemblée générale (« voting record »). Un fonds qui ne vote jamais contre les rémunérations excessives n'a pas d'effet réel sur la gouvernance.",
       ],
       callout:
-        "Un fonds engagé est traçable. Si vous mettez 30 minutes à comprendre ce qu'il y a dedans et comment il sélectionne, c'est qu'il y a un problème de transparence.",
+        "Un fonds engagé est traçable. Si tu mets 30 minutes à comprendre ce qu'il y a dedans et comment il sélectionne, c'est qu'il y a un problème.",
     },
     {
-      heading: "Signal n°5 : revendications d'impact sans mesure",
+      heading: "Signal n°5 : promesses d'impact sans chiffres",
       paragraphs: [
         "« Notre fonds finance la transition énergétique » : phrase typique qui peut couvrir aussi bien un vrai fonds d'énergies renouvelables qu'un fonds qui détient 5 % d'éolien et 30 % de tech américaine.",
-        "Vérification : chercher des indicateurs chiffrés et comparables. Intensité carbone du portefeuille vs l'indice, alignement Paris 1,5 °C, pourcentage du chiffre d'affaires des entreprises détenues lié à des activités vertes (taxonomie européenne).",
-        "Méfiance pour les indicateurs flous : « contribution aux ODD de l'ONU », « entreprises engagées » sans chiffres derrière. Un vrai impact se mesure.",
+        "Vérification : chercher des indicateurs chiffrés et comparables. Intensité carbone du portefeuille vs l'indice, alignement Paris 1,5 °C, % du CA des entreprises détenues lié à des activités vertes (taxonomie européenne).",
+        "Méfiance pour les indicateurs flous : « contribution aux ODD de l'ONU », « entreprises engagées » sans chiffres. Un vrai impact se mesure.",
       ],
     },
     {
@@ -85,6 +87,13 @@ export const course: Course = {
     "Indicateurs d'impact chiffrés > slogans ODD.",
     "Comparer frais ESG actif vs ETF ESG indiciel.",
     "Audit en 10 min suffit pour repérer les pires cas.",
+  ],
+  advanced: [
+    "Guidelines ESMA fonds ESG (mai 2024) : nom durable requiert ≥ 80 % d'investissements alignés + exclusions Paris-Aligned Benchmark.",
+    "PAB (Paris-Aligned Benchmark) vs CTB (Climate Transition Benchmark) : deux standards européens, PAB plus strict (-50 % intensité carbone dès départ, -7 %/an).",
+    "Active Share : mesure quantitative de l'écart avec l'indice ; < 20 % = closet indexing, > 60 % = gestion réellement active.",
+    "Novethic, Morningstar Sustainability Rating (globes), Reclaim Finance : sources indépendantes pour croiser les allégations.",
+    "Sanctions AMF : mise en demeure fréquente sur greenwashing dans les noms depuis 2023 ; DWS, Goldman Sachs déjà condamnés aux USA.",
   ],
   quiz: [
     {

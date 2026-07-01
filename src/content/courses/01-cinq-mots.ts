@@ -12,70 +12,72 @@ export const course: Course = {
   description:
     "Rendement, risque, volatilité, horizon, liquidité : cinq mots que tout investisseur débutant rencontre dès la première page. Définitions courtes, exemples chiffrés, pièges classiques.",
   intro:
-    "Investir, ce n'est pas compliqué — c'est juste mal expliqué. Avant de cliquer sur quoi que ce soit, on pose cinq mots. Une fois ces cinq mots clairs, 80 % des conversations financières deviennent lisibles, et on cesse de signer des produits qu'on ne comprend pas. Ce cours pose un vocabulaire de base, en français, avec des exemples concrets en euros.",
+    "Investir, ce n'est pas compliqué — c'est mal expliqué. On pose cinq mots. Une fois ces cinq mots clairs, 80 % des conversations financières deviennent lisibles, et on cesse de signer des produits qu'on ne comprend pas.",
+  eli5:
+    "Imagine que tu prêtes ta trottinette à un copain. Combien il te rend en plus ? (rendement). Est-ce qu'il peut la casser ? (risque). Est-ce qu'elle roule un peu à droite un peu à gauche ? (volatilité). Pour combien de temps tu la prêtes ? (horizon). Peux-tu la récupérer vite ? (liquidité). Voilà, tu sais tout.",
   sections: [
     {
-      heading: "Rendement : ce que rapporte vraiment un placement",
+      heading: "Rendement : ce que ton argent te rapporte en plus",
       paragraphs: [
-        "Le rendement, c'est ce que rapporte un placement, exprimé en pourcentage du montant investi sur une période donnée. Un livret à 3 % rapporte 30 € pour 1 000 € sur un an. C'est l'indicateur le plus mis en avant — et donc le plus manipulé.",
-        "Distinction utile et systématiquement masquée par le marketing : rendement brut (avant frais et fiscalité) versus rendement net. Les deux peuvent différer de 1 à 2 points par an. Sur 20 ans, c'est l'écart entre doubler son capital ou le multiplier par 1,4.",
-        "Autre distinction : le rendement annualisé (moyenne géométrique sur plusieurs années) versus le rendement cumulé (gain total). Un fonds peut afficher « +60 % sur 10 ans » qui correspond à seulement 4,8 % par an — honorable, mais moins glamour que les chiffres en gras.",
+        "Le rendement, c'est le « en plus » que tu récupères. Tu poses 100 € sur un livret à 3 % : au bout d'un an, tu as 103 €. Les 3 € en plus, c'est le rendement.",
+        "Piège classique : le chiffre affiché est presque toujours « brut » (avant frais et impôts). Un fonds affiché à 6 % peut te rapporter 4 % dans la vraie vie. Toujours demander : c'est brut ou net ?",
+        "Autre piège : « + 60 % sur 10 ans » sonne mieux que « + 4,8 % par an », mais c'est exactement la même chose. Un chiffre sans durée = un chiffre marketing.",
       ],
       callout:
-        "Un rendement affiché sans horizon, sans méthode de calcul et sans mention « net de quoi » ne veut rien dire. Toujours demander : sur combien de temps, et net de quels frais et de quelle fiscalité.",
+        "Un rendement sans durée et sans « net de quoi » ne veut rien dire. Toujours poser deux questions : sur combien de temps, et après quels frais.",
     },
     {
-      heading: "Risque : le prix à payer pour exister sur les marchés",
+      heading: "Risque : le prix à payer pour espérer plus",
       paragraphs: [
-        "Le risque est la probabilité de perdre une partie de son capital, ou de toucher un rendement très différent de celui attendu. Tout placement non garanti porte un risque — y compris un fonds étiqueté ESG, y compris un ETF mondial, y compris un livret au-delà des 100 000 € garantis par État.",
-        "Le risque n'est pas l'ennemi du rendement, il en est le carburant. Historiquement, sur plus d'un siècle de données aux États-Unis et en Europe, les placements sans risque rapportent à peine plus que l'inflation. Tout le supplément vient du fait d'accepter de voir son capital fluctuer.",
-        "La vraie question n'est donc pas « comment éviter le risque » mais « combien suis-je prêt à voir mon capital baisser temporairement sans paniquer ». Si la réponse est « 0 € », il faut rester sur des supports garantis et accepter un rendement proche de l'inflation.",
+        "Le risque, c'est la possibilité de récupérer moins que ce que tu as mis. Un livret n'a presque aucun risque. Une action peut baisser de 30 %. C'est le deal : plus tu acceptes de voir ton argent bouger, plus il peut rapporter à long terme.",
+        "Vue autrement : sans un peu de risque, ton argent rapporte à peine plus que l'inflation. Historiquement, sur 100 ans, tout le « bonus » vient d'avoir accepté de voir son capital fluctuer.",
+        "La vraie question n'est donc pas « comment éviter le risque » mais « combien puis-je voir mon argent baisser sans paniquer ? ». Si la réponse est « rien », on reste sur des livrets — et on accepte de ne pas battre l'inflation.",
       ],
     },
     {
-      heading: "Volatilité : l'amplitude des vagues, pas la marée",
+      heading: "Volatilité : la hauteur des vagues, pas la marée",
       paragraphs: [
-        "La volatilité mesure l'amplitude des variations d'un actif autour de sa moyenne. Une action très volatile peut prendre 5 % un jour et en perdre 4 % le lendemain. Un livret a une volatilité nulle. Les statisticiens la mesurent avec l'écart-type des rendements quotidiens ou mensuels.",
-        "Volatilité ≠ risque de perte définitive. Un portefeuille diversifié et volatil sur 1 an peut être très stable sur 10 ans. Sur l'indice S&P 500, les chances de perdre de l'argent sont d'environ 25 % sur 1 an, mais tombent à moins de 5 % sur 15 ans, et zéro historiquement sur 20 ans.",
-        "La volatilité fait peur ; le temps long la dilue. C'est la raison pour laquelle on ne place pas en actions l'argent dont on aura besoin dans 12 mois, mais qu'on peut le faire pour un projet à 15 ans.",
-      ],
-      callout:
-        "Un produit « peu volatil » n'est pas forcément « peu risqué ». Certains fonds obligataires affichent une volatilité faible jusqu'au jour où l'émetteur fait défaut.",
-    },
-    {
-      heading: "Horizon : le temps dont vous disposez vraiment",
-      paragraphs: [
-        "L'horizon, c'est le temps pendant lequel on accepte de ne pas toucher à son argent. Court (moins de 3 ans), moyen (3 à 8 ans), long (8 ans et plus). Cet horizon doit être réaliste, pas théorique : si on sait qu'on va acheter une maison dans 4 ans, l'horizon est de 4 ans, pas de 30.",
-        "Règle de base : plus l'horizon est long, plus on peut tolérer de volatilité, parce qu'on a le temps d'attendre une remontée après une baisse. Investir en actions de l'argent dont on aura besoin dans 6 mois est l'erreur la plus courante chez les débutants.",
-        "Un bon réflexe : segmenter son épargne par horizon. L'argent à 6 mois sur un livret. L'argent à 4 ans sur un fonds prudent. L'argent à 15 ans peut accepter beaucoup plus de volatilité. Chaque poche a sa logique propre.",
-      ],
-    },
-    {
-      heading: "Liquidité : la facilité à récupérer son argent",
-      paragraphs: [
-        "La liquidité, c'est la facilité avec laquelle on peut récupérer son argent. Un livret est très liquide (1 clic, 24 h). Une assurance-vie l'est correctement (sous 1 mois). Un investissement immobilier locatif l'est beaucoup moins (plusieurs mois, frais de notaire, marché illiquide).",
-        "Manquer de liquidité, ce n'est pas grave si l'horizon est cohérent. Ça le devient quand un imprévu — chômage, santé, séparation — force à vendre au mauvais moment, souvent avec une décote significative.",
-        "Règle minimale : conserver l'équivalent de 3 à 6 mois de dépenses sur un support 100 % liquide avant d'envisager des placements moins disponibles. C'est ce qu'on appelle l'épargne de précaution.",
+        "La volatilité, c'est l'amplitude des mouvements. Imagine deux bateaux : l'un tangue beaucoup, l'autre glisse tranquille. Les deux avancent — mais le premier fait plus peur à bord.",
+        "Un livret a une volatilité nulle. Une action peut prendre 5 % un jour et en perdre 4 % le lendemain. Ça bouge fort mais ça n'a rien d'anormal.",
+        "Point important : volatilité ≠ perte définitive. Sur un indice mondial (l'ensemble des grandes entreprises), on perd sur 1 an environ 1 fois sur 4. Sur 15 ans, presque jamais. Plus l'horizon est long, plus les vagues se lissent.",
       ],
       callout:
-        "Crypto et SCPI ont en commun une faible liquidité en période de stress : quand tout le monde veut sortir, les prix s'effondrent et les retraits sont parfois gelés. À garder en tête avant de mettre l'épargne de précaution dedans.",
+        "Un produit « peu volatil » n'est pas forcément « peu risqué ». Une obligation d'entreprise fragile bouge peu — jusqu'au jour où l'émetteur ne rembourse pas.",
     },
     {
-      heading: "Cas pratique : Léa, 28 ans, 15 000 € sur son compte courant",
+      heading: "Horizon : dans combien de temps tu auras besoin de cet argent",
       paragraphs: [
-        "Léa a 15 000 € qui dorment sur son compte courant. Elle n'a aucun projet précis. Première étape : segmenter par horizon.",
-        "5 000 € restent disponibles sur un livret pour l'épargne de précaution (3 mois de dépenses). 4 000 € vont sur un fonds prudent en assurance-vie pour un éventuel projet à 4-5 ans. Les 6 000 € restants partent sur un ETF mondial diversifié, avec un horizon d'au moins 10 ans.",
-        "Léa accepte que ces 6 000 € puissent valoir 4 500 € dans deux ans si les marchés baissent, parce qu'elle sait qu'elle n'y touchera pas. Statistiquement, sur 15 ans, cette poche vaudra entre 12 000 € et 18 000 € selon les scénarios.",
+        "L'horizon, c'est la durée pendant laquelle tu peux laisser ton argent tranquille. Court (< 3 ans), moyen (3 à 8 ans), long (8 ans et plus).",
+        "Règle simple : plus c'est long, plus tu peux accepter de volatilité, parce que tu as le temps d'attendre une remontée. Placer en actions un argent que tu utiliseras dans 6 mois est l'erreur la plus courante des débutants.",
+        "Bon réflexe : ranger son épargne par tiroirs. Le tiroir « 6 mois » sur un livret. Le tiroir « 4 ans » sur un fonds prudent. Le tiroir « 15 ans » peut aller en actions. Chaque tiroir a sa logique.",
       ],
     },
     {
-      heading: "Cinq erreurs fréquentes chez les débutants",
+      heading: "Liquidité : à quelle vitesse tu peux récupérer ton argent",
       paragraphs: [
-        "1. Comparer des rendements bruts à des rendements nets — toujours apple to apple, frais compris.",
-        "2. Confondre volatilité court terme et perte définitive — vendre en panique après -20 % est la meilleure façon de transformer une fluctuation en perte réelle.",
-        "3. Investir long terme un argent à court terme — la pire combinaison, car l'horizon force à vendre au pire moment.",
-        "4. Sous-estimer les frais — 2 % par an semblent peu, mais c'est environ un tiers du rendement long terme moyen des actions.",
-        "5. Tout mettre sur un seul produit « miracle » — un fonds qui a fait +40 % l'an dernier a souvent autant de chances de faire -30 % l'année suivante.",
+        "La liquidité, c'est la facilité à retirer son argent. Un livret : 1 clic, 24 h. Une assurance-vie : quelques semaines. Un appartement en location : plusieurs mois et des frais.",
+        "Manquer de liquidité, ce n'est pas grave si l'horizon est cohérent. Ça devient grave quand un imprévu (chômage, santé, séparation) t'oblige à vendre au pire moment, souvent avec une décote.",
+        "Règle minimale : garder 3 à 6 mois de dépenses sur un support 100 % liquide (livret) avant d'investir sur des supports moins accessibles. C'est ce qu'on appelle l'épargne de précaution.",
+      ],
+      callout:
+        "Crypto et SCPI (parts d'immobilier) ont un point commun : en période de stress, tout le monde veut sortir en même temps, les prix chutent et les retraits sont parfois gelés. Pas la peine d'y mettre son épargne de précaution.",
+    },
+    {
+      heading: "Cas pratique : Léa, 28 ans, 15 000 € qui dorment",
+      paragraphs: [
+        "Léa a 15 000 € sur son compte courant. Pas de projet précis. Étape 1 : trier par horizon.",
+        "5 000 € sur un livret (précaution, 3 mois de dépenses). 4 000 € sur un fonds prudent en assurance-vie pour un projet à 4-5 ans. 6 000 € sur un ETF mondial diversifié (horizon 10 ans et plus).",
+        "Léa accepte que les 6 000 € puissent valoir 4 500 € dans deux ans en cas de baisse, parce qu'elle sait qu'elle n'y touchera pas. Sur 15 ans, cette poche vaudra statistiquement entre 12 000 € et 18 000 €.",
+      ],
+    },
+    {
+      heading: "Cinq erreurs classiques",
+      paragraphs: [
+        "1. Comparer un rendement brut à un rendement net — comme comparer un salaire brut à un salaire net.",
+        "2. Confondre « ça bouge en ce moment » et « j'ai perdu pour toujours ». Vendre en panique après -20 % transforme une vague en perte définitive.",
+        "3. Investir long terme un argent dont on aura besoin dans 6 mois. La pire combinaison.",
+        "4. Sous-estimer les frais. 2 % par an semblent peu, c'est environ un tiers du rendement long terme des actions.",
+        "5. Tout mettre sur le produit « miracle » de l'année. Ce qui a fait +40 % l'an dernier fait souvent -30 % l'année suivante.",
       ],
     },
   ],
@@ -87,6 +89,13 @@ export const course: Course = {
     "Vérifier la liquidité avant d'engager une somme dont on peut avoir besoin.",
     "Segmenter son épargne par poche d'horizon avant tout choix de produit.",
     "Garder 3 à 6 mois de dépenses 100 % liquides avant d'investir long terme.",
+  ],
+  advanced: [
+    "Rendement annualisé (moyenne géométrique) vs cumulé : un fonds « +60 % sur 10 ans » = 4,8 %/an, pas 6 %.",
+    "Volatilité annualisée S&P 500 ~15-18 %, ETF World ~15 %, fonds obligataire ~5 %, livret 0 %.",
+    "Sur 1 an glissant, ~25 % des fenêtres d'un ETF World sont négatives ; sur 15 ans, historiquement < 5 %.",
+    "Livret garanti par l'État jusqu'à 100 000 € par banque (garantie FGDR) ; au-delà, risque de contrepartie.",
+    "Fonds monétaire = alternative au livret pour l'épargne courte, sensibilité aux taux directeurs BCE.",
   ],
   quiz: [
     {

@@ -12,67 +12,69 @@ export const course: Course = {
   description:
     "Pourquoi 100 € placés à 7 % deviennent 7 600 € en 50 ans : la mécanique des intérêts composés, expliquée avec des chiffres simples et des cas pratiques.",
   intro:
-    "Einstein l'aurait appelée « la huitième merveille du monde ». La formule est triviale, ses conséquences sont contre-intuitives. Ce cours explique pourquoi le temps est de loin le plus puissant levier de l'investisseur — bien plus que le choix du « bon » produit.",
+    "Einstein l'aurait appelée « la huitième merveille du monde ». La formule tient en une ligne, ses conséquences sont contre-intuitives. Le temps est de loin le plus puissant levier de l'investisseur — bien plus que le choix du « bon » produit.",
+  eli5:
+    "Imagine une boule de neige au sommet d'une pente. Au début, elle est minuscule et elle avance lentement. Puis elle grossit, roule sur elle-même, ramasse encore plus de neige. À la fin, elle est énorme. Les intérêts composés, c'est la même chose : ton argent gagne des intérêts, et ces intérêts gagnent à leur tour des intérêts. Plus la pente est longue, plus la boule finit grosse.",
   sections: [
     {
       heading: "La formule en une ligne",
       paragraphs: [
-        "Capital final = Capital initial × (1 + rendement annuel) ^ nombre d'années. C'est tout. Le mot « composé » signifie que les intérêts d'une année rapportent à leur tour des intérêts l'année suivante.",
-        "Exemple : 1 000 € placés à 7 % par an deviennent 1 070 € après 1 an. La deuxième année, les 7 % s'appliquent à 1 070 €, pas à 1 000 €. On gagne 74,90 € au lieu de 70 €. L'écart paraît dérisoire — sur 30 ans, il fait toute la différence.",
-        "Sur 30 ans à 7 %, ces 1 000 € deviennent 7 612 €. Sur 50 ans, 29 457 €. La courbe n'est pas une ligne droite : elle accélère avec le temps.",
+        "Capital final = Capital de départ × (1 + rendement) ^ nombre d'années. C'est tout. « Composé » veut dire que les intérêts d'une année rapportent à leur tour des intérêts l'année suivante.",
+        "Exemple : 1 000 € à 7 % par an. Au bout d'un an, tu as 1 070 €. La deuxième année, les 7 % s'appliquent à 1 070 € (pas à 1 000 €). Tu gagnes 74,90 € au lieu de 70 €. Petit écart, mais qui grossit chaque année.",
+        "Sur 30 ans à 7 %, ces 1 000 € deviennent 7 612 €. Sur 50 ans : 29 457 €. La courbe n'est pas une ligne droite : elle accélère.",
       ],
       callout:
-        "L'intuition humaine raisonne en ligne droite. Les intérêts composés suivent une exponentielle. C'est pourquoi 95 % des gens sous-estiment ce qu'un placement régulier produit sur 30 ans.",
+        "Notre cerveau raisonne en ligne droite. Les intérêts composés suivent une courbe qui accélère. C'est pour ça que 95 % des gens sous-estiment ce qu'un placement régulier peut donner sur 30 ans.",
     },
     {
       heading: "Le coût caché d'attendre 10 ans avant de commencer",
       paragraphs: [
-        "Cas A : Alex commence à 25 ans, place 200 €/mois pendant 10 ans, puis arrête tout et laisse fructifier. À 65 ans, à 7 % de rendement annuel, il aura ≈ 280 000 €.",
-        "Cas B : Béa commence à 35 ans, place 200 €/mois pendant 30 ans jusqu'à 65 ans. Elle aura placé trois fois plus que Alex en valeur cumulée. À 65 ans, elle aura ≈ 244 000 €.",
-        "Alex a moins versé mais a commencé plus tôt — et il termine devant. Ce n'est pas une astuce de calcul, c'est la nature des intérêts composés. Le temps est l'ingrédient n°1.",
+        "Alex a 25 ans. Il place 200 €/mois pendant 10 ans, puis arrête et laisse tout tranquille. À 65 ans (à 7 %), il a environ 280 000 €.",
+        "Béa a 35 ans. Elle place 200 €/mois pendant 30 ans, jusqu'à 65 ans. Elle a versé trois fois plus qu'Alex en tout. À 65 ans, elle a environ 244 000 €.",
+        "Alex a moins versé — il termine devant. Ce n'est pas une astuce : c'est la nature de la boule de neige. Le temps est l'ingrédient n°1.",
       ],
     },
     {
-      heading: "Pourquoi 1 % de rendement annuel change tout",
+      heading: "Pourquoi 1 % de rendement en plus change tout",
       paragraphs: [
-        "Sur des durées longues, 1 % de rendement supplémentaire par an semble dérisoire. En réalité, c'est massif.",
-        "1 000 € à 4 % pendant 40 ans → 4 801 €. 1 000 € à 5 % pendant 40 ans → 7 040 €. Soit +46 % de capital final pour 1 point de rendement de plus par an. Sur 50 ans, l'écart dépasse +65 %.",
-        "Conclusion pratique : 1 % de frais en moins par an n'est pas une optimisation cosmétique, c'est un des leviers les plus puissants à votre disposition.",
+        "Sur des durées longues, 1 % de plus par an semble ridicule. En vrai, c'est énorme.",
+        "1 000 € à 4 % pendant 40 ans → 4 801 €. 1 000 € à 5 % pendant 40 ans → 7 040 €. Un seul point de plus, +46 % de capital final. Sur 50 ans, +65 %.",
+        "En clair : 1 % de frais en moins par an, ce n'est pas de la cosmétique — c'est l'un des leviers les plus puissants dont tu disposes.",
       ],
       callout:
-        "Un fonds maison de banque à 2,5 % de frais annuels vs un ETF à 0,3 % : sur 30 ans, l'écart se compte en dizaines de milliers d'euros. Sur le même rendement brut.",
+        "Un fonds maison de banque à 2,5 % de frais vs un ETF à 0,3 % : sur 30 ans, l'écart se compte en dizaines de milliers d'euros. Même rendement brut, très différents dans ta poche.",
     },
     {
       heading: "L'effet boule de neige : où elle décolle vraiment",
       paragraphs: [
-        "Au début, les versements représentent la quasi-totalité du capital. Les intérêts sont marginaux. C'est la phase frustrante : on a l'impression que rien ne se passe.",
-        "Vers la 10e année, la balance bascule : les intérêts annuels approchent puis dépassent les versements annuels. C'est le point d'inflexion psychologique.",
-        "Vers la 20e année, l'effet est spectaculaire : le capital double tous les 10 ans (à 7 %). Sur les 5 dernières années avant la retraite, on peut gagner plus qu'on n'a versé sur 20 ans.",
+        "Au début, ce sont surtout tes versements qui font le capital. Les intérêts sont ridicules. C'est la phase frustrante : on a l'impression que rien ne bouge.",
+        "Vers la 10e année, ça bascule : les intérêts annuels approchent puis dépassent tes versements annuels. Point d'inflexion.",
+        "Vers la 20e année, c'est spectaculaire : le capital double tous les 10 ans (à 7 %). Sur les 5 dernières années avant la retraite, tu peux gagner plus que ce que tu as versé sur les 20 premières.",
       ],
     },
     {
       heading: "La règle de 72 : le calcul mental utile",
       paragraphs: [
-        "Pour estimer en combien d'années un placement double : 72 ÷ rendement annuel. À 6 %, on double en 12 ans. À 8 %, en 9 ans. À 3 %, en 24 ans.",
-        "Cette règle, approximative mais redoutablement efficace, permet de juger un produit en 5 secondes. Un livret à 3 % double en 24 ans. Un ETF actions à 7 % long terme double en ~10 ans.",
-        "Inversée, elle révèle aussi le coût de l'inflation. À 3 % d'inflation, le pouvoir d'achat de votre euro est divisé par 2 en 24 ans. Garder son argent sur un compte courant à 0 % est donc une perte garantie.",
+        "Envie de savoir en combien d'années ton placement double ? Divise 72 par le rendement. À 6 %, ça double en 12 ans. À 8 %, en 9 ans. À 3 %, en 24 ans.",
+        "Simple, approximatif, redoutable. Un livret à 3 % double en 24 ans. Un ETF actions à 7 % double en environ 10 ans.",
+        "Retournée, elle donne aussi l'effet de l'inflation. À 3 % d'inflation, ton pouvoir d'achat est divisé par 2 en 24 ans. Laisser son argent sur un compte courant à 0 %, c'est une perte garantie.",
       ],
     },
     {
-      heading: "Cas pratique : 150 €/mois sur 40 ans",
+      heading: "Cas pratique : 150 €/mois pendant 40 ans",
       paragraphs: [
-        "Hypothèses : Sami verse 150 €/mois pendant 40 ans (de 25 à 65 ans), soit 72 000 € versés au total. Rendement annuel net moyen : 6 %.",
-        "Résultat : ≈ 298 000 € à 65 ans. Sur les 298 000 €, environ 226 000 € viennent des intérêts composés, et seulement 72 000 € des versements.",
-        "Autrement dit : sur le capital final, 76 % vient du temps et des marchés, 24 % vient de l'effort d'épargne. C'est cette asymétrie qui rend l'investissement régulier si puissant pour des revenus moyens.",
+        "Sami verse 150 €/mois de 25 à 65 ans. Total versé : 72 000 €. Rendement net moyen : 6 %.",
+        "Résultat : environ 298 000 € à 65 ans. Sur ces 298 000 €, environ 226 000 € viennent des intérêts et seulement 72 000 € de ses versements.",
+        "En clair : 76 % du capital final vient du temps et des marchés, 24 % de l'effort d'épargne. C'est ce déséquilibre qui rend l'investissement régulier si puissant pour des revenus moyens.",
       ],
     },
     {
       heading: "Erreurs fréquentes",
       paragraphs: [
-        "1. Croire qu'il faut « beaucoup d'argent pour commencer ». 50 €/mois suffisent pour amorcer la mécanique. C'est le temps, pas la somme initiale, qui fait l'essentiel.",
-        "2. Interrompre les versements quand les marchés baissent. C'est précisément à ce moment-là qu'on achète au meilleur prix les briques qui composeront le plus.",
-        "3. Sous-estimer l'impact des frais. 1 % par an semble négligeable, on a vu : c'est tout sauf négligeable.",
-        "4. Vouloir « rattraper » en prenant plus de risque à 55 ans pour compenser une décennie de retard. C'est statistiquement perdant et émotionnellement intenable.",
+        "1. Croire qu'il faut « beaucoup d'argent pour commencer ». 50 €/mois suffisent à amorcer la boule.",
+        "2. Arrêter les versements quand les marchés baissent. C'est précisément là qu'on achète au meilleur prix.",
+        "3. Sous-estimer les frais. 1 % par an paraît négligeable — on a vu le contraire.",
+        "4. Vouloir « rattraper » en prenant plus de risque à 55 ans. Statistiquement perdant, émotionnellement intenable.",
       ],
     },
   ],
@@ -84,6 +86,13 @@ export const course: Course = {
     "Sur 40 ans, ~75 % du capital final vient des intérêts, ~25 % des versements.",
     "Couper ses frais de 2 % à 0,3 % est l'optimisation la plus rentable disponible.",
     "Ne jamais interrompre les versements en baisse de marché : c'est le moment idéal.",
+  ],
+  advanced: [
+    "Formule versements réguliers : V × ((1+r)^n − 1) / r, où V = versement, r = taux périodique, n = nombre de périodes.",
+    "Passage taux annuel → mensuel : (1+r_annuel)^(1/12) − 1 (ne pas diviser par 12).",
+    "Règle de 72 exacte via ln(2)/ln(1+r) ≈ 0,693/r ; l'écart avec 72/r reste < 3 % pour r ∈ [4 %, 10 %].",
+    "Rendement réel = (1 + rendement nominal)/(1 + inflation) − 1 ; c'est le seul chiffre qui compte long terme.",
+    "Ordre de grandeur historique : actions monde ~7 %/an réel, obligations ~2 %, or ~1 %, cash ~0 % (net d'inflation).",
   ],
   quiz: [
     {
