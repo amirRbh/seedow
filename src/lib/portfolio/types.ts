@@ -7,6 +7,7 @@ export type AssetClass =
   | "green_bond"
   | "social_bond"
   | "sov_bond"
+  | "corporate_bond"
   | "reit"
   | "commodity"
   | "cash";
