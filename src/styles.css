@@ -100,39 +100,40 @@
 :root {
   --radius: 0.875rem;
 
-  /* Surfaces — papier ivoire éditorial (HEX exacts) */
-  --paper: #F5F3EC;
-  --paper-2: #E0DCCE;
-  --paper-3: #DEDACE;
-  --paper-inset: #E0DCCE;
+  /* Surfaces — palette Apple */
+  --paper: #FFFFFF;
+  --paper-2: #F5F5F7;
+  --paper-3: #D2D2D7;
+  --paper-inset: #F5F5F7;
 
-  /* Encre — noir pur + dim gris */
-  --ink: #0A0A0A;
-  --ink-2: #6B6B66;
-  --ink-3: #6B6B66;
+  /* Encre — noir Apple + gris secondaire */
+  --ink: #1D1D1F;
+  --ink-2: #86868B;
+  --ink-3: #6E6E73;
 
-  /* Mapping moss → ink/paper pour rétro-compat */
-  --moss-1: #0A0A0A;
-  --moss-2: #2A2A2A;
-  --moss-3: #6B6B66;
-  --moss-4: #DEDACE;
-  --moss-5: #E0DCCE;
+  /* Mapping moss → tokens Apple pour rétro-compat */
+  --moss-1: #1D1D1F;
+  --moss-2: #2D2D2F;
+  --moss-3: #86868B;
+  --moss-4: #D2D2D7;
+  --moss-5: #F5F5F7;
 
-  /* Data signal colors (HEX exacts) */
-  --mint: #0B7A3E;        /* accent primaire */
-  --ice: #0099CC;         /* accent secondaire */
-  --volt: #8B4FE0;        /* accent tertiaire */
-  --alert: #E0294F;       /* warning */
-  --solar: #D4A300;       /* gold highlight */
+  /* Data signal colors — accents assourdis Apple */
+  --mint: #1D8348;        /* vert forest sobre */
+  --ice: #0071E3;         /* bleu Apple signature */
+  --volt: #6E56CF;        /* violet doux */
+  --alert: #E11D48;       /* rouge saturé */
+  --solar: #B7791F;       /* or mat */
 
   /* Aliases legacy */
-  --rust: #E0294F;
-  --gold: #0B7A3E;        /* gold mappé à mint (signature) */
-  --gold-soft: #0B7A3E;
-  --sky: #0099CC;
-  --bloom: #8B4FE0;
-  --peach: #D4A300;
-  --glacier: #0099CC;
+  --rust: #E11D48;
+  --gold: #1D8348;
+  --gold-soft: #1D8348;
+  --sky: #0071E3;
+  --bloom: #6E56CF;
+  --peach: #B7791F;
+  --glacier: #0071E3;
+
 
   /* shadcn mapping */
   --background: var(--paper);

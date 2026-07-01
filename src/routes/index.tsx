@@ -49,9 +49,19 @@ function Landing() {
         style={{ background: "rgba(255,255,255,0.72)", borderBottom: "1px solid #d2d2d7" }}
       >
         <div className="max-w-[1024px] mx-auto px-6 h-12 flex items-center justify-between">
-          <Link to="/" className="text-[19px] font-semibold tracking-tight text-[color:var(--apple-text)]">
-            seedow
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-[22px] font-bold text-[color:var(--apple-text)]"
+            style={{ letterSpacing: "-0.02em" }}
+          >
+            SEEDOW
+            <span
+              aria-hidden
+              className="inline-block w-[6px] h-[6px] rounded-full"
+              style={{ background: "var(--mint)" }}
+            />
           </Link>
+
           <div className="flex items-center gap-6 text-[13px] text-[color:var(--apple-text)]">
             <Link to="/cours" className="hidden md:inline opacity-90 hover:opacity-100">
               Cours
@@ -320,7 +330,21 @@ function Landing() {
         style={{ background: "var(--apple-surface)", borderTop: "1px solid #d2d2d7" }}
       >
         <div className="max-w-[1024px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>© 2026 Seedow. Votre argent façonne déjà le monde.</div>
+          <div className="flex items-center gap-3">
+            <span
+              className="inline-flex items-center gap-1.5 text-[15px] font-bold text-[color:var(--apple-text)]"
+              style={{ letterSpacing: "-0.02em" }}
+            >
+              SEEDOW
+              <span
+                aria-hidden
+                className="inline-block w-[5px] h-[5px] rounded-full"
+                style={{ background: "var(--mint)" }}
+              />
+            </span>
+            <span>© 2026 · Votre argent façonne déjà le monde.</span>
+          </div>
+
           <nav className="flex flex-wrap gap-x-6 gap-y-2">
             <Link to="/cours" className="hover:text-[color:var(--apple-text)]">Cours</Link>
             <Link to="/methodologie" className="hover:text-[color:var(--apple-text)]">Méthodologie</Link>
