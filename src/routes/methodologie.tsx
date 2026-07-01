@@ -191,6 +191,11 @@ function MethodologyPage() {
         </ol>
       </section>
 
+      {/* ESG Transparency — grille de notation, sources et limites */}
+      <EsgTransparencySection activeCauses={causes} />
+
+
+
       {/* Simulator */}
       <section className="max-w-6xl mx-auto px-6 pb-24">
         <div className="border-t border-paper-3 pt-10">
