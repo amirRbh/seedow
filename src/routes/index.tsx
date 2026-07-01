@@ -177,7 +177,7 @@ function Landing() {
 
       {/* SECTION — voir ton impact */}
       <section className="px-6 py-24 md:py-32">
-        <div className="max-w-[980px] mx-auto text-center">
+        <Reveal className="max-w-[980px] mx-auto text-center">
           <p className="apple-eyebrow" style={{ color: "var(--mint)" }}>
             Vois ton impact
           </p>
@@ -194,12 +194,16 @@ function Landing() {
             className="mt-16 mx-auto max-w-[820px] apple-card"
             style={{ background: "var(--apple-surface)", padding: "48px 32px" }}
           >
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-3 items-end">
               {ALLOCATION.map((a, i) => (
                 <div key={i} className="flex flex-col items-center gap-2">
                   <div
-                    className="w-full rounded-2xl"
-                    style={{ height: `${40 + a.weight * 1.6}px`, background: a.color }}
+                    className="w-full rounded-2xl anim-bar"
+                    style={{
+                      height: `${40 + a.weight * 1.6}px`,
+                      background: a.color,
+                      animationDelay: `${0.1 + i * 0.08}s`,
+                    }}
                   />
                   <div className="text-[11px] text-[color:var(--apple-text-2)]">{a.label}</div>
                   <div className="text-[13px] font-semibold text-[color:var(--apple-text)]">
@@ -209,7 +213,7 @@ function Landing() {
               ))}
             </div>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {/* SECTION — Ethi (dark, style Apple) */}
@@ -217,7 +221,7 @@ function Landing() {
         className="px-6 py-24 md:py-32"
         style={{ background: "var(--apple-dark)", color: "#ffffff" }}
       >
-        <div className="max-w-[980px] mx-auto text-center">
+        <Reveal className="max-w-[980px] mx-auto text-center">
           <p className="apple-eyebrow" style={{ color: "var(--volt)" }}>
             Ethi
           </p>
@@ -239,23 +243,19 @@ function Landing() {
 
           {/* Chat mockup */}
           <div className="mt-16 mx-auto max-w-[560px] flex flex-col gap-3 text-left">
-            <ChatBubble side="user">
-              C'est quoi cette ligne à 4% dans mon portefeuille ?
-            </ChatBubble>
-            <ChatBubble side="ethi">
-              Un fonds obligataire vert qui finance des rénovations énergétiques en Europe.
-              Rendement stable, faible volatilité.
-            </ChatBubble>
-            <ChatBubble side="user">
-              Et si je veux plus d'impact direct ?
-            </ChatBubble>
-            <ChatBubble side="ethi">
-              Je peux te proposer 3 alternatives équivalentes en risque, avec un score climat
-              supérieur. Tu veux voir ?
-            </ChatBubble>
+            {CHAT.map((c, i) => (
+              <div
+                key={i}
+                className="anim-bubble"
+                style={{ animationDelay: `${0.2 + i * 0.18}s` }}
+              >
+                <ChatBubble side={c.side}>{c.text}</ChatBubble>
+              </div>
+            ))}
           </div>
-        </div>
+        </Reveal>
       </section>
+
 
       {/* SECTION — deux façons de commencer */}
       <section style={{ background: "var(--apple-surface)" }} className="px-6 py-24 md:py-32">
