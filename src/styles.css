@@ -7,7 +7,7 @@
 
 /* ═══════════════════════════════════════════════════════════════
    SEEDOW — Editorial brut, ESG signal-driven
-   Papier ivoire #F5F3EC, encre noir pur, accent mint vif #00C77A
+   Papier ivoire #F5F3EC, encre noir pur, accent mint profond #0B7A3E
    + ice/solar/alert/volt comme data colors. Typo : Bebas Neue (display)
    + Inter (body) + IBM Plex Mono (eyebrows / chiffres / labels).
 ═══════════════════════════════════════════════════════════════ */
@@ -119,7 +119,7 @@
   --moss-5: #E0DCCE;
 
   /* Data signal colors (HEX exacts) */
-  --mint: #00C77A;        /* accent primaire */
+  --mint: #0B7A3E;        /* accent primaire */
   --ice: #0099CC;         /* accent secondaire */
   --volt: #8B4FE0;        /* accent tertiaire */
   --alert: #E0294F;       /* warning */
@@ -127,8 +127,8 @@
 
   /* Aliases legacy */
   --rust: #E0294F;
-  --gold: #00C77A;        /* gold mappé à mint (signature) */
-  --gold-soft: #00C77A;
+  --gold: #0B7A3E;        /* gold mappé à mint (signature) */
+  --gold-soft: #0B7A3E;
   --sky: #0099CC;
   --bloom: #8B4FE0;
   --peach: #D4A300;
