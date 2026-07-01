@@ -1,64 +1,47 @@
-# Harmonisation DA Apple — tokens globaux uniquement
+# Landing "wow" — hero vivant + transitions au scroll
 
-Trois changements ciblés, aucun composant retouché individuellement — l'impact se propage via les tokens CSS.
+Objectif : donner du souffle à la landing sans casser la ligne Apple. Portée : `src/routes/index.tsx` + ajout d'animations dans `src/styles.css`. Aucune autre partie de l'app n'est touchée.
 
-## 1. Palette globale Apple dans `src/styles.css`
+## 1. Hero — visualisation vivante en fond
 
-Réécrire les valeurs des tokens racines (les noms restent identiques pour ne rien casser dans l'app) :
+Derrière le titre "Votre argent façonne déjà le monde.", on ajoute une couche d'arrière-plan animée qui *montre* le produit sans le dire.
 
-```text
---paper       #F5F3EC  →  #FFFFFF   (fond principal blanc pur)
---paper-2     #E0DCCE  →  #F5F5F7   (surface Apple gris signature)
---paper-3     #DEDACE  →  #D2D2D7   (borders Apple)
---paper-inset #E0DCCE  →  #F5F5F7
+Composition :
+- Grille floue de ~40 pastilles/barres colorées (mint, ice, volt, gris Apple) réparties en fond, opacité 0.15–0.25, blur léger.
+- Chaque pastille pulse doucement (scale 1 → 1.05, opacity oscillante) avec des délais aléatoires → sensation d'un portefeuille "vivant".
+- 3 chiffres flottants discrets (ex. `+2.4%`, `€1,240`, `CO₂ −18kg`) qui apparaissent/disparaissent en fondu tous les 4–6s à des positions fixes.
+- Un halo radial mint très dilué au centre, derrière le titre, pour concentrer le regard.
+- Titre au-dessus avec un `z-index` clair + fond blanc/70 en radial derrière la typo pour garantir la lisibilité.
 
---ink         #0A0A0A  →  #1D1D1F   (texte principal Apple)
---ink-2       #6B6B66  →  #86868B   (texte secondaire Apple)
---ink-3       #6B6B66  →  #6E6E73
+Titre lui-même :
+- Reveal doux au chargement (fade + rise, séquentiel ligne par ligne, ~120ms de décalage).
+- "le monde." reste mint, avec un fin trait mint dessiné en dessous en 0.6s à l'apparition.
 
---moss-*      → mêmes valeurs neutres Apple (rétro-compat)
-```
+Rien de JS lourd : tout en CSS keyframes + quelques `animation-delay` inline.
 
-Accents assourdis façon Apple :
+## 2. Transitions entre sections
 
-```text
---mint   #0B7A3E  →  #1D8348  (vert forest sobre)
---ice    #0099CC  →  #0071E3  (bleu Apple signature)
---volt   #8B4FE0  →  #6E56CF  (violet doux)
---alert  #E0294F  →  #E11D48  (rouge saturé Apple-like)
---solar  #D4A300  →  #B7791F  (or plus mat)
-```
+Chaque section suivante reçoit :
+- `reveal-on-scroll` : fade-in + translateY(24px → 0) déclenché via `IntersectionObserver` (un petit hook local, ~15 lignes).
+- Les grands chiffres (`0%`, `∞`, `1` dans la section stats) s'animent à l'apparition : fade-in + scale 0.92 → 1, avec un léger décalage entre les trois.
+- Les barres de l'allocation "Ton portefeuille, enfin lisible" grandissent de 0 → hauteur finale sur 800ms à l'entrée dans le viewport.
+- Bulles de chat Ethi apparaissent une par une (150ms d'écart) quand la section entre à l'écran.
 
-Aliases legacy (`--gold`, `--rust`, `--sky`, `--bloom`, `--peach`, `--glacier`) remappés vers ces nouvelles valeurs pour que tous les usages existants restent cohérents.
+## 3. Détails de polish
 
-Retirer aussi les tokens spécifiques `.apple-landing` — puisque la palette globale devient déjà Apple, le scope `.apple-landing` n'est plus nécessaire. Les classes `.apple-title`, `.apple-btn-primary`, etc. deviennent utilisables partout et se basent sur `var(--paper)` / `var(--ink)` au lieu de `--apple-*`.
+- Curseur au-dessus du bouton "Rejoindre la beta" : léger scale 1.02 + ombre douce mint.
+- Séparateurs entre sections : au lieu de couleurs de fond franches, on garde les fonds actuels mais on ajoute un `border-top` 1px `#D2D2D7` très discret pour marquer le rythme.
+- Le fond animé du hero se désactive sur `prefers-reduced-motion`.
 
-## 2. Wordmark SEEDOW visible
+## Détails techniques
 
-Dans la nav de `src/routes/index.tsx` :
-- Taille : `text-[22px]` → poids 700, tracking `-0.02em`
-- Ajouter un point mint 6px à côté (rappel identité, consistant avec le `.gold-pulse` du dashboard qui utilise déjà mint)
-- Structure : `SEEDOW` (bold) + `•` mint
+- `src/routes/index.tsx` : ajout d'un composant `<HeroLiveBackground />` local (SVG ou div grid absolute), d'un hook `useReveal()` (IntersectionObserver), et wrap des sections avec `<div ref={...} className="reveal">`.
+- `src/styles.css` : ajout des keyframes `pulse-dot`, `float-figure`, `reveal-up`, `grow-bar`, et de la classe `.reveal` (state initial hidden, `.reveal.in-view` visible). Respect de `@media (prefers-reduced-motion: reduce)`.
+- Aucun package ajouté. Pas de librairie d'animation.
+- Pas de changement dans `styles.css` sur les tokens ; on ajoute uniquement des keyframes/classes en fin de fichier.
 
-Même wordmark appliqué au footer de la landing.
+## Ce qui ne bouge PAS
 
-## 3. Composant `.paper-card`, boutons, filets
-
-Comme les tokens changent, les composants qui référencent `var(--paper-2)`, `var(--paper-3)`, `var(--ink)` se réharmonisent automatiquement :
-- Cards éditoriales du dashboard : fond `#F5F5F7` sur blanc au lieu d'ivoire sur ivoire
-- Boutons `.btn-plant` / `.btn-harvest` / `.btn-outline-ink` : couleurs mint/ink recalculées automatiquement
-- `.gold-rule` : reste un trait plein, teinte ink Apple
-
-Aucun réglage par écran nécessaire — la propagation via tokens suffit.
-
-## Ce qui n'est pas touché
-
-- Aucun composant applicatif modifié (dashboard, cours, portfolio, ethi, profil, nav app)
-- Aucune logique métier
-- La typo reste : Bebas + Inter + JetBrains Mono dans l'app, Inter pur sur la landing
-- Les memories DA (éditorial magazine/data terminal) restent globalement valides — seule la palette bascule vers l'univers Apple
-
-## Fichiers touchés
-
-- `src/styles.css` : bloc `:root` + section `.apple-landing` (simplifiée ou supprimée)
-- `src/routes/index.tsx` : nav (wordmark SEEDOW) + footer (wordmark)
+- Palette, typographie, wordmark SEEDOW.
+- Structure des sections (ordre, contenus, CTA).
+- Le reste de l'app (dashboard, cours, portfolio, etc.).
