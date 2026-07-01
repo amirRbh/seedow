@@ -43,8 +43,8 @@ export function KPIFigure({
     <div className={cn(align === "center" && "text-center", className)}>
       <p
         className={cn(
-          "text-[10px] font-semibold uppercase tracking-[0.22em] mb-3",
-          accent ? "text-gold" : "text-ink-3",
+          "text-[13px] font-semibold tracking-[-0.01em] mb-3",
+          accent ? "text-gold" : "text-ink-2",
         )}
       >
         {label}

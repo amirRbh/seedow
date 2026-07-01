@@ -22,8 +22,8 @@
   --radius-3xl: calc(var(--radius) + 12px);
 
   --font-sans: "Inter", system-ui, -apple-system, sans-serif;
-  --font-value: "IBM Plex Mono", ui-monospace, monospace;
-  --font-display: "Bebas Neue", "Inter", sans-serif;
+  --font-value: "Inter", system-ui, sans-serif;
+  --font-display: "Inter", system-ui, -apple-system, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 
   --color-background: var(--background);
@@ -233,50 +233,69 @@
   .font-value {
     font-family: var(--font-value);
     font-weight: 500;
-    letter-spacing: 0.02em;
+    letter-spacing: -0.01em;
     font-feature-settings: "lnum", "tnum";
   }
 
   .font-display {
     font-family: var(--font-display);
-    font-weight: 400;
-    letter-spacing: 0.01em;
+    font-weight: 700;
+    letter-spacing: -0.025em;
   }
 
-  /* Échelle éditoriale signature — Bebas Neue */
+  /* Échelle éditoriale — Inter Apple */
   .display-xl {
     font-family: var(--font-display);
-    font-weight: 400;
-    font-size: clamp(3rem, 9vw, 7rem);
-    line-height: 0.95;
-    letter-spacing: 0.01em;
-    text-transform: uppercase;
+    font-weight: 700;
+    font-size: clamp(2.75rem, 7.5vw, 5.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    text-transform: none;
   }
 
   .display-lg {
     font-family: var(--font-display);
-    font-weight: 400;
+    font-weight: 700;
     font-size: clamp(2rem, 5vw, 3.25rem);
-    line-height: 1.02;
-    letter-spacing: 0.01em;
-    text-transform: uppercase;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    text-transform: none;
   }
 
-  h1, h2, h3 {
+  h1 {
     font-family: var(--font-display);
-    font-weight: 400;
-    letter-spacing: 0.01em;
-    text-transform: uppercase;
+    font-weight: 700;
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    text-transform: none;
     color: var(--color-ink);
-    line-height: 1.02;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    line-height: 1.12;
+    letter-spacing: -0.025em;
+    text-transform: none;
+    color: var(--color-ink);
+  }
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.125rem, 2vw, 1.375rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    text-transform: none;
+    color: var(--color-ink);
   }
 
   .eyebrow {
-    font-family: var(--font-mono);
-    font-size: 11px;
+    font-family: var(--font-sans);
+    font-size: 13px;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
+    text-transform: none;
+    letter-spacing: -0.01em;
     color: var(--color-ink-2);
   }
   .eyebrow--accent { color: var(--color-mint); }
@@ -294,22 +313,22 @@
     background-color: var(--color-ink);
   }
 
-  /* Données — chiffres mono large bold */
+  /* Données — chiffres Inter bold Apple */
   .data-xl {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-weight: 700;
     font-size: clamp(2rem, 5vw, 3.5rem);
     line-height: 1;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.035em;
     color: var(--color-ink);
     font-feature-settings: "tnum", "lnum";
   }
   .data-lg {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-weight: 700;
     font-size: clamp(1.5rem, 3vw, 2.25rem);
     line-height: 1;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.03em;
     color: var(--color-ink);
     font-feature-settings: "tnum", "lnum";
   }
@@ -398,17 +417,17 @@
   }
   .leaf-hover:hover { border-color: var(--color-ink); }
 
-  /* CTA principal — pill noir éditorial */
+  /* CTA principal — pill noir Apple */
   .btn-plant {
     background: var(--color-ink);
     color: var(--color-paper);
-    border-radius: 100px;
+    border-radius: 980px;
     padding: 12px 24px;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    text-transform: none;
     border: none;
     cursor: pointer;
     display: inline-flex;
@@ -421,15 +440,15 @@
   /* Secondaire — pill mint filled */
   .btn-harvest {
     background: var(--color-mint);
-    color: var(--color-ink);
+    color: var(--color-paper);
     border: none;
-    border-radius: 100px;
+    border-radius: 980px;
     padding: 12px 24px;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    text-transform: none;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -443,13 +462,13 @@
     background: transparent;
     color: var(--color-ink);
     border: 1px solid var(--color-ink);
-    border-radius: 100px;
+    border-radius: 980px;
     padding: 11px 23px;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    text-transform: none;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -458,18 +477,18 @@
   }
   .btn-outline-ink:hover { background: var(--color-ink); color: var(--color-paper); }
 
-  /* Badge éditorial — pill mono uppercase */
+  /* Badge Apple — pill Inter, casse normale */
   .moss-badge {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     padding: 5px 12px;
-    border-radius: 100px;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
+    border-radius: 980px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    text-transform: none;
     background: transparent;
     color: var(--color-ink);
     border: 1px solid var(--color-paper-3);
@@ -486,11 +505,11 @@
     font-size: 14px;
   }
 
-  /* KPI éditorial — chiffres en JetBrains Mono bold (data terminal) */
+  /* KPI — chiffres Inter bold Apple */
   .kpi-figure {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-weight: 700;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.035em;
     line-height: 1;
     color: var(--color-ink);
     font-feature-settings: "tnum", "lnum";
