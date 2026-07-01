@@ -417,17 +417,17 @@
   }
   .leaf-hover:hover { border-color: var(--color-ink); }
 
-  /* CTA principal — pill noir éditorial */
+  /* CTA principal — pill noir Apple */
   .btn-plant {
     background: var(--color-ink);
     color: var(--color-paper);
-    border-radius: 100px;
+    border-radius: 980px;
     padding: 12px 24px;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    text-transform: none;
     border: none;
     cursor: pointer;
     display: inline-flex;
@@ -440,15 +440,15 @@
   /* Secondaire — pill mint filled */
   .btn-harvest {
     background: var(--color-mint);
-    color: var(--color-ink);
+    color: var(--color-paper);
     border: none;
-    border-radius: 100px;
+    border-radius: 980px;
     padding: 12px 24px;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    text-transform: none;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -462,13 +462,13 @@
     background: transparent;
     color: var(--color-ink);
     border: 1px solid var(--color-ink);
-    border-radius: 100px;
+    border-radius: 980px;
     padding: 11px 23px;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    text-transform: none;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -477,18 +477,18 @@
   }
   .btn-outline-ink:hover { background: var(--color-ink); color: var(--color-paper); }
 
-  /* Badge éditorial — pill mono uppercase */
+  /* Badge Apple — pill Inter, casse normale */
   .moss-badge {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     padding: 5px 12px;
-    border-radius: 100px;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
+    border-radius: 980px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    text-transform: none;
     background: transparent;
     color: var(--color-ink);
     border: 1px solid var(--color-paper-3);
@@ -505,11 +505,11 @@
     font-size: 14px;
   }
 
-  /* KPI éditorial — chiffres en JetBrains Mono bold (data terminal) */
+  /* KPI — chiffres Inter bold Apple */
   .kpi-figure {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-weight: 700;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.035em;
     line-height: 1;
     color: var(--color-ink);
     font-feature-settings: "tnum", "lnum";
