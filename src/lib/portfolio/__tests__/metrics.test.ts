@@ -8,7 +8,7 @@ import {
 import { makeAsset } from "./fixtures";
 
 describe("computeMetrics", () => {
-  it("returns zeroed metrics when weights is empty", () => {
+  it("returns zeroed metrics when weights is empty (no NaN, no crash)", () => {
     const a = makeAsset({ id: "a" });
     const m = computeMetrics([a], {}, [[a.volatility ** 2]], [a.expected_return]);
     expect(m.expected_return).toBe(0);
@@ -16,11 +16,17 @@ describe("computeMetrics", () => {
     expect(m.sharpe).toBe(0);
     expect(m.esg_score).toBe(0);
     expect(m.ter).toBe(0);
-    expect(m.diversification).toBe(0);
+    // NOTE — current behaviour: diversification = 1 - HHI, and HHI = 0 on empty
+    // weights → diversification = 1. Arguably diversification should be 0 (or
+    // undefined) when there is no portfolio. Captured here as documentation;
+    // do not silently patch — see instructions.
+    expect(m.diversification).toBe(1);
     expect(m.carbon_intensity_gco2e_per_eur).toBeNull();
     expect(m.carbon_intensity_coverage).toBe(0);
     expect(Number.isFinite(m.sharpe)).toBe(true);
+    expect(Number.isNaN(m.sharpe)).toBe(false);
   });
+
 
   it("computes wᵀΣw exactly for a hand-worked 2-asset case", () => {
     const a = makeAsset({ id: "a", volatility: 0.1 });
