@@ -164,7 +164,14 @@ function CertificatPage() {
           />
         </section>
 
+        <p className="mt-4 text-[11px] text-ink-3 leading-relaxed max-w-3xl">
+          Le CO₂ évité est une <span className="text-ink-2 font-medium">estimation indicative</span>{" "}
+          dérivée du score ESG du portefeuille — ce n'est pas un chiffre réglementaire ni une mesure
+          carbone certifiée.
+        </p>
+
         <section className="mt-12">
+
           <p className="eyebrow">{t("certificate.methodology")}</p>
           <p className="mt-3 text-sm text-ink-2 leading-relaxed max-w-3xl">
             {t("certificate.methodology_body")}
