@@ -290,6 +290,7 @@
   },
   "ethi": {
     "your_advisor": "Ton assistant Ethi",
+    "disclaimer": "Ethi t'aide à comprendre ton portefeuille — ce n'est pas un conseil en investissement personnalisé.",
     "settings": "Réglages",
     "send": "Envoyer",
     "input_placeholder": "Demande quelque chose à Ethi…",
