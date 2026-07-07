@@ -110,12 +110,20 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     pathname.startsWith("/onboarding") ||
     pathname.startsWith("/certificat");
 
+  const showBanner = showBetaBannerFor(pathname);
+
   if (fullBleed) {
-    return <>{children}</>;
+    return (
+      <>
+        {showBanner ? <BetaBanner /> : null}
+        {children}
+      </>
+    );
   }
 
   return (
     <div className="min-h-screen bg-paper">
+      {showBanner ? <BetaBanner /> : null}
       <div
         className={cn(
           prefersReducedMotion ? "" : "transform-gpu will-change-transform transition-[opacity,transform] duration-300 ease-out",
