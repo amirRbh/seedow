@@ -4,9 +4,25 @@ import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { RailNav } from "./RailNav";
 import { TopBar } from "./TopBar";
 import { CommandPalette } from "./CommandPalette";
+import { BetaBanner } from "@/components/beta/BetaBanner";
 import { useFocusMode } from "@/hooks/useFocusMode";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+
+/** Routes affichant des montants/valorisations réelles → bandeau bêta requis. */
+const MONEY_ROUTES = [
+  "/dashboard",
+  "/portfolio",
+  "/objectifs",
+  "/certificat",
+  "/comparatif",
+  "/profil",
+];
+function showBetaBannerFor(pathname: string): boolean {
+  return MONEY_ROUTES.some(
+    (p) => pathname === p || pathname.startsWith(`${p}/`),
+  );
+}
 
 /**
  * Shell de l'application — rail + topbar persistants sur desktop (md+).
@@ -94,12 +110,20 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     pathname.startsWith("/onboarding") ||
     pathname.startsWith("/certificat");
 
+  const showBanner = showBetaBannerFor(pathname);
+
   if (fullBleed) {
-    return <>{children}</>;
+    return (
+      <>
+        {showBanner ? <BetaBanner /> : null}
+        {children}
+      </>
+    );
   }
 
   return (
     <div className="min-h-screen bg-paper">
+      {showBanner ? <BetaBanner /> : null}
       <div
         className={cn(
           prefersReducedMotion ? "" : "transform-gpu will-change-transform transition-[opacity,transform] duration-300 ease-out",
