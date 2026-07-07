@@ -94,7 +94,7 @@ function Dashboard() {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
-      <BetaBanner />
+
       <div className="max-w-lg mx-auto pb-28">
         <AppHeader eyebrow={greeting} title={userName} showPortfolioSelector />
 
