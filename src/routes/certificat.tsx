@@ -104,6 +104,17 @@ function CertificatPage() {
 
       {/* Feuille A4 paysage */}
       <article className="max-w-5xl mx-auto px-8 md:px-14 py-12 print:py-8">
+        <div
+          role="note"
+          className="mb-6 flex items-center gap-2 border border-paper-3 bg-paper-2/60 px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-ink-2"
+        >
+          <span className="inline-block w-1.5 h-1.5 rounded-full bg-gold" aria-hidden />
+          <span className="font-semibold">Bêta</span>
+          <span className="normal-case tracking-normal text-[12px] text-ink-3">
+            capital virtuel · cours réels · aucun argent investi
+          </span>
+        </div>
+
         <header className="flex items-start justify-between gap-6 pb-6 border-b border-paper-3">
           <div>
             <p className="font-display text-2xl text-ink lowercase tracking-tight">seedow</p>
@@ -115,6 +126,7 @@ function CertificatPage() {
             <p className="text-[11px] text-ink-3 mt-1">{dateLong}</p>
           </div>
         </header>
+
 
         <section className="mt-10">
           <p className="eyebrow">{t("certificate.holder")}</p>
@@ -152,7 +164,14 @@ function CertificatPage() {
           />
         </section>
 
+        <p className="mt-4 text-[11px] text-ink-3 leading-relaxed max-w-3xl">
+          Le CO₂ évité est une <span className="text-ink-2 font-medium">estimation indicative</span>{" "}
+          dérivée du score ESG du portefeuille — ce n'est pas un chiffre réglementaire ni une mesure
+          carbone certifiée.
+        </p>
+
         <section className="mt-12">
+
           <p className="eyebrow">{t("certificate.methodology")}</p>
           <p className="mt-3 text-sm text-ink-2 leading-relaxed max-w-3xl">
             {t("certificate.methodology_body")}

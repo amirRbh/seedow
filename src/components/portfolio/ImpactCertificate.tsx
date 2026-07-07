@@ -38,8 +38,9 @@ export function ImpactCertificate() {
             Édite ton certificat personnel
           </h3>
           <p className="text-[13px] text-ink-2 mt-2 leading-relaxed">
-            Une page sobre, imprimable A4, qui résume ton impact réel : CO₂ évité, énergie verte
-            financée, score ESG composite et méthodologie.
+            Une page sobre, imprimable A4, qui résume l'impact projeté de ton portefeuille
+            simulé : CO₂ évité (estimation), énergie verte financée, score ESG composite et
+            méthodologie.
           </p>
 
           <div className="mt-4 flex flex-wrap gap-2">
