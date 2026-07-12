@@ -16,6 +16,7 @@ import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as ObjectifsRouteImport } from './routes/objectifs'
 import { Route as MethodologieRouteImport } from './routes/methodologie'
+import { Route as McpRouteImport } from './routes/mcp'
 import { Route as EthiRouteImport } from './routes/ethi'
 import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -31,7 +32,10 @@ import { Route as ObjectifsGoalIdRouteImport } from './routes/objectifs.$goalId'
 import { Route as HooksRefreshMarketDataRouteImport } from './routes/hooks/refresh-market-data'
 import { Route as CoursSlugRouteImport } from './routes/cours.$slug'
 import { Route as ApiEthiRouteImport } from './routes/api.ethi'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as AuthenticatedAdminBetaRouteImport } from './routes/_authenticated/admin.beta'
+import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 
 const WaitlistRoute = WaitlistRouteImport.update({
   id: '/waitlist',
@@ -66,6 +70,11 @@ const ObjectifsRoute = ObjectifsRouteImport.update({
 const MethodologieRoute = MethodologieRouteImport.update({
   id: '/methodologie',
   path: '/methodologie',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EthiRoute = EthiRouteImport.update({
@@ -142,11 +151,29 @@ const ApiEthiRoute = ApiEthiRouteImport.update({
   path: '/api/ethi',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char91DotmcpChar93ListToolsRoute =
+  Char91DotmcpChar93ListToolsRouteImport.update({
+    id: '/.mcp/list-tools',
+    path: '/.mcp/list-tools',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedAdminBetaRoute = AuthenticatedAdminBetaRouteImport.update({
   id: '/admin/beta',
   path: '/admin/beta',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const Char91DotmcpChar93InvokeToolToolRoute =
+  Char91DotmcpChar93InvokeToolToolRouteImport.update({
+    id: '/.mcp/invoke-tool/$tool',
+    path: '/.mcp/invoke-tool/$tool',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -158,6 +185,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/discover': typeof DiscoverRoute
   '/ethi': typeof EthiRoute
+  '/mcp': typeof McpRoute
   '/methodologie': typeof MethodologieRoute
   '/objectifs': typeof ObjectifsRouteWithChildren
   '/onboarding': typeof OnboardingRoute
@@ -165,11 +193,14 @@ export interface FileRoutesByFullPath {
   '/profil': typeof ProfilRoute
   '/reglages': typeof ReglagesRoute
   '/waitlist': typeof WaitlistRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/api/ethi': typeof ApiEthiRoute
   '/cours/$slug': typeof CoursSlugRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
   '/cours/': typeof CoursIndexRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/beta': typeof AuthenticatedAdminBetaRoute
 }
 export interface FileRoutesByTo {
@@ -181,6 +212,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/discover': typeof DiscoverRoute
   '/ethi': typeof EthiRoute
+  '/mcp': typeof McpRoute
   '/methodologie': typeof MethodologieRoute
   '/objectifs': typeof ObjectifsRouteWithChildren
   '/onboarding': typeof OnboardingRoute
@@ -188,11 +220,14 @@ export interface FileRoutesByTo {
   '/profil': typeof ProfilRoute
   '/reglages': typeof ReglagesRoute
   '/waitlist': typeof WaitlistRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/api/ethi': typeof ApiEthiRoute
   '/cours/$slug': typeof CoursSlugRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
   '/cours': typeof CoursIndexRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/beta': typeof AuthenticatedAdminBetaRoute
 }
 export interface FileRoutesById {
@@ -207,6 +242,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/discover': typeof DiscoverRoute
   '/ethi': typeof EthiRoute
+  '/mcp': typeof McpRoute
   '/methodologie': typeof MethodologieRoute
   '/objectifs': typeof ObjectifsRouteWithChildren
   '/onboarding': typeof OnboardingRoute
@@ -214,11 +250,14 @@ export interface FileRoutesById {
   '/profil': typeof ProfilRoute
   '/reglages': typeof ReglagesRoute
   '/waitlist': typeof WaitlistRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/api/ethi': typeof ApiEthiRoute
   '/cours/$slug': typeof CoursSlugRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
   '/cours/': typeof CoursIndexRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/admin/beta': typeof AuthenticatedAdminBetaRoute
 }
 export interface FileRouteTypes {
@@ -233,6 +272,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/discover'
     | '/ethi'
+    | '/mcp'
     | '/methodologie'
     | '/objectifs'
     | '/onboarding'
@@ -240,11 +280,14 @@ export interface FileRouteTypes {
     | '/profil'
     | '/reglages'
     | '/waitlist'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/api/ethi'
     | '/cours/$slug'
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
     | '/cours/'
+    | '/.mcp/invoke-tool/$tool'
     | '/admin/beta'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -256,6 +299,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/discover'
     | '/ethi'
+    | '/mcp'
     | '/methodologie'
     | '/objectifs'
     | '/onboarding'
@@ -263,11 +307,14 @@ export interface FileRouteTypes {
     | '/profil'
     | '/reglages'
     | '/waitlist'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/api/ethi'
     | '/cours/$slug'
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
     | '/cours'
+    | '/.mcp/invoke-tool/$tool'
     | '/admin/beta'
   id:
     | '__root__'
@@ -281,6 +328,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/discover'
     | '/ethi'
+    | '/mcp'
     | '/methodologie'
     | '/objectifs'
     | '/onboarding'
@@ -288,11 +336,14 @@ export interface FileRouteTypes {
     | '/profil'
     | '/reglages'
     | '/waitlist'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/api/ethi'
     | '/cours/$slug'
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
     | '/cours/'
+    | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/admin/beta'
   fileRoutesById: FileRoutesById
 }
@@ -307,6 +358,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   DiscoverRoute: typeof DiscoverRoute
   EthiRoute: typeof EthiRoute
+  McpRoute: typeof McpRoute
   MethodologieRoute: typeof MethodologieRoute
   ObjectifsRoute: typeof ObjectifsRouteWithChildren
   OnboardingRoute: typeof OnboardingRoute
@@ -314,8 +366,11 @@ export interface RootRouteChildren {
   ProfilRoute: typeof ProfilRoute
   ReglagesRoute: typeof ReglagesRoute
   WaitlistRoute: typeof WaitlistRoute
+  Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
+  Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   ApiEthiRoute: typeof ApiEthiRoute
   HooksRefreshMarketDataRoute: typeof HooksRefreshMarketDataRoute
+  Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -367,6 +422,13 @@ declare module '@tanstack/react-router' {
       path: '/methodologie'
       fullPath: '/methodologie'
       preLoaderRoute: typeof MethodologieRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ethi': {
@@ -474,12 +536,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiEthiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.mcp/list-tools': {
+      id: '/.mcp/list-tools'
+      path: '/.mcp/list-tools'
+      fullPath: '/.mcp/list-tools'
+      preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/admin/beta': {
       id: '/_authenticated/admin/beta'
       path: '/admin/beta'
       fullPath: '/admin/beta'
       preLoaderRoute: typeof AuthenticatedAdminBetaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/.mcp/invoke-tool/$tool': {
+      id: '/.mcp/invoke-tool/$tool'
+      path: '/.mcp/invoke-tool/$tool'
+      fullPath: '/.mcp/invoke-tool/$tool'
+      preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -530,6 +613,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   DiscoverRoute: DiscoverRoute,
   EthiRoute: EthiRoute,
+  McpRoute: McpRoute,
   MethodologieRoute: MethodologieRoute,
   ObjectifsRoute: ObjectifsRouteWithChildren,
   OnboardingRoute: OnboardingRoute,
@@ -537,8 +621,12 @@ const rootRouteChildren: RootRouteChildren = {
   ProfilRoute: ProfilRoute,
   ReglagesRoute: ReglagesRoute,
   WaitlistRoute: WaitlistRoute,
+  Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
+  Char91DotwellKnownChar93OauthProtectedResourceRoute:
+    Char91DotwellKnownChar93OauthProtectedResourceRoute,
   ApiEthiRoute: ApiEthiRoute,
   HooksRefreshMarketDataRoute: HooksRefreshMarketDataRoute,
+  Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

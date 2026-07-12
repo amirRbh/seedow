@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "sdk_version": "0.20.1",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://bhwueoedpupohjsxgzth.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "seedow-mcp",
+      "version": "0.1.0",
+      "title": "Seedow"
+    },
+    "tools": [
+      {
+        "name": "list_my_portfolios",
+        "title": "List my portfolios",
+        "description": "List the signed-in Seedow user's simulated portfolios (name, causes, exclusions, horizon, risk, initial amount, active status).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_portfolio",
+        "title": "Get portfolio",
+        "description": "Get one of the signed-in user's simulated portfolios by id, including its allocation weights and last generation timestamp.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "portfolio_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Portfolio UUID (from list_my_portfolios)."
+            }
+          },
+          "required": [
+            "portfolio_id"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_my_goals",
+        "title": "List my financial goals",
+        "description": "List the signed-in user's Seedow financial goals (name, target amount, target date, monthly contribution, linked portfolio).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_recent_decisions",
+        "title": "List recent decisions",
+        "description": "List the signed-in user's most recent portfolio decision events (creation, cause changes, exclusions, rebalances).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "description": "How many events to return (default 20)."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
