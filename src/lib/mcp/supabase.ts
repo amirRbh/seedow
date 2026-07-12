@@ -1,7 +1,6 @@
-import { defineTool } from "@lovable.dev/mcp-js";
 import { createClient } from "@supabase/supabase-js";
-import type { Database } from "@/integrations/supabase/types";
 import type { ToolContext } from "@lovable.dev/mcp-js";
+import type { Database } from "@/integrations/supabase/types";
 
 export function supabaseForUser(ctx: ToolContext) {
   return createClient<Database>(
@@ -12,8 +11,4 @@ export function supabaseForUser(ctx: ToolContext) {
       auth: { persistSession: false, autoRefreshToken: false },
     },
   );
-}
-
-export function unauthenticated() {
-  return defineTool;
 }
