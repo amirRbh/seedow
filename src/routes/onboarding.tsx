@@ -620,21 +620,21 @@ function Step({
                 transition={{ delay: 0.4 + i * 0.04 }}
                 onClick={() => toggle(option.id)}
                 className={`w-full flex items-center gap-3 p-3.5 rounded-2xl border text-left transition-all ${
-                  isSel ? "bg-moss-2/20 border-moss-3" : "bg-paper/5 border-paper/10 hover:bg-paper/10"
+                  isSel ? "bg-paper text-ink border-paper" : "bg-paper/10 border-paper/30 hover:bg-paper/15 text-paper"
                 }`}
               >
-                <div className="w-10 h-10 rounded-xl bg-paper/10 flex items-center justify-center text-lg flex-shrink-0">
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0 ${isSel ? "bg-ink/10" : "bg-paper/15"}`}>
                   {option.icon}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-paper">{t(`onboarding.steps.${step.id}.${option.id}`)}</p>
+                  <p className={`text-sm font-semibold ${isSel ? "text-ink" : "text-paper"}`}>{t(`onboarding.steps.${step.id}.${option.id}`)}</p>
                   {step.id !== "exclusions" && (
-                    <p className="text-[11px] text-paper/50 mt-0.5">{t(`onboarding.steps.${step.id}.${option.id}_desc`)}</p>
+                    <p className={`text-[11px] mt-0.5 ${isSel ? "text-ink/60" : "text-paper/70"}`}>{t(`onboarding.steps.${step.id}.${option.id}_desc`)}</p>
                   )}
                 </div>
                 <div
                   className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                    isSel ? "bg-moss-2 border-moss-2" : "border-paper/20"
+                    isSel ? "bg-ink border-ink" : "border-paper/40"
                   }`}
                 >
                   {isSel && (
