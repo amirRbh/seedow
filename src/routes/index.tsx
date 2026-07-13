@@ -166,9 +166,9 @@ function Landing() {
                 Accéder à mon espace
               </Link>
             ) : (
-              <button onClick={scrollToCta} className="apple-btn-primary">
+              <Link to="/auth" search={{ redirect: "/dashboard", mode: "signup" }} className="apple-btn-primary">
                 Rejoindre la beta
-              </button>
+              </Link>
             )}
             <Link to="/cours" className="apple-link">
               Voir les cours <span aria-hidden>›</span>
