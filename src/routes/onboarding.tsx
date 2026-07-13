@@ -634,7 +634,7 @@ function Step({
                 </div>
                 <div
                   className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                    isSel ? "bg-moss-2 border-moss-2" : "border-paper/20"
+                    isSel ? "bg-ink border-ink" : "border-paper/40"
                   }`}
                 >
                   {isSel && (
