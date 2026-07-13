@@ -620,10 +620,14 @@ function Step({
                 transition={{ delay: 0.4 + i * 0.04 }}
                 onClick={() => toggle(option.id)}
                 className={`w-full flex items-center gap-3 p-3.5 rounded-2xl border text-left transition-all ${
-                  isSel ? "bg-paper text-ink border-paper" : "bg-paper/10 border-paper/30 hover:bg-paper/15 text-paper"
+                  isSel ? "bg-paper text-ink border-paper" : "border-white/25 hover:bg-white/10 text-paper"
                 }`}
+                style={!isSel ? { backgroundColor: "rgba(255,255,255,0.06)" } : undefined}
               >
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0 ${isSel ? "bg-ink/10" : "bg-paper/15"}`}>
+                <div
+                  className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0 ${isSel ? "bg-ink/10" : ""}`}
+                  style={!isSel ? { backgroundColor: "rgba(255,255,255,0.12)" } : undefined}
+                >
                   {option.icon}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -634,7 +638,7 @@ function Step({
                 </div>
                 <div
                   className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                    isSel ? "bg-ink border-ink" : "border-paper/40"
+                    isSel ? "bg-ink border-ink" : "border-white/50"
                   }`}
                 >
                   {isSel && (
