@@ -83,13 +83,14 @@ function Landing() {
                 >
                   Se connecter
                 </Link>
-                <button
-                  onClick={scrollToCta}
+                <Link
+                  to="/auth"
+                  search={{ redirect: "/dashboard", mode: "signup" }}
                   className="apple-btn-primary"
                   style={{ padding: "6px 14px", fontSize: 13 }}
                 >
                   Rejoindre la beta
-                </button>
+                </Link>
               </>
             )}
           </div>
