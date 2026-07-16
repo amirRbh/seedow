@@ -86,7 +86,10 @@ function CertificatPage() {
       {/* Toolbar — masquée à l'impression */}
       <div className="print:hidden sticky top-0 z-10 bg-paper/90 backdrop-blur border-b border-paper-3">
         <div className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
-          <Link to="/portfolio" className="text-label uppercase tracking-[0.18em] text-ink-3 hover:text-ink">
+          <Link
+            to="/portfolio"
+            className="text-label uppercase tracking-[0.18em] text-ink-3 hover:text-ink"
+          >
             {t("certificate.back_portfolio_short")}
           </Link>
           <div className="flex items-center gap-2">
@@ -120,18 +123,22 @@ function CertificatPage() {
             <p className="eyebrow mt-3">{t("certificate.subtitle")}</p>
           </div>
           <div className="text-right">
-            <p className="text-tag uppercase tracking-[0.22em] text-ink-3 font-semibold">{t("certificate.reference")}</p>
+            <p className="text-tag uppercase tracking-[0.22em] text-ink-3 font-semibold">
+              {t("certificate.reference")}
+            </p>
             <p className="font-display text-sm text-ink mt-1 tabular-nums">{certNo}</p>
             <p className="text-caption text-ink-3 mt-1">{dateLong}</p>
           </div>
         </header>
 
-
         <section className="mt-10">
           <p className="eyebrow">{t("certificate.holder")}</p>
           <h1 className="font-display text-3xl md:text-4xl text-ink mt-2">{holderName}</h1>
           <p className="text-sm text-ink-2 mt-2">
-            {t("certificate.portfolio_line", { name: portfolio.name, value: formatCurrency(totalValue, lang) })}
+            {t("certificate.portfolio_line", {
+              name: portfolio.name,
+              value: formatCurrency(totalValue, lang),
+            })}
           </p>
           <div className="gold-rule mt-6" />
         </section>
@@ -170,7 +177,6 @@ function CertificatPage() {
         </p>
 
         <section className="mt-12">
-
           <p className="eyebrow">{t("certificate.methodology")}</p>
           <p className="mt-3 text-sm text-ink-2 leading-relaxed max-w-3xl">
             {t("certificate.methodology_body")}

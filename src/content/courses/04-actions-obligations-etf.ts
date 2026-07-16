@@ -13,8 +13,7 @@ export const course: Course = {
     "Trois mots qui couvrent l'essentiel de ce qu'on peut détenir dans un portefeuille. Définitions, différences, rôles, à quoi sert chacun selon votre horizon.",
   intro:
     "Avant la stratégie, les briques. Action, obligation, ETF : trois objets, trois rôles différents. Une fois ces trois mots clairs, tu peux lire la composition de n'importe quel produit financier en deux minutes.",
-  eli5:
-    "Trois façons de participer à l'économie. Une action, c'est un petit bout de boulangerie : si elle vend plus de pains, tu gagnes. Une obligation, c'est un prêt à la boulangerie : elle te rend l'argent + un petit extra à date fixe. Un ETF, c'est un panier qui contient un morceau de 1 500 boulangeries différentes en même temps — si une brûle, les autres compensent.",
+  eli5: "Trois façons de participer à l'économie. Une action, c'est un petit bout de boulangerie : si elle vend plus de pains, tu gagnes. Une obligation, c'est un prêt à la boulangerie : elle te rend l'argent + un petit extra à date fixe. Un ETF, c'est un panier qui contient un morceau de 1 500 boulangeries différentes en même temps — si une brûle, les autres compensent.",
   sections: [
     {
       heading: "Action : un petit bout d'entreprise",

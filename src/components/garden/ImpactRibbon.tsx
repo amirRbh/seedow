@@ -15,14 +15,21 @@ interface ImpactRibbonProps {
  * ImpactRibbon — version éditoriale sobre.
  * Fond papier + filet or, KPI signature ; remplace l'ancien gradient moss saturé.
  */
-export function ImpactRibbon({ co2Avoided, treesEquivalent, energyFinanced, esgScore }: ImpactRibbonProps) {
+export function ImpactRibbon({
+  co2Avoided,
+  treesEquivalent,
+  energyFinanced,
+  esgScore,
+}: ImpactRibbonProps) {
   const { t } = useTranslation();
   const { lang } = useLang();
 
   const co2Display = co2Avoided >= 1 ? co2Avoided : co2Avoided * 1000;
   const co2Unit = co2Avoided >= 1 ? t("impact_ribbon.tonnes") : t("impact_ribbon.kg");
   const energyLabel =
-    energyFinanced >= 1000 ? (energyFinanced / 1000).toFixed(1) : Math.round(energyFinanced).toString();
+    energyFinanced >= 1000
+      ? (energyFinanced / 1000).toFixed(1)
+      : Math.round(energyFinanced).toString();
   const energyUnit = energyFinanced >= 1000 ? "MWh" : "kWh";
 
   const fmt = (v: number) =>

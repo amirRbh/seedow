@@ -13,8 +13,7 @@ export const course: Course = {
     "Pourquoi un seul titre peut détruire un portefeuille, et comment la diversification réduit le risque sans sacrifier (beaucoup) le rendement attendu.",
   intro:
     "C'est le seul « repas gratuit » de la finance, disait le prix Nobel Harry Markowitz. La diversification réduit le risque global d'un portefeuille sans réduire son rendement espéré. Voici comment, et pourquoi la plupart des débutants la sous-estiment.",
-  eli5:
-    "Imagine un panier de 10 œufs. Si tu trébuches, tous se cassent. Maintenant, imagine 10 petits paniers d'un œuf chacun. Si tu trébuches, tu ne casses qu'un œuf. C'est ça, la diversification : ne pas mettre tout son argent au même endroit, pour qu'un accident quelque part ne fasse pas tout écrouler.",
+  eli5: "Imagine un panier de 10 œufs. Si tu trébuches, tous se cassent. Maintenant, imagine 10 petits paniers d'un œuf chacun. Si tu trébuches, tu ne casses qu'un œuf. C'est ça, la diversification : ne pas mettre tout son argent au même endroit, pour qu'un accident quelque part ne fasse pas tout écrouler.",
   sections: [
     {
       heading: "Pourquoi une seule action est dangereuse",
@@ -136,7 +135,8 @@ export const course: Course = {
         "Toutes les entreprises de la planète.",
       ],
       correctIndex: 1,
-      explanation: "≈ 1 500 grandes et moyennes capitalisations des pays développés. C'est le standard.",
+      explanation:
+        "≈ 1 500 grandes et moyennes capitalisations des pays développés. C'est le standard.",
     },
     {
       question: "Risque systématique signifie…",

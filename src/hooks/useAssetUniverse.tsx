@@ -30,6 +30,8 @@ interface State {
   assets: DiscoverAsset[];
   loading: boolean;
   error: string | null;
+  /** Nombre d'actifs actifs sans aucun cours (ni live, ni historique) — 0 si tout est couvert. */
+  missingPriceCount: number;
   refresh: () => void;
 }
 
@@ -38,6 +40,7 @@ export function useAssetUniverse(): State {
   const [assets, setAssets] = useState<DiscoverAsset[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [missingPriceCount, setMissingPriceCount] = useState(0);
   const [tick, setTick] = useState(0);
 
   const refresh = useCallback(() => setTick((t) => t + 1), []);
@@ -61,14 +64,46 @@ export function useAssetUniverse(): State {
       if (assetsRes.error || quotesRes.error) {
         setError((assetsRes.error ?? quotesRes.error)?.message ?? "Erreur inconnue");
         setAssets([]);
+        setMissingPriceCount(0);
         setLoading(false);
         return;
       }
 
       const quoteByAsset = new Map((quotesRes.data ?? []).map((q) => [q.asset_id, q]));
 
+      // Actifs sans cours live : on retombe sur le dernier close connu dans
+      // l'historique (asset_prices) plutôt que d'afficher "indisponible" —
+      // le cron horaire peut être en retard ou avoir échoué ponctuellement,
+      // ça ne doit pas rendre l'écran Découverte inutilisable.
+      const missingIds = (assetsRes.data ?? [])
+        .filter((r) => !quoteByAsset.has(r.id))
+        .map((r) => r.id);
+
+      const fallbackByAsset = new Map<string, { close: number; price_date: string }>();
+      if (missingIds.length > 0) {
+        const { data: fallbackRows, error: fallbackErr } = await supabase.rpc(
+          "get_latest_asset_prices",
+          { p_asset_ids: missingIds },
+        );
+        if (fallbackErr) {
+          console.warn("[useAssetUniverse] fallback prices", fallbackErr.message);
+        } else {
+          for (const row of fallbackRows ?? []) {
+            fallbackByAsset.set(row.asset_id, {
+              close: Number(row.close),
+              price_date: row.price_date,
+            });
+          }
+        }
+      }
+      if (cancelled) return;
+
+      let stillMissing = 0;
       const mapped: DiscoverAsset[] = (assetsRes.data ?? []).map((r) => {
         const quote = quoteByAsset.get(r.id);
+        const fallback = fallbackByAsset.get(r.id);
+        const price = quote?.price != null ? Number(quote.price) : (fallback?.close ?? null);
+        if (price == null) stillMissing += 1;
         const causeExposure = (r.cause_exposure ?? {}) as Record<string, number>;
         const esg = Number(r.esg_score);
         const carbon = r.carbon_intensity_gco2e_per_eur;
@@ -82,8 +117,8 @@ export function useAssetUniverse(): State {
           description: r.description ?? "",
           issuer: r.issuer,
           currency: r.currency,
-          current_price: quote?.price != null ? Number(quote.price) : null,
-          quote_fetched_at: quote?.fetched_at ?? null,
+          current_price: price,
+          quote_fetched_at: quote?.fetched_at ?? fallback?.price_date ?? null,
           overall_esg_score: esg / 10,
           climate_score: Number(r.env_score ?? esg) / 10,
           social_score: Number(r.social_score ?? esg) / 10,
@@ -101,6 +136,7 @@ export function useAssetUniverse(): State {
       });
 
       setAssets(mapped);
+      setMissingPriceCount(stillMissing);
       setLoading(false);
     })();
     return () => {
@@ -108,5 +144,5 @@ export function useAssetUniverse(): State {
     };
   }, [tick]);
 
-  return { assets, loading, error, refresh };
+  return { assets, loading, error, missingPriceCount, refresh };
 }

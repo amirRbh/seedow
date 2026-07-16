@@ -21,8 +21,6 @@ type NavItem = {
   shortcut?: string;
 };
 
-
-
 /**
  * Rail vertical desktop — 64px de large, icônes sobres, tooltip au hover.
  * Mobile : rien (le `BottomNavigation` existant prend le relais).
@@ -31,16 +29,39 @@ export function RailNav() {
   const { t } = useTranslation();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const PRIMARY: NavItem[] = [
-    { key: "dashboard", path: "/dashboard", label: t("rail_nav.home"), icon: "portefeuille", shortcut: "g d" },
-    { key: "portfolio", path: "/portfolio", label: t("nav.portfolio"), icon: "analyse", shortcut: "g p" },
-    { key: "objectifs", path: "/objectifs", label: t("nav.objectives"), icon: "comparatif", shortcut: "g o" },
+    {
+      key: "dashboard",
+      path: "/dashboard",
+      label: t("rail_nav.home"),
+      icon: "portefeuille",
+      shortcut: "g d",
+    },
+    {
+      key: "portfolio",
+      path: "/portfolio",
+      label: t("nav.portfolio"),
+      icon: "analyse",
+      shortcut: "g p",
+    },
+    {
+      key: "objectifs",
+      path: "/objectifs",
+      label: t("nav.objectives"),
+      icon: "comparatif",
+      shortcut: "g o",
+    },
     { key: "discover", path: "/discover", label: t("bottom_nav.explore"), icon: "decouvrir" },
     { key: "ethi", path: "/ethi", label: t("rail_nav.ethi_assistant"), icon: "ethi" },
   ];
   const SECONDARY: NavItem[] = [
     { key: "profil", path: "/profil", label: t("rail_nav.investor_profile"), icon: "profil" },
     { key: "cours", path: "/cours", label: "Cours", icon: "cours" },
-    { key: "methodologie", path: "/methodologie", label: t("nav.methodology"), icon: "methodologie" },
+    {
+      key: "methodologie",
+      path: "/methodologie",
+      label: t("nav.methodology"),
+      icon: "methodologie",
+    },
   ];
   return (
     <aside

@@ -35,8 +35,8 @@ export function CoursePaywall({ redirectTo }: Props) {
           Crée un compte pour lire la suite
         </h3>
         <p className="text-sm md:text-base text-ink-2 leading-relaxed max-w-md mx-auto mb-7">
-          Compte gratuit, sans engagement, sans carte bancaire. Tu accèdes immédiatement aux
-          9 cours restants, au quiz et à toute la plateforme bêta.
+          Compte gratuit, sans engagement, sans carte bancaire. Tu accèdes immédiatement aux 9 cours
+          restants, au quiz et à toute la plateforme bêta.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
           <Link

@@ -43,8 +43,18 @@ export function PortfolioSelector({ compact = false }: { compact?: boolean }) {
         aria-expanded={open}
       >
         <span className="text-tag">🌿</span>
-        <span className="text-caption font-semibold text-ink truncate max-w-[120px]">{active.name}</span>
-        <svg viewBox="0 0 24 24" className={`w-3 h-3 text-ink-3 transition-transform ${open ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <span className="text-caption font-semibold text-ink truncate max-w-[120px]">
+          {active.name}
+        </span>
+        <svg
+          viewBox="0 0 24 24"
+          className={`w-3 h-3 text-ink-3 transition-transform ${open ? "rotate-180" : ""}`}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           <path d="M6 9l6 6 6-6" />
         </svg>
       </button>
@@ -65,7 +75,10 @@ export function PortfolioSelector({ compact = false }: { compact?: boolean }) {
                 return (
                   <button
                     key={p.id}
-                    onClick={() => { setActiveId(p.id); setOpen(false); }}
+                    onClick={() => {
+                      setActiveId(p.id);
+                      setOpen(false);
+                    }}
                     role="option"
                     aria-selected={isActive}
                     className={`w-full flex items-center justify-between gap-2 px-3 py-2 text-left text-label transition-colors ${
@@ -77,7 +90,15 @@ export function PortfolioSelector({ compact = false }: { compact?: boolean }) {
                       <span className="font-medium truncate">{p.name}</span>
                     </span>
                     {isActive && (
-                      <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-moss-1 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <svg
+                        viewBox="0 0 24 24"
+                        className="w-3.5 h-3.5 text-moss-1 flex-shrink-0"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
                         <path d="M20 6L9 17l-5-5" />
                       </svg>
                     )}
@@ -89,10 +110,15 @@ export function PortfolioSelector({ compact = false }: { compact?: boolean }) {
             <div className="border-t border-paper-3">
               {canCreateMore ? (
                 <button
-                  onClick={() => { setOpen(false); navigate({ to: "/onboarding", search: { new: 1 } }); }}
+                  onClick={() => {
+                    setOpen(false);
+                    navigate({ to: "/onboarding", search: { new: 1 } });
+                  }}
                   className="w-full flex items-center gap-2 px-3 py-2.5 text-left text-label text-moss-1 hover:bg-moss-5/30 font-medium"
                 >
-                  <span className="w-4 h-4 rounded-full border border-moss-1 flex items-center justify-center text-tag leading-none">+</span>
+                  <span className="w-4 h-4 rounded-full border border-moss-1 flex items-center justify-center text-tag leading-none">
+                    +
+                  </span>
                   {t("portfolio_selector.new_portfolio")}
                   <span className="ml-auto text-tag text-ink-3">{portfolios.length}/3</span>
                 </button>

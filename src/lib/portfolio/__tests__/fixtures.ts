@@ -39,8 +39,7 @@ export function makeAsset(overrides: AssetOverrides = {}): Asset {
     social_score: overrides.social_score ?? null,
     governance_score: overrides.governance_score ?? null,
     esg_score_source: overrides.esg_score_source ?? "manual",
-    carbon_intensity_gco2e_per_eur:
-      overrides.carbon_intensity_gco2e_per_eur ?? null,
+    carbon_intensity_gco2e_per_eur: overrides.carbon_intensity_gco2e_per_eur ?? null,
     carbon_intensity_source: overrides.carbon_intensity_source ?? null,
     carbon_intensity_updated_at: overrides.carbon_intensity_updated_at ?? null,
     sfdr_article: overrides.sfdr_article ?? null,
@@ -91,9 +90,16 @@ export function defaultParams(overrides: Partial<import("../types").PortfolioPar
 /** Build a diverse universe hitting every asset class at least once. */
 export function balancedUniverse(): Asset[] {
   const classes: AssetClass[] = [
-    "equity_dev", "equity_em", "thematic",
-    "green_bond", "corporate_bond", "social_bond", "sov_bond",
-    "reit", "commodity", "cash",
+    "equity_dev",
+    "equity_em",
+    "thematic",
+    "green_bond",
+    "corporate_bond",
+    "social_bond",
+    "sov_bond",
+    "reit",
+    "commodity",
+    "cash",
   ];
   const out: Asset[] = [];
   for (const cls of classes) {

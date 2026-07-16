@@ -10,10 +10,14 @@ export const Route = createFileRoute("/waitlist")({
       { title: "Liste d'attente — Seedow" },
       {
         name: "description",
-        content: "La phase bêta de Seedow est complète. Inscris-toi sur la liste d'attente pour être notifié·e dès qu'une place se libère.",
+        content:
+          "La phase bêta de Seedow est complète. Inscris-toi sur la liste d'attente pour être notifié·e dès qu'une place se libère.",
       },
       { property: "og:title", content: "Liste d'attente — Seedow" },
-      { property: "og:description", content: "Phase bêta complète. Inscris-toi pour la prochaine vague." },
+      {
+        property: "og:description",
+        content: "Phase bêta complète. Inscris-toi pour la prochaine vague.",
+      },
     ],
   }),
   component: WaitlistPage,
@@ -44,7 +48,10 @@ function WaitlistPage() {
     <div className="min-h-screen bg-paper flex items-center justify-center px-6 py-12">
       <div className="w-full max-w-md">
         <div className="flex items-center justify-between mb-6">
-          <Link to="/" className="block text-tag uppercase tracking-[0.22em] text-ink-3 font-medium hover:text-ink transition-colors">
+          <Link
+            to="/"
+            className="block text-tag uppercase tracking-[0.22em] text-ink-3 font-medium hover:text-ink transition-colors"
+          >
             ← {t("common.back")}
           </Link>
           <LanguageToggle />
@@ -52,12 +59,8 @@ function WaitlistPage() {
         <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">
           {t("waitlist.eyebrow")}
         </p>
-        <h1 className="font-display text-3xl text-ink leading-tight">
-          {t("waitlist.title")}
-        </h1>
-        <p className="text-body-sm text-ink-2 mt-3 leading-relaxed">
-          {t("waitlist.desc")}
-        </p>
+        <h1 className="font-display text-3xl text-ink leading-tight">{t("waitlist.title")}</h1>
+        <p className="text-body-sm text-ink-2 mt-3 leading-relaxed">{t("waitlist.desc")}</p>
 
         {position !== null ? (
           <div className="mt-8 p-6 border border-paper-3 rounded-2xl bg-paper-2">

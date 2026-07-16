@@ -48,4 +48,3 @@ export const getRecentRiskModelRuns = createServerFn({ method: "GET" })
     if (error) throw new Error(error.message);
     return { runs: (data ?? []) as CronRunEntry[] };
   });
-

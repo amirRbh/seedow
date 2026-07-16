@@ -553,7 +553,8 @@ function CtaForm({ isAuthed }: { isAuthed: boolean | null }) {
         ) : waitlistCount !== null && waitlistCount > 0 ? (
           <>
             <span className="font-semibold text-[color:var(--apple-text)]">{waitlistCount}</span>{" "}
-            {waitlistCount > 1 ? "personnes déjà inscrites" : "personne déjà inscrite"} · places limitées
+            {waitlistCount > 1 ? "personnes déjà inscrites" : "personne déjà inscrite"} · places
+            limitées
           </>
         ) : (
           <>Rejoins la liste des premiers testeurs · places limitées</>

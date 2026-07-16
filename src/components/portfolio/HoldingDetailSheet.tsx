@@ -32,8 +32,7 @@ const fmtEur = (n: number) =>
     maximumFractionDigits: 2,
   });
 
-const fmtPct = (n: number) =>
-  `${n >= 0 ? "+" : ""}${n.toFixed(2)}%`;
+const fmtPct = (n: number) => `${n >= 0 ? "+" : ""}${n.toFixed(2)}%`;
 
 const fmtPrice = (n: number) =>
   n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 4 });
@@ -80,9 +79,7 @@ export function HoldingDetailSheet({ open, onClose, holding, valued }: Props) {
           {hasQuote ? (
             <>
               <div className="flex items-baseline gap-2">
-                <p className={`font-value text-2xl ${tone}`}>
-                  {fmtPct(valued!.returnPct)}
-                </p>
+                <p className={`font-value text-2xl ${tone}`}>{fmtPct(valued!.returnPct)}</p>
                 <p className={`text-body-sm ${tone}`}>
                   {valued!.pnl >= 0 ? "+" : ""}
                   {fmtEur(valued!.pnl)}
@@ -181,7 +178,8 @@ function FundRejectionCard({ holding }: { holding: ActiveHolding }) {
     return (
       <div className="mt-3 paper-card p-4 border border-paper-3">
         <p className="text-label text-ink leading-relaxed">
-          Merci. Ton signal est enregistré — il alimentera la sélection automatique des fonds pour les profils proches du tien.
+          Merci. Ton signal est enregistré — il alimentera la sélection automatique des fonds pour
+          les profils proches du tien.
         </p>
       </div>
     );
@@ -206,7 +204,8 @@ function FundRejectionCard({ holding }: { holding: ActiveHolding }) {
         Pourquoi ce fonds ne te convient pas
       </p>
       <p className="text-caption text-ink-3 mb-3">
-        Ton retour reste privé. On s'en sert pour mieux composer les portefeuilles des utilisateurs qui partagent tes valeurs.
+        Ton retour reste privé. On s'en sert pour mieux composer les portefeuilles des utilisateurs
+        qui partagent tes valeurs.
       </p>
       <div className="space-y-1.5">
         {REJECTION_REASONS.map((r) => (
@@ -257,7 +256,11 @@ function FundRejectionCard({ holding }: { holding: ActiveHolding }) {
           {busy ? "Envoi…" : "Valider"}
         </button>
         <button
-          onClick={() => { setOpen(false); setReason(null); setDetail(""); }}
+          onClick={() => {
+            setOpen(false);
+            setReason(null);
+            setDetail("");
+          }}
           className="px-4 py-2 text-label text-ink-3 hover:text-ink transition-colors"
         >
           Annuler

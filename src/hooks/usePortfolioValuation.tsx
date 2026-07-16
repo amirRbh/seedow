@@ -8,23 +8,23 @@ export interface ValuedHolding {
   ticker: string;
   name: string;
   asset_class: string;
-  weight: number;            // 0..1
-  invested: number;          // € invested in this line
+  weight: number; // 0..1
+  invested: number; // € invested in this line
   currentPrice: number | null;
   entryPrice: number | null;
-  currentValue: number;      // € — falls back to invested if no quote
+  currentValue: number; // € — falls back to invested if no quote
   pnl: number;
   returnPct: number;
   quoteAt: string | null;
 }
 
 export interface ValuationConsistency {
-  viewValue: number;        // somme des current_value renvoyés par la vue SQL
-  expectedValue: number;    // recalcul côté client (poids × prix / prix d'entrée)
-  deltaAbs: number;         // |view - expected| en €
-  deltaPct: number;         // écart relatif vs totalInvested, en %
-  threshold: number;        // seuil d'alerte (%)
-  warn: boolean;            // true si deltaPct > threshold
+  viewValue: number; // somme des current_value renvoyés par la vue SQL
+  expectedValue: number; // recalcul côté client (poids × prix / prix d'entrée)
+  deltaAbs: number; // |view - expected| en €
+  deltaPct: number; // écart relatif vs totalInvested, en %
+  threshold: number; // seuil d'alerte (%)
+  warn: boolean; // true si deltaPct > threshold
 }
 
 export interface PortfolioValuation {
@@ -143,8 +143,7 @@ export function usePortfolioValuation(): PortfolioValuation {
     };
   });
 
-  const currentValue = holdings.reduce((s, h) => s + h.currentValue, 0)
-    || totalInvested;
+  const currentValue = holdings.reduce((s, h) => s + h.currentValue, 0) || totalInvested;
   const pnl = currentValue - totalInvested;
   const returnPct = totalInvested > 0 ? (pnl / totalInvested) * 100 : 0;
 
@@ -162,16 +161,17 @@ export function usePortfolioValuation(): PortfolioValuation {
   const expectedValue = holdings.reduce((s, h) => s + h.currentValue, 0);
   const deltaAbs = Math.abs(viewValue - expectedValue);
   const deltaPct = totalInvested > 0 ? (deltaAbs / totalInvested) * 100 : 0;
-  const consistency: ValuationConsistency | null = rows.length > 0
-    ? {
-        viewValue,
-        expectedValue,
-        deltaAbs,
-        deltaPct,
-        threshold: CONSISTENCY_THRESHOLD_PCT,
-        warn: deltaPct > CONSISTENCY_THRESHOLD_PCT,
-      }
-    : null;
+  const consistency: ValuationConsistency | null =
+    rows.length > 0
+      ? {
+          viewValue,
+          expectedValue,
+          deltaAbs,
+          deltaPct,
+          threshold: CONSISTENCY_THRESHOLD_PCT,
+          warn: deltaPct > CONSISTENCY_THRESHOLD_PCT,
+        }
+      : null;
 
   if (consistency?.warn && typeof window !== "undefined") {
     console.warn(

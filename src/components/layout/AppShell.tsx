@@ -19,9 +19,7 @@ const MONEY_ROUTES = [
   "/profil",
 ];
 function showBetaBannerFor(pathname: string): boolean {
-  return MONEY_ROUTES.some(
-    (p) => pathname === p || pathname.startsWith(`${p}/`),
-  );
+  return MONEY_ROUTES.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 }
 
 /**
@@ -91,12 +89,27 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       if (gPrefix.current && Date.now() - gPrefix.current < 1500) {
         const key = e.key.toLowerCase();
         gPrefix.current = null;
-        if (key === "d") { e.preventDefault(); navigate({ to: "/dashboard" }); return; }
-        if (key === "p") { e.preventDefault(); navigate({ to: "/portfolio" }); return; }
-        if (key === "c") { e.preventDefault(); navigate({ to: "/comparatif" }); return; }
-        if (key === "o") { e.preventDefault(); navigate({ to: "/objectifs" }); return; }
+        if (key === "d") {
+          e.preventDefault();
+          navigate({ to: "/dashboard" });
+          return;
+        }
+        if (key === "p") {
+          e.preventDefault();
+          navigate({ to: "/portfolio" });
+          return;
+        }
+        if (key === "c") {
+          e.preventDefault();
+          navigate({ to: "/comparatif" });
+          return;
+        }
+        if (key === "o") {
+          e.preventDefault();
+          navigate({ to: "/objectifs" });
+          return;
+        }
       }
-
     };
 
     window.addEventListener("keydown", onKey);
@@ -126,17 +139,28 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {showBanner ? <BetaBanner /> : null}
       <div
         className={cn(
-          prefersReducedMotion ? "" : "transform-gpu will-change-transform transition-[opacity,transform] duration-300 ease-out",
-          focus ? "md:opacity-0 md:pointer-events-none md:-translate-x-2" : "md:opacity-100 md:translate-x-0",
+          prefersReducedMotion
+            ? ""
+            : "transform-gpu will-change-transform transition-[opacity,transform] duration-300 ease-out",
+          focus
+            ? "md:opacity-0 md:pointer-events-none md:-translate-x-2"
+            : "md:opacity-100 md:translate-x-0",
         )}
         aria-hidden={focus ? "true" : undefined}
       >
         <RailNav />
       </div>
-      <div className={cn(prefersReducedMotion ? "" : "transition-[padding] duration-300 ease-out", focus ? "md:pl-0" : "md:pl-16")}>
+      <div
+        className={cn(
+          prefersReducedMotion ? "" : "transition-[padding] duration-300 ease-out",
+          focus ? "md:pl-0" : "md:pl-16",
+        )}
+      >
         <div
           className={cn(
-            prefersReducedMotion ? "grid" : "grid transform-gpu will-change-[grid-template-rows] transition-[grid-template-rows,opacity] duration-300 ease-out",
+            prefersReducedMotion
+              ? "grid"
+              : "grid transform-gpu will-change-[grid-template-rows] transition-[grid-template-rows,opacity] duration-300 ease-out",
             focus ? "md:grid-rows-[0fr] md:opacity-0" : "md:grid-rows-[1fr] md:opacity-100",
           )}
           aria-hidden={focus ? "true" : undefined}
@@ -186,7 +210,16 @@ function FocusToggle({ focus, onToggle }: { focus: boolean; onToggle: () => void
 
 function FocusIcon({ active }: { active: boolean }) {
   return (
-    <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg
+      viewBox="0 0 24 24"
+      className="w-3.5 h-3.5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
       {active ? (
         <>
           <path d="M4 9V5h4" />

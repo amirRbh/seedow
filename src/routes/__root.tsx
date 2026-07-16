@@ -114,10 +114,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
   );
 }
 
-class RootErrorBoundary extends Component<
-  { children: ReactNode },
-  { hasError: boolean }
-> {
+class RootErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
   state = { hasError: false };
 
   static getDerivedStateFromError() {
@@ -137,10 +134,7 @@ class RootErrorBoundary extends Component<
             <p className="mt-3 text-sm text-ink-3">
               Une erreur inattendue s'est produite. L'équipe a été notifiée automatiquement.
             </p>
-            <button
-              onClick={() => window.location.assign("/")}
-              className="btn-plant mt-6"
-            >
+            <button onClick={() => window.location.assign("/")} className="btn-plant mt-6">
               Retour à l'accueil
             </button>
           </div>

@@ -16,7 +16,10 @@ export const Route = createFileRoute("/objectifs/$goalId")({
   beforeLoad: async ({ params }) => {
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) {
-      throw redirect({ to: "/auth", search: { redirect: `/objectifs/${params.goalId}`, mode: "login" } });
+      throw redirect({
+        to: "/auth",
+        search: { redirect: `/objectifs/${params.goalId}`, mode: "login" },
+      });
     }
   },
   component: GoalDetail,
@@ -36,7 +39,9 @@ function GoalDetail() {
     (async () => {
       const { data, error } = await supabase
         .from("financial_goals")
-        .select("id, name, goal_type, target_amount, target_date, monthly_contribution, initial_capital, portfolio_id, created_at, updated_at")
+        .select(
+          "id, name, goal_type, target_amount, target_date, monthly_contribution, initial_capital, portfolio_id, created_at, updated_at",
+        )
         .eq("id", goalId)
         .maybeSingle();
       if (cancelled) return;
@@ -52,17 +57,25 @@ function GoalDetail() {
       }
       setLoading(false);
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [goalId]);
 
   if (loading) {
-    return <div className="min-h-screen bg-paper p-10"><p className="text-ink-3">{t("objectives.loading")}</p></div>;
+    return (
+      <div className="min-h-screen bg-paper p-10">
+        <p className="text-ink-3">{t("objectives.loading")}</p>
+      </div>
+    );
   }
   if (!goal) {
     return (
       <div className="min-h-screen bg-paper p-10 text-center">
         <p className="font-value text-2xl text-ink">{t("objectives.goal_not_found")}</p>
-        <Button className="mt-4" onClick={() => navigate({ to: "/objectifs" })}>{t("objectives.back")}</Button>
+        <Button className="mt-4" onClick={() => navigate({ to: "/objectifs" })}>
+          {t("objectives.back")}
+        </Button>
       </div>
     );
   }
@@ -75,7 +88,10 @@ function GoalDetail() {
     <div className="min-h-screen bg-paper pb-24 md:pb-12">
       <AppHeader eyebrow={t("objectives.eyebrow_goal")} title={goal.name} />
       <div className="mx-auto max-w-3xl px-4 md:px-8">
-        <Link to="/objectifs" className="text-caption uppercase tracking-[0.18em] text-ink-3 hover:text-ink">
+        <Link
+          to="/objectifs"
+          className="text-caption uppercase tracking-[0.18em] text-ink-3 hover:text-ink"
+        >
           {t("objectives.all_goals")}
         </Link>
         <EditorialSection

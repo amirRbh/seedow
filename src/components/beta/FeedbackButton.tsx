@@ -75,21 +75,19 @@ export function FeedbackButton() {
             <>
               <DialogHeader>
                 <DialogTitle>{t("beta.feedback_thanks_title")}</DialogTitle>
-                <DialogDescription>
-                  {t("beta.feedback_thanks_desc")}
-                </DialogDescription>
+                <DialogDescription>{t("beta.feedback_thanks_desc")}</DialogDescription>
               </DialogHeader>
               <DialogFooter>
-                <button onClick={() => setOpen(false)} className="btn-plant">{t("common.close")}</button>
+                <button onClick={() => setOpen(false)} className="btn-plant">
+                  {t("common.close")}
+                </button>
               </DialogFooter>
             </>
           ) : (
             <>
               <DialogHeader>
                 <DialogTitle>{t("beta.feedback_title")}</DialogTitle>
-                <DialogDescription>
-                  {t("beta.feedback_desc")}
-                </DialogDescription>
+                <DialogDescription>{t("beta.feedback_desc")}</DialogDescription>
               </DialogHeader>
               <div className="space-y-5 py-2">
                 <div>

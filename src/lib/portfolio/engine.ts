@@ -1,9 +1,4 @@
-import type {
-  Asset,
-  ExclusionTag,
-  PortfolioParams,
-  PortfolioResult,
-} from "./types";
+import type { Asset, ExclusionTag, PortfolioParams, PortfolioResult } from "./types";
 import { MIN_PORTFOLIO_ESG, causeToPillarWeights } from "./types";
 import { optimizeMarkowitz, applyConvictionAdjustment } from "./markowitz";
 import { computeMetrics } from "./metrics";
@@ -49,10 +44,7 @@ function applyBestInClass(assets: Asset[]): Asset[] {
 /**
  * Build covariance sub-matrix for the given asset subset.
  */
-function buildCovariance(
-  assets: Asset[],
-  covMap: Map<string, number>,
-): number[][] {
+function buildCovariance(assets: Asset[], covMap: Map<string, number>): number[][] {
   const n = assets.length;
   const Σ: number[][] = [];
   for (let i = 0; i < n; i++) {
@@ -98,11 +90,17 @@ export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
     return {
       weights: {},
       metrics: {
-        expected_return: 0, volatility: 0, sharpe: 0,
-        esg_score: 0, ter: 0, co2_avoided_tons: 0,
+        expected_return: 0,
+        volatility: 0,
+        sharpe: 0,
+        esg_score: 0,
+        ter: 0,
+        co2_avoided_tons: 0,
         carbon_intensity_gco2e_per_eur: null,
         carbon_intensity_coverage: 0,
-        by_class: {} as never, by_region: {}, diversification: 0,
+        by_class: {} as never,
+        by_region: {},
+        diversification: 0,
       },
       selected_assets: [],
       excluded_count: initialCount,
@@ -115,12 +113,7 @@ export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
   const baseReturns = pool.map((a) => a.expected_return);
 
   // Stage 3 — conviction adjustment (was misnamed "Black-Litterman")
-  const μ = applyConvictionAdjustment(
-    pool,
-    baseReturns,
-    params.causes,
-    params.cause_intensity,
-  );
+  const μ = applyConvictionAdjustment(pool, baseReturns, params.causes, params.cause_intensity);
 
   // Stage 4 — optimise
   const riskAversion = Math.max(2, 0.6 / Math.max(params.risk_target, 0.02));
@@ -161,7 +154,7 @@ export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
     }
     const classCount = byClass.size;
     for (const [, arr] of byClass) {
-      const share = (1 / classCount) / arr.length;
+      const share = 1 / classCount / arr.length;
       for (const a of arr) {
         cleaned[a.id] = share;
         total += share;

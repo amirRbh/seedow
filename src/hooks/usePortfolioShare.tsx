@@ -47,8 +47,8 @@ export function useCommunityShares(filter?: { cause?: string; risk?: "low" | "mi
         if (filter?.risk) {
           rows = rows.filter((r) => {
             const v = Number(r.volatility ?? 0.15);
-            if (filter.risk === "low") return v < 0.10;
-            if (filter.risk === "mid") return v >= 0.10 && v < 0.18;
+            if (filter.risk === "low") return v < 0.1;
+            if (filter.risk === "mid") return v >= 0.1 && v < 0.18;
             return v >= 0.18;
           });
         }
@@ -125,11 +125,12 @@ export async function fetchOrCreatePublicHandle(userId: string): Promise<string>
     .maybeSingle();
   if (profile?.public_handle) return profile.public_handle;
   // Generate one from display_name or random
-  const base = (profile?.display_name ?? "investor")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 16) || "investor";
+  const base =
+    (profile?.display_name ?? "investor")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 16) || "investor";
   const handle = `${base}-${Math.random().toString(36).slice(2, 6)}`;
   const { error } = await supabase
     .from("profiles")

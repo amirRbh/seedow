@@ -93,7 +93,6 @@ describe("optimizeMarkowitz", () => {
       expect(w).toBeLessThanOrEqual(MAX_SINGLE_WEIGHT + 1e-6);
     }
   });
-
 });
 
 describe("applyConvictionAdjustment", () => {

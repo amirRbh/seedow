@@ -147,20 +147,14 @@ export function useActivePortfolio(): State {
       ? `pf:${user.id}:${targetId}:${suffix}`
       : `pf:${user.id}:all:${suffix}`;
 
-    const filter = targetId
-      ? `id=eq.${targetId}`
-      : `user_id=eq.${user.id}`;
+    const filter = targetId ? `id=eq.${targetId}` : `user_id=eq.${user.id}`;
 
     const channel = supabase
       .channel(channelName)
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "portfolios", filter },
-        () => {
-          if (!active) return;
-          setTick((t) => t + 1);
-        },
-      )
+      .on("postgres_changes", { event: "*", schema: "public", table: "portfolios", filter }, () => {
+        if (!active) return;
+        setTick((t) => t + 1);
+      })
       .subscribe();
 
     return () => {

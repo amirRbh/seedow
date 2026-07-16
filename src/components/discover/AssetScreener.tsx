@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion } from "framer-motion";
+import { useServerFn } from "@tanstack/react-start";
+import { RefreshCw } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { AssetRow } from "./AssetRow";
 import { AssetDetailSheet } from "./AssetDetailSheet";
@@ -14,6 +16,7 @@ import {
   type SortKey,
 } from "@/lib/discover/filters";
 import { useAssetUniverse } from "@/hooks/useAssetUniverse";
+import { triggerMarketRefresh } from "@/lib/market/refresh.functions";
 import type { DiscoverAsset } from "@/lib/discover/types";
 
 export function AssetScreener() {
@@ -21,7 +24,30 @@ export function AssetScreener() {
   const [filters, setFilters] = useState<ScreenerFilters>(DEFAULT_FILTERS);
   const [panelOpen, setPanelOpen] = useState(false);
   const [detail, setDetail] = useState<DiscoverAsset | null>(null);
-  const { assets, loading, error } = useAssetUniverse();
+  const {
+    assets,
+    loading,
+    error,
+    missingPriceCount,
+    refresh: refreshUniverse,
+  } = useAssetUniverse();
+  const triggerRefresh = useServerFn(triggerMarketRefresh);
+  const [refreshing, setRefreshing] = useState(false);
+  const [refreshMsg, setRefreshMsg] = useState<string | null>(null);
+
+  const onRefreshPrices = async () => {
+    setRefreshing(true);
+    setRefreshMsg(null);
+    try {
+      const res = await triggerRefresh();
+      setRefreshMsg(t("discover.refresh_result", { ok: res.ok, failed: res.failed }));
+      refreshUniverse();
+    } catch (e) {
+      setRefreshMsg(e instanceof Error ? e.message : t("discover.refresh_error"));
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   const categories = useMemo(() => uniqueCategories(assets), [assets]);
   const results = useMemo(() => applyFilters(assets, filters), [assets, filters]);
@@ -225,6 +251,29 @@ export function AssetScreener() {
         )}
       </AnimatePresence>
 
+      {/* Cours manquants : action de rafraîchissement visible, pas juste un texte "indisponible" par ligne */}
+      {!loading && !error && missingPriceCount > 0 && (
+        <div className="px-5">
+          <div className="rounded-lg border border-gold/40 bg-[oklch(0.97_0.03_85)] p-3 flex items-start gap-2.5">
+            <div className="flex-1 min-w-0">
+              <p className="text-label font-medium text-ink">
+                {t("discover.prices_missing", { count: missingPriceCount })}
+              </p>
+              {refreshMsg && <p className="text-caption text-ink-3 mt-0.5">{refreshMsg}</p>}
+            </div>
+            <button
+              type="button"
+              onClick={onRefreshPrices}
+              disabled={refreshing}
+              className="text-caption font-medium px-2.5 py-1 rounded border border-ink/30 hover:bg-ink/5 transition-colors flex items-center gap-1 disabled:opacity-50 flex-shrink-0"
+            >
+              <RefreshCw className={`w-3 h-3 ${refreshing ? "animate-spin" : ""}`} />
+              {t("discover.refresh_prices")}
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Results */}
       <div className="px-5 pt-2 space-y-2.5">
         {loading ? (
@@ -270,9 +319,7 @@ export function AssetScreener() {
 function FilterGroup({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <p className="text-tag uppercase tracking-[0.18em] text-gold font-semibold mb-2">
-        {label}
-      </p>
+      <p className="text-tag uppercase tracking-[0.18em] text-gold font-semibold mb-2">{label}</p>
       <div className="flex flex-wrap gap-1.5">{children}</div>
     </div>
   );

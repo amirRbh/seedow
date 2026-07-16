@@ -49,7 +49,10 @@ export function InvestDialog({ trigger, defaultAmount = 200, label }: Props) {
     !submitting &&
     !!portfolio &&
     (method === "applepay" ||
-      (method === "card" && cardNumber.replace(/\s/g, "").length >= 12 && cardExp.length >= 4 && cardCvc.length >= 3) ||
+      (method === "card" &&
+        cardNumber.replace(/\s/g, "").length >= 12 &&
+        cardExp.length >= 4 &&
+        cardCvc.length >= 3) ||
       (method === "sepa" && iban.replace(/\s/g, "").length >= 14));
 
   const handleConfirm = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -90,9 +93,7 @@ export function InvestDialog({ trigger, defaultAmount = 200, label }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {trigger ?? <DefaultTrigger label={resolvedLabel} />}
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger ?? <DefaultTrigger label={resolvedLabel} />}</DialogTrigger>
       <DialogContent className="bg-paper border-paper-3 sm:max-w-md">
         <DialogHeader>
           <p className="eyebrow">{t("invest_dialog.eyebrow")}</p>
@@ -109,7 +110,9 @@ export function InvestDialog({ trigger, defaultAmount = 200, label }: Props) {
             </Label>
             <div className="mt-2 flex items-center gap-2">
               <div className="relative flex-1">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-3 text-sm">€</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-3 text-sm">
+                  €
+                </span>
                 <Input
                   type="number"
                   inputMode="decimal"
@@ -199,9 +202,7 @@ export function InvestDialog({ trigger, defaultAmount = 200, label }: Props) {
                 <p className="text-caption uppercase tracking-[0.18em] text-ink-3 font-semibold">
                   {t("invest_dialog.applepay_eyebrow")}
                 </p>
-                <p className="mt-2 text-sm text-ink-2">
-                  {t("invest_dialog.applepay_desc")}
-                </p>
+                <p className="mt-2 text-sm text-ink-2">{t("invest_dialog.applepay_desc")}</p>
               </div>
             </TabsContent>
 
@@ -216,9 +217,7 @@ export function InvestDialog({ trigger, defaultAmount = 200, label }: Props) {
                   maxLength={34}
                 />
               </div>
-              <p className="text-caption text-ink-3">
-                {t("invest_dialog.sepa_note")}
-              </p>
+              <p className="text-caption text-ink-3">{t("invest_dialog.sepa_note")}</p>
             </TabsContent>
           </Tabs>
 
@@ -262,7 +261,13 @@ function DefaultTrigger({ label }: { label: string }) {
       type="button"
       className="inline-flex items-center gap-1.5 h-10 px-5 rounded-full bg-ink text-paper text-label font-semibold uppercase tracking-[0.14em] hover:bg-ink-2 transition-colors"
     >
-      <svg viewBox="0 0 16 16" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.2}>
+      <svg
+        viewBox="0 0 16 16"
+        className="w-3.5 h-3.5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2.2}
+      >
         <path d="M8 3v10M3 8h10" />
       </svg>
       {label}
@@ -272,7 +277,13 @@ function DefaultTrigger({ label }: { label: string }) {
 
 function Spinner() {
   return (
-    <svg viewBox="0 0 24 24" className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" strokeWidth={2.5}>
+    <svg
+      viewBox="0 0 24 24"
+      className="w-4 h-4 animate-spin"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2.5}
+    >
       <path d="M21 12a9 9 0 1 1-6.2-8.55" strokeLinecap="round" />
     </svg>
   );

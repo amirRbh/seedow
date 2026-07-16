@@ -108,10 +108,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "asset_covariance_asset_a_fkey"
+            columns: ["asset_a"]
+            isOneToOne: false
+            referencedRelation: "assets_missing_market_data"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "asset_covariance_asset_b_fkey"
             columns: ["asset_b"]
             isOneToOne: false
             referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "asset_covariance_asset_b_fkey"
+            columns: ["asset_b"]
+            isOneToOne: false
+            referencedRelation: "assets_missing_market_data"
             referencedColumns: ["id"]
           },
         ]
@@ -147,6 +161,13 @@ export type Database = {
             columns: ["asset_id"]
             isOneToOne: false
             referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "asset_prices_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets_missing_market_data"
             referencedColumns: ["id"]
           },
         ]
@@ -188,6 +209,13 @@ export type Database = {
             columns: ["asset_id"]
             isOneToOne: true
             referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "asset_quotes_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: true
+            referencedRelation: "assets_missing_market_data"
             referencedColumns: ["id"]
           },
         ]
@@ -562,10 +590,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "fund_rejections_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets_missing_market_data"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "fund_rejections_swap_asset_id_fkey"
             columns: ["swap_asset_id"]
             isOneToOne: false
             referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fund_rejections_swap_asset_id_fkey"
+            columns: ["swap_asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets_missing_market_data"
             referencedColumns: ["id"]
           },
         ]
@@ -965,6 +1007,18 @@ export type Database = {
       }
     }
     Views: {
+      assets_missing_market_data: {
+        Row: {
+          has_live_quote: boolean | null
+          has_price_history: boolean | null
+          id: string | null
+          isin: string | null
+          name: string | null
+          ticker: string | null
+          yahoo_symbol: string | null
+        }
+        Relationships: []
+      }
       portfolio_holdings_valued: {
         Row: {
           asset_class: Database["public"]["Enums"]["asset_class"] | null
@@ -992,6 +1046,14 @@ export type Database = {
       check_and_increment_rate_limit: {
         Args: { p_key: string; p_limit: number; p_window_seconds: number }
         Returns: boolean
+      }
+      get_latest_asset_prices: {
+        Args: { p_asset_ids: string[] }
+        Returns: {
+          asset_id: string
+          close: number
+          price_date: string
+        }[]
       }
       get_vault_secret: { Args: { secret_name: string }; Returns: string }
       has_role: {

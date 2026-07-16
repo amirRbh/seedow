@@ -19,12 +19,12 @@ export function IntentCards({ wallet }: IntentCardsProps) {
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold">{t("intent_cards.what_to_do")}</p>
+        <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold">
+          {t("intent_cards.what_to_do")}
+        </p>
         <p className="text-caption text-ink-3">
           {t("intent_cards.available_balance")}{" "}
-          <span className="text-ink font-semibold">
-            {formatCurrency(balance, lang)}
-          </span>
+          <span className="text-ink font-semibold">{formatCurrency(balance, lang)}</span>
         </p>
       </div>
 
@@ -35,7 +35,15 @@ export function IntentCards({ wallet }: IntentCardsProps) {
           variant="primary"
           onClick={() => navigate({ to: "/discover" })}
           icon={
-            <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              viewBox="0 0 24 24"
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <path d="M12 22V12" />
               <path d="M12 12c0-4 3-7 7-7 0 4-3 7-7 7Z" />
               <path d="M12 12c0-3-2-5-5-5 0 3 2 5 5 5Z" />
@@ -48,7 +56,15 @@ export function IntentCards({ wallet }: IntentCardsProps) {
           variant="muted"
           onClick={() => navigate({ to: "/discover" })}
           icon={
-            <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              viewBox="0 0 24 24"
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <path d="M12 3c-4 6-7 9-7 13a7 7 0 0 0 14 0c0-4-3-7-7-13Z" />
             </svg>
           }
@@ -59,7 +75,15 @@ export function IntentCards({ wallet }: IntentCardsProps) {
           variant="ethi"
           onClick={() => navigate({ to: "/ethi", search: { intent: "rebalance" } as never })}
           icon={
-            <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              viewBox="0 0 24 24"
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0 1 1 21 12Z" />
             </svg>
           }
@@ -90,7 +114,10 @@ function IntentCard({
         : "bg-card border border-paper-3 text-ink hover:border-moss-3 hover:bg-moss-5";
 
   return (
-    <button onClick={onClick} className={`flex flex-col items-start gap-1.5 p-3.5 rounded-2xl transition-all leaf-hover ${styles}`}>
+    <button
+      onClick={onClick}
+      className={`flex flex-col items-start gap-1.5 p-3.5 rounded-2xl transition-all leaf-hover ${styles}`}
+    >
       <div className="opacity-90">{icon}</div>
       <span className="text-sm font-semibold leading-tight">{label}</span>
       <span className="text-tag opacity-60 leading-tight">{hint}</span>

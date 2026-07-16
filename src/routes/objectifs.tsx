@@ -21,7 +21,10 @@ export const Route = createFileRoute("/objectifs")({
   head: () => ({
     meta: [
       { title: "Objectifs — seedow" },
-      { name: "description", content: "Définis tes objectifs financiers et suis ta progression vers la cible." },
+      {
+        name: "description",
+        content: "Définis tes objectifs financiers et suis ta progression vers la cible.",
+      },
     ],
   }),
 });
@@ -32,8 +35,14 @@ function ObjectifsPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<FinancialGoal | null>(null);
 
-  const openNew = () => { setEditing(null); setDialogOpen(true); };
-  const openEdit = (g: FinancialGoal) => { setEditing(g); setDialogOpen(true); };
+  const openNew = () => {
+    setEditing(null);
+    setDialogOpen(true);
+  };
+  const openEdit = (g: FinancialGoal) => {
+    setEditing(g);
+    setDialogOpen(true);
+  };
 
   return (
     <div className="min-h-screen bg-paper pb-24 md:pb-12">
@@ -55,7 +64,9 @@ function ObjectifsPage() {
             <div className="rounded-lg border border-dashed border-paper-3 bg-paper p-10 text-center">
               <p className="font-value text-xl text-ink">{t("objectives.empty_title")}</p>
               <p className="mt-2 text-sm text-ink-3">{t("objectives.empty_desc")}</p>
-              <Button className="mt-6" onClick={openNew}>{t("objectives.create_goal")}</Button>
+              <Button className="mt-6" onClick={openNew}>
+                {t("objectives.create_goal")}
+              </Button>
             </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-2">
@@ -68,7 +79,10 @@ function ObjectifsPage() {
           <div className="gold-rule my-10" />
           <p className="text-xs text-ink-3">
             {t("objectives.estimates_note")}{" "}
-            <Link to="/methodologie" className="underline">{t("objectives.methodology_link")}</Link>.
+            <Link to="/methodologie" className="underline">
+              {t("objectives.methodology_link")}
+            </Link>
+            .
           </p>
         </EditorialSection>
       </div>

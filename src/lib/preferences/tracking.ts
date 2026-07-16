@@ -133,7 +133,6 @@ export async function trackPreference(args: TrackPreferenceArgs): Promise<void> 
   try {
     const userId = await getUserId();
     if (!userId) return; // pré-auth : on jette silencieusement
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { error } = await supabase.from("preference_events").insert({
       user_id: userId,
       session_id: getSessionId(),
@@ -142,6 +141,7 @@ export async function trackPreference(args: TrackPreferenceArgs): Promise<void> 
       payload: args.payload ?? {},
       variant: getVariant(),
       dwell_ms: args.dwellMs ?? null,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
     if (error) console.warn("[trackPreference]", error.message);
   } catch (e) {
@@ -153,7 +153,6 @@ export async function trackTradeoff(args: TrackTradeoffArgs): Promise<void> {
   try {
     const userId = await getUserId();
     if (!userId) return;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { error } = await supabase.from("tradeoff_decisions").insert({
       user_id: userId,
       portfolio_id: args.portfolioId ?? null,
@@ -165,6 +164,7 @@ export async function trackTradeoff(args: TrackTradeoffArgs): Promise<void> {
       accepted: args.accepted,
       alt_chosen: args.altChosen ?? null,
       context: args.context ?? {},
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
     if (error) console.warn("[trackTradeoff]", error.message);
   } catch (e) {
@@ -176,7 +176,6 @@ export async function trackFundRejection(args: TrackFundRejectionArgs): Promise<
   try {
     const userId = await getUserId();
     if (!userId) return;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { error } = await supabase.from("fund_rejections").insert({
       user_id: userId,
       portfolio_id: args.portfolioId ?? null,
@@ -185,6 +184,7 @@ export async function trackFundRejection(args: TrackFundRejectionArgs): Promise<
       reason_detail: args.reasonDetail ?? null,
       swap_asset_id: args.swapAssetId ?? null,
       context: args.context ?? {},
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
     if (error) console.warn("[trackFundRejection]", error.message);
   } catch (e) {

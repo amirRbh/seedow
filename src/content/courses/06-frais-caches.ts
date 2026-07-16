@@ -13,8 +13,7 @@ export const course: Course = {
     "Frais d'entrée, de gestion, d'arbitrage, fiscalité, écart bid-ask : la liste complète des coûts qui rognent silencieusement votre performance.",
   intro:
     "Un point de frais en trop par an, ça paraît ridicule. Sur 30 ans, c'est environ 25 % de ton capital final qui disparaît. Voici l'inventaire des frais — y compris ceux qu'on ne t'annonce pas — avec les ordres de grandeur pour les négocier.",
-  eli5:
-    "Imagine que tu remplis un seau avec un tuyau. En bas du seau, il y a un tout petit trou. Presque invisible. Mais chaque minute, il fuit un peu. Au bout d'une heure, tu as perdu un quart de ce que tu as versé. Les frais, c'est le trou. Un tout petit % par an = un énorme paquet d'euros perdus sur 30 ans.",
+  eli5: "Imagine que tu remplis un seau avec un tuyau. En bas du seau, il y a un tout petit trou. Presque invisible. Mais chaque minute, il fuit un peu. Au bout d'une heure, tu as perdu un quart de ce que tu as versé. Les frais, c'est le trou. Un tout petit % par an = un énorme paquet d'euros perdus sur 30 ans.",
   sections: [
     {
       heading: "Pourquoi 1 % de frais en plus = 25 % de capital en moins",
@@ -96,7 +95,12 @@ export const course: Course = {
   quiz: [
     {
       question: "Sur 30 ans, 1 % de frais annuels en plus coûte environ…",
-      options: ["1 % du capital final", "5 % du capital final", "25 % du capital final", "100 % du capital final"],
+      options: [
+        "1 % du capital final",
+        "5 % du capital final",
+        "25 % du capital final",
+        "100 % du capital final",
+      ],
       correctIndex: 2,
       explanation:
         "Effet exponentiel des intérêts composés inversés. 1 % par an = ~25 % de perte cumulée sur 30 ans.",
@@ -110,7 +114,8 @@ export const course: Course = {
         "Le ticker boursier.",
       ],
       correctIndex: 1,
-      explanation: "TER = Total Expense Ratio. Le chiffre à comparer en premier lieu entre deux fonds.",
+      explanation:
+        "TER = Total Expense Ratio. Le chiffre à comparer en premier lieu entre deux fonds.",
     },
     {
       question: "Ordre de grandeur d'un bon ETF actions mondial ?",

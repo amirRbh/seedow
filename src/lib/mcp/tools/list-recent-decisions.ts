@@ -8,7 +8,13 @@ export default defineTool({
   description:
     "List the signed-in user's most recent portfolio decision events (creation, cause changes, exclusions, rebalances).",
   inputSchema: {
-    limit: z.number().int().min(1).max(50).optional().describe("How many events to return (default 20)."),
+    limit: z
+      .number()
+      .int()
+      .min(1)
+      .max(50)
+      .optional()
+      .describe("How many events to return (default 20)."),
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ limit }, ctx) => {

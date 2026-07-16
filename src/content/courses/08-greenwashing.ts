@@ -13,8 +13,7 @@ export const course: Course = {
     "Comment repérer en quelques minutes si un fonds « vert » l'est vraiment, ou s'il fait juste du marketing vert.",
   intro:
     "Sur les étagères européennes, presque tous les fonds se présentent comme « durables », « responsables », « green », « impact ». La réalité est très inégale. Voici six signaux d'alerte à vérifier avant de souscrire — ça prend dix minutes et ça évite les pires pièges.",
-  eli5:
-    "Imagine un jus d'orange étiqueté « 100 % naturel ». Tu retournes la bouteille : au dos, ça dit « sucre, arômes, colorant, 2 % de jus concentré ». C'est du greenwashing : un emballage qui promet une chose, un contenu qui en fait une autre. Pour les fonds « verts », on fait pareil : on retourne l'étiquette et on regarde ce qu'il y a vraiment dedans.",
+  eli5: "Imagine un jus d'orange étiqueté « 100 % naturel ». Tu retournes la bouteille : au dos, ça dit « sucre, arômes, colorant, 2 % de jus concentré ». C'est du greenwashing : un emballage qui promet une chose, un contenu qui en fait une autre. Pour les fonds « verts », on fait pareil : on retourne l'étiquette et on regarde ce qu'il y a vraiment dedans.",
   sections: [
     {
       heading: "Signal n°1 : un nom marketing sans preuve",
@@ -105,7 +104,8 @@ export const course: Course = {
         "Vérifier la couleur du logo.",
       ],
       correctIndex: 1,
-      explanation: "Le top 10 holdings révèle immédiatement les contradictions avec le nom marketing.",
+      explanation:
+        "Le top 10 holdings révèle immédiatement les contradictions avec le nom marketing.",
     },
     {
       question: "Approche « best-in-class » signifie…",
@@ -120,7 +120,8 @@ export const course: Course = {
         "On garde les « meilleurs » de chaque secteur, y compris pétrole, armement, etc. Différent d'une approche d'exclusion.",
     },
     {
-      question: "Un fonds ESG à 2 % de frais qui ressemble à 90 % à un ETF MSCI World ESG à 0,3 % suggère…",
+      question:
+        "Un fonds ESG à 2 % de frais qui ressemble à 90 % à un ETF MSCI World ESG à 0,3 % suggère…",
       options: [
         "Une excellente gestion active.",
         "Un surcoût injustifié déguisé en effort responsable.",

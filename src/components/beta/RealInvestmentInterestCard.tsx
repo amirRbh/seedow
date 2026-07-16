@@ -59,32 +59,34 @@ export function RealInvestmentInterestCard() {
         <p className="text-label text-ink-3 mt-1.5 leading-relaxed">
           {t("real_invest_interest.description")}
         </p>
-        <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) setDone(false); }}>
+        <Dialog
+          open={open}
+          onOpenChange={(v) => {
+            setOpen(v);
+            if (!v) setDone(false);
+          }}
+        >
           <DialogTrigger asChild>
-            <button className="btn-plant mt-4">
-              {t("real_invest_interest.cta")}
-            </button>
+            <button className="btn-plant mt-4">{t("real_invest_interest.cta")}</button>
           </DialogTrigger>
           <DialogContent className="max-w-md">
             {done ? (
               <>
                 <DialogHeader>
                   <DialogTitle>{t("real_invest_interest.success_title")}</DialogTitle>
-                  <DialogDescription>
-                    {t("real_invest_interest.success_desc")}
-                  </DialogDescription>
+                  <DialogDescription>{t("real_invest_interest.success_desc")}</DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
-                  <button onClick={() => setOpen(false)} className="btn-plant">{t("common.close")}</button>
+                  <button onClick={() => setOpen(false)} className="btn-plant">
+                    {t("common.close")}
+                  </button>
                 </DialogFooter>
               </>
             ) : (
               <>
                 <DialogHeader>
                   <DialogTitle>{t("real_invest_interest.dialog_title")}</DialogTitle>
-                  <DialogDescription>
-                    {t("real_invest_interest.dialog_desc")}
-                  </DialogDescription>
+                  <DialogDescription>{t("real_invest_interest.dialog_desc")}</DialogDescription>
                 </DialogHeader>
                 <div className="space-y-5 py-2">
                   <div>
@@ -112,10 +114,12 @@ export function RealInvestmentInterestCard() {
                       {t("real_invest_interest.frequency")}
                     </label>
                     <div className="grid grid-cols-2 gap-2 mt-2">
-                      {([
-                        { v: "one_shot", l: t("real_invest_interest.one_shot") },
-                        { v: "monthly", l: t("real_invest_interest.monthly") },
-                      ] as const).map((opt) => (
+                      {(
+                        [
+                          { v: "one_shot", l: t("real_invest_interest.one_shot") },
+                          { v: "monthly", l: t("real_invest_interest.monthly") },
+                        ] as const
+                      ).map((opt) => (
                         <button
                           key={opt.v}
                           type="button"

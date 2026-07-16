@@ -13,8 +13,7 @@ export const course: Course = {
     "Drawdown, volatilité, max perte historique, ratio de Sharpe : comprendre les indicateurs de risque pour ne pas vendre au pire moment.",
   intro:
     "La principale cause de mauvaise performance n'est pas le mauvais choix de produit. C'est la vente en panique au creux d'une baisse. Ce cours pose les concepts qui permettent de tenir psychologiquement quand ton portefeuille affiche -25 %.",
-  eli5:
-    "Imagine un ascenseur qui monte du 0 au 100e étage sur 20 ans. En chemin, il descend parfois de 10 étages, parfois de 30, une fois de 50. Si tu descends à chaque baisse, tu ne remontes jamais. La volatilité, c'est l'à-coup de l'ascenseur. Le risque, c'est ne jamais arriver au 100e. Les deux ne sont pas la même chose.",
+  eli5: "Imagine un ascenseur qui monte du 0 au 100e étage sur 20 ans. En chemin, il descend parfois de 10 étages, parfois de 30, une fois de 50. Si tu descends à chaque baisse, tu ne remontes jamais. La volatilité, c'est l'à-coup de l'ascenseur. Le risque, c'est ne jamais arriver au 100e. Les deux ne sont pas la même chose.",
   sections: [
     {
       heading: "Volatilité : la mesure de l'agitation",

@@ -11,7 +11,11 @@ function yearsBetween(from: Date, to: Date) {
   return Math.max(0.5, (to.getTime() - from.getTime()) / (365.25 * 24 * 3600 * 1000));
 }
 
-export function GoalSimulator({ goal, annualReturn = 0.055, volatility = 0.12 }: {
+export function GoalSimulator({
+  goal,
+  annualReturn = 0.055,
+  volatility = 0.12,
+}: {
   goal: FinancialGoal;
   annualReturn?: number;
   volatility?: number;
@@ -51,13 +55,19 @@ export function GoalSimulator({ goal, annualReturn = 0.055, volatility = 0.12 }:
 
   return (
     <div className="rounded-lg border border-paper-3 bg-paper p-6">
-      <p className="text-tag font-semibold uppercase tracking-[0.22em] text-gold mb-4">{t("goal.sim_eyebrow")}</p>
+      <p className="text-tag font-semibold uppercase tracking-[0.22em] text-gold mb-4">
+        {t("goal.sim_eyebrow")}
+      </p>
 
       <div className="space-y-5">
         <div>
           <div className="flex items-baseline justify-between mb-2">
-            <span className="text-caption uppercase tracking-[0.18em] text-ink-3">{t("goal.sim_monthly_label")}</span>
-            <span className="font-value text-xl text-ink tabular-nums">{formatCurrency(monthly, lang)}</span>
+            <span className="text-caption uppercase tracking-[0.18em] text-ink-3">
+              {t("goal.sim_monthly_label")}
+            </span>
+            <span className="font-value text-xl text-ink tabular-nums">
+              {formatCurrency(monthly, lang)}
+            </span>
           </div>
           <Slider
             value={[monthly]}
@@ -67,15 +77,32 @@ export function GoalSimulator({ goal, annualReturn = 0.055, volatility = 0.12 }:
             step={10}
           />
           <p className="mt-2 text-xs text-ink-3">
-            {t("goal.sim_horizon")} <span className="text-ink tabular-nums">{years.toFixed(1)} {t("common.years")}</span> · {t("goal.sim_median_return")}{" "}
+            {t("goal.sim_horizon")}{" "}
+            <span className="text-ink tabular-nums">
+              {years.toFixed(1)} {t("common.years")}
+            </span>{" "}
+            · {t("goal.sim_median_return")}{" "}
             <span className="text-ink tabular-nums">{(annualReturn * 100).toFixed(1)} %</span>
           </p>
         </div>
 
         <div className="grid grid-cols-3 gap-4 border-t border-paper-3 pt-5">
-          <KPIFigure size="sm" label={t("goal.sim_scenario_pess")} value={formatCurrency(scenarios.pess.finalValue, lang)} />
-          <KPIFigure size="sm" label={t("goal.sim_scenario_med")} value={formatCurrency(scenarios.med.finalValue, lang)} accent />
-          <KPIFigure size="sm" label={t("goal.sim_scenario_opt")} value={formatCurrency(scenarios.opt.finalValue, lang)} />
+          <KPIFigure
+            size="sm"
+            label={t("goal.sim_scenario_pess")}
+            value={formatCurrency(scenarios.pess.finalValue, lang)}
+          />
+          <KPIFigure
+            size="sm"
+            label={t("goal.sim_scenario_med")}
+            value={formatCurrency(scenarios.med.finalValue, lang)}
+            accent
+          />
+          <KPIFigure
+            size="sm"
+            label={t("goal.sim_scenario_opt")}
+            value={formatCurrency(scenarios.opt.finalValue, lang)}
+          />
         </div>
 
         <div className="rounded-md bg-paper-2 px-4 py-3 text-sm">
@@ -85,7 +112,9 @@ export function GoalSimulator({ goal, annualReturn = 0.055, volatility = 0.12 }:
           {needed.feasible ? (
             <p className="text-ink">
               {t("goal.sim_required")}{" "}
-              <span className="font-value text-lg tabular-nums">{formatCurrency(needed.monthlyRequired, lang)}</span>
+              <span className="font-value text-lg tabular-nums">
+                {formatCurrency(needed.monthlyRequired, lang)}
+              </span>
               {gap > 0 ? (
                 <span className="ml-2 text-rose-600 text-xs">
                   {t("goal.sim_gap", { amount: formatCurrency(gap, lang) })}

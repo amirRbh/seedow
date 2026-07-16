@@ -2,16 +2,8 @@ import { create, all, type Matrix } from "mathjs";
 // quadprog has no types but we type the call signature locally
 // @ts-expect-error - no published types
 import quadprog from "quadprog";
-import type {
-  Asset,
-  PortfolioParams,
-  PortfolioWeights,
-} from "./types";
-import {
-  getClassBounds,
-  MAX_SINGLE_WEIGHT,
-  MIN_PORTFOLIO_ESG,
-} from "./types";
+import type { Asset, PortfolioParams, PortfolioWeights } from "./types";
+import { getClassBounds, MAX_SINGLE_WEIGHT, MIN_PORTFOLIO_ESG } from "./types";
 
 const math = create(all, {});
 
@@ -214,10 +206,7 @@ export function optimizeMarkowitz(
  * Allocate by class minimums, then split the remainder equally across all
  * assets weighted by class. Guarantees a non-empty, feasible portfolio.
  */
-function classBoundedEqualWeight(
-  assets: Asset[],
-  params: PortfolioParams,
-): PortfolioWeights {
+function classBoundedEqualWeight(assets: Asset[], params: PortfolioParams): PortfolioWeights {
   const bounds = getClassBounds(params.risk_target);
   const byClass = new Map<string, Asset[]>();
   for (const a of assets) {

@@ -197,7 +197,9 @@ export function useDecisionHistory(): { decisions: DecisionEvent[]; loading: boo
       setLoading(false);
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [user, portfolio?.id]);
 
   return { decisions, loading };

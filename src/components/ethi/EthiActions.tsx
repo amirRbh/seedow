@@ -18,4 +18,3 @@ export function parseEthiActions(content: string): { cleaned: string; actions: E
 export function EthiActions(_: { actions: EthiAction[] }) {
   return null;
 }
-

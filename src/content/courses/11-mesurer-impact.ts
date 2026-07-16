@@ -13,8 +13,7 @@ export const course: Course = {
     "Les principaux indicateurs d'impact ESG : ce qu'ils mesurent vraiment, comment les lire, et pourquoi un seul chiffre ne suffit jamais.",
   intro:
     "« Notre fonds a un impact positif. » D'accord — combien, mesuré comment, comparé à quoi ? Voici les indicateurs ESG les plus utilisés, leurs forces et leurs limites, pour cesser de se contenter de slogans.",
-  eli5:
-    "Imagine qu'on te dise « ce plat est sain ». Tu voudrais savoir : combien de calories ? De sucre ? De protéines ? Sans chiffres précis, « sain » ne veut rien dire. Pour un fonds « à impact », c'est pareil : on regarde plusieurs indicateurs — combien de CO2 ? Quels scandales ? Combien d'activités vraiment vertes ? Un seul chiffre ne suffit jamais.",
+  eli5: "Imagine qu'on te dise « ce plat est sain ». Tu voudrais savoir : combien de calories ? De sucre ? De protéines ? Sans chiffres précis, « sain » ne veut rien dire. Pour un fonds « à impact », c'est pareil : on regarde plusieurs indicateurs — combien de CO2 ? Quels scandales ? Combien d'activités vraiment vertes ? Un seul chiffre ne suffit jamais.",
   sections: [
     {
       heading: "Intensité carbone du portefeuille",

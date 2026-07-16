@@ -13,8 +13,7 @@ export const course: Course = {
     "Pourquoi 100 € placés à 7 % deviennent 7 600 € en 50 ans : la mécanique des intérêts composés, expliquée avec des chiffres simples et des cas pratiques.",
   intro:
     "Einstein l'aurait appelée « la huitième merveille du monde ». La formule tient en une ligne, ses conséquences sont contre-intuitives. Le temps est de loin le plus puissant levier de l'investisseur — bien plus que le choix du « bon » produit.",
-  eli5:
-    "Imagine une boule de neige au sommet d'une pente. Au début, elle est minuscule et elle avance lentement. Puis elle grossit, roule sur elle-même, ramasse encore plus de neige. À la fin, elle est énorme. Les intérêts composés, c'est la même chose : ton argent gagne des intérêts, et ces intérêts gagnent à leur tour des intérêts. Plus la pente est longue, plus la boule finit grosse.",
+  eli5: "Imagine une boule de neige au sommet d'une pente. Au début, elle est minuscule et elle avance lentement. Puis elle grossit, roule sur elle-même, ramasse encore plus de neige. À la fin, elle est énorme. Les intérêts composés, c'est la même chose : ton argent gagne des intérêts, et ces intérêts gagnent à leur tour des intérêts. Plus la pente est longue, plus la boule finit grosse.",
   sections: [
     {
       heading: "La formule en une ligne",
@@ -102,7 +101,8 @@ export const course: Course = {
       explanation: "72 ÷ 6 = 12. Approximation très utile pour juger un placement de tête.",
     },
     {
-      question: "Alex (25 ans, 10 ans de versements) finit devant Béa (35 ans, 30 ans de versements). Pourquoi ?",
+      question:
+        "Alex (25 ans, 10 ans de versements) finit devant Béa (35 ans, 30 ans de versements). Pourquoi ?",
       options: [
         "Parce qu'Alex a versé plus.",
         "Parce que le temps composé donne un avantage massif aux 10 premières années.",
@@ -120,7 +120,8 @@ export const course: Course = {
       explanation: "1 000 × 1,07^30 ≈ 7 612 €. La courbe est exponentielle, pas linéaire.",
     },
     {
-      question: "Un fonds à 2,5 % de frais vs un ETF à 0,3 %, sur 30 ans, à rendement brut identique…",
+      question:
+        "Un fonds à 2,5 % de frais vs un ETF à 0,3 %, sur 30 ans, à rendement brut identique…",
       options: [
         "Différence négligeable.",
         "Différence de quelques centaines d'euros.",
@@ -132,7 +133,8 @@ export const course: Course = {
         "2,2 % d'écart annuel composé sur 30 ans = environ 40 % de capital final en moins pour le fonds cher.",
     },
     {
-      question: "Le meilleur réflexe quand les marchés baissent fortement et qu'on a un horizon de 20 ans ?",
+      question:
+        "Le meilleur réflexe quand les marchés baissent fortement et qu'on a un horizon de 20 ans ?",
       options: [
         "Vendre pour limiter la casse.",
         "Arrêter les versements en attendant que ça remonte.",

@@ -61,7 +61,8 @@ export function EthiBriefing() {
       <article className="paper-card p-5 md:p-6">
         <header className="flex items-center justify-between gap-3">
           <p className="eyebrow">
-            {t("ethi_briefing.edition_of", { date })} <span className="text-ink-3 mx-1.5">·</span> Ethi
+            {t("ethi_briefing.edition_of", { date })} <span className="text-ink-3 mx-1.5">·</span>{" "}
+            Ethi
           </p>
           <Link
             to="/ethi"
@@ -80,7 +81,10 @@ export function EthiBriefing() {
         {briefing.signals.length > 0 && (
           <div className="mt-5">
             <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold mb-3">
-              {t("ethi_briefing.signals", { count: briefing.signals.length, defaultValue: `${briefing.signals.length} signals` })}
+              {t("ethi_briefing.signals", {
+                count: briefing.signals.length,
+                defaultValue: `${briefing.signals.length} signals`,
+              })}
             </p>
             <div className="flex flex-wrap gap-2">
               {briefing.signals.map((s, i) =>
@@ -96,7 +100,9 @@ export function EthiBriefing() {
                     )}
                   >
                     <span className="font-semibold uppercase tracking-wider text-tag opacity-80">
-                      {rebalancing ? t("ethi_briefing.rebalancing") : t("ethi_briefing.rebalance_cta")}
+                      {rebalancing
+                        ? t("ethi_briefing.rebalancing")
+                        : t("ethi_briefing.rebalance_cta")}
                     </span>
                     <span className="opacity-90">{s.detail}</span>
                   </button>

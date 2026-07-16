@@ -56,7 +56,7 @@ function Ethi() {
   }, [dataLoading, firstName, portfolio, valuationKey, lang]);
 
   useEffect(() => {
-    const welcome = dataLoading ? "" : briefing?.message ?? "";
+    const welcome = dataLoading ? "" : (briefing?.message ?? "");
     setMessages((prev) => {
       if (prev.length === 1 && prev[0].id === "welcome" && prev[0].content === welcome) return prev;
       if (prev.length > 1) return prev; // don't wipe ongoing conversation
@@ -138,9 +138,15 @@ function Ethi() {
       });
       const json = (await res.json()) as { content?: string; error?: string };
       const reply = json.content ?? json.error ?? t("ethi.error_no_response");
-      setMessages((prev) => [...prev, { id: `a-${Date.now()}`, role: "assistant", content: reply }]);
+      setMessages((prev) => [
+        ...prev,
+        { id: `a-${Date.now()}`, role: "assistant", content: reply },
+      ]);
     } catch {
-      setMessages((prev) => [...prev, { id: `a-${Date.now()}`, role: "assistant", content: t("ethi.error_connection") }]);
+      setMessages((prev) => [
+        ...prev,
+        { id: `a-${Date.now()}`, role: "assistant", content: t("ethi.error_connection") },
+      ]);
     } finally {
       setIsLoading(false);
     }
@@ -158,9 +164,10 @@ function Ethi() {
     setShowSim(false);
     const out = runSimulation(values);
     const formatted = formatSimulation(values, out, lang);
-    const summaryLine = lang === "en"
-      ? `Simulate ${values.monthly}€/mo + ${values.initial}€ over ${values.years} years.`
-      : `Simule ${values.monthly} €/mois + ${values.initial} € sur ${values.years} ans.`;
+    const summaryLine =
+      lang === "en"
+        ? `Simulate ${values.monthly}€/mo + ${values.initial}€ over ${values.years} years.`
+        : `Simule ${values.monthly} €/mois + ${values.initial} € sur ${values.years} ans.`;
     setMessages((prev) => [
       ...prev,
       { id: `u-${Date.now()}`, role: "user", content: summaryLine },
@@ -174,12 +181,22 @@ function Ethi() {
         <div className="flex items-center justify-between gap-3 max-w-lg mx-auto w-full">
           <div className="flex items-center gap-3 min-w-0">
             <div className="w-10 h-10 rounded-full bg-moss-2 flex items-center justify-center flex-shrink-0">
-              <svg viewBox="0 0 24 24" className="w-5 h-5 text-paper" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                viewBox="0 0 24 24"
+                className="w-5 h-5 text-paper"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0 1 1 21 12Z" />
               </svg>
             </div>
             <div className="min-w-0">
-              <p className="text-tag uppercase tracking-wider text-paper/40 font-semibold">{t("ethi.your_advisor")}</p>
+              <p className="text-tag uppercase tracking-wider text-paper/40 font-semibold">
+                {t("ethi.your_advisor")}
+              </p>
               <h1 className="font-value text-2xl">Ethi</h1>
             </div>
           </div>
@@ -188,7 +205,15 @@ function Ethi() {
             aria-label={t("ethi.settings")}
             className="flex items-center justify-center w-11 h-11 rounded-full border border-paper/15 text-paper/70 hover:text-paper hover:border-paper/40 transition-colors flex-shrink-0"
           >
-            <svg viewBox="0 0 24 24" className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              viewBox="0 0 24 24"
+              className="w-[18px] h-[18px]"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.6}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <circle cx="12" cy="12" r="3" />
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z" />
             </svg>
@@ -199,7 +224,10 @@ function Ethi() {
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-6 pb-44">
         <div className="max-w-lg mx-auto space-y-4">
           <div className="rounded-2xl border border-paper/15 bg-paper/5 px-4 py-2.5 flex items-start gap-2 text-caption leading-snug text-paper/70">
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-gold mt-1.5 flex-shrink-0" aria-hidden />
+            <span
+              className="inline-block w-1.5 h-1.5 rounded-full bg-gold mt-1.5 flex-shrink-0"
+              aria-hidden
+            />
             <span>{t("ethi.disclaimer")}</span>
           </div>
           <AnimatePresence initial={false}>
@@ -210,7 +238,6 @@ function Ethi() {
           </AnimatePresence>
         </div>
       </div>
-
 
       <div className="fixed bottom-[88px] left-0 right-0 z-30 px-5 pointer-events-none">
         <div className="max-w-lg mx-auto pointer-events-auto">
@@ -229,7 +256,10 @@ function Ethi() {
             </div>
           )}
           <form
-            onSubmit={(e) => { e.preventDefault(); send(input); }}
+            onSubmit={(e) => {
+              e.preventDefault();
+              send(input);
+            }}
             className="flex items-center gap-2 bg-paper/10 border border-paper/15 rounded-full px-4 py-2 backdrop-blur-xl"
           >
             <input
@@ -245,7 +275,15 @@ function Ethi() {
               className="w-11 h-11 rounded-full bg-moss-2 hover:bg-moss-1 text-paper flex items-center justify-center disabled:opacity-30 transition-colors"
               aria-label={t("ethi.send")}
             >
-              <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                viewBox="0 0 24 24"
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M5 12h14M13 5l7 7-7 7" />
               </svg>
             </button>

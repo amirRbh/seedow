@@ -83,7 +83,8 @@ export function ShareToggle() {
           </p>
           <p className="font-display text-lg text-ink">{t("share_toggle.title")}</p>
           <p className="mt-2 text-xs text-ink-3 max-w-md">
-            {t("share_toggle.description")} <span className="text-ink font-medium">@{handle ?? "—"}</span>
+            {t("share_toggle.description")}{" "}
+            <span className="text-ink font-medium">@{handle ?? "—"}</span>
           </p>
         </div>
         <Switch checked={enabled} onCheckedChange={onToggle} disabled={busy} />

@@ -101,11 +101,10 @@ function detectMarket(returnPct: number): "up" | "down" | null {
   return null;
 }
 
-export function computeBriefing({
-  portfolio,
-  holdings,
-  returnPct,
-}: BriefingInputs): { headline: string; signals: BriefingSignal[] } {
+export function computeBriefing({ portfolio, holdings, returnPct }: BriefingInputs): {
+  headline: string;
+  signals: BriefingSignal[];
+} {
   if (!portfolio || holdings.length === 0) {
     return {
       headline:
@@ -118,9 +117,7 @@ export function computeBriefing({
   const dir = returnPct >= 0 ? "gagne" : "recule de";
   const valAbs = Math.abs(returnPct).toFixed(2).replace(".", ",");
   const sign = returnPct >= 0 ? "+" : "−";
-  const leaderTxt = leader
-    ? `, porté par ${CLASS_LABEL[leader.cls] ?? leader.cls}`
-    : "";
+  const leaderTxt = leader ? `, porté par ${CLASS_LABEL[leader.cls] ?? leader.cls}` : "";
   const headline = `Ton portefeuille ${dir} ${sign}${valAbs} % aujourd'hui${leaderTxt}.`;
 
   const signals: BriefingSignal[] = [];

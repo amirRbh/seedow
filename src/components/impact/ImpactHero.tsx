@@ -42,7 +42,8 @@ export function ImpactHero() {
       ? t("impact_hero.equivalence_trips", { count: Math.max(1, Math.round(data.co2Tons * 6)) })
       : t("impact_hero.equivalence_trees", { count: Math.max(1, data.trees) });
 
-  const energyLabel = data.energy >= 1000 ? (data.energy / 1000).toFixed(1) : Math.round(data.energy).toString();
+  const energyLabel =
+    data.energy >= 1000 ? (data.energy / 1000).toFixed(1) : Math.round(data.energy).toString();
   const energyUnit = data.energy >= 1000 ? "MWh" : "kWh";
 
   const fmt = (v: number) =>
@@ -91,7 +92,10 @@ export function ImpactHero() {
           <p className="mt-2 text-xs text-ink-3 italic">{equivalence}</p>
           <p className="mt-3 text-xs text-ink-3 leading-relaxed max-w-md">
             {t("impact_hero.explainer")}{" "}
-            <Link to="/methodologie" className="underline underline-offset-2 hover:text-gold transition-colors">
+            <Link
+              to="/methodologie"
+              className="underline underline-offset-2 hover:text-gold transition-colors"
+            >
               {t("impact_hero.learn_more")}
             </Link>
           </p>
@@ -128,7 +132,13 @@ export function ImpactHero() {
             className="text-caption uppercase tracking-[0.18em] font-semibold text-ink hover:text-gold transition-colors inline-flex items-center gap-2"
           >
             {t("impact_hero.see_detail")}
-            <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              viewBox="0 0 24 24"
+              className="w-3.5 h-3.5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <path d="M9 6l6 6-6 6" />
             </svg>
           </Link>

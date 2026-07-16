@@ -65,7 +65,9 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                   {asset.current_price != null
                     ? formatCurrency(asset.current_price, lang)
                     : t("discover.row.price_unavailable")}
-                  <span className="text-caption text-ink-3 ml-1">{t("asset_detail.per_share")}</span>
+                  <span className="text-caption text-ink-3 ml-1">
+                    {t("asset_detail.per_share")}
+                  </span>
                 </p>
               </div>
               <div className="flex items-center gap-1 text-tag font-semibold text-moss-1 bg-moss-5 px-2 py-1 rounded-full border border-moss-4 flex-shrink-0">

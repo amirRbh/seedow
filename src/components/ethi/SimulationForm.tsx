@@ -47,9 +47,29 @@ export function SimulationForm({ onSubmit, onCancel }: Props) {
         {t("ethi.sim.title")}
       </p>
       <div className="grid grid-cols-3 gap-2">
-        <Field label={t("ethi.sim.monthly")} suffix="€/mo" value={monthly} onChange={setMonthly} step={50} />
-        <Field label={t("ethi.sim.initial")} suffix="€" value={initial} onChange={setInitial} step={500} />
-        <Field label={t("ethi.sim.years")} suffix="y" value={years} onChange={setYears} step={1} min={1} max={40} />
+        <Field
+          label={t("ethi.sim.monthly")}
+          suffix="€/mo"
+          value={monthly}
+          onChange={setMonthly}
+          step={50}
+        />
+        <Field
+          label={t("ethi.sim.initial")}
+          suffix="€"
+          value={initial}
+          onChange={setInitial}
+          step={500}
+        />
+        <Field
+          label={t("ethi.sim.years")}
+          suffix="y"
+          value={years}
+          onChange={setYears}
+          step={1}
+          min={1}
+          max={40}
+        />
       </div>
       <label className="flex items-center gap-2 text-caption text-paper/70">
         <input

@@ -20,7 +20,9 @@ function AdminBetaPage() {
   useEffect(() => {
     callAuthed(getBetaAdminStats, undefined as never)
       .then(setStats)
-      .catch((err) => setError(err instanceof Error ? err.message : t("admin_beta.error_fallback")));
+      .catch((err) =>
+        setError(err instanceof Error ? err.message : t("admin_beta.error_fallback")),
+      );
   }, [t]);
 
   const filteredTesters = useMemo(() => {
@@ -47,20 +49,33 @@ function AdminBetaPage() {
   }
 
   if (!stats) {
-    return <div className="max-w-3xl mx-auto px-6 py-12 text-ink-3 text-sm">{t("admin_beta.loading")}</div>;
+    return (
+      <div className="max-w-3xl mx-auto px-6 py-12 text-ink-3 text-sm">
+        {t("admin_beta.loading")}
+      </div>
+    );
   }
 
-  const dtOpts: Intl.DateTimeFormatOptions = { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" };
+  const dtOpts: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  };
   const dOpts: Intl.DateTimeFormatOptions = { year: "numeric", month: "short", day: "numeric" };
   const fillPct = Math.round(stats.fillRate * 100);
-  const statusLabel = stats.status === "open" ? t("admin_beta.status_open") : t("admin_beta.status_closed");
+  const statusLabel =
+    stats.status === "open" ? t("admin_beta.status_open") : t("admin_beta.status_closed");
   const statusTone = stats.status === "open" && stats.slotsLeft > 0 ? "text-forest" : "text-rust";
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-12 space-y-10">
       <header className="flex items-end justify-between flex-wrap gap-4">
         <div>
-          <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold">{t("admin_beta.eyebrow")}</p>
+          <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold">
+            {t("admin_beta.eyebrow")}
+          </p>
           <h1 className="font-display text-3xl text-ink mt-2">{t("admin_beta.title")}</h1>
         </div>
         <Link to="/dashboard" className="text-label underline text-ink-3 hover:text-ink">
@@ -72,23 +87,24 @@ function AdminBetaPage() {
       <section className="border border-paper-3 rounded-2xl p-6 bg-paper-2/40">
         <div className="flex items-end justify-between flex-wrap gap-4 mb-4">
           <div>
-            <p className="text-tag uppercase tracking-[0.22em] text-ink-3 font-semibold">{t("admin_beta.capacity_title")}</p>
+            <p className="text-tag uppercase tracking-[0.22em] text-ink-3 font-semibold">
+              {t("admin_beta.capacity_title")}
+            </p>
             <p className="font-display text-4xl text-ink mt-2 tabular-nums">
               {stats.signups} <span className="text-ink-3 text-2xl">/ {stats.cap}</span>
             </p>
           </div>
           <div className="text-right">
-            <p className={`text-label uppercase tracking-[0.18em] font-semibold ${statusTone}`}>● {statusLabel}</p>
+            <p className={`text-label uppercase tracking-[0.18em] font-semibold ${statusTone}`}>
+              ● {statusLabel}
+            </p>
             <p className="text-body-sm text-ink-2 mt-1 tabular-nums">
               {t("admin_beta.slots_left", { count: stats.slotsLeft })}
             </p>
           </div>
         </div>
         <div className="h-2 w-full bg-paper-3 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-gold transition-all"
-            style={{ width: `${fillPct}%` }}
-          />
+          <div className="h-full bg-gold transition-all" style={{ width: `${fillPct}%` }} />
         </div>
         <p className="text-caption text-ink-3 mt-2 tabular-nums">{fillPct}%</p>
       </section>
@@ -108,12 +124,13 @@ function AdminBetaPage() {
         <Kpi label={t("admin_beta.kpi_feedback")} value={String(stats.feedbackCount)} />
         <Kpi
           label={t("admin_beta.kpi_conversion")}
-          value={stats.signups > 0 ? `${Math.round((stats.portfoliosCreated / stats.signups) * 100)}%` : "—"}
+          value={
+            stats.signups > 0
+              ? `${Math.round((stats.portfoliosCreated / stats.signups) * 100)}%`
+              : "—"
+          }
         />
-        <Kpi
-          label={t("admin_beta.kpi_errors_24h")}
-          value={String(stats.clientErrors24h)}
-        />
+        <Kpi label={t("admin_beta.kpi_errors_24h")} value={String(stats.clientErrors24h)} />
       </section>
 
       {/* Onboarding funnel */}
@@ -125,7 +142,9 @@ function AdminBetaPage() {
             return (
               <div key={s.step} className="p-4">
                 <div className="flex items-center justify-between text-body-sm">
-                  <span className="font-medium text-ink">{t(`admin_beta.funnel_step_${s.step}`, { defaultValue: s.step })}</span>
+                  <span className="font-medium text-ink">
+                    {t(`admin_beta.funnel_step_${s.step}`, { defaultValue: s.step })}
+                  </span>
                   <span className="text-ink-3 tabular-nums">
                     {s.completed} / {s.entered}
                     {s.entered > 0 && (
@@ -158,15 +177,19 @@ function AdminBetaPage() {
       <section>
         <div className="flex items-end justify-between flex-wrap gap-3 mb-3">
           <h2 className="font-display text-lg text-ink">{t("admin_beta.ingestion_title")}</h2>
-          <span className={`text-label uppercase tracking-[0.18em] font-semibold ${
-            stats.ingestionSuccessRate === null
-              ? "text-ink-3"
-              : stats.ingestionSuccessRate >= 0.9
-                ? "text-forest"
-                : "text-rust"
-          }`}>
+          <span
+            className={`text-label uppercase tracking-[0.18em] font-semibold ${
+              stats.ingestionSuccessRate === null
+                ? "text-ink-3"
+                : stats.ingestionSuccessRate >= 0.9
+                  ? "text-forest"
+                  : "text-rust"
+            }`}
+          >
             {stats.ingestionSuccessRate !== null
-              ? t("admin_beta.ingestion_success_rate", { pct: Math.round(stats.ingestionSuccessRate * 100) })
+              ? t("admin_beta.ingestion_success_rate", {
+                  pct: Math.round(stats.ingestionSuccessRate * 100),
+                })
               : t("admin_beta.ingestion_no_data")}
           </span>
         </div>
@@ -179,13 +202,20 @@ function AdminBetaPage() {
                 <span className="flex items-center gap-2">
                   <span
                     className={
-                      r.status === "ok" ? "text-forest" : r.status === "partial" ? "text-gold" : "text-rust"
+                      r.status === "ok"
+                        ? "text-forest"
+                        : r.status === "partial"
+                          ? "text-gold"
+                          : "text-rust"
                     }
                   >
                     ●
                   </span>
                   <span className="text-ink tabular-nums">
-                    {r.assets_ok} ok{r.assets_failed > 0 ? ` · ${r.assets_failed} ${t("admin_beta.ingestion_failed")}` : ""}
+                    {r.assets_ok} ok
+                    {r.assets_failed > 0
+                      ? ` · ${r.assets_failed} ${t("admin_beta.ingestion_failed")}`
+                      : ""}
                   </span>
                 </span>
                 <span className="text-ink-3 text-caption tabular-nums">
@@ -203,7 +233,9 @@ function AdminBetaPage() {
         <div className="flex items-end justify-between flex-wrap gap-3 mb-4">
           <h2 className="font-display text-lg text-ink">
             {t("admin_beta.testers_title")}{" "}
-            <span className="text-ink-3 text-body-sm font-normal tabular-nums">({filteredTesters.length})</span>
+            <span className="text-ink-3 text-body-sm font-normal tabular-nums">
+              ({filteredTesters.length})
+            </span>
           </h2>
           <input
             type="search"
@@ -218,12 +250,22 @@ function AdminBetaPage() {
             <table className="w-full text-body-sm">
               <thead className="bg-paper-2/60 text-tag uppercase tracking-[0.14em] text-ink-3">
                 <tr>
-                  <th className="text-left font-semibold px-4 py-3">{t("admin_beta.col_tester")}</th>
+                  <th className="text-left font-semibold px-4 py-3">
+                    {t("admin_beta.col_tester")}
+                  </th>
                   <th className="text-left font-semibold px-4 py-3">{t("admin_beta.col_email")}</th>
-                  <th className="text-left font-semibold px-4 py-3">{t("admin_beta.col_joined")}</th>
-                  <th className="text-left font-semibold px-4 py-3">{t("admin_beta.col_last_seen")}</th>
-                  <th className="text-right font-semibold px-4 py-3">{t("admin_beta.col_portfolios")}</th>
-                  <th className="text-center font-semibold px-4 py-3">{t("admin_beta.col_feedback")}</th>
+                  <th className="text-left font-semibold px-4 py-3">
+                    {t("admin_beta.col_joined")}
+                  </th>
+                  <th className="text-left font-semibold px-4 py-3">
+                    {t("admin_beta.col_last_seen")}
+                  </th>
+                  <th className="text-right font-semibold px-4 py-3">
+                    {t("admin_beta.col_portfolios")}
+                  </th>
+                  <th className="text-center font-semibold px-4 py-3">
+                    {t("admin_beta.col_feedback")}
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-paper-3">
@@ -235,7 +277,13 @@ function AdminBetaPage() {
                   </tr>
                 ) : (
                   filteredTesters.map((tester) => (
-                    <TesterRow key={tester.id} tester={tester} dOpts={dOpts} dtOpts={dtOpts} lang={lang} />
+                    <TesterRow
+                      key={tester.id}
+                      tester={tester}
+                      dOpts={dOpts}
+                      dtOpts={dtOpts}
+                      lang={lang}
+                    />
                   ))
                 )}
               </tbody>
@@ -254,7 +302,10 @@ function AdminBetaPage() {
               <div key={i.id} className="p-4 flex items-center justify-between text-body-sm">
                 <span>
                   {formatCurrency(i.amount, lang)}
-                  <span className="text-ink-3 ml-2">· {i.frequency === "monthly" ? t("admin_beta.monthly") : t("admin_beta.one_shot")}</span>
+                  <span className="text-ink-3 ml-2">
+                    ·{" "}
+                    {i.frequency === "monthly" ? t("admin_beta.monthly") : t("admin_beta.one_shot")}
+                  </span>
                 </span>
                 <span className="text-ink-3 text-caption">
                   {formatDate(i.created_at, lang, dtOpts)}
@@ -279,13 +330,17 @@ function AdminBetaPage() {
                 </div>
                 {f.blocker && (
                   <p className="text-body-sm text-ink mb-1">
-                    <span className="text-ink-3 text-caption uppercase tracking-wider mr-2">{t("admin_beta.blocker")}</span>
+                    <span className="text-ink-3 text-caption uppercase tracking-wider mr-2">
+                      {t("admin_beta.blocker")}
+                    </span>
                     {f.blocker}
                   </p>
                 )}
                 {f.wish && (
                   <p className="text-body-sm text-ink">
-                    <span className="text-ink-3 text-caption uppercase tracking-wider mr-2">{t("admin_beta.wish")}</span>
+                    <span className="text-ink-3 text-caption uppercase tracking-wider mr-2">
+                      {t("admin_beta.wish")}
+                    </span>
                     {f.wish}
                   </p>
                 )}
@@ -313,17 +368,27 @@ function TesterRow({
   return (
     <tr className="hover:bg-paper-2/40 transition-colors">
       <td className="px-4 py-3">
-        <div className="text-ink">{tester.display_name || <span className="text-ink-3 italic">{t("admin_beta.no_name")}</span>}</div>
+        <div className="text-ink">
+          {tester.display_name || (
+            <span className="text-ink-3 italic">{t("admin_beta.no_name")}</span>
+          )}
+        </div>
         <div className="text-tag text-ink-3 font-mono">{tester.id.slice(0, 8)}…</div>
       </td>
       <td className="px-4 py-3 text-ink-2">{tester.email ?? "—"}</td>
-      <td className="px-4 py-3 text-ink-3 tabular-nums">{formatDate(tester.created_at, lang, dOpts)}</td>
+      <td className="px-4 py-3 text-ink-3 tabular-nums">
+        {formatDate(tester.created_at, lang, dOpts)}
+      </td>
       <td className="px-4 py-3 text-ink-3 tabular-nums">
         {tester.last_sign_in_at ? formatDate(tester.last_sign_in_at, lang, dtOpts) : "—"}
       </td>
       <td className="px-4 py-3 text-right tabular-nums text-ink">{tester.portfolios_count}</td>
       <td className="px-4 py-3 text-center">
-        {tester.has_feedback ? <span className="text-forest">●</span> : <span className="text-ink-3">—</span>}
+        {tester.has_feedback ? (
+          <span className="text-forest">●</span>
+        ) : (
+          <span className="text-ink-3">—</span>
+        )}
       </td>
     </tr>
   );

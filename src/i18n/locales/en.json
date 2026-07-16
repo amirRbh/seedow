@@ -275,6 +275,11 @@
     "load_error_desc": "Try again in a moment.",
     "universe_empty_title": "Universe still being built",
     "universe_empty_desc": "No asset is available yet.",
+    "prices_missing_one": "{{count}} asset without an up-to-date price.",
+    "prices_missing_other": "{{count}} assets without an up-to-date price.",
+    "refresh_prices": "Refresh",
+    "refresh_result": "{{ok}} asset(s) updated, {{failed}} failure(s).",
+    "refresh_error": "Couldn't refresh prices.",
     "row": {
       "risk": "Risk",
       "ter": "Fees",

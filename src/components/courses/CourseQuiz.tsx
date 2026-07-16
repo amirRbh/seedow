@@ -12,10 +12,7 @@ export function CourseQuiz({ slug, quiz }: Props) {
   const [submitted, setSubmitted] = useState(false);
 
   const allAnswered = quiz.every((_, i) => answers[i] !== undefined);
-  const score = quiz.reduce(
-    (acc, q, i) => acc + (answers[i] === q.correctIndex ? 1 : 0),
-    0,
-  );
+  const score = quiz.reduce((acc, q, i) => acc + (answers[i] === q.correctIndex ? 1 : 0), 0);
 
   function reset() {
     setAnswers({});
@@ -38,9 +35,7 @@ export function CourseQuiz({ slug, quiz }: Props) {
   return (
     <section className="max-w-2xl mx-auto mt-20 pt-12 border-t-2 border-ink">
       <p className="eyebrow mb-3">Quiz</p>
-      <h2 className="font-display text-2xl md:text-3xl text-ink mb-2">
-        Vérifie ta compréhension
-      </h2>
+      <h2 className="font-display text-2xl md:text-3xl text-ink mb-2">Vérifie ta compréhension</h2>
       <p className="text-sm text-ink-3 mb-10">
         {quiz.length} questions · réponds sans pression, le score reste sur ton appareil.
       </p>
@@ -72,7 +67,10 @@ export function CourseQuiz({ slug, quiz }: Props) {
                         !showResult && isSelected && "border-ink bg-ink/5",
                         !showResult && !isSelected && "border-ink/15 hover:border-ink/40",
                         showResult && isCorrect && "border-moss bg-moss/8 text-ink",
-                        showResult && !isCorrect && isSelected && "border-red-400 bg-red-50 text-ink",
+                        showResult &&
+                          !isCorrect &&
+                          isSelected &&
+                          "border-red-400 bg-red-50 text-ink",
                         showResult && !isCorrect && !isSelected && "border-ink/10 text-ink-3",
                         submitted && "cursor-default",
                       )}
@@ -125,7 +123,9 @@ export function CourseQuiz({ slug, quiz }: Props) {
             onClick={submit}
             className={cn(
               "px-6 py-3 text-xs font-semibold uppercase tracking-[0.18em] transition-colors",
-              allAnswered ? "bg-ink text-paper hover:bg-ink-2" : "bg-ink/20 text-ink-3 cursor-not-allowed",
+              allAnswered
+                ? "bg-ink text-paper hover:bg-ink-2"
+                : "bg-ink/20 text-ink-3 cursor-not-allowed",
             )}
           >
             Valider mes réponses
