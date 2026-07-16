@@ -2,22 +2,24 @@ import { useTranslation, Trans } from "react-i18next";
 import { useLang } from "@/hooks/useLang";
 import { formatCurrency } from "@/lib/format";
 import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
-import { generatePortfolio } from "@/lib/portfolio/server.functions";
+import { generatePortfolio, simulatePortfolio } from "@/lib/portfolio/server.functions";
 import { callAuthed } from "@/lib/authedServerFn";
 import { trackPreference, type PreferenceStep } from "@/lib/preferences/tracking";
-import type { CauseTag, ExclusionTag } from "@/lib/portfolio/types";
+import type { CauseTag, ExclusionTag, PortfolioParams } from "@/lib/portfolio/types";
 
 export const Route = createFileRoute("/onboarding")({
   validateSearch: (s: Record<string, unknown>): { new?: 1 } => ({
     new: s.new === 1 || s.new === "1" ? 1 : undefined,
   }),
-  // Pas de guard auth : on laisse l'utilisateur répondre aux questions sans compte.
-  // La création de compte arrive juste avant la génération du portefeuille (phase "account").
+  // Pas de guard auth : on laisse l'utilisateur répondre aux questions sans compte,
+  // et on lui montre son allocation simulée (phase "preview", non persistée) avant
+  // tout mur d'inscription. Le compte n'est demandé qu'au moment de sauvegarder
+  // (phase "account", juste avant la persistance en phase "saving").
   component: Onboarding,
 });
 
@@ -73,8 +75,26 @@ const STEPS = [
 ];
 
 type StepId = (typeof STEPS)[number]["id"];
-type Phase = "intro" | "steps" | "account" | "naming" | "planting";
+type Phase = "intro" | "steps" | "preview" | "account" | "naming" | "planting" | "saving";
 type Answers = Partial<Record<StepId, string[]>>;
+
+/** Dérive les paramètres du moteur de portefeuille depuis les réponses de l'onboarding. */
+function answersToParams(answers: Answers): PortfolioParams {
+  const causes = ((answers.values ?? []) as CauseTag[]).slice(0, 6);
+  const exclusions = ((answers.exclusions ?? []) as ExclusionTag[]).slice(0, 6);
+  const { risk, horizon } = objectiveToRiskHorizon(answers.objective?.[0]);
+  const amount = Number(answers.amount?.[0] ?? "10") || 10;
+  const cause_intensity: Record<string, number> = {};
+  for (const c of causes) cause_intensity[c] = 0.7;
+  return {
+    causes,
+    cause_intensity,
+    exclusions,
+    risk_target: risk,
+    horizon_years: horizon,
+    initial_amount: amount,
+  };
+}
 
 // Map onboarding objective → (risk_target, horizon_years)
 function objectiveToRiskHorizon(obj: string | undefined): { risk: number; horizon: number } {
@@ -101,6 +121,8 @@ function Onboarding() {
   const [answers, setAnswers] = useState<Answers>({});
   const [gardenName, setGardenName] = useState("");
 
+  const portfolioParams = useMemo(() => answersToParams(answers), [answers]);
+
   const completeStep = async (selected: string[]) => {
     const step = STEPS[stepIndex];
     setAnswers((a) => ({ ...a, [step.id]: selected }));
@@ -111,18 +133,26 @@ function Onboarding() {
     });
     if (stepIndex < STEPS.length - 1) {
       setStepIndex((i) => i + 1);
-    } else {
-      // Dernière question terminée
-      const { data } = await supabase.auth.getSession();
-      if (isAdditive) {
-        // Mode "nouveau portefeuille" : utilisateur déjà connecté, on demande le nom puis on génère.
-        if (data.session) setPhase("naming");
-        else setPhase("account");
-      } else {
-        if (data.session) setPhase("planting");
-        else setPhase("account");
-      }
+      return;
     }
+    // Dernière question terminée
+    if (isAdditive) {
+      // Mode "nouveau portefeuille" : utilisateur déjà connecté, on demande le nom puis on génère.
+      const { data } = await supabase.auth.getSession();
+      if (data.session) setPhase("naming");
+      else setPhase("account");
+    } else {
+      // Premier portefeuille : on montre l'allocation simulée tout de suite,
+      // sans compte — la création de compte n'arrive qu'au moment de sauvegarder.
+      setPhase("preview");
+    }
+  };
+
+  // Appelé depuis l'écran de preview quand l'utilisateur veut sauvegarder son jardin.
+  const handleSave = async () => {
+    const { data } = await supabase.auth.getSession();
+    if (data.session) setPhase("saving");
+    else setPhase("account");
   };
 
   return (
@@ -139,6 +169,9 @@ function Onboarding() {
             onBack={() => (stepIndex > 0 ? setStepIndex(stepIndex - 1) : isAdditive ? navigate({ to: "/dashboard" }) : setPhase("intro"))}
           />
         )}
+        {phase === "preview" && (
+          <PreviewScene key="preview" params={portfolioParams} onSave={handleSave} />
+        )}
         {phase === "naming" && (
           <NameGardenStep
             key="naming"
@@ -150,8 +183,15 @@ function Onboarding() {
         {phase === "account" && (
           <AccountStep
             key="account"
-            onAuthed={() => setPhase(isAdditive ? "naming" : "planting")}
-            onBack={() => { setStepIndex(STEPS.length - 1); setPhase("steps"); }}
+            onAuthed={() => setPhase(isAdditive ? "naming" : "saving")}
+            onBack={() => {
+              if (isAdditive) {
+                setStepIndex(STEPS.length - 1);
+                setPhase("steps");
+              } else {
+                setPhase("preview");
+              }
+            }}
           />
         )}
         {phase === "planting" && (
@@ -164,6 +204,16 @@ function Onboarding() {
             answers={answers}
             mode={isAdditive ? "create" : "replace"}
             name={gardenName || undefined}
+          />
+        )}
+        {phase === "saving" && (
+          <SavingScene
+            key="saving"
+            params={portfolioParams}
+            onEnter={async () => {
+              await router.invalidate();
+              navigate({ to: "/dashboard" });
+            }}
           />
         )}
       </AnimatePresence>
@@ -668,15 +718,247 @@ function Step({
   );
 }
 
-// ─────────────────────────────────────────────────────────
-// Planting scene — actually generates the portfolio
-// ─────────────────────────────────────────────────────────
-
 interface SelectedAsset {
   id: string;
   ticker: string;
   name: string;
 }
+
+// ─────────────────────────────────────────────────────────
+// Preview — simule l'allocation sans compte ni persistance
+// (mur d'inscription repoussé après la preview, pas avant)
+// ─────────────────────────────────────────────────────────
+
+function PreviewScene({
+  params,
+  onSave,
+}: {
+  params: PortfolioParams;
+  onSave: () => void;
+}) {
+  const { t } = useTranslation();
+  const { lang } = useLang();
+  const simulate = useServerFn(simulatePortfolio);
+  const [phase, setPhase] = useState<"loading" | "reveal" | "error">("loading");
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [selected, setSelected] = useState<SelectedAsset[]>([]);
+  const [weights, setWeights] = useState<Record<string, number>>({});
+  const [attempt, setAttempt] = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+    setPhase("loading");
+    setErrorMsg(null);
+    (async () => {
+      try {
+        const result = await simulate({ data: params });
+        if (cancelled) return;
+        setSelected(result.selected.map((s) => ({ id: s.id, ticker: s.ticker, name: s.name })));
+        setWeights(result.weights as Record<string, number>);
+        setPhase("reveal");
+        void trackPreference({
+          step: "allocation_seen",
+          payload: {
+            position_count: result.selected.length,
+            causes: params.causes,
+            exclusions: params.exclusions,
+            risk_target: params.risk_target,
+            horizon_years: params.horizon_years,
+            initial_amount: params.initial_amount,
+          },
+        });
+      } catch (err) {
+        if (cancelled) return;
+        console.error("[onboarding] simulate:", err);
+        setErrorMsg(err instanceof Error ? err.message : t("onboarding.planting.error_fallback"));
+        setPhase("error");
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [attempt]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-paper text-ink"
+    >
+      <AnimatePresence mode="wait">
+        {phase === "loading" && (
+          <motion.div key="l" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center">
+            <div className="w-32 h-px bg-paper-3 relative mb-8 overflow-hidden">
+              <motion.div
+                animate={{ x: ["-100%", "100%"] }}
+                transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute inset-y-0 w-1/2 bg-ink"
+              />
+            </div>
+            <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-medium">{t("onboarding.planting.loading_eyebrow")}</p>
+            <p className="font-value text-2xl text-ink mt-3">{t("onboarding.planting.loading_title")}</p>
+            <p className="text-[12px] text-ink-3 mt-2">{t("onboarding.planting.loading_desc")}</p>
+          </motion.div>
+        )}
+
+        {phase === "error" && (
+          <motion.div key="e" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-md text-center">
+            <p className="text-[10px] uppercase tracking-[0.18em] text-rust font-medium">{t("onboarding.planting.error_eyebrow")}</p>
+            <h2 className="font-value text-2xl text-ink mt-3">{t("onboarding.planting.error_title")}</h2>
+            <p className="text-[12px] text-ink-3 mt-3 break-words">{errorMsg}</p>
+            <button
+              onClick={() => setAttempt((a) => a + 1)}
+              className="mt-6 px-5 py-2.5 text-[13px] font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
+            >
+              {t("common.retry")}
+            </button>
+          </motion.div>
+        )}
+
+        {phase === "reveal" && (
+          <motion.div key="r" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
+            <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-medium text-center">
+              {t("onboarding.planting.reveal_eyebrow")}
+            </p>
+            <p className="font-value text-2xl text-ink text-center mt-2 mb-6">{t("onboarding.planting.reveal_title")}</p>
+            <p className="text-[11px] text-ink-3 text-center mb-6">
+              {t("onboarding.planting.reveal_summary", { count: selected.length, amount: formatCurrency(params.initial_amount, lang) })}
+            </p>
+            <ul className="divide-y divide-paper-3 border-t border-b border-paper-3">
+              {selected
+                .map((a) => ({ ...a, w: (weights[a.id] ?? 0) * 100 }))
+                .filter((a) => a.w > 0.5)
+                .sort((a, b) => b.w - a.w)
+                .slice(0, 8)
+                .map((a, i) => (
+                  <motion.li
+                    key={a.id}
+                    initial={{ opacity: 0, x: -6 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.08, duration: 0.3 }}
+                    className="py-3"
+                  >
+                    <div className="flex items-baseline justify-between mb-1.5 gap-3">
+                      <span className="font-value text-[13px] text-ink truncate">{a.ticker}</span>
+                      <span className="text-[12px] text-ink tabular-nums font-medium">{a.w.toFixed(1)}%</span>
+                    </div>
+                    <div className="h-px bg-paper-3 relative">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${Math.min(100, a.w * 2.5)}%` }}
+                        transition={{ delay: i * 0.08 + 0.15, duration: 0.6, ease: "easeOut" }}
+                        className="absolute inset-y-0 left-0 bg-ink"
+                      />
+                    </div>
+                    <p className="text-[10px] text-ink-3 mt-1 truncate">{a.name}</p>
+                  </motion.li>
+                ))}
+            </ul>
+            <button
+              onClick={() => {
+                void trackPreference({ step: "allocation_accepted", payload: { position_count: selected.length } });
+                onSave();
+              }}
+              className="mt-8 w-full py-3 rounded-full bg-ink text-paper font-semibold text-[13px] hover:bg-moss-2 transition-colors flex items-center justify-center gap-2"
+            >
+              {t("onboarding.planting.save_cta")}
+              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M5 12h14M13 5l7 7-7 7" />
+              </svg>
+            </button>
+            <p className="mt-3 text-center text-[11px] text-ink-3">{t("onboarding.planting.save_hint")}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// Saving — persiste le portefeuille une fois le compte créé
+// (ou immédiatement si l'utilisateur était déjà connecté)
+// ─────────────────────────────────────────────────────────
+
+function SavingScene({
+  params,
+  onEnter,
+}: {
+  params: PortfolioParams;
+  onEnter: () => void;
+}) {
+  const { t } = useTranslation();
+  const generate = useServerFn(generatePortfolio);
+  const [phase, setPhase] = useState<"loading" | "error">("loading");
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+    setPhase("loading");
+    setErrorMsg(null);
+    (async () => {
+      try {
+        await callAuthed(generate, { ...params, mode: "replace" });
+        if (cancelled) return;
+        onEnter();
+      } catch (err) {
+        if (cancelled) return;
+        console.error("[onboarding] save:", err);
+        setErrorMsg(err instanceof Error ? err.message : t("onboarding.planting.error_fallback"));
+        setPhase("error");
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [attempt]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-paper text-ink"
+    >
+      <AnimatePresence mode="wait">
+        {phase === "loading" && (
+          <motion.div key="l" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center">
+            <div className="w-32 h-px bg-paper-3 relative mb-8 overflow-hidden">
+              <motion.div
+                animate={{ x: ["-100%", "100%"] }}
+                transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute inset-y-0 w-1/2 bg-ink"
+              />
+            </div>
+            <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-medium">{t("onboarding.saving.title")}</p>
+          </motion.div>
+        )}
+
+        {phase === "error" && (
+          <motion.div key="e" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-md text-center">
+            <p className="text-[10px] uppercase tracking-[0.18em] text-rust font-medium">{t("onboarding.planting.error_eyebrow")}</p>
+            <h2 className="font-value text-2xl text-ink mt-3">{t("onboarding.planting.error_title")}</h2>
+            <p className="text-[12px] text-ink-3 mt-3 break-words">{errorMsg}</p>
+            <button
+              onClick={() => setAttempt((a) => a + 1)}
+              className="mt-6 px-5 py-2.5 text-[13px] font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
+            >
+              {t("common.retry")}
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// Planting scene — flux additif (nouveau jardin, déjà connecté) :
+// simule ET persiste en une passe, inchangé pour ce cas.
+// ─────────────────────────────────────────────────────────
 
 function PlantingScene({ onEnter, answers, mode = "replace", name }: { onEnter: () => void; answers: Answers; mode?: "replace" | "create"; name?: string }) {
   const { t } = useTranslation();
@@ -695,21 +977,10 @@ function PlantingScene({ onEnter, answers, mode = "replace", name }: { onEnter: 
     setErrorMsg(null);
     (async () => {
       try {
-        const causes = ((answers.values ?? []) as CauseTag[]).slice(0, 6);
-        const exclusions = ((answers.exclusions ?? []) as ExclusionTag[]).slice(0, 6);
-        const { risk, horizon } = objectiveToRiskHorizon(answers.objective?.[0]);
-        const amount = Number(answers.amount?.[0] ?? "10") || 10;
-
-        const intensity: Record<string, number> = {};
-        for (const c of causes) intensity[c] = 0.7;
+        const params = answersToParams(answers);
 
         const result = await callAuthed(generate, {
-          causes,
-          cause_intensity: intensity,
-          exclusions,
-          risk_target: risk,
-          horizon_years: horizon,
-          initial_amount: amount,
+          ...params,
           mode,
           name,
         });
@@ -717,7 +988,7 @@ function PlantingScene({ onEnter, answers, mode = "replace", name }: { onEnter: 
         if (cancelled) return;
         setSelected(result.selected.map((s) => ({ id: s.id, ticker: s.ticker, name: s.name })));
         setWeights(result.weights as Record<string, number>);
-        setInitialAmount(amount);
+        setInitialAmount(params.initial_amount);
         setPhase("reveal");
         // Tracking : allocation présentée à l'utilisateur
         void trackPreference({
@@ -725,11 +996,11 @@ function PlantingScene({ onEnter, answers, mode = "replace", name }: { onEnter: 
           portfolioId: result.portfolio_id,
           payload: {
             position_count: result.selected.length,
-            causes,
-            exclusions,
-            risk_target: risk,
-            horizon_years: horizon,
-            initial_amount: amount,
+            causes: params.causes,
+            exclusions: params.exclusions,
+            risk_target: params.risk_target,
+            horizon_years: params.horizon_years,
+            initial_amount: params.initial_amount,
           },
         });
       } catch (err) {
