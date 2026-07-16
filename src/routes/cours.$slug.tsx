@@ -118,9 +118,24 @@ function CoursePage() {
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between gap-4 text-xs text-ink-3">
           <p>© Seedow — Édition éducative</p>
           <div className="flex gap-6">
-            <Link to="/cours" className="hover:text-ink transition-colors">Tous les cours</Link>
-            <Link to="/methodologie" className="hover:text-ink transition-colors">Méthodologie</Link>
-            <a href="mailto:hello@seedow.life" className="hover:text-ink transition-colors">Contact</a>
+            <Link to="/cours" className="hover:text-ink transition-colors">
+              Tous les cours
+            </Link>
+            <Link to="/methodologie" className="hover:text-ink transition-colors">
+              Méthodologie
+            </Link>
+            <Link to="/mentions-legales" className="hover:text-ink transition-colors">
+              Mentions légales
+            </Link>
+            <Link to="/confidentialite" className="hover:text-ink transition-colors">
+              Confidentialité
+            </Link>
+            <Link to="/cgu" className="hover:text-ink transition-colors">
+              CGU
+            </Link>
+            <a href="mailto:hello@seedow.life" className="hover:text-ink transition-colors">
+              Contact
+            </a>
           </div>
         </div>
       </footer>

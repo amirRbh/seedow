@@ -3,7 +3,6 @@ import { useEffect, useState, type FormEvent } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { joinWaitlist } from "@/lib/beta/beta.functions";
 
-
 const SITE_URL = "https://seedow.life";
 
 export const Route = createFileRoute("/")({
@@ -71,7 +70,11 @@ function Landing() {
               Méthodologie
             </Link>
             {isAuthed ? (
-              <Link to="/dashboard" className="apple-btn-primary" style={{ padding: "6px 14px", fontSize: 13 }}>
+              <Link
+                to="/dashboard"
+                className="apple-btn-primary"
+                style={{ padding: "6px 14px", fontSize: 13 }}
+              >
                 Mon espace
               </Link>
             ) : (
@@ -151,13 +154,12 @@ function Landing() {
           <h1 className="apple-title apple-title-lg mx-auto max-w-[900px]">
             Votre argent
             <br />
-            façonne{" "}
-            <span style={{ color: "var(--mint)" }}>déjà</span> le monde.
+            façonne <span style={{ color: "var(--mint)" }}>déjà</span> le monde.
           </h1>
 
           <p className="apple-subtitle mx-auto max-w-[620px] mt-6">
-            Seedow vous montre lequel. Investissement ESG, visualisé clairement,
-            expliqué par une IA qui ne vous vend rien.
+            Seedow vous montre lequel. Investissement ESG, visualisé clairement, expliqué par une IA
+            qui ne vous vend rien.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 mt-10">
@@ -166,7 +168,11 @@ function Landing() {
                 Accéder à mon espace
               </Link>
             ) : (
-              <Link to="/auth" search={{ redirect: "/dashboard", mode: "signup" }} className="apple-btn-primary">
+              <Link
+                to="/auth"
+                search={{ redirect: "/dashboard", mode: "signup" }}
+                className="apple-btn-primary"
+              >
                 Rejoindre la beta
               </Link>
             )}
@@ -190,10 +196,6 @@ function Landing() {
           </div>
         </div>
       </section>
-
-
-
-
 
       {/* SECTION — problème / stats */}
       <section style={{ background: "var(--apple-surface)" }} className="px-6 py-24 md:py-32">
@@ -230,7 +232,6 @@ function Landing() {
         </div>
       </section>
 
-
       {/* SECTION — voir ton impact */}
       <section className="px-6 py-24 md:py-32">
         <div className="max-w-[980px] mx-auto text-center">
@@ -241,8 +242,8 @@ function Landing() {
             Ton portefeuille, enfin lisible.
           </h2>
           <p className="apple-subtitle mx-auto max-w-[560px] mt-5">
-            Chaque ligne devient une couleur, une histoire, une réalité concrète.
-            Pas un rapport annuel de 80 pages.
+            Chaque ligne devient une couleur, une histoire, une réalité concrète. Pas un rapport
+            annuel de 80 pages.
           </p>
 
           {/* Mockup visuel simplifié */}
@@ -281,18 +282,12 @@ function Landing() {
           <p className="apple-eyebrow" style={{ color: "var(--volt)" }}>
             Ethi
           </p>
-          <h2
-            className="apple-title mx-auto max-w-[760px] mt-3"
-            style={{ color: "#ffffff" }}
-          >
+          <h2 className="apple-title mx-auto max-w-[760px] mt-3" style={{ color: "#ffffff" }}>
             Une IA qui répond.
             <br />
             Pas qui vend.
           </h2>
-          <p
-            className="apple-subtitle mx-auto max-w-[600px] mt-5"
-            style={{ color: "#a1a1a6" }}
-          >
+          <p className="apple-subtitle mx-auto max-w-[600px] mt-5" style={{ color: "#a1a1a6" }}>
             Ethi connaît chaque ligne de ton portefeuille. Pose une question, obtiens une réponse
             claire. Sans jargon, sans pression commerciale.
           </p>
@@ -310,18 +305,14 @@ function Landing() {
               supérieur. Tu veux voir ?
             </ChatBubble>
           </div>
-
         </div>
       </section>
-
 
       {/* SECTION — deux façons de commencer */}
       <section style={{ background: "var(--apple-surface)" }} className="px-6 py-24 md:py-32">
         <div className="max-w-[980px] mx-auto">
           <div className="text-center mb-16">
-            <h2 className="apple-title mx-auto max-w-[720px]">
-              Deux façons de commencer.
-            </h2>
+            <h2 className="apple-title mx-auto max-w-[720px]">Deux façons de commencer.</h2>
             <p className="apple-subtitle mx-auto max-w-[560px] mt-5">
               Sans carte, sans engagement.
             </p>
@@ -401,7 +392,6 @@ function Landing() {
         </div>
       </section>
 
-
       {/* FOOTER */}
       <footer
         className="px-6 py-10 text-[12px] text-[color:var(--apple-text-2)]"
@@ -424,16 +414,37 @@ function Landing() {
           </div>
 
           <nav className="flex flex-wrap gap-x-6 gap-y-2">
-            <Link to="/cours" className="hover:text-[color:var(--apple-text)]">Cours</Link>
-            <Link to="/methodologie" className="hover:text-[color:var(--apple-text)]">Méthodologie</Link>
+            <Link to="/cours" className="hover:text-[color:var(--apple-text)]">
+              Cours
+            </Link>
+            <Link to="/methodologie" className="hover:text-[color:var(--apple-text)]">
+              Méthodologie
+            </Link>
             {isAuthed ? (
-              <Link to="/dashboard" className="hover:text-[color:var(--apple-text)]">Mon espace</Link>
+              <Link to="/dashboard" className="hover:text-[color:var(--apple-text)]">
+                Mon espace
+              </Link>
             ) : (
-              <Link to="/auth" search={{ redirect: "/dashboard", mode: "login" }} className="hover:text-[color:var(--apple-text)]">
+              <Link
+                to="/auth"
+                search={{ redirect: "/dashboard", mode: "login" }}
+                className="hover:text-[color:var(--apple-text)]"
+              >
                 Se connecter
               </Link>
             )}
-            <a href="mailto:hello@seedow.life" className="hover:text-[color:var(--apple-text)]">Contact</a>
+            <Link to="/mentions-legales" className="hover:text-[color:var(--apple-text)]">
+              Mentions légales
+            </Link>
+            <Link to="/confidentialite" className="hover:text-[color:var(--apple-text)]">
+              Confidentialité
+            </Link>
+            <Link to="/cgu" className="hover:text-[color:var(--apple-text)]">
+              CGU
+            </Link>
+            <a href="mailto:hello@seedow.life" className="hover:text-[color:var(--apple-text)]">
+              Contact
+            </a>
           </nav>
         </div>
       </footer>
@@ -442,9 +453,6 @@ function Landing() {
 }
 
 /* ---------- Sub-components ---------- */
-
-
-
 
 function ChatBubble({ side, children }: { side: "user" | "ethi"; children: React.ReactNode }) {
   const isUser = side === "user";
@@ -522,8 +530,8 @@ function CtaForm({ isAuthed }: { isAuthed: boolean | null }) {
       <div className="text-[13px] text-[color:var(--apple-text-2)] mt-5">
         {position !== null ? (
           <>
-            <span className="font-semibold text-[color:var(--apple-text)]">#{position}</span> sur
-            la liste · on te contacte très vite
+            <span className="font-semibold text-[color:var(--apple-text)]">#{position}</span> sur la
+            liste · on te contacte très vite
           </>
         ) : (
           <>

@@ -48,12 +48,31 @@ export const Route = createFileRoute("/api/ethi")({
           });
         }
 
+        const lang = body.lang === "en" ? "en" : "fr";
+
+        // ── Rate limit: max 20 messages / 10 min per user ──
+        const { data: allowed, error: rlErr } = await supabaseAdmin.rpc(
+          "check_and_increment_ethi_rate_limit",
+          { p_user_id: userData.user.id, p_limit: 20, p_window_seconds: 600 },
+        );
+        if (rlErr) {
+          console.error("[ethi] rate limit check failed", rlErr);
+        } else if (allowed === false) {
+          return new Response(
+            JSON.stringify({
+              error:
+                lang === "en"
+                  ? "Too many messages sent. Try again in a few minutes."
+                  : "Trop de messages envoyés. Réessaie dans quelques minutes.",
+            }),
+            { status: 429, headers: { "Content-Type": "application/json" } },
+          );
+        }
+
         const apiKey = process.env.LOVABLE_API_KEY;
         if (!apiKey) {
           return Response.json({ error: "AI gateway not configured" });
         }
-
-        const lang = body.lang === "en" ? "en" : "fr";
 
         const contextBlock = body.context
           ? lang === "en"
@@ -109,7 +128,6 @@ For a pure definition question ("what's the Sharpe ratio?"), reply freely in 2-4
 
 Reply in English.${contextBlock}`;
 
-
         const systemPrompt = lang === "en" ? systemPromptEN : systemPromptFR;
 
         try {
@@ -125,15 +143,24 @@ Reply in English.${contextBlock}`;
 
           if (resp.status === 429)
             return Response.json({
-              error: lang === "en" ? "Too many requests, try again in a moment." : "Trop de requêtes, réessaie dans un instant.",
+              error:
+                lang === "en"
+                  ? "Too many requests, try again in a moment."
+                  : "Trop de requêtes, réessaie dans un instant.",
             });
           if (resp.status === 402)
             return Response.json({
-              error: lang === "en" ? "AI credits exhausted. Top up your workspace." : "Crédits AI épuisés. Recharge ton workspace.",
+              error:
+                lang === "en"
+                  ? "AI credits exhausted. Top up your workspace."
+                  : "Crédits AI épuisés. Recharge ton workspace.",
             });
           if (!resp.ok)
             return Response.json({
-              error: lang === "en" ? "Ethi is unavailable right now." : "Ethi est indisponible pour le moment.",
+              error:
+                lang === "en"
+                  ? "Ethi is unavailable right now."
+                  : "Ethi est indisponible pour le moment.",
             });
 
           const json = (await resp.json()) as { choices?: { message?: { content?: string } }[] };

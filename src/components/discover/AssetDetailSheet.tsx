@@ -1,33 +1,21 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useTranslation } from "react-i18next";
 import { useLang } from "@/hooks/useLang";
-import { formatCurrency, formatNumber, formatPercent } from "@/lib/format";
+import { formatCurrency, formatPercent } from "@/lib/format";
 import { Slider } from "@/components/ui/slider";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
-import type { MockAsset } from "@/lib/mockGarden";
+import type { DiscoverAsset } from "@/lib/discover/types";
 
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  asset: MockAsset | null;
+  asset: DiscoverAsset | null;
 }
 
-
-
-
-
-function impactFor(
-  monthly: number,
-  co2Factor: number,
-  energyFactor: number
-) {
+function co2AvoidedFor(monthly: number, co2FactorPer1k: number) {
   const annualK = (monthly * 12) / 1000;
-  return {
-    co2: co2Factor * annualK,
-    kwh: energyFactor * annualK,
-    trees: Math.round(annualK * 4.2),
-  };
+  return co2FactorPer1k * annualK;
 }
 
 export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
@@ -54,7 +42,10 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
   // Risques propres au type d'actif
   const risksList = buildRisks(asset, t);
 
-  const imp = impactFor(monthly, asset.co2_factor_per_1k_eur, asset.energy_factor_per_1k_eur);
+  const co2 =
+    asset.co2_factor_per_1k_eur != null
+      ? co2AvoidedFor(monthly, asset.co2_factor_per_1k_eur)
+      : null;
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -70,7 +61,9 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                   {asset.name}
                 </SheetTitle>
                 <p className="font-value text-[15px] text-ink-2 mt-1">
-                  {formatCurrency(asset.current_price, lang)}
+                  {asset.current_price != null
+                    ? formatCurrency(asset.current_price, lang)
+                    : t("discover.row.price_unavailable")}
                   <span className="text-[11px] text-ink-3 ml-1">{t("asset_detail.per_share")}</span>
                 </p>
               </div>
@@ -112,7 +105,9 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
             {/* Montant + slider */}
             <div className="bg-paper-2 rounded-xl p-4 border border-paper-3 mb-3">
               <div className="flex items-center justify-between mb-3">
-                <span className="text-[11px] text-ink-3 font-medium">{t("asset_detail.monthly_deposit")}</span>
+                <span className="text-[11px] text-ink-3 font-medium">
+                  {t("asset_detail.monthly_deposit")}
+                </span>
                 <div className="flex items-center gap-2">
                   <input
                     type="number"
@@ -126,7 +121,9 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                     }}
                     className="w-20 h-8 text-right font-value text-[15px] text-ink bg-paper border border-paper-3 rounded-lg px-2 focus:outline-none focus:ring-1 focus:ring-ink-2"
                   />
-                  <span className="text-[12px] text-ink-3 font-medium">{t("asset_detail.per_month")}</span>
+                  <span className="text-[12px] text-ink-3 font-medium">
+                    {t("asset_detail.per_month")}
+                  </span>
                 </div>
               </div>
               <Slider
@@ -144,34 +141,19 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
             </div>
 
             {/* Résultat dynamique */}
-            <div className="grid grid-cols-3 gap-2.5">
+            {co2 != null ? (
               <div className="bg-paper-2 rounded-xl p-3 border border-paper-3 text-center">
                 <p className="font-value text-xl leading-none text-moss-1">
-                  {imp.co2.toFixed(1)}
+                  {co2.toFixed(1)}
                   <span className="text-[9px] text-ink-3 ml-0.5 font-sans">kg</span>
                 </p>
                 <p className="text-[9px] text-ink-3 mt-1.5 font-medium uppercase tracking-wider">
                   {t("asset_detail.co2_avoided")}
                 </p>
               </div>
-              <div className="bg-paper-2 rounded-xl p-3 border border-paper-3 text-center">
-                <p className="font-value text-xl leading-none text-ink">
-                  {Math.round(imp.kwh)}
-                  <span className="text-[9px] text-ink-3 ml-0.5 font-sans">kWh</span>
-                </p>
-                <p className="text-[9px] text-ink-3 mt-1.5 font-medium uppercase tracking-wider">
-                  {t("asset_detail.green_energy")}
-                </p>
-              </div>
-              <div className="bg-paper-2 rounded-xl p-3 border border-paper-3 text-center">
-                <p className="font-value text-xl leading-none text-ink">
-                  ~{imp.trees}
-                </p>
-                <p className="text-[9px] text-ink-3 mt-1.5 font-medium uppercase tracking-wider">
-                  {t("asset_detail.trees_equivalent")}
-                </p>
-              </div>
-            </div>
+            ) : (
+              <p className="text-[11px] text-ink-3 italic">{t("asset_detail.co2_unavailable")}</p>
+            )}
 
             <div className="grid grid-cols-3 gap-2.5 mt-2.5">
               <MiniBar label={t("asset_detail.climate")} value={asset.climate_score} />
@@ -187,15 +169,15 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
             </p>
             <div className="paper-card p-3.5">
               <div className="flex items-center justify-between pb-3 mb-3 border-b border-dashed border-paper-3">
-                <span className="text-[11px] text-ink-3 font-medium">{t("asset_detail.risk_level")}</span>
+                <span className="text-[11px] text-ink-3 font-medium">
+                  {t("asset_detail.risk_level")}
+                </span>
                 <div className="flex items-center gap-2">
                   <div className="flex gap-0.5">
                     {[1, 2, 3, 4, 5, 6, 7].map((n) => (
                       <span
                         key={n}
-                        className={`w-1.5 h-3 rounded-sm ${
-                          n <= risk ? "bg-ink" : "bg-paper-3"
-                        }`}
+                        className={`w-1.5 h-3 rounded-sm ${n <= risk ? "bg-ink" : "bg-paper-3"}`}
                       />
                     ))}
                   </div>
@@ -226,7 +208,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                         key={e}
                         className="text-[10px] bg-rust/10 text-rust font-semibold px-2 py-0.5 rounded-full border border-rust/20"
                       >
-                        ⊘ {e}
+                        ⊘ {t(`onboarding.steps.exclusions.${e}`)}
                       </span>
                     ))}
                   </div>
@@ -241,52 +223,24 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
               {t("asset_detail_sheet.id_card")}
             </p>
             <div className="grid grid-cols-2 gap-x-4 gap-y-0 text-[12px]">
-              {asset.issuer && <IdRow label={t("asset_detail_sheet.issuer")} value={asset.issuer} />}
-              {asset.domicile && <IdRow label={t("asset_detail_sheet.domicile")} value={asset.domicile} />}
-              {asset.currency && <IdRow label={t("asset_detail_sheet.currency")} value={asset.currency} />}
-              {typeof asset.ter_pct === "number" && (
-                <IdRow label={t("asset_detail_sheet.fees")} value={formatPercent(asset.ter_pct / 100, lang)} />
+              {asset.issuer && (
+                <IdRow label={t("asset_detail_sheet.issuer")} value={asset.issuer} />
               )}
-              {asset.dividend_policy && (
+              {asset.currency && (
+                <IdRow label={t("asset_detail_sheet.currency")} value={asset.currency} />
+              )}
+              <IdRow
+                label={t("asset_detail_sheet.fees")}
+                value={formatPercent(asset.ter_pct / 100, lang)}
+              />
+              {asset.sfdr_article && (
                 <IdRow
-                  label={t("asset_detail_sheet.dividends")}
-                  value={
-                    asset.dividend_policy +
-                    (asset.dividend_yield_pct
-                      ? ` · ${asset.dividend_yield_pct.toFixed(1)} %`
-                      : "")
-                  }
+                  label={t("asset_detail_sheet.sfdr")}
+                  value={`Article ${asset.sfdr_article}`}
                 />
-              )}
-              {asset.inception_year && (
-                <IdRow label={t("asset_detail_sheet.created_in")} value={asset.inception_year.toString()} />
-              )}
-              {asset.benchmark && asset.benchmark !== "—" && (
-                <IdRow label={t("asset_detail_sheet.index")} value={asset.benchmark} />
-              )}
-              {typeof asset.holdings_count === "number" && (
-                <IdRow label={t("asset_detail_sheet.lines")} value={formatNumber(asset.holdings_count, lang)} />
               )}
             </div>
           </section>
-
-          {asset.top_holdings && asset.top_holdings.length > 0 && (
-            <section>
-              <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold mb-2">
-                {t("asset_detail_sheet.top_positions")}
-              </p>
-              <div className="flex flex-wrap gap-1.5">
-                {asset.top_holdings.map((h) => (
-                  <span
-                    key={h}
-                    className="text-[11px] bg-paper-2 text-ink-2 font-medium px-2 py-1 rounded-full border border-paper-3"
-                  >
-                    {h}
-                  </span>
-                ))}
-              </div>
-            </section>
-          )}
         </div>
 
         {/* Footer CTA collant */}
@@ -306,7 +260,13 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                 type="button"
                 className="flex-1 h-11 rounded-full bg-ink text-paper text-[12px] font-semibold uppercase tracking-[0.14em] hover:bg-ink-2 transition-colors flex items-center justify-center gap-2"
               >
-                <svg viewBox="0 0 16 16" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.4}>
+                <svg
+                  viewBox="0 0 16 16"
+                  className="w-3.5 h-3.5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2.4}
+                >
                   <path d="M8 3v10M3 8h10" />
                 </svg>
                 {t("asset_detail.invest_now")}
@@ -319,8 +279,12 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
   );
 }
 
-function buildRisks(asset: MockAsset, t: any): { title: string; desc: string }[] {
-  const cat = asset.category.toLowerCase();
+const BOND_CLASSES = new Set(["green_bond", "social_bond", "sov_bond", "corporate_bond"]);
+
+function buildRisks(
+  asset: DiscoverAsset,
+  t: (key: string, options?: Record<string, unknown>) => string,
+): { title: string; desc: string }[] {
   const risks: { title: string; desc: string }[] = [];
 
   risks.push({
@@ -328,7 +292,7 @@ function buildRisks(asset: MockAsset, t: any): { title: string; desc: string }[]
     desc: t("asset_detail.risks.capital_loss_desc"),
   });
 
-  if (cat.includes("oblig")) {
+  if (BOND_CLASSES.has(asset.asset_class)) {
     risks.push({
       title: t("asset_detail.risks.interest_rate_title"),
       desc: t("asset_detail.risks.interest_rate_desc"),
@@ -337,7 +301,7 @@ function buildRisks(asset: MockAsset, t: any): { title: string; desc: string }[]
       title: t("asset_detail.risks.credit_risk_title"),
       desc: t("asset_detail.risks.credit_risk_desc"),
     });
-  } else if (cat.includes("etf")) {
+  } else {
     risks.push({
       title: t("asset_detail.risks.market_risk_title"),
       desc: t("asset_detail.risks.market_risk_desc"),
@@ -348,18 +312,9 @@ function buildRisks(asset: MockAsset, t: any): { title: string; desc: string }[]
         desc: t("asset_detail.risks.currency_risk_desc", { currency: asset.currency }),
       });
     }
-  } else if (cat.includes("action")) {
-    risks.push({
-      title: t("asset_detail.risks.specific_risk_title"),
-      desc: t("asset_detail.risks.specific_risk_desc"),
-    });
-    risks.push({
-      title: t("asset_detail.risks.volatility_title"),
-      desc: t("asset_detail.risks.volatility_desc"),
-    });
   }
 
-  if (asset.themes.includes("tech") || asset.tags.some((t) => /hydro|renouv|clean/i.test(t))) {
+  if (asset.asset_class === "thematic" || asset.themes.length > 0) {
     risks.push({
       title: t("asset_detail.risks.thematic_risk_title"),
       desc: t("asset_detail.risks.thematic_risk_desc"),
@@ -391,7 +346,9 @@ function StatTile({
 }) {
   return (
     <div className="bg-paper-2 rounded-xl p-3 text-center border border-paper-3">
-      <p className={`font-value text-xl leading-none ${tone === "moss" ? "text-moss-1" : "text-ink"}`}>
+      <p
+        className={`font-value text-xl leading-none ${tone === "moss" ? "text-moss-1" : "text-ink"}`}
+      >
         {value}
         {unit && <span className="text-[11px] text-ink-3 ml-0.5 font-sans">{unit}</span>}
       </p>
@@ -410,10 +367,7 @@ function MiniBar({ label, value }: { label: string; value: number }) {
         <span className="text-[10px] font-bold text-ink">{value.toFixed(1)}</span>
       </div>
       <div className="h-1 bg-paper-3 rounded-full overflow-hidden">
-        <div
-          className="h-full bg-moss-1 rounded-full"
-          style={{ width: `${value * 10}%` }}
-        />
+        <div className="h-full bg-moss-1 rounded-full" style={{ width: `${value * 10}%` }} />
       </div>
     </div>
   );

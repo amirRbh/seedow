@@ -2,11 +2,11 @@ import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useLang } from "@/hooks/useLang";
 import { formatCurrency } from "@/lib/format";
-import type { MockAsset } from "@/lib/mockGarden";
+import type { DiscoverAsset } from "@/lib/discover/types";
 import { dominantRegion } from "@/lib/discover/filters";
 
 interface Props {
-  asset: MockAsset;
+  asset: DiscoverAsset;
   index: number;
   onOpen: () => void;
 }
@@ -26,13 +26,17 @@ export function AssetRow({ asset, index, onOpen }: Props) {
       className="paper-card w-full text-left p-3.5 flex items-center gap-3 hover:shadow-leaf transition-shadow group"
     >
       <div className="w-11 h-11 rounded-md bg-paper-2 border border-paper-3 flex items-center justify-center flex-shrink-0">
-        <span className="text-ink text-[10px] font-bold tracking-tight">{asset.ticker.slice(0, 5)}</span>
+        <span className="text-ink text-[10px] font-bold tracking-tight">
+          {asset.ticker.slice(0, 5)}
+        </span>
       </div>
 
       <div className="flex-1 min-w-0">
         <p className="text-[13px] font-semibold text-ink truncate leading-tight">{asset.name}</p>
         <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-          <span className="text-[9px] uppercase tracking-wider text-ink-3 font-semibold">{asset.category}</span>
+          <span className="text-[9px] uppercase tracking-wider text-ink-3 font-semibold">
+            {asset.category}
+          </span>
           <span className="text-[9px] text-ink-3">·</span>
           <span className="text-[9px] uppercase tracking-wider text-ink-3">{region}</span>
           {asset.risk_level != null && (
@@ -56,7 +60,9 @@ export function AssetRow({ asset, index, onOpen }: Props) {
 
       <div className="text-right flex-shrink-0">
         <p className="font-value text-base text-ink leading-none">
-          {formatCurrency(asset.current_price, lang)}
+          {asset.current_price != null
+            ? formatCurrency(asset.current_price, lang)
+            : t("discover.row.price_unavailable")}
         </p>
         <p className="text-[9px] uppercase tracking-wider text-gold font-semibold mt-1">
           ESG {asset.overall_esg_score.toFixed(1)}
