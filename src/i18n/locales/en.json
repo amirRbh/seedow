@@ -718,6 +718,17 @@
         "ago_hours": "{{count}}h ago",
         "never": "never"
       },
+      "risk_model": {
+        "title": "Risk model",
+        "desc": "Expected return, volatility and covariance are recomputed from the real price history (rolling 2 years). An asset whose history is still too short is left unchanged rather than recomputed on an unreliable basis.",
+        "refresh": "Recompute now",
+        "refreshing": "Recomputing…",
+        "refresh_success": "{{ok}} asset(s) recomputed",
+        "refresh_skipped": "{{skipped}} skipped (insufficient history)",
+        "refresh_error": "Recompute error",
+        "health_title": "Recompute history",
+        "health_empty": "No logged recomputes yet. Run one above to start tracking."
+      },
       "pipeline": {
         "title": "Construction pipeline",
         "desc": "Six traceable steps: profiling, investable universe, sector exclusions, best-in-class ESG filters, constrained Markowitz optimization (ESG floor, risk budget, weight bounds), then pre-optimization tilt of expected returns according to your causes. The interactive simulator and detailed documentation are on the dedicated page.",

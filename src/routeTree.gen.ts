@@ -33,6 +33,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CoursIndexRouteImport } from './routes/cours.index'
 import { Route as ObjectifsGoalIdRouteImport } from './routes/objectifs.$goalId'
 import { Route as HooksRefreshMarketDataRouteImport } from './routes/hooks/refresh-market-data'
+import { Route as HooksRecomputeRiskModelRouteImport } from './routes/hooks/recompute-risk-model'
 import { Route as CoursSlugRouteImport } from './routes/cours.$slug'
 import { Route as ApiEthiRouteImport } from './routes/api.ethi'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
@@ -160,6 +161,11 @@ const HooksRefreshMarketDataRoute = HooksRefreshMarketDataRouteImport.update({
   path: '/hooks/refresh-market-data',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HooksRecomputeRiskModelRoute = HooksRecomputeRiskModelRouteImport.update({
+  id: '/hooks/recompute-risk-model',
+  path: '/hooks/recompute-risk-model',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CoursSlugRoute = CoursSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -224,6 +230,7 @@ export interface FileRoutesByFullPath {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/api/ethi': typeof ApiEthiRoute
   '/cours/$slug': typeof CoursSlugRoute
+  '/hooks/recompute-risk-model': typeof HooksRecomputeRiskModelRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
   '/cours/': typeof CoursIndexRoute
@@ -255,6 +262,7 @@ export interface FileRoutesByTo {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/api/ethi': typeof ApiEthiRoute
   '/cours/$slug': typeof CoursSlugRoute
+  '/hooks/recompute-risk-model': typeof HooksRecomputeRiskModelRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
   '/cours': typeof CoursIndexRoute
@@ -289,6 +297,7 @@ export interface FileRoutesById {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/api/ethi': typeof ApiEthiRoute
   '/cours/$slug': typeof CoursSlugRoute
+  '/hooks/recompute-risk-model': typeof HooksRecomputeRiskModelRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
   '/cours/': typeof CoursIndexRoute
@@ -323,6 +332,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/api/ethi'
     | '/cours/$slug'
+    | '/hooks/recompute-risk-model'
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
     | '/cours/'
@@ -354,6 +364,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/api/ethi'
     | '/cours/$slug'
+    | '/hooks/recompute-risk-model'
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
     | '/cours'
@@ -387,6 +398,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/api/ethi'
     | '/cours/$slug'
+    | '/hooks/recompute-risk-model'
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
     | '/cours/'
@@ -420,6 +432,7 @@ export interface RootRouteChildren {
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   ApiEthiRoute: typeof ApiEthiRoute
+  HooksRecomputeRiskModelRoute: typeof HooksRecomputeRiskModelRoute
   HooksRefreshMarketDataRoute: typeof HooksRefreshMarketDataRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -595,6 +608,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HooksRefreshMarketDataRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/hooks/recompute-risk-model': {
+      id: '/hooks/recompute-risk-model'
+      path: '/hooks/recompute-risk-model'
+      fullPath: '/hooks/recompute-risk-model'
+      preLoaderRoute: typeof HooksRecomputeRiskModelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/cours/$slug': {
       id: '/cours/$slug'
       path: '/$slug'
@@ -708,6 +728,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   ApiEthiRoute: ApiEthiRoute,
+  HooksRecomputeRiskModelRoute: HooksRecomputeRiskModelRoute,
   HooksRefreshMarketDataRoute: HooksRefreshMarketDataRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,

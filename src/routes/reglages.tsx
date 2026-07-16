@@ -11,7 +11,8 @@ import { AppHeader } from "@/components/navigation/AppHeader";
 import { useAuth } from "@/hooks/useAuth";
 import { generatePortfolio } from "@/lib/portfolio/server.functions";
 import { triggerMarketRefresh } from "@/lib/market/refresh.functions";
-import { getRecentCronRuns, type CronRunEntry } from "@/lib/market/cron.functions";
+import { triggerRiskModelRecompute } from "@/lib/market/risk-model.functions";
+import { getRecentCronRuns, getRecentRiskModelRuns, type CronRunEntry } from "@/lib/market/cron.functions";
 import { exportAccountData } from "@/lib/account/server.functions";
 import { DeleteAccountDialog } from "@/components/reglages/DeleteAccountDialog";
 import { callAuthed } from "@/lib/authedServerFn";
@@ -676,10 +677,66 @@ function MarketDataBlock() {
   );
 }
 
-function CronHealthBlock() {
+function RiskModelBlock() {
+  const { t } = useTranslation();
+  const recompute = useServerFn(triggerRiskModelRecompute);
+  const [state, setState] = useState<"idle" | "loading" | "ok" | "error">("idle");
+  const [msg, setMsg] = useState<string | null>(null);
+
+  const onClick = async () => {
+    setState("loading");
+    setMsg(null);
+    try {
+      const res = await recompute();
+      setState("ok");
+      setMsg(
+        t("reglages.methodology.risk_model.refresh_success", { ok: res.assets_updated }) +
+          (res.skipped.length > 0
+            ? `, ${t("reglages.methodology.risk_model.refresh_skipped", { skipped: res.skipped.length })}`
+            : "") +
+          ".",
+      );
+    } catch (e) {
+      setState("error");
+      setMsg(e instanceof Error ? e.message : t("reglages.methodology.risk_model.refresh_error"));
+    }
+  };
+
+  return (
+    <Block title={t("reglages.methodology.risk_model.title")}>
+      <p className="text-[12px] text-ink-2 leading-relaxed mb-3">
+        {t("reglages.methodology.risk_model.desc")}
+      </p>
+      <button
+        onClick={onClick}
+        disabled={state === "loading"}
+        className="px-4 py-2 text-[12px] font-medium border border-ink text-ink rounded hover:bg-ink hover:text-paper transition-colors disabled:opacity-50"
+      >
+        {state === "loading"
+          ? t("reglages.methodology.risk_model.refreshing")
+          : t("reglages.methodology.risk_model.refresh")}
+      </button>
+      {msg && (
+        <p className={`text-[11px] mt-2 ${state === "error" ? "text-rust" : "text-ink-3"}`}>
+          {msg}
+        </p>
+      )}
+    </Block>
+  );
+}
+
+function CronHealthBlock({
+  fetchFn = getRecentCronRuns,
+  titleKey = "reglages.methodology.health.title",
+  emptyKey = "reglages.methodology.health.empty",
+}: {
+  fetchFn?: typeof getRecentCronRuns;
+  titleKey?: string;
+  emptyKey?: string;
+} = {}) {
   const { t } = useTranslation();
   const { lang } = useLang();
-  const fetchRuns = useServerFn(getRecentCronRuns);
+  const fetchRuns = useServerFn(fetchFn);
   const [runs, setRuns] = useState<CronRunEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -705,11 +762,11 @@ function CronHealthBlock() {
     : null;
 
   return (
-    <Block title={t("reglages.methodology.health.title")}>
+    <Block title={t(titleKey)}>
       {loading ? (
         <p className="text-[12px] text-ink-3">{t("reglages.methodology.health.loading")}</p>
       ) : runs.length === 0 ? (
-        <p className="text-[12px] text-ink-3">{t("reglages.methodology.health.empty")}</p>
+        <p className="text-[12px] text-ink-3">{t(emptyKey)}</p>
       ) : (
         <>
           <div className="flex items-center gap-2 mb-3">
@@ -771,6 +828,12 @@ function MethodologySection() {
     <div className="space-y-6">
       <MarketDataBlock />
       <CronHealthBlock />
+      <RiskModelBlock />
+      <CronHealthBlock
+        fetchFn={getRecentRiskModelRuns}
+        titleKey="reglages.methodology.risk_model.health_title"
+        emptyKey="reglages.methodology.risk_model.health_empty"
+      />
       <Block title={t("reglages.methodology.pipeline.title")}>
         <p className="text-[12px] text-ink-2 leading-relaxed mb-4">
           {t("reglages.methodology.pipeline.desc")}
