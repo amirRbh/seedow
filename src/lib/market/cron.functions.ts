@@ -32,3 +32,20 @@ export const getRecentCronRuns = createServerFn({ method: "GET" })
     return { runs: (data ?? []) as CronRunEntry[] };
   });
 
+/**
+ * Même chose pour le job de recalcul du modèle de risque
+ * (rendement attendu / volatilité / covariance).
+ */
+export const getRecentRiskModelRuns = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async () => {
+    const { data, error } = await supabaseAdmin
+      .from("cron_run_log")
+      .select("id, job_name, status, message, assets_ok, assets_failed, duration_ms, ran_at")
+      .eq("job_name", "recompute-risk-model")
+      .order("ran_at", { ascending: false })
+      .limit(5);
+    if (error) throw new Error(error.message);
+    return { runs: (data ?? []) as CronRunEntry[] };
+  });
+

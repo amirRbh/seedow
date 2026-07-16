@@ -700,6 +700,17 @@
         "ago_hours": "il y a {{count}}h",
         "never": "jamais"
       },
+      "risk_model": {
+        "title": "Modèle de risque",
+        "desc": "Rendement attendu, volatilité et covariance sont recalculés à partir de l'historique réel des cours (2 ans glissants). Un actif dont l'historique est encore trop court est laissé inchangé plutôt que recalculé sur une base peu fiable.",
+        "refresh": "Recalculer maintenant",
+        "refreshing": "Recalcul…",
+        "refresh_success": "{{ok}} actif(s) recalculé(s)",
+        "refresh_skipped": "{{skipped}} ignoré(s) (historique insuffisant)",
+        "refresh_error": "Erreur de recalcul",
+        "health_title": "Historique des recalculs",
+        "health_empty": "Aucun recalcul journalisé pour l'instant. Lance-en un ci-dessus pour démarrer le suivi."
+      },
       "pipeline": {
         "title": "Pipeline de construction",
         "desc": "Six étapes traçables : profilage, univers investissable, exclusions sectorielles, filtres best-in-class ESG, optimisation Markowitz contrainte (plancher ESG, budget de risque, bornes de poids), puis tilt pré-optimisation des rendements attendus selon vos causes. Le simulateur interactif et la documentation détaillée sont sur la page dédiée.",
