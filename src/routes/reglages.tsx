@@ -5,12 +5,15 @@ import { formatCurrency } from "@/lib/format";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useServerFn } from "@tanstack/react-start";
+import { toast } from "sonner";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { useAuth } from "@/hooks/useAuth";
 import { generatePortfolio } from "@/lib/portfolio/server.functions";
 import { triggerMarketRefresh } from "@/lib/market/refresh.functions";
 import { getRecentCronRuns, type CronRunEntry } from "@/lib/market/cron.functions";
+import { exportAccountData } from "@/lib/account/server.functions";
+import { DeleteAccountDialog } from "@/components/reglages/DeleteAccountDialog";
 import { callAuthed } from "@/lib/authedServerFn";
 import { supabase } from "@/integrations/supabase/client";
 import type { CauseTag, ExclusionTag } from "@/lib/portfolio/types";
@@ -19,7 +22,10 @@ export const Route = createFileRoute("/reglages")({
   head: () => ({
     meta: [
       { title: "Réglages — Seedow" },
-      { name: "description", content: "Gérez votre profil, vos préférences d'investissement et vos notifications." },
+      {
+        name: "description",
+        content: "Gérez votre profil, vos préférences d'investissement et vos notifications.",
+      },
     ],
   }),
   component: ReglagesPage,
@@ -134,9 +140,17 @@ function PreferencesSection() {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const firstLoadRef = useRef(true);
 
-  type PreviewLine = { id: string; ticker: string; name: string; asset_class: string; weight: number };
+  type PreviewLine = {
+    id: string;
+    ticker: string;
+    name: string;
+    asset_class: string;
+    weight: number;
+  };
   type SelectedAsset = { id: string; ticker: string; name: string; asset_class: string };
-  const [preview, setPreview] = useState<{ lines: PreviewLine[]; esg: number; ter: number } | null>(null);
+  const [preview, setPreview] = useState<{ lines: PreviewLine[]; esg: number; ter: number } | null>(
+    null,
+  );
 
   // Charger le portefeuille actif
   useEffect(() => {
@@ -247,8 +261,16 @@ function PreferencesSection() {
               {t("reglages.preview_eyebrow")}
             </p>
             <div className="flex gap-3 text-[11px] text-ink-3">
-              <span>{t("reglages.preview_esg")} <span className="text-ink font-value tabular-nums">{preview.esg.toFixed(1)}</span></span>
-              <span>{t("reglages.preview_ter")} <span className="text-ink font-value tabular-nums">{(preview.ter * 100).toFixed(2)}%</span></span>
+              <span>
+                {t("reglages.preview_esg")}{" "}
+                <span className="text-ink font-value tabular-nums">{preview.esg.toFixed(1)}</span>
+              </span>
+              <span>
+                {t("reglages.preview_ter")}{" "}
+                <span className="text-ink font-value tabular-nums">
+                  {(preview.ter * 100).toFixed(2)}%
+                </span>
+              </span>
             </div>
           </div>
           <ul className="space-y-1.5">
@@ -281,7 +303,14 @@ function PreferencesSection() {
                 >
                   {active && (
                     <svg width="10" height="8" viewBox="0 0 10 8">
-                      <path d="M1 4l3 3 5-6" stroke="white" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                      <path
+                        d="M1 4l3 3 5-6"
+                        stroke="white"
+                        strokeWidth="1.5"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                   )}
                 </button>
@@ -294,7 +323,9 @@ function PreferencesSection() {
                       max={1}
                       step={0.05}
                       value={intensity[c.id] ?? 0.5}
-                      onChange={(e) => setIntensity({ ...intensity, [c.id]: Number(e.target.value) })}
+                      onChange={(e) =>
+                        setIntensity({ ...intensity, [c.id]: Number(e.target.value) })
+                      }
                       className="flex-1 accent-ink h-1"
                     />
                     <span className="text-[11px] text-ink-3 tabular-nums w-10 text-right">
@@ -317,10 +348,14 @@ function PreferencesSection() {
                 key={e.id}
                 onClick={() => toggleExclusion(e.id)}
                 className={`flex items-center gap-2 p-2.5 rounded border text-left text-[12px] transition-colors ${
-                  active ? "bg-ink/5 border-ink text-ink" : "bg-paper border-paper-3 text-ink-2 hover:border-ink-3"
+                  active
+                    ? "bg-ink/5 border-ink text-ink"
+                    : "bg-paper border-paper-3 text-ink-2 hover:border-ink-3"
                 }`}
               >
-                <span className={`w-3 h-3 rounded-sm border flex-shrink-0 ${active ? "bg-ink border-ink" : "border-paper-3"}`} />
+                <span
+                  className={`w-3 h-3 rounded-sm border flex-shrink-0 ${active ? "bg-ink border-ink" : "border-paper-3"}`}
+                />
                 {e.label}
               </button>
             );
@@ -352,7 +387,9 @@ function PreferencesSection() {
       <Block title={t("reglages.block_horizon")}>
         <div className="flex items-baseline justify-between mb-2">
           <span className="text-[12px] text-ink-2">{t("reglages.horizon_label")}</span>
-          <span className="text-[13px] font-medium tabular-nums">{t("reglages.years", { n: horizon })}</span>
+          <span className="text-[13px] font-medium tabular-nums">
+            {t("reglages.years", { n: horizon })}
+          </span>
         </div>
         <input
           type="range"
@@ -401,9 +438,14 @@ function ProfileSection({ email, onSignOut }: { email: string; onSignOut: () => 
 
   useEffect(() => {
     if (!user) return;
-    supabase.from("profiles").select("display_name").eq("id", user.id).single().then(({ data }) => {
-      if (data?.display_name) setDisplayName(data.display_name);
-    });
+    supabase
+      .from("profiles")
+      .select("display_name")
+      .eq("id", user.id)
+      .single()
+      .then(({ data }) => {
+        if (data?.display_name) setDisplayName(data.display_name);
+      });
   }, [user]);
 
   const saveName = async () => {
@@ -419,7 +461,9 @@ function ProfileSection({ email, onSignOut }: { email: string; onSignOut: () => 
         <label className="text-[11px] text-ink-3 block mb-1">{t("reglages.email_label")}</label>
         <p className="text-[13px] text-ink mb-4">{email}</p>
 
-        <label className="text-[11px] text-ink-3 block mb-1">{t("reglages.display_name_label")}</label>
+        <label className="text-[11px] text-ink-3 block mb-1">
+          {t("reglages.display_name_label")}
+        </label>
         <div className="flex gap-2">
           <input
             type="text"
@@ -464,7 +508,7 @@ function ProfileSection({ email, onSignOut }: { email: string; onSignOut: () => 
 }
 
 // ─────────────────────────────────────────────────────────
-// Notifications & confidentialité (maquette)
+// Notifications (maquette) & confidentialité (export / suppression réels)
 // ─────────────────────────────────────────────────────────
 
 function NotificationsSection() {
@@ -472,26 +516,81 @@ function NotificationsSection() {
   const [emailNotif, setEmailNotif] = useState(true);
   const [marketAlerts, setMarketAlerts] = useState(false);
   const [reportMonthly, setReportMonthly] = useState(true);
+  const exportFn = useServerFn(exportAccountData);
+  const [exporting, setExporting] = useState(false);
+
+  const onExport = async () => {
+    setExporting(true);
+    try {
+      const data = await callAuthed(exportFn, undefined as never);
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `seedow-donnees-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      toast.success(t("reglages.export_data_done"));
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : t("common.error"));
+    } finally {
+      setExporting(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
       <Block title={t("reglages.block_email_notifs")}>
-        <ToggleRow label={t("reglages.notif_recap")} checked={emailNotif} onChange={setEmailNotif} />
-        <ToggleRow label={t("reglages.notif_market")} checked={marketAlerts} onChange={setMarketAlerts} />
-        <ToggleRow label={t("reglages.notif_report")} checked={reportMonthly} onChange={setReportMonthly} />
+        <ToggleRow
+          label={t("reglages.notif_recap")}
+          checked={emailNotif}
+          onChange={setEmailNotif}
+        />
+        <ToggleRow
+          label={t("reglages.notif_market")}
+          checked={marketAlerts}
+          onChange={setMarketAlerts}
+        />
+        <ToggleRow
+          label={t("reglages.notif_report")}
+          checked={reportMonthly}
+          onChange={setReportMonthly}
+        />
       </Block>
 
       <Block title={t("reglages.block_privacy")}>
-        <p className="text-[12px] text-ink-2 leading-relaxed mb-3">
-          {t("reglages.privacy_desc")}
-        </p>
+        <p className="text-[12px] text-ink-2 leading-relaxed mb-3">{t("reglages.privacy_desc")}</p>
         <div className="flex flex-wrap gap-2">
-          <button className="px-3 py-1.5 text-[12px] border border-paper-3 rounded hover:border-ink transition-colors">
-            {t("reglages.export_data")}
+          <button
+            onClick={onExport}
+            disabled={exporting}
+            className="px-3 py-1.5 text-[12px] border border-paper-3 rounded hover:border-ink transition-colors disabled:opacity-50"
+          >
+            {exporting ? t("common.sending") : t("reglages.export_data")}
           </button>
-          <button className="px-3 py-1.5 text-[12px] border border-paper-3 text-rust rounded hover:border-rust transition-colors">
-            {t("reglages.delete_account")}
-          </button>
+          <DeleteAccountDialog />
+        </div>
+      </Block>
+
+      <Block title={t("reglages.block_legal")}>
+        <div className="flex flex-wrap gap-x-4 gap-y-2 text-[12px]">
+          <Link
+            to="/mentions-legales"
+            className="text-ink-2 hover:text-ink underline-offset-2 hover:underline"
+          >
+            {t("reglages.legal_notice")}
+          </Link>
+          <Link
+            to="/confidentialite"
+            className="text-ink-2 hover:text-ink underline-offset-2 hover:underline"
+          >
+            {t("reglages.privacy_policy")}
+          </Link>
+          <Link to="/cgu" className="text-ink-2 hover:text-ink underline-offset-2 hover:underline">
+            {t("reglages.terms")}
+          </Link>
         </div>
       </Block>
     </div>
@@ -541,7 +640,13 @@ function MarketDataBlock() {
     try {
       const res = await refresh();
       setState("ok");
-      setMsg(t("reglages.methodology.market_data.refresh_success", { ok: res.ok }) + (res.failed ? `, ${t("reglages.methodology.market_data.refresh_failed", { failed: res.failed })}` : "") + ".");
+      setMsg(
+        t("reglages.methodology.market_data.refresh_success", { ok: res.ok }) +
+          (res.failed
+            ? `, ${t("reglages.methodology.market_data.refresh_failed", { failed: res.failed })}`
+            : "") +
+          ".",
+      );
     } catch (e) {
       setState("error");
       setMsg(e instanceof Error ? e.message : t("reglages.methodology.market_data.refresh_error"));
@@ -550,13 +655,17 @@ function MarketDataBlock() {
 
   return (
     <Block title={t("reglages.methodology.market_data.title")}>
-      <p className="text-[12px] text-ink-2 leading-relaxed mb-3">{t("reglages.methodology.market_data.desc")}</p>
+      <p className="text-[12px] text-ink-2 leading-relaxed mb-3">
+        {t("reglages.methodology.market_data.desc")}
+      </p>
       <button
         onClick={onClick}
         disabled={state === "loading"}
         className="px-4 py-2 text-[12px] font-medium border border-ink text-ink rounded hover:bg-ink hover:text-paper transition-colors disabled:opacity-50"
       >
-        {state === "loading" ? t("reglages.methodology.market_data.refreshing") : t("reglages.methodology.market_data.refresh")}
+        {state === "loading"
+          ? t("reglages.methodology.market_data.refreshing")
+          : t("reglages.methodology.market_data.refresh")}
       </button>
       {msg && (
         <p className={`text-[11px] mt-2 ${state === "error" ? "text-rust" : "text-ink-3"}`}>
@@ -616,7 +725,9 @@ function CronHealthBlock() {
             <p className="text-[12px] text-ink-2">
               {t("reglages.methodology.health.last_success")}
               <span className="text-ink font-medium ml-1">
-                {ageHours != null ? t("reglages.methodology.health.ago_hours", { count: ageHours }) : t("reglages.methodology.health.never")}
+                {ageHours != null
+                  ? t("reglages.methodology.health.ago_hours", { count: ageHours })
+                  : t("reglages.methodology.health.never")}
               </span>
             </p>
           </div>
@@ -628,11 +739,7 @@ function CronHealthBlock() {
               >
                 <span
                   className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
-                    r.status === "ok"
-                      ? "bg-moss-1"
-                      : r.status === "partial"
-                        ? "bg-gold"
-                        : "bg-rust"
+                    r.status === "ok" ? "bg-moss-1" : r.status === "partial" ? "bg-gold" : "bg-rust"
                   }`}
                 />
                 <span className="text-ink-3 tabular-nums w-28 flex-shrink-0">
@@ -665,7 +772,9 @@ function MethodologySection() {
       <MarketDataBlock />
       <CronHealthBlock />
       <Block title={t("reglages.methodology.pipeline.title")}>
-        <p className="text-[12px] text-ink-2 leading-relaxed mb-4">{t("reglages.methodology.pipeline.desc")}</p>
+        <p className="text-[12px] text-ink-2 leading-relaxed mb-4">
+          {t("reglages.methodology.pipeline.desc")}
+        </p>
         <Link
           to="/methodologie"
           className="inline-flex items-center gap-2 text-[12px] font-medium text-ink underline-offset-2 hover:underline"
@@ -685,7 +794,10 @@ function MethodologySection() {
       </Block>
 
       <Block title={t("reglages.methodology.esg_composite.title")}>
-        <p className="text-[12px] text-ink-2 leading-relaxed mb-4">{t("reglages.methodology.esg_composite.desc_1")} {t("reglages.methodology.esg_composite.desc_2")}</p>
+        <p className="text-[12px] text-ink-2 leading-relaxed mb-4">
+          {t("reglages.methodology.esg_composite.desc_1")}{" "}
+          {t("reglages.methodology.esg_composite.desc_2")}
+        </p>
 
         <div className="space-y-4">
           <div>
@@ -694,17 +806,24 @@ function MethodologySection() {
             </p>
             <ul className="text-[12px] text-ink-2 space-y-1.5 leading-relaxed">
               <li>
-                <span className="font-medium text-ink">Environnement (E)</span> — {t("reglages.methodology.esg_composite.pillar_e")} scope 1-2-3,
+                <span className="font-medium text-ink">Environnement (E)</span> —{" "}
+                {t("reglages.methodology.esg_composite.pillar_e")} scope 1-2-3,
                 {t("reglages.methodology.esg_composite.pillar_e")}
               </li>
               <li>
-                <span className="font-medium text-ink">Social (S)</span> — {t("reglages.methodology.esg_composite.pillar_s")} {t("reglages.methodology.esg_composite.pillar_s")}
+                <span className="font-medium text-ink">Social (S)</span> —{" "}
+                {t("reglages.methodology.esg_composite.pillar_s")}{" "}
+                {t("reglages.methodology.esg_composite.pillar_s")}
               </li>
               <li>
-                <span className="font-medium text-ink">Gouvernance (G)</span> — {t("reglages.methodology.esg_composite.pillar_g")} {t("reglages.methodology.esg_composite.pillar_g")}
+                <span className="font-medium text-ink">Gouvernance (G)</span> —{" "}
+                {t("reglages.methodology.esg_composite.pillar_g")}{" "}
+                {t("reglages.methodology.esg_composite.pillar_g")}
               </li>
             </ul>
-            <p className="text-[11px] text-ink-3 mt-2 leading-relaxed">{t("reglages.methodology.esg_composite.fallback_note")}</p>
+            <p className="text-[11px] text-ink-3 mt-2 leading-relaxed">
+              {t("reglages.methodology.esg_composite.fallback_note")}
+            </p>
           </div>
 
           <div>
@@ -712,18 +831,37 @@ function MethodologySection() {
               {t("reglages.methodology.esg_composite.mapping_title")}
             </p>
             <ul className="text-[12px] text-ink-2 space-y-1.5 leading-relaxed">
-              <li>• <span className="font-medium text-ink">{t("reglages.methodology.esg_composite.mapping_e")}</span></li>
-              <li>• <span className="font-medium text-ink">{t("reglages.methodology.esg_composite.mapping_s")}</span></li>
-              <li>• <span className="font-medium text-ink">{t("reglages.methodology.esg_composite.mapping_sg")}</span></li>
+              <li>
+                •{" "}
+                <span className="font-medium text-ink">
+                  {t("reglages.methodology.esg_composite.mapping_e")}
+                </span>
+              </li>
+              <li>
+                •{" "}
+                <span className="font-medium text-ink">
+                  {t("reglages.methodology.esg_composite.mapping_s")}
+                </span>
+              </li>
+              <li>
+                •{" "}
+                <span className="font-medium text-ink">
+                  {t("reglages.methodology.esg_composite.mapping_sg")}
+                </span>
+              </li>
             </ul>
-            <p className="text-[11px] text-ink-3 mt-2 leading-relaxed">{t("reglages.methodology.esg_composite.mapping_note")}</p>
+            <p className="text-[11px] text-ink-3 mt-2 leading-relaxed">
+              {t("reglages.methodology.esg_composite.mapping_note")}
+            </p>
           </div>
 
           <div>
             <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
               {t("reglages.methodology.esg_composite.portfolio_title")}
             </p>
-            <p className="text-[12px] text-ink-2 leading-relaxed">{t("reglages.methodology.esg_composite.portfolio_desc")}</p>
+            <p className="text-[12px] text-ink-2 leading-relaxed">
+              {t("reglages.methodology.esg_composite.portfolio_desc")}
+            </p>
           </div>
 
           <div className="pt-2 border-t border-paper-3">
@@ -745,23 +883,31 @@ function MethodologySection() {
               </div>
               <div className="rounded border border-moss-2 bg-moss-5 p-2">
                 <p className="font-value text-moss-1">80–100</p>
-                <p className="text-moss-1">{t("reglages.methodology.esg_composite.scale_excellent")}</p>
+                <p className="text-moss-1">
+                  {t("reglages.methodology.esg_composite.scale_excellent")}
+                </p>
               </div>
             </div>
           </div>
         </div>
 
-        <p className="text-[11px] text-ink-3 leading-relaxed mt-4 pt-3 border-t border-paper-3">{t("reglages.methodology.esg_composite.warning")}</p>
+        <p className="text-[11px] text-ink-3 leading-relaxed mt-4 pt-3 border-t border-paper-3">
+          {t("reglages.methodology.esg_composite.warning")}
+        </p>
       </Block>
 
       <Block title={t("reglages.methodology.carbon.title")}>
-        <p className="text-[12px] text-ink-2 leading-relaxed mb-3">{t("reglages.methodology.carbon.desc")}</p>
+        <p className="text-[12px] text-ink-2 leading-relaxed mb-3">
+          {t("reglages.methodology.carbon.desc")}
+        </p>
         <ul className="text-[12px] text-ink-2 space-y-2 leading-relaxed">
           <li>
-            • <span className="font-medium text-ink">CO₂ évité (heuristique)</span> — {t("reglages.methodology.carbon.avoided")} indicative
+            • <span className="font-medium text-ink">CO₂ évité (heuristique)</span> —{" "}
+            {t("reglages.methodology.carbon.avoided")} indicative
           </li>
           <li>
-            • <span className="font-medium text-ink">Intensité carbone réelle</span> — {t("reglages.methodology.carbon.intensity")}
+            • <span className="font-medium text-ink">Intensité carbone réelle</span> —{" "}
+            {t("reglages.methodology.carbon.intensity")}
           </li>
         </ul>
 
@@ -770,9 +916,18 @@ function MethodologySection() {
             {t("reglages.methodology.carbon.coverage_title")}
           </p>
           <ul className="text-[12px] text-ink-2 space-y-1.5 leading-relaxed mb-3">
-            <li>{t("reglages.methodology.carbon.coverage_low")} à l'heuristique CO₂ évité, l'intensité réelle n'est pas représentative.</li>
-            <li>{t("reglages.methodology.carbon.coverage_medium")} indicative, à recouper avec l'ESG composite.</li>
-            <li>{t("reglages.methodology.carbon.coverage_high")} fiable, utilisable pour reporting interne.</li>
+            <li>
+              {t("reglages.methodology.carbon.coverage_low")} à l'heuristique CO₂ évité, l'intensité
+              réelle n'est pas représentative.
+            </li>
+            <li>
+              {t("reglages.methodology.carbon.coverage_medium")} indicative, à recouper avec l'ESG
+              composite.
+            </li>
+            <li>
+              {t("reglages.methodology.carbon.coverage_high")} fiable, utilisable pour reporting
+              interne.
+            </li>
           </ul>
           <Link
             to="/methodologie"
@@ -785,7 +940,9 @@ function MethodologySection() {
       </Block>
 
       <Block title={t("reglages.methodology.optimization.title")}>
-        <p className="text-[12px] text-ink-2 leading-relaxed">{t("reglages.methodology.optimization.desc")}</p>
+        <p className="text-[12px] text-ink-2 leading-relaxed">
+          {t("reglages.methodology.optimization.desc")}
+        </p>
       </Block>
 
       <Block title={t("reglages.methodology.version.title")}>
@@ -810,7 +967,13 @@ function Block({ title, children }: { title: string; children: React.ReactNode }
   );
 }
 
-function StatusBanner({ status, errorMsg }: { status: "idle" | "saving" | "saved" | "error"; errorMsg: string | null }) {
+function StatusBanner({
+  status,
+  errorMsg,
+}: {
+  status: "idle" | "saving" | "saved" | "error";
+  errorMsg: string | null;
+}) {
   const { t } = useTranslation();
   const label = useMemo(() => {
     switch (status) {
@@ -841,7 +1004,9 @@ function StatusBanner({ status, errorMsg }: { status: "idle" | "saving" | "saved
       animate={{ opacity: 1, y: 0 }}
       className={`text-[11px] px-3 py-2 rounded border flex items-center gap-2 ${tone}`}
     >
-      {status === "saving" && <span className="inline-block w-2 h-2 rounded-full bg-ink-3 animate-pulse" />}
+      {status === "saving" && (
+        <span className="inline-block w-2 h-2 rounded-full bg-ink-3 animate-pulse" />
+      )}
       {label}
     </motion.div>
   );

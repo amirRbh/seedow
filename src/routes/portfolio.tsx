@@ -24,7 +24,8 @@ import { useViewMode } from "@/hooks/useViewMode";
 import { useLang } from "@/hooks/useLang";
 import { formatCurrency } from "@/lib/format";
 import { supabase } from "@/integrations/supabase/client";
-import { MOCK_BADGES } from "@/lib/mockGarden";
+import { BADGE_DEFS, computeUnlockedBadgeIds } from "@/lib/portfolio/badges";
+import type { SeasonalBadge } from "@/components/garden/SeasonalBadges";
 
 export const Route = createFileRoute("/portfolio")({
   beforeLoad: async () => {
@@ -54,13 +55,21 @@ function Portfolio() {
 
   if (!portfolio) {
     return (
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="min-h-screen bg-paper"
+      >
         <div className="max-w-lg mx-auto pb-28">
           <AppHeader eyebrow={t("portfolio.details")} title={t("portfolio.my_portfolio")} />
           <div className="px-5 pt-8">
             <div className="border border-dashed border-paper-3 rounded p-6 text-center">
               <p className="text-[13px] text-ink-2 mb-3">{t("portfolio.no_active")}</p>
-              <Link to="/onboarding" search={{ new: undefined }} className="inline-block px-4 py-2 text-[12px] font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors">
+              <Link
+                to="/onboarding"
+                search={{ new: undefined }}
+                className="inline-block px-4 py-2 text-[12px] font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
+              >
                 {t("portfolio.start_onboarding")}
               </Link>
             </div>
@@ -81,9 +90,24 @@ function Portfolio() {
     : 0;
   const trees = Math.round(co2 * 45);
   const energy = Math.round(totalInvested / 5);
-  const esgScore = portfolio.metrics?.esg_score ? Number((portfolio.metrics.esg_score / 10).toFixed(1)) : 0;
+  const esgScore = portfolio.metrics?.esg_score
+    ? Number((portfolio.metrics.esg_score / 10).toFixed(1))
+    : 0;
 
-  const linesLabel = t(portfolio.holdings.length > 1 ? "portfolio.lines_other" : "portfolio.lines_one", { count: portfolio.holdings.length });
+  const unlockedBadgeIds = computeUnlockedBadgeIds(portfolio, esgScore);
+  const badges: SeasonalBadge[] = BADGE_DEFS.map((b) => ({
+    id: b.id,
+    icon: b.icon,
+    tier: b.tier,
+    unlocked: unlockedBadgeIds.has(b.id),
+    name: t(`seasonal_badges.defs.${b.id}.name`),
+    description: t(`seasonal_badges.defs.${b.id}.description`),
+  }));
+
+  const linesLabel = t(
+    portfolio.holdings.length > 1 ? "portfolio.lines_other" : "portfolio.lines_one",
+    { count: portfolio.holdings.length },
+  );
   const subtitle = `${linesLabel} · ${formatCurrency(totalValue, lang)}`;
 
   return (
@@ -106,11 +130,21 @@ function Portfolio() {
         <section className="px-5 pt-4">
           <Tabs defaultValue="performance">
             <TabsList className="w-full grid grid-cols-5 h-auto bg-paper-2 p-1">
-              <TabsTrigger value="performance" className="text-[11px] uppercase tracking-[0.12em]">{t("portfolio.tab_perf")}</TabsTrigger>
-              <TabsTrigger value="allocation" className="text-[11px] uppercase tracking-[0.12em]">{t("portfolio.tab_allocation")}</TabsTrigger>
-              <TabsTrigger value="affiner" className="text-[11px] uppercase tracking-[0.12em]">{t("portfolio.tab_refine")}</TabsTrigger>
-              <TabsTrigger value="impact" className="text-[11px] uppercase tracking-[0.12em]">{t("portfolio.tab_impact")}</TabsTrigger>
-              <TabsTrigger value="comparatif" className="text-[11px] uppercase tracking-[0.12em]">{t("portfolio.tab_vs_market")}</TabsTrigger>
+              <TabsTrigger value="performance" className="text-[11px] uppercase tracking-[0.12em]">
+                {t("portfolio.tab_perf")}
+              </TabsTrigger>
+              <TabsTrigger value="allocation" className="text-[11px] uppercase tracking-[0.12em]">
+                {t("portfolio.tab_allocation")}
+              </TabsTrigger>
+              <TabsTrigger value="affiner" className="text-[11px] uppercase tracking-[0.12em]">
+                {t("portfolio.tab_refine")}
+              </TabsTrigger>
+              <TabsTrigger value="impact" className="text-[11px] uppercase tracking-[0.12em]">
+                {t("portfolio.tab_impact")}
+              </TabsTrigger>
+              <TabsTrigger value="comparatif" className="text-[11px] uppercase tracking-[0.12em]">
+                {t("portfolio.tab_vs_market")}
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="performance" className="pt-5 space-y-5">
@@ -147,7 +181,7 @@ function Portfolio() {
                 totalAmount={totalInvested}
                 valuedHoldings={valuation.holdings}
               />
-              <BadgesCard badges={MOCK_BADGES} />
+              <BadgesCard badges={badges} />
             </TabsContent>
 
             <TabsContent value="affiner" className="pt-5">
@@ -165,7 +199,9 @@ function Portfolio() {
                 <h2 className="text-sm font-semibold text-ink">{t("portfolio.key_indicators")}</h2>
                 {isSimple && (
                   <ExplainerCard tone="moss" dismissKey="portfolio-metrics-simple">
-                    {t("portfolio.simple_explainer_pre")} <span className="font-semibold">{t("portfolio.simple_explainer_expert")}</span> {t("portfolio.simple_explainer_post")}
+                    {t("portfolio.simple_explainer_pre")}{" "}
+                    <span className="font-semibold">{t("portfolio.simple_explainer_expert")}</span>{" "}
+                    {t("portfolio.simple_explainer_post")}
                   </ExplainerCard>
                 )}
                 <PortfolioMetricsCard metrics={portfolio.metrics} />

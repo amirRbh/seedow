@@ -53,11 +53,17 @@ function CoursesIndex() {
             <LanguageToggle />
           </div>
           <div className="flex items-center gap-5 md:gap-8 text-[10px] font-semibold uppercase tracking-[0.22em]">
-            <Link to="/methodologie" className="hidden sm:inline-block hover:text-gold transition-colors">
+            <Link
+              to="/methodologie"
+              className="hidden sm:inline-block hover:text-gold transition-colors"
+            >
               Méthodologie
             </Link>
             {isAuthed ? (
-              <Link to="/dashboard" className="bg-ink text-paper px-5 py-3 hover:bg-ink-2 transition-colors">
+              <Link
+                to="/dashboard"
+                className="bg-ink text-paper px-5 py-3 hover:bg-ink-2 transition-colors"
+              >
                 Mon espace
               </Link>
             ) : (
@@ -86,14 +92,15 @@ function CoursesIndex() {
         <section className="max-w-3xl mb-16 md:mb-20">
           <p className="eyebrow mb-5">N° 00 — Apprendre</p>
           <h1 className="font-display text-4xl md:text-6xl leading-[1.02] text-ink mb-6">
-            Apprendre la finance et l'ESG,<br />
+            Apprendre la finance et l'ESG,
+            <br />
             <span className="text-gold italic">sans jargon.</span>
           </h1>
           <div className="gold-rule mb-7" />
           <p className="text-lg md:text-xl text-ink-2 leading-relaxed">
-            Douze cours courts pour comprendre comment fonctionne ton argent et ce que veut
-            vraiment dire « investir responsable ». {freeCount} cours sont gratuits, le reste est
-            accessible avec un compte sans engagement.
+            Douze cours courts pour comprendre comment fonctionne ton argent et ce que veut vraiment
+            dire « investir responsable ». {freeCount} cours sont gratuits, le reste est accessible
+            avec un compte sans engagement.
           </p>
         </section>
 
@@ -140,9 +147,24 @@ function CoursesIndex() {
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between gap-4 text-xs text-ink-3">
           <p>© Seedow — Édition éducative</p>
           <div className="flex gap-6">
-            <Link to="/" className="hover:text-ink transition-colors">Accueil</Link>
-            <Link to="/methodologie" className="hover:text-ink transition-colors">Méthodologie</Link>
-            <a href="mailto:hello@seedow.life" className="hover:text-ink transition-colors">Contact</a>
+            <Link to="/" className="hover:text-ink transition-colors">
+              Accueil
+            </Link>
+            <Link to="/methodologie" className="hover:text-ink transition-colors">
+              Méthodologie
+            </Link>
+            <Link to="/mentions-legales" className="hover:text-ink transition-colors">
+              Mentions légales
+            </Link>
+            <Link to="/confidentialite" className="hover:text-ink transition-colors">
+              Confidentialité
+            </Link>
+            <Link to="/cgu" className="hover:text-ink transition-colors">
+              CGU
+            </Link>
+            <a href="mailto:hello@seedow.life" className="hover:text-ink transition-colors">
+              Contact
+            </a>
           </div>
         </div>
       </footer>

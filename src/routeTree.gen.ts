@@ -16,13 +16,16 @@ import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as ObjectifsRouteImport } from './routes/objectifs'
 import { Route as MethodologieRouteImport } from './routes/methodologie'
+import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as EthiRouteImport } from './routes/ethi'
 import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CoursRouteImport } from './routes/cours'
+import { Route as ConfidentialiteRouteImport } from './routes/confidentialite'
 import { Route as ComparatifRouteImport } from './routes/comparatif'
 import { Route as CommunauteRouteImport } from './routes/communaute'
+import { Route as CguRouteImport } from './routes/cgu'
 import { Route as CertificatRouteImport } from './routes/certificat'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
@@ -73,6 +76,11 @@ const MethodologieRoute = MethodologieRouteImport.update({
   path: '/methodologie',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MentionsLegalesRoute = MentionsLegalesRouteImport.update({
+  id: '/mentions-legales',
+  path: '/mentions-legales',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const McpRoute = McpRouteImport.update({
   id: '/mcp',
   path: '/mcp',
@@ -98,6 +106,11 @@ const CoursRoute = CoursRouteImport.update({
   path: '/cours',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ConfidentialiteRoute = ConfidentialiteRouteImport.update({
+  id: '/confidentialite',
+  path: '/confidentialite',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ComparatifRoute = ComparatifRouteImport.update({
   id: '/comparatif',
   path: '/comparatif',
@@ -106,6 +119,11 @@ const ComparatifRoute = ComparatifRouteImport.update({
 const CommunauteRoute = CommunauteRouteImport.update({
   id: '/communaute',
   path: '/communaute',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CguRoute = CguRouteImport.update({
+  id: '/cgu',
+  path: '/cgu',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CertificatRoute = CertificatRouteImport.update({
@@ -185,13 +203,16 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/certificat': typeof CertificatRoute
+  '/cgu': typeof CguRoute
   '/communaute': typeof CommunauteRoute
   '/comparatif': typeof ComparatifRoute
+  '/confidentialite': typeof ConfidentialiteRoute
   '/cours': typeof CoursRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/discover': typeof DiscoverRoute
   '/ethi': typeof EthiRoute
   '/mcp': typeof McpRoute
+  '/mentions-legales': typeof MentionsLegalesRoute
   '/methodologie': typeof MethodologieRoute
   '/objectifs': typeof ObjectifsRouteWithChildren
   '/onboarding': typeof OnboardingRoute
@@ -214,12 +235,15 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/certificat': typeof CertificatRoute
+  '/cgu': typeof CguRoute
   '/communaute': typeof CommunauteRoute
   '/comparatif': typeof ComparatifRoute
+  '/confidentialite': typeof ConfidentialiteRoute
   '/dashboard': typeof DashboardRoute
   '/discover': typeof DiscoverRoute
   '/ethi': typeof EthiRoute
   '/mcp': typeof McpRoute
+  '/mentions-legales': typeof MentionsLegalesRoute
   '/methodologie': typeof MethodologieRoute
   '/objectifs': typeof ObjectifsRouteWithChildren
   '/onboarding': typeof OnboardingRoute
@@ -244,13 +268,16 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/certificat': typeof CertificatRoute
+  '/cgu': typeof CguRoute
   '/communaute': typeof CommunauteRoute
   '/comparatif': typeof ComparatifRoute
+  '/confidentialite': typeof ConfidentialiteRoute
   '/cours': typeof CoursRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/discover': typeof DiscoverRoute
   '/ethi': typeof EthiRoute
   '/mcp': typeof McpRoute
+  '/mentions-legales': typeof MentionsLegalesRoute
   '/methodologie': typeof MethodologieRoute
   '/objectifs': typeof ObjectifsRouteWithChildren
   '/onboarding': typeof OnboardingRoute
@@ -275,13 +302,16 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/certificat'
+    | '/cgu'
     | '/communaute'
     | '/comparatif'
+    | '/confidentialite'
     | '/cours'
     | '/dashboard'
     | '/discover'
     | '/ethi'
     | '/mcp'
+    | '/mentions-legales'
     | '/methodologie'
     | '/objectifs'
     | '/onboarding'
@@ -304,12 +334,15 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/certificat'
+    | '/cgu'
     | '/communaute'
     | '/comparatif'
+    | '/confidentialite'
     | '/dashboard'
     | '/discover'
     | '/ethi'
     | '/mcp'
+    | '/mentions-legales'
     | '/methodologie'
     | '/objectifs'
     | '/onboarding'
@@ -333,13 +366,16 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/certificat'
+    | '/cgu'
     | '/communaute'
     | '/comparatif'
+    | '/confidentialite'
     | '/cours'
     | '/dashboard'
     | '/discover'
     | '/ethi'
     | '/mcp'
+    | '/mentions-legales'
     | '/methodologie'
     | '/objectifs'
     | '/onboarding'
@@ -364,13 +400,16 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   CertificatRoute: typeof CertificatRoute
+  CguRoute: typeof CguRoute
   CommunauteRoute: typeof CommunauteRoute
   ComparatifRoute: typeof ComparatifRoute
+  ConfidentialiteRoute: typeof ConfidentialiteRoute
   CoursRoute: typeof CoursRouteWithChildren
   DashboardRoute: typeof DashboardRoute
   DiscoverRoute: typeof DiscoverRoute
   EthiRoute: typeof EthiRoute
   McpRoute: typeof McpRoute
+  MentionsLegalesRoute: typeof MentionsLegalesRoute
   MethodologieRoute: typeof MethodologieRoute
   ObjectifsRoute: typeof ObjectifsRouteWithChildren
   OnboardingRoute: typeof OnboardingRoute
@@ -437,6 +476,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MethodologieRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mentions-legales': {
+      id: '/mentions-legales'
+      path: '/mentions-legales'
+      fullPath: '/mentions-legales'
+      preLoaderRoute: typeof MentionsLegalesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/mcp': {
       id: '/mcp'
       path: '/mcp'
@@ -472,6 +518,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CoursRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/confidentialite': {
+      id: '/confidentialite'
+      path: '/confidentialite'
+      fullPath: '/confidentialite'
+      preLoaderRoute: typeof ConfidentialiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/comparatif': {
       id: '/comparatif'
       path: '/comparatif'
@@ -484,6 +537,13 @@ declare module '@tanstack/react-router' {
       path: '/communaute'
       fullPath: '/communaute'
       preLoaderRoute: typeof CommunauteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cgu': {
+      id: '/cgu'
+      path: '/cgu'
+      fullPath: '/cgu'
+      preLoaderRoute: typeof CguRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/certificat': {
@@ -627,13 +687,16 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   CertificatRoute: CertificatRoute,
+  CguRoute: CguRoute,
   CommunauteRoute: CommunauteRoute,
   ComparatifRoute: ComparatifRoute,
+  ConfidentialiteRoute: ConfidentialiteRoute,
   CoursRoute: CoursRouteWithChildren,
   DashboardRoute: DashboardRoute,
   DiscoverRoute: DiscoverRoute,
   EthiRoute: EthiRoute,
   McpRoute: McpRoute,
+  MentionsLegalesRoute: MentionsLegalesRoute,
   MethodologieRoute: MethodologieRoute,
   ObjectifsRoute: ObjectifsRouteWithChildren,
   OnboardingRoute: OnboardingRoute,

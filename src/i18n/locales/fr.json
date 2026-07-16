@@ -2,6 +2,7 @@
   "common": {
     "back": "Retour",
     "loading": "Chargement…",
+    "sending": "Envoi…",
     "submit": "Envoyer",
     "close": "Fermer",
     "or": "ou",
@@ -24,6 +25,11 @@
     "back_home": "Retour à l'accueil",
     "site_tagline": "Investis avec impact, simplement",
     "site_description": "Investis, suis ta performance, mesure ton impact. Une expérience claire et responsable."
+  },
+  "cookie_notice": {
+    "text": "Seedow n'utilise aucun cookie publicitaire ni de mesure d'audience. Seules des informations strictement nécessaires (connexion, préférences) sont stockées localement dans ton navigateur.",
+    "learn_more": "En savoir plus",
+    "dismiss": "J'ai compris"
   },
   "nav": {
     "dashboard": "Tableau de bord",
@@ -264,9 +270,15 @@
     "reset": "Réinitialiser",
     "empty_title": "Aucun actif ne correspond",
     "empty_desc": "Ajuste tes filtres pour élargir la sélection.",
+    "loading": "Chargement des actifs…",
+    "load_error_title": "Impossible de charger les actifs",
+    "load_error_desc": "Réessaie dans un instant.",
+    "universe_empty_title": "Univers en cours de constitution",
+    "universe_empty_desc": "Aucun actif n'est disponible pour le moment.",
     "row": {
       "risk": "Risque",
-      "ter": "Frais"
+      "ter": "Frais",
+      "price_unavailable": "Cours indisponible"
     },
     "filters": {
       "category": "Catégorie",
@@ -659,7 +671,17 @@
     "block_privacy": "Confidentialité",
     "privacy_desc": "Vos données restent strictement confidentielles. Vous pouvez exporter ou supprimer lensemble de vos informations à tout moment.",
     "export_data": "Exporter mes données",
+    "export_data_done": "Export téléchargé.",
     "delete_account": "Supprimer mon compte",
+    "delete_account_title": "Supprimer définitivement ton compte ?",
+    "delete_account_warning": "Cette action est irréversible : ton profil, tes portefeuilles, tes objectifs et toutes tes données seront supprimés définitivement. Il n'y a pas de retour en arrière possible.",
+    "delete_account_confirm_label": "Tape ton adresse email ({{email}}) pour confirmer.",
+    "delete_account_confirm_cta": "Supprimer définitivement",
+    "delete_account_done": "Ton compte a été supprimé.",
+    "block_legal": "Légal",
+    "legal_notice": "Mentions légales",
+    "privacy_policy": "Politique de confidentialité",
+    "terms": "Conditions Générales d'Utilisation",
     "methodology": {
       "market_data": {
         "title": "Données de marché",
@@ -865,6 +887,7 @@
     "monthly_deposit": "Versement mensuel",
     "per_month": "€/mois",
     "co2_avoided": "CO₂ évité",
+    "co2_unavailable": "Donnée d'impact carbone pas encore disponible pour cet actif.",
     "green_energy": "Énergie verte",
     "trees_equivalent": "Arbres équivalents",
     "climate": "Climat",
@@ -968,7 +991,41 @@
     "milestones": "Jalons",
     "celebrated_one": "{{count}} célébré",
     "celebrated_other": "{{count}} célébrés",
-    "to_unlock": "À débloquer : {{desc}}"
+    "to_unlock": "À débloquer : {{desc}}",
+    "defs": {
+      "first_seed": {
+        "name": "Premier investissement",
+        "description": "Tu as effectué ton premier investissement."
+      },
+      "patient_gardener": {
+        "name": "Investisseur patient",
+        "description": "90 jours sans paniquer."
+      },
+      "biodiversity": {
+        "name": "Bien diversifié",
+        "description": "5 actifs différents en portefeuille."
+      },
+      "regular_waterer": {
+        "name": "Versements réguliers",
+        "description": "6 mois de versements consécutifs."
+      },
+      "carbon_neutral": {
+        "name": "Empreinte nulle",
+        "description": "Autant de CO₂ évité que ta conso annuelle."
+      },
+      "forest": {
+        "name": "Petite forêt",
+        "description": "100 arbres équivalents financés."
+      },
+      "first_harvest": {
+        "name": "Premier retrait",
+        "description": "Tu as retiré pour un projet qui te tient à cœur."
+      },
+      "aligned": {
+        "name": "Parfait alignement",
+        "description": "ESG > 8,5 sur tout."
+      }
+    }
   },
   "allocation_breakdown": {
     "title": "Allocation",
@@ -1342,7 +1399,8 @@
     "created_in": "Créé en",
     "index": "Indice",
     "lines": "Lignes",
-    "top_positions": "Principales positions"
+    "top_positions": "Principales positions",
+    "sfdr": "Classification SFDR"
   },
   "reglages_inline": {
     "apercu_live": "Aperçu live",

@@ -2,6 +2,7 @@
   "common": {
     "back": "Back",
     "loading": "Loading…",
+    "sending": "Sending…",
     "submit": "Submit",
     "close": "Close",
     "or": "or",
@@ -24,6 +25,11 @@
     "back_home": "Back to home",
     "site_tagline": "Invest with impact, simply",
     "site_description": "Invest, track your performance, measure your impact. A clear, responsible experience."
+  },
+  "cookie_notice": {
+    "text": "Seedow doesn't use any advertising or audience-measurement cookies. Only strictly necessary information (session, preferences) is stored locally in your browser.",
+    "learn_more": "Learn more",
+    "dismiss": "Got it"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -264,9 +270,15 @@
     "reset": "Reset",
     "empty_title": "No asset matches",
     "empty_desc": "Loosen your filters to widen the selection.",
+    "loading": "Loading assets…",
+    "load_error_title": "Couldn't load assets",
+    "load_error_desc": "Try again in a moment.",
+    "universe_empty_title": "Universe still being built",
+    "universe_empty_desc": "No asset is available yet.",
     "row": {
       "risk": "Risk",
-      "ter": "Fees"
+      "ter": "Fees",
+      "price_unavailable": "Price unavailable"
     },
     "filters": {
       "category": "Category",
@@ -654,7 +666,17 @@
     "block_privacy": "Privacy",
     "privacy_desc": "Your data stays strictly confidential. You can export or delete all your information at any time.",
     "export_data": "Export my data",
+    "export_data_done": "Export downloaded.",
     "delete_account": "Delete my account",
+    "delete_account_title": "Permanently delete your account?",
+    "delete_account_warning": "This action is irreversible: your profile, portfolios, goals and all your data will be permanently deleted. There is no way back.",
+    "delete_account_confirm_label": "Type your email address ({{email}}) to confirm.",
+    "delete_account_confirm_cta": "Permanently delete",
+    "delete_account_done": "Your account has been deleted.",
+    "block_legal": "Legal",
+    "legal_notice": "Legal notice",
+    "privacy_policy": "Privacy policy",
+    "terms": "Terms of Service",
     "block_market_data": "Market data",
     "market_data_desc": "Prices are refreshed automatically every business day at close. You can force an immediate update here.",
     "refresh_prices": "Refresh prices now",
@@ -883,6 +905,7 @@
     "monthly_deposit": "Monthly deposit",
     "per_month": "€/month",
     "co2_avoided": "CO₂ avoided",
+    "co2_unavailable": "Carbon impact data not yet available for this asset.",
     "green_energy": "Green energy",
     "trees_equivalent": "Equivalent trees",
     "climate": "Climate",
@@ -986,7 +1009,41 @@
     "milestones": "Milestones",
     "celebrated_one": "{{count}} celebrated",
     "celebrated_other": "{{count}} celebrated",
-    "to_unlock": "To unlock: {{desc}}"
+    "to_unlock": "To unlock: {{desc}}",
+    "defs": {
+      "first_seed": {
+        "name": "First investment",
+        "description": "You made your first investment."
+      },
+      "patient_gardener": {
+        "name": "Patient investor",
+        "description": "90 days without panicking."
+      },
+      "biodiversity": {
+        "name": "Well diversified",
+        "description": "5 different assets in your portfolio."
+      },
+      "regular_waterer": {
+        "name": "Regular deposits",
+        "description": "6 consecutive months of deposits."
+      },
+      "carbon_neutral": {
+        "name": "Zero footprint",
+        "description": "As much CO₂ avoided as your yearly consumption."
+      },
+      "forest": {
+        "name": "Small forest",
+        "description": "100 tree-equivalents financed."
+      },
+      "first_harvest": {
+        "name": "First withdrawal",
+        "description": "You withdrew for a project close to your heart."
+      },
+      "aligned": {
+        "name": "Perfect alignment",
+        "description": "ESG > 8.5 across the board."
+      }
+    }
   },
   "allocation_breakdown": {
     "title": "Allocation",
@@ -1360,7 +1417,8 @@
     "created_in": "Created in",
     "index": "Index",
     "lines": "Lines",
-    "top_positions": "Top positions"
+    "top_positions": "Top positions",
+    "sfdr": "SFDR classification"
   },
   "reglages_inline": {
     "apercu_live": "Live preview",

@@ -408,6 +408,24 @@ export type Database = {
         }
         Relationships: []
       }
+      ethi_rate_limits: {
+        Row: {
+          request_count: number
+          user_id: string
+          window_start: string
+        }
+        Insert: {
+          request_count?: number
+          user_id: string
+          window_start?: string
+        }
+        Update: {
+          request_count?: number
+          user_id?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
       financial_goals: {
         Row: {
           created_at: string
@@ -910,6 +928,10 @@ export type Database = {
       }
     }
     Functions: {
+      check_and_increment_ethi_rate_limit: {
+        Args: { p_limit: number; p_user_id: string; p_window_seconds: number }
+        Returns: boolean
+      }
       get_vault_secret: { Args: { secret_name: string }; Returns: string }
       has_role: {
         Args: {

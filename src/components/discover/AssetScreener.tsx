@@ -13,16 +13,18 @@ import {
   type ScreenerFilters,
   type SortKey,
 } from "@/lib/discover/filters";
-import { MOCK_ASSETS, type MockAsset } from "@/lib/mockGarden";
+import { useAssetUniverse } from "@/hooks/useAssetUniverse";
+import type { DiscoverAsset } from "@/lib/discover/types";
 
 export function AssetScreener() {
   const { t } = useTranslation();
   const [filters, setFilters] = useState<ScreenerFilters>(DEFAULT_FILTERS);
   const [panelOpen, setPanelOpen] = useState(false);
-  const [detail, setDetail] = useState<MockAsset | null>(null);
+  const [detail, setDetail] = useState<DiscoverAsset | null>(null);
+  const { assets, loading, error } = useAssetUniverse();
 
-  const categories = useMemo(() => uniqueCategories(MOCK_ASSETS), []);
-  const results = useMemo(() => applyFilters(MOCK_ASSETS, filters), [filters]);
+  const categories = useMemo(() => uniqueCategories(assets), [assets]);
+  const results = useMemo(() => applyFilters(assets, filters), [assets, filters]);
   const activeCount = activeFilterCount(filters);
 
   const update = <K extends keyof ScreenerFilters>(key: K, value: ScreenerFilters[K]) =>
@@ -31,7 +33,10 @@ export function AssetScreener() {
   const toggleInArray = (key: "categories" | "regions", value: string) => {
     setFilters((f) => {
       const arr = f[key];
-      return { ...f, [key]: arr.includes(value) ? arr.filter((v) => v !== value) : [...arr, value] };
+      return {
+        ...f,
+        [key]: arr.includes(value) ? arr.filter((v) => v !== value) : [...arr, value],
+      };
     });
   };
 
@@ -81,7 +86,14 @@ export function AssetScreener() {
               : "bg-card text-ink border-paper-3 hover:border-ink/40"
           }`}
         >
-          <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+          <svg
+            viewBox="0 0 24 24"
+            className="w-3.5 h-3.5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+          >
             <path d="M3 6h18M6 12h12M10 18h4" />
           </svg>
           {t("discover.filters_btn")}
@@ -104,7 +116,14 @@ export function AssetScreener() {
               </option>
             ))}
           </select>
-          <svg viewBox="0 0 24 24" className="w-3 h-3 text-ink-3 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+          <svg
+            viewBox="0 0 24 24"
+            className="w-3 h-3 text-ink-3 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          >
             <path d="M6 9l6 6 6-6" />
           </svg>
         </div>
@@ -152,7 +171,11 @@ export function AssetScreener() {
               {/* Regions */}
               <FilterGroup label={t("discover.filters.region")}>
                 {REGION_OPTIONS.map((r) => (
-                  <Chip key={r} active={filters.regions.includes(r)} onClick={() => toggleInArray("regions", r)}>
+                  <Chip
+                    key={r}
+                    active={filters.regions.includes(r)}
+                    onClick={() => toggleInArray("regions", r)}
+                  >
                     {r}
                   </Chip>
                 ))}
@@ -178,7 +201,9 @@ export function AssetScreener() {
                 max={1}
                 step={0.05}
                 suffix="%"
-                hint={t("discover.filters.ter_hint", { value: filters.maxTer.toFixed(2).replace(".", ",") })}
+                hint={t("discover.filters.ter_hint", {
+                  value: filters.maxTer.toFixed(2).replace(".", ","),
+                })}
                 onChange={(v) => update("maxTer", v)}
               />
 
@@ -190,7 +215,9 @@ export function AssetScreener() {
                 max={10}
                 step={0.5}
                 suffix="/10"
-                hint={t("discover.filters.esg_hint", { value: filters.minEsg.toFixed(1).replace(".", ",") })}
+                hint={t("discover.filters.esg_hint", {
+                  value: filters.minEsg.toFixed(1).replace(".", ","),
+                })}
                 onChange={(v) => update("minEsg", v)}
               />
             </div>
@@ -200,7 +227,19 @@ export function AssetScreener() {
 
       {/* Results */}
       <div className="px-5 pt-2 space-y-2.5">
-        {results.length === 0 ? (
+        {loading ? (
+          <p className="text-[12px] text-ink-3 text-center py-8">{t("discover.loading")}</p>
+        ) : error ? (
+          <div className="paper-card p-8 text-center">
+            <p className="font-value text-xl text-ink">{t("discover.load_error_title")}</p>
+            <p className="text-sm text-ink-3 mt-2">{t("discover.load_error_desc")}</p>
+          </div>
+        ) : assets.length === 0 ? (
+          <div className="paper-card p-8 text-center">
+            <p className="font-value text-xl text-ink">{t("discover.universe_empty_title")}</p>
+            <p className="text-sm text-ink-3 mt-2">{t("discover.universe_empty_desc")}</p>
+          </div>
+        ) : results.length === 0 ? (
           <div className="paper-card p-8 text-center">
             <p className="font-value text-xl text-ink">{t("discover.empty_title")}</p>
             <p className="text-sm text-ink-3 mt-2">{t("discover.empty_desc")}</p>
@@ -219,7 +258,11 @@ export function AssetScreener() {
         )}
       </div>
 
-      <AssetDetailSheet open={detail !== null} onOpenChange={(o) => !o && setDetail(null)} asset={detail} />
+      <AssetDetailSheet
+        open={detail !== null}
+        onOpenChange={(o) => !o && setDetail(null)}
+        asset={detail}
+      />
     </div>
   );
 }
@@ -227,13 +270,23 @@ export function AssetScreener() {
 function FilterGroup({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <p className="text-[10px] uppercase tracking-[0.18em] text-gold font-semibold mb-2">{label}</p>
+      <p className="text-[10px] uppercase tracking-[0.18em] text-gold font-semibold mb-2">
+        {label}
+      </p>
       <div className="flex flex-wrap gap-1.5">{children}</div>
     </div>
   );
 }
 
-function Chip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+function Chip({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
   return (
     <button
       type="button"
