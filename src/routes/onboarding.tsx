@@ -687,9 +687,12 @@ function PlantingScene({ onEnter, answers, mode = "replace", name }: { onEnter: 
   const [selected, setSelected] = useState<SelectedAsset[]>([]);
   const [weights, setWeights] = useState<Record<string, number>>({});
   const [initialAmount, setInitialAmount] = useState(0);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
+    setPhase("loading");
+    setErrorMsg(null);
     (async () => {
       try {
         const causes = ((answers.values ?? []) as CauseTag[]).slice(0, 6);
@@ -740,7 +743,7 @@ function PlantingScene({ onEnter, answers, mode = "replace", name }: { onEnter: 
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [attempt]);
 
   return (
     <motion.div
@@ -771,12 +774,7 @@ function PlantingScene({ onEnter, answers, mode = "replace", name }: { onEnter: 
             <h2 className="font-value text-2xl text-ink mt-3">{t("onboarding.planting.error_title")}</h2>
             <p className="text-[12px] text-ink-3 mt-3 break-words">{errorMsg}</p>
             <button
-              onClick={() => {
-                setErrorMsg(null);
-                setPhase("loading");
-                // re-run by reloading the planting scene — simplest path
-                window.location.reload();
-              }}
+              onClick={() => setAttempt((a) => a + 1)}
               className="mt-6 px-5 py-2.5 text-[13px] font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
             >
               {t("common.retry")}

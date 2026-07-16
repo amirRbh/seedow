@@ -12,9 +12,8 @@ import { fireConfetti } from "@/lib/confetti";
 
 export const Route = createFileRoute("/certificat")({
   beforeLoad: async () => {
-    if (typeof window === "undefined") return;
-    const { data } = await supabase.auth.getSession();
-    if (!data.session) {
+    const { data, error } = await supabase.auth.getUser();
+    if (error || !data.user) {
       throw redirect({ to: "/auth", search: { redirect: "/certificat", mode: "login" } });
     }
   },

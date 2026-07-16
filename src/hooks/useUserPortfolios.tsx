@@ -14,6 +14,7 @@ interface Ctx {
   activeId: string | null;
   setActiveId: (id: string) => void;
   loading: boolean;
+  error: string | null;
   refresh: () => void;
   canCreateMore: boolean;
 }
@@ -27,6 +28,7 @@ export function UserPortfoliosProvider({ children }: { children: ReactNode }) {
   const [portfolios, setPortfolios] = useState<PortfolioSummary[]>([]);
   const [activeId, setActiveIdState] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [tick, setTick] = useState(0);
 
   const refresh = useCallback(() => setTick((t) => t + 1), []);
@@ -43,24 +45,30 @@ export function UserPortfoliosProvider({ children }: { children: ReactNode }) {
     if (!user) {
       setPortfolios([]);
       setActiveIdState(null);
+      setError(null);
       setLoading(false);
       return;
     }
     let cancelled = false;
     setLoading(true);
     (async () => {
-      const { data, error } = await supabase
+      const { data, error: fetchError } = await supabase
         .from("portfolios")
         .select("id, name, generated_at, initial_amount")
         .eq("user_id", user.id)
         .eq("is_active", true)
         .order("generated_at", { ascending: true });
       if (cancelled) return;
-      if (error) {
-        setPortfolios([]);
+      if (fetchError) {
+        // Ne pas vider `portfolios` sur une erreur transitoire (réseau, timeout) :
+        // ça ferait passer un utilisateur qui a bien des portefeuilles pour un
+        // utilisateur qui n'en a aucun, et déclencherait une redirection onboarding
+        // à tort côté dashboard. On garde le dernier état connu et on expose l'erreur.
+        setError(fetchError.message);
         setLoading(false);
         return;
       }
+      setError(null);
       const list: PortfolioSummary[] = (data ?? []).map((p) => ({
         id: p.id,
         name: p.name,
@@ -118,6 +126,7 @@ export function UserPortfoliosProvider({ children }: { children: ReactNode }) {
         activeId,
         setActiveId,
         loading,
+        error,
         refresh,
         canCreateMore: portfolios.length < 3,
       }}
@@ -136,6 +145,7 @@ export function useUserPortfolios(): Ctx {
       activeId: null,
       setActiveId: () => { /* noop */ },
       loading: false,
+      error: null,
       refresh: () => { /* noop */ },
       canCreateMore: true,
     };
