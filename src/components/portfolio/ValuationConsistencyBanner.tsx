@@ -25,11 +25,11 @@ export function ValuationConsistencyBanner({ consistency }: Props) {
         Écart de valorisation détecté
       </p>
       <p className="text-label text-ink-2 mt-1 leading-snug">
-        La valeur calculée par la base ({fmt(consistency.viewValue)}) diffère du
-        recalcul à partir des poids et des cours ({fmt(consistency.expectedValue)})
-        de <span className="font-semibold">{consistency.deltaPct.toFixed(2)}%</span>{" "}
-        (seuil&nbsp;: {consistency.threshold}%). Rafraîchis les cours ; si l'écart
-        persiste, la vue est probablement à reconstruire.
+        La valeur calculée par la base ({fmt(consistency.viewValue)}) diffère du recalcul à partir
+        des poids et des cours ({fmt(consistency.expectedValue)}) de{" "}
+        <span className="font-semibold">{consistency.deltaPct.toFixed(2)}%</span> (seuil&nbsp;:{" "}
+        {consistency.threshold}%). Rafraîchis les cours ; si l'écart persiste, la vue est
+        probablement à reconstruire.
       </p>
     </div>
   );

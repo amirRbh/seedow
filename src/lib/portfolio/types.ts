@@ -12,21 +12,9 @@ export type AssetClass =
   | "commodity"
   | "cash";
 
-export type CauseTag =
-  | "climat"
-  | "biodiversite"
-  | "humain"
-  | "egalite"
-  | "tech"
-  | "circulaire";
+export type CauseTag = "climat" | "biodiversite" | "humain" | "egalite" | "tech" | "circulaire";
 
-export type ExclusionTag =
-  | "fossiles"
-  | "armes"
-  | "tabac"
-  | "jeux"
-  | "animaux"
-  | "fast-fashion";
+export type ExclusionTag = "fossiles" | "armes" | "tabac" | "jeux" | "animaux" | "fast-fashion";
 
 export interface Asset {
   id: string;
@@ -35,14 +23,14 @@ export interface Asset {
   asset_class: AssetClass;
   region: string | null;
   ter: number;
-  esg_score: number;          // global aggregate (0–100), back-compat
-  env_score: number | null;   // pillar E (0–100), nullable → falls back to esg_score
+  esg_score: number; // global aggregate (0–100), back-compat
+  env_score: number | null; // pillar E (0–100), nullable → falls back to esg_score
   social_score: number | null;
   governance_score: number | null;
-  esg_score_source: string | null;  // MSCI, Sustainalytics, Yahoo, manual...
-  carbon_intensity_gco2e_per_eur: number | null;  // gCO2e per € invested per year
+  esg_score_source: string | null; // MSCI, Sustainalytics, Yahoo, manual...
+  carbon_intensity_gco2e_per_eur: number | null; // gCO2e per € invested per year
   carbon_intensity_source: string | null;
-  carbon_intensity_updated_at: string | null;     // ISO timestamp
+  carbon_intensity_updated_at: string | null; // ISO timestamp
   sfdr_article: number | null;
   expected_return: number;
   volatility: number;
@@ -57,8 +45,8 @@ export interface Asset {
  * towards the relevant pillar — see causeToPillarWeights().
  */
 export interface PillarWeights {
-  env: number;        // 0..1
-  social: number;     // 0..1
+  env: number; // 0..1
+  social: number; // 0..1
   governance: number; // 0..1
 }
 
@@ -107,13 +95,13 @@ export interface PortfolioParams {
   causes: CauseTag[];
   cause_intensity: Partial<Record<CauseTag, number>>; // 0..1
   exclusions: ExclusionTag[];
-  risk_target: number;          // annualised vol target, e.g. 0.10
+  risk_target: number; // annualised vol target, e.g. 0.10
   horizon_years: number;
   initial_amount: number;
 }
 
 export interface PortfolioWeights {
-  [assetId: string]: number;    // sums to 1
+  [assetId: string]: number; // sums to 1
 }
 
 export interface PortfolioMetrics {
@@ -122,32 +110,32 @@ export interface PortfolioMetrics {
   sharpe: number;
   esg_score: number;
   ter: number;
-  co2_avoided_tons: number;     // heuristic estimate (per 10k€ invested)
+  co2_avoided_tons: number; // heuristic estimate (per 10k€ invested)
   // Real carbon footprint when per-asset intensity data is available.
   // null if no asset in the selection has a carbon_intensity_gco2e_per_eur value.
-  carbon_intensity_gco2e_per_eur: number | null;  // weighted, gCO2e per € per year
-  carbon_intensity_coverage: number;              // 0..1, share of weight with real data
+  carbon_intensity_gco2e_per_eur: number | null; // weighted, gCO2e per € per year
+  carbon_intensity_coverage: number; // 0..1, share of weight with real data
   by_class: Record<AssetClass, number>;
   by_region: Record<string, number>;
-  diversification: number;      // 1 - HHI
+  diversification: number; // 1 - HHI
 }
 
 export interface PortfolioResult {
   weights: PortfolioWeights;
   metrics: PortfolioMetrics;
   selected_assets: Asset[];
-  excluded_count: number;       // assets removed by filter
-  esg_floor_relaxed: boolean;   // true if QP couldn't satisfy MIN_PORTFOLIO_ESG
+  excluded_count: number; // assets removed by filter
+  esg_floor_relaxed: boolean; // true if QP couldn't satisfy MIN_PORTFOLIO_ESG
   methodology_version: string;
 }
 
 // Default risk targets per horizon goal
 export const DEFAULT_RISK_BY_HORIZON: Record<number, number> = {
-  1: 0.04,   // 1y
-  3: 0.06,   // 1-3y
-  5: 0.09,   // 5y
-  10: 0.11,  // 10y
-  20: 0.14,  // 20y+
+  1: 0.04, // 1y
+  3: 0.06, // 1-3y
+  5: 0.09, // 5y
+  10: 0.11, // 10y
+  20: 0.14, // 20y+
 };
 
 // Asset-class bounds per risk profile (min, max share of portfolio)
@@ -160,44 +148,44 @@ export function getClassBounds(riskTarget: number): Record<AssetClass, ClassBoun
   // Defensive (low risk) → bonds-heavy
   if (riskTarget <= 0.05) {
     return {
-      equity_dev: { min: 0.05, max: 0.20 },
+      equity_dev: { min: 0.05, max: 0.2 },
       equity_em: { min: 0.0, max: 0.05 },
       thematic: { min: 0.0, max: 0.05 },
-      green_bond: { min: 0.15, max: 0.40 },
+      green_bond: { min: 0.15, max: 0.4 },
       corporate_bond: { min: 0.05, max: 0.25 },
-      social_bond: { min: 0.05, max: 0.20 },
-      sov_bond: { min: 0.20, max: 0.40 },
+      social_bond: { min: 0.05, max: 0.2 },
+      sov_bond: { min: 0.2, max: 0.4 },
       reit: { min: 0.0, max: 0.05 },
       commodity: { min: 0.0, max: 0.05 },
-      cash: { min: 0.05, max: 0.20 },
+      cash: { min: 0.05, max: 0.2 },
     };
   }
   // Balanced
   if (riskTarget <= 0.09) {
     return {
-      equity_dev: { min: 0.20, max: 0.45 },
-      equity_em: { min: 0.0, max: 0.10 },
-      thematic: { min: 0.05, max: 0.20 },
-      green_bond: { min: 0.05, max: 0.20 },
-      corporate_bond: { min: 0.05, max: 0.20 },
+      equity_dev: { min: 0.2, max: 0.45 },
+      equity_em: { min: 0.0, max: 0.1 },
+      thematic: { min: 0.05, max: 0.2 },
+      green_bond: { min: 0.05, max: 0.2 },
+      corporate_bond: { min: 0.05, max: 0.2 },
       social_bond: { min: 0.0, max: 0.15 },
-      sov_bond: { min: 0.05, max: 0.20 },
-      reit: { min: 0.0, max: 0.10 },
+      sov_bond: { min: 0.05, max: 0.2 },
+      reit: { min: 0.0, max: 0.1 },
       commodity: { min: 0.0, max: 0.08 },
-      cash: { min: 0.0, max: 0.10 },
+      cash: { min: 0.0, max: 0.1 },
     };
   }
   // Dynamic (high risk) → equity-heavy
   return {
-    equity_dev: { min: 0.30, max: 0.60 },
-    equity_em: { min: 0.05, max: 0.20 },
-    thematic: { min: 0.10, max: 0.35 },
-    green_bond: { min: 0.00, max: 0.10 },
-    corporate_bond: { min: 0.00, max: 0.10 },
-    social_bond: { min: 0.0, max: 0.10 },
-    sov_bond: { min: 0.0, max: 0.10 },
+    equity_dev: { min: 0.3, max: 0.6 },
+    equity_em: { min: 0.05, max: 0.2 },
+    thematic: { min: 0.1, max: 0.35 },
+    green_bond: { min: 0.0, max: 0.1 },
+    corporate_bond: { min: 0.0, max: 0.1 },
+    social_bond: { min: 0.0, max: 0.1 },
+    sov_bond: { min: 0.0, max: 0.1 },
     reit: { min: 0.0, max: 0.15 },
-    commodity: { min: 0.0, max: 0.10 },
+    commodity: { min: 0.0, max: 0.1 },
     cash: { min: 0.0, max: 0.05 },
   };
 }

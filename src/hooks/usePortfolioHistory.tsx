@@ -63,7 +63,7 @@ export function usePortfolioHistory(totalInvested: number, days = 90): State {
         return;
       }
       const pf = pfs?.[0];
-      const weights = ((pf?.weights ?? {}) as Record<string, number>);
+      const weights = (pf?.weights ?? {}) as Record<string, number>;
       const ids = Object.keys(weights).filter((id) => weights[id] > 0);
       if (ids.length === 0) {
         setPoints([]);

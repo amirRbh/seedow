@@ -110,22 +110,23 @@ export const joinWaitlist = createServerFn({ method: "POST" })
  * par IP pour éviter qu'un bug en boucle ne remplisse la table.
  */
 export const logClientError = createServerFn({ method: "POST" })
-  .inputValidator((input: {
-    message: string;
-    stack?: string;
-    url?: string;
-    userAgent?: string;
-    context?: Record<string, unknown>;
-  }) =>
-    z
-      .object({
-        message: z.string().trim().min(1).max(2000),
-        stack: z.string().trim().max(8000).optional(),
-        url: z.string().trim().max(2000).optional(),
-        userAgent: z.string().trim().max(500).optional(),
-        context: z.record(z.string(), z.unknown()).optional(),
-      })
-      .parse(input),
+  .inputValidator(
+    (input: {
+      message: string;
+      stack?: string;
+      url?: string;
+      userAgent?: string;
+      context?: Record<string, unknown>;
+    }) =>
+      z
+        .object({
+          message: z.string().trim().min(1).max(2000),
+          stack: z.string().trim().max(8000).optional(),
+          url: z.string().trim().max(2000).optional(),
+          userAgent: z.string().trim().max(500).optional(),
+          context: z.record(z.string(), z.unknown()).optional(),
+        })
+        .parse(input),
   )
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -163,20 +164,21 @@ export const logClientError = createServerFn({ method: "POST" })
 
 export const submitRealInvestmentIntent = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: {
-    amount: number;
-    frequency: "one_shot" | "monthly";
-    portfolioId?: string | null;
-    contactEmail?: string;
-  }) =>
-    z
-      .object({
-        amount: z.number().positive().max(1_000_000),
-        frequency: z.enum(["one_shot", "monthly"]),
-        portfolioId: z.string().uuid().nullable().optional(),
-        contactEmail: z.string().email().max(255).optional(),
-      })
-      .parse(input),
+  .inputValidator(
+    (input: {
+      amount: number;
+      frequency: "one_shot" | "monthly";
+      portfolioId?: string | null;
+      contactEmail?: string;
+    }) =>
+      z
+        .object({
+          amount: z.number().positive().max(1_000_000),
+          frequency: z.enum(["one_shot", "monthly"]),
+          portfolioId: z.string().uuid().nullable().optional(),
+          contactEmail: z.string().email().max(255).optional(),
+        })
+        .parse(input),
   )
   .handler(async ({ data, context }) => {
     const { error } = await context.supabase.from("real_investment_intents").insert({
@@ -192,20 +194,16 @@ export const submitRealInvestmentIntent = createServerFn({ method: "POST" })
 
 export const submitBetaFeedback = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: {
-    nps?: number;
-    blocker?: string;
-    wish?: string;
-    routeWhenSent?: string;
-  }) =>
-    z
-      .object({
-        nps: z.number().int().min(0).max(10).optional(),
-        blocker: z.string().trim().max(2000).optional(),
-        wish: z.string().trim().max(2000).optional(),
-        routeWhenSent: z.string().max(255).optional(),
-      })
-      .parse(input),
+  .inputValidator(
+    (input: { nps?: number; blocker?: string; wish?: string; routeWhenSent?: string }) =>
+      z
+        .object({
+          nps: z.number().int().min(0).max(10).optional(),
+          blocker: z.string().trim().max(2000).optional(),
+          wish: z.string().trim().max(2000).optional(),
+          routeWhenSent: z.string().max(255).optional(),
+        })
+        .parse(input),
   )
   .handler(async ({ data, context }) => {
     const { error } = await context.supabase.from("beta_feedback").insert({
@@ -395,9 +393,7 @@ export const getBetaAdminStats = createServerFn({ method: "GET" })
       const uid = p.user_id as string;
       portfolioCounts.set(uid, (portfolioCounts.get(uid) ?? 0) + 1);
     }
-    const feedbackUsers = new Set(
-      (feedbackByUserRes.data ?? []).map((f) => f.user_id as string),
-    );
+    const feedbackUsers = new Set((feedbackByUserRes.data ?? []).map((f) => f.user_id as string));
     const authById = new Map<string, { email: string | null; last_sign_in_at: string | null }>();
     for (const u of authUsersRes.data?.users ?? []) {
       authById.set(u.id, {

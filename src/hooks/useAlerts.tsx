@@ -134,7 +134,9 @@ export function useAlerts(): State {
       setCauses((data?.causes ?? []) as string[]);
       setLoadedMeta(true);
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [user, portfolio?.id]);
 
   // 2) Upsert des candidats dérivés, puis lecture depuis la table
@@ -185,7 +187,9 @@ export function useAlerts(): State {
         })),
       );
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [user, loadedMeta, portfolio, exclusions, causes, tick]);
 
   const sorted = useMemo(
@@ -205,16 +209,10 @@ export function useAlerts(): State {
     setTick((t) => t + 1);
   }, [user]);
 
-  const dismiss = useCallback(
-    async (id: string) => {
-      await supabase
-        .from("alerts")
-        .update({ dismissed_at: new Date().toISOString() })
-        .eq("id", id);
-      setTick((t) => t + 1);
-    },
-    [],
-  );
+  const dismiss = useCallback(async (id: string) => {
+    await supabase.from("alerts").update({ dismissed_at: new Date().toISOString() }).eq("id", id);
+    setTick((t) => t + 1);
+  }, []);
 
   return {
     alerts: sorted,

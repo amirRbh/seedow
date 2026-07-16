@@ -1,15 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { buildPortfolio } from "../engine";
-import {
-  MAX_SINGLE_WEIGHT,
-  MIN_PORTFOLIO_ESG,
-} from "../types";
-import {
-  balancedUniverse,
-  defaultParams,
-  diagonalCovMap,
-  makeAsset,
-} from "./fixtures";
+import { MAX_SINGLE_WEIGHT, MIN_PORTFOLIO_ESG } from "../types";
+import { balancedUniverse, defaultParams, diagonalCovMap, makeAsset } from "./fixtures";
 
 describe("buildPortfolio", () => {
   it("returns an empty result on an empty universe without throwing", () => {

@@ -13,7 +13,7 @@ interface Props {
 
 export function JourneySteps({ active, compact = false }: Props) {
   const { t } = useTranslation();
-  
+
   const STEPS: { key: JourneyStepKey; label: string; to: string; n: string }[] = [
     { key: "values", label: t("journey_steps.values"), to: "/profil", n: "01" },
     { key: "portfolio", label: t("journey_steps.portfolio"), to: "/portfolio", n: "02" },
@@ -23,10 +23,7 @@ export function JourneySteps({ active, compact = false }: Props) {
   return (
     <nav
       aria-label={t("journey_steps.aria")}
-      className={cn(
-        "flex items-stretch gap-2",
-        !compact && "px-5 pb-2",
-      )}
+      className={cn("flex items-stretch gap-2", !compact && "px-5 pb-2")}
     >
       {STEPS.map((step, i) => {
         const isActive = step.key === active;

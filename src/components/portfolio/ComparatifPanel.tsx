@@ -14,7 +14,7 @@ const MSCI_WORLD = {
   ticker: "IWDA / EUNL",
   expectedReturn: 0.072,
   volatility: 0.155,
-  ter: 0.0020,
+  ter: 0.002,
   esgScore: 52,
   carbonIntensityGperEur: 165,
   sfdr: "Article 6",
@@ -74,17 +74,29 @@ export function ComparatifPanel() {
         <KPIFigure
           size="sm"
           label={t("comparatif_panel.simulated_10y")}
-          value={seedow10y.toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+          value={seedow10y.toLocaleString("fr-FR", {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+          })}
           unit="€"
           accent
-          hint={t("comparatif_panel.on_invested", { amount: capital.toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 }) })}
+          hint={t("comparatif_panel.on_invested", {
+            amount: capital.toLocaleString("fr-FR", {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }),
+          })}
         />
         <KPIFigure
           size="sm"
           label={t("comparatif_panel.gap_msci")}
           value={`${delta10y >= 0 ? "+" : ""}${delta10y.toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`}
           unit="€"
-          hint={delta10y >= 0 ? t("comparatif_panel.above_benchmark") : t("comparatif_panel.below_benchmark")}
+          hint={
+            delta10y >= 0
+              ? t("comparatif_panel.above_benchmark")
+              : t("comparatif_panel.below_benchmark")
+          }
         />
       </div>
       <p className="mt-3 text-caption text-ink-3 leading-relaxed">
@@ -93,8 +105,12 @@ export function ComparatifPanel() {
 
       <div className="mt-8">
         <div className="gold-rule mb-5" />
-        <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">{t("comparatif_panel.face_to_face")}</p>
-        <h2 className="font-value text-2xl text-ink leading-tight">{t("comparatif_panel.no_filter")}</h2>
+        <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">
+          {t("comparatif_panel.face_to_face")}
+        </p>
+        <h2 className="font-value text-2xl text-ink leading-tight">
+          {t("comparatif_panel.no_filter")}
+        </h2>
 
         <div className="mt-6 border-t border-b border-paper-3 divide-y divide-paper-3">
           <CompareRow
@@ -103,7 +119,13 @@ export function ComparatifPanel() {
             seedowValue={`${(seedow.expectedReturn * 100).toFixed(1)} %`}
             msciValue={`${(MSCI_WORLD.expectedReturn * 100).toFixed(1)} %`}
             seedowWins={seedow.expectedReturn >= MSCI_WORLD.expectedReturn}
-            bar={<PerfMedaillon value={seedow.expectedReturn} max={Math.max(seedow.expectedReturn, MSCI_WORLD.expectedReturn)} accent />}
+            bar={
+              <PerfMedaillon
+                value={seedow.expectedReturn}
+                max={Math.max(seedow.expectedReturn, MSCI_WORLD.expectedReturn)}
+                accent
+              />
+            }
           />
           <CompareRow
             label={t("comparatif_panel.volatility")}
@@ -149,13 +171,20 @@ export function ComparatifPanel() {
 
       <div className="mt-10">
         <div className="gold-rule mb-5" />
-        <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">{t("comparatif_panel.concrete_impact")}</p>
-        <h2 className="font-value text-2xl text-ink leading-tight">{t("comparatif_panel.avoided_per_year")}</h2>
+        <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">
+          {t("comparatif_panel.concrete_impact")}
+        </p>
+        <h2 className="font-value text-2xl text-ink leading-tight">
+          {t("comparatif_panel.avoided_per_year")}
+        </h2>
         <div className="mt-6 grid grid-cols-2 gap-4 border-t border-paper-3 pt-5">
           <KPIFigure
             size="md"
             label={t("comparatif_panel.co2_avoided")}
-            value={co2EvitedKg.toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+            value={co2EvitedKg.toLocaleString("fr-FR", {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            })}
             unit="kg/an"
             accent
             hint={t("comparatif_panel.paris_lyon_trips", { count: Math.round(co2EvitedKg / 120) })}
@@ -165,13 +194,20 @@ export function ComparatifPanel() {
             label={t("comparatif_panel.saved_fees")}
             value={`${Math.max(0, (MSCI_WORLD.ter - seedow.ter) * capital).toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`}
             unit="€/an"
-            hint={t("comparatif_panel.for_invested", { amount: capital.toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 }) })}
+            hint={t("comparatif_panel.for_invested", {
+              amount: capital.toLocaleString("fr-FR", {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              }),
+            })}
           />
         </div>
       </div>
 
       <div className="mt-10 border-t border-paper-3 pt-5">
-        <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold mb-2">{t("comparatif_panel.methodology")}</p>
+        <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold mb-2">
+          {t("comparatif_panel.methodology")}
+        </p>
         <p className="text-label text-ink-2 leading-relaxed">
           {t("comparatif_panel.methodology_body")}
         </p>
@@ -180,7 +216,13 @@ export function ComparatifPanel() {
           className="mt-3 inline-flex items-center gap-2 text-caption font-semibold uppercase tracking-[0.18em] text-ink hover:text-moss-1 transition-colors"
         >
           Lire la méthodologie complète
-          <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5">
+          <svg
+            viewBox="0 0 24 24"
+            className="w-3 h-3"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+          >
             <path d="M5 12h14M13 5l7 7-7 7" />
           </svg>
         </Link>
@@ -210,14 +252,27 @@ function CompareRow({ label, term, seedowValue, msciValue, seedowWins, note, bar
       </div>
       <div className="mt-2 grid grid-cols-2 gap-4">
         <div>
-          <p className="text-tag uppercase tracking-[0.18em] text-gold font-semibold mb-1">Seedow</p>
-          <p className={cn("kpi-figure text-xl tabular-nums", seedowWins ? "text-ink" : "text-ink-2")}>
+          <p className="text-tag uppercase tracking-[0.18em] text-gold font-semibold mb-1">
+            Seedow
+          </p>
+          <p
+            className={cn(
+              "kpi-figure text-xl tabular-nums",
+              seedowWins ? "text-ink" : "text-ink-2",
+            )}
+          >
             {seedowValue}
-            {seedowWins && <span aria-hidden="true" className="ml-1.5 text-gold text-xs">●</span>}
+            {seedowWins && (
+              <span aria-hidden="true" className="ml-1.5 text-gold text-xs">
+                ●
+              </span>
+            )}
           </p>
         </div>
         <div>
-          <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold mb-1">MSCI World</p>
+          <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold mb-1">
+            MSCI World
+          </p>
           <p className="kpi-figure text-xl text-ink-2 tabular-nums">{msciValue}</p>
         </div>
       </div>

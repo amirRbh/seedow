@@ -36,8 +36,7 @@ export function NextStepCard() {
       const months = Math.max(
         1,
         Math.round(
-          (new Date(upcoming.target_date).getTime() - Date.now()) /
-            (1000 * 60 * 60 * 24 * 30),
+          (new Date(upcoming.target_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24 * 30),
         ),
       );
       if (months <= 36) {
@@ -105,7 +104,13 @@ export function NextStepCard() {
         <p className="text-label text-ink-2 mt-2 leading-relaxed">{card.detail}</p>
         <p className="mt-4 text-caption uppercase tracking-[0.18em] font-semibold text-ink inline-flex items-center gap-1.5">
           {card.cta}
-          <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5">
+          <svg
+            viewBox="0 0 24 24"
+            className="w-3 h-3"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+          >
             <path d="M5 12h14M13 5l7 7-7 7" />
           </svg>
         </p>

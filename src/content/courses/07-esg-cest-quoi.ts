@@ -13,8 +13,7 @@ export const course: Course = {
     "Environnement, Social, Gouvernance : trois lettres devenues incontournables. Ce qu'elles signifient vraiment, comment on les mesure, et leurs limites.",
   intro:
     "ESG est devenu un argument marketing si vendeur que presque tous les fonds européens s'en réclament. Voici les bases pour comprendre ce que recouvre l'acronyme, ce qu'il évalue vraiment, et ce qu'il ne dit pas. Sans naïveté ni cynisme.",
-  eli5:
-    "Imagine un bulletin scolaire d'entreprise. Trois notes principales : Environnement (l'entreprise pollue-t-elle ?), Social (traite-t-elle bien ses employés ?), Gouvernance (est-elle bien dirigée, sans triche ?). ESG = ces trois notes. Le problème : chaque « prof » (agence de notation) note différemment. Une entreprise peut être 18/20 chez l'un et 8/20 chez l'autre.",
+  eli5: "Imagine un bulletin scolaire d'entreprise. Trois notes principales : Environnement (l'entreprise pollue-t-elle ?), Social (traite-t-elle bien ses employés ?), Gouvernance (est-elle bien dirigée, sans triche ?). ESG = ces trois notes. Le problème : chaque « prof » (agence de notation) note différemment. Une entreprise peut être 18/20 chez l'un et 8/20 chez l'autre.",
   sections: [
     {
       heading: "E pour Environnement",
@@ -107,7 +106,8 @@ export const course: Course = {
       explanation: "Trois axes d'évaluation extra-financière standardisés depuis ~2005.",
     },
     {
-      question: "Selon le MIT, la corrélation entre scores ESG d'agences différentes est d'environ…",
+      question:
+        "Selon le MIT, la corrélation entre scores ESG d'agences différentes est d'environ…",
       options: ["0,99", "0,80", "0,50", "0,10"],
       correctIndex: 2,
       explanation:

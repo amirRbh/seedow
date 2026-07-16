@@ -71,7 +71,9 @@ function Dashboard() {
 
   const userName = useMemo(() => {
     const meta = user?.user_metadata as { display_name?: string; full_name?: string } | undefined;
-    return meta?.display_name || meta?.full_name || user?.email?.split("@")[0] || t("dashboard.welcome");
+    return (
+      meta?.display_name || meta?.full_name || user?.email?.split("@")[0] || t("dashboard.welcome")
+    );
   }, [user, t]);
 
   const plants: GardenPlant[] = useMemo(
@@ -96,7 +98,6 @@ function Dashboard() {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
-
       <div className="max-w-lg mx-auto pb-28">
         <AppHeader eyebrow={greeting} title={userName} showPortfolioSelector />
 
@@ -107,18 +108,33 @@ function Dashboard() {
           transition={{ delay: 0.1 }}
           className="px-5 pt-6"
         >
-          <p className="text-caption uppercase tracking-wider text-ink-3 font-medium">{t("dashboard.total_value")}</p>
+          <p className="text-caption uppercase tracking-wider text-ink-3 font-medium">
+            {t("dashboard.total_value")}
+          </p>
           <h2 className="font-value text-6xl text-ink leading-none mt-1">
             <sup className="text-2xl align-super mr-1">€</sup>
-            {totalValue.toLocaleString(lang === "en" ? "en-US" : "fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {totalValue.toLocaleString(lang === "en" ? "en-US" : "fr-FR", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
           </h2>
           <div
             className={`inline-flex items-center gap-1.5 mt-3 px-3 py-1 rounded-full text-xs font-semibold ${
               isGrowing ? "bg-moss-5 text-moss-1" : "bg-[oklch(0.93_0.05_45)] text-rust"
             }`}
           >
-            <svg viewBox="0 0 16 16" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5">
-              {isGrowing ? <polyline points="2,12 6,7 10,9 14,3" /> : <polyline points="2,4 6,9 10,7 14,13" />}
+            <svg
+              viewBox="0 0 16 16"
+              className="w-3 h-3"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+            >
+              {isGrowing ? (
+                <polyline points="2,12 6,7 10,9 14,3" />
+              ) : (
+                <polyline points="2,4 6,9 10,7 14,13" />
+              )}
             </svg>
             {isGrowing ? "+" : ""}
             {formatCurrency(gain, lang)} · {returnPct.toFixed(2)}%
@@ -173,7 +189,6 @@ function Dashboard() {
         {/* 3b. Capture intention investissement réel */}
         {portfolio && <RealInvestmentInterestCard />}
 
-
         {/* 4. Lien Voir le détail */}
         <motion.section
           initial={{ opacity: 0 }}
@@ -189,7 +204,13 @@ function Dashboard() {
               <p className="text-sm font-semibold text-ink">{t("dashboard.see_detail")}</p>
               <p className="text-xs text-ink-3 mt-0.5">{t("dashboard.see_detail_desc")}</p>
             </div>
-            <svg viewBox="0 0 24 24" className="w-5 h-5 text-ink-3" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              viewBox="0 0 24 24"
+              className="w-5 h-5 text-ink-3"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <path d="M9 6l6 6-6 6" />
             </svg>
           </Link>

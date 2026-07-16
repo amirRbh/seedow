@@ -6,7 +6,10 @@ import { formatCurrency, formatDate } from "@/lib/format";
 import { useLang } from "@/hooks/useLang";
 
 function monthsBetween(from: Date, to: Date) {
-  return Math.max(0, (to.getFullYear() - from.getFullYear()) * 12 + (to.getMonth() - from.getMonth()));
+  return Math.max(
+    0,
+    (to.getFullYear() - from.getFullYear()) * 12 + (to.getMonth() - from.getMonth()),
+  );
 }
 
 function estimateCurrent(goal: FinancialGoal): number {
@@ -34,7 +37,8 @@ export function GoalCard({ goal, onEdit }: { goal: FinancialGoal; onEdit: () => 
       ? { label: t("goal.status_reached"), tone: "text-emerald-700" }
       : monthsLeft <= 0
         ? { label: t("goal.status_overdue"), tone: "text-rose-600" }
-        : pct / 100 >= (1 - monthsLeft / Math.max(1, monthsBetween(new Date(goal.created_at), target)))
+        : pct / 100 >=
+            1 - monthsLeft / Math.max(1, monthsBetween(new Date(goal.created_at), target))
           ? { label: t("goal.status_ahead"), tone: "text-emerald-700" }
           : { label: t("goal.status_on_track"), tone: "text-ink-3" };
 
@@ -64,13 +68,19 @@ export function GoalCard({ goal, onEdit }: { goal: FinancialGoal; onEdit: () => 
 
       <div className="mt-5">
         <div className="flex items-baseline justify-between text-sm">
-          <span className="font-value text-ink text-lg tabular-nums">{formatCurrency(current, lang)}</span>
-          <span className="text-ink-3 tabular-nums">/ {formatCurrency(goal.target_amount, lang)}</span>
+          <span className="font-value text-ink text-lg tabular-nums">
+            {formatCurrency(current, lang)}
+          </span>
+          <span className="text-ink-3 tabular-nums">
+            / {formatCurrency(goal.target_amount, lang)}
+          </span>
         </div>
         <Progress value={pct} className="mt-2 h-1.5 bg-paper-3 [&>div]:bg-gold" />
         <div className="mt-2 flex items-center justify-between text-caption">
           <span className="text-ink-3 tabular-nums">{pct.toFixed(1)} %</span>
-          <span className={`uppercase tracking-[0.18em] font-semibold ${status.tone}`}>{status.label}</span>
+          <span className={`uppercase tracking-[0.18em] font-semibold ${status.tone}`}>
+            {status.label}
+          </span>
         </div>
       </div>
 

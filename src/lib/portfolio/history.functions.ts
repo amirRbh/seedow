@@ -128,10 +128,7 @@ export const getPortfolioHistory = createServerFn({ method: "POST" })
       for (const [aid, p] of today) lastPriceByAsset.set(aid, p);
 
       // Advance deposit cursor
-      while (
-        depositCursor < sortedDeposits.length &&
-        sortedDeposits[depositCursor].date <= date
-      ) {
+      while (depositCursor < sortedDeposits.length && sortedDeposits[depositCursor].date <= date) {
         cumulatedDeposits += sortedDeposits[depositCursor].amount;
         depositCursor++;
       }

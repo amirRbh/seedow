@@ -36,7 +36,11 @@ export function UserPortfoliosProvider({ children }: { children: ReactNode }) {
   const setActiveId = useCallback((id: string) => {
     setActiveIdState(id);
     if (typeof window !== "undefined") {
-      try { window.localStorage.setItem(STORAGE_KEY, id); } catch { /* ignore */ }
+      try {
+        window.localStorage.setItem(STORAGE_KEY, id);
+      } catch {
+        /* ignore */
+      }
     }
   }, []);
 
@@ -79,18 +83,28 @@ export function UserPortfoliosProvider({ children }: { children: ReactNode }) {
       // Resolve active id
       let resolved: string | null = null;
       if (typeof window !== "undefined") {
-        try { resolved = window.localStorage.getItem(STORAGE_KEY); } catch { /* ignore */ }
+        try {
+          resolved = window.localStorage.getItem(STORAGE_KEY);
+        } catch {
+          /* ignore */
+        }
       }
       if (!resolved || !list.some((p) => p.id === resolved)) {
         resolved = list[0]?.id ?? null;
         if (resolved && typeof window !== "undefined") {
-          try { window.localStorage.setItem(STORAGE_KEY, resolved); } catch { /* ignore */ }
+          try {
+            window.localStorage.setItem(STORAGE_KEY, resolved);
+          } catch {
+            /* ignore */
+          }
         }
       }
       setActiveIdState(resolved);
       setLoading(false);
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [user, authLoading, tick]);
 
   // Realtime: refresh on portfolio changes
@@ -143,10 +157,14 @@ export function useUserPortfolios(): Ctx {
     return {
       portfolios: [],
       activeId: null,
-      setActiveId: () => { /* noop */ },
+      setActiveId: () => {
+        /* noop */
+      },
       loading: false,
       error: null,
-      refresh: () => { /* noop */ },
+      refresh: () => {
+        /* noop */
+      },
       canCreateMore: true,
     };
   }

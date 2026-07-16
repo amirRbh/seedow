@@ -50,8 +50,8 @@ export const PROJECTION_BOUNDS = {
   monthlyMax: 10_000,
   yearsMin: 1,
   yearsMax: 40,
-  annualReturnMin: -0.20,
-  annualReturnMax: 0.30,
+  annualReturnMin: -0.2,
+  annualReturnMax: 0.3,
   inflationMin: -0.05,
   inflationMax: 0.15,
 } as const;
@@ -61,7 +61,9 @@ const clamp = (n: number, min: number, max: number) =>
 
 /** Normalise et borne les paramètres ; renvoie aussi la liste des warnings. */
 export function sanitizeProjectionInput(raw: ProjectionInput): {
-  input: Required<Pick<ProjectionInput, "initial" | "monthly" | "years" | "annualReturn" | "inflation">> & {
+  input: Required<
+    Pick<ProjectionInput, "initial" | "monthly" | "years" | "annualReturn" | "inflation">
+  > & {
     stress?: StressEvent;
   };
   warnings: string[];
@@ -98,15 +100,9 @@ export function sanitizeProjectionInput(raw: ProjectionInput): {
 export function computeProjection(raw: ProjectionInput): ProjectionResult {
   const { input } = sanitizeProjectionInput(raw);
   const months = input.years * 12;
-  const r =
-    input.annualReturn >= -0.999
-      ? Math.pow(1 + input.annualReturn, 1 / 12) - 1
-      : -0.999;
+  const r = input.annualReturn >= -0.999 ? Math.pow(1 + input.annualReturn, 1 / 12) - 1 : -0.999;
   const stress = input.stress ?? {};
-  const shockMonth =
-    stress.shockYear && stress.shockPct
-      ? Math.round(stress.shockYear * 12)
-      : null;
+  const shockMonth = stress.shockYear && stress.shockPct ? Math.round(stress.shockYear * 12) : null;
   const pauseStartM = stress.pauseStartYear ? stress.pauseStartYear * 12 : null;
   const pauseEndM = stress.pauseEndYear ? stress.pauseEndYear * 12 : null;
   const inflationUsed = stress.inflationOverride ?? input.inflation;
@@ -125,8 +121,7 @@ export function computeProjection(raw: ProjectionInput): ProjectionResult {
   });
 
   for (let m = 1; m <= months; m++) {
-    const paused =
-      pauseStartM !== null && pauseEndM !== null && m > pauseStartM && m <= pauseEndM;
+    const paused = pauseStartM !== null && pauseEndM !== null && m > pauseStartM && m <= pauseEndM;
     const monthlyAmt = paused ? 0 : input.monthly;
 
     // Versement en début de mois, puis capitalisation sur le mois
@@ -197,7 +192,7 @@ export function useProjection(
 // ────────────────────────────────────────────────────────────────────────────────
 
 const SOCIAL_TAX = 0.172; // Prélèvements sociaux PEA / AV (volet PS)
-const PFU = 0.30; // Flat tax CTO
+const PFU = 0.3; // Flat tax CTO
 const AV_IR_BEFORE_8Y = 0.128; // IR forfaitaire AV < 8 ans (PFU 12.8 % + 17.2 % PS = 30 %)
 const AV_IR_AFTER_8Y = 0.075; // IR forfaitaire AV > 8 ans après abattement
 const AV_ABATEMENT_SINGLE = 4_600;

@@ -27,7 +27,9 @@ export function LanguageToggle({ className }: LanguageToggleProps) {
         return (
           <span key={opt} className="inline-flex items-center gap-2">
             {idx > 0 && (
-              <span aria-hidden="true" className="text-ink-3 text-tag">·</span>
+              <span aria-hidden="true" className="text-ink-3 text-tag">
+                ·
+              </span>
             )}
             <button
               type="button"

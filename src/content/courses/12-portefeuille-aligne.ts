@@ -13,8 +13,7 @@ export const course: Course = {
     "Étape par étape : définir ses lignes rouges, choisir ses briques, équilibrer engagement et diversification, suivre dans le temps.",
   intro:
     "Aligner son portefeuille avec ses valeurs ne signifie pas tout sacrifier à la performance, ni acheter n'importe quel produit étiqueté « green ». C'est un travail explicite, structuré, qui prend une journée par an. Voici la méthode.",
-  eli5:
-    "Imagine que tu prépares un menu pour un dîner. D'abord tu listes ce que tu ne veux pas (pas de viande, pas d'arachides). Ensuite tu choisis tes ingrédients (légumes, riz, épices). Puis tu goûtes en cours de route pour ajuster. Un portefeuille aligné, c'est la même recette : lignes rouges, ingrédients (fonds), goûter (audit) une fois par an.",
+  eli5: "Imagine que tu prépares un menu pour un dîner. D'abord tu listes ce que tu ne veux pas (pas de viande, pas d'arachides). Ensuite tu choisis tes ingrédients (légumes, riz, épices). Puis tu goûtes en cours de route pour ajuster. Un portefeuille aligné, c'est la même recette : lignes rouges, ingrédients (fonds), goûter (audit) une fois par an.",
   sections: [
     {
       heading: "Étape 1 : définir ses lignes rouges",
@@ -138,7 +137,12 @@ export const course: Course = {
     },
     {
       question: "Fréquence raisonnable d'audit d'un portefeuille aligné ?",
-      options: ["Chaque jour", "Chaque mois", "Une fois par an + suivi trimestriel léger", "Jamais"],
+      options: [
+        "Chaque jour",
+        "Chaque mois",
+        "Une fois par an + suivi trimestriel léger",
+        "Jamais",
+      ],
       correctIndex: 2,
       explanation:
         "Audit annuel sérieux + 1 heure par trimestre pour vérification = suffisant et soutenable.",

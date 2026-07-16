@@ -20,7 +20,11 @@ export const Route = createFileRoute("/methodologie")({
   head: () => ({
     meta: [
       { title: "Méthodologie — Construction de portefeuille" },
-      { name: "description", content: "Pipeline de construction du portefeuille : exclusions, best-in-class, optimisation Markowitz contrainte, tilts par convictions." },
+      {
+        name: "description",
+        content:
+          "Pipeline de construction du portefeuille : exclusions, best-in-class, optimisation Markowitz contrainte, tilts par convictions.",
+      },
     ],
   }),
   component: MethodologyPage,
@@ -51,11 +55,36 @@ function MethodologyPage() {
   ];
 
   const STAGES = [
-    { id: 1, name: t("methodologie.stages.1_name"), desc: t("methodologie.stages.1_desc"), tip: t("methodologie.tips.stage_1") },
-    { id: 2, name: t("methodologie.stages.2_name"), desc: t("methodologie.stages.2_desc"), tip: t("methodologie.tips.stage_2") },
-    { id: 3, name: t("methodologie.stages.3_name"), desc: t("methodologie.stages.3_desc"), tip: t("methodologie.tips.stage_3") },
-    { id: 4, name: t("methodologie.stages.4_name"), desc: t("methodologie.stages.4_desc"), tip: t("methodologie.tips.stage_4") },
-    { id: 5, name: t("methodologie.stages.5_name"), desc: t("methodologie.stages.5_desc"), tip: t("methodologie.tips.stage_5") },
+    {
+      id: 1,
+      name: t("methodologie.stages.1_name"),
+      desc: t("methodologie.stages.1_desc"),
+      tip: t("methodologie.tips.stage_1"),
+    },
+    {
+      id: 2,
+      name: t("methodologie.stages.2_name"),
+      desc: t("methodologie.stages.2_desc"),
+      tip: t("methodologie.tips.stage_2"),
+    },
+    {
+      id: 3,
+      name: t("methodologie.stages.3_name"),
+      desc: t("methodologie.stages.3_desc"),
+      tip: t("methodologie.tips.stage_3"),
+    },
+    {
+      id: 4,
+      name: t("methodologie.stages.4_name"),
+      desc: t("methodologie.stages.4_desc"),
+      tip: t("methodologie.tips.stage_4"),
+    },
+    {
+      id: 5,
+      name: t("methodologie.stages.5_name"),
+      desc: t("methodologie.stages.5_desc"),
+      tip: t("methodologie.tips.stage_5"),
+    },
   ];
 
   const ASSET_CLASS_LABEL: Record<string, string> = {
@@ -74,7 +103,8 @@ function MethodologyPage() {
 
   const [causes, setCauses] = useState<CauseTag[]>(["climat", "biodiversite"]);
   const [intensity, setIntensity] = useState<Record<string, number>>({
-    climat: 0.7, biodiversite: 0.5,
+    climat: 0.7,
+    biodiversite: 0.5,
   });
   const [exclusions, setExclusions] = useState<ExclusionTag[]>(["fossiles", "armes"]);
   const [risk, setRisk] = useState(0.09);
@@ -122,7 +152,7 @@ function MethodologyPage() {
   };
 
   const toggleExclusion = (id: ExclusionTag) => {
-    setExclusions((prev) => prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]);
+    setExclusions((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   };
 
   const sortedWeights = useMemo(() => {
@@ -140,7 +170,10 @@ function MethodologyPage() {
     <div className="min-h-screen bg-paper text-ink">
       <header className="max-w-6xl mx-auto px-6 pt-10 pb-8 border-b border-paper-3">
         <div className="flex items-center justify-between">
-          <Link to="/dashboard" className="text-tag uppercase tracking-[0.18em] text-ink-3 hover:text-ink transition-colors">
+          <Link
+            to="/dashboard"
+            className="text-tag uppercase tracking-[0.18em] text-ink-3 hover:text-ink transition-colors"
+          >
             {t("methodologie.back_dashboard")}
           </Link>
           <LanguageToggle />
@@ -164,10 +197,20 @@ function MethodologyPage() {
             <p>{t("methodologie.reading_p1")}</p>
             <p>{t("methodologie.reading_p2")}</p>
             <div className="pt-3 border-t border-paper-3 grid sm:grid-cols-2 gap-x-6 gap-y-2 text-label">
-              <p><span className="font-value text-ink">·</span> {t("methodologie.glossary.markowitz")}</p>
-              <p><span className="font-value text-ink">·</span> {t("methodologie.glossary.best_in_class")}</p>
-              <p><span className="font-value text-ink">·</span> {t("methodologie.glossary.ter")}</p>
-              <p><span className="font-value text-ink">·</span> {t("methodologie.glossary.esg_acro")}</p>
+              <p>
+                <span className="font-value text-ink">·</span>{" "}
+                {t("methodologie.glossary.markowitz")}
+              </p>
+              <p>
+                <span className="font-value text-ink">·</span>{" "}
+                {t("methodologie.glossary.best_in_class")}
+              </p>
+              <p>
+                <span className="font-value text-ink">·</span> {t("methodologie.glossary.ter")}
+              </p>
+              <p>
+                <span className="font-value text-ink">·</span> {t("methodologie.glossary.esg_acro")}
+              </p>
             </div>
           </div>
         </div>
@@ -193,8 +236,6 @@ function MethodologyPage() {
 
       {/* ESG Transparency — grille de notation, sources et limites */}
       <EsgTransparencySection activeCauses={causes} />
-
-
 
       {/* Simulator */}
       <section className="max-w-6xl mx-auto px-6 pb-24">
@@ -224,7 +265,18 @@ function MethodologyPage() {
                           active ? "bg-ink border-ink" : "bg-paper border-paper-3 hover:border-ink"
                         }`}
                       >
-                        {active && <svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="white" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>}
+                        {active && (
+                          <svg width="10" height="8" viewBox="0 0 10 8">
+                            <path
+                              d="M1 4l3 3 5-6"
+                              stroke="white"
+                              strokeWidth="1.5"
+                              fill="none"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        )}
                       </button>
                       <label className="text-body-sm text-ink min-w-[140px]">{c.label}</label>
                       {active && (
@@ -234,7 +286,9 @@ function MethodologyPage() {
                           max={1}
                           step={0.05}
                           value={intensity[c.id] ?? 0.5}
-                          onChange={(e) => setIntensity({ ...intensity, [c.id]: Number(e.target.value) })}
+                          onChange={(e) =>
+                            setIntensity({ ...intensity, [c.id]: Number(e.target.value) })
+                          }
                           className="flex-1 accent-ink h-1"
                         />
                       )}
@@ -249,7 +303,10 @@ function MethodologyPage() {
               </div>
             </Block>
 
-            <Block title={t("methodologie.exclusions_title")} tip={t("methodologie.tips.exclusions")}>
+            <Block
+              title={t("methodologie.exclusions_title")}
+              tip={t("methodologie.tips.exclusions")}
+            >
               <div className="grid grid-cols-2 gap-2">
                 {EXCLUSIONS.map((e) => {
                   const active = exclusions.includes(e.id);
@@ -258,10 +315,14 @@ function MethodologyPage() {
                       key={e.id}
                       onClick={() => toggleExclusion(e.id)}
                       className={`flex items-center gap-2 p-2.5 rounded border text-left text-label transition-colors ${
-                        active ? "bg-ink/5 border-ink text-ink" : "bg-paper border-paper-3 text-ink-2 hover:border-ink-3"
+                        active
+                          ? "bg-ink/5 border-ink text-ink"
+                          : "bg-paper border-paper-3 text-ink-2 hover:border-ink-3"
                       }`}
                     >
-                      <span className={`w-3 h-3 rounded-sm border flex-shrink-0 ${active ? "bg-ink border-ink" : "border-paper-3"}`} />
+                      <span
+                        className={`w-3 h-3 rounded-sm border flex-shrink-0 ${active ? "bg-ink border-ink" : "border-paper-3"}`}
+                      />
                       {e.label}
                     </button>
                   );
@@ -272,7 +333,9 @@ function MethodologyPage() {
             <Block title={t("methodologie.risk_title")} tip={t("methodologie.tips.risk")}>
               <div className="flex items-baseline justify-between mb-2">
                 <span className="text-label text-ink-2">{t("methodologie.volatility_label")}</span>
-                <span className="text-body-sm font-medium tabular-nums">{(risk * 100).toFixed(1)}%</span>
+                <span className="text-body-sm font-medium tabular-nums">
+                  {(risk * 100).toFixed(1)}%
+                </span>
               </div>
               <input
                 type="range"
@@ -293,7 +356,9 @@ function MethodologyPage() {
             <Block title={t("methodologie.horizon_title")} tip={t("methodologie.tips.horizon")}>
               <div className="flex items-baseline justify-between mb-2">
                 <span className="text-label text-ink-2">{t("methodologie.horizon_label")}</span>
-                <span className="text-body-sm font-medium tabular-nums">{t("methodologie.horizon_years", { count: horizon })}</span>
+                <span className="text-body-sm font-medium tabular-nums">
+                  {t("methodologie.horizon_years", { count: horizon })}
+                </span>
               </div>
               <input
                 type="range"
@@ -311,17 +376,55 @@ function MethodologyPage() {
           <div className="lg:sticky lg:top-6 lg:self-start space-y-6">
             {result?.esg_floor_relaxed && (
               <div className="border border-rust/30 bg-rust/5 px-4 py-3 text-label text-ink-2 leading-relaxed">
-                <p className="font-value text-body-sm text-rust mb-1">{t("methodologie.esg_floor_relaxed_title")}</p>
+                <p className="font-value text-body-sm text-rust mb-1">
+                  {t("methodologie.esg_floor_relaxed_title")}
+                </p>
                 {t("methodologie.esg_floor_relaxed_desc")}
               </div>
             )}
             <div className="border-t border-b border-paper-3 divide-y divide-paper-3">
-              <MetricRow label={t("methodologie.metric_return")} tip={t("methodologie.tips.return")} value={result ? formatPercent(result.metrics.expected_return, lang) : "—"} sub={t("methodologie.metric_return_hint")} />
-              <MetricRow label={t("methodologie.metric_volatility")} tip={t("methodologie.tips.volatility")} value={result ? formatPercent(result.metrics.volatility, lang) : "—"} sub={t("methodologie.metric_volatility_hint")} />
-              <MetricRow label={t("methodologie.metric_sharpe")} tip={t("methodologie.tips.sharpe")} value={result ? formatNumber(result.metrics.sharpe, lang) : "—"} sub={t("methodologie.metric_sharpe_hint")} />
-              <MetricRow label={t("methodologie.metric_esg")} tip={t("methodologie.tips.esg")} value={result ? `${formatNumber(result.metrics.esg_score, lang, { maximumFractionDigits: 0 })} / 100` : "—"} sub={t("methodologie.metric_esg_hint")} />
-              <MetricRow label={t("methodologie.metric_fees")} tip={t("methodologie.tips.fees")} value={result ? formatPercent(result.metrics.ter, lang) : "—"} sub={t("methodologie.metric_fees_hint")} />
-              <MetricRow label={t("methodologie.metric_co2")} tip={t("methodologie.tips.co2")} value={result ? `${formatNumber(result.metrics.co2_avoided_tons, lang)} t / 10k€` : "—"} sub={t("methodologie.metric_co2_hint")} />
+              <MetricRow
+                label={t("methodologie.metric_return")}
+                tip={t("methodologie.tips.return")}
+                value={result ? formatPercent(result.metrics.expected_return, lang) : "—"}
+                sub={t("methodologie.metric_return_hint")}
+              />
+              <MetricRow
+                label={t("methodologie.metric_volatility")}
+                tip={t("methodologie.tips.volatility")}
+                value={result ? formatPercent(result.metrics.volatility, lang) : "—"}
+                sub={t("methodologie.metric_volatility_hint")}
+              />
+              <MetricRow
+                label={t("methodologie.metric_sharpe")}
+                tip={t("methodologie.tips.sharpe")}
+                value={result ? formatNumber(result.metrics.sharpe, lang) : "—"}
+                sub={t("methodologie.metric_sharpe_hint")}
+              />
+              <MetricRow
+                label={t("methodologie.metric_esg")}
+                tip={t("methodologie.tips.esg")}
+                value={
+                  result
+                    ? `${formatNumber(result.metrics.esg_score, lang, { maximumFractionDigits: 0 })} / 100`
+                    : "—"
+                }
+                sub={t("methodologie.metric_esg_hint")}
+              />
+              <MetricRow
+                label={t("methodologie.metric_fees")}
+                tip={t("methodologie.tips.fees")}
+                value={result ? formatPercent(result.metrics.ter, lang) : "—"}
+                sub={t("methodologie.metric_fees_hint")}
+              />
+              <MetricRow
+                label={t("methodologie.metric_co2")}
+                tip={t("methodologie.tips.co2")}
+                value={
+                  result ? `${formatNumber(result.metrics.co2_avoided_tons, lang)} t / 10k€` : "—"
+                }
+                sub={t("methodologie.metric_co2_hint")}
+              />
               <MetricRow
                 label={t("methodologie.metric_carbon_intensity")}
                 tip={t("methodologie.tips.carbon_intensity")}
@@ -343,10 +446,15 @@ function MethodologyPage() {
             <div>
               <div className="flex items-baseline justify-between border-b border-paper-3 pb-2">
                 <p className="text-tag uppercase tracking-[0.12em] text-ink-3 font-medium">
-                  <MetricLabel label={t("methodologie.allocation_title")} hint={t("methodologie.tips.allocation")} />
+                  <MetricLabel
+                    label={t("methodologie.allocation_title")}
+                    hint={t("methodologie.tips.allocation")}
+                  />
                 </p>
                 <p className="text-tag text-ink-3">
-                  {loading ? t("methodologie.loading") : t("methodologie.positions_count", { count: sortedWeights.length })}
+                  {loading
+                    ? t("methodologie.loading")
+                    : t("methodologie.positions_count", { count: sortedWeights.length })}
                 </p>
               </div>
               <ul className="divide-y divide-paper-3">
@@ -360,13 +468,20 @@ function MethodologyPage() {
                   >
                     <div className="flex items-baseline justify-between gap-3">
                       <div className="flex items-baseline gap-2 min-w-0">
-                        <span className="font-value text-body-sm text-ink">{row.asset!.ticker}</span>
+                        <span className="font-value text-body-sm text-ink">
+                          {row.asset!.ticker}
+                        </span>
                         <span className="text-caption text-ink-3 truncate">{row.asset!.name}</span>
                       </div>
-                      <span className="text-label tabular-nums font-medium">{(row.weight * 100).toFixed(1)}%</span>
+                      <span className="text-label tabular-nums font-medium">
+                        {(row.weight * 100).toFixed(1)}%
+                      </span>
                     </div>
                     <div className="mt-1 h-px bg-paper-3 relative">
-                      <div className="absolute inset-y-0 left-0 bg-ink" style={{ width: `${row.weight * 100}%`, height: "1px" }} />
+                      <div
+                        className="absolute inset-y-0 left-0 bg-ink"
+                        style={{ width: `${row.weight * 100}%`, height: "1px" }}
+                      />
                     </div>
                   </motion.li>
                 ))}
@@ -381,7 +496,10 @@ function MethodologyPage() {
             {result && (
               <div>
                 <p className="text-tag uppercase tracking-[0.12em] text-ink-3 font-medium border-b border-paper-3 pb-2 mb-3">
-                  <MetricLabel label={t("methodologie.breakdown_title")} hint={t("methodologie.tips.breakdown")} />
+                  <MetricLabel
+                    label={t("methodologie.breakdown_title")}
+                    hint={t("methodologie.tips.breakdown")}
+                  />
                 </p>
                 <ul className="space-y-1.5">
                   {Object.entries(result.metrics.by_class)
@@ -433,7 +551,10 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
     { name: "MSCI ESG", scope: "Actions monde développé & émergent" },
     { name: "Sustainalytics (Morningstar)", scope: "ETF, obligations, thématiques" },
     { name: "Yahoo Finance ESG", scope: "Couverture complémentaire large" },
-    { name: "Notation manuelle interne", scope: "Fonds thématiques niches (obligations sociales, biodiversité)" },
+    {
+      name: "Notation manuelle interne",
+      scope: "Fonds thématiques niches (obligations sociales, biodiversité)",
+    },
   ];
 
   return (
@@ -444,8 +565,8 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
         </p>
         <h2 className="font-value text-3xl mt-2">D'où viennent les scores ESG</h2>
         <p className="text-body-sm text-ink-2 mt-3 max-w-2xl leading-relaxed">
-          Chaque actif reçoit un score composite 0–100 sur trois piliers. Voici les sources,
-          la grille de pondération, et ce que la note ne dit pas.
+          Chaque actif reçoit un score composite 0–100 sur trois piliers. Voici les sources, la
+          grille de pondération, et ce que la note ne dit pas.
         </p>
       </div>
 
@@ -465,7 +586,8 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
           </ul>
           <p className="text-caption text-ink-3 mt-3 leading-relaxed">
             Les échelles fournisseurs divergent (MSCI note AAA→CCC, Sustainalytics 0-100 « risk »…).
-            Nous les renormalisons sur une échelle 0–100 homogène pour rendre les actifs comparables.
+            Nous les renormalisons sur une échelle 0–100 homogène pour rendre les actifs
+            comparables.
           </p>
         </div>
 
@@ -494,7 +616,9 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
                     <td className="py-2 text-right tabular-nums text-ink-3">
                       {(p.base * 100).toFixed(0)}%
                     </td>
-                    <td className={`py-2 text-right tabular-nums font-value ${shifted ? "text-moss-1" : "text-ink"}`}>
+                    <td
+                      className={`py-2 text-right tabular-nums font-value ${shifted ? "text-moss-1" : "text-ink"}`}
+                    >
                       {(p.current * 100).toFixed(0)}%
                     </td>
                   </tr>
@@ -517,17 +641,19 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
         </p>
         <ol className="grid md:grid-cols-2 gap-x-8 gap-y-3 text-label text-ink-2 leading-relaxed">
           <li>
-            <span className="font-value text-ink">Exclusions dures.</span> Fossiles, armes, tabac, jeux,
-            tests animaux, fast-fashion : filtre binaire avant tout calcul. Aucun compromis possible.
+            <span className="font-value text-ink">Exclusions dures.</span> Fossiles, armes, tabac,
+            jeux, tests animaux, fast-fashion : filtre binaire avant tout calcul. Aucun compromis
+            possible.
           </li>
           <li>
-            <span className="font-value text-ink">Best-in-class.</span> Dans chaque classe d'actifs, on
-            ne garde que les meilleurs quintiles sur le score composite pondéré par vos causes.
+            <span className="font-value text-ink">Best-in-class.</span> Dans chaque classe d'actifs,
+            on ne garde que les meilleurs quintiles sur le score composite pondéré par vos causes.
           </li>
           <li>
-            <span className="font-value text-ink">Plancher portefeuille.</span> Score ESG moyen pondéré
-            ≥ <span className="tabular-nums font-value">{MIN_PORTFOLIO_ESG}/100</span>. Si l'optimiseur
-            ne l'atteint pas sous vos contraintes, on lève le plancher et on l'affiche honnêtement.
+            <span className="font-value text-ink">Plancher portefeuille.</span> Score ESG moyen
+            pondéré ≥ <span className="tabular-nums font-value">{MIN_PORTFOLIO_ESG}/100</span>. Si
+            l'optimiseur ne l'atteint pas sous vos contraintes, on lève le plancher et on l'affiche
+            honnêtement.
           </li>
           <li>
             <span className="font-value text-ink">Tilts par conviction.</span> L'intensité de chaque
@@ -543,31 +669,44 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
         </p>
         <ul className="space-y-2 text-label text-ink-2 leading-relaxed">
           <li>
-            <span className="font-value text-ink">Les agences ne sont pas d'accord.</span> Corrélation
-            entre notations ESG ≈ <span className="tabular-nums">0,5</span> (contre{" "}
-            <span className="tabular-nums">0,99</span> pour la notation de crédit — Berg, Kölbel &amp;
-            Rigobon, MIT 2022). Un score n'est pas une vérité.
+            <span className="font-value text-ink">Les agences ne sont pas d'accord.</span>{" "}
+            Corrélation entre notations ESG ≈ <span className="tabular-nums">0,5</span> (contre{" "}
+            <span className="tabular-nums">0,99</span> pour la notation de crédit — Berg, Kölbel
+            &amp; Rigobon, MIT 2022). Un score n'est pas une vérité.
           </li>
           <li>
-            <span className="font-value text-ink">Scope 3 souvent absent.</span> 80–95 % des émissions
-            réelles se cachent chez fournisseurs et clients. Regardez le taux de couverture carbone
-            plus bas — il indique quelle part de votre portefeuille dispose de données réelles.
+            <span className="font-value text-ink">Scope 3 souvent absent.</span> 80–95 % des
+            émissions réelles se cachent chez fournisseurs et clients. Regardez le taux de
+            couverture carbone plus bas — il indique quelle part de votre portefeuille dispose de
+            données réelles.
           </li>
           <li>
-            <span className="font-value text-ink">ESG mesure des pratiques, pas l'activité.</span> Un
-            score élevé signifie « mieux géré que la moyenne du secteur », pas « aligné avec vos
+            <span className="font-value text-ink">ESG mesure des pratiques, pas l'activité.</span>{" "}
+            Un score élevé signifie « mieux géré que la moyenne du secteur », pas « aligné avec vos
             valeurs ». Les exclusions sectorielles servent à cela.
           </li>
         </ul>
         <div className="mt-4 pt-3 border-t border-ink/10 flex flex-wrap gap-x-4 gap-y-1 text-caption">
           <span className="text-ink-3 uppercase tracking-[0.12em]">Pour aller plus loin :</span>
-          <Link to="/cours/$slug" params={{ slug: "esg-cest-quoi" }} className="text-ink hover:underline">
+          <Link
+            to="/cours/$slug"
+            params={{ slug: "esg-cest-quoi" }}
+            className="text-ink hover:underline"
+          >
             Qu'est-ce que l'ESG ?
           </Link>
-          <Link to="/cours/$slug" params={{ slug: "greenwashing" }} className="text-ink hover:underline">
+          <Link
+            to="/cours/$slug"
+            params={{ slug: "greenwashing" }}
+            className="text-ink hover:underline"
+          >
             Greenwashing
           </Link>
-          <Link to="/cours/$slug" params={{ slug: "labels-isr-sfdr" }} className="text-ink hover:underline">
+          <Link
+            to="/cours/$slug"
+            params={{ slug: "labels-isr-sfdr" }}
+            className="text-ink hover:underline"
+          >
             Labels ISR &amp; SFDR
           </Link>
         </div>
@@ -576,8 +715,15 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
   );
 }
 
-
-function Block({ title, tip, children }: { title: string; tip?: string; children: React.ReactNode }) {
+function Block({
+  title,
+  tip,
+  children,
+}: {
+  title: string;
+  tip?: string;
+  children: React.ReactNode;
+}) {
   return (
     <div>
       <p className="text-tag uppercase tracking-[0.15em] text-ink-3 font-medium border-b border-paper-3 pb-2 mb-3">
@@ -588,7 +734,17 @@ function Block({ title, tip, children }: { title: string; tip?: string; children
   );
 }
 
-function MetricRow({ label, value, sub, tip }: { label: string; value: string; sub?: string; tip?: string }) {
+function MetricRow({
+  label,
+  value,
+  sub,
+  tip,
+}: {
+  label: string;
+  value: string;
+  sub?: string;
+  tip?: string;
+}) {
   return (
     <div className="flex items-baseline justify-between py-2.5">
       <div>
@@ -618,17 +774,16 @@ function CarbonCoverage({
   else if (pct >= 30) tone = "partial";
   else tone = "low";
 
-  const barColor =
-    tone === "good" ? "bg-moss-2" : tone === "partial" ? "bg-ink" : "bg-rust";
+  const barColor = tone === "good" ? "bg-moss-2" : tone === "partial" ? "bg-ink" : "bg-rust";
 
   const advice =
     !hasRealData || pct === 0
       ? t("methodologie.carbon_coverage_advice_none")
       : pct < 30
-      ? t("methodologie.carbon_coverage_advice_low")
-      : pct < 70
-      ? t("methodologie.carbon_coverage_advice_mid")
-      : t("methodologie.carbon_coverage_advice_high");
+        ? t("methodologie.carbon_coverage_advice_low")
+        : pct < 70
+          ? t("methodologie.carbon_coverage_advice_mid")
+          : t("methodologie.carbon_coverage_advice_high");
 
   return (
     <div className="border border-paper-3 p-4">

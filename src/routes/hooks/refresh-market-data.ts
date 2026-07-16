@@ -44,11 +44,9 @@ export const Route = createFileRoute("/hooks/refresh-market-data")({
         } catch {
           // ignore — empty/invalid body is fine
         }
-        const range = body.seed ? "2y" : body.range ?? "5d";
+        const range = body.seed ? "2y" : (body.range ?? "5d");
         const interval = body.interval ?? "1d";
-        const symbolFilter = body.symbols?.length
-          ? new Set(body.symbols)
-          : null;
+        const symbolFilter = body.symbols?.length ? new Set(body.symbols) : null;
 
         // ── Load assets with a yahoo_symbol ──────────────────
         const { data: assets, error: aErr } = await supabaseAdmin
@@ -63,8 +61,7 @@ export const Route = createFileRoute("/hooks/refresh-market-data")({
 
         const targets = (assets ?? []).filter(
           (a): a is { id: string; ticker: string; yahoo_symbol: string } =>
-            !!a.yahoo_symbol &&
-            (!symbolFilter || symbolFilter.has(a.yahoo_symbol)),
+            !!a.yahoo_symbol && (!symbolFilter || symbolFilter.has(a.yahoo_symbol)),
         );
 
         // ── Fetch + upsert ───────────────────────────────────
@@ -79,25 +76,19 @@ export const Route = createFileRoute("/hooks/refresh-market-data")({
 
         for (const a of targets) {
           try {
-            const { quote, bars } = await fetchYahooChart(
-              a.yahoo_symbol,
-              range,
-              interval,
-            );
+            const { quote, bars } = await fetchYahooChart(a.yahoo_symbol, range, interval);
 
             // Upsert quote
-            const { error: qErr } = await supabaseAdmin
-              .from("asset_quotes")
-              .upsert({
-                asset_id: a.id,
-                price: quote.price,
-                previous_close: quote.previousClose,
-                change_pct: quote.changePct,
-                currency: quote.currency,
-                market_state: quote.marketState,
-                source: "yahoo",
-                fetched_at: new Date().toISOString(),
-              });
+            const { error: qErr } = await supabaseAdmin.from("asset_quotes").upsert({
+              asset_id: a.id,
+              price: quote.price,
+              previous_close: quote.previousClose,
+              change_pct: quote.changePct,
+              currency: quote.currency,
+              market_state: quote.marketState,
+              source: "yahoo",
+              fetched_at: new Date().toISOString(),
+            });
             if (qErr) throw new Error(`quote upsert: ${qErr.message}`);
 
             // Upsert price history (chunked to stay under payload limits)
@@ -128,10 +119,7 @@ export const Route = createFileRoute("/hooks/refresh-market-data")({
             });
           } catch (e) {
             const msg = e instanceof Error ? e.message : String(e);
-            console.error(
-              `[refresh-market-data] ${a.ticker} (${a.yahoo_symbol})`,
-              msg,
-            );
+            console.error(`[refresh-market-data] ${a.ticker} (${a.yahoo_symbol})`, msg);
             results.push({
               ticker: a.ticker,
               symbol: a.yahoo_symbol,
@@ -155,9 +143,7 @@ export const Route = createFileRoute("/hooks/refresh-market-data")({
             job_name: "refresh-market-data",
             status,
             message:
-              status === "ok"
-                ? `${ok} actif(s) rafraîchi(s)`
-                : `${ok} ok, ${failed} en échec`,
+              status === "ok" ? `${ok} actif(s) rafraîchi(s)` : `${ok} ok, ${failed} en échec`,
             assets_ok: ok,
             assets_failed: failed,
             duration_ms: durationMs,

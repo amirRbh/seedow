@@ -1,10 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { computeMetrics } from "../metrics";
-import {
-  DEFAULT_PILLAR_WEIGHTS,
-  compositeEsgScore,
-  causeToPillarWeights,
-} from "../types";
+import { DEFAULT_PILLAR_WEIGHTS, compositeEsgScore, causeToPillarWeights } from "../types";
 import { makeAsset } from "./fixtures";
 
 describe("computeMetrics", () => {
@@ -26,7 +22,6 @@ describe("computeMetrics", () => {
     expect(Number.isFinite(m.sharpe)).toBe(true);
     expect(Number.isNaN(m.sharpe)).toBe(false);
   });
-
 
   it("computes wᵀΣw exactly for a hand-worked 2-asset case", () => {
     const a = makeAsset({ id: "a", volatility: 0.1 });

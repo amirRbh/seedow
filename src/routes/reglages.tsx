@@ -12,7 +12,11 @@ import { useAuth } from "@/hooks/useAuth";
 import { generatePortfolio } from "@/lib/portfolio/server.functions";
 import { triggerMarketRefresh } from "@/lib/market/refresh.functions";
 import { triggerRiskModelRecompute } from "@/lib/market/risk-model.functions";
-import { getRecentCronRuns, getRecentRiskModelRuns, type CronRunEntry } from "@/lib/market/cron.functions";
+import {
+  getRecentCronRuns,
+  getRecentRiskModelRuns,
+  type CronRunEntry,
+} from "@/lib/market/cron.functions";
 import { exportAccountData } from "@/lib/account/server.functions";
 import { DeleteAccountDialog } from "@/components/reglages/DeleteAccountDialog";
 import { callAuthed } from "@/lib/authedServerFn";

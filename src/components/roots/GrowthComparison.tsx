@@ -16,12 +16,23 @@ interface GrowthComparisonProps {
 
 type Range = 30 | 90 | 365;
 
-
-
 const eur = (n: number) =>
-  n.toLocaleString("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  n.toLocaleString("fr-FR", {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 
-export function GrowthComparison({ currentValue, invested, gain, returnPct, lastUpdated, onRefresh, refreshing }: GrowthComparisonProps) {
+export function GrowthComparison({
+  currentValue,
+  invested,
+  gain,
+  returnPct,
+  lastUpdated,
+  onRefresh,
+  refreshing,
+}: GrowthComparisonProps) {
   const { t } = useTranslation();
   const isGrowing = gain >= 0;
   const formatRelative = (iso: string | null | undefined): string => {
@@ -57,14 +68,20 @@ export function GrowthComparison({ currentValue, invested, gain, returnPct, last
       {/* Header : gain principal */}
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold">{t("growth_comparison.your_growth")}</p>
+          <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold">
+            {t("growth_comparison.your_growth")}
+          </p>
           <p className="font-value text-3xl text-ink mt-1">
             {isGrowing ? "+" : ""}
             {gain.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
           </p>
-          <p className="text-caption text-ink-3 mt-0.5">{t("growth_comparison.since_first_deposit")}</p>
+          <p className="text-caption text-ink-3 mt-0.5">
+            {t("growth_comparison.since_first_deposit")}
+          </p>
         </div>
-        <div className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold ${isGrowing ? "bg-moss-5 text-moss-1" : "bg-[oklch(0.93_0.05_45)] text-rust"}`}>
+        <div
+          className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold ${isGrowing ? "bg-moss-5 text-moss-1" : "bg-[oklch(0.93_0.05_45)] text-rust"}`}
+        >
           {isGrowing ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
           {isGrowing ? "+" : ""}
           {returnPct.toFixed(1)} %
@@ -73,7 +90,14 @@ export function GrowthComparison({ currentValue, invested, gain, returnPct, last
 
       {/* Mini-graph d'historique */}
       <div className="mt-4">
-        <Sparkline points={points} invested={invested} isGrowing={isGrowing} loading={histLoading} hasHistory={hasHistory} t={t} />
+        <Sparkline
+          points={points}
+          invested={invested}
+          isGrowing={isGrowing}
+          loading={histLoading}
+          hasHistory={hasHistory}
+          t={t}
+        />
         <div className="mt-2 flex items-center justify-between">
           <div className="flex gap-1">
             {([30, 90, 365] as Range[]).map((r) => (
@@ -91,7 +115,11 @@ export function GrowthComparison({ currentValue, invested, gain, returnPct, last
           </div>
           {hasHistory && points.length > 0 && (
             <p className="text-tag text-ink-3">
-              {new Date(points[0].date).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })} → {t("growth_comparison.today")}
+              {new Date(points[0].date).toLocaleDateString("fr-FR", {
+                day: "numeric",
+                month: "short",
+              })}{" "}
+              → {t("growth_comparison.today")}
             </p>
           )}
         </div>
@@ -199,9 +227,7 @@ function Sparkline({
   }, [points, invested]);
 
   if (loading) {
-    return (
-      <div className="h-16 rounded-md bg-paper-2/50 animate-pulse" aria-hidden />
-    );
+    return <div className="h-16 rounded-md bg-paper-2/50 animate-pulse" aria-hidden />;
   }
   if (!hasHistory) {
     return (
@@ -211,11 +237,19 @@ function Sparkline({
     );
   }
 
-  const stroke = isGrowing ? "var(--moss-1, oklch(0.55 0.12 150))" : "var(--rust, oklch(0.55 0.15 30))";
+  const stroke = isGrowing
+    ? "var(--moss-1, oklch(0.55 0.12 150))"
+    : "var(--rust, oklch(0.55 0.15 30))";
   const fill = isGrowing ? "oklch(0.55 0.12 150 / 0.12)" : "oklch(0.55 0.15 30 / 0.12)";
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-16" preserveAspectRatio="none" role="img" aria-label={t("growth_comparison.chart_aria")}>
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      className="w-full h-16"
+      preserveAspectRatio="none"
+      role="img"
+      aria-label={t("growth_comparison.chart_aria")}
+    >
       {/* baseline = montant investi */}
       <line
         x1={0}

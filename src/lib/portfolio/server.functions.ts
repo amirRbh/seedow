@@ -7,18 +7,14 @@ import { buildPortfolio, type Asset, type PortfolioParams } from "@/lib/portfoli
 // ─────────────────────────────────────────────────────────
 // Validation
 // ─────────────────────────────────────────────────────────
-const CauseSchema = z.enum([
-  "climat", "biodiversite", "humain", "egalite", "tech", "circulaire",
-]);
-const ExclusionSchema = z.enum([
-  "fossiles", "armes", "tabac", "jeux", "animaux", "fast-fashion",
-]);
+const CauseSchema = z.enum(["climat", "biodiversite", "humain", "egalite", "tech", "circulaire"]);
+const ExclusionSchema = z.enum(["fossiles", "armes", "tabac", "jeux", "animaux", "fast-fashion"]);
 
 const ParamsSchema = z.object({
   causes: z.array(CauseSchema).max(6),
   cause_intensity: z.record(CauseSchema, z.number().min(0).max(1)).default({}),
   exclusions: z.array(ExclusionSchema).max(6),
-  risk_target: z.number().min(0.02).max(0.30),
+  risk_target: z.number().min(0.02).max(0.3),
   horizon_years: z.number().int().min(1).max(40),
   initial_amount: z.number().min(0).max(10_000_000),
   /** "replace" (default): deactivate all existing active portfolios. "create": add a new one alongside (max 3 enforced by DB trigger). */
@@ -38,20 +34,18 @@ interface UniverseCache {
 let _cache: UniverseCache | null = null;
 const CACHE_TTL_MS = 5 * 60 * 1000;
 
-async function loadUniverse(
-  client: typeof supabaseAdmin = supabaseAdmin,
-): Promise<UniverseCache> {
+async function loadUniverse(client: typeof supabaseAdmin = supabaseAdmin): Promise<UniverseCache> {
   if (_cache && Date.now() - _cache.loadedAt < CACHE_TTL_MS && _cache.assets.length > 0) {
     return _cache;
   }
   const [assetsRes, covRes] = await Promise.all([
     client
       .from("assets")
-      .select("id, ticker, name, asset_class, region, ter, esg_score, env_score, social_score, governance_score, esg_score_source, carbon_intensity_gco2e_per_eur, carbon_intensity_source, carbon_intensity_updated_at, sfdr_article, expected_return, volatility, cause_exposure, excluded_sectors, description")
+      .select(
+        "id, ticker, name, asset_class, region, ter, esg_score, env_score, social_score, governance_score, esg_score_source, carbon_intensity_gco2e_per_eur, carbon_intensity_source, carbon_intensity_updated_at, sfdr_article, expected_return, volatility, cause_exposure, excluded_sectors, description",
+      )
       .eq("is_active", true),
-    client
-      .from("asset_covariance")
-      .select("asset_a, asset_b, covariance"),
+    client.from("asset_covariance").select("asset_a, asset_b, covariance"),
   ]);
 
   if (assetsRes.error) {
@@ -63,10 +57,8 @@ async function loadUniverse(
     throw new Error("Données de covariance indisponibles.");
   }
 
-  const num = (v: unknown): number | null =>
-    v == null ? null : Number(v);
-  const str = (v: unknown): string | null =>
-    v == null ? null : String(v);
+  const num = (v: unknown): number | null => (v == null ? null : Number(v));
+  const str = (v: unknown): string | null => (v == null ? null : String(v));
 
   const assets = (assetsRes.data ?? []).map((row) => {
     const r = row as Record<string, unknown>;
@@ -182,7 +174,9 @@ export const generatePortfolio = createServerFn({ method: "POST" })
 
       if (deactivateErr) {
         console.error("[generatePortfolio] deactivate error:", deactivateErr);
-        throw new Error("Impossible de désactiver le portefeuille précédent. Réessaie dans un instant.");
+        throw new Error(
+          "Impossible de désactiver le portefeuille précédent. Réessaie dans un instant.",
+        );
       }
     }
 
@@ -223,17 +217,18 @@ export const generatePortfolio = createServerFn({ method: "POST" })
           .limit(1)
           .maybeSingle();
         if (existing) {
-          await userClient
-            .from("profiles")
-            .update({ onboarding_completed: true })
-            .eq("id", userId);
+          await userClient.from("profiles").update({ onboarding_completed: true }).eq("id", userId);
           return {
             portfolio_id: existing.id,
             weights: result.weights,
             metrics: result.metrics,
             selected: result.selected_assets.map((a) => ({
-              id: a.id, ticker: a.ticker, name: a.name,
-              asset_class: a.asset_class, esg_score: a.esg_score, ter: a.ter,
+              id: a.id,
+              ticker: a.ticker,
+              name: a.name,
+              asset_class: a.asset_class,
+              esg_score: a.esg_score,
+              ter: a.ter,
             })),
           };
         }
@@ -242,10 +237,7 @@ export const generatePortfolio = createServerFn({ method: "POST" })
     }
 
     // Mark onboarding complete
-    await userClient
-      .from("profiles")
-      .update({ onboarding_completed: true })
-      .eq("id", userId);
+    await userClient.from("profiles").update({ onboarding_completed: true }).eq("id", userId);
 
     return {
       portfolio_id: inserted.id,

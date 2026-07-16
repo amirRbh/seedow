@@ -130,10 +130,7 @@ export function buildRiskModel(pricesByAsset: Map<string, PricePoint[]>): RiskMo
     covariance.set(`${idA}|${idA}`, varA);
     for (let j = i + 1; j < ids.length; j++) {
       const idB = ids[j];
-      const result = computePairwiseCovariance(
-        pricesByAsset.get(idA)!,
-        pricesByAsset.get(idB)!,
-      );
+      const result = computePairwiseCovariance(pricesByAsset.get(idA)!, pricesByAsset.get(idB)!);
       if (!result) continue;
       covariance.set(`${idA}|${idB}`, result.covariance);
       covariance.set(`${idB}|${idA}`, result.covariance);

@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { simulateTradeoffs } from "@/lib/portfolio/tradeoffs.functions";
-import {
-  trackTradeoff,
-  type TradeoffLever,
-} from "@/lib/preferences/tracking";
+import { trackTradeoff, type TradeoffLever } from "@/lib/preferences/tracking";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 
@@ -38,8 +35,6 @@ interface Row {
 interface Props {
   portfolioId: string;
 }
-
-
 
 export function AllocationRefiner({ portfolioId }: Props) {
   const { t } = useTranslation();
@@ -83,7 +78,10 @@ export function AllocationRefiner({ portfolioId }: Props) {
   }, [portfolioId, simulate]);
 
   const handleDecision = (row: Row, accepted: boolean) => {
-    setDecided((p) => ({ ...p, [`${row.lever}|${row.altLabel}`]: accepted ? "accepted" : "rejected" }));
+    setDecided((p) => ({
+      ...p,
+      [`${row.lever}|${row.altLabel}`]: accepted ? "accepted" : "rejected",
+    }));
     void trackTradeoff({
       lever: row.lever as TradeoffLever,
       leverValue: row.altLabel,
@@ -121,17 +119,28 @@ export function AllocationRefiner({ portfolioId }: Props) {
   return (
     <div className="space-y-5">
       <header className="space-y-2">
-        <p className="text-tag font-semibold uppercase tracking-[0.22em] text-gold">{t("allocation_refiner.eyebrow")}</p>
-        <h2 className="text-lg font-semibold text-ink leading-tight">{t("allocation_refiner.title")}</h2>
-        <p className="text-label text-ink-2 leading-relaxed">
-          {t("allocation_refiner.desc")}
+        <p className="text-tag font-semibold uppercase tracking-[0.22em] text-gold">
+          {t("allocation_refiner.eyebrow")}
         </p>
+        <h2 className="text-lg font-semibold text-ink leading-tight">
+          {t("allocation_refiner.title")}
+        </h2>
+        <p className="text-label text-ink-2 leading-relaxed">{t("allocation_refiner.desc")}</p>
       </header>
 
       <div className="grid grid-cols-3 gap-3 border-y border-paper-3 py-3">
-        <Figure label={t("allocation_refiner.expected_return")} value={`${(baseline.expected_return * 100).toFixed(2)} %`} />
-        <Figure label={t("allocation_refiner.volatility")} value={`${(baseline.volatility * 100).toFixed(2)} %`} />
-        <Figure label={t("allocation_refiner.esg_score")} value={`${baseline.esg_score.toFixed(1)} / 100`} />
+        <Figure
+          label={t("allocation_refiner.expected_return")}
+          value={`${(baseline.expected_return * 100).toFixed(2)} %`}
+        />
+        <Figure
+          label={t("allocation_refiner.volatility")}
+          value={`${(baseline.volatility * 100).toFixed(2)} %`}
+        />
+        <Figure
+          label={t("allocation_refiner.esg_score")}
+          value={`${baseline.esg_score.toFixed(1)} / 100`}
+        />
       </div>
 
       <ul className="space-y-3">
@@ -199,11 +208,15 @@ export function AllocationRefiner({ portfolioId }: Props) {
                   onClick={() => setExpanded(isOpen ? null : key)}
                   className="ml-auto text-tag font-semibold uppercase tracking-[0.14em] text-gold hover:text-ink transition-colors"
                 >
-                  {isOpen ? t("allocation_refiner.hide_before_after") : t("allocation_refiner.show_before_after")}
+                  {isOpen
+                    ? t("allocation_refiner.hide_before_after")
+                    : t("allocation_refiner.show_before_after")}
                 </button>
               </div>
 
-              {isOpen && <BeforeAfter baseline={baseline} alt={row.alt} altLabel={row.altLabel} t={t} />}
+              {isOpen && (
+                <BeforeAfter baseline={baseline} alt={row.alt} altLabel={row.altLabel} t={t} />
+              )}
 
               {!decision ? (
                 <div className="flex gap-2 pt-1">
@@ -259,10 +272,37 @@ function BeforeAfter({
     commodity: t("asset_class.commodity"),
     cash: t("asset_class.cash"),
   };
-  const metrics: Array<{ label: string; before: string; after: string; deltaLabel: string; positive: boolean | null }> = [
-    metricRow(t("allocation_refiner.expected_return"), baseline.expected_return * 100, alt.expected_return * 100, "%", 2, true),
-    metricRow(t("allocation_refiner.volatility"), baseline.volatility * 100, alt.volatility * 100, "%", 2, false),
-    metricRow(t("allocation_refiner.esg_score"), baseline.esg_score, alt.esg_score, "/100", 1, true),
+  const metrics: Array<{
+    label: string;
+    before: string;
+    after: string;
+    deltaLabel: string;
+    positive: boolean | null;
+  }> = [
+    metricRow(
+      t("allocation_refiner.expected_return"),
+      baseline.expected_return * 100,
+      alt.expected_return * 100,
+      "%",
+      2,
+      true,
+    ),
+    metricRow(
+      t("allocation_refiner.volatility"),
+      baseline.volatility * 100,
+      alt.volatility * 100,
+      "%",
+      2,
+      false,
+    ),
+    metricRow(
+      t("allocation_refiner.esg_score"),
+      baseline.esg_score,
+      alt.esg_score,
+      "/100",
+      1,
+      true,
+    ),
     metricRow(t("allocation_refiner.fees"), baseline.ter * 100, alt.ter * 100, "%", 2, false),
   ];
 
@@ -285,9 +325,13 @@ function BeforeAfter({
   return (
     <div className="border-t border-paper-3 pt-4 mt-1 space-y-4">
       <div className="grid grid-cols-[1fr_auto_1fr] gap-2 items-baseline">
-        <p className="text-tag font-semibold uppercase tracking-[0.18em] text-ink-3">Avant — actuel</p>
+        <p className="text-tag font-semibold uppercase tracking-[0.18em] text-ink-3">
+          Avant — actuel
+        </p>
         <span className="text-tag text-ink-3">vs</span>
-        <p className="text-tag font-semibold uppercase tracking-[0.18em] text-gold text-right">{t("allocation_refiner.after_label", { label: altLabel })}</p>
+        <p className="text-tag font-semibold uppercase tracking-[0.18em] text-gold text-right">
+          {t("allocation_refiner.after_label", { label: altLabel })}
+        </p>
       </div>
 
       <table className="w-full text-label">
@@ -301,11 +345,7 @@ function BeforeAfter({
               <td
                 className={cn(
                   "py-1.5 pl-3 text-right tabular-nums text-caption w-20",
-                  m.positive === null
-                    ? "text-ink-3"
-                    : m.positive
-                      ? "text-moss-2"
-                      : "text-rust",
+                  m.positive === null ? "text-ink-3" : m.positive ? "text-moss-2" : "text-rust",
                 )}
               >
                 {m.deltaLabel}
@@ -321,7 +361,10 @@ function BeforeAfter({
         </p>
         <ul className="space-y-1.5">
           {classes.map((c) => (
-            <li key={c.key} className="grid grid-cols-[1fr_auto_auto] gap-3 items-center text-caption">
+            <li
+              key={c.key}
+              className="grid grid-cols-[1fr_auto_auto] gap-3 items-center text-caption"
+            >
               <span className="text-ink truncate">{c.label}</span>
               <span className="tabular-nums text-ink-3">{(c.before * 100).toFixed(1)}%</span>
               <span className="tabular-nums text-gold w-12 text-right">
@@ -394,11 +437,7 @@ function metricRow(
   const fmt = (v: number) => `${v.toFixed(digits)} ${unit}`;
   const sign = delta >= 0 ? "+" : "";
   const positive =
-    Math.abs(delta) < Math.pow(10, -digits) / 2
-      ? null
-      : higherIsBetter
-        ? delta > 0
-        : delta < 0;
+    Math.abs(delta) < Math.pow(10, -digits) / 2 ? null : higherIsBetter ? delta > 0 : delta < 0;
   return {
     label,
     before: fmt(before),
@@ -412,7 +451,10 @@ function Figure({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <p className="text-tag font-semibold uppercase tracking-[0.18em] text-ink-3">{label}</p>
-      <p className="text-body-lg font-semibold text-ink mt-1 tabular-nums" style={{ fontVariantNumeric: "tabular-nums" }}>
+      <p
+        className="text-body-lg font-semibold text-ink mt-1 tabular-nums"
+        style={{ fontVariantNumeric: "tabular-nums" }}
+      >
         {value}
       </p>
     </div>

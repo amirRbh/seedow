@@ -13,8 +13,7 @@ export const course: Course = {
     "Rendement, risque, volatilité, horizon, liquidité : cinq mots que tout investisseur débutant rencontre dès la première page. Définitions courtes, exemples chiffrés, pièges classiques.",
   intro:
     "Investir, ce n'est pas compliqué — c'est mal expliqué. On pose cinq mots. Une fois ces cinq mots clairs, 80 % des conversations financières deviennent lisibles, et on cesse de signer des produits qu'on ne comprend pas.",
-  eli5:
-    "Imagine que tu prêtes ta trottinette à un copain. Combien il te rend en plus ? (rendement). Est-ce qu'il peut la casser ? (risque). Est-ce qu'elle roule un peu à droite un peu à gauche ? (volatilité). Pour combien de temps tu la prêtes ? (horizon). Peux-tu la récupérer vite ? (liquidité). Voilà, tu sais tout.",
+  eli5: "Imagine que tu prêtes ta trottinette à un copain. Combien il te rend en plus ? (rendement). Est-ce qu'il peut la casser ? (risque). Est-ce qu'elle roule un peu à droite un peu à gauche ? (volatilité). Pour combien de temps tu la prêtes ? (horizon). Peux-tu la récupérer vite ? (liquidité). Voilà, tu sais tout.",
   sections: [
     {
       heading: "Rendement : ce que ton argent te rapporte en plus",
@@ -123,7 +122,8 @@ export const course: Course = {
         "La volatilité mesure l'amplitude des variations, pas la perte finale. Un actif volatil sur 1 an peut très bien gagner sur 10 ans.",
     },
     {
-      question: "Pour de l'argent dont vous aurez besoin dans 6 mois, quel placement est cohérent ?",
+      question:
+        "Pour de l'argent dont vous aurez besoin dans 6 mois, quel placement est cohérent ?",
       options: [
         "Un ETF actions monde.",
         "Un fonds immobilier non coté.",

@@ -16,7 +16,9 @@ export default defineTool({
     const supabase = supabaseForUser(ctx);
     const { data, error } = await supabase
       .from("portfolios")
-      .select("id, name, causes, exclusions, horizon_years, risk_target, initial_amount, is_active, generated_at")
+      .select(
+        "id, name, causes, exclusions, horizon_years, risk_target, initial_amount, is_active, generated_at",
+      )
       .order("generated_at", { ascending: false });
     if (error) {
       return { content: [{ type: "text", text: error.message }], isError: true };

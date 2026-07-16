@@ -82,7 +82,9 @@ export function AlertsBell() {
               >
                 <div className="flex items-center justify-between gap-2 mb-2">
                   <div className="flex items-center gap-2">
-                    <span className={cn("inline-block w-1.5 h-1.5 rounded-full", TONE_DOT[a.severity])} />
+                    <span
+                      className={cn("inline-block w-1.5 h-1.5 rounded-full", TONE_DOT[a.severity])}
+                    />
                     <span className="text-tag uppercase tracking-[0.18em] font-semibold text-ink-3">
                       {TONE_LABEL[a.severity]}
                     </span>
@@ -105,7 +107,13 @@ export function AlertsBell() {
                     className="mt-3 inline-flex items-center gap-2 text-caption font-semibold uppercase tracking-[0.18em] text-ink hover:text-moss-1 transition-colors"
                   >
                     {a.ctaLabel}
-                    <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="w-3 h-3"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                    >
                       <path d="M5 12h14M13 5l7 7-7 7" />
                     </svg>
                   </Link>

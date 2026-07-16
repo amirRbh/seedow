@@ -60,10 +60,7 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
         : 0.06,
     [expectedReturn],
   );
-  const vol = useMemo(
-    () => (volatility > 0 && volatility < 0.6 ? volatility : 0.14),
-    [volatility],
-  );
+  const vol = useMemo(() => (volatility > 0 && volatility < 0.6 ? volatility : 0.14), [volatility]);
 
   const sigma = SCENARIOS.find((s) => s.key === scenario)?.sigma ?? 0;
   const rawAnnualReturn = baseReturn + sigma * vol;
@@ -97,7 +94,7 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
   const stress: StressEvent | undefined = useMemo(() => {
     if (stressKey === "none") return undefined;
     if (stressKey === "crash") {
-      return { shockYear: Math.max(1, Math.floor(safe.years / 3)), shockPct: -0.30 };
+      return { shockYear: Math.max(1, Math.floor(safe.years / 3)), shockPct: -0.3 };
     }
     if (stressKey === "pause") {
       const start = Math.max(1, Math.floor(safe.years / 3));
@@ -155,20 +152,33 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
         {t("projection_simulator.projection_eyebrow", { defaultValue: "Projection" })}
       </p>
       <h2 id="simulator-title" className="font-display text-2xl text-ink leading-tight">
-        {mode === "contribute" ? t("projection_simulator.contribute_title") : t("projection_simulator.goal_title")}
+        {mode === "contribute"
+          ? t("projection_simulator.contribute_title")
+          : t("projection_simulator.goal_title")}
       </h2>
       <p className="text-sm text-ink-3 mt-2">
         {mode === "contribute"
-          ? t("projection_simulator.contribute_desc", { years: safe.years, initial: formatCurrency(safe.initial, lang) })
+          ? t("projection_simulator.contribute_desc", {
+              years: safe.years,
+              initial: formatCurrency(safe.initial, lang),
+            })
           : t("projection_simulator.goal_desc", { years: safe.years })}
       </p>
 
       {/* Mode switch */}
-      <div role="tablist" aria-label={t("projection_simulator.simulator_mode_aria", { defaultValue: "Mode du simulateur" })} className="mt-5 inline-flex border border-paper-3 rounded-full p-1">
-        {([
-          { key: "contribute", label: t("projection_simulator.tab_contribute") },
-          { key: "goal", label: t("projection_simulator.tab_goal") },
-        ] as const).map((m) => {
+      <div
+        role="tablist"
+        aria-label={t("projection_simulator.simulator_mode_aria", {
+          defaultValue: "Mode du simulateur",
+        })}
+        className="mt-5 inline-flex border border-paper-3 rounded-full p-1"
+      >
+        {(
+          [
+            { key: "contribute", label: t("projection_simulator.tab_contribute") },
+            { key: "goal", label: t("projection_simulator.tab_goal") },
+          ] as const
+        ).map((m) => {
           const active = mode === m.key;
           return (
             <button
@@ -199,7 +209,8 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
                 {t("projection_simulator.monthly_deposit")}
               </label>
               <span className="kpi-figure text-xl text-ink tabular-nums">
-                {formatNumber(safe.monthly, lang, { maximumFractionDigits: 0 })} <span className="text-sm text-ink-3 font-sans">€</span>
+                {formatNumber(safe.monthly, lang, { maximumFractionDigits: 0 })}{" "}
+                <span className="text-sm text-ink-3 font-sans">€</span>
               </span>
             </div>
             <input
@@ -222,7 +233,10 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
             </div>
             {monthlyInvalid && (
               <p role="alert" className="mt-2 text-caption text-rust">
-                {t("projection_simulator.monthly_invalid", { min: PROJECTION_BOUNDS.monthlyMin, max: PROJECTION_BOUNDS.monthlyMax })}
+                {t("projection_simulator.monthly_invalid", {
+                  min: PROJECTION_BOUNDS.monthlyMin,
+                  max: PROJECTION_BOUNDS.monthlyMax,
+                })}
               </p>
             )}
           </div>
@@ -252,7 +266,11 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
           <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold mb-2">
             {t("projection_simulator.investment_horizon")}
           </p>
-          <div role="radiogroup" aria-label={t("projection_simulator.investment_horizon")} className="flex gap-2">
+          <div
+            role="radiogroup"
+            aria-label={t("projection_simulator.investment_horizon")}
+            className="flex gap-2"
+          >
             {HORIZONS.map((h) => {
               const active = horizon === h;
               return (
@@ -281,7 +299,11 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
           <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold mb-2">
             {t("projection_simulator.market_scenario")}
           </p>
-          <div role="radiogroup" aria-label={t("projection_simulator.market_scenario")} className="flex gap-2">
+          <div
+            role="radiogroup"
+            aria-label={t("projection_simulator.market_scenario")}
+            className="flex gap-2"
+          >
             {SCENARIOS.map((s) => {
               const active = scenario === s.key;
               return (
@@ -310,7 +332,11 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
           <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold mb-2">
             {t("projection_simulator.tax_envelope")}
           </p>
-          <div role="radiogroup" aria-label={t("projection_simulator.tax_envelope")} className="flex gap-2">
+          <div
+            role="radiogroup"
+            aria-label={t("projection_simulator.tax_envelope")}
+            className="flex gap-2"
+          >
             {ENVELOPES.map((e) => {
               const active = envelope === e.key;
               return (
@@ -340,13 +366,19 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
             <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold mb-2">
               {t("projection_simulator.stress_test")}
             </p>
-            <div role="radiogroup" aria-label={t("projection_simulator.stress_test")} className="flex flex-wrap gap-2">
-              {([
-                { key: "none", label: t("projection_simulator.none") },
-                { key: "crash", label: t("projection_simulator.crash") },
-                { key: "pause", label: t("projection_simulator.pause") },
-                { key: "inflation", label: t("projection_simulator.inflation_stress") },
-              ] as const).map((s) => {
+            <div
+              role="radiogroup"
+              aria-label={t("projection_simulator.stress_test")}
+              className="flex flex-wrap gap-2"
+            >
+              {(
+                [
+                  { key: "none", label: t("projection_simulator.none") },
+                  { key: "crash", label: t("projection_simulator.crash") },
+                  { key: "pause", label: t("projection_simulator.pause") },
+                  { key: "inflation", label: t("projection_simulator.inflation_stress") },
+                ] as const
+              ).map((s) => {
                 const active = stressKey === s.key;
                 return (
                   <button
@@ -378,7 +410,10 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
             size="lg"
             label={t("projection_simulator.projected_capital_brut")}
             value={formatCurrency(result.finalValue, lang)}
-            hint={t("projection_simulator.purchasing_power", { value: formatCurrency(result.finalValueReal, lang), inflation: formatPercent(safe.inflation, lang) })}
+            hint={t("projection_simulator.purchasing_power", {
+              value: formatCurrency(result.finalValueReal, lang),
+              inflation: formatPercent(safe.inflation, lang),
+            })}
             accent
           />
 
@@ -391,9 +426,15 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
             />
             <KPIFigure
               size="sm"
-              label={result.gain >= 0 ? t("projection_simulator.gross_gain") : t("projection_simulator.estimated_loss")}
+              label={
+                result.gain >= 0
+                  ? t("projection_simulator.gross_gain")
+                  : t("projection_simulator.estimated_loss")
+              }
               value={`${result.gain >= 0 ? "+" : ""}${formatCurrency(result.gain, lang)}`}
-              hint={t("projection_simulator.total_contributed", { total: formatCurrency(result.totalContributed, lang) })}
+              hint={t("projection_simulator.total_contributed", {
+                total: formatCurrency(result.totalContributed, lang),
+              })}
             />
           </div>
 
@@ -403,10 +444,14 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
                 {t("projection_simulator.under_stress")}
               </p>
               <p className="text-sm text-ink">
-                {t("projection_simulator.projected_capital_brut")} : <span className="font-value tabular-nums">{formatCurrency(stressedResult.finalValue, lang)}</span>{" "}
+                {t("projection_simulator.projected_capital_brut")} :{" "}
+                <span className="font-value tabular-nums">
+                  {formatCurrency(stressedResult.finalValue, lang)}
+                </span>{" "}
                 <span className="text-ink-3">
                   ({stressedResult.finalValue - result.finalValue >= 0 ? "+" : ""}
-                  {formatCurrency(stressedResult.finalValue - result.finalValue, lang)} {t("projection_simulator.vs_central")})
+                  {formatCurrency(stressedResult.finalValue - result.finalValue, lang)}{" "}
+                  {t("projection_simulator.vs_central")})
                 </span>
               </p>
             </div>
@@ -422,8 +467,14 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
                 value={formatCurrency(goal.monthlyRequired, lang)}
                 hint={
                   goal.feasible
-                    ? t("projection_simulator.goal_attain", { target: formatCurrency(targetCapital, lang), nominal: formatCurrency(goal.nominalTarget, lang), years: safe.years })
-                    : t("projection_simulator.unattainable", { max: formatCurrency(PROJECTION_BOUNDS.monthlyMax, lang) })
+                    ? t("projection_simulator.goal_attain", {
+                        target: formatCurrency(targetCapital, lang),
+                        nominal: formatCurrency(goal.nominalTarget, lang),
+                        years: safe.years,
+                      })
+                    : t("projection_simulator.unattainable", {
+                        max: formatCurrency(PROJECTION_BOUNDS.monthlyMax, lang),
+                      })
                 }
                 accent
               />
@@ -478,7 +529,12 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
               }}
               labelStyle={{ color: "var(--paper-2)", marginBottom: 4 }}
               itemStyle={{ color: "var(--paper)" }}
-              labelFormatter={(y: number) => t("projection_simulator.after_years", { defaultValue: "Après {{count}} ans", count: y })}
+              labelFormatter={(y: number) =>
+                t("projection_simulator.after_years", {
+                  defaultValue: "Après {{count}} ans",
+                  count: y,
+                })
+              }
               formatter={(v: number) => formatCurrency(v, lang)}
             />
             <Area

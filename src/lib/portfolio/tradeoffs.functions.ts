@@ -127,7 +127,8 @@ async function loadUniverse(): Promise<UniverseCache> {
     };
   }) as Asset[];
   const covariance = new Map<string, number>();
-  for (const c of covRes.data ?? []) covariance.set(`${c.asset_a}|${c.asset_b}`, Number(c.covariance));
+  for (const c of covRes.data ?? [])
+    covariance.set(`${c.asset_a}|${c.asset_b}`, Number(c.covariance));
   _cache = { assets, covariance, loadedAt: Date.now() };
   return _cache;
 }
@@ -139,9 +140,7 @@ export const simulateTradeoffs = createServerFn({ method: "POST" })
     const { userId, supabase: userClient } = context;
     const { data: pf, error } = await userClient
       .from("portfolios")
-      .select(
-        "id, causes, cause_intensity, exclusions, risk_target, horizon_years, initial_amount",
-      )
+      .select("id, causes, cause_intensity, exclusions, risk_target, horizon_years, initial_amount")
       .eq("id", data.portfolioId)
       .eq("user_id", userId)
       .maybeSingle();
@@ -201,7 +200,9 @@ export const simulateTradeoffs = createServerFn({ method: "POST" })
         lever,
         leverLabel,
         altLabel,
-        costBps: Math.round((alt.metrics.expected_return - baseline.metrics.expected_return) * 10000),
+        costBps: Math.round(
+          (alt.metrics.expected_return - baseline.metrics.expected_return) * 10000,
+        ),
         esgDelta: Number((baseline.metrics.esg_score - alt.metrics.esg_score).toFixed(2)),
         volDelta: Number(((baseline.metrics.volatility - alt.metrics.volatility) * 100).toFixed(2)),
         alt: snapshot(alt),
@@ -214,10 +215,15 @@ export const simulateTradeoffs = createServerFn({ method: "POST" })
         covariance: universe.covariance,
         params: { ...baseParams, exclusions: baseParams.exclusions.filter((e) => e !== excl) },
       });
-      pushRow(EXCLUSION_LEVERS[excl], `Exclusion : ${EXCLUSION_LABELS[excl]}`, "Sans cette exclusion", alt);
+      pushRow(
+        EXCLUSION_LEVERS[excl],
+        `Exclusion : ${EXCLUSION_LABELS[excl]}`,
+        "Sans cette exclusion",
+        alt,
+      );
     }
 
-    const riskUp = Math.min(0.30, baseParams.risk_target + 0.02);
+    const riskUp = Math.min(0.3, baseParams.risk_target + 0.02);
     const riskDown = Math.max(0.02, baseParams.risk_target - 0.02);
     if (riskUp !== baseParams.risk_target) {
       const alt = buildPortfolio({

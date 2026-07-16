@@ -1,13 +1,30 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
-import { upsertGoal, deleteGoal, type FinancialGoal, type GoalType } from "@/hooks/useFinancialGoals";
+import {
+  upsertGoal,
+  deleteGoal,
+  type FinancialGoal,
+  type GoalType,
+} from "@/hooks/useFinancialGoals";
 import { toast } from "sonner";
 
 const GOAL_TYPES: GoalType[] = ["retirement", "real_estate", "studies", "safety_net", "other"];
@@ -117,19 +134,34 @@ export function GoalDialog({ open, onOpenChange, goal, onSaved }: Props) {
 
         <div className="space-y-4">
           <div>
-            <Label htmlFor="goal-name" className="text-caption uppercase tracking-[0.18em] text-ink-3">
+            <Label
+              htmlFor="goal-name"
+              className="text-caption uppercase tracking-[0.18em] text-ink-3"
+            >
               {t("goal.name")}
             </Label>
-            <Input id="goal-name" value={name} onChange={(e) => setName(e.target.value)} placeholder={t("goal.name_placeholder")} maxLength={80} />
+            <Input
+              id="goal-name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder={t("goal.name_placeholder")}
+              maxLength={80}
+            />
           </div>
 
           <div>
-            <Label className="text-caption uppercase tracking-[0.18em] text-ink-3">{t("goal.type")}</Label>
+            <Label className="text-caption uppercase tracking-[0.18em] text-ink-3">
+              {t("goal.type")}
+            </Label>
             <Select value={type} onValueChange={(v) => setType(v as GoalType)}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 {GOAL_TYPES.map((k) => (
-                  <SelectItem key={k} value={k}>{t(`goal.type_${k}`)}</SelectItem>
+                  <SelectItem key={k} value={k}>
+                    {t(`goal.type_${k}`)}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -137,34 +169,66 @@ export function GoalDialog({ open, onOpenChange, goal, onSaved }: Props) {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label className="text-caption uppercase tracking-[0.18em] text-ink-3">{t("goal.target_amount")}</Label>
-              <Input type="number" min={0} step={1000} value={target} onChange={(e) => setTarget(Number(e.target.value))} />
+              <Label className="text-caption uppercase tracking-[0.18em] text-ink-3">
+                {t("goal.target_amount")}
+              </Label>
+              <Input
+                type="number"
+                min={0}
+                step={1000}
+                value={target}
+                onChange={(e) => setTarget(Number(e.target.value))}
+              />
             </div>
             <div>
-              <Label className="text-caption uppercase tracking-[0.18em] text-ink-3">{t("goal.due_date")}</Label>
+              <Label className="text-caption uppercase tracking-[0.18em] text-ink-3">
+                {t("goal.due_date")}
+              </Label>
               <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label className="text-caption uppercase tracking-[0.18em] text-ink-3">{t("goal.monthly_contribution")}</Label>
-              <Input type="number" min={0} step={10} value={monthly} onChange={(e) => setMonthly(Number(e.target.value))} />
+              <Label className="text-caption uppercase tracking-[0.18em] text-ink-3">
+                {t("goal.monthly_contribution")}
+              </Label>
+              <Input
+                type="number"
+                min={0}
+                step={10}
+                value={monthly}
+                onChange={(e) => setMonthly(Number(e.target.value))}
+              />
             </div>
             <div>
-              <Label className="text-caption uppercase tracking-[0.18em] text-ink-3">{t("goal.initial_capital")}</Label>
-              <Input type="number" min={0} step={100} value={initial} onChange={(e) => setInitial(Number(e.target.value))} />
+              <Label className="text-caption uppercase tracking-[0.18em] text-ink-3">
+                {t("goal.initial_capital")}
+              </Label>
+              <Input
+                type="number"
+                min={0}
+                step={100}
+                value={initial}
+                onChange={(e) => setInitial(Number(e.target.value))}
+              />
             </div>
           </div>
 
           <div>
-            <Label className="text-caption uppercase tracking-[0.18em] text-ink-3">{t("goal.attached_portfolio")}</Label>
+            <Label className="text-caption uppercase tracking-[0.18em] text-ink-3">
+              {t("goal.attached_portfolio")}
+            </Label>
             <Select value={portfolioId} onValueChange={setPortfolioId}>
-              <SelectTrigger><SelectValue placeholder={t("goal.none")} /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue placeholder={t("goal.none")} />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="none">{t("goal.none")}</SelectItem>
                 {portfolios.map((p) => (
-                  <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                  <SelectItem key={p.id} value={p.id}>
+                    {p.name}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -173,13 +237,25 @@ export function GoalDialog({ open, onOpenChange, goal, onSaved }: Props) {
 
         <DialogFooter className="flex sm:justify-between gap-2">
           {goal ? (
-            <Button type="button" variant="ghost" onClick={remove} disabled={saving} className="text-rose-600 hover:text-rose-700">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={remove}
+              disabled={saving}
+              className="text-rose-600 hover:text-rose-700"
+            >
               {t("common.delete")}
             </Button>
-          ) : <span />}
+          ) : (
+            <span />
+          )}
           <div className="flex gap-2">
-            <Button variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>{t("common.cancel")}</Button>
-            <Button onClick={save} disabled={saving}>{goal ? t("common.save") : t("common.create")}</Button>
+            <Button variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>
+              {t("common.cancel")}
+            </Button>
+            <Button onClick={save} disabled={saving}>
+              {goal ? t("common.save") : t("common.create")}
+            </Button>
           </div>
         </DialogFooter>
       </DialogContent>

@@ -15,20 +15,20 @@
 // `src/start.ts` (auto-wired by the integration).
 //
 // Edit freely. This file is only re-injected when deleted entirely.
-import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
-import { supabase } from '@/integrations/supabase/client'
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { supabase } from "@/integrations/supabase/client";
 
 // Lovable's Supabase auth scaffolds use `/auth`; change this if the app uses another sign-in route.
-const SIGN_IN_ROUTE = '/auth'
+const SIGN_IN_ROUTE = "/auth";
 
-export const Route = createFileRoute('/_authenticated')({
+export const Route = createFileRoute("/_authenticated")({
   ssr: false,
   beforeLoad: async () => {
-    const { data, error } = await supabase.auth.getUser()
+    const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) {
-      throw redirect({ to: SIGN_IN_ROUTE })
+      throw redirect({ to: SIGN_IN_ROUTE });
     }
-    return { user: data.user }
+    return { user: data.user };
   },
   component: () => <Outlet />,
-})
+});

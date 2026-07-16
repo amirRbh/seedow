@@ -32,7 +32,16 @@ export function fireConfetti(origin?: { x: number; y: number }) {
   const ox = origin?.x ?? w / 2;
   const oy = origin?.y ?? h / 2;
 
-  type P = { x: number; y: number; vx: number; vy: number; rot: number; vr: number; color: string; size: number };
+  type P = {
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    rot: number;
+    vr: number;
+    color: string;
+    size: number;
+  };
   const particles: P[] = Array.from({ length: 12 }, () => {
     const angle = -Math.PI / 2 + (Math.random() - 0.5) * 1.4;
     const speed = 380 + Math.random() * 260;

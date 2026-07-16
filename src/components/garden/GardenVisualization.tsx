@@ -70,7 +70,9 @@ export function GardenVisualization({
             onClick={() => setExpanded((v) => !v)}
             className="text-caption text-ink-2 hover:text-ink underline-offset-2 hover:underline"
           >
-            {expanded ? t("garden_viz.show_less") : t("garden_viz.show_all", { count: plants.length })}
+            {expanded
+              ? t("garden_viz.show_less")
+              : t("garden_viz.show_all", { count: plants.length })}
           </button>
         )}
       </div>

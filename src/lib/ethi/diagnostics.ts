@@ -100,14 +100,23 @@ export function buildBriefing({ firstName, portfolio, valuation, lang }: BuildAr
         : `Salut ${firstName} ✨\n\n**Pas encore de portefeuille.** Dis-moi ce qui compte pour toi — valeurs, horizon, montant — je propose une allocation en deux minutes.`,
       chips: en
         ? [
-            { label: "Build my first portfolio", query: "Help me build my first portfolio from scratch." },
+            {
+              label: "Build my first portfolio",
+              query: "Help me build my first portfolio from scratch.",
+            },
             { label: "Simulate a monthly plan", kind: "sim" },
             { label: "What is an ESG ETF?", query: "What is an ESG ETF, in simple terms?" },
           ]
         : [
-            { label: "Construis mon premier portefeuille", query: "Aide-moi à construire mon premier portefeuille." },
+            {
+              label: "Construis mon premier portefeuille",
+              query: "Aide-moi à construire mon premier portefeuille.",
+            },
             { label: "Simuler un versement mensuel", kind: "sim" },
-            { label: "C'est quoi un ETF ESG ?", query: "C'est quoi un ETF ESG, en termes simples ?" },
+            {
+              label: "C'est quoi un ETF ESG ?",
+              query: "C'est quoi un ETF ESG, en termes simples ?",
+            },
           ],
       flags: [],
       aggregates: {
@@ -251,7 +260,11 @@ export function buildBriefing({ firstName, portfolio, valuation, lang }: BuildAr
 
   // Build dynamic chips from flags
   const chips: ChipAction[] = [];
-  if (top.some((f) => f.id === "concentration") || top.some((f) => f.id === "region_bias") || top.some((f) => f.id === "category_bias")) {
+  if (
+    top.some((f) => f.id === "concentration") ||
+    top.some((f) => f.id === "region_bias") ||
+    top.some((f) => f.id === "category_bias")
+  ) {
     chips.push({
       label: en ? "How do I rebalance?" : "Comment je rééquilibre ?",
       query: en
@@ -276,7 +289,10 @@ export function buildBriefing({ firstName, portfolio, valuation, lang }: BuildAr
     });
   }
   // Always offer simulation + crash scenario
-  chips.push({ label: en ? "Simulate a monthly plan" : "Simuler un versement mensuel", kind: "sim" });
+  chips.push({
+    label: en ? "Simulate a monthly plan" : "Simuler un versement mensuel",
+    kind: "sim",
+  });
   if (chips.length < 3) {
     chips.push({
       label: en ? "What if the market drops 20%?" : "Et si le marché baisse de 20 % ?",

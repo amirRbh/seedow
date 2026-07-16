@@ -43,8 +43,7 @@ export const Route = createFileRoute("/.lovable/oauth/consent")({
     }
   },
   loader: async ({ location }) => {
-    const authorizationId =
-      new URLSearchParams(location.search).get("authorization_id") ?? "";
+    const authorizationId = new URLSearchParams(location.search).get("authorization_id") ?? "";
     const { data, error } = await oauth().getAuthorizationDetails(authorizationId);
     if (error) throw new Error(error.message);
     const immediate = data?.redirect_url ?? data?.redirect_to;
@@ -58,9 +57,7 @@ export const Route = createFileRoute("/.lovable/oauth/consent")({
     <main className="min-h-screen bg-paper flex items-center justify-center px-6">
       <div className="max-w-md text-center">
         <h1 className="font-value text-3xl text-ink">Authorization error</h1>
-        <p className="mt-3 text-sm text-ink-2">
-          {String((error as Error)?.message ?? error)}
-        </p>
+        <p className="mt-3 text-sm text-ink-2">{String((error as Error)?.message ?? error)}</p>
       </div>
     </main>
   ),
@@ -105,15 +102,22 @@ function Consent() {
           Connect {clientName} to your Seedow account
         </h1>
         <p className="mt-3 text-body-sm text-ink-2">
-          {clientName} will be able to call this app's enabled tools while you are
-          signed in. This does not bypass Seedow's permissions or backend policies.
+          {clientName} will be able to call this app's enabled tools while you are signed in. This
+          does not bypass Seedow's permissions or backend policies.
         </p>
 
         <div className="mt-6 rounded-lg border border-paper-3 bg-paper-2 p-4 text-label text-ink-2 space-y-1">
-          <div><span className="text-ink-3">Access:</span> read your portfolios, goals and decision history (simulated data)</div>
-          <div><span className="text-ink-3">Identity:</span> your Seedow account (email, id)</div>
+          <div>
+            <span className="text-ink-3">Access:</span> read your portfolios, goals and decision
+            history (simulated data)
+          </div>
+          <div>
+            <span className="text-ink-3">Identity:</span> your Seedow account (email, id)
+          </div>
           {details?.scope ? (
-            <div><span className="text-ink-3">Scope:</span> {details.scope}</div>
+            <div>
+              <span className="text-ink-3">Scope:</span> {details.scope}
+            </div>
           ) : null}
         </div>
 

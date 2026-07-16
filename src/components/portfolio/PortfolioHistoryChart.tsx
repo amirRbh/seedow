@@ -99,12 +99,8 @@ export function PortfolioHistoryChart() {
     <div className="paper-card p-5">
       <div className="flex items-baseline justify-between mb-3">
         <div>
-          <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold">
-            Évolution
-          </p>
-          <p className="font-value text-2xl text-ink mt-0.5">
-            {fmtEur(last)}
-          </p>
+          <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold">Évolution</p>
+          <p className="font-value text-2xl text-ink mt-0.5">{fmtEur(last)}</p>
           {points.length > 0 && (
             <p
               className={`text-label font-semibold tabular-nums mt-0.5 ${
@@ -124,9 +120,7 @@ export function PortfolioHistoryChart() {
               type="button"
               onClick={() => setRange(r.id)}
               className={`text-caption font-medium px-2.5 py-1 rounded-full transition-colors ${
-                range === r.id
-                  ? "bg-paper text-ink shadow-sm"
-                  : "text-ink-3 hover:text-ink-2"
+                range === r.id ? "bg-paper text-ink shadow-sm" : "text-ink-3 hover:text-ink-2"
               }`}
             >
               {r.label}
@@ -152,10 +146,7 @@ export function PortfolioHistoryChart() {
           </div>
         ) : (
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart
-              data={points}
-              margin={{ top: 4, right: 8, left: 8, bottom: 0 }}
-            >
+            <AreaChart data={points} margin={{ top: 4, right: 8, left: 8, bottom: 0 }}>
               <defs>
                 <linearGradient id="phc-fill" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor={stroke} stopOpacity={0.25} />
@@ -171,10 +162,7 @@ export function PortfolioHistoryChart() {
                 tickLine={false}
                 minTickGap={32}
               />
-              <YAxis
-                domain={[minY, maxY]}
-                hide
-              />
+              <YAxis domain={[minY, maxY]} hide />
               <Tooltip
                 contentStyle={{
                   background: "var(--ink)",
@@ -224,10 +212,7 @@ export function PortfolioHistoryChart() {
       {points.length >= 2 && (
         <div className="flex items-center gap-4 mt-3 pt-3 border-t border-paper-3 text-tag text-ink-3">
           <span className="flex items-center gap-1.5">
-            <span
-              className="w-2.5 h-0.5 inline-block"
-              style={{ backgroundColor: stroke }}
-            />
+            <span className="w-2.5 h-0.5 inline-block" style={{ backgroundColor: stroke }} />
             Valeur
           </span>
           <span className="flex items-center gap-1.5">

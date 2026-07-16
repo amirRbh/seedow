@@ -75,9 +75,21 @@ export function PortfolioMetricsCard({ metrics }: Props) {
 
   const toneClasses: Record<Tone, { text: string; bg: string; border: string }> = {
     moss: { text: "text-moss-1", bg: "bg-moss-5", border: "border-moss-4" },
-    bloom: { text: "text-bloom", bg: "bg-[oklch(0.96_0.04_310)]", border: "border-[oklch(0.88_0.07_310)]" },
-    peach: { text: "text-rust", bg: "bg-[oklch(0.96_0.04_45)]", border: "border-[oklch(0.88_0.07_45)]" },
-    sky: { text: "text-sky", bg: "bg-[oklch(0.96_0.03_230)]", border: "border-[oklch(0.88_0.06_230)]" },
+    bloom: {
+      text: "text-bloom",
+      bg: "bg-[oklch(0.96_0.04_310)]",
+      border: "border-[oklch(0.88_0.07_310)]",
+    },
+    peach: {
+      text: "text-rust",
+      bg: "bg-[oklch(0.96_0.04_45)]",
+      border: "border-[oklch(0.88_0.07_45)]",
+    },
+    sky: {
+      text: "text-sky",
+      bg: "bg-[oklch(0.96_0.03_230)]",
+      border: "border-[oklch(0.88_0.06_230)]",
+    },
     ink: { text: "text-ink", bg: "bg-paper-2", border: "border-paper-3" },
   };
 

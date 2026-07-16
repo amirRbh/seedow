@@ -34,9 +34,7 @@ export function EditorialSection({
             </p>
           )}
           {eyebrow && <p className="eyebrow mb-4">{eyebrow}</p>}
-          {title && (
-            <h2 className="display-lg text-ink max-w-3xl">{title}</h2>
-          )}
+          {title && <h2 className="display-lg text-ink max-w-3xl">{title}</h2>}
           {kicker && (
             <p className="mt-4 text-base md:text-lg text-ink-2 max-w-2xl leading-relaxed">
               {kicker}

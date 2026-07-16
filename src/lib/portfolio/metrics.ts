@@ -1,10 +1,4 @@
-import type {
-  Asset,
-  PortfolioWeights,
-  PortfolioMetrics,
-  AssetClass,
-  PillarWeights,
-} from "./types";
+import type { Asset, PortfolioWeights, PortfolioMetrics, AssetClass, PillarWeights } from "./types";
 import { DEFAULT_PILLAR_WEIGHTS, compositeEsgScore } from "./types";
 
 export function computeMetrics(
@@ -63,9 +57,16 @@ export function computeMetrics(
   const sharpe = vol > 0 ? (portfolioReturn - portfolioTER - riskFreeRate) / vol : 0;
 
   const byClass: Record<AssetClass, number> = {
-    equity_dev: 0, equity_em: 0, thematic: 0,
-    green_bond: 0, corporate_bond: 0, social_bond: 0, sov_bond: 0,
-    reit: 0, commodity: 0, cash: 0,
+    equity_dev: 0,
+    equity_em: 0,
+    thematic: 0,
+    green_bond: 0,
+    corporate_bond: 0,
+    social_bond: 0,
+    sov_bond: 0,
+    reit: 0,
+    commodity: 0,
+    cash: 0,
   };
   const byRegion: Record<string, number> = {};
 

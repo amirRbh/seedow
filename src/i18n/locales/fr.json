@@ -275,6 +275,11 @@
     "load_error_desc": "Réessaie dans un instant.",
     "universe_empty_title": "Univers en cours de constitution",
     "universe_empty_desc": "Aucun actif n'est disponible pour le moment.",
+    "prices_missing_one": "{{count}} actif sans cours à jour.",
+    "prices_missing_other": "{{count}} actifs sans cours à jour.",
+    "refresh_prices": "Rafraîchir",
+    "refresh_result": "{{ok}} actif(s) mis à jour, {{failed}} échec(s).",
+    "refresh_error": "Rafraîchissement impossible.",
     "row": {
       "risk": "Risque",
       "ter": "Frais",

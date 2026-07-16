@@ -13,8 +13,7 @@ export const course: Course = {
     "Quels secteurs sont communément exclus des fonds ESG, selon quels seuils, et avec quel impact sur le portefeuille.",
   intro:
     "L'exclusion sectorielle est l'approche la plus visible et la plus controversée de l'investissement responsable. Voici les secteurs typiquement exclus, les seuils utilisés, les débats actifs et les conséquences en termes de diversification.",
-  eli5:
-    "Imagine que tu invites 100 amis à un dîner, mais tu décides à l'avance : pas de fumeurs, pas de vendeurs d'armes, pas de tricheurs. Il te reste peut-être 70 amis à inviter. Pour un fonds, c'est pareil : « exclure un secteur », c'est décider de ne pas financer certaines entreprises, quelles que soient leurs performances. Selon combien tu exclus, ton portefeuille est plus étroit — ou beaucoup plus étroit.",
+  eli5: "Imagine que tu invites 100 amis à un dîner, mais tu décides à l'avance : pas de fumeurs, pas de vendeurs d'armes, pas de tricheurs. Il te reste peut-être 70 amis à inviter. Pour un fonds, c'est pareil : « exclure un secteur », c'est décider de ne pas financer certaines entreprises, quelles que soient leurs performances. Selon combien tu exclus, ton portefeuille est plus étroit — ou beaucoup plus étroit.",
   sections: [
     {
       heading: "Exclusions normatives (quasi obligatoires)",
@@ -111,7 +110,12 @@ export const course: Course = {
     },
     {
       question: "TotalEnergies est-il systématiquement exclu des fonds ISR ?",
-      options: ["Oui, toujours.", "Non, pas toujours, selon les seuils retenus.", "Seulement aux États-Unis.", "Uniquement par Greenfin."],
+      options: [
+        "Oui, toujours.",
+        "Non, pas toujours, selon les seuils retenus.",
+        "Seulement aux États-Unis.",
+        "Uniquement par Greenfin.",
+      ],
       correctIndex: 1,
       explanation:
         "Pétrole conventionnel pas systématiquement exclu. Charbon et fossiles non conventionnels oui, mais pas TotalEnergies dans tous les fonds ISR.",

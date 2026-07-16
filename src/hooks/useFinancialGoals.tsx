@@ -97,10 +97,7 @@ export async function upsertGoal(input: GoalInput, userId: string) {
     portfolio_id: input.portfolio_id,
   };
   if (input.id) {
-    const { error } = await supabase
-      .from("financial_goals")
-      .update(payload)
-      .eq("id", input.id);
+    const { error } = await supabase.from("financial_goals").update(payload).eq("id", input.id);
     if (error) throw new Error(error.message);
   } else {
     const { error } = await supabase.from("financial_goals").insert(payload);

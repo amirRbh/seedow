@@ -21,10 +21,7 @@ export function BetaCounter({ className = "" }: { className?: string }) {
         </span>
       </div>
       <div className="h-1 bg-paper-3 overflow-hidden rounded-full">
-        <div
-          className="h-full bg-gold transition-all duration-700"
-          style={{ width: `${pct}%` }}
-        />
+        <div className="h-full bg-gold transition-all duration-700" style={{ width: `${pct}%` }} />
       </div>
     </div>
   );

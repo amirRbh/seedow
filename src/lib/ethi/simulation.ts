@@ -27,7 +27,7 @@ function fv(initial: number, monthly: number, annualRate: number, years: number)
   const n = Math.max(0, Math.round(years * 12));
   const r = annualRate / 12;
   const fvInitial = initial * Math.pow(1 + r, n);
-  const fvMonthly = r === 0 ? monthly * n : monthly * (((Math.pow(1 + r, n) - 1) / r));
+  const fvMonthly = r === 0 ? monthly * n : monthly * ((Math.pow(1 + r, n) - 1) / r);
   return fvInitial + fvMonthly;
 }
 
@@ -47,7 +47,11 @@ const fmt = (n: number) =>
     maximumFractionDigits: 0,
   }).format(Math.round(n));
 
-export function formatSimulation(input: SimulationInput, out: SimulationOutcome, lang: "fr" | "en"): string {
+export function formatSimulation(
+  input: SimulationInput,
+  out: SimulationOutcome,
+  lang: "fr" | "en",
+): string {
   const en = lang === "en";
   const yearsLabel = en ? "years" : "ans";
   const range = `**${en ? "€" : ""}${fmt(out.low)}${en ? "" : " €"}** ${en ? "to" : "à"} **${en ? "€" : ""}${fmt(out.high)}${en ? "" : " €"}**`;
@@ -65,11 +69,14 @@ export function formatSimulation(input: SimulationInput, out: SimulationOutcome,
     ? `**Impact.** That's roughly **${gainStr}** of compound growth — the math rewards consistency more than timing.`
     : `**Impact.** Soit environ **${gainStr}** d'intérêts cumulés — la régularité paie plus que le market timing.`;
 
-  const shockLine = out.shocked != null
-    ? `\n${en
-        ? `**Shock test.** A ${Math.round(Math.abs((input.shockPct ?? 0) * 100))}% drop right before the end would leave you near **${en ? "€" : ""}${fmt(out.shocked)}${en ? "" : " €"}** — still above your contributions if held long enough.`
-        : `**Stress-test.** Une baisse de ${Math.round(Math.abs((input.shockPct ?? 0) * 100))} % juste avant l'échéance te laisserait autour de **${fmt(out.shocked)} €** — toujours au-dessus de tes versements si tu tiens le cap.`}`
-    : "";
+  const shockLine =
+    out.shocked != null
+      ? `\n${
+          en
+            ? `**Shock test.** A ${Math.round(Math.abs((input.shockPct ?? 0) * 100))}% drop right before the end would leave you near **${en ? "€" : ""}${fmt(out.shocked)}${en ? "" : " €"}** — still above your contributions if held long enough.`
+            : `**Stress-test.** Une baisse de ${Math.round(Math.abs((input.shockPct ?? 0) * 100))} % juste avant l'échéance te laisserait autour de **${fmt(out.shocked)} €** — toujours au-dessus de tes versements si tu tiens le cap.`
+        }`
+      : "";
 
   const action = en
     ? `**Action.** Set up the monthly transfer now — every month skipped costs more than a bad market year.`

@@ -68,7 +68,13 @@ export function ExplainerCard({ title, children, tone = "moss", dismissKey }: Pr
           aria-label="Masquer cette aide"
           className="absolute top-2 right-2 w-5 h-5 flex items-center justify-center text-ink-3 hover:text-ink rounded-full hover:bg-paper/60 transition-colors"
         >
-          <svg viewBox="0 0 16 16" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2}>
+          <svg
+            viewBox="0 0 16 16"
+            className="w-3 h-3"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
             <path d="M4 4l8 8M12 4l-8 8" />
           </svg>
         </button>

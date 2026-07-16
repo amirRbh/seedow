@@ -17,7 +17,10 @@ export const Route = createFileRoute("/communaute")({
   head: () => ({
     meta: [
       { title: "Communauté — seedow" },
-      { name: "description", content: "Compare ta stratégie d'investissement responsable avec la communauté seedow." },
+      {
+        name: "description",
+        content: "Compare ta stratégie d'investissement responsable avec la communauté seedow.",
+      },
     ],
   }),
 });

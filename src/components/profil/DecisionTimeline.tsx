@@ -24,11 +24,7 @@ export function DecisionTimeline() {
   }
 
   if (decisions.length === 0) {
-    return (
-      <p className="text-sm text-ink-3 mt-3">
-        {t("decision_timeline.empty")}
-      </p>
-    );
+    return <p className="text-sm text-ink-3 mt-3">{t("decision_timeline.empty")}</p>;
   }
 
   return (
@@ -57,9 +53,7 @@ export function DecisionTimeline() {
               </time>
             </div>
             <p className="text-sm font-medium text-ink leading-snug">{d.title}</p>
-            {d.detail && (
-              <p className="text-label text-ink-3 mt-0.5 leading-relaxed">{d.detail}</p>
-            )}
+            {d.detail && <p className="text-label text-ink-3 mt-0.5 leading-relaxed">{d.detail}</p>}
           </li>
         );
       })}

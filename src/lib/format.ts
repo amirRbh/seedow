@@ -23,7 +23,11 @@ export function formatPercent(value: number, lang: Lang, digits = 2) {
   }).format(value);
 }
 
-export function formatDate(date: Date | string, lang: Lang, opts: Intl.DateTimeFormatOptions = { year: "numeric", month: "long", day: "numeric" }) {
+export function formatDate(
+  date: Date | string,
+  lang: Lang,
+  opts: Intl.DateTimeFormatOptions = { year: "numeric", month: "long", day: "numeric" },
+) {
   const d = typeof date === "string" ? new Date(date) : date;
   return new Intl.DateTimeFormat(locale(lang), opts).format(d);
 }

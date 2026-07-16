@@ -13,8 +13,7 @@ export const course: Course = {
     "Le maquis des labels et catégories de fonds durables : ce qu'ils garantissent vraiment, leurs critères, leurs limites.",
   intro:
     "ISR, Greenfin, Finansol, Article 8, Article 9, Towards Sustainability, B-Corp… Les labels se multiplient sans se ressembler. Voici l'inventaire des principaux, ce qu'ils contrôlent vraiment, et une hiérarchie de confiance.",
-  eli5:
-    "Imagine les étiquettes qu'on colle sur les aliments : bio, AOC, Label Rouge, sans gluten, Nutri-Score A. Chacune contrôle une chose différente, et le mot « naturel » n'est presque jamais garanti par personne. Pour les fonds « verts », c'est pareil : des labels très différents, avec des règles très différentes. Il faut savoir lequel garantit quoi.",
+  eli5: "Imagine les étiquettes qu'on colle sur les aliments : bio, AOC, Label Rouge, sans gluten, Nutri-Score A. Chacune contrôle une chose différente, et le mot « naturel » n'est presque jamais garanti par personne. Pour les fonds « verts », c'est pareil : des labels très différents, avec des règles très différentes. Il faut savoir lequel garantit quoi.",
   sections: [
     {
       heading: "Le label ISR français (refondu en 2024)",
@@ -131,7 +130,8 @@ export const course: Course = {
         "Fonds 100 % obligataire.",
       ],
       correctIndex: 1,
-      explanation: "Article 8 est très large et représente la moitié de l'encours européen. Ne suffit pas à valider l'engagement.",
+      explanation:
+        "Article 8 est très large et représente la moitié de l'encours européen. Ne suffit pas à valider l'engagement.",
     },
     {
       question: "Hiérarchie de confiance pour un investisseur attentif ?",
@@ -142,7 +142,8 @@ export const course: Course = {
         "Aucun label ne vaut rien.",
       ],
       correctIndex: 1,
-      explanation: "Greenfin > ISR refondu > Article 9 > Article 8. À combiner avec un audit ligne par ligne.",
+      explanation:
+        "Greenfin > ISR refondu > Article 9 > Article 8. À combiner avec un audit ligne par ligne.",
     },
     {
       question: "Finansol certifie principalement…",

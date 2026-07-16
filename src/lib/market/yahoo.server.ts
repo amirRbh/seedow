@@ -26,8 +26,7 @@ export interface YahooChartResult {
   bars: YahooBar[];
 }
 
-const UA =
-  "Mozilla/5.0 (compatible; SeedowBot/1.0; +https://seedow.app)";
+const UA = "Mozilla/5.0 (compatible; SeedowBot/1.0; +https://seedow.app)";
 
 /** Codes considérés transitoires : ça vaut le coup de réessayer. */
 function isRetryableStatus(status: number): boolean {
@@ -71,7 +70,10 @@ export async function fetchYahooChart(
 }
 
 class YahooHttpError extends Error {
-  constructor(public status: number, message: string) {
+  constructor(
+    public status: number,
+    message: string,
+  ) {
     super(message);
   }
 }
@@ -103,16 +105,13 @@ async function fetchYahooChartOnce(url: string, symbol: string): Promise<YahooCh
   const result = json.chart?.result?.[0];
   if (!result || !result.meta) {
     const err = json.chart?.error;
-    throw new Error(
-      `Yahoo empty result for ${symbol}: ${err?.description ?? "no data"}`,
-    );
+    throw new Error(`Yahoo empty result for ${symbol}: ${err?.description ?? "no data"}`);
   }
 
   const meta = result.meta;
   const price = Number(meta.regularMarketPrice);
   const prev = meta.chartPreviousClose ?? meta.previousClose ?? null;
-  const changePct =
-    prev && price ? ((price - prev) / prev) * 100 : null;
+  const changePct = prev && price ? ((price - prev) / prev) * 100 : null;
 
   const quote: YahooQuote = {
     symbol,

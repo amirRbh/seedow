@@ -27,8 +27,7 @@ export const Route = createFileRoute("/profil")({
       { title: "Mon profil d'investisseur — Seedow" },
       {
         name: "description",
-        content:
-          "Vue d'ensemble de tes valeurs, ton portefeuille et ta progression sur Seedow.",
+        content: "Vue d'ensemble de tes valeurs, ton portefeuille et ta progression sur Seedow.",
       },
     ],
   }),
@@ -112,12 +111,16 @@ function ProfilPage() {
         horizon_years: Number(data.horizon_years ?? 0),
       });
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [user, portfolio?.id]);
 
   const userName = useMemo(() => {
     const m = user?.user_metadata as { display_name?: string; full_name?: string } | undefined;
-    return m?.display_name || m?.full_name || user?.email?.split("@")[0] || t("profile.default_name");
+    return (
+      m?.display_name || m?.full_name || user?.email?.split("@")[0] || t("profile.default_name")
+    );
   }, [user, t]);
 
   const totalInvested = valuation.totalInvested || (portfolio?.initial_amount ?? 0);
@@ -129,11 +132,7 @@ function ProfilPage() {
   const numLocale = lang === "en" ? "en-US" : "fr-FR";
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="min-h-screen bg-paper"
-    >
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
       <div className="max-w-lg mx-auto pb-28">
         <AppHeader
           eyebrow={t("profile.eyebrow")}
@@ -151,7 +150,10 @@ function ProfilPage() {
             <KPIFigure
               size="sm"
               label={t("profile.kpi_invested")}
-              value={totalInvested.toLocaleString(numLocale, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              value={totalInvested.toLocaleString(numLocale, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
               unit="€"
             />
             <KPIFigure
@@ -232,7 +234,13 @@ function ProfilPage() {
             className="mt-6 inline-flex items-center gap-2 text-caption font-semibold uppercase tracking-[0.18em] text-ink hover:text-moss-1 transition-colors"
           >
             {t("profile.adjust_values")}
-            <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <svg
+              viewBox="0 0 24 24"
+              className="w-3 h-3"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+            >
               <path d="M5 12h14M13 5l7 7-7 7" />
             </svg>
           </Link>
@@ -252,7 +260,12 @@ function ProfilPage() {
             <Row label={t("profile.active_portfolio")} value={portfolio?.name ?? "—"} />
             <Row label={t("profile.portfolio_count")} value={`${portfolios.length} / 3`} />
             <Row
-              label={<><Glossary term="Volatilite">Volatilité</Glossary> {t("profile.target_volatility_suffix")}</>}
+              label={
+                <>
+                  <Glossary term="Volatilite">Volatilité</Glossary>{" "}
+                  {t("profile.target_volatility_suffix")}
+                </>
+              }
               value={`${riskPct} %`}
             />
             <Row
@@ -266,7 +279,13 @@ function ProfilPage() {
             className="mt-5 inline-flex items-center gap-2 text-caption font-semibold uppercase tracking-[0.18em] text-ink hover:text-moss-1 transition-colors"
           >
             {t("profile.see_allocation")}
-            <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <svg
+              viewBox="0 0 24 24"
+              className="w-3 h-3"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+            >
               <path d="M5 12h14M13 5l7 7-7 7" />
             </svg>
           </Link>
@@ -286,17 +305,26 @@ function ProfilPage() {
             <ProgressItem
               done
               label={t("profile.progress_values_done")}
-              detail={t("profile.progress_values_detail", { causes: meta?.causes.length ?? 0, exclusions: meta?.exclusions.length ?? 0 })}
+              detail={t("profile.progress_values_detail", {
+                causes: meta?.causes.length ?? 0,
+                exclusions: meta?.exclusions.length ?? 0,
+              })}
             />
             <ProgressItem
               done={positions > 0}
               label={t("profile.progress_portfolio_done")}
-              detail={positions > 0 ? t("profile.progress_portfolio_detail_active", { n: positions }) : t("profile.progress_portfolio_detail_empty")}
+              detail={
+                positions > 0
+                  ? t("profile.progress_portfolio_detail_active", { n: positions })
+                  : t("profile.progress_portfolio_detail_empty")
+              }
             />
             <ProgressItem
               done={currentValue > totalInvested}
               label={t("profile.progress_perf_done")}
-              detail={t("profile.progress_perf_detail", { value: `${returnPct >= 0 ? "+" : ""}${returnPct.toFixed(2)}` })}
+              detail={t("profile.progress_perf_detail", {
+                value: `${returnPct >= 0 ? "+" : ""}${returnPct.toFixed(2)}`,
+              })}
             />
           </ul>
         </section>
@@ -310,18 +338,13 @@ function ProfilPage() {
           <h2 className="font-value text-2xl text-ink leading-tight">
             {t("profile.decisions_title")}
           </h2>
-          <p className="text-sm text-ink-3 mt-2">
-            {t("profile.decisions_desc")}
-          </p>
+          <p className="text-sm text-ink-3 mt-2">{t("profile.decisions_desc")}</p>
           <DecisionTimeline />
         </section>
 
         {/* Comparatif teaser */}
         <section className="px-5 pt-10">
-          <Link
-            to="/comparatif"
-            className="block border-t border-paper-3 pt-5 group"
-          >
+          <Link to="/comparatif" className="block border-t border-paper-3 pt-5 group">
             <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-2">
               {t("profile.comparison_eyebrow")}
             </p>
@@ -329,13 +352,17 @@ function ProfilPage() {
               <h3 className="font-value text-xl text-ink leading-tight group-hover:text-moss-1 transition-colors">
                 {t("profile.comparison_title_pre")} <Glossary term="MSCIWorld">MSCI World</Glossary>
               </h3>
-              <svg viewBox="0 0 24 24" className="w-5 h-5 text-ink-3 shrink-0" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg
+                viewBox="0 0 24 24"
+                className="w-5 h-5 text-ink-3 shrink-0"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <path d="M9 6l6 6-6 6" />
               </svg>
             </div>
-            <p className="text-sm text-ink-3 mt-2">
-              {t("profile.comparison_desc")}
-            </p>
+            <p className="text-sm text-ink-3 mt-2">{t("profile.comparison_desc")}</p>
           </Link>
         </section>
       </div>
@@ -354,15 +381,7 @@ function Row({ label, value }: { label: React.ReactNode; value: string }) {
   );
 }
 
-function ProgressItem({
-  done,
-  label,
-  detail,
-}: {
-  done: boolean;
-  label: string;
-  detail: string;
-}) {
+function ProgressItem({ done, label, detail }: { done: boolean; label: string; detail: string }) {
   return (
     <li className="flex items-start gap-3">
       <span
@@ -372,7 +391,15 @@ function ProgressItem({
         }`}
       >
         {done ? (
-          <svg viewBox="0 0 16 16" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            viewBox="0 0 16 16"
+            className="w-3 h-3"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <polyline points="3,8 7,12 13,4" />
           </svg>
         ) : (

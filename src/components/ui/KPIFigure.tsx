@@ -56,15 +56,9 @@ export function KPIFigure({
           SIZES[size],
         )}
       >
-        {canAnimate ? (
-          <AnimatedFigure value={numeric} />
-        ) : (
-          <span>{value}</span>
-        )}
+        {canAnimate ? <AnimatedFigure value={numeric} /> : <span>{value}</span>}
         {unit && (
-          <span className="text-base font-medium tracking-normal text-ink-3 font-sans">
-            {unit}
-          </span>
+          <span className="text-base font-medium tracking-normal text-ink-3 font-sans">{unit}</span>
         )}
       </div>
       {hint && <p className="mt-3 text-xs text-ink-3 leading-relaxed">{hint}</p>}

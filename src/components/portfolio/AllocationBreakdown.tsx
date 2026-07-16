@@ -71,7 +71,12 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
         <p className="text-caption text-ink-3">
           Total{" "}
           <span className="font-semibold text-ink">
-            {totalAmount.toLocaleString("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {totalAmount.toLocaleString("fr-FR", {
+              style: "currency",
+              currency: "EUR",
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
           </span>
         </p>
       </div>
@@ -128,7 +133,11 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
                       : "border-bloom/30 bg-bloom/5 text-bloom hover:bg-bloom/10"
                   }`}
                 >
-                  {up ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
+                  {up ? (
+                    <ArrowUpRight className="w-3 h-3" />
+                  ) : (
+                    <ArrowDownRight className="w-3 h-3" />
+                  )}
                   <span className="font-value font-semibold">{m.ticker}</span>
                   <span className="tabular-nums">
                     {up ? "+" : ""}
@@ -190,9 +199,7 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
                           {valued!.returnPct.toFixed(2)}%
                         </span>
                       )}
-                      <p className="font-value text-sm text-ink">
-                        {h.allocationPct.toFixed(1)}%
-                      </p>
+                      <p className="font-value text-sm text-ink">{h.allocationPct.toFixed(1)}%</p>
                     </div>
                   </div>
                   <div className="flex items-center justify-between gap-2 mt-0.5">
@@ -203,14 +210,23 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
                       <span className="text-moss-1 font-semibold">{h.esgScore.toFixed(0)}</span>
                     </p>
                     <p className="text-tag text-ink-3 flex-shrink-0">
-                      {amount.toLocaleString("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      {amount.toLocaleString("fr-FR", {
+                        style: "currency",
+                        currency: "EUR",
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
                     </p>
                   </div>
                   <div className="h-1 mt-1.5 bg-paper-2 rounded-full overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${h.allocationPct}%` }}
-                      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.2 + i * 0.04 }}
+                      transition={{
+                        duration: 0.9,
+                        ease: [0.22, 1, 0.36, 1],
+                        delay: 0.2 + i * 0.04,
+                      }}
                       style={{ backgroundColor: color }}
                       className="h-full rounded-full"
                     />
@@ -226,9 +242,8 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
         open={selected !== null}
         onClose={() => setSelected(null)}
         holding={selected}
-        valued={selected ? valuedById.get(selected.id) ?? null : null}
+        valued={selected ? (valuedById.get(selected.id) ?? null) : null}
       />
     </div>
   );
 }
-
