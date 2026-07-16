@@ -35,7 +35,10 @@ export function dominantRegion(asset: DiscoverAsset): string {
   return REGION_LABEL[key] ?? "Autre";
 }
 
-export const REGION_OPTIONS = ["Monde", "Europe", "USA", "Asie", "Émergents", "Autre"];
+// Doit rester aligné avec REGION_LABEL ci-dessus : la colonne `region` en base
+// ne contient que world/europe/us/em, donc une option ici sans entrée dans
+// REGION_LABEL ne matchera jamais aucun actif (voir dominantRegion).
+export const REGION_OPTIONS = ["Monde", "Europe", "USA", "Émergents", "Autre"];
 
 export function uniqueCategories(assets: DiscoverAsset[]): string[] {
   return Array.from(new Set(assets.map((a) => a.category))).sort();

@@ -59,7 +59,7 @@ export function AppHeader({
               to="/reglages"
               aria-label={t("nav.open_settings")}
               className={cn(
-                "flex items-center justify-center w-9 h-9 rounded-full border border-paper-3 text-ink-2",
+                "flex items-center justify-center w-11 h-11 rounded-full border border-paper-3 text-ink-2",
                 "transition-colors duration-150 hover:text-ink hover:border-ink-3",
                 "outline-none focus-visible:ring-2 focus-visible:ring-moss-1",
               )}

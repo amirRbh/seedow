@@ -87,6 +87,9 @@ export function ComparatifPanel() {
           hint={delta10y >= 0 ? t("comparatif_panel.above_benchmark") : t("comparatif_panel.below_benchmark")}
         />
       </div>
+      <p className="mt-3 text-[11px] text-ink-3 leading-relaxed">
+        {t("comparatif_panel.projection_disclaimer")}
+      </p>
 
       <div className="mt-8">
         <div className="gold-rule mb-5" />

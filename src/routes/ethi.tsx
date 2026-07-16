@@ -186,7 +186,7 @@ function Ethi() {
           <Link
             to="/reglages"
             aria-label={t("ethi.settings")}
-            className="flex items-center justify-center w-9 h-9 rounded-full border border-paper/15 text-paper/70 hover:text-paper hover:border-paper/40 transition-colors flex-shrink-0"
+            className="flex items-center justify-center w-11 h-11 rounded-full border border-paper/15 text-paper/70 hover:text-paper hover:border-paper/40 transition-colors flex-shrink-0"
           >
             <svg viewBox="0 0 24 24" className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="3" />
@@ -242,7 +242,7 @@ function Ethi() {
             <button
               type="submit"
               disabled={!input.trim() || isLoading}
-              className="w-9 h-9 rounded-full bg-moss-2 hover:bg-moss-1 text-paper flex items-center justify-center disabled:opacity-30 transition-colors"
+              className="w-11 h-11 rounded-full bg-moss-2 hover:bg-moss-1 text-paper flex items-center justify-center disabled:opacity-30 transition-colors"
               aria-label={t("ethi.send")}
             >
               <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

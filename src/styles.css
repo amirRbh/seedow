@@ -108,7 +108,7 @@
 
   /* Encre — noir Apple + gris secondaire */
   --ink: #1D1D1F;
-  --ink-2: #86868B;
+  --ink-2: #64646A; /* contraste ~5.9:1 sur --paper (WCAG AA) — était #86868B (~3.6:1, sous le seuil AA) */
   --ink-3: #6E6E73;
 
   /* Mapping moss → tokens Apple pour rétro-compat */
