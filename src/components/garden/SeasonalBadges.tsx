@@ -19,7 +19,7 @@ export function BadgesCard({ badges }: { badges: SeasonalBadge[] }) {
     <div className="paper-card p-5">
       <div className="flex items-baseline justify-between mb-4">
         <div>
-          <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold">{t("seasonal_badges.milestones")}</p>
+          <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold">{t("seasonal_badges.milestones")}</p>
           <h3 className="font-value text-2xl text-ink mt-0.5">
             {t("seasonal_badges.celebrated", { count: unlocked.length })}
           </h3>
@@ -50,14 +50,14 @@ export function BadgesCard({ badges }: { badges: SeasonalBadge[] }) {
             >
               {badge.icon}
             </div>
-            <span className="text-[9px] text-ink-3 text-center line-clamp-2 leading-tight">{badge.name}</span>
+            <span className="text-tag text-ink-3 text-center line-clamp-2 leading-tight">{badge.name}</span>
           </motion.div>
         ))}
 
         {locked.slice(0, 8 - unlocked.length).map((badge) => (
           <div key={badge.id} className="flex flex-col items-center gap-1.5 opacity-30" title={t("seasonal_badges.to_unlock", { desc: badge.description })}>
             <div className="w-12 h-12 rounded-full bg-paper-2 flex items-center justify-center text-xl grayscale">{badge.icon}</div>
-            <span className="text-[9px] text-ink-3 text-center line-clamp-2 leading-tight">{badge.name}</span>
+            <span className="text-tag text-ink-3 text-center line-clamp-2 leading-tight">{badge.name}</span>
           </div>
         ))}
       </div>

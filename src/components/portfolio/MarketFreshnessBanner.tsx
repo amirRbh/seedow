@@ -94,10 +94,10 @@ export function MarketFreshnessBanner({ latestQuoteAt, hasQuotes, onRefreshed }:
     <div className={`mx-5 mt-3 rounded-lg border ${tone} p-3 flex items-start gap-2.5`}>
       <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
       <div className="flex-1 min-w-0">
-        <p className="text-[12px] font-medium">
+        <p className="text-label font-medium">
           {isCritical ? "Prix de marché obsolètes" : "Prix de marché un peu anciens"}
         </p>
-        <p className="text-[11px] opacity-80 mt-0.5">
+        <p className="text-caption opacity-80 mt-0.5">
           Dernière mise à jour&nbsp;: {ageLabel}
           {msg && ` · ${msg}`}
         </p>
@@ -106,7 +106,7 @@ export function MarketFreshnessBanner({ latestQuoteAt, hasQuotes, onRefreshed }:
         type="button"
         onClick={onClick}
         disabled={busy}
-        className="text-[11px] font-medium px-2.5 py-1 rounded border border-current/30 hover:bg-current/5 transition-colors flex items-center gap-1 disabled:opacity-50 flex-shrink-0"
+        className="text-caption font-medium px-2.5 py-1 rounded border border-current/30 hover:bg-current/5 transition-colors flex items-center gap-1 disabled:opacity-50 flex-shrink-0"
       >
         <RefreshCw className={`w-3 h-3 ${busy ? "animate-spin" : ""}`} />
         Rafraîchir

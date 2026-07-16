@@ -21,10 +21,10 @@ export function ValuationConsistencyBanner({ consistency }: Props) {
     });
   return (
     <div className="mx-5 mt-3 rounded border border-[oklch(0.88_0.07_45)] bg-[oklch(0.96_0.04_45)] px-3 py-2">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-rust">
+      <p className="text-caption font-semibold uppercase tracking-[0.14em] text-rust">
         Écart de valorisation détecté
       </p>
-      <p className="text-[12px] text-ink-2 mt-1 leading-snug">
+      <p className="text-label text-ink-2 mt-1 leading-snug">
         La valeur calculée par la base ({fmt(consistency.viewValue)}) diffère du
         recalcul à partir des poids et des cours ({fmt(consistency.expectedValue)})
         de <span className="font-semibold">{consistency.deltaPct.toFixed(2)}%</span>{" "}

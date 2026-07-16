@@ -179,7 +179,7 @@ function Ethi() {
               </svg>
             </div>
             <div className="min-w-0">
-              <p className="text-[10px] uppercase tracking-wider text-paper/40 font-semibold">{t("ethi.your_advisor")}</p>
+              <p className="text-tag uppercase tracking-wider text-paper/40 font-semibold">{t("ethi.your_advisor")}</p>
               <h1 className="font-value text-2xl">Ethi</h1>
             </div>
           </div>
@@ -198,7 +198,7 @@ function Ethi() {
 
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-6 pb-44">
         <div className="max-w-lg mx-auto space-y-4">
-          <div className="rounded-2xl border border-paper/15 bg-paper/5 px-4 py-2.5 flex items-start gap-2 text-[11px] leading-snug text-paper/70">
+          <div className="rounded-2xl border border-paper/15 bg-paper/5 px-4 py-2.5 flex items-start gap-2 text-caption leading-snug text-paper/70">
             <span className="inline-block w-1.5 h-1.5 rounded-full bg-gold mt-1.5 flex-shrink-0" aria-hidden />
             <span>{t("ethi.disclaimer")}</span>
           </div>

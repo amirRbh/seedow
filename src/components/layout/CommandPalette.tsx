@@ -84,11 +84,11 @@ export function CommandPalette({ open, onOpenChange }: Props) {
               }}
             >
               <span className="flex flex-col">
-                <span className="text-[13px] text-ink font-medium">{r.label}</span>
-                <span className="text-[11px] text-ink-3">{r.hint}</span>
+                <span className="text-body-sm text-ink font-medium">{r.label}</span>
+                <span className="text-caption text-ink-3">{r.hint}</span>
               </span>
               {r.shortcut && (
-                <kbd className="ml-auto text-[10px] text-ink-3 font-mono tracking-wide">{r.shortcut}</kbd>
+                <kbd className="ml-auto text-tag text-ink-3 font-mono tracking-wide">{r.shortcut}</kbd>
               )}
             </CommandItem>
           ))}
@@ -109,13 +109,13 @@ export function CommandPalette({ open, onOpenChange }: Props) {
                   }}
                 >
                   <span className="flex flex-col">
-                    <span className="text-[13px] text-ink font-medium">{p.name}</span>
-                    <span className="text-[11px] text-ink-3">
+                    <span className="text-body-sm text-ink font-medium">{p.name}</span>
+                    <span className="text-caption text-ink-3">
                       {t("command_palette.capital_initial", { amount: p.initial_amount.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) })}
                     </span>
                   </span>
                   {p.id === activeId && (
-                    <span className="ml-auto text-[10px] uppercase tracking-[0.18em] text-gold">{t("command_palette.active")}</span>
+                    <span className="ml-auto text-tag uppercase tracking-[0.18em] text-gold">{t("command_palette.active")}</span>
                   )}
                 </CommandItem>
               ))}
@@ -136,8 +136,8 @@ export function CommandPalette({ open, onOpenChange }: Props) {
               close();
             }}
           >
-            <span className="text-[13px] text-ink">{t("command_palette.action_simulate")}</span>
-            <span className="ml-auto text-[11px] text-ink-3">{t("command_palette.hint_simulator")}</span>
+            <span className="text-body-sm text-ink">{t("command_palette.action_simulate")}</span>
+            <span className="ml-auto text-caption text-ink-3">{t("command_palette.hint_simulator")}</span>
           </CommandItem>
           <CommandItem
             value="action stress test krach"
@@ -150,8 +150,8 @@ export function CommandPalette({ open, onOpenChange }: Props) {
               close();
             }}
           >
-            <span className="text-[13px] text-ink">{t("command_palette.action_stress")}</span>
-            <span className="ml-auto text-[11px] text-ink-3">{t("command_palette.hint_simulator")}</span>
+            <span className="text-body-sm text-ink">{t("command_palette.action_stress")}</span>
+            <span className="ml-auto text-caption text-ink-3">{t("command_palette.hint_simulator")}</span>
           </CommandItem>
           <CommandItem
             value="action marquer alertes lues"
@@ -162,8 +162,8 @@ export function CommandPalette({ open, onOpenChange }: Props) {
               close();
             }}
           >
-            <span className="text-[13px] text-ink">{t("command_palette.action_mark_read")}</span>
-            <span className="ml-auto text-[11px] text-ink-3">{t(unread > 1 ? "command_palette.alerts_unread_other" : "command_palette.alerts_unread_one", { count: unread })}</span>
+            <span className="text-body-sm text-ink">{t("command_palette.action_mark_read")}</span>
+            <span className="ml-auto text-caption text-ink-3">{t(unread > 1 ? "command_palette.alerts_unread_other" : "command_palette.alerts_unread_one", { count: unread })}</span>
           </CommandItem>
           <CommandItem
             value="action invalider cache router refresh"
@@ -173,8 +173,8 @@ export function CommandPalette({ open, onOpenChange }: Props) {
               close();
             }}
           >
-            <span className="text-[13px] text-ink">{t("command_palette.action_refresh")}</span>
-            <span className="ml-auto text-[11px] text-ink-3">{t("command_palette.action_refresh_hint")}</span>
+            <span className="text-body-sm text-ink">{t("command_palette.action_refresh")}</span>
+            <span className="ml-auto text-caption text-ink-3">{t("command_palette.action_refresh_hint")}</span>
           </CommandItem>
         </CommandGroup>
 
@@ -189,8 +189,8 @@ export function CommandPalette({ open, onOpenChange }: Props) {
                 close();
               }}
             >
-              <span className="text-[13px] text-ink font-medium">{g.label}</span>
-              <span className="ml-3 text-[11px] text-ink-3 truncate">{g.definition.slice(0, 80)}{g.definition.length > 80 ? "…" : ""}</span>
+              <span className="text-body-sm text-ink font-medium">{g.label}</span>
+              <span className="ml-3 text-caption text-ink-3 truncate">{g.definition.slice(0, 80)}{g.definition.length > 80 ? "…" : ""}</span>
             </CommandItem>
           ))}
         </CommandGroup>
@@ -203,15 +203,15 @@ export function CommandPalette({ open, onOpenChange }: Props) {
             });
             close();
           }}>
-            <span className="text-[13px] text-ink">{t("command_palette.help_shortcuts")}</span>
-            <kbd className="ml-auto text-[10px] text-ink-3 font-mono">?</kbd>
+            <span className="text-body-sm text-ink">{t("command_palette.help_shortcuts")}</span>
+            <kbd className="ml-auto text-tag text-ink-3 font-mono">?</kbd>
           </CommandItem>
           <CommandItem value="help comprendre kpi" onSelect={() => {
             navigate({ to: "/methodologie" });
             close();
           }}>
-            <span className="text-[13px] text-ink">{t("command_palette.help_kpi")}</span>
-            <span className="ml-auto text-[11px] text-ink-3">{t("command_palette.hint_methodology")}</span>
+            <span className="text-body-sm text-ink">{t("command_palette.help_kpi")}</span>
+            <span className="ml-auto text-caption text-ink-3">{t("command_palette.hint_methodology")}</span>
           </CommandItem>
         </CommandGroup>
       </CommandList>

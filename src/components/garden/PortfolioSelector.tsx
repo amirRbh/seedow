@@ -42,8 +42,8 @@ export function PortfolioSelector({ compact = false }: { compact?: boolean }) {
         aria-haspopup="listbox"
         aria-expanded={open}
       >
-        <span className="text-[10px]">🌿</span>
-        <span className="text-[11px] font-semibold text-ink truncate max-w-[120px]">{active.name}</span>
+        <span className="text-tag">🌿</span>
+        <span className="text-caption font-semibold text-ink truncate max-w-[120px]">{active.name}</span>
         <svg viewBox="0 0 24 24" className={`w-3 h-3 text-ink-3 transition-transform ${open ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M6 9l6 6 6-6" />
         </svg>
@@ -68,12 +68,12 @@ export function PortfolioSelector({ compact = false }: { compact?: boolean }) {
                     onClick={() => { setActiveId(p.id); setOpen(false); }}
                     role="option"
                     aria-selected={isActive}
-                    className={`w-full flex items-center justify-between gap-2 px-3 py-2 text-left text-[12px] transition-colors ${
+                    className={`w-full flex items-center justify-between gap-2 px-3 py-2 text-left text-label transition-colors ${
                       isActive ? "bg-moss-5/40 text-ink" : "text-ink-2 hover:bg-paper-2"
                     }`}
                   >
                     <span className="flex items-center gap-2 truncate">
-                      <span className="text-[12px]">🌱</span>
+                      <span className="text-label">🌱</span>
                       <span className="font-medium truncate">{p.name}</span>
                     </span>
                     {isActive && (
@@ -90,14 +90,14 @@ export function PortfolioSelector({ compact = false }: { compact?: boolean }) {
               {canCreateMore ? (
                 <button
                   onClick={() => { setOpen(false); navigate({ to: "/onboarding", search: { new: 1 } }); }}
-                  className="w-full flex items-center gap-2 px-3 py-2.5 text-left text-[12px] text-moss-1 hover:bg-moss-5/30 font-medium"
+                  className="w-full flex items-center gap-2 px-3 py-2.5 text-left text-label text-moss-1 hover:bg-moss-5/30 font-medium"
                 >
-                  <span className="w-4 h-4 rounded-full border border-moss-1 flex items-center justify-center text-[10px] leading-none">+</span>
+                  <span className="w-4 h-4 rounded-full border border-moss-1 flex items-center justify-center text-tag leading-none">+</span>
                   {t("portfolio_selector.new_portfolio")}
-                  <span className="ml-auto text-[9px] text-ink-3">{portfolios.length}/3</span>
+                  <span className="ml-auto text-tag text-ink-3">{portfolios.length}/3</span>
                 </button>
               ) : (
-                <div className="px-3 py-2 text-[10px] text-ink-3 text-center">
+                <div className="px-3 py-2 text-tag text-ink-3 text-center">
                   {t("portfolio_selector.limit_reached")}
                 </div>
               )}

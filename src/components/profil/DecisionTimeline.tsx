@@ -20,7 +20,7 @@ export function DecisionTimeline() {
   };
 
   if (loading) {
-    return <p className="text-[12px] text-ink-3 mt-3">{t("decision_timeline.loading")}</p>;
+    return <p className="text-label text-ink-3 mt-3">{t("decision_timeline.loading")}</p>;
   }
 
   if (decisions.length === 0) {
@@ -45,20 +45,20 @@ export function DecisionTimeline() {
               )}
             />
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-[10px] uppercase tracking-[0.18em] font-semibold text-ink-3">
+              <span className="text-tag uppercase tracking-[0.18em] font-semibold text-ink-3">
                 {tone.label}
               </span>
-              <span className="text-[10px] text-ink-3">·</span>
+              <span className="text-tag text-ink-3">·</span>
               <time
                 dateTime={d.date}
-                className="text-[10px] text-ink-3 tabular-nums uppercase tracking-wider"
+                className="text-tag text-ink-3 tabular-nums uppercase tracking-wider"
               >
                 {formatDate(d.date, lang, { day: "numeric", month: "long", year: "numeric" })}
               </time>
             </div>
             <p className="text-sm font-medium text-ink leading-snug">{d.title}</p>
             {d.detail && (
-              <p className="text-[12px] text-ink-3 mt-0.5 leading-relaxed">{d.detail}</p>
+              <p className="text-label text-ink-3 mt-0.5 leading-relaxed">{d.detail}</p>
             )}
           </li>
         );

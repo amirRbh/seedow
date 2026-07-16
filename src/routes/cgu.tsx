@@ -16,17 +16,17 @@ function CguPage() {
       <header className="max-w-3xl mx-auto px-6 pt-10 pb-8 border-b border-paper-3">
         <Link
           to="/"
-          className="text-[10px] uppercase tracking-[0.18em] text-ink-3 hover:text-ink transition-colors"
+          className="text-tag uppercase tracking-[0.18em] text-ink-3 hover:text-ink transition-colors"
         >
           ← Retour à l'accueil
         </Link>
         <h1 className="font-value text-4xl mt-4">Conditions Générales d'Utilisation</h1>
-        <p className="text-[12px] text-ink-3 mt-2">Dernière mise à jour : 15 juillet 2026</p>
+        <p className="text-label text-ink-3 mt-2">Dernière mise à jour : 15 juillet 2026</p>
       </header>
 
-      <div className="max-w-3xl mx-auto px-6 py-10 space-y-10 text-[14px] text-ink-2 leading-relaxed">
+      <div className="max-w-3xl mx-auto px-6 py-10 space-y-10 text-body text-ink-2 leading-relaxed">
         <section className="paper-card p-5 border-l-4 border-l-gold">
-          <p className="text-[13px] text-ink">
+          <p className="text-body-sm text-ink">
             <strong>À retenir avant de continuer :</strong> Seedow est, à ce stade, un outil
             pédagogique de simulation. Le portefeuille que tu construis est virtuel et valorisé sur
             des cours réels — aucune somme d'argent n'est investie via l'application. Seedow n'est

@@ -34,7 +34,7 @@ function ComparatifPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-paper flex items-center justify-center">
-        <p className="text-[12px] text-ink-3">{t("comparison.loading")}</p>
+        <p className="text-label text-ink-3">{t("comparison.loading")}</p>
       </div>
     );
   }
@@ -48,7 +48,7 @@ function ComparatifPage() {
             <Link
               to="/onboarding"
               search={{ new: undefined }}
-              className="inline-block px-4 py-2 text-[12px] font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
+              className="inline-block px-4 py-2 text-label font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
             >
               {t("comparison.start")}
             </Link>

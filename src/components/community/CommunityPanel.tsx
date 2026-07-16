@@ -13,7 +13,7 @@ function ShareCard({ s }: { s: PortfolioShareRow }) {
     <article className="rounded-lg border border-paper-3 bg-paper p-5 hover:shadow-sm transition-shadow">
       <div className="flex items-baseline justify-between">
         <p className="font-value text-lg text-ink">@{s.public_handle}</p>
-        <span className="text-[10px] uppercase tracking-[0.18em] text-gold">
+        <span className="text-tag uppercase tracking-[0.18em] text-gold">
           {formatNumber(s.risk_target * 100, lang, { maximumFractionDigits: 0 })} % {t("community_panel.risk")}
         </span>
       </div>
@@ -22,15 +22,15 @@ function ShareCard({ s }: { s: PortfolioShareRow }) {
       </p>
       <div className="mt-4 grid grid-cols-3 gap-2 border-t border-paper-3 pt-3 text-xs">
         <div>
-          <p className="text-ink-3 uppercase tracking-[0.16em] text-[10px]">ESG</p>
+          <p className="text-ink-3 uppercase tracking-[0.16em] text-tag">ESG</p>
           <p className="font-value text-ink tabular-nums">{s.esg_score ? formatNumber(s.esg_score, lang, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "—"}</p>
         </div>
         <div>
-          <p className="text-ink-3 uppercase tracking-[0.16em] text-[10px]">{t("community_panel.expected_return")}</p>
+          <p className="text-ink-3 uppercase tracking-[0.16em] text-tag">{t("community_panel.expected_return")}</p>
           <p className="font-value text-ink tabular-nums">{s.expected_return ? formatPercent(s.expected_return, lang) : "—"}</p>
         </div>
         <div>
-          <p className="text-ink-3 uppercase tracking-[0.16em] text-[10px]">{t("allocation_refiner.volatility")}</p>
+          <p className="text-ink-3 uppercase tracking-[0.16em] text-tag">{t("allocation_refiner.volatility")}</p>
           <p className="font-value text-ink tabular-nums">{s.volatility ? formatPercent(s.volatility, lang) : "—"}</p>
         </div>
       </div>
@@ -57,7 +57,7 @@ export function CommunityPanel() {
     <div>
       {myESG != null && median != null && (
         <div className="mb-6 rounded-lg border border-paper-3 bg-paper-2 p-4">
-          <p className="text-[10px] uppercase tracking-[0.22em] text-gold mb-2">{t("community_panel.where_you_stand")}</p>
+          <p className="text-tag uppercase tracking-[0.22em] text-gold mb-2">{t("community_panel.where_you_stand")}</p>
           <p className="text-sm text-ink">
             {t("community_panel.your_esg_score")}{" "}
             <span className="font-value text-lg tabular-nums">{formatNumber(myESG, lang, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span> · {t("community_panel.community_median")}{" "}
@@ -82,13 +82,13 @@ export function CommunityPanel() {
             <div className="mb-4 flex flex-wrap gap-2">
               <button
                 onClick={() => setCause(undefined)}
-                className={`text-[11px] uppercase tracking-[0.16em] px-3 py-1 rounded-full border ${!cause ? "bg-ink text-paper border-ink" : "border-paper-3 text-ink-3 hover:text-ink"}`}
+                className={`text-caption uppercase tracking-[0.16em] px-3 py-1 rounded-full border ${!cause ? "bg-ink text-paper border-ink" : "border-paper-3 text-ink-3 hover:text-ink"}`}
               >{t("community_panel.all")}</button>
               {causes.map((c) => (
                 <button
                   key={c}
                   onClick={() => setCause(c)}
-                  className={`text-[11px] uppercase tracking-[0.16em] px-3 py-1 rounded-full border ${cause === c ? "bg-ink text-paper border-ink" : "border-paper-3 text-ink-3 hover:text-ink"}`}
+                  className={`text-caption uppercase tracking-[0.16em] px-3 py-1 rounded-full border ${cause === c ? "bg-ink text-paper border-ink" : "border-paper-3 text-ink-3 hover:text-ink"}`}
                 >{c}</button>
               ))}
             </div>

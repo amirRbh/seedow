@@ -75,7 +75,7 @@ function GoalDetail() {
     <div className="min-h-screen bg-paper pb-24 md:pb-12">
       <AppHeader eyebrow={t("objectives.eyebrow_goal")} title={goal.name} />
       <div className="mx-auto max-w-3xl px-4 md:px-8">
-        <Link to="/objectifs" className="text-[11px] uppercase tracking-[0.18em] text-ink-3 hover:text-ink">
+        <Link to="/objectifs" className="text-caption uppercase tracking-[0.18em] text-ink-3 hover:text-ink">
           {t("objectives.all_goals")}
         </Link>
         <EditorialSection

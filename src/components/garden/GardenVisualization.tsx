@@ -62,13 +62,13 @@ export function GardenVisualization({
   return (
     <div className="w-full">
       <div className="flex items-baseline justify-between mb-2">
-        <p className="text-[10px] uppercase tracking-[0.12em] text-ink-3 font-medium">
+        <p className="text-tag uppercase tracking-[0.12em] text-ink-3 font-medium">
           {t("garden_viz.allocation_title", { count: plants.length })}
         </p>
         {rest.length > 0 && (
           <button
             onClick={() => setExpanded((v) => !v)}
-            className="text-[11px] text-ink-2 hover:text-ink underline-offset-2 hover:underline"
+            className="text-caption text-ink-2 hover:text-ink underline-offset-2 hover:underline"
           >
             {expanded ? t("garden_viz.show_less") : t("garden_viz.show_all", { count: plants.length })}
           </button>
@@ -103,18 +103,18 @@ export function GardenVisualization({
               className="w-2 h-2 rounded-full flex-shrink-0"
               style={{ backgroundColor: colorFor(plant.category) }}
             />
-            <span className="font-value text-[12px] text-ink tracking-tight w-14 flex-shrink-0">
+            <span className="font-value text-label text-ink tracking-tight w-14 flex-shrink-0">
               {plant.ticker}
             </span>
-            <span className="text-[11px] text-ink-3 truncate flex-1">{plant.name}</span>
-            <span className="text-[12px] font-medium tabular-nums text-ink w-12 text-right flex-shrink-0">
+            <span className="text-caption text-ink-3 truncate flex-1">{plant.name}</span>
+            <span className="text-label font-medium tabular-nums text-ink w-12 text-right flex-shrink-0">
               {formatPercent(plant.allocationPct / 100, lang, 1)}
             </span>
           </motion.li>
         ))}
 
         {!expanded && rest.length > 0 && (
-          <li className="flex items-center gap-2.5 py-1.5 text-[11px] text-ink-3">
+          <li className="flex items-center gap-2.5 py-1.5 text-caption text-ink-3">
             <span className="w-2 h-2 rounded-full bg-paper-3 flex-shrink-0" />
             <span className="flex-1">
               {t("garden_viz.other_positions", { count: rest.length })}
@@ -129,8 +129,8 @@ export function GardenVisualization({
           onClick={() => (onEmptySlotClick ? onEmptySlotClick() : navigate({ to: "/discover" }))}
           className="pt-2 mt-1 border-t border-paper-3 cursor-pointer text-ink-3 hover:text-ink transition-colors flex items-center justify-between"
         >
-          <span className="text-[11px] tracking-tight">{t("garden_viz.add_position")}</span>
-          <span className="text-[10px] uppercase tracking-[0.12em]">{t("garden_viz.explore")}</span>
+          <span className="text-caption tracking-tight">{t("garden_viz.add_position")}</span>
+          <span className="text-tag uppercase tracking-[0.12em]">{t("garden_viz.explore")}</span>
         </li>
       </ul>
     </div>

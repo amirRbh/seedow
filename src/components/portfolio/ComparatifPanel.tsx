@@ -41,7 +41,7 @@ export function ComparatifPanel() {
   const valuation = usePortfolioValuation();
 
   if (!portfolio) {
-    return <p className="text-[12px] text-ink-3">{t("comparatif_panel.no_active")}</p>;
+    return <p className="text-label text-ink-3">{t("comparatif_panel.no_active")}</p>;
   }
 
   const metrics = portfolio.metrics;
@@ -87,13 +87,13 @@ export function ComparatifPanel() {
           hint={delta10y >= 0 ? t("comparatif_panel.above_benchmark") : t("comparatif_panel.below_benchmark")}
         />
       </div>
-      <p className="mt-3 text-[11px] text-ink-3 leading-relaxed">
+      <p className="mt-3 text-caption text-ink-3 leading-relaxed">
         {t("comparatif_panel.projection_disclaimer")}
       </p>
 
       <div className="mt-8">
         <div className="gold-rule mb-5" />
-        <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold mb-3">{t("comparatif_panel.face_to_face")}</p>
+        <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">{t("comparatif_panel.face_to_face")}</p>
         <h2 className="font-value text-2xl text-ink leading-tight">{t("comparatif_panel.no_filter")}</h2>
 
         <div className="mt-6 border-t border-b border-paper-3 divide-y divide-paper-3">
@@ -149,7 +149,7 @@ export function ComparatifPanel() {
 
       <div className="mt-10">
         <div className="gold-rule mb-5" />
-        <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold mb-3">{t("comparatif_panel.concrete_impact")}</p>
+        <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">{t("comparatif_panel.concrete_impact")}</p>
         <h2 className="font-value text-2xl text-ink leading-tight">{t("comparatif_panel.avoided_per_year")}</h2>
         <div className="mt-6 grid grid-cols-2 gap-4 border-t border-paper-3 pt-5">
           <KPIFigure
@@ -171,13 +171,13 @@ export function ComparatifPanel() {
       </div>
 
       <div className="mt-10 border-t border-paper-3 pt-5">
-        <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">{t("comparatif_panel.methodology")}</p>
-        <p className="text-[12px] text-ink-2 leading-relaxed">
+        <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold mb-2">{t("comparatif_panel.methodology")}</p>
+        <p className="text-label text-ink-2 leading-relaxed">
           {t("comparatif_panel.methodology_body")}
         </p>
         <Link
           to="/methodologie"
-          className="mt-3 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-ink hover:text-moss-1 transition-colors"
+          className="mt-3 inline-flex items-center gap-2 text-caption font-semibold uppercase tracking-[0.18em] text-ink hover:text-moss-1 transition-colors"
         >
           Lire la méthodologie complète
           <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -204,25 +204,25 @@ function CompareRow({ label, term, seedowValue, msciValue, seedowWins, note, bar
     <div className="py-4">
       <div className="flex items-baseline justify-between gap-4">
         <div className="flex items-center gap-2 min-w-0">
-          <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold">{label}</p>
+          <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold">{label}</p>
           <Glossary term={term} variant="icon" />
         </div>
       </div>
       <div className="mt-2 grid grid-cols-2 gap-4">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.18em] text-gold font-semibold mb-1">Seedow</p>
+          <p className="text-tag uppercase tracking-[0.18em] text-gold font-semibold mb-1">Seedow</p>
           <p className={cn("kpi-figure text-xl tabular-nums", seedowWins ? "text-ink" : "text-ink-2")}>
             {seedowValue}
             {seedowWins && <span aria-hidden="true" className="ml-1.5 text-gold text-xs">●</span>}
           </p>
         </div>
         <div>
-          <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold mb-1">MSCI World</p>
+          <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold mb-1">MSCI World</p>
           <p className="kpi-figure text-xl text-ink-2 tabular-nums">{msciValue}</p>
         </div>
       </div>
       {bar}
-      {note && <p className="text-[11px] text-ink-3 mt-2">{note}</p>}
+      {note && <p className="text-caption text-ink-3 mt-2">{note}</p>}
     </div>
   );
 }

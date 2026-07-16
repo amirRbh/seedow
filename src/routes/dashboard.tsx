@@ -107,7 +107,7 @@ function Dashboard() {
           transition={{ delay: 0.1 }}
           className="px-5 pt-6"
         >
-          <p className="text-[11px] uppercase tracking-wider text-ink-3 font-medium">{t("dashboard.total_value")}</p>
+          <p className="text-caption uppercase tracking-wider text-ink-3 font-medium">{t("dashboard.total_value")}</p>
           <h2 className="font-value text-6xl text-ink leading-none mt-1">
             <sup className="text-2xl align-super mr-1">€</sup>
             {totalValue.toLocaleString(lang === "en" ? "en-US" : "fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -128,7 +128,7 @@ function Dashboard() {
           {portfolio && (
             <div className="mt-5">
               <InvestDialog label={t("dashboard.invest_demo")} defaultAmount={200} />
-              <p className="text-[10px] text-ink-3 mt-2 uppercase tracking-wider">
+              <p className="text-tag text-ink-3 mt-2 uppercase tracking-wider">
                 {t("dashboard.demo_mode_capital")}
               </p>
             </div>
@@ -146,14 +146,14 @@ function Dashboard() {
           className="px-5 pt-8"
         >
           {loading ? (
-            <p className="text-[12px] text-ink-3">{t("dashboard.loading_portfolio")}</p>
+            <p className="text-label text-ink-3">{t("dashboard.loading_portfolio")}</p>
           ) : plants.length === 0 ? (
             <div className="border border-dashed border-paper-3 rounded p-6 text-center">
-              <p className="text-[13px] text-ink-2 mb-3">{t("dashboard.empty_portfolio")}</p>
+              <p className="text-body-sm text-ink-2 mb-3">{t("dashboard.empty_portfolio")}</p>
               <Link
                 to="/onboarding"
                 search={{ new: undefined }}
-                className="inline-block px-4 py-2 text-[12px] font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
+                className="inline-block px-4 py-2 text-label font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
               >
                 {t("dashboard.first_investment")}
               </Link>

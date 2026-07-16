@@ -52,7 +52,7 @@ function CoursesIndex() {
             </Link>
             <LanguageToggle />
           </div>
-          <div className="flex items-center gap-5 md:gap-8 text-[10px] font-semibold uppercase tracking-[0.22em]">
+          <div className="flex items-center gap-5 md:gap-8 text-tag font-semibold uppercase tracking-[0.22em]">
             <Link
               to="/methodologie"
               className="hidden sm:inline-block hover:text-gold transition-colors"
@@ -186,7 +186,7 @@ function FilterButton({
       type="button"
       onClick={onClick}
       className={cn(
-        "px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.2em] border transition-colors",
+        "px-4 py-2 text-tag font-semibold uppercase tracking-[0.2em] border transition-colors",
         active
           ? "border-ink bg-ink text-paper"
           : "border-ink/20 text-ink-2 hover:border-ink hover:text-ink",

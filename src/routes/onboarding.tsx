@@ -250,11 +250,11 @@ function NameGardenStep({
             <path d="M15 6l-6 6 6 6" />
           </svg>
         </button>
-        <span className="text-[11px] text-paper/40 font-semibold">{t("onboarding.naming.title")}</span>
+        <span className="text-caption text-paper/40 font-semibold">{t("onboarding.naming.title")}</span>
       </div>
       <div className="px-6 pt-12 pb-12 max-w-md mx-auto w-full flex-1">
         <h2 className="font-value text-3xl text-paper">{t("onboarding.naming.question")}</h2>
-        <p className="text-[13px] text-paper/60 mt-2">
+        <p className="text-body-sm text-paper/60 mt-2">
           <Trans i18nKey="onboarding.naming.description">
             Donne-lui un nom qui te parle — par exemple <em>Climat</em>, <em>Retraite</em>, <em>Tech responsable</em>…
           </Trans>
@@ -267,7 +267,7 @@ function NameGardenStep({
           autoFocus
           className="mt-8 w-full px-4 py-4 rounded-2xl border border-paper/15 bg-paper/5 text-paper text-[16px] placeholder-paper/30 focus:border-paper/40 focus:outline-none transition-colors"
         />
-        <p className="mt-2 text-[10px] text-paper/40 text-right">{name.length}/40</p>
+        <p className="mt-2 text-tag text-paper/40 text-right">{name.length}/40</p>
 
         <button
           onClick={() => onConfirm(name.trim() || t("onboarding.naming.default_name"))}
@@ -348,7 +348,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
             <path d="M15 6l-6 6 6 6" />
           </svg>
         </button>
-        <span className="text-[11px] text-paper/40 font-semibold">{t("onboarding.account.eyebrow")}</span>
+        <span className="text-caption text-paper/40 font-semibold">{t("onboarding.account.eyebrow")}</span>
       </div>
 
       <div className="px-6 pt-10 pb-12 max-w-md mx-auto w-full flex-1">
@@ -362,7 +362,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
               <path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0 1 1 21 12Z" />
             </svg>
           </div>
-          <div className="flex-1 bg-paper/10 text-paper text-[13px] rounded-2xl rounded-bl-sm px-4 py-3 leading-relaxed">
+          <div className="flex-1 bg-paper/10 text-paper text-body-sm rounded-2xl rounded-bl-sm px-4 py-3 leading-relaxed">
             {t("onboarding.account.ethi_message")}
           </div>
         </motion.div>
@@ -370,13 +370,13 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
         <h2 className="font-value text-2xl text-paper pt-8">
           {mode === "signup" ? t("onboarding.account.title_signup") : t("onboarding.account.title_login")}
         </h2>
-        <p className="text-[12px] text-paper/60 mt-1.5">
+        <p className="text-label text-paper/60 mt-1.5">
           {t("onboarding.account.description")}
         </p>
 
         <button
           onClick={onGoogle}
-          className="mt-6 w-full py-2.5 rounded-xl border border-paper/20 hover:border-paper/40 hover:bg-paper/5 transition-colors text-[13px] font-medium text-paper flex items-center justify-center gap-2"
+          className="mt-6 w-full py-2.5 rounded-xl border border-paper/20 hover:border-paper/40 hover:bg-paper/5 transition-colors text-body-sm font-medium text-paper flex items-center justify-center gap-2"
         >
           <svg viewBox="0 0 24 24" className="w-4 h-4">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -389,7 +389,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
 
         <div className="my-4 flex items-center gap-3">
           <div className="flex-1 h-px bg-paper/15" />
-          <span className="text-[10px] uppercase tracking-[0.15em] text-paper/40">ou</span>
+          <span className="text-tag uppercase tracking-[0.15em] text-paper/40">ou</span>
           <div className="flex-1 h-px bg-paper/15" />
         </div>
 
@@ -400,7 +400,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
               placeholder={t("onboarding.account.firstname_placeholder")}
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              className="w-full px-3.5 py-3 rounded-xl border border-paper/15 bg-paper/5 text-[13px] text-paper placeholder-paper/40 focus:border-paper/40 focus:outline-none transition-colors"
+              className="w-full px-3.5 py-3 rounded-xl border border-paper/15 bg-paper/5 text-body-sm text-paper placeholder-paper/40 focus:border-paper/40 focus:outline-none transition-colors"
             />
           )}
           <input
@@ -410,7 +410,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
             onChange={(e) => setEmail(e.target.value)}
             required
             autoComplete="email"
-            className="w-full px-3.5 py-3 rounded-xl border border-paper/15 bg-paper/5 text-[13px] text-paper placeholder-paper/40 focus:border-paper/40 focus:outline-none transition-colors"
+            className="w-full px-3.5 py-3 rounded-xl border border-paper/15 bg-paper/5 text-body-sm text-paper placeholder-paper/40 focus:border-paper/40 focus:outline-none transition-colors"
           />
           <input
             type="password"
@@ -420,15 +420,15 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
             required
             minLength={8}
             autoComplete={mode === "signup" ? "new-password" : "current-password"}
-            className="w-full px-3.5 py-3 rounded-xl border border-paper/15 bg-paper/5 text-[13px] text-paper placeholder-paper/40 focus:border-paper/40 focus:outline-none transition-colors"
+            className="w-full px-3.5 py-3 rounded-xl border border-paper/15 bg-paper/5 text-body-sm text-paper placeholder-paper/40 focus:border-paper/40 focus:outline-none transition-colors"
           />
 
-          {error && <p className="text-[12px] text-rust">{error}</p>}
+          {error && <p className="text-label text-rust">{error}</p>}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 rounded-full bg-paper text-ink font-semibold text-[13px] hover:bg-moss-5 hover:text-moss-1 transition-colors disabled:opacity-40 disabled:cursor-not-allowed mt-2"
+            className="w-full py-3.5 rounded-full bg-paper text-ink font-semibold text-body-sm hover:bg-moss-5 hover:text-moss-1 transition-colors disabled:opacity-40 disabled:cursor-not-allowed mt-2"
           >
             {loading
               ? t("onboarding.account.waiting")
@@ -438,7 +438,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
           </button>
         </form>
 
-        <p className="mt-5 text-[12px] text-paper/50 text-center">
+        <p className="mt-5 text-label text-paper/50 text-center">
           {mode === "signup" ? t("onboarding.account.already_account") + " " : t("onboarding.account.no_account") + " "}
           <button
             type="button"
@@ -486,7 +486,7 @@ function Intro({ onStart }: { onStart: () => void }) {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
-        className="text-[10px] uppercase tracking-[0.18em] text-paper/50 font-medium"
+        className="text-tag uppercase tracking-[0.18em] text-paper/50 font-medium"
       >
         {t("onboarding.intro.eyebrow")}
       </motion.p>
@@ -502,7 +502,7 @@ function Intro({ onStart }: { onStart: () => void }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.1 }}
-        className="text-[13px] text-paper/60 text-center mt-5 max-w-sm leading-relaxed"
+        className="text-body-sm text-paper/60 text-center mt-5 max-w-sm leading-relaxed"
       >
         {t("onboarding.intro.description")}
       </motion.p>
@@ -523,11 +523,11 @@ function Intro({ onStart }: { onStart: () => void }) {
             key={s.n}
             className={`border-t pt-2 ${i === 0 ? "border-paper" : "border-paper/15"}`}
           >
-            <p className="font-value text-[10px] tabular-nums tracking-widest text-paper/40">
+            <p className="font-value text-tag tabular-nums tracking-widest text-paper/40">
               {s.n}
             </p>
             <p
-              className={`text-[11px] uppercase tracking-[0.16em] mt-1 ${
+              className={`text-caption uppercase tracking-[0.16em] mt-1 ${
                 i === 0 ? "text-paper font-semibold" : "text-paper/50 font-medium"
               }`}
             >
@@ -542,7 +542,7 @@ function Intro({ onStart }: { onStart: () => void }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.4 }}
         onClick={onStart}
-        className="mt-12 px-7 py-3 rounded bg-paper text-ink font-medium text-[13px] tracking-wide hover:bg-paper-2 transition-colors flex items-center gap-2"
+        className="mt-12 px-7 py-3 rounded bg-paper text-ink font-medium text-body-sm tracking-wide hover:bg-paper-2 transition-colors flex items-center gap-2"
       >
         {t("onboarding.intro.start")}
         <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -628,7 +628,7 @@ function Step({
             />
           ))}
         </div>
-        <span className="text-[11px] text-paper/40 font-semibold min-w-[28px] text-right">
+        <span className="text-caption text-paper/40 font-semibold min-w-[28px] text-right">
           {t("onboarding.step.progress", { current: stepIndex + 1, total: totalSteps })}
         </span>
       </div>
@@ -645,7 +645,7 @@ function Step({
               <path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0 1 1 21 12Z" />
             </svg>
           </div>
-          <div className="flex-1 bg-paper/10 text-paper text-[13px] rounded-2xl rounded-bl-sm px-4 py-3 leading-relaxed">
+          <div className="flex-1 bg-paper/10 text-paper text-body-sm rounded-2xl rounded-bl-sm px-4 py-3 leading-relaxed">
             {t(`onboarding.steps.${step.id}.ethiMessage`)}
           </div>
         </motion.div>
@@ -683,7 +683,7 @@ function Step({
                 <div className="flex-1 min-w-0">
                   <p className={`text-sm font-semibold ${isSel ? "text-ink" : "text-paper"}`}>{t(`onboarding.steps.${step.id}.${option.id}`)}</p>
                   {step.id !== "exclusions" && (
-                    <p className={`text-[11px] mt-0.5 ${isSel ? "text-ink/60" : "text-paper/70"}`}>{t(`onboarding.steps.${step.id}.${option.id}_desc`)}</p>
+                    <p className={`text-caption mt-0.5 ${isSel ? "text-ink/60" : "text-paper/70"}`}>{t(`onboarding.steps.${step.id}.${option.id}_desc`)}</p>
                   )}
                 </div>
                 <div
@@ -797,20 +797,20 @@ function PreviewScene({
                 className="absolute inset-y-0 w-1/2 bg-ink"
               />
             </div>
-            <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-medium">{t("onboarding.planting.loading_eyebrow")}</p>
+            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium">{t("onboarding.planting.loading_eyebrow")}</p>
             <p className="font-value text-2xl text-ink mt-3">{t("onboarding.planting.loading_title")}</p>
-            <p className="text-[12px] text-ink-3 mt-2">{t("onboarding.planting.loading_desc")}</p>
+            <p className="text-label text-ink-3 mt-2">{t("onboarding.planting.loading_desc")}</p>
           </motion.div>
         )}
 
         {phase === "error" && (
           <motion.div key="e" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-md text-center">
-            <p className="text-[10px] uppercase tracking-[0.18em] text-rust font-medium">{t("onboarding.planting.error_eyebrow")}</p>
+            <p className="text-tag uppercase tracking-[0.18em] text-rust font-medium">{t("onboarding.planting.error_eyebrow")}</p>
             <h2 className="font-value text-2xl text-ink mt-3">{t("onboarding.planting.error_title")}</h2>
-            <p className="text-[12px] text-ink-3 mt-3 break-words">{errorMsg}</p>
+            <p className="text-label text-ink-3 mt-3 break-words">{errorMsg}</p>
             <button
               onClick={() => setAttempt((a) => a + 1)}
-              className="mt-6 px-5 py-2.5 text-[13px] font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
+              className="mt-6 px-5 py-2.5 text-body-sm font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
             >
               {t("common.retry")}
             </button>
@@ -819,11 +819,11 @@ function PreviewScene({
 
         {phase === "reveal" && (
           <motion.div key="r" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
-            <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-medium text-center">
+            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium text-center">
               {t("onboarding.planting.reveal_eyebrow")}
             </p>
             <p className="font-value text-2xl text-ink text-center mt-2 mb-6">{t("onboarding.planting.reveal_title")}</p>
-            <p className="text-[11px] text-ink-3 text-center mb-6">
+            <p className="text-caption text-ink-3 text-center mb-6">
               {t("onboarding.planting.reveal_summary", { count: selected.length, amount: formatCurrency(params.initial_amount, lang) })}
             </p>
             <ul className="divide-y divide-paper-3 border-t border-b border-paper-3">
@@ -841,8 +841,8 @@ function PreviewScene({
                     className="py-3"
                   >
                     <div className="flex items-baseline justify-between mb-1.5 gap-3">
-                      <span className="font-value text-[13px] text-ink truncate">{a.ticker}</span>
-                      <span className="text-[12px] text-ink tabular-nums font-medium">{a.w.toFixed(1)}%</span>
+                      <span className="font-value text-body-sm text-ink truncate">{a.ticker}</span>
+                      <span className="text-label text-ink tabular-nums font-medium">{a.w.toFixed(1)}%</span>
                     </div>
                     <div className="h-px bg-paper-3 relative">
                       <motion.div
@@ -852,7 +852,7 @@ function PreviewScene({
                         className="absolute inset-y-0 left-0 bg-ink"
                       />
                     </div>
-                    <p className="text-[10px] text-ink-3 mt-1 truncate">{a.name}</p>
+                    <p className="text-tag text-ink-3 mt-1 truncate">{a.name}</p>
                   </motion.li>
                 ))}
             </ul>
@@ -861,14 +861,14 @@ function PreviewScene({
                 void trackPreference({ step: "allocation_accepted", payload: { position_count: selected.length } });
                 onSave();
               }}
-              className="mt-8 w-full py-3 rounded-full bg-ink text-paper font-semibold text-[13px] hover:bg-moss-2 transition-colors flex items-center justify-center gap-2"
+              className="mt-8 w-full py-3 rounded-full bg-ink text-paper font-semibold text-body-sm hover:bg-moss-2 transition-colors flex items-center justify-center gap-2"
             >
               {t("onboarding.planting.save_cta")}
               <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                 <path d="M5 12h14M13 5l7 7-7 7" />
               </svg>
             </button>
-            <p className="mt-3 text-center text-[11px] text-ink-3">{t("onboarding.planting.save_hint")}</p>
+            <p className="mt-3 text-center text-caption text-ink-3">{t("onboarding.planting.save_hint")}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -933,18 +933,18 @@ function SavingScene({
                 className="absolute inset-y-0 w-1/2 bg-ink"
               />
             </div>
-            <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-medium">{t("onboarding.saving.title")}</p>
+            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium">{t("onboarding.saving.title")}</p>
           </motion.div>
         )}
 
         {phase === "error" && (
           <motion.div key="e" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-md text-center">
-            <p className="text-[10px] uppercase tracking-[0.18em] text-rust font-medium">{t("onboarding.planting.error_eyebrow")}</p>
+            <p className="text-tag uppercase tracking-[0.18em] text-rust font-medium">{t("onboarding.planting.error_eyebrow")}</p>
             <h2 className="font-value text-2xl text-ink mt-3">{t("onboarding.planting.error_title")}</h2>
-            <p className="text-[12px] text-ink-3 mt-3 break-words">{errorMsg}</p>
+            <p className="text-label text-ink-3 mt-3 break-words">{errorMsg}</p>
             <button
               onClick={() => setAttempt((a) => a + 1)}
-              className="mt-6 px-5 py-2.5 text-[13px] font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
+              className="mt-6 px-5 py-2.5 text-body-sm font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
             >
               {t("common.retry")}
             </button>
@@ -1033,20 +1033,20 @@ function PlantingScene({ onEnter, answers, mode = "replace", name }: { onEnter: 
                 className="absolute inset-y-0 w-1/2 bg-ink"
               />
             </div>
-            <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-medium">{t("onboarding.planting.loading_eyebrow")}</p>
+            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium">{t("onboarding.planting.loading_eyebrow")}</p>
             <p className="font-value text-2xl text-ink mt-3">{t("onboarding.planting.loading_title")}</p>
-            <p className="text-[12px] text-ink-3 mt-2">{t("onboarding.planting.loading_desc")}</p>
+            <p className="text-label text-ink-3 mt-2">{t("onboarding.planting.loading_desc")}</p>
           </motion.div>
         )}
 
         {phase === "error" && (
           <motion.div key="e" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-md text-center">
-            <p className="text-[10px] uppercase tracking-[0.18em] text-rust font-medium">{t("onboarding.planting.error_eyebrow")}</p>
+            <p className="text-tag uppercase tracking-[0.18em] text-rust font-medium">{t("onboarding.planting.error_eyebrow")}</p>
             <h2 className="font-value text-2xl text-ink mt-3">{t("onboarding.planting.error_title")}</h2>
-            <p className="text-[12px] text-ink-3 mt-3 break-words">{errorMsg}</p>
+            <p className="text-label text-ink-3 mt-3 break-words">{errorMsg}</p>
             <button
               onClick={() => setAttempt((a) => a + 1)}
-              className="mt-6 px-5 py-2.5 text-[13px] font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
+              className="mt-6 px-5 py-2.5 text-body-sm font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
             >
               {t("common.retry")}
             </button>
@@ -1055,11 +1055,11 @@ function PlantingScene({ onEnter, answers, mode = "replace", name }: { onEnter: 
 
         {phase === "reveal" && (
           <motion.div key="r" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
-            <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-medium text-center">
+            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium text-center">
               {t("onboarding.planting.reveal_eyebrow")}
             </p>
             <p className="font-value text-2xl text-ink text-center mt-2 mb-6">{t("onboarding.planting.reveal_title")}</p>
-            <p className="text-[11px] text-ink-3 text-center mb-6">
+            <p className="text-caption text-ink-3 text-center mb-6">
               {t("onboarding.planting.reveal_summary", { count: selected.length, amount: formatCurrency(initialAmount, lang) })}
             </p>
             <ul className="divide-y divide-paper-3 border-t border-b border-paper-3">
@@ -1077,8 +1077,8 @@ function PlantingScene({ onEnter, answers, mode = "replace", name }: { onEnter: 
                     className="py-3"
                   >
                     <div className="flex items-baseline justify-between mb-1.5 gap-3">
-                      <span className="font-value text-[13px] text-ink truncate">{a.ticker}</span>
-                      <span className="text-[12px] text-ink tabular-nums font-medium">{a.w.toFixed(1)}%</span>
+                      <span className="font-value text-body-sm text-ink truncate">{a.ticker}</span>
+                      <span className="text-label text-ink tabular-nums font-medium">{a.w.toFixed(1)}%</span>
                     </div>
                     <div className="h-px bg-paper-3 relative">
                       <motion.div
@@ -1088,7 +1088,7 @@ function PlantingScene({ onEnter, answers, mode = "replace", name }: { onEnter: 
                         className="absolute inset-y-0 left-0 bg-ink"
                       />
                     </div>
-                    <p className="text-[10px] text-ink-3 mt-1 truncate">{a.name}</p>
+                    <p className="text-tag text-ink-3 mt-1 truncate">{a.name}</p>
                   </motion.li>
                 ))}
             </ul>
@@ -1097,7 +1097,7 @@ function PlantingScene({ onEnter, answers, mode = "replace", name }: { onEnter: 
                 void trackPreference({ step: "allocation_accepted", payload: { position_count: selected.length } });
                 onEnter();
               }}
-              className="mt-8 w-full py-3 rounded-full bg-ink text-paper font-semibold text-[13px] hover:bg-moss-2 transition-colors flex items-center justify-center gap-2"
+              className="mt-8 w-full py-3 rounded-full bg-ink text-paper font-semibold text-body-sm hover:bg-moss-2 transition-colors flex items-center justify-center gap-2"
             >
               {t("onboarding.planting.dashboard_cta")}
               <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">

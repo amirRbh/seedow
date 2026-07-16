@@ -104,12 +104,12 @@ function Consent() {
         <h1 className="font-value text-3xl text-ink leading-tight">
           Connect {clientName} to your Seedow account
         </h1>
-        <p className="mt-3 text-[13px] text-ink-2">
+        <p className="mt-3 text-body-sm text-ink-2">
           {clientName} will be able to call this app's enabled tools while you are
           signed in. This does not bypass Seedow's permissions or backend policies.
         </p>
 
-        <div className="mt-6 rounded-lg border border-paper-3 bg-paper-2 p-4 text-[12px] text-ink-2 space-y-1">
+        <div className="mt-6 rounded-lg border border-paper-3 bg-paper-2 p-4 text-label text-ink-2 space-y-1">
           <div><span className="text-ink-3">Access:</span> read your portfolios, goals and decision history (simulated data)</div>
           <div><span className="text-ink-3">Identity:</span> your Seedow account (email, id)</div>
           {details?.scope ? (
@@ -118,7 +118,7 @@ function Consent() {
         </div>
 
         {error && (
-          <p role="alert" className="mt-4 text-[12px] text-rust">
+          <p role="alert" className="mt-4 text-label text-rust">
             {error}
           </p>
         )}
@@ -134,7 +134,7 @@ function Consent() {
           <button
             disabled={busy}
             onClick={() => decide(false)}
-            className="flex-1 py-2.5 rounded border border-paper-3 hover:border-ink transition-colors text-[13px] font-medium disabled:opacity-50"
+            className="flex-1 py-2.5 rounded border border-paper-3 hover:border-ink transition-colors text-body-sm font-medium disabled:opacity-50"
           >
             Deny
           </button>

@@ -53,7 +53,7 @@ export function RailNav() {
         aria-label={t("rail_nav.seedow_home")}
         className="flex items-center justify-center w-10 h-10 mb-2 outline-none rounded-sm focus-visible:ring-2 focus-visible:ring-moss-1"
       >
-        <span className="font-value text-[14px] text-ink tracking-tight leading-none">s</span>
+        <span className="font-value text-body text-ink tracking-tight leading-none">s</span>
       </Link>
       <div className="h-px w-6 bg-gold/40 my-2" />
 
@@ -96,10 +96,10 @@ function RailLink({ item, active }: { item: NavItem; active: boolean }) {
           )}
         </Link>
       </TooltipTrigger>
-      <TooltipContent side="right" sideOffset={8} className="text-[11px]">
+      <TooltipContent side="right" sideOffset={8} className="text-caption">
         <span>{item.label}</span>
         {item.shortcut && (
-          <kbd className="ml-2 text-[9px] text-ink-3 font-mono tracking-wide">{item.shortcut}</kbd>
+          <kbd className="ml-2 text-tag text-ink-3 font-mono tracking-wide">{item.shortcut}</kbd>
         )}
       </TooltipContent>
     </Tooltip>

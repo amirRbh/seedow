@@ -63,12 +63,12 @@ export function ImpactHero() {
         <div className="gold-rule mb-5" aria-hidden />
 
         <header className="flex items-baseline justify-between gap-3">
-          <p className="text-[10px] uppercase tracking-[0.22em] font-semibold text-gold">
+          <p className="text-tag uppercase tracking-[0.22em] font-semibold text-gold">
             <span className="opacity-70">N° 02 ·</span> {t("impact_hero.eyebrow")}
           </p>
           <Link
             to="/methodologie"
-            className="text-[10px] uppercase tracking-[0.18em] font-semibold text-ink-3 hover:text-ink transition-colors"
+            className="text-tag uppercase tracking-[0.18em] font-semibold text-ink-3 hover:text-ink transition-colors"
           >
             {t("impact_hero.see_methodology")}
           </Link>
@@ -76,7 +76,7 @@ export function ImpactHero() {
 
         {/* Hero CO₂ */}
         <div className="mt-6">
-          <p className="text-[10px] uppercase tracking-[0.22em] font-semibold text-ink-3 mb-3">
+          <p className="text-tag uppercase tracking-[0.22em] font-semibold text-ink-3 mb-3">
             {t("impact_hero.co2_label")}
           </p>
           <div className="kpi-figure flex items-baseline gap-3 text-7xl md:text-8xl leading-none">
@@ -125,7 +125,7 @@ export function ImpactHero() {
         <div className="mt-6 flex items-center justify-end">
           <Link
             to="/portfolio"
-            className="text-[11px] uppercase tracking-[0.18em] font-semibold text-ink hover:text-gold transition-colors inline-flex items-center gap-2"
+            className="text-caption uppercase tracking-[0.18em] font-semibold text-ink hover:text-gold transition-colors inline-flex items-center gap-2"
           >
             {t("impact_hero.see_detail")}
             <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2">

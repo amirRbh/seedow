@@ -19,8 +19,8 @@ export function IntentCards({ wallet }: IntentCardsProps) {
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold">{t("intent_cards.what_to_do")}</p>
-        <p className="text-[11px] text-ink-3">
+        <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold">{t("intent_cards.what_to_do")}</p>
+        <p className="text-caption text-ink-3">
           {t("intent_cards.available_balance")}{" "}
           <span className="text-ink font-semibold">
             {formatCurrency(balance, lang)}
@@ -93,7 +93,7 @@ function IntentCard({
     <button onClick={onClick} className={`flex flex-col items-start gap-1.5 p-3.5 rounded-2xl transition-all leaf-hover ${styles}`}>
       <div className="opacity-90">{icon}</div>
       <span className="text-sm font-semibold leading-tight">{label}</span>
-      <span className="text-[10px] opacity-60 leading-tight">{hint}</span>
+      <span className="text-tag opacity-60 leading-tight">{hint}</span>
     </button>
   );
 }

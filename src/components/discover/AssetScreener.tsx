@@ -70,7 +70,7 @@ export function AssetScreener() {
             value={filters.search}
             onChange={(e) => update("search", e.target.value)}
             placeholder={t("discover.search_placeholder")}
-            className="w-full bg-card border border-paper-3 rounded-full pl-9 pr-4 py-2.5 text-[13px] text-ink placeholder:text-ink-3 outline-none focus:border-ink/40 transition-colors"
+            className="w-full bg-card border border-paper-3 rounded-full pl-9 pr-4 py-2.5 text-body-sm text-ink placeholder:text-ink-3 outline-none focus:border-ink/40 transition-colors"
           />
         </div>
       </div>
@@ -80,7 +80,7 @@ export function AssetScreener() {
         <button
           type="button"
           onClick={() => setPanelOpen((o) => !o)}
-          className={`flex items-center gap-1.5 text-[11px] uppercase tracking-[0.12em] font-semibold px-3 py-1.5 rounded-full border transition-colors ${
+          className={`flex items-center gap-1.5 text-caption uppercase tracking-[0.12em] font-semibold px-3 py-1.5 rounded-full border transition-colors ${
             panelOpen || activeCount > 0
               ? "bg-ink text-paper border-ink"
               : "bg-card text-ink border-paper-3 hover:border-ink/40"
@@ -98,7 +98,7 @@ export function AssetScreener() {
           </svg>
           {t("discover.filters_btn")}
           {activeCount > 0 && (
-            <span className="bg-gold text-ink text-[10px] font-bold rounded-full px-1.5 leading-none py-0.5 ml-0.5">
+            <span className="bg-gold text-ink text-tag font-bold rounded-full px-1.5 leading-none py-0.5 ml-0.5">
               {activeCount}
             </span>
           )}
@@ -108,7 +108,7 @@ export function AssetScreener() {
           <select
             value={filters.sort}
             onChange={(e) => update("sort", e.target.value as SortKey)}
-            className="appearance-none bg-card border border-paper-3 rounded-full pl-3 pr-7 py-1.5 text-[11px] uppercase tracking-[0.12em] font-semibold text-ink hover:border-ink/40 transition-colors cursor-pointer"
+            className="appearance-none bg-card border border-paper-3 rounded-full pl-3 pr-7 py-1.5 text-caption uppercase tracking-[0.12em] font-semibold text-ink hover:border-ink/40 transition-colors cursor-pointer"
           >
             {sortOptions.map((o) => (
               <option key={o.value} value={o.value}>
@@ -129,14 +129,14 @@ export function AssetScreener() {
         </div>
 
         <div className="ml-auto flex items-center gap-2">
-          <span className="text-[11px] text-ink-3 font-semibold">
+          <span className="text-caption text-ink-3 font-semibold">
             {t("discover.results_count", { count: results.length })}
           </span>
           {activeCount > 0 && (
             <button
               type="button"
               onClick={() => setFilters(DEFAULT_FILTERS)}
-              className="text-[11px] uppercase tracking-[0.12em] font-semibold text-rust hover:text-ink transition-colors"
+              className="text-caption uppercase tracking-[0.12em] font-semibold text-rust hover:text-ink transition-colors"
             >
               {t("discover.reset")}
             </button>
@@ -228,7 +228,7 @@ export function AssetScreener() {
       {/* Results */}
       <div className="px-5 pt-2 space-y-2.5">
         {loading ? (
-          <p className="text-[12px] text-ink-3 text-center py-8">{t("discover.loading")}</p>
+          <p className="text-label text-ink-3 text-center py-8">{t("discover.loading")}</p>
         ) : error ? (
           <div className="paper-card p-8 text-center">
             <p className="font-value text-xl text-ink">{t("discover.load_error_title")}</p>
@@ -246,7 +246,7 @@ export function AssetScreener() {
             <button
               type="button"
               onClick={() => setFilters(DEFAULT_FILTERS)}
-              className="mt-4 text-[11px] uppercase tracking-[0.14em] font-semibold text-ink underline underline-offset-4 decoration-gold"
+              className="mt-4 text-caption uppercase tracking-[0.14em] font-semibold text-ink underline underline-offset-4 decoration-gold"
             >
               {t("discover.reset")}
             </button>
@@ -270,7 +270,7 @@ export function AssetScreener() {
 function FilterGroup({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <p className="text-[10px] uppercase tracking-[0.18em] text-gold font-semibold mb-2">
+      <p className="text-tag uppercase tracking-[0.18em] text-gold font-semibold mb-2">
         {label}
       </p>
       <div className="flex flex-wrap gap-1.5">{children}</div>
@@ -291,7 +291,7 @@ function Chip({
     <button
       type="button"
       onClick={onClick}
-      className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-colors border ${
+      className={`px-3 py-1 rounded-full text-caption font-semibold transition-colors border ${
         active
           ? "bg-ink text-paper border-ink"
           : "bg-paper-2 text-ink-2 border-paper-3 hover:border-ink/30"
@@ -324,7 +324,7 @@ function SliderGroup({
   return (
     <div>
       <div className="flex items-center justify-between mb-2">
-        <p className="text-[10px] uppercase tracking-[0.18em] text-gold font-semibold">{label}</p>
+        <p className="text-tag uppercase tracking-[0.18em] text-gold font-semibold">{label}</p>
         <span className="font-value text-sm text-ink">
           {step < 1 ? value.toFixed(2).replace(".", ",") : value}
           {suffix}
@@ -337,7 +337,7 @@ function SliderGroup({
         step={step}
         onValueChange={(v) => onChange(v[0])}
       />
-      <p className="text-[10px] text-ink-3 mt-1.5">{hint}</p>
+      <p className="text-tag text-ink-3 mt-1.5">{hint}</p>
     </div>
   );
 }

@@ -139,7 +139,7 @@ export function Glossary({ term, children, variant = "inline", className }: Prop
             variant === "inline" &&
               "border-b border-dotted border-ink-3 text-inherit hover:text-ink",
             variant === "icon" &&
-              "w-4 h-4 items-center justify-center rounded-full border border-paper-3 text-ink-3 text-[10px] font-semibold hover:text-ink hover:border-ink-3",
+              "w-4 h-4 items-center justify-center rounded-full border border-paper-3 text-ink-3 text-tag font-semibold hover:text-ink hover:border-ink-3",
             className,
           )}
         >
@@ -148,7 +148,7 @@ export function Glossary({ term, children, variant = "inline", className }: Prop
           ) : (
             <>
               <span>{children ?? entry.title}</span>
-              <span aria-hidden="true" className="text-[9px] text-ink-3 leading-none">
+              <span aria-hidden="true" className="text-tag text-ink-3 leading-none">
                 ⓘ
               </span>
             </>
@@ -160,7 +160,7 @@ export function Glossary({ term, children, variant = "inline", className }: Prop
         align="start"
         className="max-w-[280px] bg-ink text-paper border-ink"
       >
-        <p className="text-[11px] font-semibold tracking-wide uppercase text-gold-soft mb-1">
+        <p className="text-caption font-semibold tracking-wide uppercase text-gold-soft mb-1">
           {entry.title}
           {"long" in entry && entry.long && (
             <span className="ml-1.5 text-paper/70 font-normal normal-case tracking-normal">
@@ -168,7 +168,7 @@ export function Glossary({ term, children, variant = "inline", className }: Prop
             </span>
           )}
         </p>
-        <p className="text-[12px] leading-relaxed">{entry.body}</p>
+        <p className="text-label leading-relaxed">{entry.body}</p>
       </TooltipContent>
     </Tooltip>
   );

@@ -48,7 +48,7 @@ export const getPortfolioHistory = createServerFn({ method: "POST" })
     // 1. Charge le portefeuille actif (ou celui demandé)
     let pfQuery = supabase
       .from("portfolios")
-      .select("id, initial_amount, weights, created_at, generated_at")
+      .select("id, initial_amount, weights, created_at, generated_at, rebalanced_at")
       .eq("user_id", userId);
     if (data.portfolioId) pfQuery = pfQuery.eq("id", data.portfolioId);
     else pfQuery = pfQuery.eq("is_active", true);
@@ -65,7 +65,9 @@ export const getPortfolioHistory = createServerFn({ method: "POST" })
 
     // 2. Fenêtre temporelle
     const days = rangeToDays(data.range);
-    const portfolioStart = new Date(pf.generated_at ?? pf.created_at);
+    // L'ancre de valorisation suit le dernier rééquilibrage, s'il y en a un —
+    // même logique que la vue SQL portfolio_holdings_valued.
+    const portfolioStart = new Date(pf.rebalanced_at ?? pf.generated_at ?? pf.created_at);
     let startDate: Date;
     if (days == null) {
       startDate = portfolioStart;

@@ -26,23 +26,23 @@ export function AssetRow({ asset, index, onOpen }: Props) {
       className="paper-card w-full text-left p-3.5 flex items-center gap-3 hover:shadow-leaf transition-shadow group"
     >
       <div className="w-11 h-11 rounded-md bg-paper-2 border border-paper-3 flex items-center justify-center flex-shrink-0">
-        <span className="text-ink text-[10px] font-bold tracking-tight">
+        <span className="text-ink text-tag font-bold tracking-tight">
           {asset.ticker.slice(0, 5)}
         </span>
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className="text-[13px] font-semibold text-ink truncate leading-tight">{asset.name}</p>
+        <p className="text-body-sm font-semibold text-ink truncate leading-tight">{asset.name}</p>
         <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-          <span className="text-[9px] uppercase tracking-wider text-ink-3 font-semibold">
+          <span className="text-tag uppercase tracking-wider text-ink-3 font-semibold">
             {asset.category}
           </span>
-          <span className="text-[9px] text-ink-3">·</span>
-          <span className="text-[9px] uppercase tracking-wider text-ink-3">{region}</span>
+          <span className="text-tag text-ink-3">·</span>
+          <span className="text-tag uppercase tracking-wider text-ink-3">{region}</span>
           {asset.risk_level != null && (
             <>
-              <span className="text-[9px] text-ink-3">·</span>
-              <span className="text-[9px] uppercase tracking-wider text-ink-3">
+              <span className="text-tag text-ink-3">·</span>
+              <span className="text-tag uppercase tracking-wider text-ink-3">
                 {t("discover.row.risk")} {asset.risk_level}/7 ·{" "}
                 {t(`asset_detail.risk_labels.${asset.risk_level}`)}
               </span>
@@ -50,8 +50,8 @@ export function AssetRow({ asset, index, onOpen }: Props) {
           )}
           {asset.ter_pct != null && (
             <>
-              <span className="text-[9px] text-ink-3">·</span>
-              <span className="text-[9px] uppercase tracking-wider text-ink-3">
+              <span className="text-tag text-ink-3">·</span>
+              <span className="text-tag uppercase tracking-wider text-ink-3">
                 {t("discover.row.ter")} {asset.ter_pct.toFixed(2).replace(".", ",")}%
               </span>
             </>
@@ -65,7 +65,7 @@ export function AssetRow({ asset, index, onOpen }: Props) {
             ? formatCurrency(asset.current_price, lang)
             : t("discover.row.price_unavailable")}
         </p>
-        <p className="text-[9px] uppercase tracking-wider text-gold font-semibold mt-1">
+        <p className="text-tag uppercase tracking-wider text-gold font-semibold mt-1">
           ESG {asset.overall_esg_score.toFixed(1)}
         </p>
       </div>

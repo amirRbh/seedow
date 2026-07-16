@@ -77,7 +77,7 @@ export function CourseQuiz({ slug, quiz }: Props) {
                         submitted && "cursor-default",
                       )}
                     >
-                      <span className="font-mono text-[10px] text-ink-3 mr-3">
+                      <span className="font-mono text-tag text-ink-3 mr-3">
                         {String.fromCharCode(65 + j)}
                       </span>
                       {opt}

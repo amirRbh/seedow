@@ -65,7 +65,7 @@ function ReglagesPage() {
   if (authLoading || !user) {
     return (
       <div className="min-h-screen bg-paper flex items-center justify-center">
-        <p className="text-[12px] text-ink-3">{t("common.loading")}</p>
+        <p className="text-label text-ink-3">{t("common.loading")}</p>
       </div>
     );
   }
@@ -94,7 +94,7 @@ function ReglagesPage() {
               <button
                 key={key}
                 onClick={() => setSection(key)}
-                className={`text-[12px] py-2.5 px-3 border-b transition-colors whitespace-nowrap ${
+                className={`text-label py-2.5 px-3 border-b transition-colors whitespace-nowrap ${
                   section === key
                     ? "border-ink text-ink font-medium"
                     : "border-transparent text-ink-3 hover:text-ink-2"
@@ -243,7 +243,7 @@ function PreferencesSection() {
   };
 
   if (loadingInitial) {
-    return <p className="text-[12px] text-ink-3">{t("reglages.loading_prefs")}</p>;
+    return <p className="text-label text-ink-3">{t("reglages.loading_prefs")}</p>;
   }
 
   return (
@@ -258,10 +258,10 @@ function PreferencesSection() {
           className="border border-paper-3 rounded-lg p-4 bg-paper-2"
         >
           <div className="flex items-baseline justify-between mb-3">
-            <p className="text-[10px] uppercase tracking-[0.15em] text-ink-3 font-medium">
+            <p className="text-tag uppercase tracking-[0.15em] text-ink-3 font-medium">
               {t("reglages.preview_eyebrow")}
             </p>
-            <div className="flex gap-3 text-[11px] text-ink-3">
+            <div className="flex gap-3 text-caption text-ink-3">
               <span>
                 {t("reglages.preview_esg")}{" "}
                 <span className="text-ink font-value tabular-nums">{preview.esg.toFixed(1)}</span>
@@ -276,7 +276,7 @@ function PreferencesSection() {
           </div>
           <ul className="space-y-1.5">
             {preview.lines.map((l) => (
-              <li key={l.id} className="flex items-center gap-3 text-[12px]">
+              <li key={l.id} className="flex items-center gap-3 text-label">
                 <span className="font-value text-ink-2 w-12 tabular-nums shrink-0">{l.ticker}</span>
                 <span className="flex-1 text-ink truncate">{l.name}</span>
                 <span className="font-value tabular-nums text-ink w-12 text-right">
@@ -315,7 +315,7 @@ function PreferencesSection() {
                     </svg>
                   )}
                 </button>
-                <label className="text-[13px] text-ink min-w-[110px]">{c.label}</label>
+                <label className="text-body-sm text-ink min-w-[110px]">{c.label}</label>
                 {active && (
                   <>
                     <input
@@ -329,7 +329,7 @@ function PreferencesSection() {
                       }
                       className="flex-1 accent-ink h-1"
                     />
-                    <span className="text-[11px] text-ink-3 tabular-nums w-10 text-right">
+                    <span className="text-caption text-ink-3 tabular-nums w-10 text-right">
                       {Math.round((intensity[c.id] ?? 0.5) * 100)}%
                     </span>
                   </>
@@ -348,7 +348,7 @@ function PreferencesSection() {
               <button
                 key={e.id}
                 onClick={() => toggleExclusion(e.id)}
-                className={`flex items-center gap-2 p-2.5 rounded border text-left text-[12px] transition-colors ${
+                className={`flex items-center gap-2 p-2.5 rounded border text-left text-label transition-colors ${
                   active
                     ? "bg-ink/5 border-ink text-ink"
                     : "bg-paper border-paper-3 text-ink-2 hover:border-ink-3"
@@ -366,8 +366,8 @@ function PreferencesSection() {
 
       <Block title={t("reglages.block_risk")}>
         <div className="flex items-baseline justify-between mb-2">
-          <span className="text-[12px] text-ink-2">{t("reglages.risk_label")}</span>
-          <span className="text-[13px] font-medium tabular-nums">{(risk * 100).toFixed(1)}%</span>
+          <span className="text-label text-ink-2">{t("reglages.risk_label")}</span>
+          <span className="text-body-sm font-medium tabular-nums">{(risk * 100).toFixed(1)}%</span>
         </div>
         <input
           type="range"
@@ -378,7 +378,7 @@ function PreferencesSection() {
           onChange={(e) => setRisk(Number(e.target.value))}
           className="w-full accent-ink"
         />
-        <div className="flex justify-between text-[10px] text-ink-3 mt-1">
+        <div className="flex justify-between text-tag text-ink-3 mt-1">
           <span>{t("reglages.risk_prudent")}</span>
           <span>{t("reglages.risk_balanced")}</span>
           <span>{t("reglages.risk_dynamic")}</span>
@@ -387,8 +387,8 @@ function PreferencesSection() {
 
       <Block title={t("reglages.block_horizon")}>
         <div className="flex items-baseline justify-between mb-2">
-          <span className="text-[12px] text-ink-2">{t("reglages.horizon_label")}</span>
-          <span className="text-[13px] font-medium tabular-nums">
+          <span className="text-label text-ink-2">{t("reglages.horizon_label")}</span>
+          <span className="text-body-sm font-medium tabular-nums">
             {t("reglages.years", { n: horizon })}
           </span>
         </div>
@@ -405,8 +405,8 @@ function PreferencesSection() {
 
       <Block title={t("reglages.block_initial")}>
         <div className="flex items-baseline justify-between mb-2">
-          <span className="text-[12px] text-ink-2">{t("reglages.initial_label")}</span>
-          <span className="text-[13px] font-medium tabular-nums">
+          <span className="text-label text-ink-2">{t("reglages.initial_label")}</span>
+          <span className="text-body-sm font-medium tabular-nums">
             {formatCurrency(amount, lang)}
           </span>
         </div>
@@ -421,7 +421,7 @@ function PreferencesSection() {
         />
       </Block>
 
-      <p className="text-[11px] text-ink-3 leading-relaxed">{t("reglages.auto_recalc_note")}</p>
+      <p className="text-caption text-ink-3 leading-relaxed">{t("reglages.auto_recalc_note")}</p>
     </div>
   );
 }
@@ -459,10 +459,10 @@ function ProfileSection({ email, onSignOut }: { email: string; onSignOut: () => 
   return (
     <div className="space-y-6">
       <Block title={t("reglages.block_identity")}>
-        <label className="text-[11px] text-ink-3 block mb-1">{t("reglages.email_label")}</label>
-        <p className="text-[13px] text-ink mb-4">{email}</p>
+        <label className="text-caption text-ink-3 block mb-1">{t("reglages.email_label")}</label>
+        <p className="text-body-sm text-ink mb-4">{email}</p>
 
-        <label className="text-[11px] text-ink-3 block mb-1">
+        <label className="text-caption text-ink-3 block mb-1">
           {t("reglages.display_name_label")}
         </label>
         <div className="flex gap-2">
@@ -471,13 +471,13 @@ function ProfileSection({ email, onSignOut }: { email: string; onSignOut: () => 
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
             maxLength={60}
-            className="flex-1 border border-paper-3 rounded px-3 py-2 text-[13px] focus:border-ink outline-none transition-colors"
+            className="flex-1 border border-paper-3 rounded px-3 py-2 text-body-sm focus:border-ink outline-none transition-colors"
             placeholder={t("reglages.display_name_placeholder")}
           />
           <button
             onClick={saveName}
             disabled={savingName}
-            className="px-4 py-2 text-[12px] font-medium border border-ink text-ink rounded hover:bg-ink hover:text-paper transition-colors disabled:opacity-50"
+            className="px-4 py-2 text-label font-medium border border-ink text-ink rounded hover:bg-ink hover:text-paper transition-colors disabled:opacity-50"
           >
             {savingName ? "…" : t("reglages.save")}
           </button>
@@ -487,7 +487,7 @@ function ProfileSection({ email, onSignOut }: { email: string; onSignOut: () => 
       <Block title={t("reglages.block_security")}>
         <button
           onClick={() => navigate({ to: "/auth" })}
-          className="text-[13px] text-ink-2 hover:text-ink underline-offset-2 hover:underline"
+          className="text-body-sm text-ink-2 hover:text-ink underline-offset-2 hover:underline"
         >
           {t("reglages.change_password")}
         </button>
@@ -499,7 +499,7 @@ function ProfileSection({ email, onSignOut }: { email: string; onSignOut: () => 
             await onSignOut();
             navigate({ to: "/auth" });
           }}
-          className="px-4 py-2 text-[12px] font-medium border border-paper-3 text-ink rounded hover:border-ink transition-colors"
+          className="px-4 py-2 text-label font-medium border border-paper-3 text-ink rounded hover:border-ink transition-colors"
         >
           {t("reglages.sign_out")}
         </button>
@@ -562,12 +562,12 @@ function NotificationsSection() {
       </Block>
 
       <Block title={t("reglages.block_privacy")}>
-        <p className="text-[12px] text-ink-2 leading-relaxed mb-3">{t("reglages.privacy_desc")}</p>
+        <p className="text-label text-ink-2 leading-relaxed mb-3">{t("reglages.privacy_desc")}</p>
         <div className="flex flex-wrap gap-2">
           <button
             onClick={onExport}
             disabled={exporting}
-            className="px-3 py-1.5 text-[12px] border border-paper-3 rounded hover:border-ink transition-colors disabled:opacity-50"
+            className="px-3 py-1.5 text-label border border-paper-3 rounded hover:border-ink transition-colors disabled:opacity-50"
           >
             {exporting ? t("common.sending") : t("reglages.export_data")}
           </button>
@@ -576,7 +576,7 @@ function NotificationsSection() {
       </Block>
 
       <Block title={t("reglages.block_legal")}>
-        <div className="flex flex-wrap gap-x-4 gap-y-2 text-[12px]">
+        <div className="flex flex-wrap gap-x-4 gap-y-2 text-label">
           <Link
             to="/mentions-legales"
             className="text-ink-2 hover:text-ink underline-offset-2 hover:underline"
@@ -609,7 +609,7 @@ function ToggleRow({
 }) {
   return (
     <div className="flex items-center justify-between py-2 border-b border-paper-3 last:border-b-0">
-      <span className="text-[13px] text-ink">{label}</span>
+      <span className="text-body-sm text-ink">{label}</span>
       <button
         onClick={() => onChange(!checked)}
         className={`w-9 h-5 rounded-full transition-colors relative ${checked ? "bg-ink" : "bg-paper-3"}`}
@@ -656,20 +656,20 @@ function MarketDataBlock() {
 
   return (
     <Block title={t("reglages.methodology.market_data.title")}>
-      <p className="text-[12px] text-ink-2 leading-relaxed mb-3">
+      <p className="text-label text-ink-2 leading-relaxed mb-3">
         {t("reglages.methodology.market_data.desc")}
       </p>
       <button
         onClick={onClick}
         disabled={state === "loading"}
-        className="px-4 py-2 text-[12px] font-medium border border-ink text-ink rounded hover:bg-ink hover:text-paper transition-colors disabled:opacity-50"
+        className="px-4 py-2 text-label font-medium border border-ink text-ink rounded hover:bg-ink hover:text-paper transition-colors disabled:opacity-50"
       >
         {state === "loading"
           ? t("reglages.methodology.market_data.refreshing")
           : t("reglages.methodology.market_data.refresh")}
       </button>
       {msg && (
-        <p className={`text-[11px] mt-2 ${state === "error" ? "text-rust" : "text-ink-3"}`}>
+        <p className={`text-caption mt-2 ${state === "error" ? "text-rust" : "text-ink-3"}`}>
           {msg}
         </p>
       )}
@@ -704,20 +704,20 @@ function RiskModelBlock() {
 
   return (
     <Block title={t("reglages.methodology.risk_model.title")}>
-      <p className="text-[12px] text-ink-2 leading-relaxed mb-3">
+      <p className="text-label text-ink-2 leading-relaxed mb-3">
         {t("reglages.methodology.risk_model.desc")}
       </p>
       <button
         onClick={onClick}
         disabled={state === "loading"}
-        className="px-4 py-2 text-[12px] font-medium border border-ink text-ink rounded hover:bg-ink hover:text-paper transition-colors disabled:opacity-50"
+        className="px-4 py-2 text-label font-medium border border-ink text-ink rounded hover:bg-ink hover:text-paper transition-colors disabled:opacity-50"
       >
         {state === "loading"
           ? t("reglages.methodology.risk_model.refreshing")
           : t("reglages.methodology.risk_model.refresh")}
       </button>
       {msg && (
-        <p className={`text-[11px] mt-2 ${state === "error" ? "text-rust" : "text-ink-3"}`}>
+        <p className={`text-caption mt-2 ${state === "error" ? "text-rust" : "text-ink-3"}`}>
           {msg}
         </p>
       )}
@@ -764,9 +764,9 @@ function CronHealthBlock({
   return (
     <Block title={t(titleKey)}>
       {loading ? (
-        <p className="text-[12px] text-ink-3">{t("reglages.methodology.health.loading")}</p>
+        <p className="text-label text-ink-3">{t("reglages.methodology.health.loading")}</p>
       ) : runs.length === 0 ? (
-        <p className="text-[12px] text-ink-3">{t(emptyKey)}</p>
+        <p className="text-label text-ink-3">{t(emptyKey)}</p>
       ) : (
         <>
           <div className="flex items-center gap-2 mb-3">
@@ -779,7 +779,7 @@ function CronHealthBlock({
                     : "bg-rust"
               }`}
             />
-            <p className="text-[12px] text-ink-2">
+            <p className="text-label text-ink-2">
               {t("reglages.methodology.health.last_success")}
               <span className="text-ink font-medium ml-1">
                 {ageHours != null
@@ -792,7 +792,7 @@ function CronHealthBlock({
             {runs.map((r) => (
               <li
                 key={r.id}
-                className="flex items-center gap-2 text-[11px] py-1.5 border-b border-paper-3 last:border-b-0"
+                className="flex items-center gap-2 text-caption py-1.5 border-b border-paper-3 last:border-b-0"
               >
                 <span
                   className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
@@ -835,12 +835,12 @@ function MethodologySection() {
         emptyKey="reglages.methodology.risk_model.health_empty"
       />
       <Block title={t("reglages.methodology.pipeline.title")}>
-        <p className="text-[12px] text-ink-2 leading-relaxed mb-4">
+        <p className="text-label text-ink-2 leading-relaxed mb-4">
           {t("reglages.methodology.pipeline.desc")}
         </p>
         <Link
           to="/methodologie"
-          className="inline-flex items-center gap-2 text-[12px] font-medium text-ink underline-offset-2 hover:underline"
+          className="inline-flex items-center gap-2 text-label font-medium text-ink underline-offset-2 hover:underline"
         >
           {t("reglages.methodology.pipeline.link")}
           <span aria-hidden>→</span>
@@ -848,7 +848,7 @@ function MethodologySection() {
       </Block>
 
       <Block title={t("reglages.methodology.sources.title")}>
-        <ul className="text-[12px] text-ink-2 space-y-1.5 leading-relaxed">
+        <ul className="text-label text-ink-2 space-y-1.5 leading-relaxed">
           <li>{t("reglages.methodology.sources.esg")}</li>
           <li>{t("reglages.methodology.sources.carbon")}</li>
           <li>{t("reglages.methodology.sources.sfdr")}</li>
@@ -857,17 +857,17 @@ function MethodologySection() {
       </Block>
 
       <Block title={t("reglages.methodology.esg_composite.title")}>
-        <p className="text-[12px] text-ink-2 leading-relaxed mb-4">
+        <p className="text-label text-ink-2 leading-relaxed mb-4">
           {t("reglages.methodology.esg_composite.desc_1")}{" "}
           {t("reglages.methodology.esg_composite.desc_2")}
         </p>
 
         <div className="space-y-4">
           <div>
-            <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
+            <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold mb-2">
               {t("reglages.methodology.esg_composite.pillars_title")}
             </p>
-            <ul className="text-[12px] text-ink-2 space-y-1.5 leading-relaxed">
+            <ul className="text-label text-ink-2 space-y-1.5 leading-relaxed">
               <li>
                 <span className="font-medium text-ink">Environnement (E)</span> —{" "}
                 {t("reglages.methodology.esg_composite.pillar_e")} scope 1-2-3,
@@ -884,16 +884,16 @@ function MethodologySection() {
                 {t("reglages.methodology.esg_composite.pillar_g")}
               </li>
             </ul>
-            <p className="text-[11px] text-ink-3 mt-2 leading-relaxed">
+            <p className="text-caption text-ink-3 mt-2 leading-relaxed">
               {t("reglages.methodology.esg_composite.fallback_note")}
             </p>
           </div>
 
           <div>
-            <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
+            <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold mb-2">
               {t("reglages.methodology.esg_composite.mapping_title")}
             </p>
-            <ul className="text-[12px] text-ink-2 space-y-1.5 leading-relaxed">
+            <ul className="text-label text-ink-2 space-y-1.5 leading-relaxed">
               <li>
                 •{" "}
                 <span className="font-medium text-ink">
@@ -913,25 +913,25 @@ function MethodologySection() {
                 </span>
               </li>
             </ul>
-            <p className="text-[11px] text-ink-3 mt-2 leading-relaxed">
+            <p className="text-caption text-ink-3 mt-2 leading-relaxed">
               {t("reglages.methodology.esg_composite.mapping_note")}
             </p>
           </div>
 
           <div>
-            <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
+            <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold mb-2">
               {t("reglages.methodology.esg_composite.portfolio_title")}
             </p>
-            <p className="text-[12px] text-ink-2 leading-relaxed">
+            <p className="text-label text-ink-2 leading-relaxed">
               {t("reglages.methodology.esg_composite.portfolio_desc")}
             </p>
           </div>
 
           <div className="pt-2 border-t border-paper-3">
-            <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
+            <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold mb-2">
               {t("reglages.methodology.esg_composite.scale_title")}
             </p>
-            <div className="grid grid-cols-4 gap-1.5 text-[10px]">
+            <div className="grid grid-cols-4 gap-1.5 text-tag">
               <div className="rounded border border-paper-3 p-2">
                 <p className="font-value text-ink">0–40</p>
                 <p className="text-ink-3">{t("reglages.methodology.esg_composite.scale_low")}</p>
@@ -954,16 +954,16 @@ function MethodologySection() {
           </div>
         </div>
 
-        <p className="text-[11px] text-ink-3 leading-relaxed mt-4 pt-3 border-t border-paper-3">
+        <p className="text-caption text-ink-3 leading-relaxed mt-4 pt-3 border-t border-paper-3">
           {t("reglages.methodology.esg_composite.warning")}
         </p>
       </Block>
 
       <Block title={t("reglages.methodology.carbon.title")}>
-        <p className="text-[12px] text-ink-2 leading-relaxed mb-3">
+        <p className="text-label text-ink-2 leading-relaxed mb-3">
           {t("reglages.methodology.carbon.desc")}
         </p>
-        <ul className="text-[12px] text-ink-2 space-y-2 leading-relaxed">
+        <ul className="text-label text-ink-2 space-y-2 leading-relaxed">
           <li>
             • <span className="font-medium text-ink">CO₂ évité (heuristique)</span> —{" "}
             {t("reglages.methodology.carbon.avoided")} indicative
@@ -975,10 +975,10 @@ function MethodologySection() {
         </ul>
 
         <div className="mt-4 rounded border border-paper-3 bg-paper-2 p-3">
-          <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
+          <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold mb-2">
             {t("reglages.methodology.carbon.coverage_title")}
           </p>
-          <ul className="text-[12px] text-ink-2 space-y-1.5 leading-relaxed mb-3">
+          <ul className="text-label text-ink-2 space-y-1.5 leading-relaxed mb-3">
             <li>
               {t("reglages.methodology.carbon.coverage_low")} à l'heuristique CO₂ évité, l'intensité
               réelle n'est pas représentative.
@@ -994,7 +994,7 @@ function MethodologySection() {
           </ul>
           <Link
             to="/methodologie"
-            className="inline-flex items-center gap-2 text-[12px] font-medium text-ink underline-offset-2 hover:underline"
+            className="inline-flex items-center gap-2 text-label font-medium text-ink underline-offset-2 hover:underline"
           >
             {t("reglages.methodology.carbon.coverage_link")}
             <span aria-hidden>→</span>
@@ -1003,13 +1003,13 @@ function MethodologySection() {
       </Block>
 
       <Block title={t("reglages.methodology.optimization.title")}>
-        <p className="text-[12px] text-ink-2 leading-relaxed">
+        <p className="text-label text-ink-2 leading-relaxed">
           {t("reglages.methodology.optimization.desc")}
         </p>
       </Block>
 
       <Block title={t("reglages.methodology.version.title")}>
-        <p className="text-[12px] text-ink-2">{t("reglages.methodology.version.desc")}</p>
+        <p className="text-label text-ink-2">{t("reglages.methodology.version.desc")}</p>
       </Block>
     </div>
   );
@@ -1022,7 +1022,7 @@ function MethodologySection() {
 function Block({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <p className="text-[10px] uppercase tracking-[0.15em] text-ink-3 font-medium border-b border-paper-3 pb-2 mb-3">
+      <p className="text-tag uppercase tracking-[0.15em] text-ink-3 font-medium border-b border-paper-3 pb-2 mb-3">
         {title}
       </p>
       {children}
@@ -1065,7 +1065,7 @@ function StatusBanner({
       key={status + (errorMsg ?? "")}
       initial={{ opacity: 0, y: -4 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`text-[11px] px-3 py-2 rounded border flex items-center gap-2 ${tone}`}
+      className={`text-caption px-3 py-2 rounded border flex items-center gap-2 ${tone}`}
     >
       {status === "saving" && (
         <span className="inline-block w-2 h-2 rounded-full bg-ink-3 animate-pulse" />

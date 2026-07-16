@@ -189,6 +189,32 @@
   --input: var(--paper-3);
 }
 
+/* ─────────────────────────────────────────────────────────
+ * Échelle typographique — remplace les valeurs arbitraires text-[Npx]
+ * dispersées dans le code par des utilitaires nommés, un seul endroit
+ * à faire évoluer. Mêmes tailles rendues qu'avant (aucun changement
+ * visuel), sauf .text-tag qui remonte 9px → 10px : 9px était sous le
+ * seuil de lisibilité, c'est la seule taille corrigée, pas juste renommée.
+ * ───────────────────────────────────────────────────────── */
+@utility text-tag {
+  font-size: 10px;
+}
+@utility text-caption {
+  font-size: 11px;
+}
+@utility text-label {
+  font-size: 12px;
+}
+@utility text-body-sm {
+  font-size: 13px;
+}
+@utility text-body {
+  font-size: 14px;
+}
+@utility text-body-lg {
+  font-size: 15px;
+}
+
 @layer base {
   * { border-color: var(--color-border); }
 

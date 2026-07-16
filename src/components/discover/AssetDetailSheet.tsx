@@ -55,20 +55,20 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
           <SheetHeader className="text-left p-0">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold">
+                <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold">
                   {asset.category} · {asset.ticker}
                 </p>
                 <SheetTitle className="font-value text-2xl text-ink mt-1 leading-tight">
                   {asset.name}
                 </SheetTitle>
-                <p className="font-value text-[15px] text-ink-2 mt-1">
+                <p className="font-value text-body-lg text-ink-2 mt-1">
                   {asset.current_price != null
                     ? formatCurrency(asset.current_price, lang)
                     : t("discover.row.price_unavailable")}
-                  <span className="text-[11px] text-ink-3 ml-1">{t("asset_detail.per_share")}</span>
+                  <span className="text-caption text-ink-3 ml-1">{t("asset_detail.per_share")}</span>
                 </p>
               </div>
-              <div className="flex items-center gap-1 text-[10px] font-semibold text-moss-1 bg-moss-5 px-2 py-1 rounded-full border border-moss-4 flex-shrink-0">
+              <div className="flex items-center gap-1 text-tag font-semibold text-moss-1 bg-moss-5 px-2 py-1 rounded-full border border-moss-4 flex-shrink-0">
                 <span className="w-1.5 h-1.5 rounded-full bg-moss-1" />
                 ESG {asset.overall_esg_score.toFixed(1)}
               </div>
@@ -79,10 +79,10 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
         <div className="px-5 py-5 space-y-6">
           {/* {t("asset_detail.summary")} */}
           <section>
-            <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold mb-2">
+            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold mb-2">
               {t("asset_detail_sheet.summary")}
             </p>
-            <p className="text-[13px] text-ink-2 leading-relaxed">{asset.description}</p>
+            <p className="text-body-sm text-ink-2 leading-relaxed">{asset.description}</p>
             {asset.tags.length > 0 && (
               <div className="flex flex-wrap gap-1.5 mt-3">
                 {asset.tags.map((tag) => (
@@ -90,7 +90,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                     key={tag}
                     term="SFDR"
                     variant="inline"
-                    className="text-[10px] bg-moss-5 text-moss-1 font-semibold px-2 py-0.5 rounded-full capitalize border border-solid border-moss-4 hover:text-moss-1"
+                    className="text-tag bg-moss-5 text-moss-1 font-semibold px-2 py-0.5 rounded-full capitalize border border-solid border-moss-4 hover:text-moss-1"
                   >
                     {tag}
                   </Glossary>
@@ -101,14 +101,14 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
 
           {/* Impact dynamique */}
           <section>
-            <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold mb-3">
+            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold mb-3">
               {t("asset_detail.impact_overview")}
             </p>
 
             {/* Montant + slider */}
             <div className="bg-paper-2 rounded-xl p-4 border border-paper-3 mb-3">
               <div className="flex items-center justify-between mb-3">
-                <span className="text-[11px] text-ink-3 font-medium">
+                <span className="text-caption text-ink-3 font-medium">
                   {t("asset_detail.monthly_deposit")}
                 </span>
                 <div className="flex items-center gap-2">
@@ -122,9 +122,9 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                       const v = Math.min(500, Math.max(10, Number(e.target.value) || 0));
                       setMonthly(v);
                     }}
-                    className="w-20 h-8 text-right font-value text-[15px] text-ink bg-paper border border-paper-3 rounded-lg px-2 focus:outline-none focus:ring-1 focus:ring-ink-2"
+                    className="w-20 h-8 text-right font-value text-body-lg text-ink bg-paper border border-paper-3 rounded-lg px-2 focus:outline-none focus:ring-1 focus:ring-ink-2"
                   />
-                  <span className="text-[12px] text-ink-3 font-medium">
+                  <span className="text-label text-ink-3 font-medium">
                     {t("asset_detail.per_month")}
                   </span>
                 </div>
@@ -138,8 +138,8 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                 className="[&_[data-orientation=horizontal]]:bg-paper-3 [&_[data-radix-slider-range]]:bg-moss-1 [&_[data-radix-slider-thumb]]:border-moss-2 [&_[data-radix-slider-thumb]]:bg-paper"
               />
               <div className="flex justify-between mt-2">
-                <span className="text-[9px] text-ink-3 font-medium">10 €</span>
-                <span className="text-[9px] text-ink-3 font-medium">500 €</span>
+                <span className="text-tag text-ink-3 font-medium">10 €</span>
+                <span className="text-tag text-ink-3 font-medium">500 €</span>
               </div>
             </div>
 
@@ -148,14 +148,14 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
               <div className="bg-paper-2 rounded-xl p-3 border border-paper-3 text-center">
                 <p className="font-value text-xl leading-none text-moss-1">
                   {co2.toFixed(1)}
-                  <span className="text-[9px] text-ink-3 ml-0.5 font-sans">kg</span>
+                  <span className="text-tag text-ink-3 ml-0.5 font-sans">kg</span>
                 </p>
-                <p className="text-[9px] text-ink-3 mt-1.5 font-medium uppercase tracking-wider">
+                <p className="text-tag text-ink-3 mt-1.5 font-medium uppercase tracking-wider">
                   {t("asset_detail.co2_avoided")}
                 </p>
               </div>
             ) : (
-              <p className="text-[11px] text-ink-3 italic">{t("asset_detail.co2_unavailable")}</p>
+              <p className="text-caption text-ink-3 italic">{t("asset_detail.co2_unavailable")}</p>
             )}
 
             <div className="grid grid-cols-3 gap-2.5 mt-2.5">
@@ -167,12 +167,12 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
 
           {/* Risques */}
           <section>
-            <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold mb-2">
+            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold mb-2">
               {t("asset_detail.risks_title")}
             </p>
             <div className="paper-card p-3.5">
               <div className="flex items-center justify-between pb-3 mb-3 border-b border-dashed border-paper-3">
-                <span className="text-[11px] text-ink-3 font-medium">
+                <span className="text-caption text-ink-3 font-medium">
                   {t("asset_detail.risk_level")}
                 </span>
                 <div className="flex items-center gap-2">
@@ -184,7 +184,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                       />
                     ))}
                   </div>
-                  <span className={`text-[11px] font-semibold ${riskInfo.tone}`}>
+                  <span className={`text-caption font-semibold ${riskInfo.tone}`}>
                     {risk}/7 · {riskInfo.label}
                   </span>
                 </div>
@@ -193,7 +193,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                 {risksList.map((r) => (
                   <li key={r.title} className="flex items-start gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-rust mt-1.5 flex-shrink-0" />
-                    <div className="text-[12px] leading-relaxed">
+                    <div className="text-label leading-relaxed">
                       <span className="font-semibold text-ink">{r.title} · </span>
                       <span className="text-ink-2">{r.desc}</span>
                     </div>
@@ -202,14 +202,14 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
               </ul>
               {asset.exclusions && asset.exclusions.length > 0 && (
                 <div className="mt-3 pt-3 border-t border-dashed border-paper-3">
-                  <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold mb-1.5">
+                  <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold mb-1.5">
                     {t("asset_detail.exclusions_applied")}
                   </p>
                   <div className="flex flex-wrap gap-1.5">
                     {asset.exclusions.map((e) => (
                       <span
                         key={e}
-                        className="text-[10px] bg-rust/10 text-rust font-semibold px-2 py-0.5 rounded-full border border-rust/20"
+                        className="text-tag bg-rust/10 text-rust font-semibold px-2 py-0.5 rounded-full border border-rust/20"
                       >
                         ⊘ {t(`onboarding.steps.exclusions.${e}`)}
                       </span>
@@ -222,10 +222,10 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
 
           {/* {t("asset_detail.identity_card")} */}
           <section>
-            <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold mb-2">
+            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold mb-2">
               {t("asset_detail_sheet.id_card")}
             </p>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-0 text-[12px]">
+            <div className="grid grid-cols-2 gap-x-4 gap-y-0 text-label">
               {asset.issuer && (
                 <IdRow label={t("asset_detail_sheet.issuer")} value={asset.issuer} />
               )}
@@ -251,7 +251,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
           <button
             type="button"
             onClick={() => onOpenChange(false)}
-            className="h-11 px-4 rounded-full bg-paper-2 hover:bg-paper-3 border border-paper-3 text-[12px] font-semibold text-ink-2"
+            className="h-11 px-4 rounded-full bg-paper-2 hover:bg-paper-3 border border-paper-3 text-label font-semibold text-ink-2"
           >
             {t("common.close")}
           </button>
@@ -261,7 +261,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
             trigger={
               <button
                 type="button"
-                className="flex-1 h-11 rounded-full bg-ink text-paper text-[12px] font-semibold uppercase tracking-[0.14em] hover:bg-ink-2 transition-colors flex items-center justify-center gap-2"
+                className="flex-1 h-11 rounded-full bg-ink text-paper text-label font-semibold uppercase tracking-[0.14em] hover:bg-ink-2 transition-colors flex items-center justify-center gap-2"
               >
                 <svg
                   viewBox="0 0 16 16"
@@ -353,9 +353,9 @@ function StatTile({
         className={`font-value text-xl leading-none ${tone === "moss" ? "text-moss-1" : "text-ink"}`}
       >
         {value}
-        {unit && <span className="text-[11px] text-ink-3 ml-0.5 font-sans">{unit}</span>}
+        {unit && <span className="text-caption text-ink-3 ml-0.5 font-sans">{unit}</span>}
       </p>
-      <p className="text-[9px] mt-1.5 text-ink-3 font-medium leading-tight uppercase tracking-wider">
+      <p className="text-tag mt-1.5 text-ink-3 font-medium leading-tight uppercase tracking-wider">
         {label}
       </p>
     </div>
@@ -366,8 +366,8 @@ function MiniBar({ label, value }: { label: string; value: number }) {
   return (
     <div className="bg-paper-2 rounded-xl p-2.5 border border-paper-3">
       <div className="flex items-baseline justify-between mb-1.5">
-        <span className="text-[10px] text-ink-3 font-medium">{label}</span>
-        <span className="text-[10px] font-bold text-ink">{value.toFixed(1)}</span>
+        <span className="text-tag text-ink-3 font-medium">{label}</span>
+        <span className="text-tag font-bold text-ink">{value.toFixed(1)}</span>
       </div>
       <div className="h-1 bg-paper-3 rounded-full overflow-hidden">
         <div className="h-full bg-moss-1 rounded-full" style={{ width: `${value * 10}%` }} />

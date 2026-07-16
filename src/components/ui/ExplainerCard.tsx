@@ -56,7 +56,7 @@ export function ExplainerCard({ title, children, tone = "moss", dismissKey }: Pr
     <div className={`rounded-xl border p-3 relative ${TONE_BG[tone]}`}>
       <div className="flex items-start gap-2 pr-5">
         <span className={`w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0 ${TONE_DOT[tone]}`} />
-        <div className="text-[12px] text-ink-2 leading-relaxed">
+        <div className="text-label text-ink-2 leading-relaxed">
           {title && <span className="font-semibold text-ink">{title} </span>}
           {children}
         </div>

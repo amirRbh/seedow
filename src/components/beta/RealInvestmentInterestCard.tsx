@@ -50,13 +50,13 @@ export function RealInvestmentInterestCard() {
   return (
     <section className="px-5 pt-6">
       <div className="rounded-2xl border border-paper-3 bg-paper-2 p-5">
-        <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold">
+        <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold">
           {t("real_invest_interest.eyebrow")}
         </p>
         <h3 className="font-display text-lg text-ink mt-2 leading-snug">
           {t("real_invest_interest.title")}
         </h3>
-        <p className="text-[12px] text-ink-3 mt-1.5 leading-relaxed">
+        <p className="text-label text-ink-3 mt-1.5 leading-relaxed">
           {t("real_invest_interest.description")}
         </p>
         <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) setDone(false); }}>
@@ -88,7 +88,7 @@ export function RealInvestmentInterestCard() {
                 </DialogHeader>
                 <div className="space-y-5 py-2">
                   <div>
-                    <label className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold">
+                    <label className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold">
                       {t("real_invest_interest.envisaged_amount")}
                     </label>
                     <div className="flex items-center gap-3 mt-2">
@@ -108,7 +108,7 @@ export function RealInvestmentInterestCard() {
                   </div>
 
                   <div>
-                    <label className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold">
+                    <label className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold">
                       {t("real_invest_interest.frequency")}
                     </label>
                     <div className="grid grid-cols-2 gap-2 mt-2">
@@ -120,7 +120,7 @@ export function RealInvestmentInterestCard() {
                           key={opt.v}
                           type="button"
                           onClick={() => setFrequency(opt.v)}
-                          className={`py-2.5 rounded border text-[13px] transition-colors ${
+                          className={`py-2.5 rounded border text-body-sm transition-colors ${
                             frequency === opt.v
                               ? "border-ink bg-ink text-paper"
                               : "border-paper-3 text-ink hover:border-ink"
@@ -133,18 +133,18 @@ export function RealInvestmentInterestCard() {
                   </div>
 
                   <div>
-                    <label className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold">
+                    <label className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold">
                       {t("real_invest_interest.contact_email")}
                     </label>
                     <input
                       type="email"
                       value={contactEmail}
                       onChange={(e) => setContactEmail(e.target.value)}
-                      className="w-full mt-2 px-3 py-2.5 rounded border border-paper-3 bg-paper text-[13px] focus:border-ink focus:outline-none"
+                      className="w-full mt-2 px-3 py-2.5 rounded border border-paper-3 bg-paper text-body-sm focus:border-ink focus:outline-none"
                     />
                   </div>
 
-                  {error && <p className="text-[12px] text-rust">{error}</p>}
+                  {error && <p className="text-label text-rust">{error}</p>}
                 </div>
                 <DialogFooter>
                   <button

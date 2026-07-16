@@ -10,7 +10,7 @@ export function CoursePaywall({ redirectTo }: Props) {
       {/* Faux contenu flouté pour donner un aperçu */}
       <div
         aria-hidden
-        className="select-none pointer-events-none filter blur-sm opacity-60 space-y-4 text-[15px] md:text-base text-ink-2 leading-[1.75]"
+        className="select-none pointer-events-none filter blur-sm opacity-60 space-y-4 text-body-lg md:text-base text-ink-2 leading-[1.75]"
       >
         <p>
           La suite de ce cours détaille les mécanismes avancés, les exemples chiffrés et les cas
@@ -54,7 +54,7 @@ export function CoursePaywall({ redirectTo }: Props) {
             J'ai déjà un compte →
           </Link>
         </div>
-        <p className="mt-6 text-[10px] uppercase tracking-[0.2em] text-ink-3">
+        <p className="mt-6 text-tag uppercase tracking-[0.2em] text-ink-3">
           Aucune donnée bancaire · résiliation en 1 clic
         </p>
       </div>

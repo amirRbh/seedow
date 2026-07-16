@@ -90,11 +90,11 @@ export function PortfolioMetricsCard({ metrics }: Props) {
             key={it.label}
             className={`rounded-xl p-3 border ${c.bg} ${c.border} relative overflow-visible`}
           >
-            <div className="text-[9px] uppercase tracking-wider text-ink-3 font-semibold leading-tight">
+            <div className="text-tag uppercase tracking-wider text-ink-3 font-semibold leading-tight">
               <MetricLabel label={it.label} hint={it.hint} />
             </div>
             <p className={`font-value text-2xl mt-2 leading-none ${c.text}`}>{it.value}</p>
-            <p className="text-[10px] text-ink-3 mt-1.5">{it.sub}</p>
+            <p className="text-tag text-ink-3 mt-1.5">{it.sub}</p>
           </div>
         );
       })}

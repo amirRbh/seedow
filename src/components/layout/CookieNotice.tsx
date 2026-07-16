@@ -35,7 +35,7 @@ export function CookieNotice() {
   return (
     <div className="fixed inset-x-0 bottom-0 z-[60] border-t border-paper-3 bg-paper/95 backdrop-blur px-4 py-3 safe-area-bottom">
       <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-start sm:items-center gap-3">
-        <p className="flex-1 text-[12px] text-ink-2 leading-relaxed">
+        <p className="flex-1 text-label text-ink-2 leading-relaxed">
           {t("cookie_notice.text")}{" "}
           <Link to="/confidentialite" className="underline hover:text-ink">
             {t("cookie_notice.learn_more")}
@@ -43,7 +43,7 @@ export function CookieNotice() {
         </p>
         <button
           onClick={dismiss}
-          className="shrink-0 px-3 py-1.5 text-[12px] font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
+          className="shrink-0 px-3 py-1.5 text-label font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
         >
           {t("cookie_notice.dismiss")}
         </button>

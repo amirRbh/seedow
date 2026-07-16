@@ -81,7 +81,7 @@ export function AppHeader({
         )}
         <div className="min-w-0 flex-1">
           {eyebrow && (
-            <p className="text-[10px] uppercase tracking-[0.2em] text-ink-3 font-semibold mb-2">
+            <p className="text-tag uppercase tracking-[0.2em] text-ink-3 font-semibold mb-2">
               {eyebrow}
             </p>
           )}
@@ -117,7 +117,7 @@ function ViewModeToggle() {
         onClick={() => setMode("simple")}
         aria-pressed={mode === "simple"}
         className={cn(
-          "px-2.5 h-7 text-[10px] font-semibold uppercase tracking-[0.16em] transition-colors duration-150",
+          "px-2.5 h-7 text-tag font-semibold uppercase tracking-[0.16em] transition-colors duration-150",
           "outline-none focus-visible:ring-2 focus-visible:ring-moss-1 focus-visible:ring-inset",
           mode === "simple" ? "bg-ink text-paper" : "text-ink-3 hover:text-ink",
         )}
@@ -129,7 +129,7 @@ function ViewModeToggle() {
         onClick={() => setMode("expert")}
         aria-pressed={mode === "expert"}
         className={cn(
-          "px-2.5 h-7 text-[10px] font-semibold uppercase tracking-[0.16em] transition-colors duration-150 border-l border-paper-3",
+          "px-2.5 h-7 text-tag font-semibold uppercase tracking-[0.16em] transition-colors duration-150 border-l border-paper-3",
           "outline-none focus-visible:ring-2 focus-visible:ring-moss-1 focus-visible:ring-inset",
           mode === "expert" ? "bg-ink text-paper" : "text-ink-3 hover:text-ink",
         )}

@@ -27,7 +27,7 @@ export function LanguageToggle({ className }: LanguageToggleProps) {
         return (
           <span key={opt} className="inline-flex items-center gap-2">
             {idx > 0 && (
-              <span aria-hidden="true" className="text-ink-3 text-[10px]">·</span>
+              <span aria-hidden="true" className="text-ink-3 text-tag">·</span>
             )}
             <button
               type="button"
@@ -35,7 +35,7 @@ export function LanguageToggle({ className }: LanguageToggleProps) {
               aria-pressed={active}
               aria-label={opt === "fr" ? "Français" : "English"}
               className={cn(
-                "relative inline-flex items-center h-6 px-1 text-[10px] font-semibold uppercase tracking-[0.22em] transition-colors duration-150",
+                "relative inline-flex items-center h-6 px-1 text-tag font-semibold uppercase tracking-[0.22em] transition-colors duration-150",
                 "outline-none focus-visible:ring-2 focus-visible:ring-moss-1 rounded-sm",
                 active ? "text-ink" : "text-ink-3 hover:text-ink",
               )}

@@ -97,14 +97,14 @@ export function InvestDialog({ trigger, defaultAmount = 200, label }: Props) {
         <DialogHeader>
           <p className="eyebrow">{t("invest_dialog.eyebrow")}</p>
           <DialogTitle className="font-display text-2xl text-ink mt-1">{resolvedLabel}</DialogTitle>
-          <DialogDescription className="text-ink-3 text-[13px]">
+          <DialogDescription className="text-ink-3 text-body-sm">
             {t("invest_dialog.description")}
           </DialogDescription>
         </DialogHeader>
 
         <div className="mt-2 space-y-4">
           <div>
-            <Label className="text-[11px] uppercase tracking-[0.18em] text-ink-3 font-semibold">
+            <Label className="text-caption uppercase tracking-[0.18em] text-ink-3 font-semibold">
               {t("invest_dialog.amount")}
             </Label>
             <div className="mt-2 flex items-center gap-2">
@@ -127,7 +127,7 @@ export function InvestDialog({ trigger, defaultAmount = 200, label }: Props) {
                     type="button"
                     onClick={() => setAmount(v)}
                     className={cn(
-                      "h-12 px-3 rounded-md text-[12px] font-semibold border transition-colors",
+                      "h-12 px-3 rounded-md text-label font-semibold border transition-colors",
                       amount === v
                         ? "bg-ink text-paper border-ink"
                         : "bg-paper border-paper-3 text-ink-2 hover:border-ink-3",
@@ -142,20 +142,20 @@ export function InvestDialog({ trigger, defaultAmount = 200, label }: Props) {
 
           <Tabs value={method} onValueChange={(v) => setMethod(v as Method)}>
             <TabsList className="grid grid-cols-3 w-full bg-paper-2 border border-paper-3">
-              <TabsTrigger value="card" className="text-[12px]">
+              <TabsTrigger value="card" className="text-label">
                 {t("invest_dialog.tab_card")}
               </TabsTrigger>
-              <TabsTrigger value="applepay" className="text-[12px]">
+              <TabsTrigger value="applepay" className="text-label">
                 {t("invest_dialog.tab_applepay")}
               </TabsTrigger>
-              <TabsTrigger value="sepa" className="text-[12px]">
+              <TabsTrigger value="sepa" className="text-label">
                 {t("invest_dialog.tab_sepa")}
               </TabsTrigger>
             </TabsList>
 
             <TabsContent value="card" className="mt-4 space-y-3">
               <div>
-                <Label className="text-[11px] text-ink-3">{t("invest_dialog.card_number")}</Label>
+                <Label className="text-caption text-ink-3">{t("invest_dialog.card_number")}</Label>
                 <Input
                   inputMode="numeric"
                   autoComplete="cc-number"
@@ -168,7 +168,7 @@ export function InvestDialog({ trigger, defaultAmount = 200, label }: Props) {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <Label className="text-[11px] text-ink-3">{t("invest_dialog.card_exp")}</Label>
+                  <Label className="text-caption text-ink-3">{t("invest_dialog.card_exp")}</Label>
                   <Input
                     inputMode="numeric"
                     autoComplete="cc-exp"
@@ -180,7 +180,7 @@ export function InvestDialog({ trigger, defaultAmount = 200, label }: Props) {
                   />
                 </div>
                 <div>
-                  <Label className="text-[11px] text-ink-3">{t("invest_dialog.card_cvc")}</Label>
+                  <Label className="text-caption text-ink-3">{t("invest_dialog.card_cvc")}</Label>
                   <Input
                     inputMode="numeric"
                     autoComplete="cc-csc"
@@ -196,7 +196,7 @@ export function InvestDialog({ trigger, defaultAmount = 200, label }: Props) {
 
             <TabsContent value="applepay" className="mt-4">
               <div className="rounded-md border border-paper-3 bg-paper-2 p-4 text-center">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-ink-3 font-semibold">
+                <p className="text-caption uppercase tracking-[0.18em] text-ink-3 font-semibold">
                   {t("invest_dialog.applepay_eyebrow")}
                 </p>
                 <p className="mt-2 text-sm text-ink-2">
@@ -207,7 +207,7 @@ export function InvestDialog({ trigger, defaultAmount = 200, label }: Props) {
 
             <TabsContent value="sepa" className="mt-4 space-y-3">
               <div>
-                <Label className="text-[11px] text-ink-3">{t("invest_dialog.iban")}</Label>
+                <Label className="text-caption text-ink-3">{t("invest_dialog.iban")}</Label>
                 <Input
                   placeholder="FR76 ____ ____ ____ ____ ____ ___"
                   value={iban}
@@ -216,7 +216,7 @@ export function InvestDialog({ trigger, defaultAmount = 200, label }: Props) {
                   maxLength={34}
                 />
               </div>
-              <p className="text-[11px] text-ink-3">
+              <p className="text-caption text-ink-3">
                 {t("invest_dialog.sepa_note")}
               </p>
             </TabsContent>
@@ -227,7 +227,7 @@ export function InvestDialog({ trigger, defaultAmount = 200, label }: Props) {
             onClick={handleConfirm}
             disabled={!canSubmit}
             className={cn(
-              "w-full h-12 rounded-full font-semibold text-[13px] uppercase tracking-[0.16em] transition-colors flex items-center justify-center gap-2",
+              "w-full h-12 rounded-full font-semibold text-body-sm uppercase tracking-[0.16em] transition-colors flex items-center justify-center gap-2",
               method === "applepay"
                 ? "bg-ink text-paper hover:bg-ink-2"
                 : "bg-moss-1 text-paper hover:bg-moss-2",
@@ -247,7 +247,7 @@ export function InvestDialog({ trigger, defaultAmount = 200, label }: Props) {
             )}
           </button>
 
-          <p className="text-[10px] text-ink-3 text-center leading-relaxed">
+          <p className="text-tag text-ink-3 text-center leading-relaxed">
             {t("invest_dialog.footer_note")}
           </p>
         </div>
@@ -260,7 +260,7 @@ function DefaultTrigger({ label }: { label: string }) {
   return (
     <button
       type="button"
-      className="inline-flex items-center gap-1.5 h-10 px-5 rounded-full bg-ink text-paper text-[12px] font-semibold uppercase tracking-[0.14em] hover:bg-ink-2 transition-colors"
+      className="inline-flex items-center gap-1.5 h-10 px-5 rounded-full bg-ink text-paper text-label font-semibold uppercase tracking-[0.14em] hover:bg-ink-2 transition-colors"
     >
       <svg viewBox="0 0 16 16" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.2}>
         <path d="M8 3v10M3 8h10" />

@@ -39,7 +39,7 @@ export function EthiSuggestionChips({ onSelect, hasGarden, chips }: EthiSuggesti
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.08 + 0.2 }}
           onClick={() => onSelect(c)}
-          className="bg-paper/10 border border-paper/15 hover:bg-moss-2/30 hover:border-moss-3 rounded-full px-3 py-2 text-[11px] text-paper/80 hover:text-paper transition-all"
+          className="bg-paper/10 border border-paper/15 hover:bg-moss-2/30 hover:border-moss-3 rounded-full px-3 py-2 text-caption text-paper/80 hover:text-paper transition-all"
         >
           {c.label}
         </motion.button>

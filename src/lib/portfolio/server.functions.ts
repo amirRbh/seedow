@@ -261,3 +261,34 @@ export const generatePortfolio = createServerFn({ method: "POST" })
       })),
     };
   });
+
+const RebalanceSchema = z.object({ portfolio_id: z.string().uuid() });
+
+/**
+ * Rééquilibre un portefeuille : déplace l'ancre de valorisation (`rebalanced_at`)
+ * à maintenant. Les poids cibles (`weights`) ne changent pas — c'est le drift
+ * entre cible et valorisation réelle qui est remis à zéro, comme si on avait
+ * vendu/racheté pour revenir pile sur l'allocation cible. Pas de mouvement
+ * d'argent réel : l'app est en mode simulation.
+ */
+export const rebalancePortfolio = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) => RebalanceSchema.parse(input))
+  .handler(async ({ data, context }) => {
+    const { userId, supabase: userClient } = context;
+    const rebalancedAt = new Date().toISOString();
+    const { data: updated, error } = await userClient
+      .from("portfolios")
+      .update({ rebalanced_at: rebalancedAt })
+      .eq("id", data.portfolio_id)
+      .eq("user_id", userId)
+      .select("id, rebalanced_at")
+      .maybeSingle();
+    if (error) {
+      throw new Error("Impossible de rééquilibrer le portefeuille. Réessaie dans un instant.");
+    }
+    if (!updated) {
+      throw new Error("Portefeuille introuvable.");
+    }
+    return { portfolio_id: updated.id, rebalanced_at: updated.rebalanced_at as string };
+  });
