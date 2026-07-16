@@ -29,24 +29,59 @@ export interface YahooChartResult {
 const UA =
   "Mozilla/5.0 (compatible; SeedowBot/1.0; +https://seedow.app)";
 
+/** Codes considérés transitoires : ça vaut le coup de réessayer. */
+function isRetryableStatus(status: number): boolean {
+  return status === 429 || status === 408 || status >= 500;
+}
+
 /**
  * Fetch chart + meta for one symbol.
  * range/interval: defaults give ~2 years of daily closes.
+ *
+ * Retry avec backoff exponentiel (jusqu'à 2 tentatives supplémentaires) sur les
+ * erreurs transitoires (429/5xx/réseau) — Yahoo Finance étant une API non
+ * officielle sans SLA, un blocage temporaire ou un pic de latence ne doit pas
+ * faire échouer tout un run d'ingestion horaire.
  */
 export async function fetchYahooChart(
   symbol: string,
   range: string = "2y",
   interval: string = "1d",
+  maxRetries: number = 2,
 ): Promise<YahooChartResult> {
   const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(
     symbol,
   )}?range=${range}&interval=${interval}&includePrePost=false`;
 
+  let lastErr: Error = new Error(`Yahoo fetch failed for ${symbol}`);
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    if (attempt > 0) {
+      await new Promise((r) => setTimeout(r, 300 * 2 ** (attempt - 1)));
+    }
+    try {
+      return await fetchYahooChartOnce(url, symbol);
+    } catch (e) {
+      lastErr = e instanceof Error ? e : new Error(String(e));
+      const status = e instanceof YahooHttpError ? e.status : null;
+      const retryable = status === null || isRetryableStatus(status);
+      if (!retryable || attempt === maxRetries) throw lastErr;
+    }
+  }
+  throw lastErr;
+}
+
+class YahooHttpError extends Error {
+  constructor(public status: number, message: string) {
+    super(message);
+  }
+}
+
+async function fetchYahooChartOnce(url: string, symbol: string): Promise<YahooChartResult> {
   const res = await fetch(url, {
     headers: { "User-Agent": UA, Accept: "application/json" },
   });
   if (!res.ok) {
-    throw new Error(`Yahoo HTTP ${res.status} for ${symbol}`);
+    throw new YahooHttpError(res.status, `Yahoo HTTP ${res.status} for ${symbol}`);
   }
   const json = (await res.json()) as {
     chart?: {

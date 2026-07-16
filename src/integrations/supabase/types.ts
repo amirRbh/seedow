@@ -339,6 +339,42 @@ export type Database = {
         }
         Relationships: []
       }
+      client_errors: {
+        Row: {
+          context: Json
+          created_at: string
+          id: string
+          message: string
+          source: string
+          stack: string | null
+          url: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          context?: Json
+          created_at?: string
+          id?: string
+          message: string
+          source?: string
+          stack?: string | null
+          url?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          context?: Json
+          created_at?: string
+          id?: string
+          message?: string
+          source?: string
+          stack?: string | null
+          url?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       cron_run_log: {
         Row: {
           assets_failed: number
@@ -732,6 +768,24 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limits: {
+        Row: {
+          key: string
+          request_count: number
+          window_start: string
+        }
+        Insert: {
+          key: string
+          request_count?: number
+          window_start?: string
+        }
+        Update: {
+          key?: string
+          request_count?: number
+          window_start?: string
+        }
+        Relationships: []
+      }
       real_investment_intents: {
         Row: {
           amount: number
@@ -933,6 +987,10 @@ export type Database = {
     Functions: {
       check_and_increment_ethi_rate_limit: {
         Args: { p_limit: number; p_user_id: string; p_window_seconds: number }
+        Returns: boolean
+      }
+      check_and_increment_rate_limit: {
+        Args: { p_key: string; p_limit: number; p_window_seconds: number }
         Returns: boolean
       }
       get_vault_secret: { Args: { secret_name: string }; Returns: string }

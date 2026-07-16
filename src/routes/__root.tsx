@@ -7,6 +7,7 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import { AnimatePresence, motion, MotionConfig } from "framer-motion";
+import { Component, useEffect, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import "@/i18n";
 import { LexiconProvider } from "@/hooks/useLexicon";
@@ -18,6 +19,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { AppShell } from "@/components/layout/AppShell";
 import { CookieNotice } from "@/components/layout/CookieNotice";
+import { installGlobalErrorReporting, reportReactError } from "@/lib/monitoring/errorReporter";
 
 import appCss from "../styles.css?url";
 
@@ -74,6 +76,11 @@ export const Route = createRootRoute({
           "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/19e08fb9-f330-450c-bd8c-8e92d139eed3/id-preview-4e3b9288--8da0a748-e3ac-433b-89b0-062aead1a028.lovable.app-1776452888382.png",
       },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "theme-color", content: "#0d1f14" },
+      { name: "mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
+      { name: "apple-mobile-web-app-title", content: "Seedow" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -85,6 +92,7 @@ export const Route = createRootRoute({
       },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "apple-touch-icon", href: "/favicon.png" },
+      { rel: "manifest", href: "/manifest.json" },
     ],
   }),
   shellComponent: RootShell,
@@ -106,6 +114,43 @@ function RootShell({ children }: { children: React.ReactNode }) {
   );
 }
 
+class RootErrorBoundary extends Component<
+  { children: ReactNode },
+  { hasError: boolean }
+> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, info: { componentStack?: string | null }) {
+    reportReactError(error, info.componentStack ?? undefined);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex min-h-screen items-center justify-center bg-paper px-4">
+          <div className="max-w-md text-center">
+            <h1 className="font-value text-4xl text-ink">Oups.</h1>
+            <p className="mt-3 text-sm text-ink-3">
+              Une erreur inattendue s'est produite. L'équipe a été notifiée automatiquement.
+            </p>
+            <button
+              onClick={() => window.location.assign("/")}
+              className="btn-plant mt-6"
+            >
+              Retour à l'accueil
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 function RouteTransition() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   return (
@@ -125,25 +170,31 @@ function RouteTransition() {
 }
 
 function RootComponent() {
+  useEffect(() => {
+    installGlobalErrorReporting();
+  }, []);
+
   return (
     <MotionConfig reducedMotion="user">
-      <AuthProvider>
-        <UserPortfoliosProvider>
-          <LexiconProvider>
-            <ViewModeProvider>
-              <FocusModeProvider>
-                <TooltipProvider delayDuration={150}>
-                  <AppShell>
-                    <RouteTransition />
-                  </AppShell>
-                  <Toaster richColors position="bottom-right" />
-                  <CookieNotice />
-                </TooltipProvider>
-              </FocusModeProvider>
-            </ViewModeProvider>
-          </LexiconProvider>
-        </UserPortfoliosProvider>
-      </AuthProvider>
+      <RootErrorBoundary>
+        <AuthProvider>
+          <UserPortfoliosProvider>
+            <LexiconProvider>
+              <ViewModeProvider>
+                <FocusModeProvider>
+                  <TooltipProvider delayDuration={150}>
+                    <AppShell>
+                      <RouteTransition />
+                    </AppShell>
+                    <Toaster richColors position="bottom-right" />
+                    <CookieNotice />
+                  </TooltipProvider>
+                </FocusModeProvider>
+              </ViewModeProvider>
+            </LexiconProvider>
+          </UserPortfoliosProvider>
+        </AuthProvider>
+      </RootErrorBoundary>
     </MotionConfig>
   );
 }
