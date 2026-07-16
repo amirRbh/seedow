@@ -6,7 +6,7 @@ import {
   Scripts,
   useRouterState,
 } from "@tanstack/react-router";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, MotionConfig } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import "@/i18n";
 import { LexiconProvider } from "@/hooks/useLexicon";
@@ -126,22 +126,24 @@ function RouteTransition() {
 
 function RootComponent() {
   return (
-    <AuthProvider>
-      <UserPortfoliosProvider>
-        <LexiconProvider>
-          <ViewModeProvider>
-            <FocusModeProvider>
-              <TooltipProvider delayDuration={150}>
-                <AppShell>
-                  <RouteTransition />
-                </AppShell>
-                <Toaster richColors position="bottom-right" />
-                <CookieNotice />
-              </TooltipProvider>
-            </FocusModeProvider>
-          </ViewModeProvider>
-        </LexiconProvider>
-      </UserPortfoliosProvider>
-    </AuthProvider>
+    <MotionConfig reducedMotion="user">
+      <AuthProvider>
+        <UserPortfoliosProvider>
+          <LexiconProvider>
+            <ViewModeProvider>
+              <FocusModeProvider>
+                <TooltipProvider delayDuration={150}>
+                  <AppShell>
+                    <RouteTransition />
+                  </AppShell>
+                  <Toaster richColors position="bottom-right" />
+                  <CookieNotice />
+                </TooltipProvider>
+              </FocusModeProvider>
+            </ViewModeProvider>
+          </LexiconProvider>
+        </UserPortfoliosProvider>
+      </AuthProvider>
+    </MotionConfig>
   );
 }

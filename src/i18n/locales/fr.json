@@ -1126,6 +1126,7 @@
     "gap_msci": "Écart vs MSCI World",
     "above_benchmark": "Au-dessus du benchmark",
     "below_benchmark": "En-dessous du benchmark",
+    "projection_disclaimer": "Projection illustrative basée sur une hypothèse de rendement annuel constant — ce n'est ni une garantie ni un historique réel de performance. Les marchés varient, ton résultat réel peut être très différent.",
     "face_to_face": "Face à face",
     "no_filter": "Les chiffres, sans filtre",
     "you": "Toi",
