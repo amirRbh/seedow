@@ -22,9 +22,8 @@ import { ImpactHero } from "@/components/impact/ImpactHero";
 
 export const Route = createFileRoute("/dashboard")({
   beforeLoad: async () => {
-    if (typeof window === "undefined") return;
-    const { data } = await supabase.auth.getSession();
-    if (!data.session) {
+    const { data, error } = await supabase.auth.getUser();
+    if (error || !data.user) {
       throw redirect({ to: "/auth", search: { redirect: "/dashboard", mode: "login" } });
     }
   },
@@ -43,8 +42,8 @@ function Dashboard() {
   const { lang } = useLang();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { portfolio, loading } = useActivePortfolio();
-  const { portfolios, loading: pfListLoading } = useUserPortfolios();
+  const { portfolio, loading, error: portfolioError } = useActivePortfolio();
+  const { portfolios, loading: pfListLoading, error: pfListError } = useUserPortfolios();
   const valuation = usePortfolioValuation();
   const [greeting, setGreeting] = useState(t("dashboard.greeting_fallback"));
   const hasSeenPortfolioRef = useRef(false);
@@ -61,11 +60,14 @@ function Dashboard() {
 
   useEffect(() => {
     if (pfListLoading || loading) return;
+    // Ne jamais rediriger vers l'onboarding sur la foi d'une erreur réseau/requête :
+    // un "0 portefeuille" qui vient d'un échec de fetch n'est pas un "0 portefeuille" réel.
+    if (pfListError || portfolioError) return;
     if (hasSeenPortfolioRef.current) return;
     if (portfolios.length === 0 && !portfolio) {
       navigate({ to: "/onboarding", search: { new: undefined } });
     }
-  }, [pfListLoading, loading, portfolios.length, portfolio, navigate]);
+  }, [pfListLoading, loading, pfListError, portfolioError, portfolios.length, portfolio, navigate]);
 
   const userName = useMemo(() => {
     const meta = user?.user_metadata as { display_name?: string; full_name?: string } | undefined;

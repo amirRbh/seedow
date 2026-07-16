@@ -14,9 +14,8 @@ import { formatDate } from "@/lib/format";
 
 export const Route = createFileRoute("/objectifs/$goalId")({
   beforeLoad: async ({ params }) => {
-    if (typeof window === "undefined") return;
-    const { data } = await supabase.auth.getSession();
-    if (!data.session) {
+    const { data, error } = await supabase.auth.getUser();
+    if (error || !data.user) {
       throw redirect({ to: "/auth", search: { redirect: `/objectifs/${params.goalId}`, mode: "login" } });
     }
   },
