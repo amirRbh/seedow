@@ -419,7 +419,19 @@
     "col_last_seen": "Dernière connexion",
     "col_portfolios": "Portefeuilles",
     "col_feedback": "Feedback",
-    "no_name": "Sans nom"
+    "no_name": "Sans nom",
+    "kpi_errors_24h": "Erreurs client (24h)",
+    "funnel_title": "Fonnel d'onboarding (30 derniers jours)",
+    "funnel_hint": "Complétées / entrées par étape · dernière ligne = allocation présentée puis acceptée.",
+    "funnel_step_values": "1. Valeurs",
+    "funnel_step_exclusions": "2. Exclusions",
+    "funnel_step_objective": "3. Objectif",
+    "funnel_step_amount": "4. Montant",
+    "funnel_allocation": "Allocation acceptée / présentée",
+    "ingestion_title": "Santé ingestion cours de marché",
+    "ingestion_success_rate": "{{pct}}% de succès (20 derniers runs)",
+    "ingestion_no_data": "Aucune donnée d'ingestion pour l'instant.",
+    "ingestion_failed": "échec(s)"
   },
   "next_step": {
     "eyebrow": "Prochaine étape",

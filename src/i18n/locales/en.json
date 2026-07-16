@@ -419,7 +419,19 @@
     "col_last_seen": "Last sign-in",
     "col_portfolios": "Portfolios",
     "col_feedback": "Feedback",
-    "no_name": "No name"
+    "no_name": "No name",
+    "kpi_errors_24h": "Client errors (24h)",
+    "funnel_title": "Onboarding funnel (last 30 days)",
+    "funnel_hint": "Completed / entered per step · last row = allocation shown then accepted.",
+    "funnel_step_values": "1. Values",
+    "funnel_step_exclusions": "2. Exclusions",
+    "funnel_step_objective": "3. Objective",
+    "funnel_step_amount": "4. Amount",
+    "funnel_allocation": "Allocation accepted / seen",
+    "ingestion_title": "Market data ingestion health",
+    "ingestion_success_rate": "{{pct}}% success (last 20 runs)",
+    "ingestion_no_data": "No ingestion data yet.",
+    "ingestion_failed": "failure(s)"
   },
   "next_step": {
     "eyebrow": "Next step",

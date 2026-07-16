@@ -110,6 +110,92 @@ function AdminBetaPage() {
           label={t("admin_beta.kpi_conversion")}
           value={stats.signups > 0 ? `${Math.round((stats.portfoliosCreated / stats.signups) * 100)}%` : "—"}
         />
+        <Kpi
+          label={t("admin_beta.kpi_errors_24h")}
+          value={String(stats.clientErrors24h)}
+        />
+      </section>
+
+      {/* Onboarding funnel */}
+      <section>
+        <h2 className="font-display text-lg text-ink mb-3">{t("admin_beta.funnel_title")}</h2>
+        <div className="border border-paper-3 rounded-2xl divide-y divide-paper-3">
+          {stats.onboardingFunnel.map((s) => {
+            const dropRate = s.entered > 0 ? 1 - s.completed / s.entered : 0;
+            return (
+              <div key={s.step} className="p-4">
+                <div className="flex items-center justify-between text-body-sm">
+                  <span className="font-medium text-ink">{t(`admin_beta.funnel_step_${s.step}`, { defaultValue: s.step })}</span>
+                  <span className="text-ink-3 tabular-nums">
+                    {s.completed} / {s.entered}
+                    {s.entered > 0 && (
+                      <span className={`ml-2 ${dropRate > 0.3 ? "text-rust" : "text-ink-3"}`}>
+                        (-{Math.round(dropRate * 100)}%)
+                      </span>
+                    )}
+                  </span>
+                </div>
+                <div className="h-1.5 w-full bg-paper-3 rounded-full overflow-hidden mt-2">
+                  <div
+                    className="h-full bg-gold"
+                    style={{ width: `${s.entered > 0 ? (s.completed / s.entered) * 100 : 0}%` }}
+                  />
+                </div>
+              </div>
+            );
+          })}
+          <div className="p-4 flex items-center justify-between text-body-sm">
+            <span className="font-medium text-ink">{t("admin_beta.funnel_allocation")}</span>
+            <span className="text-ink-3 tabular-nums">
+              {stats.allocationAccepted} / {stats.allocationSeen}
+            </span>
+          </div>
+        </div>
+        <p className="text-caption text-ink-3 mt-2">{t("admin_beta.funnel_hint")}</p>
+      </section>
+
+      {/* Market data ingestion health */}
+      <section>
+        <div className="flex items-end justify-between flex-wrap gap-3 mb-3">
+          <h2 className="font-display text-lg text-ink">{t("admin_beta.ingestion_title")}</h2>
+          <span className={`text-label uppercase tracking-[0.18em] font-semibold ${
+            stats.ingestionSuccessRate === null
+              ? "text-ink-3"
+              : stats.ingestionSuccessRate >= 0.9
+                ? "text-forest"
+                : "text-rust"
+          }`}>
+            {stats.ingestionSuccessRate !== null
+              ? t("admin_beta.ingestion_success_rate", { pct: Math.round(stats.ingestionSuccessRate * 100) })
+              : t("admin_beta.ingestion_no_data")}
+          </span>
+        </div>
+        <div className="border border-paper-3 rounded-2xl divide-y divide-paper-3">
+          {stats.ingestionRuns.length === 0 ? (
+            <p className="p-4 text-body-sm text-ink-3">{t("admin_beta.ingestion_no_data")}</p>
+          ) : (
+            stats.ingestionRuns.slice(0, 8).map((r) => (
+              <div key={r.id} className="p-4 flex items-center justify-between text-body-sm">
+                <span className="flex items-center gap-2">
+                  <span
+                    className={
+                      r.status === "ok" ? "text-forest" : r.status === "partial" ? "text-gold" : "text-rust"
+                    }
+                  >
+                    ●
+                  </span>
+                  <span className="text-ink tabular-nums">
+                    {r.assets_ok} ok{r.assets_failed > 0 ? ` · ${r.assets_failed} ${t("admin_beta.ingestion_failed")}` : ""}
+                  </span>
+                </span>
+                <span className="text-ink-3 text-caption tabular-nums">
+                  {formatDate(r.ran_at, lang, dtOpts)}
+                  {r.duration_ms != null ? ` · ${Math.round(r.duration_ms / 1000)}s` : ""}
+                </span>
+              </div>
+            ))
+          )}
+        </div>
       </section>
 
       {/* Testers list */}

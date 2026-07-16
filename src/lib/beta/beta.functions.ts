@@ -1,10 +1,11 @@
 /**
  * Server functions pour la phase bêta (300 testeurs).
- * - checkBetaCapacity / joinWaitlist : publiques
- * - submitRealInvestmentIntent / submitBetaFeedback / logBetaEvent : authentifiées
+ * - checkBetaCapacity / joinWaitlist / getWaitlistCount : publiques
+ * - submitRealInvestmentIntent / submitBetaFeedback / logBetaEvent / logClientError : authentifiées ou best-effort
  * - getBetaAdminStats : auth + role admin
  */
 import { createServerFn } from "@tanstack/react-start";
+import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
@@ -28,13 +29,41 @@ export const checkBetaCapacity = createServerFn({ method: "GET" }).handler(
 
     const cap = typeof capRes.data?.value === "number" ? capRes.data.value : 300;
     const status = (statusRes.data?.value === "closed" ? "closed" : "open") as "open" | "closed";
-    const realCount = count ?? 0;
-    const slotsTaken = Math.max(220, realCount);
+    // Chiffre réel — aucun plancher artificiel. Ce que l'utilisateur voit doit
+    // correspondre exactement à la table `profiles`.
+    const slotsTaken = count ?? 0;
     const slotsLeft = Math.max(0, cap - slotsTaken);
     const full = slotsLeft === 0 || status === "closed";
     return { slotsTaken, cap, status, slotsLeft, full };
   },
 );
+
+/** Nombre réel d'inscrits sur la waitlist — utilisé par la landing pour un compteur honnête. */
+export const getWaitlistCount = createServerFn({ method: "GET" }).handler(
+  async (): Promise<{ count: number }> => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { count } = await supabaseAdmin
+      .from("waitlist")
+      .select("*", { count: "exact", head: true });
+    return { count: count ?? 0 };
+  },
+);
+
+/** Hash non-réversible d'une IP pour la clé de rate-limit (pas de PII stockée en clair). */
+async function hashIp(ip: string): Promise<string> {
+  const data = new TextEncoder().encode(ip);
+  const digest = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(digest))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+function clientIp(): string {
+  const request = getRequest();
+  const fwd = request?.headers?.get("x-forwarded-for");
+  if (fwd) return fwd.split(",")[0].trim();
+  return request?.headers?.get("cf-connecting-ip") ?? "unknown";
+}
 
 export const joinWaitlist = createServerFn({ method: "POST" })
   .inputValidator((input: { email: string; source?: string }) =>
@@ -47,6 +76,19 @@ export const joinWaitlist = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // Anti-abus : max 5 inscriptions / 10 min depuis la même IP (endpoint public,
+    // sans auth — cible visible pour un bot qui spammerait la waitlist).
+    const ip = clientIp();
+    const rlKey = `waitlist:${await hashIp(ip)}`;
+    const { data: allowed, error: rlErr } = await supabaseAdmin.rpc(
+      "check_and_increment_rate_limit",
+      { p_key: rlKey, p_limit: 5, p_window_seconds: 600 },
+    );
+    if (!rlErr && allowed === false) {
+      throw new Error("Trop de tentatives. Réessaie dans quelques minutes.");
+    }
+
     const { error } = await supabaseAdmin
       .from("waitlist")
       .insert({ email: data.email.toLowerCase(), source: data.source ?? null });
@@ -60,6 +102,63 @@ export const joinWaitlist = createServerFn({ method: "POST" })
       .select("*", { count: "exact", head: true });
 
     return { ok: true, position: count ?? 0 };
+  });
+
+/**
+ * Journalise une erreur client (JS runtime, promesse rejetée, error boundary).
+ * Best-effort, public (l'erreur peut survenir avant authentification), rate-limitée
+ * par IP pour éviter qu'un bug en boucle ne remplisse la table.
+ */
+export const logClientError = createServerFn({ method: "POST" })
+  .inputValidator((input: {
+    message: string;
+    stack?: string;
+    url?: string;
+    userAgent?: string;
+    context?: Record<string, unknown>;
+  }) =>
+    z
+      .object({
+        message: z.string().trim().min(1).max(2000),
+        stack: z.string().trim().max(8000).optional(),
+        url: z.string().trim().max(2000).optional(),
+        userAgent: z.string().trim().max(500).optional(),
+        context: z.record(z.string(), z.unknown()).optional(),
+      })
+      .parse(input),
+  )
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const ip = clientIp();
+    const rlKey = `client_error:${await hashIp(ip)}`;
+    const { data: allowed, error: rlErr } = await supabaseAdmin.rpc(
+      "check_and_increment_rate_limit",
+      { p_key: rlKey, p_limit: 30, p_window_seconds: 600 },
+    );
+    if (!rlErr && allowed === false) return { ok: false };
+
+    let userId: string | null = null;
+    try {
+      const authHeader = getRequest()?.headers?.get("authorization");
+      const token = authHeader?.replace(/^Bearer\s+/i, "").trim();
+      if (token) {
+        const { data: userData } = await supabaseAdmin.auth.getUser(token);
+        userId = userData?.user?.id ?? null;
+      }
+    } catch {
+      // pas de token / token invalide : on journalise quand même, anonyme
+    }
+
+    await supabaseAdmin.from("client_errors").insert({
+      user_id: userId,
+      message: data.message,
+      stack: data.stack ?? null,
+      url: data.url ?? null,
+      user_agent: data.userAgent ?? null,
+      context: (data.context ?? {}) as never,
+    });
+    return { ok: true };
   });
 
 export const submitRealInvestmentIntent = createServerFn({ method: "POST" })
@@ -150,6 +249,21 @@ export interface BetaTester {
   has_feedback: boolean;
 }
 
+export interface OnboardingFunnelStep {
+  step: string;
+  entered: number;
+  completed: number;
+}
+
+export interface IngestionRun {
+  id: string;
+  status: "ok" | "error" | "partial";
+  assets_ok: number;
+  assets_failed: number;
+  duration_ms: number | null;
+  ran_at: string;
+}
+
 export interface BetaAdminStats {
   signups: number;
   cap: number;
@@ -176,6 +290,12 @@ export interface BetaAdminStats {
     wish: string | null;
     created_at: string;
   }>;
+  onboardingFunnel: OnboardingFunnelStep[];
+  allocationSeen: number;
+  allocationAccepted: number;
+  ingestionRuns: IngestionRun[];
+  ingestionSuccessRate: number | null;
+  clientErrors24h: number;
 }
 
 export const getBetaAdminStats = createServerFn({ method: "GET" })
@@ -203,6 +323,9 @@ export const getBetaAdminStats = createServerFn({ method: "GET" })
       portfoliosByUserRes,
       feedbackByUserRes,
       authUsersRes,
+      preferenceEventsRes,
+      ingestionRunsRes,
+      clientErrors24hRes,
     ] = await Promise.all([
       supabaseAdmin.from("profiles").select("*", { count: "exact", head: true }),
       supabaseAdmin.from("app_config").select("value").eq("key", "beta_cap").maybeSingle(),
@@ -229,6 +352,25 @@ export const getBetaAdminStats = createServerFn({ method: "GET" })
       supabaseAdmin.from("portfolios").select("user_id"),
       supabaseAdmin.from("beta_feedback").select("user_id"),
       supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 300 }),
+      // Fonnel d'onboarding : step_entered / step_completed par étape, + les
+      // deux jalons finaux (allocation présentée / acceptée), sur les 30 derniers jours.
+      supabaseAdmin
+        .from("preference_events")
+        .select("step, payload, occurred_at")
+        .in("step", ["step_entered", "step_completed", "allocation_seen", "allocation_accepted"])
+        .gte("occurred_at", new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString())
+        .limit(20000),
+      // Santé de l'ingestion des cours de marché (cron horaire Yahoo Finance).
+      supabaseAdmin
+        .from("cron_run_log")
+        .select("id, status, assets_ok, assets_failed, duration_ms, ran_at")
+        .eq("job_name", "refresh-market-data")
+        .order("ran_at", { ascending: false })
+        .limit(20),
+      supabaseAdmin
+        .from("client_errors")
+        .select("*", { count: "exact", head: true })
+        .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()),
     ]);
 
     const intents = intentsRes.data ?? [];
@@ -277,6 +419,45 @@ export const getBetaAdminStats = createServerFn({ method: "GET" })
       };
     });
 
+    // ── Fonnel d'onboarding : entered/completed par step, dans l'ordre du parcours ──
+    const STEP_ORDER = ["values", "exclusions", "objective", "amount"];
+    const entered = new Map<string, number>();
+    const completed = new Map<string, number>();
+    let allocationSeen = 0;
+    let allocationAccepted = 0;
+    for (const ev of preferenceEventsRes.data ?? []) {
+      const payload = (ev.payload as Record<string, unknown> | null) ?? {};
+      const onboardingStep = payload.onboarding_step as string | undefined;
+      if (ev.step === "step_entered" && onboardingStep) {
+        entered.set(onboardingStep, (entered.get(onboardingStep) ?? 0) + 1);
+      } else if (ev.step === "step_completed" && onboardingStep) {
+        completed.set(onboardingStep, (completed.get(onboardingStep) ?? 0) + 1);
+      } else if (ev.step === "allocation_seen") {
+        allocationSeen += 1;
+      } else if (ev.step === "allocation_accepted") {
+        allocationAccepted += 1;
+      }
+    }
+    const onboardingFunnel: OnboardingFunnelStep[] = STEP_ORDER.map((step) => ({
+      step,
+      entered: entered.get(step) ?? 0,
+      completed: completed.get(step) ?? 0,
+    }));
+
+    // ── Santé de l'ingestion de marché ──
+    const ingestionRuns: IngestionRun[] = (ingestionRunsRes.data ?? []).map((r) => ({
+      id: r.id as string,
+      status: r.status as "ok" | "error" | "partial",
+      assets_ok: r.assets_ok as number,
+      assets_failed: r.assets_failed as number,
+      duration_ms: r.duration_ms as number | null,
+      ran_at: r.ran_at as string,
+    }));
+    const ingestionSuccessRate =
+      ingestionRuns.length > 0
+        ? ingestionRuns.filter((r) => r.status === "ok").length / ingestionRuns.length
+        : null;
+
     return {
       signups,
       cap,
@@ -303,5 +484,11 @@ export const getBetaAdminStats = createServerFn({ method: "GET" })
         wish: r.wish as string | null,
         created_at: r.created_at as string,
       })),
+      onboardingFunnel,
+      allocationSeen,
+      allocationAccepted,
+      ingestionRuns,
+      ingestionSuccessRate,
+      clientErrors24h: clientErrors24hRes.count ?? 0,
     };
   });

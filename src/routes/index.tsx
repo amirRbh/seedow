@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { joinWaitlist } from "@/lib/beta/beta.functions";
+import { joinWaitlist, getWaitlistCount } from "@/lib/beta/beta.functions";
 
 const SITE_URL = "https://seedow.life";
 
@@ -479,6 +479,23 @@ function CtaForm({ isAuthed }: { isAuthed: boolean | null }) {
   const [done, setDone] = useState(false);
   const [position, setPosition] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // Compteur réel — jamais de chiffre inventé. `null` tant qu'on n'a pas la
+  // vraie valeur, pour ne rien afficher plutôt que d'afficher un chiffre faux.
+  const [waitlistCount, setWaitlistCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    getWaitlistCount()
+      .then((res) => {
+        if (!cancelled) setWaitlistCount(res.count);
+      })
+      .catch(() => {
+        /* silencieux : pas de compteur plutôt qu'un compteur faux */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -533,11 +550,13 @@ function CtaForm({ isAuthed }: { isAuthed: boolean | null }) {
             <span className="font-semibold text-[color:var(--apple-text)]">#{position}</span> sur la
             liste · on te contacte très vite
           </>
-        ) : (
+        ) : waitlistCount !== null && waitlistCount > 0 ? (
           <>
-            <span className="font-semibold text-[color:var(--apple-text)]">312</span> personnes déjà
-            inscrites · lancement dans 1-2 semaines
+            <span className="font-semibold text-[color:var(--apple-text)]">{waitlistCount}</span>{" "}
+            {waitlistCount > 1 ? "personnes déjà inscrites" : "personne déjà inscrite"} · places limitées
           </>
+        ) : (
+          <>Rejoins la liste des premiers testeurs · places limitées</>
         )}
       </div>
       {error && <p className="text-body-sm text-red-500 mt-3">{error}</p>}
