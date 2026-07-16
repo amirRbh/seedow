@@ -616,7 +616,12 @@
       "reveal_eyebrow": "Target allocation",
       "reveal_title": "Your portfolio",
       "reveal_summary": "{{count}} positions · reference capital {{amount}}",
-      "dashboard_cta": "Go to dashboard"
+      "dashboard_cta": "Go to dashboard",
+      "save_cta": "Save my garden",
+      "save_hint": "Create a free account to save it — no strings attached, 10 seconds."
+    },
+    "saving": {
+      "title": "Saving your garden…"
     },
     "step": {
       "back": "Back",

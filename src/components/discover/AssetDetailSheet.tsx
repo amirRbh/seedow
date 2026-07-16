@@ -5,6 +5,7 @@ import { useLang } from "@/hooks/useLang";
 import { formatCurrency, formatPercent } from "@/lib/format";
 import { Slider } from "@/components/ui/slider";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
+import { Glossary } from "@/components/ui/Glossary";
 import type { DiscoverAsset } from "@/lib/discover/types";
 
 interface Props {
@@ -85,12 +86,14 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
             {asset.tags.length > 0 && (
               <div className="flex flex-wrap gap-1.5 mt-3">
                 {asset.tags.map((tag) => (
-                  <span
+                  <Glossary
                     key={tag}
-                    className="text-[10px] bg-moss-5 text-moss-1 font-semibold px-2 py-0.5 rounded-full capitalize border border-moss-4"
+                    term="SFDR"
+                    variant="inline"
+                    className="text-[10px] bg-moss-5 text-moss-1 font-semibold px-2 py-0.5 rounded-full capitalize border border-solid border-moss-4 hover:text-moss-1"
                   >
                     {tag}
-                  </span>
+                  </Glossary>
                 ))}
               </div>
             )}

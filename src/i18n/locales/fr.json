@@ -616,7 +616,12 @@
       "reveal_eyebrow": "Allocation cible",
       "reveal_title": "Votre portefeuille",
       "reveal_summary": "{{count}} positions · capital de référence {{amount}}",
-      "dashboard_cta": "Accéder au tableau de bord"
+      "dashboard_cta": "Accéder au tableau de bord",
+      "save_cta": "Sauvegarder mon jardin",
+      "save_hint": "Crée un compte gratuit pour le sauvegarder — sans engagement, 10 secondes."
+    },
+    "saving": {
+      "title": "Enregistrement de ton jardin…"
     },
     "step": {
       "back": "Retour",

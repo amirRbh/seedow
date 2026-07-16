@@ -43,7 +43,8 @@ export function AssetRow({ asset, index, onOpen }: Props) {
             <>
               <span className="text-[9px] text-ink-3">·</span>
               <span className="text-[9px] uppercase tracking-wider text-ink-3">
-                {t("discover.row.risk")} {asset.risk_level}/7
+                {t("discover.row.risk")} {asset.risk_level}/7 ·{" "}
+                {t(`asset_detail.risk_labels.${asset.risk_level}`)}
               </span>
             </>
           )}
