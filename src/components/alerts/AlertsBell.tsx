@@ -51,7 +51,7 @@ export function AlertsBell() {
           {unread > 0 && (
             <span
               aria-hidden="true"
-              className="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] px-1 rounded-full bg-rust text-paper text-[9px] font-semibold leading-[16px] text-center tabular-nums"
+              className="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] px-1 rounded-full bg-rust text-paper text-tag font-semibold leading-[16px] text-center tabular-nums"
             >
               {unread > 9 ? "9+" : unread}
             </span>
@@ -61,7 +61,7 @@ export function AlertsBell() {
 
       <SheetContent side="right" className="w-full sm:max-w-md bg-paper border-paper-3 p-0">
         <SheetHeader className="px-5 pt-6 pb-4 border-b border-paper-3 text-left">
-          <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold">
+          <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold">
             {t("alerts.eyebrow")}
           </p>
           <SheetTitle className="font-value text-2xl text-ink leading-tight">
@@ -83,7 +83,7 @@ export function AlertsBell() {
                 <div className="flex items-center justify-between gap-2 mb-2">
                   <div className="flex items-center gap-2">
                     <span className={cn("inline-block w-1.5 h-1.5 rounded-full", TONE_DOT[a.severity])} />
-                    <span className="text-[10px] uppercase tracking-[0.18em] font-semibold text-ink-3">
+                    <span className="text-tag uppercase tracking-[0.18em] font-semibold text-ink-3">
                       {TONE_LABEL[a.severity]}
                     </span>
                   </div>
@@ -91,18 +91,18 @@ export function AlertsBell() {
                     type="button"
                     onClick={() => void dismiss(a.id)}
                     aria-label={t("alerts.dismiss")}
-                    className="text-ink-3 hover:text-ink text-[11px] outline-none focus-visible:ring-2 focus-visible:ring-moss-1 rounded"
+                    className="text-ink-3 hover:text-ink text-caption outline-none focus-visible:ring-2 focus-visible:ring-moss-1 rounded"
                   >
                     ✕
                   </button>
                 </div>
                 <h3 className="text-sm font-semibold text-ink leading-snug">{a.title}</h3>
-                <p className="text-[13px] text-ink-2 mt-1.5 leading-relaxed">{a.body}</p>
+                <p className="text-body-sm text-ink-2 mt-1.5 leading-relaxed">{a.body}</p>
                 {a.ctaHref && a.ctaLabel && (
                   <Link
                     to={a.ctaHref}
                     onClick={() => setOpen(false)}
-                    className="mt-3 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-ink hover:text-moss-1 transition-colors"
+                    className="mt-3 inline-flex items-center gap-2 text-caption font-semibold uppercase tracking-[0.18em] text-ink hover:text-moss-1 transition-colors"
                   >
                     {a.ctaLabel}
                     <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5">

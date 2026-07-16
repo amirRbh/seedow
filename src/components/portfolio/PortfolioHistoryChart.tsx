@@ -99,7 +99,7 @@ export function PortfolioHistoryChart() {
     <div className="paper-card p-5">
       <div className="flex items-baseline justify-between mb-3">
         <div>
-          <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold">
+          <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold">
             Évolution
           </p>
           <p className="font-value text-2xl text-ink mt-0.5">
@@ -107,7 +107,7 @@ export function PortfolioHistoryChart() {
           </p>
           {points.length > 0 && (
             <p
-              className={`text-[12px] font-semibold tabular-nums mt-0.5 ${
+              className={`text-label font-semibold tabular-nums mt-0.5 ${
                 isUp ? "text-moss-1" : "text-bloom"
               }`}
             >
@@ -123,7 +123,7 @@ export function PortfolioHistoryChart() {
               key={r.id}
               type="button"
               onClick={() => setRange(r.id)}
-              className={`text-[11px] font-medium px-2.5 py-1 rounded-full transition-colors ${
+              className={`text-caption font-medium px-2.5 py-1 rounded-full transition-colors ${
                 range === r.id
                   ? "bg-paper text-ink shadow-sm"
                   : "text-ink-3 hover:text-ink-2"
@@ -137,15 +137,15 @@ export function PortfolioHistoryChart() {
 
       <div className="h-44 -mx-2">
         {loading ? (
-          <div className="h-full flex items-center justify-center text-[11px] text-ink-3">
+          <div className="h-full flex items-center justify-center text-caption text-ink-3">
             Chargement…
           </div>
         ) : error ? (
-          <div className="h-full flex items-center justify-center text-[11px] text-rust">
+          <div className="h-full flex items-center justify-center text-caption text-rust">
             {error}
           </div>
         ) : points.length < 2 ? (
-          <div className="h-full flex items-center justify-center text-[11px] text-ink-3 text-center px-4">
+          <div className="h-full flex items-center justify-center text-caption text-ink-3 text-center px-4">
             Pas encore assez de données historiques pour tracer une courbe.
             <br />
             La courbe apparaîtra dès que plusieurs jours de cotations seront disponibles.
@@ -222,7 +222,7 @@ export function PortfolioHistoryChart() {
       </div>
 
       {points.length >= 2 && (
-        <div className="flex items-center gap-4 mt-3 pt-3 border-t border-paper-3 text-[10px] text-ink-3">
+        <div className="flex items-center gap-4 mt-3 pt-3 border-t border-paper-3 text-tag text-ink-3">
           <span className="flex items-center gap-1.5">
             <span
               className="w-2.5 h-0.5 inline-block"

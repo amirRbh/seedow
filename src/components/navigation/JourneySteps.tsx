@@ -46,12 +46,12 @@ export function JourneySteps({ active, compact = false }: Props) {
                   : "border-paper-3 text-ink-3 hover:text-ink-2",
             )}
           >
-            <span className="font-value text-[10px] tabular-nums tracking-widest text-ink-3 shrink-0">
+            <span className="font-value text-tag tabular-nums tracking-widest text-ink-3 shrink-0">
               {step.n}
             </span>
             <span
               className={cn(
-                "text-[10px] uppercase tracking-[0.18em] truncate",
+                "text-tag uppercase tracking-[0.18em] truncate",
                 isActive ? "font-semibold" : "font-medium",
               )}
             >

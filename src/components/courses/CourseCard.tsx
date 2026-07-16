@@ -21,7 +21,7 @@ export function CourseCard({ course, isAuthed }: Props) {
         !accessible && "opacity-95",
       )}
     >
-      <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-3">
+      <div className="flex items-center justify-between text-tag font-semibold uppercase tracking-[0.18em] text-ink-3">
         <span>
           {trackLabel} · {levelLabel}
         </span>
@@ -40,16 +40,16 @@ export function CourseCard({ course, isAuthed }: Props) {
 
       <div className="mt-auto pt-4 border-t border-ink/8 flex items-center justify-between">
         {course.isFree ? (
-          <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-moss">
+          <span className="inline-flex items-center gap-1.5 text-tag font-semibold uppercase tracking-[0.18em] text-moss">
             <span className="w-1.5 h-1.5 bg-moss rounded-full" />
             Gratuit · Lire maintenant
           </span>
         ) : accessible ? (
-          <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-3">
+          <span className="text-tag font-semibold uppercase tracking-[0.18em] text-ink-3">
             Accessible
           </span>
         ) : (
-          <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-3">
+          <span className="inline-flex items-center gap-1.5 text-tag font-semibold uppercase tracking-[0.18em] text-ink-3">
             <LockIcon />
             Compte gratuit requis
           </span>

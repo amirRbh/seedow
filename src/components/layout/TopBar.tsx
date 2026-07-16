@@ -42,7 +42,7 @@ export function TopBar({ onOpenCommand }: TopBarProps) {
           onClick={onOpenCommand}
           className={cn(
             "hidden md:inline-flex items-center gap-2 h-9 pl-3 pr-2 rounded-md border border-paper-3 bg-paper-2/60",
-            "text-[12px] text-ink-3 hover:text-ink hover:border-ink-3 transition-colors duration-150",
+            "text-label text-ink-3 hover:text-ink hover:border-ink-3 transition-colors duration-150",
             "outline-none focus-visible:ring-2 focus-visible:ring-moss-1",
           )}
           aria-label={t("nav.open_command_palette")}
@@ -51,7 +51,7 @@ export function TopBar({ onOpenCommand }: TopBarProps) {
           <span className="font-medium">{t("nav.search")}</span>
           <kbd
             suppressHydrationWarning
-            className="ml-3 inline-flex items-center gap-0.5 h-5 px-1.5 rounded border border-paper-3 bg-paper text-[10px] text-ink-3 font-mono"
+            className="ml-3 inline-flex items-center gap-0.5 h-5 px-1.5 rounded border border-paper-3 bg-paper text-tag text-ink-3 font-mono"
           >
             <span suppressHydrationWarning>{isMac ? "⌘" : "Ctrl"}</span>
             <span>K</span>
@@ -89,7 +89,7 @@ function ViewModeToggle() {
         onClick={() => setMode("simple")}
         aria-pressed={mode === "simple"}
         className={cn(
-          "px-2.5 h-7 text-[10px] font-semibold uppercase tracking-[0.16em] transition-colors duration-150",
+          "px-2.5 h-7 text-tag font-semibold uppercase tracking-[0.16em] transition-colors duration-150",
           "outline-none focus-visible:ring-2 focus-visible:ring-moss-1 focus-visible:ring-inset",
           mode === "simple" ? "bg-ink text-paper" : "text-ink-3 hover:text-ink",
         )}
@@ -101,7 +101,7 @@ function ViewModeToggle() {
         onClick={() => setMode("expert")}
         aria-pressed={mode === "expert"}
         className={cn(
-          "px-2.5 h-7 text-[10px] font-semibold uppercase tracking-[0.16em] transition-colors duration-150 border-l border-paper-3",
+          "px-2.5 h-7 text-tag font-semibold uppercase tracking-[0.16em] transition-colors duration-150 border-l border-paper-3",
           "outline-none focus-visible:ring-2 focus-visible:ring-moss-1 focus-visible:ring-inset",
           mode === "expert" ? "bg-ink text-paper" : "text-ink-3 hover:text-ink",
         )}

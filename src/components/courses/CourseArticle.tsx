@@ -20,15 +20,15 @@ export function CourseArticle({ course, sections, truncated }: Props) {
         <p className="text-lg md:text-xl text-ink-2 leading-relaxed">{course.intro}</p>
         {course.eli5 && (
           <aside className="mt-8 bg-paper-2/70 border border-ink/8 p-5 md:p-6">
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink-3 mb-2">
+            <p className="font-mono text-tag uppercase tracking-[0.22em] text-ink-3 mb-2">
               En une image
             </p>
-            <p className="text-[15px] md:text-base text-ink italic leading-relaxed">
+            <p className="text-body-lg md:text-base text-ink italic leading-relaxed">
               {course.eli5}
             </p>
           </aside>
         )}
-        <div className="mt-6 flex items-center gap-4 text-[10px] font-semibold uppercase tracking-[0.22em] text-ink-3">
+        <div className="mt-6 flex items-center gap-4 text-tag font-semibold uppercase tracking-[0.22em] text-ink-3">
           <span>{course.track === "esg" ? "Finance ESG" : "Finance"}</span>
           <span>·</span>
           <span>{course.level === "debutant" ? "Débutant" : "Intermédiaire"}</span>
@@ -43,7 +43,7 @@ export function CourseArticle({ course, sections, truncated }: Props) {
             <h2 className="font-display text-xl md:text-2xl text-ink mb-5 leading-tight">
               {section.heading}
             </h2>
-            <div className="space-y-4 text-[15px] md:text-base text-ink-2 leading-[1.75]">
+            <div className="space-y-4 text-body-lg md:text-base text-ink-2 leading-[1.75]">
               {section.paragraphs.map((p, j) => (
                 <p key={j}>{p}</p>
               ))}
@@ -68,9 +68,9 @@ export function CourseArticle({ course, sections, truncated }: Props) {
             {course.advanced.map((item, i) => (
               <li
                 key={i}
-                className="flex gap-3 text-[14px] md:text-[15px] text-ink-2 leading-relaxed"
+                className="flex gap-3 text-body md:text-body-lg text-ink-2 leading-relaxed"
               >
-                <span className="font-mono text-[11px] text-gold tabular-nums shrink-0 w-6 pt-1">
+                <span className="font-mono text-caption text-gold tabular-nums shrink-0 w-6 pt-1">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span>{item}</span>
@@ -85,7 +85,7 @@ export function CourseArticle({ course, sections, truncated }: Props) {
           <p className="eyebrow mb-5">À retenir</p>
           <ul className="space-y-3">
             {course.keyTakeaways.map((k, i) => (
-              <li key={i} className="flex gap-3 text-[15px] md:text-base text-ink leading-relaxed">
+              <li key={i} className="flex gap-3 text-body-lg md:text-base text-ink leading-relaxed">
                 <span className="font-display text-gold tabular-nums shrink-0 w-6">
                   {String(i + 1).padStart(2, "0")}
                 </span>

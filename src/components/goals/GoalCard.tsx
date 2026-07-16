@@ -42,7 +42,7 @@ export function GoalCard({ goal, onEdit }: { goal: FinancialGoal; onEdit: () => 
     <article className="rounded-lg border border-paper-3 bg-paper p-6 transition-shadow hover:shadow-sm">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gold">
+          <p className="text-tag font-semibold uppercase tracking-[0.22em] text-gold">
             {t(`goal.type_${goal.goal_type}`)}
           </p>
           <h3 className="mt-2 font-value text-2xl text-ink leading-tight">{goal.name}</h3>
@@ -56,7 +56,7 @@ export function GoalCard({ goal, onEdit }: { goal: FinancialGoal; onEdit: () => 
         <button
           type="button"
           onClick={onEdit}
-          className="text-[11px] uppercase tracking-[0.18em] text-ink-3 hover:text-ink"
+          className="text-caption uppercase tracking-[0.18em] text-ink-3 hover:text-ink"
         >
           {t("common.edit")}
         </button>
@@ -68,7 +68,7 @@ export function GoalCard({ goal, onEdit }: { goal: FinancialGoal; onEdit: () => 
           <span className="text-ink-3 tabular-nums">/ {formatCurrency(goal.target_amount, lang)}</span>
         </div>
         <Progress value={pct} className="mt-2 h-1.5 bg-paper-3 [&>div]:bg-gold" />
-        <div className="mt-2 flex items-center justify-between text-[11px]">
+        <div className="mt-2 flex items-center justify-between text-caption">
           <span className="text-ink-3 tabular-nums">{pct.toFixed(1)} %</span>
           <span className={`uppercase tracking-[0.18em] font-semibold ${status.tone}`}>{status.label}</span>
         </div>

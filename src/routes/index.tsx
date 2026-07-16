@@ -62,7 +62,7 @@ function Landing() {
             />
           </Link>
 
-          <div className="flex items-center gap-6 text-[13px] text-[color:var(--apple-text)]">
+          <div className="flex items-center gap-6 text-body-sm text-[color:var(--apple-text)]">
             <Link to="/cours" className="hidden md:inline opacity-90 hover:opacity-100">
               Cours
             </Link>
@@ -183,7 +183,7 @@ function Landing() {
 
           {/* Trust line */}
           <div
-            className="mt-16 flex items-center gap-4 text-[11px] font-bold uppercase text-[color:var(--apple-text-2)]"
+            className="mt-16 flex items-center gap-4 text-caption font-bold uppercase text-[color:var(--apple-text-2)]"
             style={{ letterSpacing: "0.2em" }}
           >
             <span>Impact certifié</span>
@@ -223,7 +223,7 @@ function Landing() {
                 >
                   {s.figure}
                 </div>
-                <p className="mt-4 text-[15px] leading-[1.45] text-[color:var(--apple-text-2)] max-w-[240px] mx-auto">
+                <p className="mt-4 text-body-lg leading-[1.45] text-[color:var(--apple-text-2)] max-w-[240px] mx-auto">
                   {s.text}
                 </p>
               </div>
@@ -262,8 +262,8 @@ function Landing() {
                       animationDelay: `${0.1 + i * 0.08}s`,
                     }}
                   />
-                  <div className="text-[11px] text-[color:var(--apple-text-2)]">{a.label}</div>
-                  <div className="text-[13px] font-semibold text-[color:var(--apple-text)]">
+                  <div className="text-caption text-[color:var(--apple-text-2)]">{a.label}</div>
+                  <div className="text-body-sm font-semibold text-[color:var(--apple-text)]">
                     {a.weight}%
                   </div>
                 </div>
@@ -362,7 +362,7 @@ function Landing() {
                   <Link
                     to="/auth"
                     search={{ redirect: "/dashboard", mode: "login" }}
-                    className="apple-link text-[14px]"
+                    className="apple-link text-body"
                   >
                     Déjà inscrit·e ? Se connecter <span aria-hidden>›</span>
                   </Link>
@@ -394,13 +394,13 @@ function Landing() {
 
       {/* FOOTER */}
       <footer
-        className="px-6 py-10 text-[12px] text-[color:var(--apple-text-2)]"
+        className="px-6 py-10 text-label text-[color:var(--apple-text-2)]"
         style={{ background: "var(--apple-surface)", borderTop: "1px solid #d2d2d7" }}
       >
         <div className="max-w-[1024px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <span
-              className="inline-flex items-center gap-1.5 text-[15px] font-bold text-[color:var(--apple-text)]"
+              className="inline-flex items-center gap-1.5 text-body-lg font-bold text-[color:var(--apple-text)]"
               style={{ letterSpacing: "-0.02em" }}
             >
               SEEDOW
@@ -459,7 +459,7 @@ function ChatBubble({ side, children }: { side: "user" | "ethi"; children: React
   return (
     <div className={isUser ? "self-end" : "self-start"} style={{ maxWidth: "85%" }}>
       <div
-        className="text-[15px] leading-[1.4] px-5 py-3"
+        className="text-body-lg leading-[1.4] px-5 py-3"
         style={{
           background: isUser ? "var(--mint)" : "var(--apple-dark-2)",
           color: "#ffffff",
@@ -527,7 +527,7 @@ function CtaForm({ isAuthed }: { isAuthed: boolean | null }) {
           {done ? "Inscrit ✓" : submitting ? "…" : "Je rejoins"}
         </button>
       </form>
-      <div className="text-[13px] text-[color:var(--apple-text-2)] mt-5">
+      <div className="text-body-sm text-[color:var(--apple-text-2)] mt-5">
         {position !== null ? (
           <>
             <span className="font-semibold text-[color:var(--apple-text)]">#{position}</span> sur la
@@ -540,7 +540,7 @@ function CtaForm({ isAuthed }: { isAuthed: boolean | null }) {
           </>
         )}
       </div>
-      {error && <p className="text-[13px] text-red-500 mt-3">{error}</p>}
+      {error && <p className="text-body-sm text-red-500 mt-3">{error}</p>}
     </>
   );
 }

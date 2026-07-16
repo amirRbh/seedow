@@ -68,7 +68,7 @@ function CoursePage() {
             </Link>
             <LanguageToggle />
           </div>
-          <div className="flex items-center gap-5 md:gap-8 text-[10px] font-semibold uppercase tracking-[0.22em]">
+          <div className="flex items-center gap-5 md:gap-8 text-tag font-semibold uppercase tracking-[0.22em]">
             <Link to="/cours" className="hover:text-gold transition-colors">
               ← Tous les cours
             </Link>

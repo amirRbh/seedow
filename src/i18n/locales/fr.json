@@ -514,7 +514,10 @@
     "edition_of": "Édition du {{date}}",
     "talk_to_ethi": "Parler à Ethi →",
     "signals_one": "{{count}} signal du jour",
-    "signals_other": "{{count}} signaux du jour"
+    "signals_other": "{{count}} signaux du jour",
+    "rebalance_cta": "Rééquilibrer",
+    "rebalancing": "Rééquilibrage…",
+    "rebalance_done": "Portefeuille rééquilibré sur ton allocation cible."
   },
   "onboarding": {
     "steps": {

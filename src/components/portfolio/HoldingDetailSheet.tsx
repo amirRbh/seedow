@@ -64,9 +64,9 @@ export function HoldingDetailSheet({ open, onClose, holding, valued }: Props) {
         <SheetHeader className="text-left">
           <div className="flex items-baseline gap-2">
             <SheetTitle className="text-lg">{holding.name}</SheetTitle>
-            <span className="font-value text-[12px] text-ink-3">{holding.ticker}</span>
+            <span className="font-value text-label text-ink-3">{holding.ticker}</span>
           </div>
-          <p className="text-[11px] text-ink-3">
+          <p className="text-caption text-ink-3">
             {CLASS_LABELS[holding.category] ?? holding.category}
             {holding.region && ` · ${holding.region}`}
           </p>
@@ -74,7 +74,7 @@ export function HoldingDetailSheet({ open, onClose, holding, valued }: Props) {
 
         {/* Performance bloc */}
         <div className="mt-5 paper-card p-4">
-          <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
+          <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold mb-2">
             Évolution du prix
           </p>
           {hasQuote ? (
@@ -83,31 +83,31 @@ export function HoldingDetailSheet({ open, onClose, holding, valued }: Props) {
                 <p className={`font-value text-2xl ${tone}`}>
                   {fmtPct(valued!.returnPct)}
                 </p>
-                <p className={`text-[13px] ${tone}`}>
+                <p className={`text-body-sm ${tone}`}>
                   {valued!.pnl >= 0 ? "+" : ""}
                   {fmtEur(valued!.pnl)}
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-3 mt-3 pt-3 border-t border-paper-3">
                 <div>
-                  <p className="text-[10px] uppercase tracking-wider text-ink-3">Prix d'entrée</p>
-                  <p className="font-value text-[13px] text-ink mt-0.5">
+                  <p className="text-tag uppercase tracking-wider text-ink-3">Prix d'entrée</p>
+                  <p className="font-value text-body-sm text-ink mt-0.5">
                     {fmtPrice(valued!.entryPrice!)} €
                   </p>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase tracking-wider text-ink-3">Prix actuel</p>
-                  <p className="font-value text-[13px] text-ink mt-0.5">
+                  <p className="text-tag uppercase tracking-wider text-ink-3">Prix actuel</p>
+                  <p className="font-value text-body-sm text-ink mt-0.5">
                     {fmtPrice(valued!.currentPrice!)} €
                   </p>
                 </div>
               </div>
-              <p className="text-[10px] text-ink-3 mt-3">
+              <p className="text-tag text-ink-3 mt-3">
                 Dernière mise à jour : {fmtDate(valued?.quoteAt ?? null)}
               </p>
             </>
           ) : (
-            <p className="text-[12px] text-ink-3">
+            <p className="text-label text-ink-3">
               Pas encore de cotation pour cet actif. La valorisation s'affichera après la prochaine
               mise à jour des prix.
             </p>
@@ -116,31 +116,31 @@ export function HoldingDetailSheet({ open, onClose, holding, valued }: Props) {
 
         {/* Position bloc */}
         <div className="mt-3 paper-card p-4">
-          <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
+          <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold mb-2">
             Ta position
           </p>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <p className="text-[10px] uppercase tracking-wider text-ink-3">Allocation</p>
-              <p className="font-value text-[13px] text-ink mt-0.5">
+              <p className="text-tag uppercase tracking-wider text-ink-3">Allocation</p>
+              <p className="font-value text-body-sm text-ink mt-0.5">
                 {holding.allocationPct.toFixed(2)}%
               </p>
             </div>
             <div>
-              <p className="text-[10px] uppercase tracking-wider text-ink-3">Capital investi</p>
-              <p className="font-value text-[13px] text-ink mt-0.5">
+              <p className="text-tag uppercase tracking-wider text-ink-3">Capital investi</p>
+              <p className="font-value text-body-sm text-ink mt-0.5">
                 {fmtEur(valued?.invested ?? 0)}
               </p>
             </div>
             <div>
-              <p className="text-[10px] uppercase tracking-wider text-ink-3">Valeur actuelle</p>
-              <p className="font-value text-[13px] text-ink mt-0.5">
+              <p className="text-tag uppercase tracking-wider text-ink-3">Valeur actuelle</p>
+              <p className="font-value text-body-sm text-ink mt-0.5">
                 {fmtEur(valued?.currentValue ?? 0)}
               </p>
             </div>
             <div>
-              <p className="text-[10px] uppercase tracking-wider text-ink-3">Score d'impact</p>
-              <p className="font-value text-[13px] text-moss-1 mt-0.5">
+              <p className="text-tag uppercase tracking-wider text-ink-3">Score d'impact</p>
+              <p className="font-value text-body-sm text-moss-1 mt-0.5">
                 {holding.esgScore.toFixed(0)}/100
               </p>
             </div>
@@ -180,7 +180,7 @@ function FundRejectionCard({ holding }: { holding: ActiveHolding }) {
   if (submitted) {
     return (
       <div className="mt-3 paper-card p-4 border border-paper-3">
-        <p className="text-[12px] text-ink leading-relaxed">
+        <p className="text-label text-ink leading-relaxed">
           Merci. Ton signal est enregistré — il alimentera la sélection automatique des fonds pour les profils proches du tien.
         </p>
       </div>
@@ -192,7 +192,7 @@ function FundRejectionCard({ holding }: { holding: ActiveHolding }) {
       <div className="mt-3 text-center">
         <button
           onClick={() => setOpen(true)}
-          className="text-[11px] uppercase tracking-[0.18em] text-ink-3 hover:text-ink font-semibold transition-colors"
+          className="text-caption uppercase tracking-[0.18em] text-ink-3 hover:text-ink font-semibold transition-colors"
         >
           Pas assez vert pour moi ?
         </button>
@@ -202,17 +202,17 @@ function FundRejectionCard({ holding }: { holding: ActiveHolding }) {
 
   return (
     <div className="mt-3 paper-card p-4 border border-paper-3">
-      <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
+      <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold mb-2">
         Pourquoi ce fonds ne te convient pas
       </p>
-      <p className="text-[11px] text-ink-3 mb-3">
+      <p className="text-caption text-ink-3 mb-3">
         Ton retour reste privé. On s'en sert pour mieux composer les portefeuilles des utilisateurs qui partagent tes valeurs.
       </p>
       <div className="space-y-1.5">
         {REJECTION_REASONS.map((r) => (
           <label
             key={r.id}
-            className={`flex items-center gap-2 p-2 rounded border cursor-pointer text-[12px] ${
+            className={`flex items-center gap-2 p-2 rounded border cursor-pointer text-label ${
               reason === r.id ? "border-ink bg-ink/5" : "border-paper-3 hover:border-ink/40"
             }`}
           >
@@ -232,7 +232,7 @@ function FundRejectionCard({ holding }: { holding: ActiveHolding }) {
           value={detail}
           onChange={(e) => setDetail(e.target.value.slice(0, 280))}
           placeholder="Précise si tu veux (optionnel)…"
-          className="mt-3 w-full px-3 py-2 text-[12px] border border-paper-3 rounded resize-none focus:border-ink focus:outline-none"
+          className="mt-3 w-full px-3 py-2 text-label border border-paper-3 rounded resize-none focus:border-ink focus:outline-none"
           rows={2}
         />
       )}
@@ -252,13 +252,13 @@ function FundRejectionCard({ holding }: { holding: ActiveHolding }) {
             setSubmitted(true);
             toast.success("Signal enregistré");
           }}
-          className="flex-1 py-2 rounded-full bg-ink text-paper text-[12px] font-semibold hover:bg-moss-2 transition-colors disabled:opacity-30"
+          className="flex-1 py-2 rounded-full bg-ink text-paper text-label font-semibold hover:bg-moss-2 transition-colors disabled:opacity-30"
         >
           {busy ? "Envoi…" : "Valider"}
         </button>
         <button
           onClick={() => { setOpen(false); setReason(null); setDetail(""); }}
-          className="px-4 py-2 text-[12px] text-ink-3 hover:text-ink transition-colors"
+          className="px-4 py-2 text-label text-ink-3 hover:text-ink transition-colors"
         >
           Annuler
         </button>

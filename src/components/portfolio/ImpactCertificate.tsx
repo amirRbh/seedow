@@ -37,7 +37,7 @@ export function ImpactCertificate() {
           <h3 className="font-display text-lg text-ink mt-2 leading-tight">
             Édite ton certificat personnel
           </h3>
-          <p className="text-[13px] text-ink-2 mt-2 leading-relaxed">
+          <p className="text-body-sm text-ink-2 mt-2 leading-relaxed">
             Une page sobre, imprimable A4, qui résume l'impact projeté de ton portefeuille
             simulé : CO₂ évité (estimation), énergie verte financée, score ESG composite et
             méthodologie.
@@ -46,7 +46,7 @@ export function ImpactCertificate() {
           <div className="mt-4 flex flex-wrap gap-2">
             <Link
               to="/certificat"
-              className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-ink text-paper text-[12px] font-semibold uppercase tracking-[0.14em] hover:bg-ink-2 transition-colors"
+              className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-ink text-paper text-label font-semibold uppercase tracking-[0.14em] hover:bg-ink-2 transition-colors"
             >
               Ouvrir le certificat
               <svg viewBox="0 0 16 16" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2}>
@@ -57,7 +57,7 @@ export function ImpactCertificate() {
               type="button"
               onClick={handleCopy}
               disabled={copying}
-              className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full border border-paper-3 bg-paper text-ink text-[12px] font-semibold uppercase tracking-[0.14em] hover:bg-paper-2 transition-colors disabled:opacity-60"
+              className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full border border-paper-3 bg-paper text-ink text-label font-semibold uppercase tracking-[0.14em] hover:bg-paper-2 transition-colors disabled:opacity-60"
             >
               <svg viewBox="0 0 16 16" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2}>
                 <rect x="5" y="3" width="8" height="10" rx="1" />

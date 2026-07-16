@@ -51,12 +51,12 @@ export function GoalSimulator({ goal, annualReturn = 0.055, volatility = 0.12 }:
 
   return (
     <div className="rounded-lg border border-paper-3 bg-paper p-6">
-      <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gold mb-4">{t("goal.sim_eyebrow")}</p>
+      <p className="text-tag font-semibold uppercase tracking-[0.22em] text-gold mb-4">{t("goal.sim_eyebrow")}</p>
 
       <div className="space-y-5">
         <div>
           <div className="flex items-baseline justify-between mb-2">
-            <span className="text-[11px] uppercase tracking-[0.18em] text-ink-3">{t("goal.sim_monthly_label")}</span>
+            <span className="text-caption uppercase tracking-[0.18em] text-ink-3">{t("goal.sim_monthly_label")}</span>
             <span className="font-value text-xl text-ink tabular-nums">{formatCurrency(monthly, lang)}</span>
           </div>
           <Slider

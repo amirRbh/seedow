@@ -43,7 +43,7 @@ export function SimulationForm({ onSubmit, onCancel }: Props) {
       onSubmit={submit}
       className="bg-paper/10 border border-paper/15 rounded-2xl p-3 space-y-3 backdrop-blur-xl"
     >
-      <p className="text-[10px] uppercase tracking-[0.18em] text-paper/50 font-semibold">
+      <p className="text-tag uppercase tracking-[0.18em] text-paper/50 font-semibold">
         {t("ethi.sim.title")}
       </p>
       <div className="grid grid-cols-3 gap-2">
@@ -51,7 +51,7 @@ export function SimulationForm({ onSubmit, onCancel }: Props) {
         <Field label={t("ethi.sim.initial")} suffix="€" value={initial} onChange={setInitial} step={500} />
         <Field label={t("ethi.sim.years")} suffix="y" value={years} onChange={setYears} step={1} min={1} max={40} />
       </div>
-      <label className="flex items-center gap-2 text-[11px] text-paper/70">
+      <label className="flex items-center gap-2 text-caption text-paper/70">
         <input
           type="checkbox"
           checked={stress}
@@ -64,13 +64,13 @@ export function SimulationForm({ onSubmit, onCancel }: Props) {
         <button
           type="button"
           onClick={onCancel}
-          className="px-3 py-1.5 rounded-full text-[11px] text-paper/60 hover:text-paper/90 transition-colors"
+          className="px-3 py-1.5 rounded-full text-caption text-paper/60 hover:text-paper/90 transition-colors"
         >
           {t("common.cancel")}
         </button>
         <button
           type="submit"
-          className="px-3 py-1.5 rounded-full text-[11px] bg-moss-2 hover:bg-moss-1 text-paper font-medium transition-colors"
+          className="px-3 py-1.5 rounded-full text-caption bg-moss-2 hover:bg-moss-1 text-paper font-medium transition-colors"
         >
           {t("ethi.sim.run")}
         </button>
@@ -98,7 +98,7 @@ function Field({
 }) {
   return (
     <label className="flex flex-col gap-1">
-      <span className="text-[10px] uppercase tracking-wider text-paper/50">{label}</span>
+      <span className="text-tag uppercase tracking-wider text-paper/50">{label}</span>
       <div className="flex items-center gap-1 bg-paper/5 border border-paper/10 rounded-md px-2 py-1.5">
         <input
           type="number"
@@ -109,7 +109,7 @@ function Field({
           onChange={(e) => onChange(Number(e.target.value))}
           className="w-full bg-transparent outline-none text-sm text-paper font-value"
         />
-        <span className="text-[10px] text-paper/40">{suffix}</span>
+        <span className="text-tag text-paper/40">{suffix}</span>
       </div>
     </label>
   );

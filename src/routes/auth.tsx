@@ -106,7 +106,7 @@ function AuthPage() {
           </Link>
           <LanguageToggle />
         </div>
-        <Link to="/" className="block text-[10px] uppercase tracking-[0.18em] text-ink-3 font-medium hover:text-ink transition-colors">
+        <Link to="/" className="block text-tag uppercase tracking-[0.18em] text-ink-3 font-medium hover:text-ink transition-colors">
           ← {t("common.back")}
         </Link>
         <h1 className="font-value text-3xl text-ink mt-6 leading-tight">
@@ -118,7 +118,7 @@ function AuthPage() {
                 ? t("auth.title_beta_full")
                 : t("auth.title_signup")}
         </h1>
-        <p className="text-[13px] text-ink-2 mt-2">
+        <p className="text-body-sm text-ink-2 mt-2">
           {waitlistDone !== null
             ? t("auth.desc_waitlisted", { position: waitlistDone })
             : mode === "login"
@@ -129,14 +129,14 @@ function AuthPage() {
         </p>
 
         {mode === "signup" && capacity && !betaFull && waitlistDone === null && (
-          <p className="mt-4 text-[10px] uppercase tracking-[0.18em] text-ink-3">
+          <p className="mt-4 text-tag uppercase tracking-[0.18em] text-ink-3">
             {t("auth.slots_remaining")} : <span className="text-ink font-semibold">{capacity.slotsLeft}</span> / {capacity.cap}
           </p>
         )}
 
         <button
           onClick={onGoogle}
-          className="mt-8 w-full py-2.5 rounded border border-paper-3 hover:border-ink transition-colors text-[13px] font-medium flex items-center justify-center gap-2"
+          className="mt-8 w-full py-2.5 rounded border border-paper-3 hover:border-ink transition-colors text-body-sm font-medium flex items-center justify-center gap-2"
         >
           <svg viewBox="0 0 24 24" className="w-4 h-4">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -149,7 +149,7 @@ function AuthPage() {
 
         <div className="my-5 flex items-center gap-3">
           <div className="flex-1 h-px bg-paper-3" />
-          <span className="text-[10px] uppercase tracking-[0.15em] text-ink-3">{t("common.or")}</span>
+          <span className="text-tag uppercase tracking-[0.15em] text-ink-3">{t("common.or")}</span>
           <div className="flex-1 h-px bg-paper-3" />
         </div>
 
@@ -160,7 +160,7 @@ function AuthPage() {
               placeholder={t("auth.name_placeholder")}
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              className="w-full px-3 py-2.5 rounded border border-paper-3 bg-paper text-[13px] text-ink placeholder-ink-3 focus:border-ink focus:outline-none transition-colors"
+              className="w-full px-3 py-2.5 rounded border border-paper-3 bg-paper text-body-sm text-ink placeholder-ink-3 focus:border-ink focus:outline-none transition-colors"
             />
           )}
           <input
@@ -170,7 +170,7 @@ function AuthPage() {
             onChange={(e) => setEmail(e.target.value)}
             required
             autoComplete="email"
-            className="w-full px-3 py-2.5 rounded border border-paper-3 bg-paper text-[13px] text-ink placeholder-ink-3 focus:border-ink focus:outline-none transition-colors"
+            className="w-full px-3 py-2.5 rounded border border-paper-3 bg-paper text-body-sm text-ink placeholder-ink-3 focus:border-ink focus:outline-none transition-colors"
           />
           <input
             type="password"
@@ -180,11 +180,11 @@ function AuthPage() {
             required
             minLength={8}
             autoComplete={mode === "signup" ? "new-password" : "current-password"}
-            className="w-full px-3 py-2.5 rounded border border-paper-3 bg-paper text-[13px] text-ink placeholder-ink-3 focus:border-ink focus:outline-none transition-colors"
+            className="w-full px-3 py-2.5 rounded border border-paper-3 bg-paper text-body-sm text-ink placeholder-ink-3 focus:border-ink focus:outline-none transition-colors"
           />
 
           {error && (
-            <p className="text-[12px] text-rust">{error}</p>
+            <p className="text-label text-rust">{error}</p>
           )}
 
           <button
@@ -202,7 +202,7 @@ function AuthPage() {
           </button>
         </form>
 
-        <p className="mt-6 text-[12px] text-ink-3 text-center">
+        <p className="mt-6 text-label text-ink-3 text-center">
           {mode === "login" ? t("auth.no_account") : t("auth.have_account")}
           <button
             type="button"

@@ -151,7 +151,7 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
   return (
     <section className="px-5 pt-10" aria-labelledby="simulator-title">
       <div className="gold-rule mb-5" />
-      <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold mb-3">
+      <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">
         {t("projection_simulator.projection_eyebrow", { defaultValue: "Projection" })}
       </p>
       <h2 id="simulator-title" className="font-display text-2xl text-ink leading-tight">
@@ -177,7 +177,7 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
               aria-selected={active}
               onClick={() => setMode(m.key)}
               className={cn(
-                "px-4 py-1.5 text-[12px] font-medium rounded-full transition-colors",
+                "px-4 py-1.5 text-label font-medium rounded-full transition-colors",
                 active ? "bg-ink text-paper" : "text-ink-2 hover:text-ink",
               )}
             >
@@ -194,7 +194,7 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
             <div className="flex items-baseline justify-between mb-2 gap-3">
               <label
                 htmlFor="proj-monthly"
-                className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold"
+                className="text-caption uppercase tracking-wider text-ink-3 font-semibold"
               >
                 {t("projection_simulator.monthly_deposit")}
               </label>
@@ -215,13 +215,13 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
               aria-valuenow={safe.monthly}
               className="w-full accent-[var(--moss-1)]"
             />
-            <div className="flex justify-between text-[10px] text-ink-3 mt-1 tabular-nums">
+            <div className="flex justify-between text-tag text-ink-3 mt-1 tabular-nums">
               <span>0 €</span>
               <span>500 €</span>
               <span>1 000 €</span>
             </div>
             {monthlyInvalid && (
-              <p role="alert" className="mt-2 text-[11px] text-rust">
+              <p role="alert" className="mt-2 text-caption text-rust">
                 {t("projection_simulator.monthly_invalid", { min: PROJECTION_BOUNDS.monthlyMin, max: PROJECTION_BOUNDS.monthlyMax })}
               </p>
             )}
@@ -230,7 +230,7 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
           <div>
             <label
               htmlFor="proj-target"
-              className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold block mb-2"
+              className="text-caption uppercase tracking-wider text-ink-3 font-semibold block mb-2"
             >
               {t("projection_simulator.target_capital")}
             </label>
@@ -249,7 +249,7 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
 
         {/* Horizon */}
         <div>
-          <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
+          <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold mb-2">
             {t("projection_simulator.investment_horizon")}
           </p>
           <div role="radiogroup" aria-label={t("projection_simulator.investment_horizon")} className="flex gap-2">
@@ -263,7 +263,7 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
                   aria-checked={active}
                   onClick={() => setHorizon(h)}
                   className={cn(
-                    "flex-1 py-2 text-[12px] font-medium border rounded-full transition-colors",
+                    "flex-1 py-2 text-label font-medium border rounded-full transition-colors",
                     active
                       ? "bg-ink text-paper border-ink"
                       : "border-paper-3 text-ink-2 hover:border-ink-3",
@@ -278,7 +278,7 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
 
         {/* Scénario */}
         <div>
-          <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
+          <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold mb-2">
             {t("projection_simulator.market_scenario")}
           </p>
           <div role="radiogroup" aria-label={t("projection_simulator.market_scenario")} className="flex gap-2">
@@ -292,7 +292,7 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
                   aria-checked={active}
                   onClick={() => setScenario(s.key)}
                   className={cn(
-                    "flex-1 py-2 text-[12px] font-medium border rounded-full transition-colors",
+                    "flex-1 py-2 text-label font-medium border rounded-full transition-colors",
                     active
                       ? "bg-moss-1 text-paper border-moss-1"
                       : "border-paper-3 text-ink-2 hover:border-ink-3",
@@ -307,7 +307,7 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
 
         {/* Enveloppe fiscale */}
         <div>
-          <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
+          <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold mb-2">
             {t("projection_simulator.tax_envelope")}
           </p>
           <div role="radiogroup" aria-label={t("projection_simulator.tax_envelope")} className="flex gap-2">
@@ -321,7 +321,7 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
                   aria-checked={active}
                   onClick={() => setEnvelope(e.key)}
                   className={cn(
-                    "flex-1 py-2 text-[12px] font-medium border rounded-full transition-colors",
+                    "flex-1 py-2 text-label font-medium border rounded-full transition-colors",
                     active
                       ? "bg-ink text-paper border-ink"
                       : "border-paper-3 text-ink-2 hover:border-ink-3",
@@ -337,7 +337,7 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
         {/* Stress test */}
         {mode === "contribute" && (
           <div>
-            <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
+            <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold mb-2">
               {t("projection_simulator.stress_test")}
             </p>
             <div role="radiogroup" aria-label={t("projection_simulator.stress_test")} className="flex flex-wrap gap-2">
@@ -356,7 +356,7 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
                     aria-checked={active}
                     onClick={() => setStressKey(s.key)}
                     className={cn(
-                      "px-3 py-1.5 text-[11px] font-medium border rounded-full transition-colors",
+                      "px-3 py-1.5 text-caption font-medium border rounded-full transition-colors",
                       active
                         ? "bg-rust text-paper border-rust"
                         : "border-paper-3 text-ink-2 hover:border-ink-3",
@@ -399,7 +399,7 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
 
           {stressedResult && (
             <div className="mt-5 p-4 bg-paper-2 border-l-2 border-rust rounded-r">
-              <p className="text-[10px] uppercase tracking-[0.18em] text-rust font-semibold mb-1">
+              <p className="text-tag uppercase tracking-[0.18em] text-rust font-semibold mb-1">
                 {t("projection_simulator.under_stress")}
               </p>
               <p className="text-sm text-ink">
@@ -428,7 +428,7 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
                 accent
               />
               {!goal.feasible && (
-                <p role="alert" className="mt-3 text-[12px] text-rust">
+                <p role="alert" className="mt-3 text-label text-rust">
                   {t("projection_simulator.unattainable_hint")}
                 </p>
               )}

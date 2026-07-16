@@ -57,12 +57,12 @@ export function GrowthComparison({ currentValue, invested, gain, returnPct, last
       {/* Header : gain principal */}
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold">{t("growth_comparison.your_growth")}</p>
+          <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold">{t("growth_comparison.your_growth")}</p>
           <p className="font-value text-3xl text-ink mt-1">
             {isGrowing ? "+" : ""}
             {gain.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
           </p>
-          <p className="text-[11px] text-ink-3 mt-0.5">{t("growth_comparison.since_first_deposit")}</p>
+          <p className="text-caption text-ink-3 mt-0.5">{t("growth_comparison.since_first_deposit")}</p>
         </div>
         <div className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold ${isGrowing ? "bg-moss-5 text-moss-1" : "bg-[oklch(0.93_0.05_45)] text-rust"}`}>
           {isGrowing ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
@@ -81,7 +81,7 @@ export function GrowthComparison({ currentValue, invested, gain, returnPct, last
                 key={r}
                 type="button"
                 onClick={() => setRange(r)}
-                className={`px-2 py-0.5 text-[10px] font-semibold rounded-full transition-colors ${
+                className={`px-2 py-0.5 text-tag font-semibold rounded-full transition-colors ${
                   range === r ? "bg-ink text-paper" : "text-ink-3 hover:text-ink-2"
                 }`}
               >
@@ -90,7 +90,7 @@ export function GrowthComparison({ currentValue, invested, gain, returnPct, last
             ))}
           </div>
           {hasHistory && points.length > 0 && (
-            <p className="text-[10px] text-ink-3">
+            <p className="text-tag text-ink-3">
               {new Date(points[0].date).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })} → {t("growth_comparison.today")}
             </p>
           )}
@@ -114,7 +114,7 @@ export function GrowthComparison({ currentValue, invested, gain, returnPct, last
 
       {(onRefresh || lastUpdated !== undefined) && (
         <div className="mt-4 pt-3 border-t border-paper-2 flex items-center justify-between gap-3">
-          <p className="text-[11px] text-ink-3">
+          <p className="text-caption text-ink-3">
             <span className="text-ink-3">{t("growth_comparison.updated")}</span>
             <span className="font-medium text-ink-2">{formatRelative(lastUpdated)}</span>
           </p>
@@ -123,7 +123,7 @@ export function GrowthComparison({ currentValue, invested, gain, returnPct, last
               type="button"
               onClick={handleRefresh}
               disabled={busy}
-              className="inline-flex items-center gap-1.5 text-[11px] font-medium text-ink-2 hover:text-ink px-2.5 py-1 rounded-full border border-paper-3 hover:border-ink-3 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-1.5 text-caption font-medium text-ink-2 hover:text-ink px-2.5 py-1 rounded-full border border-paper-3 hover:border-ink-3 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label={t("growth_comparison.aria_recalculate")}
             >
               <RefreshCw className={`w-3 h-3 ${busy ? "animate-spin" : ""}`} />
@@ -151,9 +151,9 @@ function AmountTile({
     accent === "moss" ? "text-moss-1" : accent === "rust" ? "text-rust" : "text-ink";
   return (
     <div className="rounded-lg border border-paper-2 bg-paper-1/40 p-3">
-      <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold">{label}</p>
+      <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold">{label}</p>
       <p className={`font-value text-lg mt-1 ${accentClass}`}>{value}</p>
-      <p className="text-[10px] text-ink-3 mt-0.5">{hint}</p>
+      <p className="text-tag text-ink-3 mt-0.5">{hint}</p>
     </div>
   );
 }
@@ -206,7 +206,7 @@ function Sparkline({
   if (!hasHistory) {
     return (
       <div className="h-16 rounded-md border border-dashed border-paper-3 flex items-center justify-center">
-        <p className="text-[11px] text-ink-3">{t("growth_comparison.building_history")}</p>
+        <p className="text-caption text-ink-3">{t("growth_comparison.building_history")}</p>
       </div>
     );
   }

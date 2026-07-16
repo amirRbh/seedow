@@ -98,12 +98,12 @@ export function NextStepCard() {
           toneClasses[card.tone],
         )}
       >
-        <p className="text-[10px] uppercase tracking-[0.2em] text-gold font-semibold mb-2">
+        <p className="text-tag uppercase tracking-[0.2em] text-gold font-semibold mb-2">
           {card.eyebrow}
         </p>
         <p className="font-display text-lg text-ink leading-snug">{card.title}</p>
-        <p className="text-[12px] text-ink-2 mt-2 leading-relaxed">{card.detail}</p>
-        <p className="mt-4 text-[11px] uppercase tracking-[0.18em] font-semibold text-ink inline-flex items-center gap-1.5">
+        <p className="text-label text-ink-2 mt-2 leading-relaxed">{card.detail}</p>
+        <p className="mt-4 text-caption uppercase tracking-[0.18em] font-semibold text-ink inline-flex items-center gap-1.5">
           {card.cta}
           <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M5 12h14M13 5l7 7-7 7" />

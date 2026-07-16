@@ -36,7 +36,7 @@ export function TimelineEvent({ type, title, subtitle, badge, badgeVariant = "ga
             {subtitle && <p className="text-xs text-ink-3 mt-0.5">{subtitle}</p>}
           </div>
           {badge && (
-            <span className={`inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${badgeStyles}`}>
+            <span className={`inline-flex items-center text-tag font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${badgeStyles}`}>
               {badge}
             </span>
           )}
@@ -45,7 +45,7 @@ export function TimelineEvent({ type, title, subtitle, badge, badgeVariant = "ga
         {impactChips && impactChips.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mt-2.5">
             {impactChips.map((chip) => (
-              <span key={chip} className="text-[10px] bg-moss-5 text-moss-1 font-semibold px-2 py-0.5 rounded-full">
+              <span key={chip} className="text-tag bg-moss-5 text-moss-1 font-semibold px-2 py-0.5 rounded-full">
                 {chip}
               </span>
             ))}

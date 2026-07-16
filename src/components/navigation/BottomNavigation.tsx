@@ -49,7 +49,7 @@ export function BottomNavigation() {
               <NavIcon type={item.icon} />
               <span
                 className={cn(
-                  "text-[10px] leading-none tracking-[0.14em] uppercase",
+                  "text-tag leading-none tracking-[0.14em] uppercase",
                   isActive ? "font-semibold" : "font-medium",
                 )}
               >

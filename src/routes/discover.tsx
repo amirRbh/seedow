@@ -29,10 +29,10 @@ function Discover() {
         <div className="px-5 pt-2 pb-3">
           <Tabs defaultValue="explorer">
             <TabsList className="w-full grid grid-cols-2 h-auto bg-paper-2 p-1">
-              <TabsTrigger value="explorer" className="text-[11px] uppercase tracking-[0.12em]">
+              <TabsTrigger value="explorer" className="text-caption uppercase tracking-[0.12em]">
                 {t("discover.tab_explore")}
               </TabsTrigger>
-              <TabsTrigger value="communaute" className="text-[11px] uppercase tracking-[0.12em]">
+              <TabsTrigger value="communaute" className="text-caption uppercase tracking-[0.12em]">
                 {t("discover.tab_community")}
               </TabsTrigger>
             </TabsList>

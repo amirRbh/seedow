@@ -514,7 +514,10 @@
     "edition_of": "Edition of {{date}}",
     "talk_to_ethi": "Talk to Ethi →",
     "signals_one": "{{count}} signal today",
-    "signals_other": "{{count}} signals today"
+    "signals_other": "{{count}} signals today",
+    "rebalance_cta": "Rebalance",
+    "rebalancing": "Rebalancing…",
+    "rebalance_done": "Portfolio rebalanced to your target allocation."
   },
   "onboarding": {
     "steps": {

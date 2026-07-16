@@ -99,21 +99,21 @@ export function AllocationRefiner({ portfolioId }: Props) {
   if (loading) {
     return (
       <div className="border border-paper-3 rounded p-6 text-center">
-        <p className="text-[12px] text-ink-3">{t("allocation_refiner.loading")}</p>
+        <p className="text-label text-ink-3">{t("allocation_refiner.loading")}</p>
       </div>
     );
   }
   if (error) {
     return (
       <div className="border border-paper-3 rounded p-6">
-        <p className="text-[12px] text-ink-3">{error}</p>
+        <p className="text-label text-ink-3">{error}</p>
       </div>
     );
   }
   if (!baseline || rows.length === 0) {
     return (
       <div className="border border-paper-3 rounded p-6">
-        <p className="text-[12px] text-ink-3">{t("allocation_refiner.empty")}</p>
+        <p className="text-label text-ink-3">{t("allocation_refiner.empty")}</p>
       </div>
     );
   }
@@ -121,9 +121,9 @@ export function AllocationRefiner({ portfolioId }: Props) {
   return (
     <div className="space-y-5">
       <header className="space-y-2">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gold">{t("allocation_refiner.eyebrow")}</p>
+        <p className="text-tag font-semibold uppercase tracking-[0.22em] text-gold">{t("allocation_refiner.eyebrow")}</p>
         <h2 className="text-lg font-semibold text-ink leading-tight">{t("allocation_refiner.title")}</h2>
-        <p className="text-[12px] text-ink-2 leading-relaxed">
+        <p className="text-label text-ink-2 leading-relaxed">
           {t("allocation_refiner.desc")}
         </p>
       </header>
@@ -150,15 +150,15 @@ export function AllocationRefiner({ portfolioId }: Props) {
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-3">
+                  <p className="text-tag font-semibold uppercase tracking-[0.18em] text-ink-3">
                     {row.leverLabel}
                   </p>
-                  <p className="text-[13px] text-ink mt-1 truncate">vs {row.altLabel}</p>
+                  <p className="text-body-sm text-ink mt-1 truncate">vs {row.altLabel}</p>
                 </div>
                 <div className="text-right shrink-0">
                   <p
                     className={cn(
-                      "text-[15px] font-semibold tabular-nums",
+                      "text-body-lg font-semibold tabular-nums",
                       row.costBps > 0 ? "text-rust" : "text-moss-2",
                     )}
                     style={{ fontVariantNumeric: "tabular-nums" }}
@@ -169,7 +169,7 @@ export function AllocationRefiner({ portfolioId }: Props) {
                         ? `+${Math.abs(row.costBps)} bps`
                         : "0 bps"}
                   </p>
-                  <p className="text-[10px] uppercase tracking-[0.14em] text-ink-3 mt-0.5">
+                  <p className="text-tag uppercase tracking-[0.14em] text-ink-3 mt-0.5">
                     {row.costBps > 0
                       ? "rendement annuel perdu"
                       : row.costBps < 0
@@ -179,7 +179,7 @@ export function AllocationRefiner({ portfolioId }: Props) {
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-ink-3">
+              <div className="flex flex-wrap gap-x-4 gap-y-1 text-caption text-ink-3">
                 <span>
                   ESG&nbsp;
                   <span className="text-ink">
@@ -197,7 +197,7 @@ export function AllocationRefiner({ portfolioId }: Props) {
                 <button
                   type="button"
                   onClick={() => setExpanded(isOpen ? null : key)}
-                  className="ml-auto text-[10px] font-semibold uppercase tracking-[0.14em] text-gold hover:text-ink transition-colors"
+                  className="ml-auto text-tag font-semibold uppercase tracking-[0.14em] text-gold hover:text-ink transition-colors"
                 >
                   {isOpen ? t("allocation_refiner.hide_before_after") : t("allocation_refiner.show_before_after")}
                 </button>
@@ -210,20 +210,20 @@ export function AllocationRefiner({ portfolioId }: Props) {
                   <button
                     type="button"
                     onClick={() => handleDecision(row, true)}
-                    className="flex-1 h-9 px-3 rounded border border-ink bg-ink text-paper text-[11px] font-semibold uppercase tracking-[0.14em] hover:bg-ink/90 transition-colors"
+                    className="flex-1 h-9 px-3 rounded border border-ink bg-ink text-paper text-caption font-semibold uppercase tracking-[0.14em] hover:bg-ink/90 transition-colors"
                   >
                     {t("allocation_refiner.keep")}
                   </button>
                   <button
                     type="button"
                     onClick={() => handleDecision(row, false)}
-                    className="flex-1 h-9 px-3 rounded border border-paper-3 text-ink text-[11px] font-semibold uppercase tracking-[0.14em] hover:bg-paper-2 transition-colors"
+                    className="flex-1 h-9 px-3 rounded border border-paper-3 text-ink text-caption font-semibold uppercase tracking-[0.14em] hover:bg-paper-2 transition-colors"
                   >
                     {t("allocation_refiner.lift")}
                   </button>
                 </div>
               ) : (
-                <p className="text-[11px] text-ink-3 italic">
+                <p className="text-caption text-ink-3 italic">
                   {decision === "accepted"
                     ? t("allocation_refiner.accepted")
                     : t("allocation_refiner.to_lift")}
@@ -285,22 +285,22 @@ function BeforeAfter({
   return (
     <div className="border-t border-paper-3 pt-4 mt-1 space-y-4">
       <div className="grid grid-cols-[1fr_auto_1fr] gap-2 items-baseline">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-3">Avant — actuel</p>
-        <span className="text-[10px] text-ink-3">vs</span>
-        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-gold text-right">{t("allocation_refiner.after_label", { label: altLabel })}</p>
+        <p className="text-tag font-semibold uppercase tracking-[0.18em] text-ink-3">Avant — actuel</p>
+        <span className="text-tag text-ink-3">vs</span>
+        <p className="text-tag font-semibold uppercase tracking-[0.18em] text-gold text-right">{t("allocation_refiner.after_label", { label: altLabel })}</p>
       </div>
 
-      <table className="w-full text-[12px]">
+      <table className="w-full text-label">
         <tbody>
           {metrics.map((m) => (
             <tr key={m.label} className="border-b border-paper-3 last:border-0">
-              <td className="py-1.5 text-ink-3 text-[11px]">{m.label}</td>
+              <td className="py-1.5 text-ink-3 text-caption">{m.label}</td>
               <td className="py-1.5 text-right tabular-nums text-ink">{m.before}</td>
               <td className="py-1.5 text-center text-ink-3">→</td>
               <td className="py-1.5 text-right tabular-nums text-ink">{m.after}</td>
               <td
                 className={cn(
-                  "py-1.5 pl-3 text-right tabular-nums text-[11px] w-20",
+                  "py-1.5 pl-3 text-right tabular-nums text-caption w-20",
                   m.positive === null
                     ? "text-ink-3"
                     : m.positive
@@ -316,12 +316,12 @@ function BeforeAfter({
       </table>
 
       <div>
-        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-3 mb-2">
+        <p className="text-tag font-semibold uppercase tracking-[0.18em] text-ink-3 mb-2">
           {t("allocation_refiner.by_class")}
         </p>
         <ul className="space-y-1.5">
           {classes.map((c) => (
-            <li key={c.key} className="grid grid-cols-[1fr_auto_auto] gap-3 items-center text-[11px]">
+            <li key={c.key} className="grid grid-cols-[1fr_auto_auto] gap-3 items-center text-caption">
               <span className="text-ink truncate">{c.label}</span>
               <span className="tabular-nums text-ink-3">{(c.before * 100).toFixed(1)}%</span>
               <span className="tabular-nums text-gold w-12 text-right">
@@ -334,7 +334,7 @@ function BeforeAfter({
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-3 mb-2">
+          <p className="text-tag font-semibold uppercase tracking-[0.18em] text-ink-3 mb-2">
             {t("allocation_refiner.top_before")}
           </p>
           <ul className="space-y-1">
@@ -342,7 +342,7 @@ function BeforeAfter({
               <li
                 key={h.id}
                 className={cn(
-                  "flex justify-between gap-2 text-[11px]",
+                  "flex justify-between gap-2 text-caption",
                   !altTickers.has(h.id) && "text-rust",
                 )}
                 title={h.name}
@@ -354,7 +354,7 @@ function BeforeAfter({
           </ul>
         </div>
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-gold mb-2">
+          <p className="text-tag font-semibold uppercase tracking-[0.18em] text-gold mb-2">
             {t("allocation_refiner.top_after")}
           </p>
           <ul className="space-y-1">
@@ -362,7 +362,7 @@ function BeforeAfter({
               <li
                 key={h.id}
                 className={cn(
-                  "flex justify-between gap-2 text-[11px]",
+                  "flex justify-between gap-2 text-caption",
                   !baseTickers.has(h.id) && "text-moss-2",
                 )}
                 title={h.name}
@@ -374,7 +374,7 @@ function BeforeAfter({
           </ul>
         </div>
       </div>
-      <p className="text-[10px] text-ink-3 leading-relaxed">
+      <p className="text-tag text-ink-3 leading-relaxed">
         <span className="text-rust">{t("allocation_refiner.removed_note")}</span>{" "}
         <span className="text-moss-2">{t("allocation_refiner.added_note")}</span>
       </p>
@@ -411,8 +411,8 @@ function metricRow(
 function Figure({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-ink-3">{label}</p>
-      <p className="text-[15px] font-semibold text-ink mt-1 tabular-nums" style={{ fontVariantNumeric: "tabular-nums" }}>
+      <p className="text-tag font-semibold uppercase tracking-[0.18em] text-ink-3">{label}</p>
+      <p className="text-body-lg font-semibold text-ink mt-1 tabular-nums" style={{ fontVariantNumeric: "tabular-nums" }}>
         {value}
       </p>
     </div>

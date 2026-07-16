@@ -63,12 +63,12 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
     <div className="paper-card p-5">
       <div className="flex items-baseline justify-between mb-4">
         <div>
-          <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold">Allocation</p>
+          <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold">Allocation</p>
           <p className="font-value text-2xl text-ink mt-0.5">
             {holdings.length} <span className="text-base text-ink-3">positions</span>
           </p>
         </div>
-        <p className="text-[11px] text-ink-3">
+        <p className="text-caption text-ink-3">
           Total{" "}
           <span className="font-semibold text-ink">
             {totalAmount.toLocaleString("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -99,7 +99,7 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
               className="w-2 h-2 rounded-full flex-shrink-0"
               style={{ backgroundColor: CLASS_COLOR[cls] ?? "var(--moss-2)" }}
             />
-            <span className="text-[11px] text-ink-2">
+            <span className="text-caption text-ink-2">
               {CLASS_LABELS[cls] ?? cls}
               <span className="text-ink-3 ml-1">{pct.toFixed(0)}%</span>
             </span>
@@ -110,7 +110,7 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
       {/* Movers — actifs dont le prix a évolué */}
       {movers.length > 0 && (
         <div className="border-t border-paper-3 pt-4 mb-4">
-          <p className="text-[10px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
+          <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold mb-2">
             Mouvements notables
           </p>
           <div className="flex flex-wrap gap-2">
@@ -122,7 +122,7 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
                 <button
                   key={m.asset_id}
                   onClick={() => setSelected(target)}
-                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[11px] transition-colors ${
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-caption transition-colors ${
                     up
                       ? "border-moss-1/30 bg-moss-1/5 text-moss-1 hover:bg-moss-1/10"
                       : "border-bloom/30 bg-bloom/5 text-bloom hover:bg-bloom/10"
@@ -167,17 +167,17 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
                   className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
                   style={{ backgroundColor: color }}
                 >
-                  <span className="text-paper text-[9px] font-bold tracking-tight">
+                  <span className="text-paper text-tag font-bold tracking-tight">
                     {h.ticker.slice(0, 4)}
                   </span>
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-baseline justify-between gap-2">
-                    <p className="text-[13px] font-semibold text-ink truncate">{h.name}</p>
+                    <p className="text-body-sm font-semibold text-ink truncate">{h.name}</p>
                     <div className="flex items-center gap-2 flex-shrink-0">
                       {hasMove && (
                         <span
-                          className={`flex items-center gap-0.5 text-[11px] font-semibold tabular-nums ${
+                          className={`flex items-center gap-0.5 text-caption font-semibold tabular-nums ${
                             up ? "text-moss-1" : "text-bloom"
                           }`}
                         >
@@ -196,13 +196,13 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
                     </div>
                   </div>
                   <div className="flex items-center justify-between gap-2 mt-0.5">
-                    <p className="text-[10px] text-ink-3 truncate">
+                    <p className="text-tag text-ink-3 truncate">
                       {CLASS_LABELS[h.category] ?? h.category}
                       {h.region && ` · ${h.region}`}
                       {" · ESG "}
                       <span className="text-moss-1 font-semibold">{h.esgScore.toFixed(0)}</span>
                     </p>
-                    <p className="text-[10px] text-ink-3 flex-shrink-0">
+                    <p className="text-tag text-ink-3 flex-shrink-0">
                       {amount.toLocaleString("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                   </div>

@@ -618,6 +618,7 @@ export type Database = {
           methodology_version: string
           metrics: Json
           name: string
+          rebalanced_at: string | null
           risk_target: number
           updated_at: string
           user_id: string
@@ -637,6 +638,7 @@ export type Database = {
           methodology_version?: string
           metrics?: Json
           name?: string
+          rebalanced_at?: string | null
           risk_target?: number
           updated_at?: string
           user_id: string
@@ -656,6 +658,7 @@ export type Database = {
           methodology_version?: string
           metrics?: Json
           name?: string
+          rebalanced_at?: string | null
           risk_target?: number
           updated_at?: string
           user_id?: string

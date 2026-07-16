@@ -78,7 +78,7 @@ export function ShareToggle() {
     <div className="rounded-lg border border-paper-3 bg-paper p-5">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gold mb-1">
+          <p className="text-tag font-semibold uppercase tracking-[0.22em] text-gold mb-1">
             {t("share_toggle.eyebrow")}
           </p>
           <p className="font-display text-lg text-ink">{t("share_toggle.title")}</p>

@@ -165,7 +165,7 @@ function FocusToggle({ focus, onToggle }: { focus: boolean; onToggle: () => void
           aria-label={focus ? t("focus_mode.exit") : t("focus_mode.enter")}
           className={cn(
             "hidden md:flex fixed bottom-4 right-4 z-50 items-center gap-1.5 h-8 px-3 rounded-full",
-            "border text-[11px] font-semibold uppercase tracking-[0.18em] transition-all duration-200",
+            "border text-caption font-semibold uppercase tracking-[0.18em] transition-all duration-200",
             "outline-none focus-visible:ring-2 focus-visible:ring-moss-1",
             focus
               ? "bg-ink text-paper border-ink shadow-lg hover:bg-ink-2 pointer-events-auto"
@@ -176,9 +176,9 @@ function FocusToggle({ focus, onToggle }: { focus: boolean; onToggle: () => void
           <span>{focus ? "Focus" : "Focus"}</span>
         </button>
       </TooltipTrigger>
-      <TooltipContent side="left" sideOffset={8} className="text-[11px]">
+      <TooltipContent side="left" sideOffset={8} className="text-caption">
         {focus ? t("focus_mode.show_chrome") : t("focus_mode.hide_chrome")}
-        <kbd className="ml-2 text-[9px] text-ink-3 font-mono">.</kbd>
+        <kbd className="ml-2 text-tag text-ink-3 font-mono">.</kbd>
       </TooltipContent>
     </Tooltip>
   );

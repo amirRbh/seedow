@@ -39,7 +39,7 @@ function AdminBetaPage() {
     return (
       <div className="max-w-3xl mx-auto px-6 py-12">
         <p className="text-rust text-sm">{error}</p>
-        <Link to="/dashboard" className="text-[12px] underline mt-4 inline-block">
+        <Link to="/dashboard" className="text-label underline mt-4 inline-block">
           {t("admin_beta.back_dashboard")}
         </Link>
       </div>
@@ -60,10 +60,10 @@ function AdminBetaPage() {
     <div className="max-w-6xl mx-auto px-6 py-12 space-y-10">
       <header className="flex items-end justify-between flex-wrap gap-4">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold">{t("admin_beta.eyebrow")}</p>
+          <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold">{t("admin_beta.eyebrow")}</p>
           <h1 className="font-display text-3xl text-ink mt-2">{t("admin_beta.title")}</h1>
         </div>
-        <Link to="/dashboard" className="text-[12px] underline text-ink-3 hover:text-ink">
+        <Link to="/dashboard" className="text-label underline text-ink-3 hover:text-ink">
           {t("admin_beta.back_dashboard")}
         </Link>
       </header>
@@ -72,14 +72,14 @@ function AdminBetaPage() {
       <section className="border border-paper-3 rounded-2xl p-6 bg-paper-2/40">
         <div className="flex items-end justify-between flex-wrap gap-4 mb-4">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.22em] text-ink-3 font-semibold">{t("admin_beta.capacity_title")}</p>
+            <p className="text-tag uppercase tracking-[0.22em] text-ink-3 font-semibold">{t("admin_beta.capacity_title")}</p>
             <p className="font-display text-4xl text-ink mt-2 tabular-nums">
               {stats.signups} <span className="text-ink-3 text-2xl">/ {stats.cap}</span>
             </p>
           </div>
           <div className="text-right">
-            <p className={`text-[12px] uppercase tracking-[0.18em] font-semibold ${statusTone}`}>● {statusLabel}</p>
-            <p className="text-[13px] text-ink-2 mt-1 tabular-nums">
+            <p className={`text-label uppercase tracking-[0.18em] font-semibold ${statusTone}`}>● {statusLabel}</p>
+            <p className="text-body-sm text-ink-2 mt-1 tabular-nums">
               {t("admin_beta.slots_left", { count: stats.slotsLeft })}
             </p>
           </div>
@@ -90,7 +90,7 @@ function AdminBetaPage() {
             style={{ width: `${fillPct}%` }}
           />
         </div>
-        <p className="text-[11px] text-ink-3 mt-2 tabular-nums">{fillPct}%</p>
+        <p className="text-caption text-ink-3 mt-2 tabular-nums">{fillPct}%</p>
       </section>
 
       <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -117,20 +117,20 @@ function AdminBetaPage() {
         <div className="flex items-end justify-between flex-wrap gap-3 mb-4">
           <h2 className="font-display text-lg text-ink">
             {t("admin_beta.testers_title")}{" "}
-            <span className="text-ink-3 text-[13px] font-normal tabular-nums">({filteredTesters.length})</span>
+            <span className="text-ink-3 text-body-sm font-normal tabular-nums">({filteredTesters.length})</span>
           </h2>
           <input
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t("admin_beta.testers_search")}
-            className="text-[13px] border border-paper-3 rounded-lg px-3 py-1.5 bg-paper outline-none focus:border-gold transition-colors w-full sm:w-64"
+            className="text-body-sm border border-paper-3 rounded-lg px-3 py-1.5 bg-paper outline-none focus:border-gold transition-colors w-full sm:w-64"
           />
         </div>
         <div className="border border-paper-3 rounded-2xl overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-[13px]">
-              <thead className="bg-paper-2/60 text-[10px] uppercase tracking-[0.14em] text-ink-3">
+            <table className="w-full text-body-sm">
+              <thead className="bg-paper-2/60 text-tag uppercase tracking-[0.14em] text-ink-3">
                 <tr>
                   <th className="text-left font-semibold px-4 py-3">{t("admin_beta.col_tester")}</th>
                   <th className="text-left font-semibold px-4 py-3">{t("admin_beta.col_email")}</th>
@@ -162,15 +162,15 @@ function AdminBetaPage() {
         <h2 className="font-display text-lg text-ink mb-3">{t("admin_beta.recent_intents")}</h2>
         <div className="border border-paper-3 rounded-2xl divide-y divide-paper-3">
           {stats.recentIntents.length === 0 ? (
-            <p className="p-4 text-[13px] text-ink-3">{t("admin_beta.no_intents")}</p>
+            <p className="p-4 text-body-sm text-ink-3">{t("admin_beta.no_intents")}</p>
           ) : (
             stats.recentIntents.map((i) => (
-              <div key={i.id} className="p-4 flex items-center justify-between text-[13px]">
+              <div key={i.id} className="p-4 flex items-center justify-between text-body-sm">
                 <span>
                   {formatCurrency(i.amount, lang)}
                   <span className="text-ink-3 ml-2">· {i.frequency === "monthly" ? t("admin_beta.monthly") : t("admin_beta.one_shot")}</span>
                 </span>
-                <span className="text-ink-3 text-[11px]">
+                <span className="text-ink-3 text-caption">
                   {formatDate(i.created_at, lang, dtOpts)}
                 </span>
               </div>
@@ -183,23 +183,23 @@ function AdminBetaPage() {
         <h2 className="font-display text-lg text-ink mb-3">{t("admin_beta.recent_feedback")}</h2>
         <div className="space-y-3">
           {stats.recentFeedback.length === 0 ? (
-            <p className="text-[13px] text-ink-3">{t("admin_beta.no_feedback")}</p>
+            <p className="text-body-sm text-ink-3">{t("admin_beta.no_feedback")}</p>
           ) : (
             stats.recentFeedback.map((f) => (
               <div key={f.id} className="border border-paper-3 rounded-xl p-4">
-                <div className="flex items-center justify-between text-[11px] text-ink-3 mb-2">
+                <div className="flex items-center justify-between text-caption text-ink-3 mb-2">
                   <span>NPS : {f.nps ?? "—"}</span>
                   <span>{formatDate(f.created_at, lang, dtOpts)}</span>
                 </div>
                 {f.blocker && (
-                  <p className="text-[13px] text-ink mb-1">
-                    <span className="text-ink-3 text-[11px] uppercase tracking-wider mr-2">{t("admin_beta.blocker")}</span>
+                  <p className="text-body-sm text-ink mb-1">
+                    <span className="text-ink-3 text-caption uppercase tracking-wider mr-2">{t("admin_beta.blocker")}</span>
                     {f.blocker}
                   </p>
                 )}
                 {f.wish && (
-                  <p className="text-[13px] text-ink">
-                    <span className="text-ink-3 text-[11px] uppercase tracking-wider mr-2">{t("admin_beta.wish")}</span>
+                  <p className="text-body-sm text-ink">
+                    <span className="text-ink-3 text-caption uppercase tracking-wider mr-2">{t("admin_beta.wish")}</span>
                     {f.wish}
                   </p>
                 )}
@@ -228,7 +228,7 @@ function TesterRow({
     <tr className="hover:bg-paper-2/40 transition-colors">
       <td className="px-4 py-3">
         <div className="text-ink">{tester.display_name || <span className="text-ink-3 italic">{t("admin_beta.no_name")}</span>}</div>
-        <div className="text-[10px] text-ink-3 font-mono">{tester.id.slice(0, 8)}…</div>
+        <div className="text-tag text-ink-3 font-mono">{tester.id.slice(0, 8)}…</div>
       </td>
       <td className="px-4 py-3 text-ink-2">{tester.email ?? "—"}</td>
       <td className="px-4 py-3 text-ink-3 tabular-nums">{formatDate(tester.created_at, lang, dOpts)}</td>
@@ -246,7 +246,7 @@ function TesterRow({
 function Kpi({ label, value }: { label: string; value: string }) {
   return (
     <div className="border border-paper-3 rounded-2xl p-4">
-      <p className="text-[10px] uppercase tracking-[0.18em] text-ink-3 font-semibold">{label}</p>
+      <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold">{label}</p>
       <p className="font-value text-2xl text-ink mt-1 tabular-nums">{value}</p>
     </div>
   );

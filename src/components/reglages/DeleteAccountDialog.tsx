@@ -54,7 +54,7 @@ export function DeleteAccountDialog() {
       }}
     >
       <AlertDialogTrigger asChild>
-        <button className="px-3 py-1.5 text-[12px] border border-paper-3 text-rust rounded hover:border-rust transition-colors">
+        <button className="px-3 py-1.5 text-label border border-paper-3 text-rust rounded hover:border-rust transition-colors">
           {t("reglages.delete_account")}
         </button>
       </AlertDialogTrigger>
@@ -64,7 +64,7 @@ export function DeleteAccountDialog() {
           <AlertDialogDescription>{t("reglages.delete_account_warning")}</AlertDialogDescription>
         </AlertDialogHeader>
         <div className="py-2">
-          <label className="text-[11px] text-ink-3 font-medium">
+          <label className="text-caption text-ink-3 font-medium">
             {t("reglages.delete_account_confirm_label", { email: expected })}
           </label>
           <input
@@ -73,7 +73,7 @@ export function DeleteAccountDialog() {
             onChange={(e) => setConfirmText(e.target.value)}
             placeholder={expected}
             autoComplete="off"
-            className="w-full mt-2 px-3 py-2.5 rounded border border-paper-3 bg-paper text-[13px] focus:border-ink focus:outline-none"
+            className="w-full mt-2 px-3 py-2.5 rounded border border-paper-3 bg-paper text-body-sm focus:border-ink focus:outline-none"
           />
         </div>
         <AlertDialogFooter>

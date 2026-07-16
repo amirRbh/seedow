@@ -47,7 +47,7 @@ function Portfolio() {
   if (loading) {
     return (
       <div className="min-h-screen bg-paper flex items-center justify-center">
-        <p className="text-[12px] text-ink-3">{t("portfolio.loading")}</p>
+        <p className="text-label text-ink-3">{t("portfolio.loading")}</p>
       </div>
     );
   }
@@ -63,11 +63,11 @@ function Portfolio() {
           <AppHeader eyebrow={t("portfolio.details")} title={t("portfolio.my_portfolio")} />
           <div className="px-5 pt-8">
             <div className="border border-dashed border-paper-3 rounded p-6 text-center">
-              <p className="text-[13px] text-ink-2 mb-3">{t("portfolio.no_active")}</p>
+              <p className="text-body-sm text-ink-2 mb-3">{t("portfolio.no_active")}</p>
               <Link
                 to="/onboarding"
                 search={{ new: undefined }}
-                className="inline-block px-4 py-2 text-[12px] font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
+                className="inline-block px-4 py-2 text-label font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
               >
                 {t("portfolio.start_onboarding")}
               </Link>
@@ -129,19 +129,19 @@ function Portfolio() {
         <section className="px-5 pt-4">
           <Tabs defaultValue="performance">
             <TabsList className="w-full grid grid-cols-5 h-auto bg-paper-2 p-1">
-              <TabsTrigger value="performance" className="text-[11px] uppercase tracking-[0.12em]">
+              <TabsTrigger value="performance" className="text-caption uppercase tracking-[0.12em]">
                 {t("portfolio.tab_perf")}
               </TabsTrigger>
-              <TabsTrigger value="allocation" className="text-[11px] uppercase tracking-[0.12em]">
+              <TabsTrigger value="allocation" className="text-caption uppercase tracking-[0.12em]">
                 {t("portfolio.tab_allocation")}
               </TabsTrigger>
-              <TabsTrigger value="affiner" className="text-[11px] uppercase tracking-[0.12em]">
+              <TabsTrigger value="affiner" className="text-caption uppercase tracking-[0.12em]">
                 {t("portfolio.tab_refine")}
               </TabsTrigger>
-              <TabsTrigger value="impact" className="text-[11px] uppercase tracking-[0.12em]">
+              <TabsTrigger value="impact" className="text-caption uppercase tracking-[0.12em]">
                 {t("portfolio.tab_impact")}
               </TabsTrigger>
-              <TabsTrigger value="comparatif" className="text-[11px] uppercase tracking-[0.12em]">
+              <TabsTrigger value="comparatif" className="text-caption uppercase tracking-[0.12em]">
                 {t("portfolio.tab_vs_market")}
               </TabsTrigger>
             </TabsList>
@@ -165,7 +165,7 @@ function Portfolio() {
                   trigger={
                     <button
                       type="button"
-                      className="inline-flex items-center gap-1.5 h-10 px-5 rounded-full border border-paper-3 bg-paper text-ink text-[12px] font-semibold uppercase tracking-[0.14em] hover:bg-paper-2 transition-colors"
+                      className="inline-flex items-center gap-1.5 h-10 px-5 rounded-full border border-paper-3 bg-paper text-ink text-label font-semibold uppercase tracking-[0.14em] hover:bg-paper-2 transition-colors"
                     >
                       {t("portfolio.monthly_deposit")}
                     </button>

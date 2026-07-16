@@ -39,7 +39,7 @@ export function ImpactRibbon({ co2Avoided, treesEquivalent, energyFinanced, esgS
     >
       <div className="gold-rule mb-5" aria-hidden />
 
-      <p className="text-[10px] uppercase tracking-[0.22em] font-semibold text-gold">
+      <p className="text-tag uppercase tracking-[0.22em] font-semibold text-gold">
         {t("impact_ribbon.real_impact")}
       </p>
 
@@ -47,7 +47,7 @@ export function ImpactRibbon({ co2Avoided, treesEquivalent, energyFinanced, esgS
         <AnimatedFigure value={co2Display} format={fmt} />
         <span className="text-lg font-medium tracking-normal text-ink-3 font-sans">{co2Unit}</span>
       </div>
-      <p className="text-[13px] text-ink-2 mt-2">{t("impact_ribbon.co2_avoided_desc")}</p>
+      <p className="text-body-sm text-ink-2 mt-2">{t("impact_ribbon.co2_avoided_desc")}</p>
 
       <div className="gold-rule my-5" aria-hidden />
 

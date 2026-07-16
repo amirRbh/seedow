@@ -20,15 +20,15 @@ function ConfidentialitePage() {
       <header className="max-w-3xl mx-auto px-6 pt-10 pb-8 border-b border-paper-3">
         <Link
           to="/"
-          className="text-[10px] uppercase tracking-[0.18em] text-ink-3 hover:text-ink transition-colors"
+          className="text-tag uppercase tracking-[0.18em] text-ink-3 hover:text-ink transition-colors"
         >
           ← Retour à l'accueil
         </Link>
         <h1 className="font-value text-4xl mt-4">Politique de confidentialité</h1>
-        <p className="text-[12px] text-ink-3 mt-2">Dernière mise à jour : 15 juillet 2026</p>
+        <p className="text-label text-ink-3 mt-2">Dernière mise à jour : 15 juillet 2026</p>
       </header>
 
-      <div className="max-w-3xl mx-auto px-6 py-10 space-y-10 text-[14px] text-ink-2 leading-relaxed">
+      <div className="max-w-3xl mx-auto px-6 py-10 space-y-10 text-body text-ink-2 leading-relaxed">
         <section>
           <p>
             Cette politique explique quelles données Seedow collecte, pourquoi, avec qui elles sont

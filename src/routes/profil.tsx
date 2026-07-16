@@ -179,7 +179,7 @@ function ProfilPage() {
         {/* Tes valeurs */}
         <section className="px-5 pt-10">
           <div className="gold-rule mb-5" />
-          <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold mb-3">
+          <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">
             {t("profile.values_eyebrow")}
           </p>
           <h2 className="font-value text-2xl text-ink leading-tight">
@@ -187,7 +187,7 @@ function ProfilPage() {
           </h2>
 
           <div className="mt-5">
-            <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
+            <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold mb-2">
               {t("profile.causes_supported")}
             </p>
             {meta && meta.causes.length > 0 ? (
@@ -195,7 +195,7 @@ function ProfilPage() {
                 {meta.causes.map((c) => (
                   <span
                     key={c}
-                    className="px-3 py-1.5 text-[12px] font-medium border border-moss-3 text-moss-1 rounded-full"
+                    className="px-3 py-1.5 text-label font-medium border border-moss-3 text-moss-1 rounded-full"
                   >
                     {CAUSE_LABELS[c] ?? c}
                   </span>
@@ -207,7 +207,7 @@ function ProfilPage() {
           </div>
 
           <div className="mt-5">
-            <p className="text-[11px] uppercase tracking-wider text-ink-3 font-semibold mb-2">
+            <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold mb-2">
               {t("profile.exclusions")}
             </p>
             {meta && meta.exclusions.length > 0 ? (
@@ -215,7 +215,7 @@ function ProfilPage() {
                 {meta.exclusions.map((e) => (
                   <span
                     key={e}
-                    className="px-3 py-1.5 text-[12px] font-medium border border-paper-3 text-ink-2 rounded-full line-through decoration-rust/60"
+                    className="px-3 py-1.5 text-label font-medium border border-paper-3 text-ink-2 rounded-full line-through decoration-rust/60"
                   >
                     {EXCLUSION_LABELS[e] ?? e}
                   </span>
@@ -229,7 +229,7 @@ function ProfilPage() {
           <Link
             to="/onboarding"
             search={{ new: 1 }}
-            className="mt-6 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-ink hover:text-moss-1 transition-colors"
+            className="mt-6 inline-flex items-center gap-2 text-caption font-semibold uppercase tracking-[0.18em] text-ink hover:text-moss-1 transition-colors"
           >
             {t("profile.adjust_values")}
             <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -241,7 +241,7 @@ function ProfilPage() {
         {/* Ton portefeuille */}
         <section className="px-5 pt-10">
           <div className="gold-rule mb-5" />
-          <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold mb-3">
+          <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">
             {t("profile.portfolio_eyebrow")}
           </p>
           <h2 className="font-value text-2xl text-ink leading-tight">
@@ -263,7 +263,7 @@ function ProfilPage() {
 
           <Link
             to="/portfolio"
-            className="mt-5 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-ink hover:text-moss-1 transition-colors"
+            className="mt-5 inline-flex items-center gap-2 text-caption font-semibold uppercase tracking-[0.18em] text-ink hover:text-moss-1 transition-colors"
           >
             {t("profile.see_allocation")}
             <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -275,7 +275,7 @@ function ProfilPage() {
         {/* Ta progression */}
         <section className="px-5 pt-10">
           <div className="gold-rule mb-5" />
-          <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold mb-3">
+          <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">
             {t("profile.progress_eyebrow")}
           </p>
           <h2 className="font-value text-2xl text-ink leading-tight">
@@ -304,7 +304,7 @@ function ProfilPage() {
         {/* Historique des décisions */}
         <section className="px-5 pt-10">
           <div className="gold-rule mb-5" />
-          <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold mb-3">
+          <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">
             {t("profile.decisions_eyebrow")}
           </p>
           <h2 className="font-value text-2xl text-ink leading-tight">
@@ -322,7 +322,7 @@ function ProfilPage() {
             to="/comparatif"
             className="block border-t border-paper-3 pt-5 group"
           >
-            <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold mb-2">
+            <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-2">
               {t("profile.comparison_eyebrow")}
             </p>
             <div className="flex items-baseline justify-between gap-4">
@@ -348,7 +348,7 @@ function ProfilPage() {
 function Row({ label, value }: { label: React.ReactNode; value: string }) {
   return (
     <div className="flex items-baseline justify-between py-3 gap-4">
-      <dt className="text-[11px] uppercase tracking-wider text-ink-3 font-medium">{label}</dt>
+      <dt className="text-caption uppercase tracking-wider text-ink-3 font-medium">{label}</dt>
       <dd className="text-sm text-ink font-medium tabular-nums truncate">{value}</dd>
     </div>
   );

@@ -6,7 +6,7 @@ export function BetaCounter({ className = "" }: { className?: string }) {
   const { capacity, loading } = useBetaCapacity();
   if (loading || !capacity) {
     return (
-      <span className={`text-[10px] uppercase tracking-[0.22em] text-ink-3 ${className}`}>
+      <span className={`text-tag uppercase tracking-[0.22em] text-ink-3 ${className}`}>
         {t("beta.counter_loading")}
       </span>
     );
@@ -14,7 +14,7 @@ export function BetaCounter({ className = "" }: { className?: string }) {
   const pct = Math.min(100, Math.round((capacity.slotsTaken / capacity.cap) * 100));
   return (
     <div className={`flex flex-col gap-1.5 ${className}`}>
-      <div className="flex items-center justify-between gap-3 text-[10px] uppercase tracking-[0.22em] text-ink-2">
+      <div className="flex items-center justify-between gap-3 text-tag uppercase tracking-[0.22em] text-ink-2">
         <span>{t("beta.counter_label")}</span>
         <span className="font-semibold text-ink">
           {t("beta.counter_taken", { taken: capacity.slotsTaken, cap: capacity.cap })}
