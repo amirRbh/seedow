@@ -167,18 +167,19 @@ function Landing() {
                 Accéder à mon espace
               </Link>
             ) : (
-              <Link
-                to="/auth"
-                search={{ redirect: "/dashboard", mode: "signup" }}
-                className="apple-btn-primary"
-              >
-                Rejoindre la beta
+              <Link to="/onboarding" className="apple-btn-primary">
+                Construire mon portefeuille
               </Link>
             )}
             <Link to="/cours" className="apple-link">
               Voir les cours <span aria-hidden>›</span>
             </Link>
           </div>
+          {!isAuthed && (
+            <p className="mt-4 text-body-sm text-[color:var(--apple-text-2)]">
+              Sans compte · 2 minutes · résultat immédiat
+            </p>
+          )}
 
           {/* Trust line */}
           <div
