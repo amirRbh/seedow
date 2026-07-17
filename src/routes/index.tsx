@@ -380,9 +380,19 @@ function Landing() {
           <p className="apple-subtitle mx-auto max-w-[520px] mt-6">
             {isAuthed
               ? "Tu es déjà dans la place. Direct à ton espace."
-              : "Rejoins la liste des beta testeurs. Accès anticipé, gratuit, places limitées."}
+              : "Simule ton portefeuille en 2 minutes, sans compte. Tu décides après."}
           </p>
-          <div className="mt-10">
+          {!isAuthed && (
+            <div className="mt-10 flex flex-col items-center gap-4">
+              <Link to="/onboarding" className="apple-btn-primary">
+                Simuler mon portefeuille
+              </Link>
+              <p className="text-body-sm text-[color:var(--apple-text-2)]">
+                ou reçois les nouveautés par email
+              </p>
+            </div>
+          )}
+          <div className="mt-6">
             <CtaForm isAuthed={isAuthed} />
           </div>
         </div>
