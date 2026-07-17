@@ -87,12 +87,11 @@ function Landing() {
                   Se connecter
                 </Link>
                 <Link
-                  to="/auth"
-                  search={{ redirect: "/dashboard", mode: "signup" }}
+                  to="/onboarding"
                   className="apple-btn-primary"
                   style={{ padding: "6px 14px", fontSize: 13 }}
                 >
-                  Rejoindre la beta
+                  Simuler mon portefeuille
                 </Link>
               </>
             )}
