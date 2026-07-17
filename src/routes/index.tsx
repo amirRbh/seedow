@@ -87,12 +87,11 @@ function Landing() {
                   Se connecter
                 </Link>
                 <Link
-                  to="/auth"
-                  search={{ redirect: "/dashboard", mode: "signup" }}
+                  to="/onboarding"
                   className="apple-btn-primary"
                   style={{ padding: "6px 14px", fontSize: 13 }}
                 >
-                  Rejoindre la beta
+                  Simuler mon portefeuille
                 </Link>
               </>
             )}
@@ -168,18 +167,19 @@ function Landing() {
                 Accéder à mon espace
               </Link>
             ) : (
-              <Link
-                to="/auth"
-                search={{ redirect: "/dashboard", mode: "signup" }}
-                className="apple-btn-primary"
-              >
-                Rejoindre la beta
+              <Link to="/onboarding" className="apple-btn-primary">
+                Construire mon portefeuille
               </Link>
             )}
             <Link to="/cours" className="apple-link">
               Voir les cours <span aria-hidden>›</span>
             </Link>
           </div>
+          {!isAuthed && (
+            <p className="mt-4 text-body-sm text-[color:var(--apple-text-2)]">
+              Sans compte · 2 minutes · résultat immédiat
+            </p>
+          )}
 
           {/* Trust line */}
           <div
@@ -344,7 +344,7 @@ function Landing() {
               <p className="apple-subtitle mt-4 max-w-[380px]">
                 {isAuthed
                   ? "Accède à ton espace, simule ton portefeuille, discute avec Ethi."
-                  : "Crée un compte, simule ton portefeuille, discute avec Ethi."}
+                  : "Simule ton portefeuille en 2 min, puis crée un compte si tu veux le sauvegarder."}
               </p>
               {isAuthed ? (
                 <Link to="/dashboard" className="apple-btn-primary mt-8">
@@ -352,12 +352,8 @@ function Landing() {
                 </Link>
               ) : (
                 <div className="flex flex-col items-center gap-3 mt-8">
-                  <Link
-                    to="/auth"
-                    search={{ redirect: "/dashboard", mode: "signup" }}
-                    className="apple-btn-primary"
-                  >
-                    Créer un compte
+                  <Link to="/onboarding" className="apple-btn-primary">
+                    Simuler mon portefeuille
                   </Link>
                   <Link
                     to="/auth"
@@ -384,9 +380,19 @@ function Landing() {
           <p className="apple-subtitle mx-auto max-w-[520px] mt-6">
             {isAuthed
               ? "Tu es déjà dans la place. Direct à ton espace."
-              : "Rejoins la liste des beta testeurs. Accès anticipé, gratuit, places limitées."}
+              : "Simule ton portefeuille en 2 minutes, sans compte. Tu décides après."}
           </p>
-          <div className="mt-10">
+          {!isAuthed && (
+            <div className="mt-10 flex flex-col items-center gap-4">
+              <Link to="/onboarding" className="apple-btn-primary">
+                Simuler mon portefeuille
+              </Link>
+              <p className="text-body-sm text-[color:var(--apple-text-2)]">
+                ou reçois les nouveautés par email
+              </p>
+            </div>
+          )}
+          <div className="mt-6">
             <CtaForm isAuthed={isAuthed} />
           </div>
         </div>
