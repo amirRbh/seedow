@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
+import type { ExclusionTag } from "@/lib/portfolio/types";
 
 export interface ActiveHolding {
   id: string;
@@ -30,6 +31,7 @@ export interface ActivePortfolio {
   generated_at: string;
   holdings: ActiveHolding[];
   metrics: ActivePortfolioMetrics | null;
+  exclusions: ExclusionTag[];
 }
 
 interface State {
@@ -63,7 +65,7 @@ export function useActivePortfolio(): State {
     (async () => {
       let query = supabase
         .from("portfolios")
-        .select("id, name, initial_amount, generated_at, weights, metrics")
+        .select("id, name, initial_amount, generated_at, weights, metrics, exclusions")
         .eq("user_id", user.id)
         .eq("is_active", true);
 
@@ -123,6 +125,7 @@ export function useActivePortfolio(): State {
         generated_at: pf.generated_at,
         holdings,
         metrics: (pf.metrics ?? null) as ActivePortfolioMetrics | null,
+        exclusions: (pf.exclusions ?? []) as ExclusionTag[],
       });
       setLoading(false);
     })();

@@ -853,6 +853,9 @@
     "positions_count_one": "{{count}} position",
     "positions_count_other": "{{count}} positions",
     "no_positions": "No positions retained with these constraints.",
+    "since_last_change": "Since your last change",
+    "new_position": "New",
+    "removed_positions": "Dropped: {{tickers}}",
     "breakdown_title": "Breakdown by asset class",
     "stages": {
       "1_name": "Profiling",
@@ -936,6 +939,9 @@
   },
   "asset_detail": {
     "per_share": "/ share",
+    "ethi_nudge_message": "Ethi note: ESG score {{score}}/10, below the {{floor}}/10 floor recommended for a Seedow portfolio. That doesn't mean \"avoid at all costs\" — but it's worth comparing.",
+    "ethi_nudge_cta": "See alternatives with Ethi",
+    "ethi_nudge_query": "Can you suggest 2-3 alternatives to {{ticker}} with a better ESG score in the {{category}} category?",
     "summary": "Summary",
     "impact_overview": "Impact overview · monthly deposit over 1 year",
     "monthly_deposit": "Monthly deposit",
@@ -1203,7 +1209,16 @@
     "methodology": "Methodology",
     "methodology_body": "The benchmark uses the average characteristics of a MSCI World UCITS ETF (IWDA / EUNL): long-term annualized performance of 7.2% (net dividends), volatility 15.5%, TER 0.20%, MSCI ESG score ~52, carbon intensity 165 gCO₂e per euro invested.",
     "read_methodology": "Read the full methodology",
-    "no_active": "No active portfolio."
+    "no_active": "No active portfolio.",
+    "avoided_eyebrow": "Face to face · real names",
+    "avoided_title": "What your exclusions avoid",
+    "avoided_desc": "Typical sector composition of a broad unfiltered index. Checked = this sector is excluded from your portfolio thanks to your active exclusions.",
+    "avoided_excluded": "Excluded for you",
+    "avoided_present": "Not excluded for you",
+    "avoided_none_title": "No active exclusion",
+    "avoided_none_desc": "You haven't activated any sector exclusion: a broad unfiltered index can contain everything below.",
+    "avoided_disclaimer": "Illustrative list for educational purposes — public sector classification of well-known large caps, not a live index feed nor the exact composition of your portfolio.",
+    "avoided_edit_cta": "Edit my exclusions"
   },
   "market_freshness": {
     "stale_title": "Market prices a bit old",

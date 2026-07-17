@@ -2,12 +2,14 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { useLang } from "@/hooks/useLang";
 import { formatPercent, formatNumber } from "@/lib/format";
+import type { Lang } from "@/i18n";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useServerFn } from "@tanstack/react-start";
 import { simulatePortfolio } from "@/lib/portfolio/server.functions";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { MetricLabel } from "@/components/ui/MetricLabel";
+import { cn } from "@/lib/utils";
 import {
   DEFAULT_PILLAR_WEIGHTS,
   MIN_PORTFOLIO_ESG,
@@ -111,6 +113,11 @@ function MethodologyPage() {
   const [horizon, setHorizon] = useState(10);
 
   const [result, setResult] = useState<SimResult | null>(null);
+  // Snapshot du résultat précédent — permet d'afficher "depuis votre dernier
+  // réglage" et de confronter l'utilisateur au coût/gain de chaque changement,
+  // plutôt que de ne montrer que l'état final.
+  const [prevResult, setPrevResult] = useState<SimResult | null>(null);
+  const resultRef = useRef<SimResult | null>(null);
   const [loading, setLoading] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -128,7 +135,11 @@ function MethodologyPage() {
           initial_amount: 1000,
         },
       })
-        .then((r) => setResult(r))
+        .then((r) => {
+          if (resultRef.current) setPrevResult(resultRef.current);
+          resultRef.current = r;
+          setResult(r);
+        })
         .catch((e) => console.error("simulate", e))
         .finally(() => setLoading(false));
     }, 250);
@@ -165,6 +176,19 @@ function MethodologyPage() {
       .filter((x) => x.asset)
       .sort((a, b) => b.weight - a.weight);
   }, [result]);
+
+  // Tickers apparus / disparus depuis le dernier réglage — rend visible ce
+  // qu'un simple curseur change réellement dans la composition, pas juste
+  // dans les métriques agrégées.
+  const prevIds = useMemo(
+    () => new Set((prevResult?.selected ?? []).map((a) => a.id)),
+    [prevResult],
+  );
+  const removedSincePrev = useMemo(() => {
+    if (!prevResult || !result) return [];
+    const currentIds = new Set(result.selected.map((a) => a.id));
+    return prevResult.selected.filter((a) => !currentIds.has(a.id));
+  }, [prevResult, result]);
 
   return (
     <div className="min-h-screen bg-paper text-ink">
@@ -382,6 +406,9 @@ function MethodologyPage() {
                 {t("methodologie.esg_floor_relaxed_desc")}
               </div>
             )}
+            {prevResult && result && (
+              <SettingChangeDelta prev={prevResult.metrics} current={result.metrics} t={t} lang={lang} />
+            )}
             <div className="border-t border-b border-paper-3 divide-y divide-paper-3">
               <MetricRow
                 label={t("methodologie.metric_return")}
@@ -458,7 +485,9 @@ function MethodologyPage() {
                 </p>
               </div>
               <ul className="divide-y divide-paper-3">
-                {sortedWeights.map((row, i) => (
+                {sortedWeights.map((row, i) => {
+                  const isNew = prevResult !== null && !prevIds.has(row.id);
+                  return (
                   <motion.li
                     key={row.id}
                     initial={{ opacity: 0 }}
@@ -468,10 +497,20 @@ function MethodologyPage() {
                   >
                     <div className="flex items-baseline justify-between gap-3">
                       <div className="flex items-baseline gap-2 min-w-0">
-                        <span className="font-value text-body-sm text-ink">
+                        <span
+                          className={cn(
+                            "font-value text-body-sm",
+                            isNew ? "text-moss-2" : "text-ink",
+                          )}
+                        >
                           {row.asset!.ticker}
                         </span>
                         <span className="text-caption text-ink-3 truncate">{row.asset!.name}</span>
+                        {isNew && (
+                          <span className="text-tag uppercase tracking-wider text-moss-2 font-semibold flex-shrink-0">
+                            {t("methodologie.new_position")}
+                          </span>
+                        )}
                       </div>
                       <span className="text-label tabular-nums font-medium">
                         {(row.weight * 100).toFixed(1)}%
@@ -484,13 +523,21 @@ function MethodologyPage() {
                       />
                     </div>
                   </motion.li>
-                ))}
+                  );
+                })}
                 {!loading && sortedWeights.length === 0 && (
                   <li className="py-6 text-center text-label text-ink-3">
                     {t("methodologie.no_positions")}
                   </li>
                 )}
               </ul>
+              {removedSincePrev.length > 0 && (
+                <p className="mt-2 text-tag text-rust leading-relaxed">
+                  {t("methodologie.removed_positions", {
+                    tickers: removedSincePrev.map((a) => a.ticker).join(", "),
+                  })}
+                </p>
+              )}
             </div>
 
             {result && (
@@ -712,6 +759,87 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
         </div>
       </div>
     </section>
+  );
+}
+
+function metricDelta(
+  label: string,
+  before: number,
+  after: number,
+  higherIsBetter: boolean,
+  fmt: (v: number) => string,
+) {
+  const raw = after - before;
+  const positive = Math.abs(raw) < 1e-9 ? null : higherIsBetter ? raw > 0 : raw < 0;
+  return { label, raw, positive, sign: raw >= 0 ? "+" : "", formatted: fmt(raw) };
+}
+
+/**
+ * Confrontation immédiate : ce que le dernier réglage (cause, exclusion,
+ * risque, horizon) a réellement changé, plutôt que de laisser l'utilisateur
+ * déduire l'effet d'un curseur depuis un seul chiffre final statique.
+ */
+function SettingChangeDelta({
+  prev,
+  current,
+  t,
+  lang,
+}: {
+  prev: SimResult["metrics"];
+  current: SimResult["metrics"];
+  t: (k: string, opts?: Record<string, unknown>) => string;
+  lang: Lang;
+}) {
+  const rows = [
+    metricDelta(t("methodologie.metric_return"), prev.expected_return, current.expected_return, true, (v) =>
+      formatPercent(v, lang),
+    ),
+    metricDelta(
+      t("methodologie.metric_volatility"),
+      prev.volatility,
+      current.volatility,
+      false,
+      (v) => formatPercent(v, lang),
+    ),
+    metricDelta(t("methodologie.metric_esg"), prev.esg_score, current.esg_score, true, (v) =>
+      formatNumber(v, lang, { maximumFractionDigits: 1 }),
+    ),
+    metricDelta(t("methodologie.metric_fees"), prev.ter, current.ter, false, (v) =>
+      formatPercent(v, lang),
+    ),
+    metricDelta(
+      t("methodologie.metric_co2"),
+      prev.co2_avoided_tons,
+      current.co2_avoided_tons,
+      true,
+      (v) => formatNumber(v, lang, { maximumFractionDigits: 2 }),
+    ),
+  ];
+  const changed = rows.filter((r) => Math.abs(r.raw) > 1e-9);
+  if (changed.length === 0) return null;
+
+  return (
+    <div className="border border-gold/30 bg-gold/5 px-4 py-3">
+      <p className="text-tag uppercase tracking-[0.15em] text-gold font-semibold mb-2">
+        {t("methodologie.since_last_change")}
+      </p>
+      <ul className="space-y-1">
+        {changed.map((r) => (
+          <li key={r.label} className="flex items-baseline justify-between text-label">
+            <span className="text-ink-2">{r.label}</span>
+            <span
+              className={cn(
+                "tabular-nums font-value",
+                r.positive === null ? "text-ink-3" : r.positive ? "text-moss-2" : "text-rust",
+              )}
+            >
+              {r.sign}
+              {r.formatted}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 

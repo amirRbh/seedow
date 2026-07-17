@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useTranslation } from "react-i18next";
 import { useLang } from "@/hooks/useLang";
@@ -6,7 +7,11 @@ import { formatCurrency, formatPercent } from "@/lib/format";
 import { Slider } from "@/components/ui/slider";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { Glossary } from "@/components/ui/Glossary";
+import { MIN_PORTFOLIO_ESG } from "@/lib/portfolio/types";
 import type { DiscoverAsset } from "@/lib/discover/types";
+
+// overall_esg_score est sur 0..10, MIN_PORTFOLIO_ESG sur 0..100 (plancher du moteur de portefeuille).
+const ESG_FLOOR_10 = MIN_PORTFOLIO_ESG / 10;
 
 interface Props {
   open: boolean;
@@ -79,6 +84,10 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
         </div>
 
         <div className="px-5 py-5 space-y-6">
+          {asset.overall_esg_score < ESG_FLOOR_10 && (
+            <EthiLowScoreNudge asset={asset} floor={ESG_FLOOR_10} t={t} />
+          )}
+
           {/* {t("asset_detail.summary")} */}
           <section>
             <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold mb-2">
@@ -281,6 +290,70 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
         </div>
       </SheetContent>
     </Sheet>
+  );
+}
+
+/**
+ * Nudge proactif façon Ethi : signale, au moment même où l'utilisateur regarde
+ * l'actif, que son score ESG est sous le plancher recommandé pour un
+ * portefeuille Seedow — plutôt que de le laisser découvrir l'écart après coup
+ * dans le récap du portefeuille. Le CTA ouvre le chat Ethi avec une question
+ * pré-remplie demandant des alternatives mieux notées.
+ */
+function EthiLowScoreNudge({
+  asset,
+  floor,
+  t,
+}: {
+  asset: DiscoverAsset;
+  floor: number;
+  t: (key: string, options?: Record<string, unknown>) => string;
+}) {
+  const query = t("asset_detail.ethi_nudge_query", {
+    ticker: asset.ticker,
+    category: asset.category,
+  });
+
+  return (
+    <div className="rounded-xl border border-gold/30 bg-gold/5 p-3.5 flex gap-3">
+      <div className="w-8 h-8 rounded-full bg-moss-2 flex items-center justify-center flex-shrink-0">
+        <svg
+          viewBox="0 0 24 24"
+          className="w-4 h-4 text-paper"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0 1 1 21 12Z" />
+        </svg>
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-body-sm text-ink-2 leading-relaxed">
+          {t("asset_detail.ethi_nudge_message", {
+            score: asset.overall_esg_score.toFixed(1),
+            floor: floor.toFixed(0),
+          })}
+        </p>
+        <Link
+          to="/ethi"
+          search={{ q: query } as never}
+          className="mt-2 inline-flex items-center gap-1.5 text-caption font-semibold uppercase tracking-[0.14em] text-ink hover:text-moss-1 transition-colors"
+        >
+          {t("asset_detail.ethi_nudge_cta")}
+          <svg
+            viewBox="0 0 16 16"
+            className="w-3 h-3"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path d="M3 8h10M9 4l4 4-4 4" />
+          </svg>
+        </Link>
+      </div>
+    </div>
   );
 }
 
