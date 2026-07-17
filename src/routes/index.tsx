@@ -344,7 +344,7 @@ function Landing() {
               <p className="apple-subtitle mt-4 max-w-[380px]">
                 {isAuthed
                   ? "Accède à ton espace, simule ton portefeuille, discute avec Ethi."
-                  : "Crée un compte, simule ton portefeuille, discute avec Ethi."}
+                  : "Simule ton portefeuille en 2 min, puis crée un compte si tu veux le sauvegarder."}
               </p>
               {isAuthed ? (
                 <Link to="/dashboard" className="apple-btn-primary mt-8">
@@ -352,12 +352,8 @@ function Landing() {
                 </Link>
               ) : (
                 <div className="flex flex-col items-center gap-3 mt-8">
-                  <Link
-                    to="/auth"
-                    search={{ redirect: "/dashboard", mode: "signup" }}
-                    className="apple-btn-primary"
-                  >
-                    Créer un compte
+                  <Link to="/onboarding" className="apple-btn-primary">
+                    Simuler mon portefeuille
                   </Link>
                   <Link
                     to="/auth"
