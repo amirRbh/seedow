@@ -938,6 +938,11 @@ function PreviewScene({ params, onSave }: { params: PortfolioParams; onSave: () 
             animate={{ opacity: 1, y: 0 }}
             className="w-full max-w-md"
           >
+            <div className="mb-5 rounded-md border border-paper-3 bg-paper-2 px-3 py-2 text-center">
+              <p className="text-caption uppercase tracking-[0.16em] text-ink-3 font-medium">
+                Aperçu · pas encore sauvegardé
+              </p>
+            </div>
             <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium text-center">
               {t("onboarding.planting.reveal_eyebrow")}
             </p>
