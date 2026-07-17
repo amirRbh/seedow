@@ -1,46 +1,32 @@
-# Transparence ESG sur /methodologie
+## Objectif
 
-Objectif : rendre le process de notation ESG entièrement lisible et honnête sur la page méthodologie, sans toucher au moteur ni aux cours.
+Réduire le mur d'inscription : que les visiteurs puissent générer et voir leur portefeuille simulé **avant** de créer un compte. La logique existe déjà (phase `preview` de `/onboarding` fonctionne sans auth) — le problème est que les CTA de la landing envoient vers `/auth?mode=signup` au lieu de `/onboarding`.
 
-## Ce qu'on ajoute
+## Changements
 
-Une nouvelle section éditoriale **"Notation ESG"**, insérée entre le pipeline (5 étapes) et le simulateur, structurée en 4 blocs :
+### 1. `src/routes/index.tsx` — Rerouter les CTA principaux
+Remplacer les 3 CTA "Rejoindre la beta" (lignes ~89, ~171, ~357) qui pointent vers `/auth?mode=signup` par des liens vers `/onboarding` avec libellé plus engageant :
 
-### 1. D'où viennent les scores (sources)
-- Liste des fournisseurs utilisés par asset (`esg_score_source` déjà présent dans le schéma : MSCI, Sustainalytics, Yahoo, manual…).
-- Mention explicite : "score agrégé 0–100, normalisé par nos soins pour être comparable entre fournisseurs".
-- Date de fraîcheur (dernière update quotes / ESG si dispo).
+- **Nav (top-right)** : garder "Se connecter" à gauche + remplacer le bouton primaire par → `Découvrir mon portefeuille` (Link `to="/onboarding"`).
+- **Hero CTA** : `Rejoindre la beta` → `Construire mon portefeuille` (Link `to="/onboarding"`), et remplacer le "Voir les cours" en secondaire par un mini-libellé rassurant `Sans compte · 2 min`.
+- **CTA final (ligne ~357)** : idem, direction `/onboarding`.
 
-### 2. La grille — 3 piliers pondérés
-Tableau visuel des 3 piliers (E / S / G) avec :
-- pondération par défaut (**40 / 40 / 20**, cf. `DEFAULT_PILLAR_WEIGHTS`)
-- effet des causes actives (climat/biodiv → +E ; humain/égalité → +S ; tech/circulaire → léger +G), avec la formule `STEP = 0.1` puis renormalisation.
-- fallback : si un pilier manque sur un asset → on utilise le score agrégé pour ce pilier seulement (dégradation douce).
+Utilisateurs authentifiés : comportement inchangé (bouton "Accéder à mon espace" → `/dashboard`).
 
-Rendu : petit tableau paper-card + une note "les poids se réajustent selon vos convictions".
+### 2. `src/routes/onboarding.tsx` — Renforcer la promesse "sans compte"
+- Sur la phase `intro` : ajouter un micro-label sous le CTA de démarrage (« Aucun compte requis · tes réponses restent en local jusqu'à ce que tu valides »).
+- Sur la phase `preview` (l'allocation simulée) : ajouter en tête un petit bandeau clair du type « Voici ta simulation. Crée un compte gratuit uniquement si tu veux la sauvegarder. »
+- Sur la phase `account` (mur d'inscription actuel) : reformuler le titre pour insister que la simulation est **déjà prête** et qu'il ne s'agit que de la conserver.
 
-### 3. Comment on construit le portefeuille (côté ESG)
-- **Exclusions dures** (fossiles/armes/tabac/jeux/animaux/fast-fashion) : filtre binaire avant optimisation.
-- **Best-in-class** : on garde les meilleurs quintiles par classe d'actifs sur le score composite.
-- **Plancher ESG** portefeuille : `MIN_PORTFOLIO_ESG = 70` (cf. `types.ts`). Si l'optimiseur ne peut pas l'atteindre → banner "plancher relâché" (déjà géré).
-- **Tilts** : les intensités de causes (0–100 %) réajustent la pondération des piliers et biaisent la sélection thématique.
+Aucune logique métier modifiée : la génération d'allocation via `generatePortfolio` reste identique, seul le wording + le routage changent.
 
-### 4. Limites & honnêteté (bloc encadré)
-- Divergence connue entre agences (corrélation ~0,5 vs 0,99 pour la notation crédit — MIT 2022).
-- Scope 3 souvent absent → intensité carbone couverte à X % du portefeuille (déjà affiché par `CarbonCoverage`, on rappelle ici l'idée).
-- ESG mesure des pratiques, pas l'impact ni l'éthique personnelle.
-- Lien vers les cours 07 (ESG c'est quoi), 08 (Greenwashing), 09 (Labels ISR/SFDR).
+### 3. `src/components/beta/BetaCounter.tsx` (optionnel, si visible sur landing)
+Vérifier que le compteur "places restantes" apparaît bien près du nouveau CTA `/onboarding` pour garder la notion de beta sans forcer l'inscription.
 
-## Structure technique
+## Hors-scope
+- Pas de changement backend, pas de migration.
+- Pas de modification du flow `/auth` lui-même (login/signup restent accessibles pour ceux qui viennent d'un lien direct).
+- Pas de persistance côté serveur des réponses anonymes (déjà géré côté client dans onboarding).
 
-- **1 seul fichier édité** : `src/routes/methodologie.tsx` — nouvelle `<section>` insérée avant le simulateur, réutilisant les patterns existants (`border border-paper-3`, `paper-2/40`, eyebrow uppercase, `MetricLabel`).
-- **i18n** : ajout des clés sous `methodologie.esg_grid.*` dans `src/i18n/locales/fr.json` et `en.json` (titres, descriptions, labels tableau, note limites).
-- **Zéro nouveau composant** : tout inline dans la page pour rester léger. Pas de nouveau server function, pas de requête DB (les valeurs `DEFAULT_PILLAR_WEIGHTS`, `MIN_PORTFOLIO_ESG`, `STEP` sont importées depuis `@/lib/portfolio/types`).
-- **Design tokens** : respect strict des règles mémoire — paper/ink/mint uniquement, JetBrains Mono pour les nombres (poids piliers, seuil 70), pas d'ombres, `gold-rule` comme séparateur, badges pill mono uppercase.
-
-## Hors scope
-
-- Pas de changement du moteur d'optimisation ni du calcul des scores.
-- Pas de modification des cours ESG existants.
-- Pas de nouvelle page dédiée : tout tient dans /methodologie pour garder la transparence à un clic du dashboard.
-- Pas de refonte du hero ni du reste de la page.
+## Résultat attendu
+Un visiteur clique sur le CTA de la landing → arrive directement dans `/onboarding` → répond à 4 questions → **voit son allocation simulée** → à ce moment seulement, choix explicite de créer un compte pour sauvegarder.
