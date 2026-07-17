@@ -614,6 +614,14 @@ function Intro({ onStart }: { onStart: () => void }) {
           <path d="M5 12h14M13 5l7 7-7 7" />
         </svg>
       </motion.button>
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.6 }}
+        className="mt-4 text-caption uppercase tracking-[0.16em] text-paper/40"
+      >
+        Sans compte · 2 min · aucun engagement
+      </motion.p>
     </motion.div>
   );
 }
