@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { KPIFigure } from "@/components/ui/KPIFigure";
 import { AnimatedFigure } from "@/components/ui/AnimatedFigure";
@@ -50,11 +51,23 @@ export function ImpactRibbon({
         {t("impact_ribbon.real_impact")}
       </p>
 
-      <div className="mt-4 kpi-figure flex items-baseline gap-2 text-6xl leading-none">
+      <p className="text-tag uppercase tracking-[0.22em] font-semibold text-ink-3 mt-4">
+        {t("impact_ribbon.co2_label")}
+      </p>
+      <div className="mt-1 kpi-figure flex items-baseline gap-2 text-6xl leading-none">
         <AnimatedFigure value={co2Display} format={fmt} />
         <span className="text-lg font-medium tracking-normal text-ink-3 font-sans">{co2Unit}</span>
       </div>
       <p className="text-body-sm text-ink-2 mt-2">{t("impact_ribbon.co2_avoided_desc")}</p>
+      <p className="mt-2 text-xs text-ink-3 leading-relaxed max-w-md">
+        {t("impact_ribbon.explainer")}{" "}
+        <Link
+          to="/methodologie"
+          className="underline underline-offset-2 hover:text-gold transition-colors"
+        >
+          {t("impact_ribbon.learn_more")}
+        </Link>
+      </p>
 
       <div className="gold-rule my-5" aria-hidden />
 
