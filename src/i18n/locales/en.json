@@ -1001,12 +1001,15 @@
   },
   "impact_ribbon": {
     "real_impact": "Real impact",
+    "co2_label": "CO₂ avoided (estimate)",
     "co2_avoided_desc": "of CO₂ avoided through your investments",
     "tonnes": "tonnes",
     "kg": "kg",
     "trees_label": "Equivalent trees",
     "energy_label": "Green energy financed",
-    "impact_score": "Impact score"
+    "impact_score": "Impact score",
+    "explainer": "CO₂ avoided is an indicative estimate derived from each holding's ESG score. Not a regulatory figure — a directional measure.",
+    "learn_more": "See methodology"
   },
   "impact_hero": {
     "eyebrow": "Real impact",

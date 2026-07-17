@@ -983,12 +983,15 @@
   },
   "impact_ribbon": {
     "real_impact": "Impact réel",
+    "co2_label": "CO₂ évité (estimation)",
     "co2_avoided_desc": "de CO₂ évité grâce à vos investissements",
     "tonnes": "tonnes",
     "kg": "kg",
     "trees_label": "Arbres équivalents",
     "energy_label": "Énergie verte financée",
-    "impact_score": "Score impact"
+    "impact_score": "Score impact",
+    "explainer": "Le CO₂ évité est une estimation indicative calculée à partir des scores ESG de chaque ligne. Ce n'est pas un chiffre réglementaire — c'est une mesure de direction.",
+    "learn_more": "Voir la méthodologie"
   },
   "impact_hero": {
     "eyebrow": "Impact réel",
