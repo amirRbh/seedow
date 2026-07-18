@@ -3,6 +3,7 @@ import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { buildPortfolio, type Asset, type PortfolioParams } from "@/lib/portfolio";
+import { clientIp, hashIp } from "@/lib/rateLimit.server";
 
 // ─────────────────────────────────────────────────────────
 // Validation
@@ -102,11 +103,26 @@ async function loadUniverse(client: typeof supabaseAdmin = supabaseAdmin): Promi
 
 /**
  * Compute a portfolio in-memory without persisting.
- * Used by the methodology page simulator.
+ * Used by the onboarding preview and the methodology page simulator — both
+ * reachable without an account, so this is the only compute-heavy (Markowitz
+ * QP) endpoint in the app open to anonymous callers. Rate-limited by IP like
+ * the other public, unauthenticated endpoints (waitlist, client error log).
+ * Limit set generously (40/10min) since /methodologie's live simulator fires
+ * on every slider change (debounced 250ms) during normal exploration.
  */
 export const simulatePortfolio = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => ParamsSchema.parse(input))
   .handler(async ({ data }) => {
+    const ip = clientIp();
+    const rlKey = `simulate_portfolio:${await hashIp(ip)}`;
+    const { data: allowed, error: rlErr } = await supabaseAdmin.rpc(
+      "check_and_increment_rate_limit",
+      { p_key: rlKey, p_limit: 40, p_window_seconds: 600 },
+    );
+    if (!rlErr && allowed === false) {
+      throw new Error("Trop de simulations. Réessaie dans quelques minutes.");
+    }
+
     const universe = await loadUniverse();
     const params: PortfolioParams = {
       causes: data.causes,

@@ -8,6 +8,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { clientIp, hashIp } from "@/lib/rateLimit.server";
 
 export interface BetaCapacity {
   slotsTaken: number;
@@ -48,22 +49,6 @@ export const getWaitlistCount = createServerFn({ method: "GET" }).handler(
     return { count: count ?? 0 };
   },
 );
-
-/** Hash non-réversible d'une IP pour la clé de rate-limit (pas de PII stockée en clair). */
-async function hashIp(ip: string): Promise<string> {
-  const data = new TextEncoder().encode(ip);
-  const digest = await crypto.subtle.digest("SHA-256", data);
-  return Array.from(new Uint8Array(digest))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-}
-
-function clientIp(): string {
-  const request = getRequest();
-  const fwd = request?.headers?.get("x-forwarded-for");
-  if (fwd) return fwd.split(",")[0].trim();
-  return request?.headers?.get("cf-connecting-ip") ?? "unknown";
-}
 
 export const joinWaitlist = createServerFn({ method: "POST" })
   .inputValidator((input: { email: string; source?: string }) =>

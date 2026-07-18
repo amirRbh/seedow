@@ -186,7 +186,7 @@ function Landing() {
             className="mt-16 flex items-center gap-4 text-caption font-bold uppercase text-[color:var(--apple-text-2)]"
             style={{ letterSpacing: "0.2em" }}
           >
-            <span>Impact certifié</span>
+            <span>Méthodologie publique</span>
             <span
               aria-hidden
               className="inline-block rounded-full"
