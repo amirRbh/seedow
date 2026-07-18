@@ -78,7 +78,7 @@ export function FeedbackButton() {
                 <DialogDescription>{t("beta.feedback_thanks_desc")}</DialogDescription>
               </DialogHeader>
               <DialogFooter>
-                <button onClick={() => setOpen(false)} className="btn-plant">
+                <button onClick={() => setOpen(false)} className="btn-primary">
                   {t("common.close")}
                 </button>
               </DialogFooter>
@@ -142,7 +142,7 @@ export function FeedbackButton() {
                 <button
                   onClick={onSubmit}
                   disabled={submitting || (nps === null && !blocker && !wish)}
-                  className="btn-plant w-full justify-center disabled:opacity-40"
+                  className="btn-primary w-full justify-center disabled:opacity-40"
                 >
                   {submitting ? t("beta.feedback_sending") : t("common.submit")}
                 </button>

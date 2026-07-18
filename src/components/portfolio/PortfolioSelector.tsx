@@ -42,7 +42,6 @@ export function PortfolioSelector({ compact = false }: { compact?: boolean }) {
         aria-haspopup="listbox"
         aria-expanded={open}
       >
-        <span className="text-tag">🌿</span>
         <span className="text-caption font-semibold text-ink truncate max-w-[120px]">
           {active.name}
         </span>
@@ -86,7 +85,6 @@ export function PortfolioSelector({ compact = false }: { compact?: boolean }) {
                     }`}
                   >
                     <span className="flex items-center gap-2 truncate">
-                      <span className="text-label">🌱</span>
                       <span className="font-medium truncate">{p.name}</span>
                     </span>
                     {isActive && (

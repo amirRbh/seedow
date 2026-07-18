@@ -4,7 +4,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
-import { GardenVisualization, type GardenPlant } from "@/components/garden/GardenVisualization";
+import {
+  AllocationVisualization,
+  type AllocationHolding,
+} from "@/components/portfolio/AllocationVisualization";
 import { useLexicon } from "@/hooks/useLexicon";
 import { useLang } from "@/hooks/useLang";
 import { formatCurrency } from "@/lib/format";
@@ -76,7 +79,7 @@ function Dashboard() {
     );
   }, [user, t]);
 
-  const plants: GardenPlant[] = useMemo(
+  const holdings: AllocationHolding[] = useMemo(
     () =>
       (portfolio?.holdings ?? []).map((h) => ({
         id: h.id,
@@ -152,7 +155,7 @@ function Dashboard() {
         </motion.section>
 
         {/* 1b. Impact nature — mis en avant juste après la valeur */}
-        {portfolio && plants.length > 0 && <ImpactHero />}
+        {portfolio && holdings.length > 0 && <ImpactHero />}
 
         {/* 2. Aperçu portefeuille */}
         <motion.section
@@ -163,7 +166,7 @@ function Dashboard() {
         >
           {loading ? (
             <p className="text-label text-ink-3">{t("dashboard.loading_portfolio")}</p>
-          ) : plants.length === 0 ? (
+          ) : holdings.length === 0 ? (
             <div className="border border-dashed border-paper-3 rounded p-6 text-center">
               <p className="text-body-sm text-ink-2 mb-3">{t("dashboard.empty_portfolio")}</p>
               <Link
@@ -175,9 +178,9 @@ function Dashboard() {
               </Link>
             </div>
           ) : (
-            <GardenVisualization
-              plants={plants}
-              maxSlots={Math.max(5, plants.length + 1)}
+            <AllocationVisualization
+              holdings={holdings}
+              maxSlots={Math.max(5, holdings.length + 1)}
               onEmptySlotClick={() => navigate({ to: "/discover" })}
             />
           )}

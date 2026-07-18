@@ -19,7 +19,7 @@ const ParamsSchema = z.object({
   initial_amount: z.number().min(0).max(10_000_000),
   /** "replace" (default): deactivate all existing active portfolios. "create": add a new one alongside (max 3 enforced by DB trigger). */
   mode: z.enum(["replace", "create"]).default("replace"),
-  /** Custom name for the new garden (used when creating multiple portfolios) */
+  /** Custom name for the new portfolio (used when creating multiple portfolios) */
   name: z.string().min(1).max(80).optional(),
 });
 
@@ -163,7 +163,7 @@ export const generatePortfolio = createServerFn({ method: "POST" })
     });
 
     // 1) En mode "replace", désactiver tous les portefeuilles actifs existants.
-    //    En mode "create", on conserve les jardins existants (le trigger DB applique la limite de 3).
+    //    En mode "create", on conserve les portefeuilles existants (le trigger DB applique la limite de 3).
     if (data.mode === "replace") {
       const { error: deactivateErr } = await userClient
         .from("portfolios")

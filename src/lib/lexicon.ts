@@ -4,27 +4,12 @@
  */
 
 export const lexicon = {
-  nav: {
-    garden: "Portefeuille",
-    roots: "Analyse",
-    discover: "Découvrir",
-    ethi: "Ethi",
-  },
   actions: {
-    plant: "Investir",
-    harvest: "Retirer",
-    water: "Verser",
-    replant: "Rééquilibrer",
-    compost: "Arbitrer",
-  },
-  entities: {
-    seed: "actif",
-    seedPlural: "actifs",
-    seedling: "nouvel actif",
-    plant: "ligne",
-    garden: "ton portefeuille",
-    seed_initial: "capital initial",
-    soil: "solde",
+    invest: "Investir",
+    withdraw: "Retirer",
+    deposit: "Verser",
+    rebalance: "Rééquilibrer",
+    arbitrate: "Arbitrer",
   },
   themes: {
     climat: { label: "Climat", icon: "☀️", desc: "Transition énergétique" },
@@ -34,13 +19,6 @@ export const lexicon = {
     governance: { label: "Éthique", icon: "⚖️", desc: "Gouvernance transparente" },
     circulaire: { label: "Circulaire", icon: "♻️", desc: "Zéro déchet" },
     tech: { label: "Tech propre", icon: "🧠", desc: "IA responsable" },
-  },
-  status: {
-    growing: "en hausse",
-    dormant: "stable",
-    struggling: "à surveiller",
-    blooming: "forte hausse",
-    new: "récent",
   },
   labels: {
     total_value: "Valeur actuelle",

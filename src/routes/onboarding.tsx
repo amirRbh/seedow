@@ -75,7 +75,7 @@ const STEPS = [
 ];
 
 type StepId = (typeof STEPS)[number]["id"];
-type Phase = "intro" | "steps" | "preview" | "account" | "naming" | "planting" | "saving";
+type Phase = "intro" | "steps" | "preview" | "account" | "naming" | "generating" | "saving";
 type Answers = Partial<Record<StepId, string[]>>;
 
 /** Dérive les paramètres du moteur de portefeuille depuis les réponses de l'onboarding. */
@@ -119,7 +119,7 @@ function Onboarding() {
   const [phase, setPhase] = useState<Phase>(isAdditive ? "steps" : "intro");
   const [stepIndex, setStepIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
-  const [gardenName, setGardenName] = useState("");
+  const [portfolioName, setPortfolioName] = useState("");
 
   const portfolioParams = useMemo(() => answersToParams(answers), [answers]);
 
@@ -148,7 +148,7 @@ function Onboarding() {
     }
   };
 
-  // Appelé depuis l'écran de preview quand l'utilisateur veut sauvegarder son jardin.
+  // Appelé depuis l'écran de preview quand l'utilisateur veut sauvegarder son portefeuille.
   const handleSave = async () => {
     const { data } = await supabase.auth.getSession();
     if (data.session) setPhase("saving");
@@ -179,12 +179,12 @@ function Onboarding() {
           <PreviewScene key="preview" params={portfolioParams} onSave={handleSave} />
         )}
         {phase === "naming" && (
-          <NameGardenStep
+          <NamePortfolioStep
             key="naming"
-            initialName={gardenName}
+            initialName={portfolioName}
             onConfirm={(name) => {
-              setGardenName(name);
-              setPhase("planting");
+              setPortfolioName(name);
+              setPhase("generating");
             }}
             onBack={() => {
               setStepIndex(STEPS.length - 1);
@@ -206,16 +206,16 @@ function Onboarding() {
             }}
           />
         )}
-        {phase === "planting" && (
-          <PlantingScene
-            key="planting"
+        {phase === "generating" && (
+          <GeneratingScene
+            key="generating"
             onEnter={async () => {
               await router.invalidate();
               navigate({ to: "/dashboard" });
             }}
             answers={answers}
             mode={isAdditive ? "create" : "replace"}
-            name={gardenName || undefined}
+            name={portfolioName || undefined}
           />
         )}
         {phase === "saving" && (
@@ -233,7 +233,7 @@ function Onboarding() {
   );
 }
 
-function NameGardenStep({
+function NamePortfolioStep({
   initialName,
   onConfirm,
   onBack,
@@ -857,7 +857,7 @@ function PreviewScene({ params, onSave }: { params: PortfolioParams; onSave: () 
       } catch (err) {
         if (cancelled) return;
         console.error("[onboarding] simulate:", err);
-        setErrorMsg(err instanceof Error ? err.message : t("onboarding.planting.error_fallback"));
+        setErrorMsg(err instanceof Error ? err.message : t("onboarding.generating.error_fallback"));
         setPhase("error");
       }
     })();
@@ -891,12 +891,12 @@ function PreviewScene({ params, onSave }: { params: PortfolioParams; onSave: () 
               />
             </div>
             <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium">
-              {t("onboarding.planting.loading_eyebrow")}
+              {t("onboarding.generating.loading_eyebrow")}
             </p>
             <p className="font-value text-2xl text-ink mt-3">
-              {t("onboarding.planting.loading_title")}
+              {t("onboarding.generating.loading_title")}
             </p>
-            <p className="text-label text-ink-3 mt-2">{t("onboarding.planting.loading_desc")}</p>
+            <p className="text-label text-ink-3 mt-2">{t("onboarding.generating.loading_desc")}</p>
           </motion.div>
         )}
 
@@ -908,10 +908,10 @@ function PreviewScene({ params, onSave }: { params: PortfolioParams; onSave: () 
             className="w-full max-w-md text-center"
           >
             <p className="text-tag uppercase tracking-[0.18em] text-rust font-medium">
-              {t("onboarding.planting.error_eyebrow")}
+              {t("onboarding.generating.error_eyebrow")}
             </p>
             <h2 className="font-value text-2xl text-ink mt-3">
-              {t("onboarding.planting.error_title")}
+              {t("onboarding.generating.error_title")}
             </h2>
             <p className="text-label text-ink-3 mt-3 break-words">{errorMsg}</p>
             <button
@@ -931,13 +931,13 @@ function PreviewScene({ params, onSave }: { params: PortfolioParams; onSave: () 
             className="w-full max-w-md"
           >
             <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium text-center">
-              {t("onboarding.planting.reveal_eyebrow")}
+              {t("onboarding.generating.reveal_eyebrow")}
             </p>
             <p className="font-value text-2xl text-ink text-center mt-2 mb-6">
-              {t("onboarding.planting.reveal_title")}
+              {t("onboarding.generating.reveal_title")}
             </p>
             <p className="text-caption text-ink-3 text-center mb-6">
-              {t("onboarding.planting.reveal_summary", {
+              {t("onboarding.generating.reveal_summary", {
                 count: selected.length,
                 amount: formatCurrency(params.initial_amount, lang),
               })}
@@ -984,7 +984,7 @@ function PreviewScene({ params, onSave }: { params: PortfolioParams; onSave: () 
               }}
               className="mt-8 w-full py-3 rounded-full bg-ink text-paper font-semibold text-body-sm hover:bg-moss-2 transition-colors flex items-center justify-center gap-2"
             >
-              {t("onboarding.planting.save_cta")}
+              {t("onboarding.generating.save_cta")}
               <svg
                 viewBox="0 0 24 24"
                 className="w-3.5 h-3.5"
@@ -997,7 +997,7 @@ function PreviewScene({ params, onSave }: { params: PortfolioParams; onSave: () 
               </svg>
             </button>
             <p className="mt-3 text-center text-caption text-ink-3">
-              {t("onboarding.planting.save_hint")}
+              {t("onboarding.generating.save_hint")}
             </p>
           </motion.div>
         )}
@@ -1030,7 +1030,7 @@ function SavingScene({ params, onEnter }: { params: PortfolioParams; onEnter: ()
       } catch (err) {
         if (cancelled) return;
         console.error("[onboarding] save:", err);
-        setErrorMsg(err instanceof Error ? err.message : t("onboarding.planting.error_fallback"));
+        setErrorMsg(err instanceof Error ? err.message : t("onboarding.generating.error_fallback"));
         setPhase("error");
       }
     })();
@@ -1077,10 +1077,10 @@ function SavingScene({ params, onEnter }: { params: PortfolioParams; onEnter: ()
             className="w-full max-w-md text-center"
           >
             <p className="text-tag uppercase tracking-[0.18em] text-rust font-medium">
-              {t("onboarding.planting.error_eyebrow")}
+              {t("onboarding.generating.error_eyebrow")}
             </p>
             <h2 className="font-value text-2xl text-ink mt-3">
-              {t("onboarding.planting.error_title")}
+              {t("onboarding.generating.error_title")}
             </h2>
             <p className="text-label text-ink-3 mt-3 break-words">{errorMsg}</p>
             <button
@@ -1097,11 +1097,11 @@ function SavingScene({ params, onEnter }: { params: PortfolioParams; onEnter: ()
 }
 
 // ─────────────────────────────────────────────────────────
-// Planting scene — flux additif (nouveau jardin, déjà connecté) :
+// Generating scene — flux additif (nouveau portefeuille, déjà connecté) :
 // simule ET persiste en une passe, inchangé pour ce cas.
 // ─────────────────────────────────────────────────────────
 
-function PlantingScene({
+function GeneratingScene({
   onEnter,
   answers,
   mode = "replace",
@@ -1157,7 +1157,7 @@ function PlantingScene({
       } catch (err) {
         if (cancelled) return;
         console.error("[onboarding] generate:", err);
-        setErrorMsg(err instanceof Error ? err.message : t("onboarding.planting.error_fallback"));
+        setErrorMsg(err instanceof Error ? err.message : t("onboarding.generating.error_fallback"));
         setPhase("error");
       }
     })();
@@ -1191,12 +1191,12 @@ function PlantingScene({
               />
             </div>
             <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium">
-              {t("onboarding.planting.loading_eyebrow")}
+              {t("onboarding.generating.loading_eyebrow")}
             </p>
             <p className="font-value text-2xl text-ink mt-3">
-              {t("onboarding.planting.loading_title")}
+              {t("onboarding.generating.loading_title")}
             </p>
-            <p className="text-label text-ink-3 mt-2">{t("onboarding.planting.loading_desc")}</p>
+            <p className="text-label text-ink-3 mt-2">{t("onboarding.generating.loading_desc")}</p>
           </motion.div>
         )}
 
@@ -1208,10 +1208,10 @@ function PlantingScene({
             className="w-full max-w-md text-center"
           >
             <p className="text-tag uppercase tracking-[0.18em] text-rust font-medium">
-              {t("onboarding.planting.error_eyebrow")}
+              {t("onboarding.generating.error_eyebrow")}
             </p>
             <h2 className="font-value text-2xl text-ink mt-3">
-              {t("onboarding.planting.error_title")}
+              {t("onboarding.generating.error_title")}
             </h2>
             <p className="text-label text-ink-3 mt-3 break-words">{errorMsg}</p>
             <button
@@ -1231,13 +1231,13 @@ function PlantingScene({
             className="w-full max-w-md"
           >
             <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium text-center">
-              {t("onboarding.planting.reveal_eyebrow")}
+              {t("onboarding.generating.reveal_eyebrow")}
             </p>
             <p className="font-value text-2xl text-ink text-center mt-2 mb-6">
-              {t("onboarding.planting.reveal_title")}
+              {t("onboarding.generating.reveal_title")}
             </p>
             <p className="text-caption text-ink-3 text-center mb-6">
-              {t("onboarding.planting.reveal_summary", {
+              {t("onboarding.generating.reveal_summary", {
                 count: selected.length,
                 amount: formatCurrency(initialAmount, lang),
               })}
@@ -1284,7 +1284,7 @@ function PlantingScene({
               }}
               className="mt-8 w-full py-3 rounded-full bg-ink text-paper font-semibold text-body-sm hover:bg-moss-2 transition-colors flex items-center justify-center gap-2"
             >
-              {t("onboarding.planting.dashboard_cta")}
+              {t("onboarding.generating.dashboard_cta")}
               <svg
                 viewBox="0 0 24 24"
                 className="w-3.5 h-3.5"

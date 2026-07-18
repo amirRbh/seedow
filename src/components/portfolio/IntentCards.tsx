@@ -30,8 +30,8 @@ export function IntentCards({ wallet }: IntentCardsProps) {
 
       <div className="grid grid-cols-3 gap-2.5">
         <IntentCard
-          label={L.actions.plant}
-          hint={t("intent_cards.plant_hint")}
+          label={L.actions.invest}
+          hint={t("intent_cards.invest_hint")}
           variant="primary"
           onClick={() => navigate({ to: "/discover" })}
           icon={
@@ -51,8 +51,8 @@ export function IntentCards({ wallet }: IntentCardsProps) {
           }
         />
         <IntentCard
-          label={L.actions.water}
-          hint={t("intent_cards.water_hint")}
+          label={L.actions.deposit}
+          hint={t("intent_cards.deposit_hint")}
           variant="muted"
           onClick={() => navigate({ to: "/discover" })}
           icon={
@@ -70,8 +70,8 @@ export function IntentCards({ wallet }: IntentCardsProps) {
           }
         />
         <IntentCard
-          label={L.actions.replant}
-          hint={t("intent_cards.replant_hint")}
+          label={L.actions.rebalance}
+          hint={t("intent_cards.rebalance_hint")}
           variant="ethi"
           onClick={() => navigate({ to: "/ethi", search: { intent: "rebalance" } as never })}
           icon={
@@ -116,7 +116,7 @@ function IntentCard({
   return (
     <button
       onClick={onClick}
-      className={`flex flex-col items-start gap-1.5 p-3.5 rounded-2xl transition-all leaf-hover ${styles}`}
+      className={`flex flex-col items-start gap-1.5 p-3.5 rounded-2xl transition-all hover-fade ${styles}`}
     >
       <div className="opacity-90">{icon}</div>
       <span className="text-sm font-semibold leading-tight">{label}</span>

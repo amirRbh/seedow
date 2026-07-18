@@ -508,17 +508,17 @@
     color: var(--color-paper);
   }
 
-  .leaf-hover {
+  .hover-fade {
     transition:
       border-color 400ms cubic-bezier(0.32, 0.72, 0, 1),
       background-color 400ms cubic-bezier(0.32, 0.72, 0, 1);
   }
-  .leaf-hover:hover {
+  .hover-fade:hover {
     border-color: var(--color-ink);
   }
 
   /* CTA principal — pill noir Apple */
-  .btn-plant {
+  .btn-primary {
     background: var(--color-ink);
     color: var(--color-paper);
     border-radius: 980px;
@@ -535,12 +535,12 @@
     justify-content: center;
     gap: 8px;
   }
-  .btn-plant:hover {
+  .btn-primary:hover {
     opacity: 0.85;
   }
 
   /* Secondaire — pill mint filled */
-  .btn-harvest {
+  .btn-secondary {
     background: var(--color-mint);
     color: var(--color-paper);
     border: none;
@@ -557,7 +557,7 @@
     justify-content: center;
     gap: 8px;
   }
-  .btn-harvest:hover {
+  .btn-secondary:hover {
     opacity: 0.88;
   }
 

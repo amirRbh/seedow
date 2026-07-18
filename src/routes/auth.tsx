@@ -204,7 +204,7 @@ function AuthPage() {
           <button
             type="submit"
             disabled={loading}
-            className="btn-plant w-full justify-center disabled:opacity-50"
+            className="btn-primary w-full justify-center disabled:opacity-50"
           >
             {loading
               ? t("common.please_wait")

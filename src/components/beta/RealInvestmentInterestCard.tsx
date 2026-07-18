@@ -67,7 +67,7 @@ export function RealInvestmentInterestCard() {
           }}
         >
           <DialogTrigger asChild>
-            <button className="btn-plant mt-4">{t("real_invest_interest.cta")}</button>
+            <button className="btn-primary mt-4">{t("real_invest_interest.cta")}</button>
           </DialogTrigger>
           <DialogContent className="max-w-md">
             {done ? (
@@ -77,7 +77,7 @@ export function RealInvestmentInterestCard() {
                   <DialogDescription>{t("real_invest_interest.success_desc")}</DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
-                  <button onClick={() => setOpen(false)} className="btn-plant">
+                  <button onClick={() => setOpen(false)} className="btn-primary">
                     {t("common.close")}
                   </button>
                 </DialogFooter>
@@ -154,7 +154,7 @@ export function RealInvestmentInterestCard() {
                   <button
                     onClick={onSubmit}
                     disabled={submitting}
-                    className="btn-plant w-full justify-center disabled:opacity-50"
+                    className="btn-primary w-full justify-center disabled:opacity-50"
                   >
                     {submitting ? t("common.sending") : t("real_invest_interest.submit")}
                   </button>

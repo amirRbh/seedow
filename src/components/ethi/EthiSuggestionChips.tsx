@@ -9,13 +9,13 @@ export interface SuggestionChip {
 
 interface EthiSuggestionChipsProps {
   onSelect: (chip: SuggestionChip) => void;
-  hasGarden: boolean;
+  hasPortfolio: boolean;
   chips?: SuggestionChip[];
 }
 
-export function EthiSuggestionChips({ onSelect, hasGarden, chips }: EthiSuggestionChipsProps) {
+export function EthiSuggestionChips({ onSelect, hasPortfolio, chips }: EthiSuggestionChipsProps) {
   const { t } = useTranslation();
-  const fallback: SuggestionChip[] = hasGarden
+  const fallback: SuggestionChip[] = hasPortfolio
     ? [
         { label: t("ethi_chips.analyse_portfolio"), query: t("ethi_chips.analyse_portfolio") },
         { label: t("ethi_chips.what_asset"), query: t("ethi_chips.what_asset") },

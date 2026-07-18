@@ -590,7 +590,7 @@
       }
     },
     "intro": {
-      "eyebrow": "Conseiller en allocation",
+      "eyebrow": "Ton portefeuille, en 2 minutes",
       "title": "Composons votre portefeuille.",
       "description": "Quatre questions, deux minutes. Ethi structure une allocation alignée sur vos convictions et vos exclusions.",
       "step_01": "Tes valeurs",
@@ -617,8 +617,8 @@
       "email_placeholder": "Adresse email",
       "password_placeholder": "Mot de passe (8 caractères min.)",
       "waiting": "Veuillez patienter…",
-      "btn_signup": "Créer mon compte et investir",
-      "btn_login": "Se connecter et investir",
+      "btn_signup": "Créer mon compte (démo)",
+      "btn_login": "Se connecter (démo)",
       "already_account": "Déjà un compte ?",
       "no_account": "Pas encore de compte ?",
       "link_login": "Se connecter",
@@ -626,10 +626,10 @@
       "verify_email": "Compte créé. Vérifie ton email pour finaliser puis reviens.",
       "auth_error": "Erreur d'authentification"
     },
-    "planting": {
+    "generating": {
       "loading_eyebrow": "Composition en cours",
       "loading_title": "Structuration du portefeuille",
-      "loading_desc": "Optimisation Markowitz contrainte",
+      "loading_desc": "On assemble ton portefeuille…",
       "error_eyebrow": "Erreur",
       "error_title": "Impossible de générer le portefeuille",
       "error_fallback": "Erreur lors de la génération",
@@ -637,11 +637,11 @@
       "reveal_title": "Votre portefeuille",
       "reveal_summary": "{{count}} positions · capital de référence {{amount}}",
       "dashboard_cta": "Accéder au tableau de bord",
-      "save_cta": "Sauvegarder mon jardin",
+      "save_cta": "Sauvegarder mon portefeuille",
       "save_hint": "Crée un compte gratuit pour le sauvegarder — sans engagement, 10 secondes."
     },
     "saving": {
-      "title": "Enregistrement de ton jardin…"
+      "title": "Enregistrement de ton portefeuille…"
     },
     "step": {
       "back": "Retour",
@@ -980,7 +980,7 @@
     "what_esg_etf": "C'est quoi un ETF ESG ?",
     "minimum_invest": "Combien minimum pour investir ?"
   },
-  "empty_garden": {
+  "empty_portfolio": {
     "welcome": "Bienvenue, {{name}}",
     "title": "Composez votre premier portefeuille.",
     "desc": "Quatre questions pour définir vos convictions. Ethi structure ensuite une allocation alignée sur vos critères.",
@@ -1011,15 +1011,15 @@
   "intent_cards": {
     "what_to_do": "Que veux-tu faire ?",
     "available_balance": "Solde dispo :",
-    "plant_hint": "Investir plus",
-    "water_hint": "Dépôt récurrent",
-    "replant_hint": "Avec Ethi"
+    "invest_hint": "Investir plus",
+    "deposit_hint": "Dépôt récurrent",
+    "rebalance_hint": "Avec Ethi"
   },
   "portfolio_selector": {
     "new_portfolio": "Nouveau portefeuille",
     "limit_reached": "Limite de 3 portefeuilles atteinte"
   },
-  "garden_viz": {
+  "allocation_viz": {
     "allocation_title_one": "Allocation · {{count}} ligne",
     "allocation_title_other": "Allocation · {{count}} lignes",
     "show_less": "Réduire",
@@ -1029,17 +1029,17 @@
     "add_position": "+ Ajouter une position",
     "explore": "Explorer"
   },
-  "seasonal_badges": {
+  "badges": {
     "milestones": "Jalons",
     "celebrated_one": "{{count}} célébré",
     "celebrated_other": "{{count}} célébrés",
     "to_unlock": "À débloquer : {{desc}}",
     "defs": {
-      "first_seed": {
+      "first_position": {
         "name": "Premier investissement",
         "description": "Tu as effectué ton premier investissement."
       },
-      "patient_gardener": {
+      "patient_investor": {
         "name": "Investisseur patient",
         "description": "90 jours sans paniquer."
       },
@@ -1047,7 +1047,7 @@
         "name": "Bien diversifié",
         "description": "5 actifs différents en portefeuille."
       },
-      "regular_waterer": {
+      "regular_contributor": {
         "name": "Versements réguliers",
         "description": "6 mois de versements consécutifs."
       },
@@ -1059,7 +1059,7 @@
         "name": "Petite forêt",
         "description": "100 arbres équivalents financés."
       },
-      "first_harvest": {
+      "first_withdrawal": {
         "name": "Premier retrait",
         "description": "Tu as retiré pour un projet qui te tient à cœur."
       },
@@ -1485,9 +1485,9 @@
     "failed_suffix": ", {{n}} en échec"
   },
   "ethi_greetings": {
-    "rebalance_has_garden": "Hop {{name}} — on rééquilibre ? Je passe en revue tes **{{count}} lignes** et je te dis quoi ajuster.",
-    "rebalance_no_garden": "Hop {{name}} — pas encore de portefeuille à rééquilibrer. On en construit un ?",
-    "no_garden": "Salut {{name}} ✨ Ton portefeuille n'est pas encore créé. Dis-moi ce qui compte pour toi, je le compose en 2 min.",
+    "rebalance_has_portfolio": "Hop {{name}} — on rééquilibre ? Je passe en revue tes **{{count}} lignes** et je te dis quoi ajuster.",
+    "rebalance_no_portfolio": "Hop {{name}} — pas encore de portefeuille à rééquilibrer. On en construit un ?",
+    "no_portfolio": "Salut {{name}} ✨ Ton portefeuille n'est pas encore créé. Dis-moi ce qui compte pour toi, je le compose en 2 min.",
     "with_quotes": "{{name}}, ton portefeuille tourne sur **{{invested}} €** investis, **{{count}} lignes** et un P&L de **{{pnl}}** 📈. On regarde la suite ?",
     "invested_no_quotes": "{{name}}, ton portefeuille tourne sur **{{invested}} €** investis et **{{count}} lignes**. On regarde la suite ?",
     "ready_no_funds": "Salut {{name}} ✨ Ton portefeuille est prêt mais pas encore alimenté. On programme un premier versement ?"

@@ -131,7 +131,7 @@ function Consent() {
           <button
             disabled={busy}
             onClick={() => decide(true)}
-            className="btn-plant flex-1 justify-center disabled:opacity-50"
+            className="btn-primary flex-1 justify-center disabled:opacity-50"
           >
             {busy ? "Please wait…" : "Approve"}
           </button>

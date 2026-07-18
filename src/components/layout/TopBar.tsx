@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { useViewMode } from "@/hooks/useViewMode";
-import { PortfolioSelector } from "@/components/garden/PortfolioSelector";
+import { PortfolioSelector } from "@/components/portfolio/PortfolioSelector";
 import { AlertsBell } from "@/components/alerts/AlertsBell";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { cn } from "@/lib/utils";

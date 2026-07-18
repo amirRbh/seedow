@@ -250,7 +250,7 @@ function Ethi() {
             <div className="mb-3">
               <EthiSuggestionChips
                 onSelect={handleChip}
-                hasGarden={(portfolio?.holdings.length ?? 0) > 0}
+                hasPortfolio={(portfolio?.holdings.length ?? 0) > 0}
                 chips={briefing?.chips}
               />
             </div>

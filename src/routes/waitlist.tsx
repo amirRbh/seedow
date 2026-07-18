@@ -84,7 +84,7 @@ function WaitlistPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="btn-plant w-full justify-center disabled:opacity-50"
+              className="btn-primary w-full justify-center disabled:opacity-50"
             >
               {submitting ? t("waitlist.submitting") : t("waitlist.btn_join")}
             </button>
