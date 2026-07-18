@@ -2,8 +2,14 @@ import { create, all, type Matrix } from "mathjs";
 // quadprog has no types but we type the call signature locally
 // @ts-expect-error - no published types
 import quadprog from "quadprog";
-import type { Asset, PortfolioParams, PortfolioWeights } from "./types";
-import { getClassBounds, MAX_SINGLE_WEIGHT, MIN_PORTFOLIO_ESG } from "./types";
+import type { Asset, PillarWeights, PortfolioParams, PortfolioWeights } from "./types";
+import {
+  compositeEsgScore,
+  DEFAULT_PILLAR_WEIGHTS,
+  getClassBounds,
+  MAX_SINGLE_WEIGHT,
+  MIN_PORTFOLIO_ESG,
+} from "./types";
 
 const math = create(all, {});
 
@@ -55,6 +61,7 @@ export function optimizeMarkowitz(
   covariance: number[][],
   params: PortfolioParams,
   riskAversion = 4,
+  pillarWeights: PillarWeights = DEFAULT_PILLAR_WEIGHTS,
 ): OptimizeResult {
   const n = assets.length;
   if (n === 0) return { weights: {}, esgFloorRelaxed: false };
@@ -130,9 +137,12 @@ export function optimizeMarkowitz(
     });
   }
 
-  // 5) ESG floor: Σ esg_i · w_i ≥ MIN_PORTFOLIO_ESG
+  // 5) ESG floor: Σ esg_i · w_i ≥ MIN_PORTFOLIO_ESG, on the same pillar-weighted
+  // composite score reported to the user (not the raw aggregate) — so the
+  // constraint the QP solves and the floor checked against metrics.esg_score
+  // are the same quantity.
   cols.push({
-    coefs: assets.map((a) => a.esg_score),
+    coefs: assets.map((a) => compositeEsgScore(a, pillarWeights)),
     b: MIN_PORTFOLIO_ESG,
   });
 
@@ -155,7 +165,7 @@ export function optimizeMarkowitz(
     result = qp.solveQP(Dmat, dvec, Amat, bvec, meq);
   } catch (err) {
     console.warn("[markowitz] QP failed, falling back to equal-weight:", err);
-    return { weights: equalWeight(assets), esgFloorRelaxed: true };
+    return { weights: capConcentration(equalWeight(assets), MAX_SINGLE_WEIGHT), esgFloorRelaxed: true };
   }
 
   if (!result.solution || result.message) {
@@ -176,7 +186,7 @@ export function optimizeMarkowitz(
     try {
       result = qp.solveQP(Dmat, dvec, Amat2, bvec2, meq);
     } catch {
-      return { weights: equalWeight(assets), esgFloorRelaxed: true };
+      return { weights: capConcentration(equalWeight(assets), MAX_SINGLE_WEIGHT), esgFloorRelaxed: true };
     }
   }
 
@@ -195,11 +205,48 @@ export function optimizeMarkowitz(
     console.warn(
       `[markowitz] QP returned degenerate solution (total=${total.toFixed(3)}), falling back to class-bounded equal-weight`,
     );
-    return { weights: classBoundedEqualWeight(assets, params), esgFloorRelaxed: true };
+    return {
+      weights: capConcentration(classBoundedEqualWeight(assets, params), MAX_SINGLE_WEIGHT),
+      esgFloorRelaxed: true,
+    };
   }
   // Renormalise (numerical drift)
   for (const id in weights) weights[id] /= total;
-  return { weights, esgFloorRelaxed };
+  return { weights: capConcentration(weights, MAX_SINGLE_WEIGHT), esgFloorRelaxed };
+}
+
+/**
+ * Cap any weight above `max` and redistribute the excess proportionally
+ * across positions still below the cap (iterative water-filling). Preserves
+ * the total sum exactly, so no renormalisation is needed afterwards.
+ *
+ * If the cap is mathematically infeasible for this many positions
+ * (n·max < 1 — e.g. 3 names can't each stay ≤25% and still sum to 1),
+ * the weights are returned unchanged: forcing the cap would either loop
+ * forever or produce a sum < 1, both worse than a single named line
+ * temporarily exceeding the target concentration.
+ */
+export function capConcentration(weights: PortfolioWeights, max: number): PortfolioWeights {
+  const ids = Object.keys(weights);
+  if (ids.length === 0 || ids.length * max < 1 - 1e-9) return weights;
+
+  const w: PortfolioWeights = { ...weights };
+  for (let iter = 0; iter < 20; iter++) {
+    const over = ids.filter((id) => w[id] > max + 1e-9);
+    if (over.length === 0) break;
+    let excess = 0;
+    for (const id of over) {
+      excess += w[id] - max;
+      w[id] = max;
+    }
+    const under = ids.filter((id) => w[id] < max - 1e-9);
+    const underTotal = under.reduce((s, id) => s + w[id], 0);
+    if (underTotal <= 1e-9) break;
+    for (const id of under) {
+      w[id] += (w[id] / underTotal) * excess;
+    }
+  }
+  return w;
 }
 
 /**

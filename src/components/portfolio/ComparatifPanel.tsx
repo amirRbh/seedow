@@ -5,6 +5,26 @@ import { Glossary } from "@/components/ui/Glossary";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { cn } from "@/lib/utils";
+import type { ExclusionTag } from "@/lib/portfolio/types";
+
+/**
+ * Grandes capitalisations connues, classées par secteur exclu (classification
+ * publique — activité principale, pas un jugement ESG). Sert à rendre concret
+ * ce qu'une exclusion sectorielle écarte réellement, cf. cours "greenwashing"
+ * (signal n°1 : vérifier les top holdings plutôt que se fier au nom du fonds).
+ * Liste illustrative, pas un flux d'indice en temps réel.
+ */
+const AVOIDED_REFERENCE: { ticker: string; name: string; tags: ExclusionTag[] }[] = [
+  { ticker: "XOM", name: "ExxonMobil", tags: ["fossiles"] },
+  { ticker: "CVX", name: "Chevron", tags: ["fossiles"] },
+  { ticker: "SHEL", name: "Shell", tags: ["fossiles"] },
+  { ticker: "BA", name: "Boeing", tags: ["armes"] },
+  { ticker: "LMT", name: "Lockheed Martin", tags: ["armes"] },
+  { ticker: "PM", name: "Philip Morris International", tags: ["tabac"] },
+  { ticker: "BATS", name: "British American Tobacco", tags: ["tabac"] },
+  { ticker: "LVS", name: "Las Vegas Sands", tags: ["jeux"] },
+  { ticker: "ITX", name: "Inditex (Zara)", tags: ["fast-fashion"] },
+];
 
 /**
  * Benchmark de référence — ETF MSCI World grand public (UCITS, EUR).
@@ -55,6 +75,7 @@ export function ComparatifPanel() {
       ? Math.max(0, MSCI_WORLD.carbonIntensityGperEur - metrics.co2_avoided_tons * 100)
       : MSCI_WORLD.carbonIntensityGperEur,
     sfdr: "Article 8 / 9",
+    exclusions: portfolio.exclusions,
   };
 
   const capital = valuation.totalInvested || portfolio.initial_amount || 10_000;
@@ -169,6 +190,8 @@ export function ComparatifPanel() {
         </div>
       </div>
 
+      <AvoidedHoldings exclusions={seedow.exclusions} t={t} />
+
       <div className="mt-10">
         <div className="gold-rule mb-5" />
         <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">
@@ -225,6 +248,94 @@ export function ComparatifPanel() {
           >
             <path d="M5 12h14M13 5l7 7-7 7" />
           </svg>
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+function AvoidedHoldings({
+  exclusions,
+  t,
+}: {
+  exclusions: ExclusionTag[];
+  t: (k: string, opts?: Record<string, unknown>) => string;
+}) {
+  const hasExclusions = exclusions.length > 0;
+
+  return (
+    <div className="mt-10">
+      <div className="gold-rule mb-5" />
+      <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">
+        {t("comparatif_panel.avoided_eyebrow")}
+      </p>
+      <h2 className="font-value text-2xl text-ink leading-tight">
+        {t("comparatif_panel.avoided_title")}
+      </h2>
+      <p className="mt-2 text-body-sm text-ink-2 leading-relaxed max-w-lg">
+        {t("comparatif_panel.avoided_desc")}
+      </p>
+
+      {!hasExclusions && (
+        <div className="mt-4 border border-rust/30 bg-rust/5 px-4 py-3 text-label text-ink-2 leading-relaxed">
+          <p className="font-value text-body-sm text-rust mb-1">
+            {t("comparatif_panel.avoided_none_title")}
+          </p>
+          {t("comparatif_panel.avoided_none_desc")}
+        </div>
+      )}
+
+      <ul className="mt-5 border-t border-b border-paper-3 divide-y divide-paper-3">
+        {AVOIDED_REFERENCE.map((h) => {
+          const matched = h.tags.filter((tag) => exclusions.includes(tag));
+          const isExcluded = matched.length > 0;
+          return (
+            <li key={h.ticker} className="py-3 flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <div className="flex items-baseline gap-2">
+                  <span className="font-value text-body-sm text-ink">{h.ticker}</span>
+                  <span className="text-caption text-ink-3 truncate">{h.name}</span>
+                </div>
+                <div className="flex flex-wrap gap-1.5 mt-1">
+                  {h.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className={cn(
+                        "text-tag uppercase tracking-wider px-1.5 py-0.5 rounded-full border",
+                        exclusions.includes(tag)
+                          ? "border-moss-4 bg-moss-5 text-moss-1"
+                          : "border-paper-3 text-ink-3",
+                      )}
+                    >
+                      {t(`onboarding.steps.exclusions.${tag}`)}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <span
+                className={cn(
+                  "flex-shrink-0 text-tag uppercase tracking-[0.14em] font-semibold text-right",
+                  isExcluded ? "text-moss-1" : "text-ink-3",
+                )}
+              >
+                {isExcluded
+                  ? `✓ ${t("comparatif_panel.avoided_excluded")}`
+                  : t("comparatif_panel.avoided_present")}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+
+      <div className="mt-4 flex flex-wrap items-baseline justify-between gap-3">
+        <p className="text-caption text-ink-3 leading-relaxed max-w-md">
+          {t("comparatif_panel.avoided_disclaimer")}
+        </p>
+        <Link
+          to="/methodologie"
+          className="text-caption font-semibold uppercase tracking-[0.14em] text-ink hover:text-moss-1 transition-colors whitespace-nowrap"
+        >
+          {t("comparatif_panel.avoided_edit_cta")}
         </Link>
       </div>
     </div>

@@ -835,6 +835,9 @@
     "positions_count_one": "{{count}} position",
     "positions_count_other": "{{count}} positions",
     "no_positions": "Aucune position retenue avec ces contraintes.",
+    "since_last_change": "Depuis votre dernier réglage",
+    "new_position": "Nouveau",
+    "removed_positions": "Sorties : {{tickers}}",
     "breakdown_title": "Répartition par classe",
     "stages": {
       "1_name": "Profilage",
@@ -918,6 +921,9 @@
   },
   "asset_detail": {
     "per_share": "/ part",
+    "ethi_nudge_message": "Ethi note : score ESG {{score}}/10, en dessous du plancher {{floor}}/10 recommandé pour un portefeuille Seedow. Ça ne veut pas dire « à éviter à tout prix », mais ça vaut le coup de comparer.",
+    "ethi_nudge_cta": "Voir des alternatives avec Ethi",
+    "ethi_nudge_query": "Peux-tu me proposer 2-3 alternatives à {{ticker}} avec un meilleur score ESG dans la catégorie {{category}} ?",
     "summary": "Résumé",
     "impact_overview": "Aperçu de l'impact · versement mensuel sur 1 an",
     "monthly_deposit": "Versement mensuel",
@@ -1188,7 +1194,16 @@
     "methodology": "Méthodologie",
     "methodology_body": "Le benchmark utilise les caractéristiques moyennes d'un ETF MSCI World UCITS (IWDA / EUNL) : performance annualisée long terme de 7,2 % (net dividendes), volatilité 15,5 %, TER 0,20 %, score MSCI ESG ~52, intensité carbone 165 gCO₂e par euro investi.",
     "read_methodology": "Lire la méthodologie complète",
-    "no_active": "Aucun portefeuille actif."
+    "no_active": "Aucun portefeuille actif.",
+    "avoided_eyebrow": "Face à face · noms réels",
+    "avoided_title": "Ce que vos exclusions évitent",
+    "avoided_desc": "Composition sectorielle typique d'un indice large non filtré. Coché = ce secteur est écarté de votre portefeuille grâce à vos exclusions actives.",
+    "avoided_excluded": "Exclu chez vous",
+    "avoided_present": "Non exclu chez vous",
+    "avoided_none_title": "Aucune exclusion active",
+    "avoided_none_desc": "Vous n'avez activé aucune exclusion sectorielle : un indice large non filtré peut contenir tout ce qui suit.",
+    "avoided_disclaimer": "Liste illustrative à visée pédagogique — classification sectorielle publique de grandes capitalisations connues, pas un flux d'indice en temps réel ni la composition exacte de votre portefeuille.",
+    "avoided_edit_cta": "Modifier mes exclusions"
   },
   "market_freshness": {
     "stale_title": "Prix de marché un peu anciens",
