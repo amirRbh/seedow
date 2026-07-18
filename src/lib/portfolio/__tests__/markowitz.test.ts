@@ -70,13 +70,7 @@ describe("optimizeMarkowitz", () => {
     expect(res.esgFloorRelaxed).toBe(true);
   });
 
-  // KNOWN GAP — the class-bounded equal-weight fallback (classBoundedEqualWeight)
-  // does NOT enforce MAX_SINGLE_WEIGHT: when a single-asset class receives its
-  // full class share, that share can exceed 0.25 (e.g. 4 classes × 4 assets →
-  // 0.25/1 = 0.25 already at the limit; class midpoints can push above).
-  // The main QP path DOES enforce MAX_SINGLE_WEIGHT — see the balanced universe
-  // test in engine.test.ts. Flagged for discussion, not silently fixed.
-  it.fails("fallback path also respects MAX_SINGLE_WEIGHT (known gap)", () => {
+  it("fallback path also respects MAX_SINGLE_WEIGHT (capConcentration)", () => {
     const universe = [
       makeAsset({ id: "eq", asset_class: "equity_dev", esg_score: 30 }),
       makeAsset({ id: "gb", asset_class: "green_bond", esg_score: 30 }),

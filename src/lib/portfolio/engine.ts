@@ -1,6 +1,6 @@
-import type { Asset, ExclusionTag, PortfolioParams, PortfolioResult } from "./types";
-import { MIN_PORTFOLIO_ESG, causeToPillarWeights } from "./types";
-import { optimizeMarkowitz, applyConvictionAdjustment } from "./markowitz";
+import type { Asset, ExclusionTag, PillarWeights, PortfolioParams, PortfolioResult } from "./types";
+import { compositeEsgScore, MAX_SINGLE_WEIGHT, MIN_PORTFOLIO_ESG, causeToPillarWeights } from "./types";
+import { optimizeMarkowitz, applyConvictionAdjustment, capConcentration } from "./markowitz";
 import { computeMetrics } from "./metrics";
 
 const METHODOLOGY_VERSION = "v1.1";
@@ -19,8 +19,13 @@ function applyExclusions(assets: Asset[], exclusions: ExclusionTag[]): Asset[] {
  * Keep the top 50% (median split) of each asset class by ESG score.
  * Class with ≤3 assets: keep all (avoids killing thin classes).
  * Threshold is the median, not Q3 — naming aligned with implementation.
+ *
+ * Ranks on the same pillar-weighted composite score used everywhere else in
+ * the pipeline (ESG floor, final metrics) — so a user favouring "climat"
+ * gets a best-in-class cut tilted towards env_score, not just the QP-stage
+ * return boost from applyConvictionAdjustment.
  */
-function applyBestInClass(assets: Asset[]): Asset[] {
+function applyBestInClass(assets: Asset[], pillarWeights: PillarWeights): Asset[] {
   const byClass = new Map<string, Asset[]>();
   for (const a of assets) {
     const arr = byClass.get(a.asset_class) ?? [];
@@ -34,7 +39,9 @@ function applyBestInClass(assets: Asset[]): Asset[] {
       kept.push(...arr);
       continue;
     }
-    const sorted = [...arr].sort((a, b) => a.esg_score - b.esg_score);
+    const sorted = [...arr].sort(
+      (a, b) => compositeEsgScore(a, pillarWeights) - compositeEsgScore(b, pillarWeights),
+    );
     const medianIndex = Math.floor(sorted.length * 0.5); // top 50%
     kept.push(...sorted.slice(medianIndex));
   }
@@ -80,11 +87,15 @@ export interface BuildPortfolioInput {
 export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
   const { universe, covariance, params } = input;
   const initialCount = universe.length;
+  // Pillar weights from active causes — same score used at every stage that
+  // reasons about ESG (best-in-class, QP floor, final metrics), so a cause
+  // like "climat" consistently tilts towards env_score end to end.
+  const pillarWeights = causeToPillarWeights(params.causes);
 
   // Stage 1
   let pool = applyExclusions(universe, params.exclusions);
   // Stage 2
-  pool = applyBestInClass(pool);
+  pool = applyBestInClass(pool, pillarWeights);
 
   if (pool.length === 0) {
     return {
@@ -117,7 +128,14 @@ export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
 
   // Stage 4 — optimise
   const riskAversion = Math.max(2, 0.6 / Math.max(params.risk_target, 0.02));
-  const { weights, esgFloorRelaxed } = optimizeMarkowitz(pool, μ, Σ, params, riskAversion);
+  const { weights, esgFloorRelaxed } = optimizeMarkowitz(
+    pool,
+    μ,
+    Σ,
+    params,
+    riskAversion,
+    pillarWeights,
+  );
 
   // Final filter — drop dust positions
   let cleaned: Record<string, number> = {};
@@ -162,11 +180,14 @@ export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
     }
   }
   if (total > 0) for (const id in cleaned) cleaned[id] /= total;
+  // Re-apply the concentration cap: the two safety nets above (dust-filter
+  // wipeout, class-balanced fallback) build their own weights and don't go
+  // through optimizeMarkowitz's internal capping, so a thin pool could
+  // otherwise end up with a single-class share above MAX_SINGLE_WEIGHT.
+  cleaned = capConcentration(cleaned, MAX_SINGLE_WEIGHT);
 
   const selectedAssets = pool.filter((a) => cleaned[a.id] !== undefined);
   const μFinal = pool.map((a) => a.expected_return);
-  // Pillar weights derived from active causes; passed to metrics for composite ESG
-  const pillarWeights = causeToPillarWeights(params.causes);
   const metrics = computeMetrics(pool, cleaned, Σ, μFinal, pillarWeights);
 
   // The QP-side relax flag covers infeasibility; we also flag when the final
