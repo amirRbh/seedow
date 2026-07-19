@@ -8,6 +8,7 @@ import { Slider } from "@/components/ui/slider";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { Glossary } from "@/components/ui/Glossary";
 import { MIN_PORTFOLIO_ESG } from "@/lib/portfolio/types";
+import { esgTone, ESG_TONE_CLASSES } from "@/lib/esgTone";
 import type { DiscoverAsset } from "@/lib/discover/types";
 
 // overall_esg_score est sur 0..10, MIN_PORTFOLIO_ESG sur 0..100 (plancher du moteur de portefeuille).
@@ -42,6 +43,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
 
   if (!asset) return null;
 
+  const scoreTone = ESG_TONE_CLASSES[esgTone(asset.overall_esg_score)];
   const risk = asset.risk_level ?? 4;
   const riskInfo = RISK_LABELS[risk];
 
@@ -75,8 +77,10 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                   </span>
                 </p>
               </div>
-              <div className="flex items-center gap-1 text-tag font-semibold text-moss-1 bg-moss-5 px-2 py-1 rounded-full border border-moss-4 flex-shrink-0">
-                <span className="w-1.5 h-1.5 rounded-full bg-moss-1" />
+              <div
+                className={`flex items-center gap-1 text-tag font-semibold px-2 py-1 rounded-full border flex-shrink-0 ${scoreTone.text} ${scoreTone.chipBg} ${scoreTone.chipBorder}`}
+              >
+                <span className={`w-1.5 h-1.5 rounded-full ${scoreTone.dot}`} />
                 ESG {asset.overall_esg_score.toFixed(1)}
               </div>
             </div>

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import type { ActiveHolding } from "@/hooks/useActivePortfolio";
 import type { ValuedHolding } from "@/hooks/usePortfolioValuation";
+import { esgToneFrom100, ESG_TONE_CLASSES } from "@/lib/esgTone";
 import { HoldingDetailSheet } from "./HoldingDetailSheet";
 
 interface Props {
@@ -207,7 +208,9 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
                       {CLASS_LABELS[h.category] ?? h.category}
                       {h.region && ` · ${h.region}`}
                       {" · ESG "}
-                      <span className="text-moss-1 font-semibold">{h.esgScore.toFixed(0)}</span>
+                      <span className={`font-semibold ${ESG_TONE_CLASSES[esgToneFrom100(h.esgScore)].text}`}>
+                        {h.esgScore.toFixed(0)}
+                      </span>
                     </p>
                     <p className="text-tag text-ink-3 flex-shrink-0">
                       {amount.toLocaleString("fr-FR", {

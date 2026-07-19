@@ -9,6 +9,7 @@ import {
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { useLang } from "@/hooks/useLang";
 import { formatNumber, formatPercent } from "@/lib/format";
+import { esgToneFrom100, ESG_TONE_CLASSES } from "@/lib/esgTone";
 
 function ShareCard({ s }: { s: PortfolioShareRow }) {
   const { t } = useTranslation();
@@ -30,7 +31,9 @@ function ShareCard({ s }: { s: PortfolioShareRow }) {
       <div className="mt-4 grid grid-cols-3 gap-2 border-t border-paper-3 pt-3 text-xs">
         <div>
           <p className="text-ink-3 uppercase tracking-[0.16em] text-tag">ESG</p>
-          <p className="font-value text-ink tabular-nums">
+          <p
+            className={`font-value tabular-nums ${s.esg_score != null ? ESG_TONE_CLASSES[esgToneFrom100(s.esg_score)].text : "text-ink"}`}
+          >
             {s.esg_score
               ? formatNumber(s.esg_score, lang, {
                   minimumFractionDigits: 2,
@@ -94,7 +97,7 @@ export function CommunityPanel() {
               {formatNumber(median, lang, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>{" "}
             {myESG >= median ? (
-              <span className="text-emerald-700 text-xs uppercase tracking-[0.18em] font-semibold ml-2">
+              <span className="text-gold text-xs uppercase tracking-[0.18em] font-semibold ml-2">
                 {t("community_panel.above")}
               </span>
             ) : (
@@ -160,7 +163,9 @@ export function CommunityPanel() {
                   <span className="flex-1 text-ink font-medium">@{r.public_handle}</span>
                   <span className="text-xs text-ink-3 tabular-nums">
                     ESG{" "}
-                    <span className="text-ink font-value">
+                    <span
+                      className={`font-value ${r.esg_score != null ? ESG_TONE_CLASSES[esgToneFrom100(r.esg_score)].text : "text-ink"}`}
+                    >
                       {r.esg_score
                         ? formatNumber(r.esg_score, lang, {
                             minimumFractionDigits: 2,

@@ -2,6 +2,7 @@ import type { ActivePortfolioMetrics } from "@/hooks/useActivePortfolio";
 import { useTranslation } from "react-i18next";
 import { useViewMode } from "@/hooks/useViewMode";
 import { MetricLabel } from "@/components/ui/MetricLabel";
+import { esgToneFrom100, ESG_TONE_CLASSES } from "@/lib/esgTone";
 
 interface Props {
   metrics: ActivePortfolioMetrics | null;
@@ -15,6 +16,9 @@ interface Item {
   value: string;
   sub: string;
   tone: Tone;
+  /** Couleur de la valeur elle-même quand elle doit refléter sa propre qualité
+   * (ex. score ESG) plutôt que la teinte catégorielle de la tuile. */
+  valueTextOverride?: string;
   expertOnly?: boolean;
 }
 
@@ -37,6 +41,7 @@ export function PortfolioMetricsCard({ metrics }: Props) {
       value: `${metrics.esg_score.toFixed(0)}`,
       sub: t("portfolio_metrics.out_of_100"),
       tone: "bloom",
+      valueTextOverride: ESG_TONE_CLASSES[esgToneFrom100(metrics.esg_score)].text,
     },
     {
       label: t("portfolio_metrics.co2_avoided"),
@@ -105,7 +110,9 @@ export function PortfolioMetricsCard({ metrics }: Props) {
             <div className="text-tag uppercase tracking-wider text-ink-3 font-semibold leading-tight">
               <MetricLabel label={it.label} hint={it.hint} />
             </div>
-            <p className={`font-value text-2xl mt-2 leading-none ${c.text}`}>{it.value}</p>
+            <p className={`font-value text-2xl mt-2 leading-none ${it.valueTextOverride ?? c.text}`}>
+              {it.value}
+            </p>
             <p className="text-tag text-ink-3 mt-1.5">{it.sub}</p>
           </div>
         );

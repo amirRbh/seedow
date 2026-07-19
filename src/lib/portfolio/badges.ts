@@ -29,7 +29,8 @@ export const BADGE_DEFS: BadgeDef[] = [
 
 const PATIENT_INVESTOR_DAYS = 90;
 const BIODIVERSITY_MIN_HOLDINGS = 5;
-const ALIGNED_MIN_ESG = 8.5;
+// Exporté — réutilisé par esgTone.ts comme seuil "excellent" (même échelle 0..10).
+export const ALIGNED_MIN_ESG = 8.5;
 
 /**
  * Détermine les badges réellement débloqués à partir du portefeuille actif.

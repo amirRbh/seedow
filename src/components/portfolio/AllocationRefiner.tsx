@@ -4,6 +4,7 @@ import { simulateTradeoffs } from "@/lib/portfolio/tradeoffs.functions";
 import { trackTradeoff, type TradeoffLever } from "@/lib/preferences/tracking";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
+import { esgToneFrom100, ESG_TONE_CLASSES } from "@/lib/esgTone";
 
 interface Holding {
   id: string;
@@ -140,6 +141,7 @@ export function AllocationRefiner({ portfolioId }: Props) {
         <Figure
           label={t("allocation_refiner.esg_score")}
           value={`${baseline.esg_score.toFixed(1)} / 100`}
+          valueClassName={ESG_TONE_CLASSES[esgToneFrom100(baseline.esg_score)].text}
         />
       </div>
 
@@ -191,7 +193,7 @@ export function AllocationRefiner({ portfolioId }: Props) {
               <div className="flex flex-wrap gap-x-4 gap-y-1 text-caption text-ink-3">
                 <span>
                   ESG&nbsp;
-                  <span className="text-ink">
+                  <span className={row.esgDelta > 0 ? "text-moss-2" : row.esgDelta < 0 ? "text-rust" : "text-ink"}>
                     {row.esgDelta >= 0 ? "+" : ""}
                     {row.esgDelta.toFixed(1)} pt
                   </span>
@@ -447,12 +449,20 @@ function metricRow(
   };
 }
 
-function Figure({ label, value }: { label: string; value: string }) {
+function Figure({
+  label,
+  value,
+  valueClassName = "text-ink",
+}: {
+  label: string;
+  value: string;
+  valueClassName?: string;
+}) {
   return (
     <div>
       <p className="text-tag font-semibold uppercase tracking-[0.18em] text-ink-3">{label}</p>
       <p
-        className="text-body-lg font-semibold text-ink mt-1 tabular-nums"
+        className={`text-body-lg font-semibold mt-1 tabular-nums ${valueClassName}`}
         style={{ fontVariantNumeric: "tabular-nums" }}
       >
         {value}

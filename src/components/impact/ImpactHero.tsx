@@ -7,6 +7,7 @@ import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { KPIFigure } from "@/components/ui/KPIFigure";
 import { AnimatedFigure } from "@/components/ui/AnimatedFigure";
 import { useLang } from "@/hooks/useLang";
+import { esgToneFrom100, ESG_TONE_CLASSES } from "@/lib/esgTone";
 
 /**
  * ImpactHero — second pilier narratif du dashboard, dédié à l'impact nature.
@@ -123,6 +124,7 @@ export function ImpactHero() {
             label={t("impact_hero.impact_score_label")}
             size="sm"
             accent
+            valueClassName={ESG_TONE_CLASSES[esgToneFrom100(data.esg)].text}
           />
         </div>
 

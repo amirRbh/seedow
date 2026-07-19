@@ -6,6 +6,7 @@ import { AppHeader } from "@/components/navigation/AppHeader";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { JourneySteps } from "@/components/navigation/JourneySteps";
 import { KPIFigure } from "@/components/ui/KPIFigure";
+import { esgToneFrom100, ESG_TONE_CLASSES } from "@/lib/esgTone";
 import { Glossary } from "@/components/ui/Glossary";
 import { DecisionTimeline } from "@/components/profil/DecisionTimeline";
 import { useAuth } from "@/hooks/useAuth";
@@ -168,6 +169,7 @@ function ProfilPage() {
               label={t("profile.kpi_impact")}
               value={esg.toFixed(0)}
               unit="/100"
+              valueClassName={ESG_TONE_CLASSES[esgToneFrom100(esg)].text}
             />
             <KPIFigure
               size="sm"

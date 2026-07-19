@@ -38,7 +38,7 @@ export function MetricLabel({ label, hint, className = "" }: Props) {
       {open && (
         <span
           role="tooltip"
-          className="absolute z-50 bottom-full left-0 mb-2 w-56 p-2.5 rounded-lg bg-ink text-paper text-caption leading-snug shadow-deep normal-case tracking-normal"
+          className="absolute z-50 bottom-full left-0 mb-2 w-56 p-2.5 rounded-lg bg-ink text-paper text-caption leading-snug shadow-popover normal-case tracking-normal"
           style={{ letterSpacing: "0" }}
         >
           {hint}

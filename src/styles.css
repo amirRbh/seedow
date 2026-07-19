@@ -73,48 +73,8 @@
   --color-alert: var(--alert);
   --color-volt: var(--volt);
 
-  --shadow-leaf: var(--shadow-leaf);
-  --shadow-deep: var(--shadow-deep);
-  --shadow-soil: var(--shadow-soil);
-
-  --animate-breathe: breathe 4s ease-in-out infinite;
-  --animate-sprout: sprout 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-  --animate-fade-in-up: fadeInUp 0.5s ease-out;
-
-  @keyframes breathe {
-    0%,
-    100% {
-      transform: translateY(0) scale(1);
-    }
-    50% {
-      transform: translateY(-3px) scale(1.02);
-    }
-  }
-  @keyframes sprout {
-    0% {
-      transform: scaleY(0);
-      opacity: 0;
-      transform-origin: bottom;
-    }
-    60% {
-      transform: scaleY(1.05);
-      opacity: 1;
-    }
-    100% {
-      transform: scaleY(1);
-      opacity: 1;
-    }
-  }
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(12px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+  --shadow-hover: var(--shadow-hover);
+  --shadow-popover: var(--shadow-popover);
 }
 
 :root {
@@ -175,10 +135,11 @@
   --input: var(--paper-3);
   --ring: var(--ink);
 
-  /* Ombres désactivées — design flat éditorial */
-  --shadow-leaf: 0 0 0 0 transparent;
-  --shadow-deep: 0 0 0 0 transparent;
-  --shadow-soil: 0 0 0 0 transparent;
+  /* Repos = flat éditorial (pas d'ombre) ; ombre réservée au survol des
+     éléments cliquables (--shadow-hover) et aux popovers flottants qui ont
+     besoin d'une vraie séparation visuelle (--shadow-popover). */
+  --shadow-hover: 0 6px 20px -6px rgba(0, 0, 0, 0.12);
+  --shadow-popover: 0 10px 30px -8px rgba(0, 0, 0, 0.22);
 
   /* Grain SVG — texture papier discrète */
   --paper-grain-url: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.14  0 0 0 0 0.18  0 0 0 0 0.14  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
@@ -206,6 +167,10 @@
   --card-foreground: var(--ink);
   --border: var(--paper-3);
   --input: var(--paper-3);
+
+  /* Un fond noir absorbe une ombre noire — plus d'opacité pour rester visible. */
+  --shadow-hover: 0 6px 20px -6px rgba(0, 0, 0, 0.5);
+  --shadow-popover: 0 10px 30px -8px rgba(0, 0, 0, 0.6);
 }
 
 /* ─────────────────────────────────────────────────────────

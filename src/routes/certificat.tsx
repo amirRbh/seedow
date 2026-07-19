@@ -9,6 +9,7 @@ import { formatCurrency, formatDate } from "@/lib/format";
 import { supabase } from "@/integrations/supabase/client";
 import { KPIFigure } from "@/components/ui/KPIFigure";
 import { fireConfetti } from "@/lib/confetti";
+import { esgToneFrom100, ESG_TONE_CLASSES } from "@/lib/esgTone";
 
 export const Route = createFileRoute("/certificat")({
   beforeLoad: async () => {
@@ -167,6 +168,7 @@ function CertificatPage() {
             value={esgScore.toFixed(0)}
             unit="/100"
             size="lg"
+            valueClassName={ESG_TONE_CLASSES[esgToneFrom100(esgScore)].text}
           />
         </section>
 

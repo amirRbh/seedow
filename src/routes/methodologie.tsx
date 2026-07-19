@@ -10,6 +10,7 @@ import { simulatePortfolio } from "@/lib/portfolio/server.functions";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { MetricLabel } from "@/components/ui/MetricLabel";
 import { cn } from "@/lib/utils";
+import { esgToneFrom100, ESG_TONE_CLASSES } from "@/lib/esgTone";
 import {
   DEFAULT_PILLAR_WEIGHTS,
   MIN_PORTFOLIO_ESG,
@@ -437,6 +438,9 @@ function MethodologyPage() {
                     : "—"
                 }
                 sub={t("methodologie.metric_esg_hint")}
+                valueClassName={
+                  result ? ESG_TONE_CLASSES[esgToneFrom100(result.metrics.esg_score)].text : undefined
+                }
               />
               <MetricRow
                 label={t("methodologie.metric_fees")}
@@ -867,11 +871,13 @@ function MetricRow({
   value,
   sub,
   tip,
+  valueClassName,
 }: {
   label: string;
   value: string;
   sub?: string;
   tip?: string;
+  valueClassName?: string;
 }) {
   return (
     <div className="flex items-baseline justify-between py-2.5">
@@ -881,7 +887,7 @@ function MetricRow({
         </p>
         {sub && <p className="text-tag text-ink-3 mt-0.5">{sub}</p>}
       </div>
-      <span className="font-value text-body-lg tabular-nums">{value}</span>
+      <span className={`font-value text-body-lg tabular-nums ${valueClassName ?? ""}`}>{value}</span>
     </div>
   );
 }

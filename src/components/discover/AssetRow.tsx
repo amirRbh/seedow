@@ -4,6 +4,7 @@ import { useLang } from "@/hooks/useLang";
 import { formatCurrency } from "@/lib/format";
 import type { DiscoverAsset } from "@/lib/discover/types";
 import { dominantRegion } from "@/lib/discover/filters";
+import { esgTone, ESG_TONE_CLASSES } from "@/lib/esgTone";
 
 interface Props {
   asset: DiscoverAsset;
@@ -15,6 +16,7 @@ export function AssetRow({ asset, index, onOpen }: Props) {
   const { t } = useTranslation();
   const { lang } = useLang();
   const region = dominantRegion(asset);
+  const tone = ESG_TONE_CLASSES[esgTone(asset.overall_esg_score)];
 
   return (
     <motion.button
@@ -23,7 +25,7 @@ export function AssetRow({ asset, index, onOpen }: Props) {
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: Math.min(index * 0.025, 0.4) }}
-      className="paper-card w-full text-left p-3.5 flex items-center gap-3 hover:shadow-leaf transition-shadow group"
+      className="paper-card w-full text-left p-3.5 flex items-center gap-3 hover:shadow-hover hover:-translate-y-0.5 transition-all group"
     >
       <div className="w-11 h-11 rounded-md bg-paper-2 border border-paper-3 flex items-center justify-center flex-shrink-0">
         <span className="text-ink text-tag font-bold tracking-tight">
@@ -65,7 +67,10 @@ export function AssetRow({ asset, index, onOpen }: Props) {
             ? formatCurrency(asset.current_price, lang)
             : t("discover.row.price_unavailable")}
         </p>
-        <p className="text-tag uppercase tracking-wider text-gold font-semibold mt-1">
+        <p
+          className={`text-tag uppercase tracking-wider font-semibold mt-1 inline-flex items-center gap-1 ${tone.text}`}
+        >
+          <span aria-hidden className={`inline-block w-1.5 h-1.5 rounded-full ${tone.dot}`} />
           ESG {asset.overall_esg_score.toFixed(1)}
         </p>
       </div>

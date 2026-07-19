@@ -12,6 +12,9 @@ interface Props {
   /** Si true et `value` est numérique, anime le compteur au mount. */
   animate?: boolean;
   className?: string;
+  /** Couleur du chiffre lui-même, quand il doit refléter sa propre qualité
+   * (ex. score ESG) plutôt que la teinte éditoriale par défaut. */
+  valueClassName?: string;
 }
 
 const SIZES: Record<NonNullable<Props["size"]>, string> = {
@@ -35,6 +38,7 @@ export function KPIFigure({
   accent = false,
   animate = false,
   className,
+  valueClassName,
 }: Props) {
   const numeric = typeof value === "number" ? value : Number(value);
   const canAnimate = animate && Number.isFinite(numeric) && typeof value !== "string";
@@ -54,6 +58,7 @@ export function KPIFigure({
           "kpi-figure flex items-baseline gap-2 transition-[text-shadow] duration-300 hover:[text-shadow:0_0_24px_color-mix(in_oklab,var(--color-gold)_35%,transparent)]",
           align === "center" && "justify-center",
           SIZES[size],
+          valueClassName,
         )}
       >
         {canAnimate ? <AnimatedFigure value={numeric} /> : <span>{value}</span>}

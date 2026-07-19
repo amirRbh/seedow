@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { KPIFigure } from "@/components/ui/KPIFigure";
 import { AnimatedFigure } from "@/components/ui/AnimatedFigure";
 import { useLang } from "@/hooks/useLang";
+import { esgTone, ESG_TONE_CLASSES } from "@/lib/esgTone";
 
 interface ImpactRibbonProps {
   co2Avoided: number;
@@ -76,6 +77,7 @@ export function ImpactRibbon({
           label={t("impact_ribbon.impact_score")}
           size="sm"
           accent
+          valueClassName={ESG_TONE_CLASSES[esgTone(esgScore)].text}
         />
       </div>
     </motion.div>

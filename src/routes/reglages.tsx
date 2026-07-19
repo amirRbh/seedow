@@ -22,6 +22,7 @@ import { DeleteAccountDialog } from "@/components/reglages/DeleteAccountDialog";
 import { callAuthed } from "@/lib/authedServerFn";
 import { supabase } from "@/integrations/supabase/client";
 import type { CauseTag, ExclusionTag } from "@/lib/portfolio/types";
+import { esgToneFrom100, ESG_TONE_CLASSES } from "@/lib/esgTone";
 
 export const Route = createFileRoute("/reglages")({
   head: () => ({
@@ -268,7 +269,11 @@ function PreferencesSection() {
             <div className="flex gap-3 text-caption text-ink-3">
               <span>
                 {t("reglages.preview_esg")}{" "}
-                <span className="text-ink font-value tabular-nums">{preview.esg.toFixed(1)}</span>
+                <span
+                  className={`font-value tabular-nums ${ESG_TONE_CLASSES[esgToneFrom100(preview.esg)].text}`}
+                >
+                  {preview.esg.toFixed(1)}
+                </span>
               </span>
               <span>
                 {t("reglages.preview_ter")}{" "}
