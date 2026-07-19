@@ -55,7 +55,7 @@ export function RailNav() {
   ];
   const SECONDARY: NavItem[] = [
     { key: "profil", path: "/profil", label: t("rail_nav.investor_profile"), icon: "profil" },
-    { key: "cours", path: "/cours", label: "Cours", icon: "cours" },
+    { key: "cours", path: "/cours", label: t("rail_nav.courses"), icon: "cours" },
     {
       key: "methodologie",
       path: "/methodologie",

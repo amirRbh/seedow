@@ -80,7 +80,8 @@ export function useDecisionHistory(): { decisions: DecisionEvent[]; loading: boo
         .select("id, kind, title, detail, payload, occurred_at")
         .eq("user_id", user.id)
         .eq("portfolio_id", portfolio.id)
-        .order("occurred_at", { ascending: false });
+        .order("occurred_at", { ascending: false })
+        .limit(50);
 
       if (cancelled) return;
 

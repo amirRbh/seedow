@@ -14,6 +14,7 @@ import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { supabase } from "@/integrations/supabase/client";
 import { useLang } from "@/hooks/useLang";
+import { formatNumber, formatPercent } from "@/lib/format";
 import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 
 export const Route = createFileRoute("/profil")({
@@ -124,7 +125,7 @@ function ProfilPage() {
   const returnPct = valuation.returnPct;
   const esg = portfolio?.metrics?.esg_score ?? 0;
   const positions = portfolio?.holdings.length ?? 0;
-  const riskPct = meta ? (meta.risk_target * 100).toFixed(1) : "—";
+  const riskPct = meta ? formatPercent(meta.risk_target, lang, 1) : "—";
   const numLocale = lang === "en" ? "en-US" : "fr-FR";
 
   return (
@@ -155,14 +156,14 @@ function ProfilPage() {
             <KPIFigure
               size="sm"
               label={t("profile.kpi_performance")}
-              value={`${returnPct >= 0 ? "+" : ""}${returnPct.toFixed(2)}`}
+              value={`${returnPct >= 0 ? "+" : ""}${formatNumber(returnPct, lang, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
               unit="%"
               accent={returnPct >= 0}
             />
             <KPIFigure
               size="sm"
               label={t("profile.kpi_impact")}
-              value={esg.toFixed(0)}
+              value={formatNumber(esg, lang, { maximumFractionDigits: 0 })}
               unit="/100"
             />
             <KPIFigure
@@ -262,7 +263,7 @@ function ProfilPage() {
                   {t("profile.target_volatility_suffix")}
                 </>
               }
-              value={`${riskPct} %`}
+              value={riskPct}
             />
             <Row
               label={<Glossary term="Horizon">{t("profile.horizon")}</Glossary>}

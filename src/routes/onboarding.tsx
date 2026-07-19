@@ -1,6 +1,6 @@
 import { useTranslation, Trans } from "react-i18next";
 import { useLang } from "@/hooks/useLang";
-import { formatCurrency } from "@/lib/format";
+import { formatCurrency, formatPercent } from "@/lib/format";
 import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -66,10 +66,10 @@ const STEPS = [
     id: "amount" as const,
     multi: false,
     options: [
-      { id: "10", icon: "🌱" },
-      { id: "50", icon: "🌿" },
-      { id: "100", icon: "🌳" },
-      { id: "500", icon: "🍃" },
+      { id: "10", icon: "€" },
+      { id: "50", icon: "€€" },
+      { id: "100", icon: "€€€" },
+      { id: "500", icon: "€€€€" },
     ],
   },
 ];
@@ -1034,7 +1034,7 @@ function PreviewScene({ params, onSave }: { params: PortfolioParams; onSave: () 
                     <div className="flex items-baseline justify-between mb-1.5 gap-3">
                       <span className="font-value text-body-sm text-ink truncate">{a.ticker}</span>
                       <span className="text-label text-ink tabular-nums font-medium">
-                        {a.w.toFixed(1)}%
+                        {formatPercent(a.w / 100, lang, 1)}
                       </span>
                     </div>
                     <div className="h-px bg-paper-3 relative">
@@ -1334,7 +1334,7 @@ function BuildingScene({
                     <div className="flex items-baseline justify-between mb-1.5 gap-3">
                       <span className="font-value text-body-sm text-ink truncate">{a.ticker}</span>
                       <span className="text-label text-ink tabular-nums font-medium">
-                        {a.w.toFixed(1)}%
+                        {formatPercent(a.w / 100, lang, 1)}
                       </span>
                     </div>
                     <div className="h-px bg-paper-3 relative">
