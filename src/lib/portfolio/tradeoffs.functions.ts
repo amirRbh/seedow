@@ -14,13 +14,8 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
-import {
-  buildPortfolio,
-  type Asset,
-  type CauseTag,
-  type ExclusionTag,
-  type PortfolioParams,
-} from "@/lib/portfolio";
+import { buildPortfolio, type CauseTag, type ExclusionTag, type PortfolioParams } from "@/lib/portfolio";
+import { loadUniverse } from "./universe.server";
 
 const InputSchema = z.object({ portfolioId: z.string().uuid() });
 
@@ -72,65 +67,6 @@ interface TradeoffRow {
   volDelta: number;
   /** Snapshot complet du portefeuille alternatif (sans ce levier). */
   alt: PortfolioSnapshot;
-}
-
-// Cache local universe (Worker-instance scope, ~5 min)
-interface UniverseCache {
-  assets: Asset[];
-  covariance: Map<string, number>;
-  loadedAt: number;
-}
-let _cache: UniverseCache | null = null;
-const CACHE_TTL_MS = 5 * 60 * 1000;
-
-async function loadUniverse(): Promise<UniverseCache> {
-  if (_cache && Date.now() - _cache.loadedAt < CACHE_TTL_MS && _cache.assets.length > 0) {
-    return _cache;
-  }
-  const [assetsRes, covRes] = await Promise.all([
-    supabaseAdmin
-      .from("assets")
-      .select(
-        "id, ticker, name, asset_class, region, ter, esg_score, env_score, social_score, governance_score, esg_score_source, carbon_intensity_gco2e_per_eur, carbon_intensity_source, carbon_intensity_updated_at, sfdr_article, expected_return, volatility, cause_exposure, excluded_sectors, description",
-      )
-      .eq("is_active", true),
-    supabaseAdmin.from("asset_covariance").select("asset_a, asset_b, covariance"),
-  ]);
-  if (assetsRes.error) throw new Error("Univers d'actifs indisponible.");
-  if (covRes.error) throw new Error("Données de covariance indisponibles.");
-
-  const num = (v: unknown) => (v == null ? null : Number(v));
-  const str = (v: unknown) => (v == null ? null : String(v));
-  const assets = (assetsRes.data ?? []).map((row) => {
-    const r = row as Record<string, unknown>;
-    return {
-      id: row.id,
-      ticker: row.ticker,
-      name: row.name,
-      asset_class: row.asset_class,
-      region: row.region,
-      ter: Number(row.ter),
-      esg_score: Number(row.esg_score),
-      env_score: num(r.env_score),
-      social_score: num(r.social_score),
-      governance_score: num(r.governance_score),
-      esg_score_source: str(r.esg_score_source),
-      carbon_intensity_gco2e_per_eur: num(r.carbon_intensity_gco2e_per_eur),
-      carbon_intensity_source: str(r.carbon_intensity_source),
-      carbon_intensity_updated_at: str(r.carbon_intensity_updated_at),
-      sfdr_article: row.sfdr_article,
-      expected_return: Number(row.expected_return),
-      volatility: Number(row.volatility),
-      cause_exposure: (row.cause_exposure ?? {}) as Record<string, number>,
-      excluded_sectors: (row.excluded_sectors ?? []) as Asset["excluded_sectors"],
-      description: row.description,
-    };
-  }) as Asset[];
-  const covariance = new Map<string, number>();
-  for (const c of covRes.data ?? [])
-    covariance.set(`${c.asset_a}|${c.asset_b}`, Number(c.covariance));
-  _cache = { assets, covariance, loadedAt: Date.now() };
-  return _cache;
 }
 
 export const simulateTradeoffs = createServerFn({ method: "POST" })
