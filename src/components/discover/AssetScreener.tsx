@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion } from "framer-motion";
 import { useServerFn } from "@tanstack/react-start";
@@ -52,6 +52,30 @@ export function AssetScreener() {
   const categories = useMemo(() => uniqueCategories(assets), [assets]);
   const results = useMemo(() => applyFilters(assets, filters), [assets, filters]);
   const activeCount = activeFilterCount(filters);
+
+  // Rendu incrémental : l'univers d'actifs peut compter plusieurs centaines de
+  // lignes, chacune un motion.button animé — on n'en monte qu'une page à la
+  // fois plutôt que tout le résultat filtré d'un coup.
+  const PAGE_SIZE = 30;
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  useEffect(() => setVisibleCount(PAGE_SIZE), [filters]);
+  const visibleResults = results.slice(0, visibleCount);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const node = sentinelRef.current;
+    if (!node || visibleCount >= results.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setVisibleCount((c) => Math.min(c + PAGE_SIZE, results.length));
+        }
+      },
+      { rootMargin: "600px" },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [visibleCount, results.length]);
 
   const update = <K extends keyof ScreenerFilters>(key: K, value: ScreenerFilters[K]) =>
     setFilters((f) => ({ ...f, [key]: value }));
@@ -301,9 +325,12 @@ export function AssetScreener() {
             </button>
           </div>
         ) : (
-          results.map((asset, i) => (
-            <AssetRow key={asset.id} asset={asset} index={i} onOpen={() => setDetail(asset)} />
-          ))
+          <>
+            {visibleResults.map((asset, i) => (
+              <AssetRow key={asset.id} asset={asset} index={i} onOpen={() => setDetail(asset)} />
+            ))}
+            {visibleCount < results.length && <div ref={sentinelRef} aria-hidden className="h-1" />}
+          </>
         )}
       </div>
 
