@@ -23,14 +23,14 @@ export function TimelineEvent({
   const dotColor = {
     gain: "bg-highlight-1",
     deposit: "bg-highlight-2",
-    withdrawal: "bg-gold",
+    withdrawal: "bg-solar",
     opening: "bg-ink-3",
   }[type];
   const badgeStyles = {
     gain: "bg-highlight-5 text-highlight-1",
-    loss: "bg-[oklch(0.93_0.05_45)] text-rust",
+    loss: "bg-alert-tint text-rust",
     deposit: "bg-highlight-5 text-highlight-1",
-    withdrawal: "bg-[oklch(0.93_0.06_85)] text-gold",
+    withdrawal: "bg-solar-tint text-solar",
     opening: "bg-paper-2 text-ink-3",
   }[badgeVariant];
 

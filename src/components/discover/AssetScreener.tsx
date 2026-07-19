@@ -278,7 +278,7 @@ export function AssetScreener() {
       {/* Cours manquants : action de rafraîchissement visible, pas juste un texte "indisponible" par ligne */}
       {!loading && !error && missingPriceCount > 0 && (
         <div className="px-5">
-          <div className="rounded-lg border border-gold/40 bg-[oklch(0.97_0.03_85)] p-3 flex items-start gap-2.5">
+          <div className="rounded-lg border border-solar/40 bg-solar-tint p-3 flex items-start gap-2.5">
             <div className="flex-1 min-w-0">
               <p className="text-label font-medium text-ink">
                 {t("discover.prices_missing", { count: missingPriceCount })}

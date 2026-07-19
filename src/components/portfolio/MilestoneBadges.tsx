@@ -44,7 +44,7 @@ export function BadgesCard({ badges }: { badges: MilestoneBadge[] }) {
             <div
               className={`w-12 h-12 rounded-full flex items-center justify-center text-xl ${
                 badge.tier === "gold"
-                  ? "bg-[oklch(0.93_0.06_85)] ring-1 ring-gold/40"
+                  ? "bg-solar-tint ring-1 ring-solar/40"
                   : badge.tier === "silver"
                     ? "bg-paper-2"
                     : "bg-highlight-5"

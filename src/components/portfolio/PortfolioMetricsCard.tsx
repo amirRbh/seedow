@@ -77,18 +77,18 @@ export function PortfolioMetricsCard({ metrics }: Props) {
     highlight: { text: "text-highlight-1", bg: "bg-highlight-5", border: "border-highlight-4" },
     bloom: {
       text: "text-bloom",
-      bg: "bg-[oklch(0.96_0.04_310)]",
-      border: "border-[oklch(0.88_0.07_310)]",
+      bg: "bg-bloom-tint",
+      border: "border-bloom-tint-border",
     },
     peach: {
       text: "text-rust",
-      bg: "bg-[oklch(0.96_0.04_45)]",
-      border: "border-[oklch(0.88_0.07_45)]",
+      bg: "bg-alert-tint",
+      border: "border-alert-tint-border",
     },
     sky: {
       text: "text-sky",
-      bg: "bg-[oklch(0.96_0.03_230)]",
-      border: "border-[oklch(0.88_0.06_230)]",
+      bg: "bg-sky-tint",
+      border: "border-sky-tint-border",
     },
     ink: { text: "text-ink", bg: "bg-paper-2", border: "border-paper-3" },
   };

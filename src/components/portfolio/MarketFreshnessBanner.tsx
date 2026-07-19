@@ -64,7 +64,7 @@ export function MarketFreshnessBanner({ latestQuoteAt, hasQuotes, onRefreshed }:
     }
   };
   const tone = isCritical
-    ? "border-rust/40 bg-[oklch(0.97_0.02_45)] text-rust"
+    ? "border-rust/40 bg-alert-tint text-rust"
     : "border-paper-3 bg-paper-2 text-ink-2";
 
   const ageLabel = latestQuoteAt

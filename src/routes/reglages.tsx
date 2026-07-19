@@ -1104,7 +1104,7 @@ function StatusBanner({
 
   const tone =
     status === "error"
-      ? "border-rust/40 text-rust bg-[oklch(0.97_0.02_45)]"
+      ? "border-rust/40 text-rust bg-alert-tint"
       : status === "saved"
         ? "border-highlight-1/30 text-highlight-1 bg-highlight-5"
         : "border-paper-3 text-ink-3 bg-paper-2";

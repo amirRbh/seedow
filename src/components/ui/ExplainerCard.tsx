@@ -10,9 +10,9 @@ interface Props {
 
 const TONE_BG: Record<NonNullable<Props["tone"]>, string> = {
   highlight: "bg-highlight-5 border-highlight-4",
-  bloom: "bg-[oklch(0.96_0.04_310)] border-[oklch(0.88_0.07_310)]",
-  peach: "bg-[oklch(0.96_0.04_45)] border-[oklch(0.88_0.07_45)]",
-  sky: "bg-[oklch(0.96_0.03_230)] border-[oklch(0.88_0.06_230)]",
+  bloom: "bg-bloom-tint border-bloom-tint-border",
+  peach: "bg-alert-tint border-alert-tint-border",
+  sky: "bg-sky-tint border-sky-tint-border",
 };
 
 const TONE_DOT: Record<NonNullable<Props["tone"]>, string> = {
@@ -66,7 +66,7 @@ export function ExplainerCard({ title, children, tone = "highlight", dismissKey 
           type="button"
           onClick={onDismiss}
           aria-label="Masquer cette aide"
-          className="absolute top-2 right-2 w-5 h-5 flex items-center justify-center text-ink-3 hover:text-ink rounded-full hover:bg-paper/60 transition-colors"
+          className="absolute top-1.5 right-1.5 w-6 h-6 flex items-center justify-center text-ink-3 hover:text-ink rounded-full hover:bg-paper/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
         >
           <svg
             viewBox="0 0 16 16"

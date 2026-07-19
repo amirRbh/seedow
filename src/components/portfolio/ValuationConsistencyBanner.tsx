@@ -20,7 +20,7 @@ export function ValuationConsistencyBanner({ consistency }: Props) {
       maximumFractionDigits: 2,
     });
   return (
-    <div className="mx-5 mt-3 rounded border border-[oklch(0.88_0.07_45)] bg-[oklch(0.96_0.04_45)] px-3 py-2">
+    <div className="mx-5 mt-3 rounded border border-alert-tint-border bg-alert-tint px-3 py-2">
       <p className="text-caption font-semibold uppercase tracking-[0.14em] text-rust">
         Écart de valorisation détecté
       </p>

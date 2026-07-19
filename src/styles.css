@@ -72,6 +72,15 @@
   --color-alert: var(--alert);
   --color-volt: var(--volt);
 
+  --color-alert-tint: var(--alert-tint);
+  --color-alert-tint-border: var(--alert-tint-border);
+  --color-solar-tint: var(--solar-tint);
+  --color-solar-tint-border: var(--solar-tint-border);
+  --color-bloom-tint: var(--bloom-tint);
+  --color-bloom-tint-border: var(--bloom-tint-border);
+  --color-sky-tint: var(--sky-tint);
+  --color-sky-tint-border: var(--sky-tint-border);
+
   --shadow-flat-1: var(--shadow-flat-1);
   --shadow-flat-2: var(--shadow-flat-2);
   --shadow-flat-3: var(--shadow-flat-3);
@@ -153,6 +162,17 @@
   --peach: #895b17;
   --glacier: #0066cc;
 
+  /* Fonds/bordures "tinted" — remplacent ~15 oklch(...) ad-hoc dispersés
+     dans les composants (bannières, badges, tons "loss/withdrawal/gold-tier"). */
+  --alert-tint: oklch(0.95 0.03 45);
+  --alert-tint-border: oklch(0.88 0.07 45);
+  --solar-tint: oklch(0.95 0.05 85);
+  --solar-tint-border: oklch(0.88 0.08 85);
+  --bloom-tint: oklch(0.96 0.04 310);
+  --bloom-tint-border: oklch(0.88 0.07 310);
+  --sky-tint: oklch(0.96 0.03 230);
+  --sky-tint-border: oklch(0.88 0.06 230);
+
   /* shadcn mapping */
   --background: var(--paper);
   --foreground: var(--ink);
@@ -199,6 +219,14 @@
   --gold: oklch(0.72 0.16 145);
   --gold-soft: oklch(0.64 0.14 148);
   --glacier: oklch(0.65 0.08 210);
+  --alert-tint: oklch(0.28 0.05 45);
+  --alert-tint-border: oklch(0.4 0.08 45);
+  --solar-tint: oklch(0.28 0.06 85);
+  --solar-tint-border: oklch(0.4 0.09 85);
+  --bloom-tint: oklch(0.28 0.06 310);
+  --bloom-tint-border: oklch(0.4 0.09 310);
+  --sky-tint: oklch(0.26 0.05 230);
+  --sky-tint-border: oklch(0.38 0.08 230);
   --background: var(--paper);
   --foreground: var(--ink);
   --card: var(--paper-2);

@@ -80,7 +80,7 @@ export function GrowthComparison({
           </p>
         </div>
         <div
-          className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold ${isGrowing ? "bg-highlight-5 text-highlight-1" : "bg-[oklch(0.93_0.05_45)] text-rust"}`}
+          className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold ${isGrowing ? "bg-highlight-5 text-highlight-1" : "bg-alert-tint text-rust"}`}
         >
           {isGrowing ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
           {isGrowing ? "+" : ""}
