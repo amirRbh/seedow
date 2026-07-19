@@ -7,7 +7,7 @@ import { AppHeader } from "@/components/navigation/AppHeader";
 import { AllocationList, type AllocationHolding } from "@/components/portfolio/AllocationList";
 import { useLexicon } from "@/hooks/useLexicon";
 import { useLang } from "@/hooks/useLang";
-import { formatCurrency } from "@/lib/format";
+import { formatCurrency, formatPercent } from "@/lib/format";
 import { useAuth } from "@/hooks/useAuth";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
@@ -133,7 +133,7 @@ function Dashboard() {
               )}
             </svg>
             {isGrowing ? "+" : ""}
-            {formatCurrency(gain, lang)} · {returnPct.toFixed(2)}%
+            {formatCurrency(gain, lang)} · {formatPercent(returnPct / 100, lang, 2)}
             <span className="text-ink-3 font-normal ml-1">{t("dashboard.since_start")}</span>
           </div>
 

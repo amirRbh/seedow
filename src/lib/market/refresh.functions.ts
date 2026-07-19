@@ -4,11 +4,18 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 /**
  * Déclenche un rafraîchissement manuel des prix de marché.
  * Appelle le hook interne /hooks/refresh-market-data avec le CRON_SECRET côté serveur.
- * Réservé aux utilisateurs authentifiés.
+ * Réservé aux admins (has_role) — déclenche un fetch Yahoo Finance sur tout
+ * l'univers, pas quelque chose qu'un utilisateur normal doit pouvoir spammer.
  */
 export const triggerMarketRefresh = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
+    const { data: isAdmin } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
+    if (!isAdmin) throw new Error("Forbidden");
+
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     // Anti-abus : un utilisateur authentifié peut sinon déclencher en boucle

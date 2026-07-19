@@ -716,6 +716,9 @@
     "block_initial": "Montant initial",
     "initial_label": "Capital de référence",
     "auto_recalc_note": "Toute modification déclenche un recalcul automatique de votre portefeuille selon le pipeline complet (exclusions → best-in-class → optimisation Markowitz contrainte → tilts par convictions).",
+    "block_more": "Plus",
+    "more_investor_profile": "Voir mon profil investisseur",
+    "more_courses": "Cours & pédagogie",
     "block_identity": "Identité",
     "email_label": "Adresse email",
     "display_name_label": "Nom affiché",
@@ -1365,6 +1368,7 @@
     "home": "Accueil",
     "ethi_assistant": "Ethi (assistant)",
     "investor_profile": "Profil investisseur",
+    "courses": "Cours",
     "aria": "Navigation principale",
     "seedow_home": "Seedow — accueil"
   },

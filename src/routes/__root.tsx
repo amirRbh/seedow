@@ -11,6 +11,7 @@ import { Component, useEffect, useState, type ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import "@/i18n";
+import { DURATION, EASE_SIGNATURE } from "@/lib/motion";
 import { LexiconProvider } from "@/hooks/useLexicon";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ViewModeProvider } from "@/hooks/useViewMode";
@@ -159,7 +160,7 @@ function RouteTransition() {
         initial={{ opacity: 0, y: 4 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.18, ease: "easeOut" }}
+        transition={{ duration: DURATION.fast, ease: EASE_SIGNATURE }}
         style={{ willChange: "opacity, transform" }}
       >
         <Outlet />

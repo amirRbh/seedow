@@ -1,7 +1,7 @@
 /**
  * Server functions pour la phase bêta (300 testeurs).
  * - checkBetaCapacity / joinWaitlist / getWaitlistCount : publiques
- * - submitRealInvestmentIntent / submitBetaFeedback / logBetaEvent / logClientError : authentifiées ou best-effort
+ * - submitRealInvestmentIntent / submitBetaFeedback : authentifiées ; logClientError : best-effort
  * - getBetaAdminStats : auth + role admin
  */
 import { createServerFn } from "@tanstack/react-start";
@@ -214,26 +214,6 @@ export const submitBetaFeedback = createServerFn({ method: "POST" })
       route_when_sent: data.routeWhenSent ?? null,
     });
     if (error) throw new Error(error.message);
-    return { ok: true };
-  });
-
-export const logBetaEvent = createServerFn({ method: "POST" })
-  .inputValidator((input: { event: string; payload?: Record<string, unknown>; userId?: string }) =>
-    z
-      .object({
-        event: z.string().min(1).max(64),
-        payload: z.record(z.string(), z.unknown()).optional(),
-        userId: z.string().uuid().optional(),
-      })
-      .parse(input),
-  )
-  .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    await supabaseAdmin.from("beta_events").insert({
-      user_id: data.userId ?? null,
-      event: data.event,
-      payload: (data.payload ?? null) as never,
-    });
     return { ok: true };
   });
 

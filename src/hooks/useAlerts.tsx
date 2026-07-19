@@ -169,7 +169,8 @@ export function useAlerts(): State {
         .select("*")
         .eq("user_id", user.id)
         .is("dismissed_at", null)
-        .order("created_at", { ascending: false });
+        .order("created_at", { ascending: false })
+        .limit(50);
 
       if (cancelled || !data) return;
       setRows(

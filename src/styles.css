@@ -236,6 +236,19 @@
 }
 
 /* ─────────────────────────────────────────────────────────
+ * Échelle d'espacement — déjà tenue en pratique par les paliers Tailwind
+ * par défaut (multiples de 4px), mais jamais documentée nommément comme
+ * le sont les échelles couleur/rayon/typo ci-dessous. Ceci formalise les
+ * paliers déjà utilisés, ne change aucun composant :
+ *   gap-1 / p-1   (4px)  — écart minimal entre éléments d'un même groupe
+ *   gap-2 / p-2   (8px)  — espacement serré (badges, listes compactes)
+ *   gap-3 / p-3   (12px) — espacement interne standard d'un composant
+ *   gap-4 / p-4   (16px) — padding standard d'une carte/section
+ *   gap-6 / p-6   (24px) — séparation entre blocs d'un même écran
+ *   gap-8 / p-8   (32px) — séparation majeure entre sections de page
+ * ───────────────────────────────────────────────────────── */
+
+/* ─────────────────────────────────────────────────────────
  * Échelle typographique — remplace les valeurs arbitraires text-[Npx]
  * dispersées dans le code par des utilitaires nommés, un seul endroit
  * à faire évoluer. Mêmes tailles rendues qu'avant (aucun changement
@@ -259,6 +272,17 @@
 }
 @utility text-body-lg {
   font-size: 15px;
+}
+@utility text-body-xl {
+  font-size: 17px;
+}
+/* Titre de page partagé (AppHeader) — un seul endroit à faire évoluer,
+   plutôt que le triplet text-[34px]/leading-[1.04]/tracking-[-0.02em]
+   dupliqué dans chaque écran qui utilise AppHeader. */
+@utility text-h1-page {
+  font-size: 34px;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
 }
 
 @layer base {
@@ -503,14 +527,14 @@
   .paper-card {
     background-color: var(--color-paper-2);
     border: 1px solid var(--color-paper-3);
-    border-radius: 14px;
+    border-radius: var(--radius);
     box-shadow: none;
   }
 
   .paper-card-inset {
     background: var(--color-paper-2);
     border: 1px solid var(--color-paper-3);
-    border-radius: 14px;
+    border-radius: var(--radius);
     box-shadow: none;
   }
 
@@ -552,7 +576,7 @@
     background: var(--color-paper-2);
     color: var(--color-ink);
     border: 1px solid var(--color-paper-3);
-    border-radius: 14px;
+    border-radius: var(--radius);
     padding: 14px 18px;
     line-height: 1.55;
     font-size: 14px;
@@ -584,7 +608,29 @@
   }
 }
 
-/* ============= Apple landing tokens (scoped .apple-landing) ============= */
+/* ═══════════════════════════════════════════════════════════════
+   Apple landing tokens (scoped .apple-landing) — DÉCISION ASSUMÉE,
+   pas une dette non résolue.
+
+   La landing (/) garde volontairement son propre système de boutons/
+   cartes/type-scale (.apple-btn-primary, .apple-card, .apple-title...)
+   plutôt que d'utiliser button.tsx/.paper-card comme le reste de l'app.
+   Trois raisons concrètes, pas de la paresse :
+   1. Registre différent : la landing doit convertir un visiteur en 5s
+      (typo plus grande, boutons pill 44px+ pour le tap mobile, CTA
+      pleine largeur) — l'app une fois connecté doit rester dense et
+      utilitaire. Les deux objectifs tirent le système dans des sens
+      opposés si on les force à partager les mêmes composants.
+   2. Isolation de risque : un changement sur le bouton principal de
+      l'app (portefeuille, dashboard) ne doit jamais pouvoir casser
+      silencieusement le CTA d'inscription de la landing, et vice versa.
+   3. Palette partagée malgré tout : les couleurs de rôle (--ice, --mint,
+      --paper/--ink) sont réutilisées ici, pas redéfinies — seule la
+      forme des composants diverge, pas l'identité de marque.
+   Si la landing doit un jour converger vers button.tsx/.paper-card,
+   ce sera un choix de refonte explicite (avec vérification visuelle
+   live), pas une fusion mécanique de deux fichiers CSS.
+═══════════════════════════════════════════════════════════════ */
 .apple-landing {
   --apple-bg: #ffffff;
   --apple-surface: #f5f5f7;
@@ -674,7 +720,7 @@
   background: #e8e8ed;
 }
 .apple-link {
-  color: #0071e3;
+  color: var(--ice);
   font-weight: 400;
   font-size: 17px;
   letter-spacing: -0.01em;
@@ -688,7 +734,7 @@
 }
 .apple-card {
   background: var(--apple-bg);
-  border-radius: 22px;
+  border-radius: var(--radius-2xl);
   overflow: hidden;
 }
 .apple-input {

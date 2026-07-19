@@ -5,11 +5,17 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
  * Déclenche un recalcul manuel du modèle de risque (rendement attendu,
  * volatilité, covariance) à partir de l'historique réel des cours.
  * Même schéma que triggerMarketRefresh : appelle le hook interne avec le
- * CRON_SECRET côté serveur. Réservé aux utilisateurs authentifiés.
+ * CRON_SECRET côté serveur. Réservé aux admins (has_role).
  */
 export const triggerRiskModelRecompute = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
+    const { data: isAdmin } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
+    if (!isAdmin) throw new Error("Forbidden");
+
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     // Anti-abus : ce recalcul recompose la matrice de covariance de tout

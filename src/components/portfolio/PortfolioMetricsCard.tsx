@@ -1,6 +1,8 @@
 import type { ActivePortfolioMetrics } from "@/hooks/useActivePortfolio";
 import { useTranslation } from "react-i18next";
 import { useViewMode } from "@/hooks/useViewMode";
+import { useLang } from "@/hooks/useLang";
+import { formatNumber, formatPercent } from "@/lib/format";
 import { MetricLabel } from "@/components/ui/MetricLabel";
 
 interface Props {
@@ -21,34 +23,35 @@ interface Item {
 export function PortfolioMetricsCard({ metrics }: Props) {
   const { t } = useTranslation();
   const { isSimple } = useViewMode();
+  const { lang } = useLang();
   if (!metrics) return null;
 
   const items: Item[] = [
     {
       label: t("portfolio_metrics.expected_perf"),
       hint: t("portfolio_metrics.expected_perf_hint"),
-      value: `${(metrics.expected_return * 100).toFixed(1)}%`,
+      value: formatPercent(metrics.expected_return, lang, 1),
       sub: t("portfolio_metrics.per_year"),
       tone: "highlight",
     },
     {
       label: t("portfolio_metrics.impact_score"),
       hint: t("portfolio_metrics.impact_score_hint"),
-      value: `${metrics.esg_score.toFixed(0)}`,
+      value: formatNumber(metrics.esg_score, lang, { maximumFractionDigits: 0 }),
       sub: t("portfolio_metrics.out_of_100"),
       tone: "bloom",
     },
     {
       label: t("portfolio_metrics.co2_avoided"),
       hint: t("portfolio_metrics.co2_hint"),
-      value: `${metrics.co2_avoided_tons.toFixed(2)}t`,
+      value: `${formatNumber(metrics.co2_avoided_tons, lang, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}t`,
       sub: t("portfolio_metrics.per_10k"),
       tone: "highlight",
     },
     {
       label: t("portfolio_metrics.possible_variations"),
       hint: t("portfolio_metrics.volatility_hint"),
-      value: `${(metrics.volatility * 100).toFixed(1)}%`,
+      value: formatPercent(metrics.volatility, lang, 1),
       sub: t("portfolio_metrics.per_year"),
       tone: "peach",
       expertOnly: true,
@@ -56,7 +59,7 @@ export function PortfolioMetricsCard({ metrics }: Props) {
     {
       label: t("portfolio_metrics.return_quality"),
       hint: t("portfolio_metrics.sharpe_hint"),
-      value: metrics.sharpe.toFixed(2),
+      value: formatNumber(metrics.sharpe, lang, { maximumFractionDigits: 2, minimumFractionDigits: 2 }),
       sub: t("portfolio_metrics.sharpe"),
       tone: "sky",
       expertOnly: true,
@@ -64,7 +67,7 @@ export function PortfolioMetricsCard({ metrics }: Props) {
     {
       label: t("portfolio_metrics.annual_fees"),
       hint: t("portfolio_metrics.ter_hint"),
-      value: `${(metrics.ter * 100).toFixed(2)}%`,
+      value: formatPercent(metrics.ter, lang, 2),
       sub: t("portfolio_metrics.per_year"),
       tone: "ink",
       expertOnly: true,

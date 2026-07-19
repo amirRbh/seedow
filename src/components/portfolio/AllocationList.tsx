@@ -4,6 +4,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { useLang } from "@/hooks/useLang";
 import { formatPercent } from "@/lib/format";
+import { EASE_REVEAL } from "@/lib/motion";
 
 export interface AllocationHolding {
   id: string;
@@ -84,7 +85,7 @@ export function AllocationList({
             key={h.id}
             initial={{ width: 0 }}
             animate={{ width: `${h.allocationPct}%` }}
-            transition={{ delay: 0.1 + i * 0.03, duration: 0.5, ease: "easeOut" }}
+            transition={{ delay: 0.1 + i * 0.03, duration: 0.5, ease: EASE_REVEAL }}
             style={{ backgroundColor: colorFor(h.category) }}
             title={`${h.ticker} · ${h.allocationPct.toFixed(1)}%`}
           />

@@ -85,7 +85,7 @@ export function AppHeader({
               {eyebrow}
             </p>
           )}
-          <h1 className="font-value text-[34px] leading-[1.04] tracking-[-0.02em] text-ink truncate">
+          <h1 className="font-value text-h1-page text-ink truncate">
             {title}
           </h1>
           {subtitle && (

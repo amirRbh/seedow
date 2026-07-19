@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { useLang } from "@/hooks/useLang";
-import { formatCurrency } from "@/lib/format";
+import { formatCurrency, formatNumber, formatPercent } from "@/lib/format";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useServerFn } from "@tanstack/react-start";
@@ -24,6 +24,7 @@ import { supabase } from "@/integrations/supabase/client";
 import type { CauseTag, ExclusionTag } from "@/lib/portfolio/types";
 import { reportCaughtError } from "@/lib/monitoring/errorReporter";
 import { useTheme, type ThemePreference } from "@/hooks/useTheme";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 
 export const Route = createFileRoute("/reglages")({
   head: () => ({
@@ -270,12 +271,14 @@ function PreferencesSection() {
             <div className="flex gap-3 text-caption text-ink-3">
               <span>
                 {t("reglages.preview_esg")}{" "}
-                <span className="text-ink font-value tabular-nums">{preview.esg.toFixed(1)}</span>
+                <span className="text-ink font-value tabular-nums">
+                  {formatNumber(preview.esg, lang, { maximumFractionDigits: 1, minimumFractionDigits: 1 })}
+                </span>
               </span>
               <span>
                 {t("reglages.preview_ter")}{" "}
                 <span className="text-ink font-value tabular-nums">
-                  {(preview.ter * 100).toFixed(2)}%
+                  {formatPercent(preview.ter, lang, 2)}
                 </span>
               </span>
             </div>
@@ -286,7 +289,7 @@ function PreferencesSection() {
                 <span className="font-value text-ink-2 w-12 tabular-nums shrink-0">{l.ticker}</span>
                 <span className="flex-1 text-ink truncate">{l.name}</span>
                 <span className="font-value tabular-nums text-ink w-12 text-right">
-                  {(l.weight * 100).toFixed(1)}%
+                  {formatPercent(l.weight, lang, 1)}
                 </span>
               </li>
             ))}
@@ -336,7 +339,7 @@ function PreferencesSection() {
                       className="flex-1 accent-ink h-1"
                     />
                     <span className="text-caption text-ink-3 tabular-nums w-10 text-right">
-                      {Math.round((intensity[c.id] ?? 0.5) * 100)}%
+                      {formatPercent(intensity[c.id] ?? 0.5, lang, 0)}
                     </span>
                   </>
                 )}
@@ -373,7 +376,9 @@ function PreferencesSection() {
       <Block title={t("reglages.block_risk")}>
         <div className="flex items-baseline justify-between mb-2">
           <span className="text-label text-ink-2">{t("reglages.risk_label")}</span>
-          <span className="text-body-sm font-medium tabular-nums">{(risk * 100).toFixed(1)}%</span>
+          <span className="text-body-sm font-medium tabular-nums">
+            {formatPercent(risk, lang, 1)}
+          </span>
         </div>
         <input
           type="range"
@@ -464,6 +469,25 @@ function ProfileSection({ email, onSignOut }: { email: string; onSignOut: () => 
 
   return (
     <div className="space-y-6">
+      <div className="md:hidden">
+        <Block title={t("reglages.block_more")}>
+          <div className="flex flex-col gap-2">
+            <Link
+              to="/profil"
+              className="text-body-sm text-ink-2 hover:text-ink underline-offset-2 hover:underline"
+            >
+              {t("reglages.more_investor_profile")}
+            </Link>
+            <Link
+              to="/cours"
+              className="text-body-sm text-ink-2 hover:text-ink underline-offset-2 hover:underline"
+            >
+              {t("reglages.more_courses")}
+            </Link>
+          </div>
+        </Block>
+      </div>
+
       <Block title={t("reglages.block_identity")}>
         <label className="text-caption text-ink-3 block mb-1">{t("reglages.email_label")}</label>
         <p className="text-body-sm text-ink mb-4">{email}</p>
@@ -873,11 +897,12 @@ function CronHealthBlock({
 
 function MethodologySection() {
   const { t } = useTranslation();
+  const isAdmin = useIsAdmin();
   return (
     <div className="space-y-6">
-      <MarketDataBlock />
+      {isAdmin && <MarketDataBlock />}
       <CronHealthBlock />
-      <RiskModelBlock />
+      {isAdmin && <RiskModelBlock />}
       <CronHealthBlock
         fetchFn={getRecentRiskModelRuns}
         titleKey="reglages.methodology.risk_model.health_title"

@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import { parseEthiActions, EthiActions } from "./EthiActions";
 import { useTranslation } from "react-i18next";
+import { EASE_SIGNATURE } from "@/lib/motion";
 
 interface EthiBubbleProps {
   role: "user" | "assistant";
@@ -19,7 +20,7 @@ export function EthiBubble({ role, content, typing }: EthiBubbleProps) {
     <motion.div
       initial={{ opacity: 0, y: 8, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.25, ease: "easeOut" }}
+      transition={{ duration: 0.25, ease: EASE_SIGNATURE }}
       className={`flex ${isUser ? "justify-end" : "justify-start"}`}
     >
       <div className={`max-w-[85%] ${isUser ? "ml-auto" : "w-full"}`}>
