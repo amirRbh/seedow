@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { useViewMode } from "@/hooks/useViewMode";
-import { PortfolioSelector } from "@/components/garden/PortfolioSelector";
+import { PortfolioSelector } from "@/components/portfolio/PortfolioSelector";
 import { AlertsBell } from "@/components/alerts/AlertsBell";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { cn } from "@/lib/utils";
@@ -27,7 +27,7 @@ export function TopBar({ onOpenCommand }: TopBarProps) {
         <Link
           to="/dashboard"
           aria-label={t("nav.back_to_portfolio")}
-          className="inline-flex items-center outline-none rounded-sm focus-visible:ring-2 focus-visible:ring-moss-1"
+          className="inline-flex items-center outline-none rounded-sm focus-visible:ring-2 focus-visible:ring-highlight-1"
         >
           <span className="font-value text-[17px] text-ink tracking-tight">seedow</span>
         </Link>
@@ -43,7 +43,7 @@ export function TopBar({ onOpenCommand }: TopBarProps) {
           className={cn(
             "hidden md:inline-flex items-center gap-2 h-9 pl-3 pr-2 rounded-md border border-paper-3 bg-paper-2/60",
             "text-label text-ink-3 hover:text-ink hover:border-ink-3 transition-colors duration-150",
-            "outline-none focus-visible:ring-2 focus-visible:ring-moss-1",
+            "outline-none focus-visible:ring-2 focus-visible:ring-highlight-1",
           )}
           aria-label={t("nav.open_command_palette")}
         >
@@ -65,7 +65,7 @@ export function TopBar({ onOpenCommand }: TopBarProps) {
           className={cn(
             "flex items-center justify-center w-11 h-11 rounded-full border border-paper-3 text-ink-2",
             "transition-colors duration-150 hover:text-ink hover:border-ink-3",
-            "outline-none focus-visible:ring-2 focus-visible:ring-moss-1",
+            "outline-none focus-visible:ring-2 focus-visible:ring-highlight-1",
           )}
         >
           <SettingsIcon />
@@ -90,7 +90,7 @@ function ViewModeToggle() {
         aria-pressed={mode === "simple"}
         className={cn(
           "px-2.5 h-7 text-tag font-semibold uppercase tracking-[0.16em] transition-colors duration-150",
-          "outline-none focus-visible:ring-2 focus-visible:ring-moss-1 focus-visible:ring-inset",
+          "outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 focus-visible:ring-inset",
           mode === "simple" ? "bg-ink text-paper" : "text-ink-3 hover:text-ink",
         )}
       >
@@ -102,7 +102,7 @@ function ViewModeToggle() {
         aria-pressed={mode === "expert"}
         className={cn(
           "px-2.5 h-7 text-tag font-semibold uppercase tracking-[0.16em] transition-colors duration-150 border-l border-paper-3",
-          "outline-none focus-visible:ring-2 focus-visible:ring-moss-1 focus-visible:ring-inset",
+          "outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 focus-visible:ring-inset",
           mode === "expert" ? "bg-ink text-paper" : "text-ink-3 hover:text-ink",
         )}
       >

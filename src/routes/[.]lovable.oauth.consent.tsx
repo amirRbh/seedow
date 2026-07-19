@@ -1,6 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
 
 type OAuthNamespace = {
   getAuthorizationDetails: (id: string) => Promise<{
@@ -128,13 +129,14 @@ function Consent() {
         )}
 
         <div className="mt-6 flex gap-3">
-          <button
+          <Button
+            size="pill"
             disabled={busy}
             onClick={() => decide(true)}
-            className="btn-plant flex-1 justify-center disabled:opacity-50"
+            className="flex-1 justify-center disabled:opacity-50"
           >
             {busy ? "Please wait…" : "Approve"}
-          </button>
+          </Button>
           <button
             disabled={busy}
             onClick={() => decide(false)}

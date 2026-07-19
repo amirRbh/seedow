@@ -14,7 +14,7 @@ export function AlertsBell() {
   const TONE_DOT: Record<AlertSeverity, string> = {
     alert: "bg-rust",
     warn: "bg-gold",
-    info: "bg-moss-2",
+    info: "bg-highlight-2",
   };
   const TONE_LABEL: Record<AlertSeverity, string> = {
     alert: t("alerts.tone_alert"),
@@ -41,7 +41,7 @@ export function AlertsBell() {
           className={cn(
             "relative flex items-center justify-center w-11 h-11 rounded-full border border-paper-3 text-ink-2",
             "transition-colors duration-150 hover:text-ink hover:border-ink-3",
-            "outline-none focus-visible:ring-2 focus-visible:ring-moss-1",
+            "outline-none focus-visible:ring-2 focus-visible:ring-highlight-1",
           )}
         >
           <BellIcon />
@@ -93,7 +93,7 @@ export function AlertsBell() {
                     type="button"
                     onClick={() => void dismiss(a.id)}
                     aria-label={t("alerts.dismiss")}
-                    className="text-ink-3 hover:text-ink text-caption outline-none focus-visible:ring-2 focus-visible:ring-moss-1 rounded"
+                    className="text-ink-3 hover:text-ink text-caption outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 rounded"
                   >
                     ✕
                   </button>
@@ -104,7 +104,7 @@ export function AlertsBell() {
                   <Link
                     to={a.ctaHref}
                     onClick={() => setOpen(false)}
-                    className="mt-3 inline-flex items-center gap-2 text-caption font-semibold uppercase tracking-[0.18em] text-ink hover:text-moss-1 transition-colors"
+                    className="mt-3 inline-flex items-center gap-2 text-caption font-semibold uppercase tracking-[0.18em] text-ink hover:text-highlight-1 transition-colors"
                   >
                     {a.ctaLabel}
                     <svg

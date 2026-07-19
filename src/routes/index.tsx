@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { joinWaitlist, getWaitlistCount } from "@/lib/beta/beta.functions";
 
@@ -28,6 +29,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Landing() {
+  const { t } = useTranslation();
   const [isAuthed, setIsAuthed] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -40,6 +42,12 @@ function Landing() {
     document.getElementById("cta")?.scrollIntoView({ behavior: "smooth" });
     setTimeout(() => document.getElementById("cta-email")?.focus(), 400);
   };
+
+  const STATS: { figure: string; text: string; color: string }[] = [
+    { figure: "0%", color: "var(--apple-text)", text: t("landing.stats.visibility") },
+    { figure: "∞", color: "var(--apple-text)", text: t("landing.stats.jargon") },
+    { figure: "1", color: "var(--mint)", text: t("landing.stats.only_app") },
+  ];
 
   return (
     <div className="apple-landing min-h-screen">
@@ -64,10 +72,10 @@ function Landing() {
 
           <div className="flex items-center gap-6 text-body-sm text-[color:var(--apple-text)]">
             <Link to="/cours" className="hidden md:inline opacity-90 hover:opacity-100">
-              Cours
+              {t("landing.nav.courses")}
             </Link>
             <Link to="/methodologie" className="hidden md:inline opacity-90 hover:opacity-100">
-              Méthodologie
+              {t("landing.nav.methodology")}
             </Link>
             {isAuthed ? (
               <Link
@@ -75,7 +83,7 @@ function Landing() {
                 className="apple-btn-primary"
                 style={{ padding: "6px 14px", fontSize: 13 }}
               >
-                Mon espace
+                {t("landing.nav.my_space")}
               </Link>
             ) : (
               <>
@@ -84,14 +92,14 @@ function Landing() {
                   search={{ redirect: "/dashboard", mode: "login" }}
                   className="opacity-90 hover:opacity-100"
                 >
-                  Se connecter
+                  {t("landing.nav.login")}
                 </Link>
                 <Link
                   to="/onboarding"
                   className="apple-btn-primary"
                   style={{ padding: "6px 14px", fontSize: 13 }}
                 >
-                  Simuler mon portefeuille
+                  {t("landing.nav.simulate_cta")}
                 </Link>
               </>
             )}
@@ -151,33 +159,32 @@ function Landing() {
           />
 
           <h1 className="apple-title apple-title-lg mx-auto max-w-[900px]">
-            Votre argent
+            {t("landing.hero.title_line1")}
             <br />
-            façonne <span style={{ color: "var(--mint)" }}>déjà</span> le monde.
+            {t("landing.hero.title_line2_pre")}
+            <span style={{ color: "var(--mint)" }}>{t("landing.hero.title_accent")}</span>
+            {t("landing.hero.title_line2_post")}
           </h1>
 
-          <p className="apple-subtitle mx-auto max-w-[620px] mt-6">
-            Seedow vous montre lequel. Investissement ESG, visualisé clairement, expliqué par une IA
-            qui ne vous vend rien.
-          </p>
+          <p className="apple-subtitle mx-auto max-w-[620px] mt-6">{t("landing.hero.subtitle")}</p>
 
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 mt-10">
             {isAuthed ? (
               <Link to="/dashboard" className="apple-btn-primary">
-                Accéder à mon espace
+                {t("landing.hero.cta_authed")}
               </Link>
             ) : (
               <Link to="/onboarding" className="apple-btn-primary">
-                Construire mon portefeuille
+                {t("landing.hero.cta_new")}
               </Link>
             )}
             <Link to="/cours" className="apple-link">
-              Voir les cours <span aria-hidden>›</span>
+              {t("landing.hero.see_courses")} <span aria-hidden>›</span>
             </Link>
           </div>
           {!isAuthed && (
             <p className="mt-4 text-body-sm text-[color:var(--apple-text-2)]">
-              Sans compte · 2 minutes · résultat immédiat
+              {t("landing.hero.no_account_note")}
             </p>
           )}
 
@@ -186,13 +193,13 @@ function Landing() {
             className="mt-16 flex items-center gap-4 text-caption font-bold uppercase text-[color:var(--apple-text-2)]"
             style={{ letterSpacing: "0.2em" }}
           >
-            <span>Impact certifié</span>
+            <span>{t("landing.hero.trust_certified")}</span>
             <span
               aria-hidden
               className="inline-block rounded-full"
               style={{ width: 4, height: 4, background: "#d2d2d7" }}
             />
-            <span>Zéro greenwashing</span>
+            <span>{t("landing.hero.trust_no_greenwashing")}</span>
           </div>
         </div>
       </section>
@@ -201,13 +208,12 @@ function Landing() {
       <section style={{ background: "var(--apple-surface)" }} className="px-6 py-24 md:py-32">
         <div className="max-w-[980px] mx-auto text-center">
           <h2 className="apple-title mx-auto max-w-[720px]">
-            Ton épargne finance des choses
+            {t("landing.problem.title_line1")}
             <br />
-            que tu n'as jamais choisies.
+            {t("landing.problem.title_line2")}
           </h2>
           <p className="apple-subtitle mx-auto max-w-[560px] mt-5">
-            La plupart des contrats d'assurance-vie te laissent dans le flou. Seedow rend visible ce
-            qui l'était pas.
+            {t("landing.problem.subtitle")}
           </p>
           <div className="grid md:grid-cols-3 gap-12 md:gap-8 mt-20">
             {STATS.map((s, i) => (
@@ -236,14 +242,11 @@ function Landing() {
       <section className="px-6 py-24 md:py-32">
         <div className="max-w-[980px] mx-auto text-center">
           <p className="apple-eyebrow" style={{ color: "var(--mint)" }}>
-            Vois ton impact
+            {t("landing.impact.eyebrow")}
           </p>
-          <h2 className="apple-title mx-auto max-w-[720px] mt-3">
-            Ton portefeuille, enfin lisible.
-          </h2>
+          <h2 className="apple-title mx-auto max-w-[720px] mt-3">{t("landing.impact.title")}</h2>
           <p className="apple-subtitle mx-auto max-w-[560px] mt-5">
-            Chaque ligne devient une couleur, une histoire, une réalité concrète. Pas un rapport
-            annuel de 80 pages.
+            {t("landing.impact.subtitle")}
           </p>
 
           {/* Mockup visuel simplifié */}
@@ -280,30 +283,23 @@ function Landing() {
       >
         <div className="max-w-[980px] mx-auto text-center">
           <p className="apple-eyebrow" style={{ color: "var(--volt)" }}>
-            Ethi
+            {t("landing.ethi.eyebrow")}
           </p>
           <h2 className="apple-title mx-auto max-w-[760px] mt-3" style={{ color: "#ffffff" }}>
-            Une IA qui répond.
+            {t("landing.ethi.title_line1")}
             <br />
-            Pas qui vend.
+            {t("landing.ethi.title_line2")}
           </h2>
           <p className="apple-subtitle mx-auto max-w-[600px] mt-5" style={{ color: "#a1a1a6" }}>
-            Ethi connaît chaque ligne de ton portefeuille. Pose une question, obtiens une réponse
-            claire. Sans jargon, sans pression commerciale.
+            {t("landing.ethi.subtitle")}
           </p>
 
           {/* Chat mockup */}
           <div className="mt-16 mx-auto max-w-[560px] flex flex-col gap-3 text-left">
-            <ChatBubble side="user">C'est quoi cette ligne à 4% dans mon portefeuille ?</ChatBubble>
-            <ChatBubble side="ethi">
-              Un fonds obligataire vert qui finance des rénovations énergétiques en Europe.
-              Rendement stable, faible volatilité.
-            </ChatBubble>
-            <ChatBubble side="user">Et si je veux plus d'impact direct ?</ChatBubble>
-            <ChatBubble side="ethi">
-              Je peux te proposer 3 alternatives équivalentes en risque, avec un score climat
-              supérieur. Tu veux voir ?
-            </ChatBubble>
+            <ChatBubble side="user">{t("landing.ethi.chat_q1")}</ChatBubble>
+            <ChatBubble side="ethi">{t("landing.ethi.chat_a1")}</ChatBubble>
+            <ChatBubble side="user">{t("landing.ethi.chat_q2")}</ChatBubble>
+            <ChatBubble side="ethi">{t("landing.ethi.chat_a2")}</ChatBubble>
           </div>
         </div>
       </section>
@@ -312,55 +308,55 @@ function Landing() {
       <section style={{ background: "var(--apple-surface)" }} className="px-6 py-24 md:py-32">
         <div className="max-w-[980px] mx-auto">
           <div className="text-center mb-16">
-            <h2 className="apple-title mx-auto max-w-[720px]">Deux façons de commencer.</h2>
+            <h2 className="apple-title mx-auto max-w-[720px]">{t("landing.start.title")}</h2>
             <p className="apple-subtitle mx-auto max-w-[560px] mt-5">
-              Sans carte, sans engagement.
+              {t("landing.start.subtitle")}
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
             <article className="apple-card p-10 md:p-12 text-center flex flex-col items-center">
               <p className="apple-eyebrow" style={{ color: "var(--ice)" }}>
-                Cours · gratuit
+                {t("landing.start.courses_eyebrow")}
               </p>
               <h3 className="apple-title mt-2" style={{ fontSize: "clamp(28px, 3.5vw, 40px)" }}>
-                Apprends avant d'investir.
+                {t("landing.start.courses_title")}
               </h3>
               <p className="apple-subtitle mt-4 max-w-[380px]">
-                12 cours pour décoder la finance responsable, sans jargon.
+                {t("landing.start.courses_desc")}
               </p>
               <Link to="/cours" className="apple-link mt-8">
-                Voir les cours <span aria-hidden>›</span>
+                {t("landing.start.courses_cta")} <span aria-hidden>›</span>
               </Link>
             </article>
 
             <article className="apple-card p-10 md:p-12 text-center flex flex-col items-center">
               <p className="apple-eyebrow" style={{ color: "var(--mint)" }}>
-                Espace · gratuit
+                {t("landing.start.space_eyebrow")}
               </p>
               <h3 className="apple-title mt-2" style={{ fontSize: "clamp(28px, 3.5vw, 40px)" }}>
-                Ton tableau de bord ESG.
+                {t("landing.start.space_title")}
               </h3>
               <p className="apple-subtitle mt-4 max-w-[380px]">
                 {isAuthed
-                  ? "Accède à ton espace, simule ton portefeuille, discute avec Ethi."
-                  : "Simule ton portefeuille en 2 min, puis crée un compte si tu veux le sauvegarder."}
+                  ? t("landing.start.space_desc_authed")
+                  : t("landing.start.space_desc_new")}
               </p>
               {isAuthed ? (
                 <Link to="/dashboard" className="apple-btn-primary mt-8">
-                  Aller au dashboard
+                  {t("landing.start.space_cta_authed")}
                 </Link>
               ) : (
                 <div className="flex flex-col items-center gap-3 mt-8">
                   <Link to="/onboarding" className="apple-btn-primary">
-                    Simuler mon portefeuille
+                    {t("landing.start.space_cta_new")}
                   </Link>
                   <Link
                     to="/auth"
                     search={{ redirect: "/dashboard", mode: "login" }}
                     className="apple-link text-body"
                   >
-                    Déjà inscrit·e ? Se connecter <span aria-hidden>›</span>
+                    {t("landing.start.already_registered")} <span aria-hidden>›</span>
                   </Link>
                 </div>
               )}
@@ -373,22 +369,20 @@ function Landing() {
       <section id="cta" className="px-6 py-28 md:py-36 text-center">
         <div>
           <h2 className="apple-title apple-title-lg mx-auto max-w-[760px]">
-            Prêt à voir où va
+            {t("landing.final.title_line1")}
             <br />
-            <span style={{ color: "var(--mint)" }}>ton argent&nbsp;?</span>
+            <span style={{ color: "var(--mint)" }}>{t("landing.final.title_accent")}</span>
           </h2>
           <p className="apple-subtitle mx-auto max-w-[520px] mt-6">
-            {isAuthed
-              ? "Tu es déjà dans la place. Direct à ton espace."
-              : "Simule ton portefeuille en 2 minutes, sans compte. Tu décides après."}
+            {isAuthed ? t("landing.final.subtitle_authed") : t("landing.final.subtitle_new")}
           </p>
           {!isAuthed && (
             <div className="mt-10 flex flex-col items-center gap-4">
               <Link to="/onboarding" className="apple-btn-primary">
-                Simuler mon portefeuille
+                {t("landing.final.cta")}
               </Link>
               <p className="text-body-sm text-[color:var(--apple-text-2)]">
-                ou reçois les nouveautés par email
+                {t("landing.final.or_email")}
               </p>
             </div>
           )}
@@ -416,19 +410,19 @@ function Landing() {
                 style={{ background: "var(--mint)" }}
               />
             </span>
-            <span>© 2026 · Votre argent façonne déjà le monde.</span>
+            <span>{t("landing.footer.copyright")}</span>
           </div>
 
           <nav className="flex flex-wrap gap-x-6 gap-y-2">
             <Link to="/cours" className="hover:text-[color:var(--apple-text)]">
-              Cours
+              {t("landing.footer.courses")}
             </Link>
             <Link to="/methodologie" className="hover:text-[color:var(--apple-text)]">
-              Méthodologie
+              {t("landing.footer.methodology")}
             </Link>
             {isAuthed ? (
               <Link to="/dashboard" className="hover:text-[color:var(--apple-text)]">
-                Mon espace
+                {t("landing.footer.my_space")}
               </Link>
             ) : (
               <Link
@@ -436,20 +430,20 @@ function Landing() {
                 search={{ redirect: "/dashboard", mode: "login" }}
                 className="hover:text-[color:var(--apple-text)]"
               >
-                Se connecter
+                {t("landing.footer.login")}
               </Link>
             )}
             <Link to="/mentions-legales" className="hover:text-[color:var(--apple-text)]">
-              Mentions légales
+              {t("landing.footer.legal")}
             </Link>
             <Link to="/confidentialite" className="hover:text-[color:var(--apple-text)]">
-              Confidentialité
+              {t("landing.footer.privacy")}
             </Link>
             <Link to="/cgu" className="hover:text-[color:var(--apple-text)]">
-              CGU
+              {t("landing.footer.terms")}
             </Link>
             <a href="mailto:hello@seedow.life" className="hover:text-[color:var(--apple-text)]">
-              Contact
+              {t("landing.footer.contact")}
             </a>
           </nav>
         </div>
@@ -480,6 +474,7 @@ function ChatBubble({ side, children }: { side: "user" | "ethi"; children: React
 }
 
 function CtaForm({ isAuthed }: { isAuthed: boolean | null }) {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
@@ -512,7 +507,7 @@ function CtaForm({ isAuthed }: { isAuthed: boolean | null }) {
       setPosition(res.position);
       setDone(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Une erreur est survenue.");
+      setError(err instanceof Error ? err.message : t("landing.cta_form.generic_error"));
     } finally {
       setSubmitting(false);
     }
@@ -521,7 +516,7 @@ function CtaForm({ isAuthed }: { isAuthed: boolean | null }) {
   if (isAuthed) {
     return (
       <Link to="/dashboard" className="apple-btn-primary">
-        Accéder à mon espace
+        {t("landing.hero.cta_authed")}
       </Link>
     );
   }
@@ -538,7 +533,7 @@ function CtaForm({ isAuthed }: { isAuthed: boolean | null }) {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="ton@email.com"
+          placeholder={t("landing.cta_form.email_placeholder")}
           disabled={done}
           className="apple-input w-full sm:w-auto sm:flex-1"
         />
@@ -547,23 +542,31 @@ function CtaForm({ isAuthed }: { isAuthed: boolean | null }) {
           disabled={submitting || done}
           className="apple-btn-primary disabled:opacity-70"
         >
-          {done ? "Inscrit ✓" : submitting ? "…" : "Je rejoins"}
+          {done
+            ? t("landing.cta_form.done")
+            : submitting
+              ? t("landing.cta_form.submitting")
+              : t("landing.cta_form.submit")}
         </button>
       </form>
       <div className="text-body-sm text-[color:var(--apple-text-2)] mt-5">
         {position !== null ? (
           <>
-            <span className="font-semibold text-[color:var(--apple-text)]">#{position}</span> sur la
-            liste · on te contacte très vite
+            <span className="font-semibold text-[color:var(--apple-text)]">#{position}</span>{" "}
+            {t("landing.cta_form.position_suffix")}
           </>
         ) : waitlistCount !== null && waitlistCount > 0 ? (
           <>
             <span className="font-semibold text-[color:var(--apple-text)]">{waitlistCount}</span>{" "}
-            {waitlistCount > 1 ? "personnes déjà inscrites" : "personne déjà inscrite"} · places
-            limitées
+            {waitlistCount > 1
+              ? t("landing.cta_form.count_plural")
+              : t("landing.cta_form.count_singular")}{" "}
+            · {t("landing.cta_form.places_limited")}
           </>
         ) : (
-          <>Rejoins la liste des premiers testeurs · places limitées</>
+          <>
+            {t("landing.cta_form.waitlist_default")} · {t("landing.cta_form.places_limited")}
+          </>
         )}
       </div>
       {error && <p className="text-body-sm text-red-500 mt-3">{error}</p>}
@@ -572,24 +575,6 @@ function CtaForm({ isAuthed }: { isAuthed: boolean | null }) {
 }
 
 /* ---------- Content ---------- */
-
-const STATS: { figure: string; text: string; color: string }[] = [
-  {
-    figure: "0%",
-    color: "var(--apple-text)",
-    text: "de visibilité réelle sur ce que finance ton assurance-vie classique.",
-  },
-  {
-    figure: "∞",
-    color: "var(--apple-text)",
-    text: "de jargon financier entre toi et une décision qui devrait t'appartenir.",
-  },
-  {
-    figure: "1",
-    color: "var(--mint)",
-    text: "seule app qui relie ton portefeuille à son impact réel sur le monde.",
-  },
-];
 
 const ALLOCATION: { label: string; weight: number; color: string }[] = [
   { label: "ETF Monde", weight: 32, color: "#1d1d1f" },

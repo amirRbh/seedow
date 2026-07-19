@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion } from "framer-motion";
 import { useServerFn } from "@tanstack/react-start";
@@ -52,6 +52,30 @@ export function AssetScreener() {
   const categories = useMemo(() => uniqueCategories(assets), [assets]);
   const results = useMemo(() => applyFilters(assets, filters), [assets, filters]);
   const activeCount = activeFilterCount(filters);
+
+  // Rendu incrémental : l'univers d'actifs peut compter plusieurs centaines de
+  // lignes, chacune un motion.button animé — on n'en monte qu'une page à la
+  // fois plutôt que tout le résultat filtré d'un coup.
+  const PAGE_SIZE = 30;
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  useEffect(() => setVisibleCount(PAGE_SIZE), [filters]);
+  const visibleResults = results.slice(0, visibleCount);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const node = sentinelRef.current;
+    if (!node || visibleCount >= results.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setVisibleCount((c) => Math.min(c + PAGE_SIZE, results.length));
+        }
+      },
+      { rootMargin: "600px" },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [visibleCount, results.length]);
 
   const update = <K extends keyof ScreenerFilters>(key: K, value: ScreenerFilters[K]) =>
     setFilters((f) => ({ ...f, [key]: value }));
@@ -254,7 +278,7 @@ export function AssetScreener() {
       {/* Cours manquants : action de rafraîchissement visible, pas juste un texte "indisponible" par ligne */}
       {!loading && !error && missingPriceCount > 0 && (
         <div className="px-5">
-          <div className="rounded-lg border border-gold/40 bg-[oklch(0.97_0.03_85)] p-3 flex items-start gap-2.5">
+          <div className="rounded-lg border border-solar/40 bg-solar-tint p-3 flex items-start gap-2.5">
             <div className="flex-1 min-w-0">
               <p className="text-label font-medium text-ink">
                 {t("discover.prices_missing", { count: missingPriceCount })}
@@ -301,9 +325,12 @@ export function AssetScreener() {
             </button>
           </div>
         ) : (
-          results.map((asset, i) => (
-            <AssetRow key={asset.id} asset={asset} index={i} onOpen={() => setDetail(asset)} />
-          ))
+          <>
+            {visibleResults.map((asset, i) => (
+              <AssetRow key={asset.id} asset={asset} index={i} onOpen={() => setDetail(asset)} />
+            ))}
+            {visibleCount < results.length && <div ref={sentinelRef} aria-hidden className="h-1" />}
+          </>
         )}
       </div>
 

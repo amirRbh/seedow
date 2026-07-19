@@ -1,4 +1,4 @@
-import { createFileRoute, redirect, Link, useParams, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useParams, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,17 +11,10 @@ import { GOAL_TYPE_LABEL, type FinancialGoal } from "@/hooks/useFinancialGoals";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { useLang } from "@/hooks/useLang";
 import { formatDate } from "@/lib/format";
+import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 
 export const Route = createFileRoute("/objectifs/$goalId")({
-  beforeLoad: async ({ params }) => {
-    const { data, error } = await supabase.auth.getUser();
-    if (error || !data.user) {
-      throw redirect({
-        to: "/auth",
-        search: { redirect: `/objectifs/${params.goalId}`, mode: "login" },
-      });
-    }
-  },
+  beforeLoad: ({ params }) => requireAuthedUser(`/objectifs/${params.goalId}`),
   component: GoalDetail,
 });
 

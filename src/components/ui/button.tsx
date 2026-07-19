@@ -16,12 +16,18 @@ const buttonVariants = cva(
         secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        /** Pill mint filled — CTA secondaire (ex-.btn-accent). */
+        accent: "bg-mint text-paper shadow-none hover:opacity-90",
+        /** Pill outline encre, s'inverse en plein au survol (ex-.btn-outline-ink). */
+        "outline-ink": "border border-ink bg-transparent text-ink shadow-none hover:bg-ink hover:text-paper",
       },
       size: {
         default: "h-9 px-4 py-2",
         sm: "h-8 rounded-md px-3 text-xs",
         lg: "h-10 rounded-md px-8",
         icon: "h-9 w-9",
+        /** Pill Apple-style — CTA principal (ex-.btn-primary/.btn-accent/.btn-outline-ink). */
+        pill: "h-auto rounded-full px-6 py-3 text-[15px]",
       },
     },
     defaultVariants: {

@@ -168,7 +168,7 @@ export function AllocationRefiner({ portfolioId }: Props) {
                   <p
                     className={cn(
                       "text-body-lg font-semibold tabular-nums",
-                      row.costBps > 0 ? "text-rust" : "text-moss-2",
+                      row.costBps > 0 ? "text-rust" : "text-highlight-2",
                     )}
                     style={{ fontVariantNumeric: "tabular-nums" }}
                   >
@@ -345,7 +345,7 @@ function BeforeAfter({
               <td
                 className={cn(
                   "py-1.5 pl-3 text-right tabular-nums text-caption w-20",
-                  m.positive === null ? "text-ink-3" : m.positive ? "text-moss-2" : "text-rust",
+                  m.positive === null ? "text-ink-3" : m.positive ? "text-highlight-2" : "text-rust",
                 )}
               >
                 {m.deltaLabel}
@@ -406,7 +406,7 @@ function BeforeAfter({
                 key={h.id}
                 className={cn(
                   "flex justify-between gap-2 text-caption",
-                  !baseTickers.has(h.id) && "text-moss-2",
+                  !baseTickers.has(h.id) && "text-highlight-2",
                 )}
                 title={h.name}
               >
@@ -419,7 +419,7 @@ function BeforeAfter({
       </div>
       <p className="text-tag text-ink-3 leading-relaxed">
         <span className="text-rust">{t("allocation_refiner.removed_note")}</span>{" "}
-        <span className="text-moss-2">{t("allocation_refiner.added_note")}</span>
+        <span className="text-highlight-2">{t("allocation_refiner.added_note")}</span>
       </p>
     </div>
   );

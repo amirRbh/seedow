@@ -66,7 +66,7 @@ export function CourseQuiz({ slug, quiz }: Props) {
                         "w-full text-left px-4 py-3 border text-sm md:text-base transition-colors",
                         !showResult && isSelected && "border-ink bg-ink/5",
                         !showResult && !isSelected && "border-ink/15 hover:border-ink/40",
-                        showResult && isCorrect && "border-moss bg-moss/8 text-ink",
+                        showResult && isCorrect && "border-mint bg-mint/8 text-ink",
                         showResult &&
                           !isCorrect &&
                           isSelected &&

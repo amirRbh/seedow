@@ -3,20 +3,20 @@ import { useEffect, useState } from "react";
 interface Props {
   title?: string;
   children: React.ReactNode;
-  tone?: "moss" | "bloom" | "peach" | "sky";
+  tone?: "highlight" | "bloom" | "peach" | "sky";
   /** Si fourni, l'encart peut être dismissé et l'état stocké en localStorage. */
   dismissKey?: string;
 }
 
 const TONE_BG: Record<NonNullable<Props["tone"]>, string> = {
-  moss: "bg-moss-5 border-moss-4",
-  bloom: "bg-[oklch(0.96_0.04_310)] border-[oklch(0.88_0.07_310)]",
-  peach: "bg-[oklch(0.96_0.04_45)] border-[oklch(0.88_0.07_45)]",
-  sky: "bg-[oklch(0.96_0.03_230)] border-[oklch(0.88_0.06_230)]",
+  highlight: "bg-highlight-5 border-highlight-4",
+  bloom: "bg-bloom-tint border-bloom-tint-border",
+  peach: "bg-alert-tint border-alert-tint-border",
+  sky: "bg-sky-tint border-sky-tint-border",
 };
 
 const TONE_DOT: Record<NonNullable<Props["tone"]>, string> = {
-  moss: "bg-moss-1",
+  highlight: "bg-highlight-1",
   bloom: "bg-bloom",
   peach: "bg-rust",
   sky: "bg-sky",
@@ -28,7 +28,7 @@ const STORAGE_PREFIX = "seedow:explainers-dismissed:";
  * Petit encart pédagogique pour expliquer un concept en une phrase.
  * Si `dismissKey` est fourni, un bouton ✕ permet de masquer définitivement.
  */
-export function ExplainerCard({ title, children, tone = "moss", dismissKey }: Props) {
+export function ExplainerCard({ title, children, tone = "highlight", dismissKey }: Props) {
   const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
@@ -66,7 +66,7 @@ export function ExplainerCard({ title, children, tone = "moss", dismissKey }: Pr
           type="button"
           onClick={onDismiss}
           aria-label="Masquer cette aide"
-          className="absolute top-2 right-2 w-5 h-5 flex items-center justify-center text-ink-3 hover:text-ink rounded-full hover:bg-paper/60 transition-colors"
+          className="absolute top-1.5 right-1.5 w-6 h-6 flex items-center justify-center text-ink-3 hover:text-ink rounded-full hover:bg-paper/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
         >
           <svg
             viewBox="0 0 16 16"

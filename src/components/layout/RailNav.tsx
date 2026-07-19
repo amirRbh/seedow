@@ -9,7 +9,7 @@ type IconKey =
   | "ethi"
   | "decouvrir"
   | "profil"
-  | "comparatif"
+  | "objectifs"
   | "methodologie"
   | "cours";
 
@@ -47,7 +47,7 @@ export function RailNav() {
       key: "objectifs",
       path: "/objectifs",
       label: t("nav.objectives"),
-      icon: "comparatif",
+      icon: "objectifs",
       shortcut: "g o",
     },
     { key: "discover", path: "/discover", label: t("bottom_nav.explore"), icon: "decouvrir" },
@@ -72,7 +72,7 @@ export function RailNav() {
       <Link
         to="/dashboard"
         aria-label={t("rail_nav.seedow_home")}
-        className="flex items-center justify-center w-10 h-10 mb-2 outline-none rounded-sm focus-visible:ring-2 focus-visible:ring-moss-1"
+        className="flex items-center justify-center w-10 h-10 mb-2 outline-none rounded-sm focus-visible:ring-2 focus-visible:ring-highlight-1"
       >
         <span className="font-value text-body text-ink tracking-tight leading-none">s</span>
       </Link>
@@ -104,8 +104,8 @@ function RailLink({ item, active }: { item: NavItem; active: boolean }) {
           aria-label={item.label}
           className={cn(
             "relative flex items-center justify-center w-10 h-10 rounded-md transition-colors duration-150",
-            "outline-none focus-visible:ring-2 focus-visible:ring-moss-1",
-            active ? "text-ink bg-moss-5/60" : "text-ink-3 hover:text-ink hover:bg-paper-2",
+            "outline-none focus-visible:ring-2 focus-visible:ring-highlight-1",
+            active ? "text-ink bg-highlight-5/60" : "text-ink-3 hover:text-ink hover:bg-paper-2",
           )}
         >
           <NavIcon type={item.icon} />
@@ -176,11 +176,12 @@ function NavIcon({ type }: { type: IconKey }) {
           <path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" />
         </svg>
       );
-    case "comparatif":
+    case "objectifs":
       return (
         <svg {...common}>
           <circle cx="12" cy="12" r="9" />
-          <path d="M12 7v5l3 2" />
+          <circle cx="12" cy="12" r="5" />
+          <circle cx="12" cy="12" r="1.5" fill="currentColor" />
         </svg>
       );
     case "methodologie":

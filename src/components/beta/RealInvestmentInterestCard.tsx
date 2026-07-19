@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { useLang } from "@/hooks/useLang";
 import { formatCurrency, formatNumber } from "@/lib/format";
+import { Button } from "@/components/ui/button";
 
 export function RealInvestmentInterestCard() {
   const { t } = useTranslation();
@@ -67,7 +68,9 @@ export function RealInvestmentInterestCard() {
           }}
         >
           <DialogTrigger asChild>
-            <button className="btn-plant mt-4">{t("real_invest_interest.cta")}</button>
+            <Button size="pill" className="mt-4">
+              {t("real_invest_interest.cta")}
+            </Button>
           </DialogTrigger>
           <DialogContent className="max-w-md">
             {done ? (
@@ -77,9 +80,9 @@ export function RealInvestmentInterestCard() {
                   <DialogDescription>{t("real_invest_interest.success_desc")}</DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
-                  <button onClick={() => setOpen(false)} className="btn-plant">
+                  <Button size="pill" onClick={() => setOpen(false)}>
                     {t("common.close")}
-                  </button>
+                  </Button>
                 </DialogFooter>
               </>
             ) : (
@@ -151,13 +154,14 @@ export function RealInvestmentInterestCard() {
                   {error && <p className="text-label text-rust">{error}</p>}
                 </div>
                 <DialogFooter>
-                  <button
+                  <Button
+                    size="pill"
                     onClick={onSubmit}
                     disabled={submitting}
-                    className="btn-plant w-full justify-center disabled:opacity-50"
+                    className="w-full justify-center disabled:opacity-50"
                   >
                     {submitting ? t("common.sending") : t("real_invest_interest.submit")}
-                  </button>
+                  </Button>
                 </DialogFooter>
               </>
             )}

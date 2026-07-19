@@ -1,10 +1,10 @@
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { GrowthComparison } from "@/components/roots/GrowthComparison";
-import { BadgesCard } from "@/components/garden/SeasonalBadges";
+import { BadgesCard } from "@/components/portfolio/MilestoneBadges";
 import { AllocationBreakdown } from "@/components/portfolio/AllocationBreakdown";
 import { PortfolioMetricsCard } from "@/components/portfolio/PortfolioMetricsCard";
 import { PortfolioHistoryChart } from "@/components/portfolio/PortfolioHistoryChart";
@@ -13,27 +13,23 @@ import { ValuationConsistencyBanner } from "@/components/portfolio/ValuationCons
 import { ImpactCertificate } from "@/components/portfolio/ImpactCertificate";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { ShareToggle } from "@/components/community/ShareToggle";
-import { ImpactRibbon } from "@/components/garden/ImpactRibbon";
+import { ImpactRibbon } from "@/components/portfolio/ImpactRibbon";
 import { ComparatifPanel } from "@/components/portfolio/ComparatifPanel";
 import { AllocationRefiner } from "@/components/portfolio/AllocationRefiner";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ExplainerCard } from "@/components/ui/ExplainerCard";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { useViewMode } from "@/hooks/useViewMode";
 import { useLang } from "@/hooks/useLang";
 import { formatCurrency } from "@/lib/format";
-import { supabase } from "@/integrations/supabase/client";
 import { BADGE_DEFS, computeUnlockedBadgeIds } from "@/lib/portfolio/badges";
-import type { SeasonalBadge } from "@/components/garden/SeasonalBadges";
+import type { MilestoneBadge } from "@/components/portfolio/MilestoneBadges";
+import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 
 export const Route = createFileRoute("/portfolio")({
-  beforeLoad: async () => {
-    const { data, error } = await supabase.auth.getUser();
-    if (error || !data.user) {
-      throw redirect({ to: "/auth", search: { redirect: "/portfolio", mode: "login" } });
-    }
-  },
+  beforeLoad: () => requireAuthedUser("/portfolio"),
   component: Portfolio,
 });
 
@@ -46,8 +42,21 @@ function Portfolio() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-paper flex items-center justify-center">
-        <p className="text-label text-ink-3">{t("portfolio.loading")}</p>
+      <div
+        className="min-h-screen bg-paper max-w-lg mx-auto px-5 pt-6 pb-28"
+        aria-label={t("portfolio.loading")}
+      >
+        <div className="flex items-center gap-3">
+          <Skeleton className="w-9 h-9 rounded-full" />
+          <Skeleton className="h-4 w-32" />
+        </div>
+        <Skeleton className="h-8 w-48 mt-8" />
+        <Skeleton className="h-16 w-64 mt-2" />
+        <div className="mt-10 space-y-3">
+          {[0, 1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-16 w-full rounded-2xl" />
+          ))}
+        </div>
       </div>
     );
   }
@@ -94,13 +103,13 @@ function Portfolio() {
     : 0;
 
   const unlockedBadgeIds = computeUnlockedBadgeIds(portfolio, esgScore);
-  const badges: SeasonalBadge[] = BADGE_DEFS.map((b) => ({
+  const badges: MilestoneBadge[] = BADGE_DEFS.map((b) => ({
     id: b.id,
     icon: b.icon,
     tier: b.tier,
     unlocked: unlockedBadgeIds.has(b.id),
-    name: t(`seasonal_badges.defs.${b.id}.name`),
-    description: t(`seasonal_badges.defs.${b.id}.description`),
+    name: t(`milestone_badges.defs.${b.id}.name`),
+    description: t(`milestone_badges.defs.${b.id}.description`),
   }));
 
   const linesLabel = t(
@@ -197,7 +206,7 @@ function Portfolio() {
               <div className="space-y-3">
                 <h2 className="text-sm font-semibold text-ink">{t("portfolio.key_indicators")}</h2>
                 {isSimple && (
-                  <ExplainerCard tone="moss" dismissKey="portfolio-metrics-simple">
+                  <ExplainerCard tone="highlight" dismissKey="portfolio-metrics-simple">
                     {t("portfolio.simple_explainer_pre")}{" "}
                     <span className="font-semibold">{t("portfolio.simple_explainer_expert")}</span>{" "}
                     {t("portfolio.simple_explainer_post")}

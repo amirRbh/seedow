@@ -3,18 +3,21 @@ import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
-import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { useFinancialGoals } from "@/hooks/useFinancialGoals";
-import { computeBriefing } from "@/lib/portfolio/signals";
 import { formatCurrency } from "@/lib/format";
 import { useLang } from "@/hooks/useLang";
 import { cn } from "@/lib/utils";
+import { EthiBriefing } from "./EthiBriefing";
 
+/**
+ * Une seule carte contextuelle : invite à investir (portefeuille vide),
+ * rappel d'objectif proche, ou — par défaut, dès qu'un portefeuille est
+ * valorisé — le briefing Ethi (signaux + rebalancing en un clic).
+ */
 export function NextStepCard() {
   const { t } = useTranslation();
   const { lang } = useLang();
   const { portfolio } = useActivePortfolio();
-  const valuation = usePortfolioValuation();
   const { goals } = useFinancialGoals();
 
   const card = useMemo(() => {
@@ -49,38 +52,20 @@ export function NextStepCard() {
           }),
           to: "/objectifs" as const,
           cta: t("next_step.follow_goal"),
-          tone: "moss" as const,
+          tone: "highlight" as const,
         };
       }
     }
 
-    const briefing = computeBriefing({
-      portfolio,
-      holdings: valuation.holdings,
-      returnPct: valuation.returnPct,
-    });
-    const signal = briefing.signals[0];
-    if (signal) {
-      return {
-        eyebrow: signal.label,
-        title: signal.detail,
-        detail: t("next_step.signal_detail"),
-        to: "/ethi" as const,
-        cta: t("next_step.talk_to_ethi"),
-        tone: signal.tone === "rust" ? ("rust" as const) : ("neutral" as const),
-      };
-    }
-
     return null;
-  }, [portfolio, goals, valuation.holdings, valuation.returnPct, t, lang]);
+  }, [portfolio, goals, t, lang]);
 
-  if (!card) return null;
+  // Ni portefeuille vide, ni objectif imminent : le briefing Ethi prend le relais.
+  if (!card) return <EthiBriefing />;
 
   const toneClasses = {
     gold: "border-gold/40 bg-gold/5",
-    moss: "border-moss-1/30 bg-moss-5/40",
-    rust: "border-rust/30 bg-[oklch(0.96_0.03_45)]",
-    neutral: "border-paper-3 bg-paper-2",
+    highlight: "border-highlight-1/30 bg-highlight-5/40",
   } as const;
 
   return (

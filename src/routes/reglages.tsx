@@ -22,6 +22,8 @@ import { DeleteAccountDialog } from "@/components/reglages/DeleteAccountDialog";
 import { callAuthed } from "@/lib/authedServerFn";
 import { supabase } from "@/integrations/supabase/client";
 import type { CauseTag, ExclusionTag } from "@/lib/portfolio/types";
+import { reportCaughtError } from "@/lib/monitoring/errorReporter";
+import { useTheme, type ThemePreference } from "@/hooks/useTheme";
 
 export const Route = createFileRoute("/reglages")({
   head: () => ({
@@ -488,6 +490,10 @@ function ProfileSection({ email, onSignOut }: { email: string; onSignOut: () => 
         </div>
       </Block>
 
+      <Block title={t("reglages.block_appearance")}>
+        <ThemeToggle />
+      </Block>
+
       <Block title={t("reglages.block_security")}>
         <button
           onClick={() => navigate({ to: "/auth" })}
@@ -508,6 +514,38 @@ function ProfileSection({ email, onSignOut }: { email: string; onSignOut: () => 
           {t("reglages.sign_out")}
         </button>
       </Block>
+    </div>
+  );
+}
+
+function ThemeToggle() {
+  const { t } = useTranslation();
+  const { theme, setTheme } = useTheme();
+  const options: { value: ThemePreference; label: string }[] = [
+    { value: "light", label: t("reglages.theme_light") },
+    { value: "dark", label: t("reglages.theme_dark") },
+    { value: "system", label: t("reglages.theme_system") },
+  ];
+  return (
+    <div
+      role="radiogroup"
+      aria-label={t("reglages.block_appearance")}
+      className="inline-flex gap-1 bg-paper-2 rounded-full p-1"
+    >
+      {options.map((opt) => (
+        <button
+          key={opt.value}
+          type="button"
+          role="radio"
+          aria-checked={theme === opt.value}
+          onClick={() => setTheme(opt.value)}
+          className={`px-3.5 py-1.5 rounded-full text-label font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 ${
+            theme === opt.value ? "bg-paper text-ink shadow-sm" : "text-ink-3 hover:text-ink-2"
+          }`}
+        >
+          {opt.label}
+        </button>
+      ))}
     </div>
   );
 }
@@ -743,6 +781,7 @@ function CronHealthBlock({
   const fetchRuns = useServerFn(fetchFn);
   const [runs, setRuns] = useState<CronRunEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -750,7 +789,11 @@ function CronHealthBlock({
       .then((res) => {
         if (!cancelled) setRuns(res.runs);
       })
-      .catch((e) => console.error("[cron-health]", e))
+      .catch((e) => {
+        console.error("[cron-health]", e);
+        reportCaughtError(e, { source: "cron-health" });
+        if (!cancelled) setError(true);
+      })
       .finally(() => {
         if (!cancelled) setLoading(false);
       });
@@ -769,6 +812,8 @@ function CronHealthBlock({
     <Block title={t(titleKey)}>
       {loading ? (
         <p className="text-label text-ink-3">{t("reglages.methodology.health.loading")}</p>
+      ) : error ? (
+        <p className="text-label text-rust">{t("common.error")}</p>
       ) : runs.length === 0 ? (
         <p className="text-label text-ink-3">{t(emptyKey)}</p>
       ) : (
@@ -777,7 +822,7 @@ function CronHealthBlock({
             <span
               className={`w-2 h-2 rounded-full ${
                 lastRun?.status === "ok"
-                  ? "bg-moss-1"
+                  ? "bg-highlight-1"
                   : lastRun?.status === "partial"
                     ? "bg-gold"
                     : "bg-rust"
@@ -800,7 +845,7 @@ function CronHealthBlock({
               >
                 <span
                   className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
-                    r.status === "ok" ? "bg-moss-1" : r.status === "partial" ? "bg-gold" : "bg-rust"
+                    r.status === "ok" ? "bg-highlight-1" : r.status === "partial" ? "bg-gold" : "bg-rust"
                   }`}
                 />
                 <span className="text-ink-3 tabular-nums w-28 flex-shrink-0">
@@ -944,13 +989,13 @@ function MethodologySection() {
                 <p className="font-value text-ink">40–60</p>
                 <p className="text-ink-3">{t("reglages.methodology.esg_composite.scale_medium")}</p>
               </div>
-              <div className="rounded border border-moss-4 bg-moss-5 p-2">
-                <p className="font-value text-moss-1">60–80</p>
-                <p className="text-moss-1">{t("reglages.methodology.esg_composite.scale_good")}</p>
+              <div className="rounded border border-highlight-4 bg-highlight-5 p-2">
+                <p className="font-value text-highlight-1">60–80</p>
+                <p className="text-highlight-1">{t("reglages.methodology.esg_composite.scale_good")}</p>
               </div>
-              <div className="rounded border border-moss-2 bg-moss-5 p-2">
-                <p className="font-value text-moss-1">80–100</p>
-                <p className="text-moss-1">
+              <div className="rounded border border-highlight-2 bg-highlight-5 p-2">
+                <p className="font-value text-highlight-1">80–100</p>
+                <p className="text-highlight-1">
                   {t("reglages.methodology.esg_composite.scale_excellent")}
                 </p>
               </div>
@@ -1059,9 +1104,9 @@ function StatusBanner({
 
   const tone =
     status === "error"
-      ? "border-rust/40 text-rust bg-[oklch(0.97_0.02_45)]"
+      ? "border-rust/40 text-rust bg-alert-tint"
       : status === "saved"
-        ? "border-moss-1/30 text-moss-1 bg-moss-5"
+        ? "border-highlight-1/30 text-highlight-1 bg-highlight-5"
         : "border-paper-3 text-ink-3 bg-paper-2";
 
   return (

@@ -6,10 +6,9 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ═══════════════════════════════════════════════════════════════
-   SEEDOW — Editorial brut, ESG signal-driven
-   Papier ivoire #F5F3EC, encre noir pur, accent mint profond #0B7A3E
-   + ice/solar/alert/volt comme data colors. Typo : Bebas Neue (display)
-   + Inter (body) + IBM Plex Mono (eyebrows / chiffres / labels).
+   SEEDOW — palette Apple (papier blanc, encre #1d1d1f, accent mint)
+   + ice/solar/alert/volt comme data colors. Typo : Inter (display + body)
+   + IBM Plex Mono (chiffres / labels).
 ═══════════════════════════════════════════════════════════════ */
 
 @theme inline {
@@ -54,11 +53,11 @@
   --color-ink-2: var(--ink-2);
   --color-ink-3: var(--ink-3);
 
-  --color-moss-1: var(--moss-1);
-  --color-moss-2: var(--moss-2);
-  --color-moss-3: var(--moss-3);
-  --color-moss-4: var(--moss-4);
-  --color-moss-5: var(--moss-5);
+  --color-highlight-1: var(--highlight-1);
+  --color-highlight-2: var(--highlight-2);
+  --color-highlight-3: var(--highlight-3);
+  --color-highlight-4: var(--highlight-4);
+  --color-highlight-5: var(--highlight-5);
 
   --color-rust: var(--rust);
   --color-gold: var(--gold);
@@ -73,12 +72,21 @@
   --color-alert: var(--alert);
   --color-volt: var(--volt);
 
-  --shadow-leaf: var(--shadow-leaf);
-  --shadow-deep: var(--shadow-deep);
-  --shadow-soil: var(--shadow-soil);
+  --color-alert-tint: var(--alert-tint);
+  --color-alert-tint-border: var(--alert-tint-border);
+  --color-solar-tint: var(--solar-tint);
+  --color-solar-tint-border: var(--solar-tint-border);
+  --color-bloom-tint: var(--bloom-tint);
+  --color-bloom-tint-border: var(--bloom-tint-border);
+  --color-sky-tint: var(--sky-tint);
+  --color-sky-tint-border: var(--sky-tint-border);
+
+  --shadow-flat-1: var(--shadow-flat-1);
+  --shadow-flat-2: var(--shadow-flat-2);
+  --shadow-flat-3: var(--shadow-flat-3);
 
   --animate-breathe: breathe 4s ease-in-out infinite;
-  --animate-sprout: sprout 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-reveal-scale: reveal-scale 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
   --animate-fade-in-up: fadeInUp 0.5s ease-out;
 
   @keyframes breathe {
@@ -90,7 +98,7 @@
       transform: translateY(-3px) scale(1.02);
     }
   }
-  @keyframes sprout {
+  @keyframes reveal-scale {
     0% {
       transform: scaleY(0);
       opacity: 0;
@@ -131,28 +139,39 @@
   --ink-2: #64646a; /* contraste ~5.9:1 sur --paper (WCAG AA) — était #86868B (~3.6:1, sous le seuil AA) */
   --ink-3: #6e6e73;
 
-  /* Mapping moss → tokens Apple pour rétro-compat */
-  --moss-1: #1d1d1f;
-  --moss-2: #2d2d2f;
-  --moss-3: #86868b;
-  --moss-4: #d2d2d7;
-  --moss-5: #f5f5f7;
+  /* Échelle de mise en avant interactive (focus rings, highlights, badges) */
+  --highlight-1: #1d1d1f;
+  --highlight-2: #2d2d2f;
+  --highlight-3: #86868b;
+  --highlight-4: #d2d2d7;
+  --highlight-5: #f5f5f7;
 
-  /* Data signal colors — accents assourdis Apple */
-  --mint: #1d8348; /* vert forest sobre */
-  --ice: #0071e3; /* bleu Apple signature */
+  /* Data signal colors — assombries pour tenir 4.5:1 AA sur --paper-2 (voir audit contraste) */
+  --mint: #1a7a42; /* vert forest sobre */
+  --ice: #0066cc; /* bleu Apple signature */
   --volt: #6e56cf; /* violet doux */
-  --alert: #e11d48; /* rouge saturé */
-  --solar: #b7791f; /* or mat */
+  --alert: #ca1a41; /* rouge saturé */
+  --solar: #895b17; /* or mat */
 
   /* Aliases legacy */
-  --rust: #e11d48;
-  --gold: #1d8348;
-  --gold-soft: #1d8348;
-  --sky: #0071e3;
+  --rust: #ca1a41;
+  --gold: #1a7a42;
+  --gold-soft: #1a7a42;
+  --sky: #0066cc;
   --bloom: #6e56cf;
-  --peach: #b7791f;
-  --glacier: #0071e3;
+  --peach: #895b17;
+  --glacier: #0066cc;
+
+  /* Fonds/bordures "tinted" — remplacent ~15 oklch(...) ad-hoc dispersés
+     dans les composants (bannières, badges, tons "loss/withdrawal/gold-tier"). */
+  --alert-tint: oklch(0.95 0.03 45);
+  --alert-tint-border: oklch(0.88 0.07 45);
+  --solar-tint: oklch(0.95 0.05 85);
+  --solar-tint-border: oklch(0.88 0.08 85);
+  --bloom-tint: oklch(0.96 0.04 310);
+  --bloom-tint-border: oklch(0.88 0.07 310);
+  --sky-tint: oklch(0.96 0.03 230);
+  --sky-tint-border: oklch(0.88 0.06 230);
 
   /* shadcn mapping */
   --background: var(--paper);
@@ -176,9 +195,9 @@
   --ring: var(--ink);
 
   /* Ombres désactivées — design flat éditorial */
-  --shadow-leaf: 0 0 0 0 transparent;
-  --shadow-deep: 0 0 0 0 transparent;
-  --shadow-soil: 0 0 0 0 transparent;
+  --shadow-flat-1: 0 0 0 0 transparent;
+  --shadow-flat-2: 0 0 0 0 transparent;
+  --shadow-flat-3: 0 0 0 0 transparent;
 
   /* Grain SVG — texture papier discrète */
   --paper-grain-url: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.14  0 0 0 0 0.18  0 0 0 0 0.14  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
@@ -192,14 +211,22 @@
   --ink: oklch(0.96 0.008 110);
   --ink-2: oklch(0.8 0.01 160);
   --ink-3: oklch(0.62 0.012 160);
-  --moss-1: oklch(0.78 0.06 150);
-  --moss-2: oklch(0.64 0.055 150);
-  --moss-3: oklch(0.5 0.045 150);
-  --moss-4: oklch(0.34 0.03 150);
-  --moss-5: oklch(0.24 0.02 150);
+  --highlight-1: oklch(0.78 0.06 150);
+  --highlight-2: oklch(0.64 0.055 150);
+  --highlight-3: oklch(0.5 0.045 150);
+  --highlight-4: oklch(0.34 0.03 150);
+  --highlight-5: oklch(0.24 0.02 150);
   --gold: oklch(0.72 0.16 145);
   --gold-soft: oklch(0.64 0.14 148);
   --glacier: oklch(0.65 0.08 210);
+  --alert-tint: oklch(0.28 0.05 45);
+  --alert-tint-border: oklch(0.4 0.08 45);
+  --solar-tint: oklch(0.28 0.06 85);
+  --solar-tint-border: oklch(0.4 0.09 85);
+  --bloom-tint: oklch(0.28 0.06 310);
+  --bloom-tint-border: oklch(0.4 0.09 310);
+  --sky-tint: oklch(0.26 0.05 230);
+  --sky-tint-border: oklch(0.38 0.08 230);
   --background: var(--paper);
   --foreground: var(--ink);
   --card: var(--paper-2);
@@ -274,8 +301,7 @@
   textarea,
   summary,
   .paper-card,
-  .paper-card-inset,
-  .moss-badge {
+  .paper-card-inset {
     transition-property:
       background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter,
       backdrop-filter;
@@ -508,102 +534,19 @@
     color: var(--color-paper);
   }
 
-  .leaf-hover {
+  .hover-border {
     transition:
       border-color 400ms cubic-bezier(0.32, 0.72, 0, 1),
       background-color 400ms cubic-bezier(0.32, 0.72, 0, 1);
   }
-  .leaf-hover:hover {
+  .hover-border:hover {
     border-color: var(--color-ink);
   }
 
-  /* CTA principal — pill noir Apple */
-  .btn-plant {
-    background: var(--color-ink);
-    color: var(--color-paper);
-    border-radius: 980px;
-    padding: 12px 24px;
-    font-family: var(--font-sans);
-    font-size: 15px;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    text-transform: none;
-    border: none;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-  .btn-plant:hover {
-    opacity: 0.85;
-  }
-
-  /* Secondaire — pill mint filled */
-  .btn-harvest {
-    background: var(--color-mint);
-    color: var(--color-paper);
-    border: none;
-    border-radius: 980px;
-    padding: 12px 24px;
-    font-family: var(--font-sans);
-    font-size: 15px;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    text-transform: none;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-  .btn-harvest:hover {
-    opacity: 0.88;
-  }
-
-  /* Tertiaire — pill outline ink */
-  .btn-outline-ink {
-    background: transparent;
-    color: var(--color-ink);
-    border: 1px solid var(--color-ink);
-    border-radius: 980px;
-    padding: 11px 23px;
-    font-family: var(--font-sans);
-    font-size: 15px;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    text-transform: none;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-  .btn-outline-ink:hover {
-    background: var(--color-ink);
-    color: var(--color-paper);
-  }
-
-  /* Badge Apple — pill Inter, casse normale */
-  .moss-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 5px 12px;
-    border-radius: 980px;
-    font-family: var(--font-sans);
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: -0.005em;
-    text-transform: none;
-    background: transparent;
-    color: var(--color-ink);
-    border: 1px solid var(--color-paper-3);
-  }
-  .moss-badge--accent {
-    color: var(--color-mint);
-    border-color: var(--color-mint);
-  }
+  /* Boutons pill — voir le composant Button (@/components/ui/button),
+     variants "default"/"accent"/"outline-ink" + size="pill". Un seul
+     système de boutons pour toute l'app (hors .apple-landing, scope isolé
+     volontairement pour la landing page). */
 
   .bubble-ethi {
     background: var(--color-paper-2);
@@ -646,7 +589,7 @@
   --apple-bg: #ffffff;
   --apple-surface: #f5f5f7;
   --apple-text: #1d1d1f;
-  --apple-text-2: #86868b;
+  --apple-text-2: #64646a; /* aligné sur --ink-2 (5.9:1 AA) — #86868b (3.6:1) échouait le contraste */
   --apple-dark: #1d1d1f;
   --apple-dark-2: #2d2d2f;
   background: var(--apple-bg);

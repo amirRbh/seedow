@@ -7,6 +7,7 @@ import { lovable } from "@/integrations/lovable";
 import { useBetaCapacity } from "@/hooks/useBetaCapacity";
 import { joinWaitlist } from "@/lib/beta/beta.functions";
 import { LanguageToggle } from "@/components/LanguageToggle";
+import { Button } from "@/components/ui/button";
 
 // Only accept same-origin relative paths: must start with "/" then a non-"/" path char,
 // and must not contain protocol-like chars. Anything else falls back to undefined.
@@ -201,10 +202,11 @@ function AuthPage() {
 
           {error && <p className="text-label text-rust">{error}</p>}
 
-          <button
+          <Button
             type="submit"
+            size="pill"
             disabled={loading}
-            className="btn-plant w-full justify-center disabled:opacity-50"
+            className="w-full justify-center disabled:opacity-50"
           >
             {loading
               ? t("common.please_wait")
@@ -213,7 +215,7 @@ function AuthPage() {
                 : betaFull
                   ? t("auth.btn_waitlist")
                   : t("auth.btn_signup")}
-          </button>
+          </Button>
         </form>
 
         <p className="mt-6 text-label text-ink-3 text-center">

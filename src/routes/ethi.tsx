@@ -14,6 +14,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useLang } from "@/hooks/useLang";
 import { buildBriefing } from "@/lib/ethi/diagnostics";
 import { runSimulation, formatSimulation } from "@/lib/ethi/simulation";
+import { reportCaughtError } from "@/lib/monitoring/errorReporter";
 
 export const Route = createFileRoute("/ethi")({
   validateSearch: (s: Record<string, unknown>) => ({
@@ -27,6 +28,37 @@ interface Message {
   id: string;
   role: "user" | "assistant";
   content: string;
+}
+
+// ─────────────────────────────────────────────────────────
+// Persistance locale de la conversation — un simple refresh ne doit pas
+// effacer l'historique d'un "conseiller financier". localStorage (pas
+// sessionStorage) pour survivre à la fermeture de l'onglet ; scopée par
+// utilisateur pour ne pas mélanger les conversations sur un poste partagé.
+// ─────────────────────────────────────────────────────────
+const HISTORY_KEY_PREFIX = "seedow_ethi_history_";
+const MAX_STORED_MESSAGES = 100;
+
+function loadHistory(uid: string): Message[] {
+  try {
+    const raw = localStorage.getItem(HISTORY_KEY_PREFIX + uid);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? (parsed as Message[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveHistory(uid: string, messages: Message[]) {
+  try {
+    localStorage.setItem(
+      HISTORY_KEY_PREFIX + uid,
+      JSON.stringify(messages.slice(-MAX_STORED_MESSAGES)),
+    );
+  } catch {
+    // Stockage indisponible (mode privé strict, quota) : on continue sans persister.
+  }
 }
 
 function Ethi() {
@@ -63,6 +95,22 @@ function Ethi() {
       return [{ id: "welcome", role: "assistant", content: welcome }];
     });
   }, [dataLoading, briefing]);
+
+  // Restaure l'historique persisté dès que l'identité de l'utilisateur est connue
+  // (ou "anon" avant résolution de la session). Ne remplace jamais une conversation
+  // déjà en cours dans cet onglet.
+  const historyKey = user?.id ?? "anon";
+  useEffect(() => {
+    const stored = loadHistory(historyKey);
+    if (stored.length > 0) {
+      setMessages((prev) => (prev.length > 1 ? prev : stored));
+    }
+  }, [historyKey]);
+
+  useEffect(() => {
+    if (messages.length === 0) return;
+    saveHistory(historyKey, messages);
+  }, [historyKey, messages]);
 
   // Pré-remplit l'input quand la page est ouverte avec ?q=... (depuis le briefing).
   useEffect(() => {
@@ -142,7 +190,9 @@ function Ethi() {
         ...prev,
         { id: `a-${Date.now()}`, role: "assistant", content: reply },
       ]);
-    } catch {
+    } catch (err) {
+      console.error("[ethi] send failed", err);
+      reportCaughtError(err, { source: "ethi_send" });
       setMessages((prev) => [
         ...prev,
         { id: `a-${Date.now()}`, role: "assistant", content: t("ethi.error_connection") },
@@ -180,7 +230,7 @@ function Ethi() {
       <header className="px-5 pt-6 pb-3 border-b border-paper/5 safe-area-top">
         <div className="flex items-center justify-between gap-3 max-w-lg mx-auto w-full">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 rounded-full bg-moss-2 flex items-center justify-center flex-shrink-0">
+            <div className="w-10 h-10 rounded-full bg-highlight-2 flex items-center justify-center flex-shrink-0">
               <svg
                 viewBox="0 0 24 24"
                 className="w-5 h-5 text-paper"
@@ -250,7 +300,7 @@ function Ethi() {
             <div className="mb-3">
               <EthiSuggestionChips
                 onSelect={handleChip}
-                hasGarden={(portfolio?.holdings.length ?? 0) > 0}
+                hasPortfolio={(portfolio?.holdings.length ?? 0) > 0}
                 chips={briefing?.chips}
               />
             </div>
@@ -272,7 +322,7 @@ function Ethi() {
             <button
               type="submit"
               disabled={!input.trim() || isLoading}
-              className="w-11 h-11 rounded-full bg-moss-2 hover:bg-moss-1 text-paper flex items-center justify-center disabled:opacity-30 transition-colors"
+              className="w-11 h-11 rounded-full bg-highlight-2 hover:bg-highlight-1 text-paper flex items-center justify-center disabled:opacity-30 transition-colors"
               aria-label={t("ethi.send")}
             >
               <svg

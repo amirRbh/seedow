@@ -190,7 +190,7 @@ function FocusToggle({ focus, onToggle }: { focus: boolean; onToggle: () => void
           className={cn(
             "hidden md:flex fixed bottom-4 right-4 z-50 items-center gap-1.5 h-8 px-3 rounded-full",
             "border text-caption font-semibold uppercase tracking-[0.18em] transition-all duration-200",
-            "outline-none focus-visible:ring-2 focus-visible:ring-moss-1",
+            "outline-none focus-visible:ring-2 focus-visible:ring-highlight-1",
             focus
               ? "bg-ink text-paper border-ink shadow-lg hover:bg-ink-2 pointer-events-auto"
               : "bg-paper/80 backdrop-blur text-ink-3 border-paper-3 opacity-0 pointer-events-none focus-visible:opacity-100 focus-visible:pointer-events-auto",

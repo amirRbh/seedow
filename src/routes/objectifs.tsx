@@ -1,7 +1,6 @@
-import { createFileRoute, redirect, Link } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { supabase } from "@/integrations/supabase/client";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { EditorialSection } from "@/components/ui/EditorialSection";
@@ -9,14 +8,10 @@ import { Button } from "@/components/ui/button";
 import { useFinancialGoals, type FinancialGoal } from "@/hooks/useFinancialGoals";
 import { GoalCard } from "@/components/goals/GoalCard";
 import { GoalDialog } from "@/components/goals/GoalDialog";
+import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 
 export const Route = createFileRoute("/objectifs")({
-  beforeLoad: async () => {
-    const { data, error } = await supabase.auth.getUser();
-    if (error || !data.user) {
-      throw redirect({ to: "/auth", search: { redirect: "/objectifs", mode: "login" } });
-    }
-  },
+  beforeLoad: () => requireAuthedUser("/objectifs"),
   component: ObjectifsPage,
   head: () => ({
     meta: [

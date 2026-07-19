@@ -1,8 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
 
-export function EmptyGardenCTA({ userName }: { userName: string }) {
+export function EmptyPortfolioState({ userName }: { userName: string }) {
   const { t } = useTranslation();
   return (
     <div className="max-w-lg mx-auto px-8 pt-20 pb-32">
@@ -30,26 +31,28 @@ export function EmptyGardenCTA({ userName }: { userName: string }) {
             cx="200"
             cy="8"
             r="2"
-            fill="var(--moss-1)"
+            fill="var(--highlight-1)"
           />
         </svg>
       </motion.div>
 
       <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium">
-        {t("empty_garden.welcome", { name: userName })}
+        {t("empty_portfolio.welcome", { name: userName })}
       </p>
-      <h1 className="font-value text-3xl text-ink mt-2 leading-tight">{t("empty_garden.title")}</h1>
-      <p className="text-sm text-ink-2 mt-4 max-w-md leading-relaxed">{t("empty_garden.desc")}</p>
+      <h1 className="font-value text-3xl text-ink mt-2 leading-tight">{t("empty_portfolio.title")}</h1>
+      <p className="text-sm text-ink-2 mt-4 max-w-md leading-relaxed">{t("empty_portfolio.desc")}</p>
 
       <div className="mt-10 flex items-center gap-4">
-        <Link to="/onboarding" search={{ new: undefined }} className="btn-plant">
-          {t("empty_garden.start")}
-        </Link>
+        <Button asChild size="pill">
+          <Link to="/onboarding" search={{ new: undefined }}>
+            {t("empty_portfolio.start")}
+          </Link>
+        </Button>
         <Link
           to="/discover"
           className="text-body-sm text-ink-3 hover:text-ink transition-colors underline-offset-4 hover:underline"
         >
-          {t("empty_garden.explore")}
+          {t("empty_portfolio.explore")}
         </Link>
       </div>
     </div>

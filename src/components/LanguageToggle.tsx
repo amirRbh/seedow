@@ -38,7 +38,7 @@ export function LanguageToggle({ className }: LanguageToggleProps) {
               aria-label={opt === "fr" ? "Français" : "English"}
               className={cn(
                 "relative inline-flex items-center h-6 px-1 text-tag font-semibold uppercase tracking-[0.22em] transition-colors duration-150",
-                "outline-none focus-visible:ring-2 focus-visible:ring-moss-1 rounded-sm",
+                "outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 rounded-sm",
                 active ? "text-ink" : "text-ink-3 hover:text-ink",
               )}
             >

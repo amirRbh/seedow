@@ -16,8 +16,8 @@ import { cn } from "@/lib/utils";
 
 const TONE: Record<BriefingSignal["tone"], string> = {
   gold: "border-gold/40 text-ink bg-gold/5 hover:bg-gold/10",
-  moss: "border-moss-1/40 text-moss-1 bg-moss-5/40 hover:bg-moss-5/60",
-  rust: "border-rust/30 text-rust bg-[oklch(0.95_0.03_45)] hover:bg-[oklch(0.93_0.04_45)]",
+  highlight: "border-highlight-1/40 text-highlight-1 bg-highlight-5/40 hover:bg-highlight-5/60",
+  rust: "border-rust/30 text-rust bg-alert-tint hover:bg-alert-tint/70",
   neutral: "border-paper-3 text-ink-2 bg-paper-2 hover:bg-paper-3",
 };
 
@@ -66,6 +66,7 @@ export function EthiBriefing() {
           </p>
           <Link
             to="/ethi"
+            search={{} as never}
             className="text-tag uppercase tracking-[0.18em] font-semibold text-ink-3 hover:text-ink transition-colors"
           >
             {t("ethi_briefing.talk_to_ethi")}

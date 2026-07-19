@@ -9,7 +9,20 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
  */
 export const triggerRiskModelRecompute = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .handler(async () => {
+  .handler(async ({ context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // Anti-abus : ce recalcul recompose la matrice de covariance de tout
+    // l'univers — plus coûteux que le rafraîchissement de prix.
+    // 2 recalculs manuels / 15 min / user.
+    const { data: allowed, error: rlErr } = await supabaseAdmin.rpc(
+      "check_and_increment_rate_limit",
+      { p_key: `risk_recompute:${context.userId}`, p_limit: 2, p_window_seconds: 900 },
+    );
+    if (!rlErr && allowed === false) {
+      throw new Error("Trop de recalculs. Réessaie dans quelques minutes.");
+    }
+
     const secret = process.env.CRON_SECRET;
     if (!secret) {
       throw new Error("CRON_SECRET non configuré côté serveur.");

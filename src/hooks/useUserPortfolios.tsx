@@ -1,4 +1,12 @@
-import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -133,21 +141,20 @@ export function UserPortfoliosProvider({ children }: { children: ReactNode }) {
     };
   }, [user]);
 
-  return (
-    <PortfoliosContext.Provider
-      value={{
-        portfolios,
-        activeId,
-        setActiveId,
-        loading,
-        error,
-        refresh,
-        canCreateMore: portfolios.length < 3,
-      }}
-    >
-      {children}
-    </PortfoliosContext.Provider>
+  const value = useMemo(
+    () => ({
+      portfolios,
+      activeId,
+      setActiveId,
+      loading,
+      error,
+      refresh,
+      canCreateMore: portfolios.length < 3,
+    }),
+    [portfolios, activeId, setActiveId, loading, error, refresh],
   );
+
+  return <PortfoliosContext.Provider value={value}>{children}</PortfoliosContext.Provider>;
 }
 
 export function useUserPortfolios(): Ctx {

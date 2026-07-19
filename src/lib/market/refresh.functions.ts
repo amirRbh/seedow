@@ -8,7 +8,20 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
  */
 export const triggerMarketRefresh = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .handler(async () => {
+  .handler(async ({ context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // Anti-abus : un utilisateur authentifié peut sinon déclencher en boucle
+    // un fetch Yahoo Finance sur tout l'univers d'actifs (risque de ban IP
+    // + pression d'écriture DB). 3 rafraîchissements manuels / 10 min / user.
+    const { data: allowed, error: rlErr } = await supabaseAdmin.rpc(
+      "check_and_increment_rate_limit",
+      { p_key: `market_refresh:${context.userId}`, p_limit: 3, p_window_seconds: 600 },
+    );
+    if (!rlErr && allowed === false) {
+      throw new Error("Trop de rafraîchissements. Réessaie dans quelques minutes.");
+    }
+
     const secret = process.env.CRON_SECRET;
     if (!secret) {
       throw new Error("CRON_SECRET non configuré côté serveur.");

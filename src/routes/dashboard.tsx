@@ -1,10 +1,10 @@
-import { createFileRoute, Link, useNavigate, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
-import { GardenVisualization, type GardenPlant } from "@/components/garden/GardenVisualization";
+import { AllocationList, type AllocationHolding } from "@/components/portfolio/AllocationList";
 import { useLexicon } from "@/hooks/useLexicon";
 import { useLang } from "@/hooks/useLang";
 import { formatCurrency } from "@/lib/format";
@@ -14,19 +14,15 @@ import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 import { NextStepCard } from "@/components/dashboard/NextStepCard";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
-import { supabase } from "@/integrations/supabase/client";
+import { Skeleton } from "@/components/ui/skeleton";
+import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 
 import { RealInvestmentInterestCard } from "@/components/beta/RealInvestmentInterestCard";
 import { FeedbackButton } from "@/components/beta/FeedbackButton";
 import { ImpactHero } from "@/components/impact/ImpactHero";
 
 export const Route = createFileRoute("/dashboard")({
-  beforeLoad: async () => {
-    const { data, error } = await supabase.auth.getUser();
-    if (error || !data.user) {
-      throw redirect({ to: "/auth", search: { redirect: "/dashboard", mode: "login" } });
-    }
-  },
+  beforeLoad: () => requireAuthedUser("/dashboard"),
   component: Dashboard,
 });
 
@@ -76,7 +72,7 @@ function Dashboard() {
     );
   }, [user, t]);
 
-  const plants: GardenPlant[] = useMemo(
+  const holdings: AllocationHolding[] = useMemo(
     () =>
       (portfolio?.holdings ?? []).map((h) => ({
         id: h.id,
@@ -120,7 +116,7 @@ function Dashboard() {
           </h2>
           <div
             className={`inline-flex items-center gap-1.5 mt-3 px-3 py-1 rounded-full text-xs font-semibold ${
-              isGrowing ? "bg-moss-5 text-moss-1" : "bg-[oklch(0.93_0.05_45)] text-rust"
+              isGrowing ? "bg-highlight-5 text-highlight-1" : "bg-alert-tint text-rust"
             }`}
           >
             <svg
@@ -152,7 +148,7 @@ function Dashboard() {
         </motion.section>
 
         {/* 1b. Impact nature — mis en avant juste après la valeur */}
-        {portfolio && plants.length > 0 && <ImpactHero />}
+        {portfolio && holdings.length > 0 && <ImpactHero />}
 
         {/* 2. Aperçu portefeuille */}
         <motion.section
@@ -162,8 +158,18 @@ function Dashboard() {
           className="px-5 pt-8"
         >
           {loading ? (
-            <p className="text-label text-ink-3">{t("dashboard.loading_portfolio")}</p>
-          ) : plants.length === 0 ? (
+            <div className="space-y-2" aria-label={t("dashboard.loading_portfolio")}>
+              <Skeleton className="h-2 w-full rounded-full" />
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="flex items-center gap-2.5 py-1.5">
+                  <Skeleton className="w-2 h-2 rounded-full flex-shrink-0" />
+                  <Skeleton className="h-3.5 w-14 flex-shrink-0" />
+                  <Skeleton className="h-3.5 flex-1" />
+                  <Skeleton className="h-3.5 w-10 flex-shrink-0" />
+                </div>
+              ))}
+            </div>
+          ) : holdings.length === 0 ? (
             <div className="border border-dashed border-paper-3 rounded p-6 text-center">
               <p className="text-body-sm text-ink-2 mb-3">{t("dashboard.empty_portfolio")}</p>
               <Link
@@ -175,9 +181,9 @@ function Dashboard() {
               </Link>
             </div>
           ) : (
-            <GardenVisualization
-              plants={plants}
-              maxSlots={Math.max(5, plants.length + 1)}
+            <AllocationList
+              holdings={holdings}
+              maxSlots={Math.max(5, holdings.length + 1)}
               onEmptySlotClick={() => navigate({ to: "/discover" })}
             />
           )}

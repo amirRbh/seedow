@@ -39,7 +39,7 @@ export function JourneySteps({ active, compact = false }: Props) {
               isActive
                 ? "border-gold text-ink"
                 : isDone
-                  ? "border-moss-2 text-ink-2 hover:text-ink"
+                  ? "border-highlight-2 text-ink-2 hover:text-ink"
                   : "border-paper-3 text-ink-3 hover:text-ink-2",
             )}
           >

@@ -13,7 +13,7 @@ export interface BriefingSignal {
   kind: SignalKind;
   label: string;
   detail: string;
-  tone: "neutral" | "gold" | "moss" | "rust";
+  tone: "neutral" | "gold" | "highlight" | "rust";
   /** Prompt pré-rempli pour l'Ethi bubble. */
   prompt: string;
 }
@@ -154,7 +154,7 @@ export function computeBriefing({ portfolio, holdings, returnPct }: BriefingInpu
         market === "up"
           ? `Journée nettement positive (${sign}${valAbs} %)`
           : `Journée nettement baissière (${sign}${valAbs} %)`,
-      tone: market === "up" ? "moss" : "rust",
+      tone: market === "up" ? "highlight" : "rust",
       prompt:
         market === "up"
           ? `Pourquoi le marché est-il aussi positif aujourd'hui ? Que dois-je en retenir pour mon portefeuille ?`

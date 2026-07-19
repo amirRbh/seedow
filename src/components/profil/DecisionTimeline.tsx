@@ -11,11 +11,11 @@ export function DecisionTimeline() {
 
   const TYPE_TONE: Record<DecisionType, { dot: string; label: string }> = {
     creation: { dot: "bg-ink", label: t("decision_timeline.creation") },
-    cause: { dot: "bg-moss-1", label: t("decision_timeline.cause") },
+    cause: { dot: "bg-highlight-1", label: t("decision_timeline.cause") },
     exclusion: { dot: "bg-rust", label: t("decision_timeline.exclusion") },
     horizon: { dot: "bg-gold", label: t("decision_timeline.horizon") },
     risk: { dot: "bg-gold", label: t("decision_timeline.risk") },
-    rebalance: { dot: "bg-moss-2", label: t("decision_timeline.rebalance") },
+    rebalance: { dot: "bg-highlight-2", label: t("decision_timeline.rebalance") },
     contribution: { dot: "bg-gold", label: t("decision_timeline.contribution") },
   };
 

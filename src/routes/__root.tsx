@@ -7,7 +7,8 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import { AnimatePresence, motion, MotionConfig } from "framer-motion";
-import { Component, useEffect, type ReactNode } from "react";
+import { Component, useEffect, useState, type ReactNode } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import "@/i18n";
 import { LexiconProvider } from "@/hooks/useLexicon";
@@ -17,9 +18,11 @@ import { FocusModeProvider } from "@/hooks/useFocusMode";
 import { UserPortfoliosProvider } from "@/hooks/useUserPortfolios";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
+import { Button } from "@/components/ui/button";
 import { AppShell } from "@/components/layout/AppShell";
 import { CookieNotice } from "@/components/layout/CookieNotice";
 import { installGlobalErrorReporting, reportReactError } from "@/lib/monitoring/errorReporter";
+import { ThemeProvider, THEME_INIT_SCRIPT } from "@/hooks/useTheme";
 
 import appCss from "../styles.css?url";
 
@@ -32,9 +35,9 @@ function NotFoundComponent() {
         <h2 className="mt-4 text-xl font-semibold text-ink">{t("root.not_found_title")}</h2>
         <p className="mt-2 text-sm text-ink-3">{t("root.not_found_desc")}</p>
         <div className="mt-6">
-          <Link to="/" className="btn-plant">
-            {t("root.back_home")}
-          </Link>
+          <Button asChild size="pill">
+            <Link to="/">{t("root.back_home")}</Link>
+          </Button>
         </div>
       </div>
     </div>
@@ -88,7 +91,7 @@ export const Route = createRootRoute({
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap",
       },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "apple-touch-icon", href: "/favicon.png" },
@@ -102,9 +105,11 @@ export const Route = createRootRoute({
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr">
+    <html lang="fr" suppressHydrationWarning>
       <head>
         <HeadContent />
+        {/* eslint-disable-next-line react/no-danger -- lit localStorage avant hydratation, pas d'input utilisateur */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
       <body>
         {children}
@@ -134,9 +139,9 @@ class RootErrorBoundary extends Component<{ children: ReactNode }, { hasError: b
             <p className="mt-3 text-sm text-ink-3">
               Une erreur inattendue s'est produite. L'équipe a été notifiée automatiquement.
             </p>
-            <button onClick={() => window.location.assign("/")} className="btn-plant mt-6">
+            <Button size="pill" className="mt-6" onClick={() => window.location.assign("/")}>
               Retour à l'accueil
-            </button>
+            </Button>
           </div>
         </div>
       );
@@ -168,26 +173,45 @@ function RootComponent() {
     installGlobalErrorReporting();
   }, []);
 
+  // Une instance par rendu racine (pas un singleton module-level) : en SSR,
+  // un client partagé entre requêtes ferait fuiter le cache d'un utilisateur
+  // vers un autre.
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 30_000,
+            retry: 1,
+          },
+        },
+      }),
+  );
+
   return (
     <MotionConfig reducedMotion="user">
       <RootErrorBoundary>
-        <AuthProvider>
-          <UserPortfoliosProvider>
-            <LexiconProvider>
-              <ViewModeProvider>
-                <FocusModeProvider>
-                  <TooltipProvider delayDuration={150}>
-                    <AppShell>
-                      <RouteTransition />
-                    </AppShell>
-                    <Toaster richColors position="bottom-right" />
-                    <CookieNotice />
-                  </TooltipProvider>
-                </FocusModeProvider>
-              </ViewModeProvider>
-            </LexiconProvider>
-          </UserPortfoliosProvider>
-        </AuthProvider>
+        <ThemeProvider>
+          <QueryClientProvider client={queryClient}>
+            <AuthProvider>
+              <UserPortfoliosProvider>
+                <LexiconProvider>
+                  <ViewModeProvider>
+                    <FocusModeProvider>
+                      <TooltipProvider delayDuration={150}>
+                        <AppShell>
+                          <RouteTransition />
+                        </AppShell>
+                        <Toaster richColors position="bottom-right" />
+                        <CookieNotice />
+                      </TooltipProvider>
+                    </FocusModeProvider>
+                  </ViewModeProvider>
+                </LexiconProvider>
+              </UserPortfoliosProvider>
+            </AuthProvider>
+          </QueryClientProvider>
+        </ThemeProvider>
       </RootErrorBoundary>
     </MotionConfig>
   );

@@ -23,7 +23,7 @@ export function AssetRow({ asset, index, onOpen }: Props) {
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: Math.min(index * 0.025, 0.4) }}
-      className="paper-card w-full text-left p-3.5 flex items-center gap-3 hover:shadow-leaf transition-shadow group"
+      className="paper-card w-full text-left p-3.5 flex items-center gap-3 hover:shadow-flat-1 transition-shadow group"
     >
       <div className="w-11 h-11 rounded-md bg-paper-2 border border-paper-3 flex items-center justify-center flex-shrink-0">
         <span className="text-ink text-tag font-bold tracking-tight">

@@ -67,3 +67,15 @@ export function installGlobalErrorReporting() {
 export function reportReactError(error: Error, componentStack?: string) {
   void report(error.message, error.stack, { kind: "react_error_boundary", componentStack });
 }
+
+/**
+ * À appeler depuis n'importe quel catch qui avalerait sinon l'erreur en
+ * silence (un `try/catch` local ne remonte jamais à `window.onerror` ni
+ * `unhandledrejection`, même si l'erreur n'est affichée nulle part à
+ * l'utilisateur). Convention unique pour tous les catch "best-effort".
+ */
+export function reportCaughtError(error: unknown, context?: Record<string, unknown>) {
+  const message = error instanceof Error ? error.message : String(error);
+  const stack = error instanceof Error ? error.stack : undefined;
+  void report(message, stack, { kind: "caught", ...context });
+}

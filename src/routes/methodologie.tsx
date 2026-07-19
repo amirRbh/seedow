@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useServerFn } from "@tanstack/react-start";
 import { simulatePortfolio } from "@/lib/portfolio/server.functions";
+import { reportCaughtError } from "@/lib/monitoring/errorReporter";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { MetricLabel } from "@/components/ui/MetricLabel";
 import {
@@ -129,7 +130,10 @@ function MethodologyPage() {
         },
       })
         .then((r) => setResult(r))
-        .catch((e) => console.error("simulate", e))
+        .catch((e) => {
+          console.error("simulate", e);
+          reportCaughtError(e, { source: "methodologie_simulate" });
+        })
         .finally(() => setLoading(false));
     }, 250);
     return () => {
@@ -617,7 +621,7 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
                       {(p.base * 100).toFixed(0)}%
                     </td>
                     <td
-                      className={`py-2 text-right tabular-nums font-value ${shifted ? "text-moss-1" : "text-ink"}`}
+                      className={`py-2 text-right tabular-nums font-value ${shifted ? "text-highlight-1" : "text-ink"}`}
                     >
                       {(p.current * 100).toFixed(0)}%
                     </td>
@@ -774,7 +778,7 @@ function CarbonCoverage({
   else if (pct >= 30) tone = "partial";
   else tone = "low";
 
-  const barColor = tone === "good" ? "bg-moss-2" : tone === "partial" ? "bg-ink" : "bg-rust";
+  const barColor = tone === "good" ? "bg-highlight-2" : tone === "partial" ? "bg-ink" : "bg-rust";
 
   const advice =
     !hasRealData || pct === 0

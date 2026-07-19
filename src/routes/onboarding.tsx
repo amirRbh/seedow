@@ -75,8 +75,60 @@ const STEPS = [
 ];
 
 type StepId = (typeof STEPS)[number]["id"];
-type Phase = "intro" | "steps" | "preview" | "account" | "naming" | "planting" | "saving";
+type Phase = "intro" | "steps" | "preview" | "account" | "naming" | "building" | "saving";
 type Answers = Partial<Record<StepId, string[]>>;
+
+// ─────────────────────────────────────────────────────────
+// Persistance de session — évite de perdre la progression au refresh
+// ou lors d'une redirection OAuth/vérification d'email interrompue.
+// sessionStorage : disparaît à la fermeture de l'onglet, pas de brouillon
+// qui traîne indéfiniment.
+// ─────────────────────────────────────────────────────────
+const DRAFT_KEY = "seedow_onboarding_draft";
+
+interface OnboardingDraft {
+  phase: Phase;
+  stepIndex: number;
+  answers: Answers;
+  portfolioName: string;
+  isAdditive: boolean;
+}
+
+function loadDraft(isAdditive: boolean): OnboardingDraft | null {
+  try {
+    const raw = sessionStorage.getItem(DRAFT_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<OnboardingDraft>;
+    // Un brouillon "nouveau portefeuille" ne doit pas être repris par le flux
+    // du premier portefeuille, et inversement.
+    if (!parsed.phase || Boolean(parsed.isAdditive) !== isAdditive) return null;
+    return {
+      phase: parsed.phase,
+      stepIndex: parsed.stepIndex ?? 0,
+      answers: parsed.answers ?? {},
+      portfolioName: parsed.portfolioName ?? "",
+      isAdditive,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function saveDraft(draft: OnboardingDraft) {
+  try {
+    sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+  } catch {
+    // Stockage indisponible (mode privé strict, quota) : on continue sans persister.
+  }
+}
+
+function clearDraft() {
+  try {
+    sessionStorage.removeItem(DRAFT_KEY);
+  } catch {
+    // ignore
+  }
+}
 
 /** Dérive les paramètres du moteur de portefeuille depuis les réponses de l'onboarding. */
 function answersToParams(answers: Answers): PortfolioParams {
@@ -116,12 +168,20 @@ function Onboarding() {
   const router = useRouter();
   const { new: isNew } = Route.useSearch();
   const isAdditive = isNew === 1;
-  const [phase, setPhase] = useState<Phase>(isAdditive ? "steps" : "intro");
-  const [stepIndex, setStepIndex] = useState(0);
-  const [answers, setAnswers] = useState<Answers>({});
-  const [gardenName, setGardenName] = useState("");
+  // Ne restaure que le brouillon correspondant au même contexte (premier
+  // portefeuille vs. portefeuille additionnel) — jamais l'un à la place de l'autre.
+  const draft = loadDraft(isAdditive);
+  const [phase, setPhase] = useState<Phase>(draft?.phase ?? (isAdditive ? "steps" : "intro"));
+  const [stepIndex, setStepIndex] = useState(draft?.stepIndex ?? 0);
+  const [answers, setAnswers] = useState<Answers>(draft?.answers ?? {});
+  const [portfolioName, setPortfolioName] = useState(draft?.portfolioName ?? "");
 
   const portfolioParams = useMemo(() => answersToParams(answers), [answers]);
+
+  useEffect(() => {
+    if (phase === "intro") return; // rien à restaurer tant que l'utilisateur n'a pas démarré
+    saveDraft({ phase, stepIndex, answers, portfolioName, isAdditive });
+  }, [phase, stepIndex, answers, portfolioName, isAdditive]);
 
   const completeStep = async (selected: string[]) => {
     const step = STEPS[stepIndex];
@@ -148,7 +208,7 @@ function Onboarding() {
     }
   };
 
-  // Appelé depuis l'écran de preview quand l'utilisateur veut sauvegarder son jardin.
+  // Appelé depuis l'écran de preview quand l'utilisateur veut sauvegarder son portefeuille.
   const handleSave = async () => {
     const { data } = await supabase.auth.getSession();
     if (data.session) setPhase("saving");
@@ -179,12 +239,12 @@ function Onboarding() {
           <PreviewScene key="preview" params={portfolioParams} onSave={handleSave} />
         )}
         {phase === "naming" && (
-          <NameGardenStep
+          <NamePortfolioStep
             key="naming"
-            initialName={gardenName}
+            initialName={portfolioName}
             onConfirm={(name) => {
-              setGardenName(name);
-              setPhase("planting");
+              setPortfolioName(name);
+              setPhase("building");
             }}
             onBack={() => {
               setStepIndex(STEPS.length - 1);
@@ -206,16 +266,17 @@ function Onboarding() {
             }}
           />
         )}
-        {phase === "planting" && (
-          <PlantingScene
-            key="planting"
+        {phase === "building" && (
+          <BuildingScene
+            key="building"
             onEnter={async () => {
+              clearDraft();
               await router.invalidate();
               navigate({ to: "/dashboard" });
             }}
             answers={answers}
             mode={isAdditive ? "create" : "replace"}
-            name={gardenName || undefined}
+            name={portfolioName || undefined}
           />
         )}
         {phase === "saving" && (
@@ -223,6 +284,7 @@ function Onboarding() {
             key="saving"
             params={portfolioParams}
             onEnter={async () => {
+              clearDraft();
               await router.invalidate();
               navigate({ to: "/dashboard" });
             }}
@@ -233,7 +295,7 @@ function Onboarding() {
   );
 }
 
-function NameGardenStep({
+function NamePortfolioStep({
   initialName,
   onConfirm,
   onBack,
@@ -293,7 +355,7 @@ function NameGardenStep({
 
         <button
           onClick={() => onConfirm(name.trim() || t("onboarding.naming.default_name"))}
-          className="mt-8 w-full py-4 rounded-full bg-paper text-ink font-semibold text-sm hover:bg-moss-5 hover:text-moss-1 transition-colors"
+          className="mt-8 w-full py-4 rounded-full bg-paper text-ink font-semibold text-sm hover:bg-highlight-5 hover:text-highlight-1 transition-colors"
         >
           {t("onboarding.naming.validate")}
         </button>
@@ -388,7 +450,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
           animate={{ opacity: 1, y: 0 }}
           className="flex gap-3 items-start"
         >
-          <div className="w-9 h-9 rounded-full bg-moss-2 flex items-center justify-center flex-shrink-0 mt-0.5">
+          <div className="w-9 h-9 rounded-full bg-highlight-2 flex items-center justify-center flex-shrink-0 mt-0.5">
             <svg
               viewBox="0 0 24 24"
               className="w-4 h-4 text-paper"
@@ -479,7 +541,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 rounded-full bg-paper text-ink font-semibold text-body-sm hover:bg-moss-5 hover:text-moss-1 transition-colors disabled:opacity-40 disabled:cursor-not-allowed mt-2"
+            className="w-full py-3.5 rounded-full bg-paper text-ink font-semibold text-body-sm hover:bg-highlight-5 hover:text-highlight-1 transition-colors disabled:opacity-40 disabled:cursor-not-allowed mt-2"
           >
             {loading
               ? t("onboarding.account.waiting")
@@ -704,7 +766,7 @@ function Step({
             <div
               key={i}
               className={`h-1 flex-1 rounded-full transition-all ${
-                i < stepIndex ? "bg-moss-3" : i === stepIndex ? "bg-paper" : "bg-paper/15"
+                i < stepIndex ? "bg-highlight-3" : i === stepIndex ? "bg-paper" : "bg-paper/15"
               }`}
             />
           ))}
@@ -721,7 +783,7 @@ function Step({
           transition={{ delay: 0.15 }}
           className="flex gap-3 items-start"
         >
-          <div className="w-9 h-9 rounded-full bg-moss-2 flex items-center justify-center flex-shrink-0 mt-0.5">
+          <div className="w-9 h-9 rounded-full bg-highlight-2 flex items-center justify-center flex-shrink-0 mt-0.5">
             <svg
               viewBox="0 0 24 24"
               className="w-4 h-4 text-paper"
@@ -809,7 +871,7 @@ function Step({
           <button
             disabled={selected.length === 0}
             onClick={() => onComplete(selected)}
-            className="w-full py-4 rounded-full bg-paper text-ink font-semibold text-sm hover:bg-moss-5 hover:text-moss-1 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            className="w-full py-4 rounded-full bg-paper text-ink font-semibold text-sm hover:bg-highlight-5 hover:text-highlight-1 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           >
             {t("onboarding.step.continue")}
           </button>
@@ -865,7 +927,7 @@ function PreviewScene({ params, onSave }: { params: PortfolioParams; onSave: () 
       } catch (err) {
         if (cancelled) return;
         console.error("[onboarding] simulate:", err);
-        setErrorMsg(err instanceof Error ? err.message : t("onboarding.planting.error_fallback"));
+        setErrorMsg(err instanceof Error ? err.message : t("onboarding.building.error_fallback"));
         setPhase("error");
       }
     })();
@@ -899,12 +961,12 @@ function PreviewScene({ params, onSave }: { params: PortfolioParams; onSave: () 
               />
             </div>
             <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium">
-              {t("onboarding.planting.loading_eyebrow")}
+              {t("onboarding.building.loading_eyebrow")}
             </p>
             <p className="font-value text-2xl text-ink mt-3">
-              {t("onboarding.planting.loading_title")}
+              {t("onboarding.building.loading_title")}
             </p>
-            <p className="text-label text-ink-3 mt-2">{t("onboarding.planting.loading_desc")}</p>
+            <p className="text-label text-ink-3 mt-2">{t("onboarding.building.loading_desc")}</p>
           </motion.div>
         )}
 
@@ -916,10 +978,10 @@ function PreviewScene({ params, onSave }: { params: PortfolioParams; onSave: () 
             className="w-full max-w-md text-center"
           >
             <p className="text-tag uppercase tracking-[0.18em] text-rust font-medium">
-              {t("onboarding.planting.error_eyebrow")}
+              {t("onboarding.building.error_eyebrow")}
             </p>
             <h2 className="font-value text-2xl text-ink mt-3">
-              {t("onboarding.planting.error_title")}
+              {t("onboarding.building.error_title")}
             </h2>
             <p className="text-label text-ink-3 mt-3 break-words">{errorMsg}</p>
             <button
@@ -944,13 +1006,13 @@ function PreviewScene({ params, onSave }: { params: PortfolioParams; onSave: () 
               </p>
             </div>
             <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium text-center">
-              {t("onboarding.planting.reveal_eyebrow")}
+              {t("onboarding.building.reveal_eyebrow")}
             </p>
             <p className="font-value text-2xl text-ink text-center mt-2 mb-6">
-              {t("onboarding.planting.reveal_title")}
+              {t("onboarding.building.reveal_title")}
             </p>
             <p className="text-caption text-ink-3 text-center mb-6">
-              {t("onboarding.planting.reveal_summary", {
+              {t("onboarding.building.reveal_summary", {
                 count: selected.length,
                 amount: formatCurrency(params.initial_amount, lang),
               })}
@@ -995,9 +1057,9 @@ function PreviewScene({ params, onSave }: { params: PortfolioParams; onSave: () 
                 });
                 onSave();
               }}
-              className="mt-8 w-full py-3 rounded-full bg-ink text-paper font-semibold text-body-sm hover:bg-moss-2 transition-colors flex items-center justify-center gap-2"
+              className="mt-8 w-full py-3 rounded-full bg-ink text-paper font-semibold text-body-sm hover:bg-highlight-2 transition-colors flex items-center justify-center gap-2"
             >
-              {t("onboarding.planting.save_cta")}
+              {t("onboarding.building.save_cta")}
               <svg
                 viewBox="0 0 24 24"
                 className="w-3.5 h-3.5"
@@ -1010,7 +1072,7 @@ function PreviewScene({ params, onSave }: { params: PortfolioParams; onSave: () 
               </svg>
             </button>
             <p className="mt-3 text-center text-caption text-ink-3">
-              {t("onboarding.planting.save_hint")}
+              {t("onboarding.building.save_hint")}
             </p>
           </motion.div>
         )}
@@ -1043,7 +1105,7 @@ function SavingScene({ params, onEnter }: { params: PortfolioParams; onEnter: ()
       } catch (err) {
         if (cancelled) return;
         console.error("[onboarding] save:", err);
-        setErrorMsg(err instanceof Error ? err.message : t("onboarding.planting.error_fallback"));
+        setErrorMsg(err instanceof Error ? err.message : t("onboarding.building.error_fallback"));
         setPhase("error");
       }
     })();
@@ -1090,10 +1152,10 @@ function SavingScene({ params, onEnter }: { params: PortfolioParams; onEnter: ()
             className="w-full max-w-md text-center"
           >
             <p className="text-tag uppercase tracking-[0.18em] text-rust font-medium">
-              {t("onboarding.planting.error_eyebrow")}
+              {t("onboarding.building.error_eyebrow")}
             </p>
             <h2 className="font-value text-2xl text-ink mt-3">
-              {t("onboarding.planting.error_title")}
+              {t("onboarding.building.error_title")}
             </h2>
             <p className="text-label text-ink-3 mt-3 break-words">{errorMsg}</p>
             <button
@@ -1110,11 +1172,11 @@ function SavingScene({ params, onEnter }: { params: PortfolioParams; onEnter: ()
 }
 
 // ─────────────────────────────────────────────────────────
-// Planting scene — flux additif (nouveau jardin, déjà connecté) :
+// Building scene — flux additif (nouveau portefeuille, déjà connecté) :
 // simule ET persiste en une passe, inchangé pour ce cas.
 // ─────────────────────────────────────────────────────────
 
-function PlantingScene({
+function BuildingScene({
   onEnter,
   answers,
   mode = "replace",
@@ -1170,7 +1232,7 @@ function PlantingScene({
       } catch (err) {
         if (cancelled) return;
         console.error("[onboarding] generate:", err);
-        setErrorMsg(err instanceof Error ? err.message : t("onboarding.planting.error_fallback"));
+        setErrorMsg(err instanceof Error ? err.message : t("onboarding.building.error_fallback"));
         setPhase("error");
       }
     })();
@@ -1204,12 +1266,12 @@ function PlantingScene({
               />
             </div>
             <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium">
-              {t("onboarding.planting.loading_eyebrow")}
+              {t("onboarding.building.loading_eyebrow")}
             </p>
             <p className="font-value text-2xl text-ink mt-3">
-              {t("onboarding.planting.loading_title")}
+              {t("onboarding.building.loading_title")}
             </p>
-            <p className="text-label text-ink-3 mt-2">{t("onboarding.planting.loading_desc")}</p>
+            <p className="text-label text-ink-3 mt-2">{t("onboarding.building.loading_desc")}</p>
           </motion.div>
         )}
 
@@ -1221,10 +1283,10 @@ function PlantingScene({
             className="w-full max-w-md text-center"
           >
             <p className="text-tag uppercase tracking-[0.18em] text-rust font-medium">
-              {t("onboarding.planting.error_eyebrow")}
+              {t("onboarding.building.error_eyebrow")}
             </p>
             <h2 className="font-value text-2xl text-ink mt-3">
-              {t("onboarding.planting.error_title")}
+              {t("onboarding.building.error_title")}
             </h2>
             <p className="text-label text-ink-3 mt-3 break-words">{errorMsg}</p>
             <button
@@ -1244,13 +1306,13 @@ function PlantingScene({
             className="w-full max-w-md"
           >
             <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium text-center">
-              {t("onboarding.planting.reveal_eyebrow")}
+              {t("onboarding.building.reveal_eyebrow")}
             </p>
             <p className="font-value text-2xl text-ink text-center mt-2 mb-6">
-              {t("onboarding.planting.reveal_title")}
+              {t("onboarding.building.reveal_title")}
             </p>
             <p className="text-caption text-ink-3 text-center mb-6">
-              {t("onboarding.planting.reveal_summary", {
+              {t("onboarding.building.reveal_summary", {
                 count: selected.length,
                 amount: formatCurrency(initialAmount, lang),
               })}
@@ -1295,9 +1357,9 @@ function PlantingScene({
                 });
                 onEnter();
               }}
-              className="mt-8 w-full py-3 rounded-full bg-ink text-paper font-semibold text-body-sm hover:bg-moss-2 transition-colors flex items-center justify-center gap-2"
+              className="mt-8 w-full py-3 rounded-full bg-ink text-paper font-semibold text-body-sm hover:bg-highlight-2 transition-colors flex items-center justify-center gap-2"
             >
-              {t("onboarding.planting.dashboard_cta")}
+              {t("onboarding.building.dashboard_cta")}
               <svg
                 viewBox="0 0 24 24"
                 className="w-3.5 h-3.5"

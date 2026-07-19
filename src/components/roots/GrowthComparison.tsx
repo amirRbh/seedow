@@ -80,7 +80,7 @@ export function GrowthComparison({
           </p>
         </div>
         <div
-          className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold ${isGrowing ? "bg-moss-5 text-moss-1" : "bg-[oklch(0.93_0.05_45)] text-rust"}`}
+          className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold ${isGrowing ? "bg-highlight-5 text-highlight-1" : "bg-alert-tint text-rust"}`}
         >
           {isGrowing ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
           {isGrowing ? "+" : ""}
@@ -136,7 +136,7 @@ export function GrowthComparison({
           label={t("growth_comparison.current_value")}
           hint={t("growth_comparison.market_value")}
           value={eur(currentValue)}
-          accent={isGrowing ? "moss" : "rust"}
+          accent={isGrowing ? "highlight" : "rust"}
         />
       </div>
 
@@ -173,10 +173,10 @@ function AmountTile({
   label: string;
   hint: string;
   value: string;
-  accent?: "moss" | "rust";
+  accent?: "highlight" | "rust";
 }) {
   const accentClass =
-    accent === "moss" ? "text-moss-1" : accent === "rust" ? "text-rust" : "text-ink";
+    accent === "highlight" ? "text-highlight-1" : accent === "rust" ? "text-rust" : "text-ink";
   return (
     <div className="rounded-lg border border-paper-2 bg-paper-1/40 p-3">
       <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold">{label}</p>
@@ -238,7 +238,7 @@ function Sparkline({
   }
 
   const stroke = isGrowing
-    ? "var(--moss-1, oklch(0.55 0.12 150))"
+    ? "var(--highlight-1, oklch(0.55 0.12 150))"
     : "var(--rust, oklch(0.55 0.15 30))";
   const fill = isGrowing ? "oklch(0.55 0.12 150 / 0.12)" : "oklch(0.55 0.15 30 / 0.12)";
 

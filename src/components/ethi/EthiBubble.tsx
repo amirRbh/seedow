@@ -32,7 +32,7 @@ export function EthiBubble({ role, content, typing }: EthiBubbleProps) {
         <div
           className={`rounded-2xl px-4 py-3 text-body-sm leading-relaxed ${
             isUser
-              ? "bg-moss-2 text-paper rounded-br-sm"
+              ? "bg-highlight-2 text-paper rounded-br-sm"
               : "bg-paper/10 text-paper border border-paper/10 rounded-bl-sm"
           }`}
         >
@@ -41,7 +41,7 @@ export function EthiBubble({ role, content, typing }: EthiBubbleProps) {
           ) : isUser ? (
             <p className="whitespace-pre-wrap">{content}</p>
           ) : (
-            <div className="space-y-1.5 [&_strong]:text-moss-3 [&_p]:my-1 [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4">
+            <div className="space-y-1.5 [&_strong]:text-highlight-3 [&_p]:my-1 [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4">
               <ReactMarkdown>{displayContent}</ReactMarkdown>
             </div>
           )}
