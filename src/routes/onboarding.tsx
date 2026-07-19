@@ -1,6 +1,26 @@
 import { useTranslation, Trans } from "react-i18next";
+import {
+  Sun,
+  Leaf,
+  HandHeart,
+  Scale,
+  BrainCircuit,
+  Recycle,
+  Fuel,
+  Ban,
+  Cigarette,
+  Dices,
+  Rabbit,
+  Shirt,
+  Palmtree,
+  Home,
+  Target,
+  PiggyBank,
+  type LucideIcon,
+} from "lucide-react";
 import { useLang } from "@/hooks/useLang";
 import { formatCurrency, formatPercent } from "@/lib/format";
+import { EASE_REVEAL } from "@/lib/motion";
 import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -32,34 +52,34 @@ const STEPS = [
     id: "values" as const,
     multi: true,
     options: [
-      { id: "climat", icon: "☀️" },
-      { id: "biodiversite", icon: "🌿" },
-      { id: "humain", icon: "🤝" },
-      { id: "egalite", icon: "⚖️" },
-      { id: "tech", icon: "🧠" },
-      { id: "circulaire", icon: "♻️" },
+      { id: "climat", icon: Sun },
+      { id: "biodiversite", icon: Leaf },
+      { id: "humain", icon: HandHeart },
+      { id: "egalite", icon: Scale },
+      { id: "tech", icon: BrainCircuit },
+      { id: "circulaire", icon: Recycle },
     ],
   },
   {
     id: "exclusions" as const,
     multi: true,
     options: [
-      { id: "fossiles", icon: "🛢️" },
-      { id: "armes", icon: "🔫" },
-      { id: "tabac", icon: "🚬" },
-      { id: "jeux", icon: "🎰" },
-      { id: "animaux", icon: "🐇" },
-      { id: "fast-fashion", icon: "👗" },
+      { id: "fossiles", icon: Fuel },
+      { id: "armes", icon: Ban },
+      { id: "tabac", icon: Cigarette },
+      { id: "jeux", icon: Dices },
+      { id: "animaux", icon: Rabbit },
+      { id: "fast-fashion", icon: Shirt },
     ],
   },
   {
     id: "objective" as const,
     multi: false,
     options: [
-      { id: "retraite", icon: "🏖️" },
-      { id: "maison", icon: "🏠" },
-      { id: "court", icon: "🎯" },
-      { id: "epargne", icon: "💰" },
+      { id: "retraite", icon: Palmtree },
+      { id: "maison", icon: Home },
+      { id: "court", icon: Target },
+      { id: "epargne", icon: PiggyBank },
     ],
   },
   {
@@ -73,6 +93,12 @@ const STEPS = [
     ],
   },
 ];
+
+function StepOptionIcon({ icon }: { icon: string | LucideIcon }) {
+  if (typeof icon === "string") return <>{icon}</>;
+  const Icon = icon;
+  return <Icon className="w-[18px] h-[18px]" strokeWidth={1.8} aria-hidden="true" />;
+}
 
 type StepId = (typeof STEPS)[number]["id"];
 type Phase = "intro" | "steps" | "preview" | "account" | "naming" | "building" | "saving";
@@ -598,7 +624,7 @@ function Intro({ onStart }: { onStart: () => void }) {
           <motion.path
             initial={{ pathLength: 0 }}
             animate={{ pathLength: 1 }}
-            transition={{ duration: 1.6, ease: "easeOut", delay: 0.3 }}
+            transition={{ duration: 1.6, ease: EASE_REVEAL, delay: 0.3 }}
             d="M 0 50 L 60 44 L 120 32 L 180 18 L 240 6"
             stroke="var(--paper)"
             strokeWidth="1"
@@ -831,7 +857,7 @@ function Step({
                   className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0 ${isSel ? "bg-ink/10" : ""}`}
                   style={!isSel ? { backgroundColor: "rgba(255,255,255,0.12)" } : undefined}
                 >
-                  {option.icon}
+                  <StepOptionIcon icon={option.icon} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className={`text-sm font-semibold ${isSel ? "text-ink" : "text-paper"}`}>
@@ -1041,7 +1067,7 @@ function PreviewScene({ params, onSave }: { params: PortfolioParams; onSave: () 
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${Math.min(100, a.w * 2.5)}%` }}
-                        transition={{ delay: i * 0.08 + 0.15, duration: 0.6, ease: "easeOut" }}
+                        transition={{ delay: i * 0.08 + 0.15, duration: 0.6, ease: EASE_REVEAL }}
                         className="absolute inset-y-0 left-0 bg-ink"
                       />
                     </div>
@@ -1341,7 +1367,7 @@ function BuildingScene({
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${Math.min(100, a.w * 2.5)}%` }}
-                        transition={{ delay: i * 0.08 + 0.15, duration: 0.6, ease: "easeOut" }}
+                        transition={{ delay: i * 0.08 + 0.15, duration: 0.6, ease: EASE_REVEAL }}
                         className="absolute inset-y-0 left-0 bg-ink"
                       />
                     </div>
