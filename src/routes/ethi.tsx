@@ -29,6 +29,37 @@ interface Message {
   content: string;
 }
 
+// ─────────────────────────────────────────────────────────
+// Persistance locale de la conversation — un simple refresh ne doit pas
+// effacer l'historique d'un "conseiller financier". localStorage (pas
+// sessionStorage) pour survivre à la fermeture de l'onglet ; scopée par
+// utilisateur pour ne pas mélanger les conversations sur un poste partagé.
+// ─────────────────────────────────────────────────────────
+const HISTORY_KEY_PREFIX = "seedow_ethi_history_";
+const MAX_STORED_MESSAGES = 100;
+
+function loadHistory(uid: string): Message[] {
+  try {
+    const raw = localStorage.getItem(HISTORY_KEY_PREFIX + uid);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? (parsed as Message[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveHistory(uid: string, messages: Message[]) {
+  try {
+    localStorage.setItem(
+      HISTORY_KEY_PREFIX + uid,
+      JSON.stringify(messages.slice(-MAX_STORED_MESSAGES)),
+    );
+  } catch {
+    // Stockage indisponible (mode privé strict, quota) : on continue sans persister.
+  }
+}
+
 function Ethi() {
   const { t } = useTranslation();
   const { lang } = useLang();
@@ -63,6 +94,22 @@ function Ethi() {
       return [{ id: "welcome", role: "assistant", content: welcome }];
     });
   }, [dataLoading, briefing]);
+
+  // Restaure l'historique persisté dès que l'identité de l'utilisateur est connue
+  // (ou "anon" avant résolution de la session). Ne remplace jamais une conversation
+  // déjà en cours dans cet onglet.
+  const historyKey = user?.id ?? "anon";
+  useEffect(() => {
+    const stored = loadHistory(historyKey);
+    if (stored.length > 0) {
+      setMessages((prev) => (prev.length > 1 ? prev : stored));
+    }
+  }, [historyKey]);
+
+  useEffect(() => {
+    if (messages.length === 0) return;
+    saveHistory(historyKey, messages);
+  }, [historyKey, messages]);
 
   // Pré-remplit l'input quand la page est ouverte avec ?q=... (depuis le briefing).
   useEffect(() => {
