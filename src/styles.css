@@ -126,6 +126,13 @@
 }
 
 :root {
+  /* Sans ceci, certains navigateurs (Chrome/WebView Android "Auto Dark
+     Theme", Samsung Internet) appliquent une inversion heuristique des
+     couleurs par élément, indépendante de nos variables --ink/--paper —
+     ce qui peut inverser un fond sombre sans inverser son texte (ou
+     l'inverse) et rendre un bouton illisible alors que les tokens sont
+     corrects. Déclarer color-scheme leur dit que le thème est géré ici. */
+  color-scheme: light;
   --radius: 0.875rem;
 
   /* Surfaces — palette Apple */
@@ -204,6 +211,7 @@
 }
 
 .dark {
+  color-scheme: dark;
   --paper: oklch(0.2 0.01 160);
   --paper-2: oklch(0.24 0.012 160);
   --paper-3: oklch(0.3 0.014 160);
