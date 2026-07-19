@@ -4,6 +4,7 @@ import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import type { ActiveHolding } from "@/hooks/useActivePortfolio";
 import type { ValuedHolding } from "@/hooks/usePortfolioValuation";
 import { HoldingDetailSheet } from "./HoldingDetailSheet";
+import { EASE_REVEAL } from "@/lib/motion";
 
 interface Props {
   holdings: ActiveHolding[];
@@ -88,7 +89,7 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
             key={cls}
             initial={{ width: 0 }}
             animate={{ width: `${pct}%` }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: i * 0.08 }}
+            transition={{ duration: 0.8, ease: EASE_REVEAL, delay: i * 0.08 }}
             style={{ backgroundColor: CLASS_COLOR[cls] ?? "var(--highlight-2)" }}
             className="h-full"
             title={`${CLASS_LABELS[cls] ?? cls} · ${pct.toFixed(1)}%`}
@@ -187,7 +188,7 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
                       {hasMove && (
                         <span
                           className={`flex items-center gap-0.5 text-caption font-semibold tabular-nums ${
-                            up ? "text-highlight-1" : "text-bloom"
+                            up ? "text-highlight-1" : "text-rust"
                           }`}
                         >
                           {up ? (
@@ -224,7 +225,7 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
                       animate={{ width: `${h.allocationPct}%` }}
                       transition={{
                         duration: 0.9,
-                        ease: [0.22, 1, 0.36, 1],
+                        ease: EASE_REVEAL,
                         delay: 0.2 + i * 0.04,
                       }}
                       style={{ backgroundColor: color }}

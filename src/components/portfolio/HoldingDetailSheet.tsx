@@ -55,7 +55,7 @@ export function HoldingDetailSheet({ open, onClose, holding, valued }: Props) {
   const hasQuote =
     valued?.currentPrice != null && valued?.entryPrice != null && valued.entryPrice > 0;
   const isUp = (valued?.pnl ?? 0) >= 0;
-  const tone = isUp ? "text-highlight-1" : "text-bloom";
+  const tone = isUp ? "text-highlight-1" : "text-rust";
 
   return (
     <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
