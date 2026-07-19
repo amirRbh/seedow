@@ -3,6 +3,7 @@ import { useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { joinWaitlist } from "@/lib/beta/beta.functions";
 import { LanguageToggle } from "@/components/LanguageToggle";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/waitlist")({
   head: () => ({
@@ -81,13 +82,14 @@ function WaitlistPage() {
               className="w-full px-3 py-2.5 rounded border border-paper-3 bg-paper text-body-sm focus:border-ink focus:outline-none"
             />
             {error && <p className="text-label text-rust">{error}</p>}
-            <button
+            <Button
               type="submit"
+              size="pill"
               disabled={submitting}
-              className="btn-primary w-full justify-center disabled:opacity-50"
+              className="w-full justify-center disabled:opacity-50"
             >
               {submitting ? t("waitlist.submitting") : t("waitlist.btn_join")}
-            </button>
+            </Button>
           </form>
         )}
       </div>

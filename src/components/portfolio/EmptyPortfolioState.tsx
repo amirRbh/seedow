@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
 
 export function EmptyPortfolioState({ userName }: { userName: string }) {
   const { t } = useTranslation();
@@ -42,9 +43,11 @@ export function EmptyPortfolioState({ userName }: { userName: string }) {
       <p className="text-sm text-ink-2 mt-4 max-w-md leading-relaxed">{t("empty_portfolio.desc")}</p>
 
       <div className="mt-10 flex items-center gap-4">
-        <Link to="/onboarding" search={{ new: undefined }} className="btn-primary">
-          {t("empty_portfolio.start")}
-        </Link>
+        <Button asChild size="pill">
+          <Link to="/onboarding" search={{ new: undefined }}>
+            {t("empty_portfolio.start")}
+          </Link>
+        </Button>
         <Link
           to="/discover"
           className="text-body-sm text-ink-3 hover:text-ink transition-colors underline-offset-4 hover:underline"

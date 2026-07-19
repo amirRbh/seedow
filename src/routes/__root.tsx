@@ -17,6 +17,7 @@ import { FocusModeProvider } from "@/hooks/useFocusMode";
 import { UserPortfoliosProvider } from "@/hooks/useUserPortfolios";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
+import { Button } from "@/components/ui/button";
 import { AppShell } from "@/components/layout/AppShell";
 import { CookieNotice } from "@/components/layout/CookieNotice";
 import { installGlobalErrorReporting, reportReactError } from "@/lib/monitoring/errorReporter";
@@ -32,9 +33,9 @@ function NotFoundComponent() {
         <h2 className="mt-4 text-xl font-semibold text-ink">{t("root.not_found_title")}</h2>
         <p className="mt-2 text-sm text-ink-3">{t("root.not_found_desc")}</p>
         <div className="mt-6">
-          <Link to="/" className="btn-primary">
-            {t("root.back_home")}
-          </Link>
+          <Button asChild size="pill">
+            <Link to="/">{t("root.back_home")}</Link>
+          </Button>
         </div>
       </div>
     </div>
@@ -134,9 +135,9 @@ class RootErrorBoundary extends Component<{ children: ReactNode }, { hasError: b
             <p className="mt-3 text-sm text-ink-3">
               Une erreur inattendue s'est produite. L'équipe a été notifiée automatiquement.
             </p>
-            <button onClick={() => window.location.assign("/")} className="btn-primary mt-6">
+            <Button size="pill" className="mt-6" onClick={() => window.location.assign("/")}>
               Retour à l'accueil
-            </button>
+            </Button>
           </div>
         </div>
       );

@@ -66,6 +66,7 @@ export function EthiBriefing() {
           </p>
           <Link
             to="/ethi"
+            search={{} as never}
             className="text-tag uppercase tracking-[0.18em] font-semibold text-ink-3 hover:text-ink transition-colors"
           >
             {t("ethi_briefing.talk_to_ethi")}

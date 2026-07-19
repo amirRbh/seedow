@@ -273,8 +273,7 @@
   textarea,
   summary,
   .paper-card,
-  .paper-card-inset,
-  .badge-pill {
+  .paper-card-inset {
     transition-property:
       background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter,
       backdrop-filter;
@@ -516,93 +515,10 @@
     border-color: var(--color-ink);
   }
 
-  /* CTA principal — pill noir Apple */
-  .btn-primary {
-    background: var(--color-ink);
-    color: var(--color-paper);
-    border-radius: 980px;
-    padding: 12px 24px;
-    font-family: var(--font-sans);
-    font-size: 15px;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    text-transform: none;
-    border: none;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-  .btn-primary:hover {
-    opacity: 0.85;
-  }
-
-  /* Secondaire — pill mint filled */
-  .btn-accent {
-    background: var(--color-mint);
-    color: var(--color-paper);
-    border: none;
-    border-radius: 980px;
-    padding: 12px 24px;
-    font-family: var(--font-sans);
-    font-size: 15px;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    text-transform: none;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-  .btn-accent:hover {
-    opacity: 0.88;
-  }
-
-  /* Tertiaire — pill outline ink */
-  .btn-outline-ink {
-    background: transparent;
-    color: var(--color-ink);
-    border: 1px solid var(--color-ink);
-    border-radius: 980px;
-    padding: 11px 23px;
-    font-family: var(--font-sans);
-    font-size: 15px;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    text-transform: none;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-  .btn-outline-ink:hover {
-    background: var(--color-ink);
-    color: var(--color-paper);
-  }
-
-  /* Badge Apple — pill Inter, casse normale */
-  .badge-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 5px 12px;
-    border-radius: 980px;
-    font-family: var(--font-sans);
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: -0.005em;
-    text-transform: none;
-    background: transparent;
-    color: var(--color-ink);
-    border: 1px solid var(--color-paper-3);
-  }
-  .badge-pill--accent {
-    color: var(--color-mint);
-    border-color: var(--color-mint);
-  }
+  /* Boutons pill — voir le composant Button (@/components/ui/button),
+     variants "default"/"accent"/"outline-ink" + size="pill". Un seul
+     système de boutons pour toute l'app (hors .apple-landing, scope isolé
+     volontairement pour la landing page). */
 
   .bubble-ethi {
     background: var(--color-paper-2);

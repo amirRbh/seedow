@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { submitBetaFeedback } from "@/lib/beta/beta.functions";
 import { callAuthed } from "@/lib/authedServerFn";
 import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -78,9 +79,9 @@ export function FeedbackButton() {
                 <DialogDescription>{t("beta.feedback_thanks_desc")}</DialogDescription>
               </DialogHeader>
               <DialogFooter>
-                <button onClick={() => setOpen(false)} className="btn-primary">
+                <Button size="pill" onClick={() => setOpen(false)}>
                   {t("common.close")}
-                </button>
+                </Button>
               </DialogFooter>
             </>
           ) : (
@@ -139,13 +140,14 @@ export function FeedbackButton() {
                 </div>
               </div>
               <DialogFooter>
-                <button
+                <Button
+                  size="pill"
                   onClick={onSubmit}
                   disabled={submitting || (nps === null && !blocker && !wish)}
-                  className="btn-primary w-full justify-center disabled:opacity-40"
+                  className="w-full justify-center disabled:opacity-40"
                 >
                   {submitting ? t("beta.feedback_sending") : t("common.submit")}
-                </button>
+                </Button>
               </DialogFooter>
             </>
           )}
