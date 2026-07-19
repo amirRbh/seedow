@@ -54,11 +54,11 @@
   --color-ink-2: var(--ink-2);
   --color-ink-3: var(--ink-3);
 
-  --color-moss-1: var(--moss-1);
-  --color-moss-2: var(--moss-2);
-  --color-moss-3: var(--moss-3);
-  --color-moss-4: var(--moss-4);
-  --color-moss-5: var(--moss-5);
+  --color-highlight-1: var(--highlight-1);
+  --color-highlight-2: var(--highlight-2);
+  --color-highlight-3: var(--highlight-3);
+  --color-highlight-4: var(--highlight-4);
+  --color-highlight-5: var(--highlight-5);
 
   --color-rust: var(--rust);
   --color-gold: var(--gold);
@@ -73,12 +73,12 @@
   --color-alert: var(--alert);
   --color-volt: var(--volt);
 
-  --shadow-leaf: var(--shadow-leaf);
-  --shadow-deep: var(--shadow-deep);
-  --shadow-soil: var(--shadow-soil);
+  --shadow-flat-1: var(--shadow-flat-1);
+  --shadow-flat-2: var(--shadow-flat-2);
+  --shadow-flat-3: var(--shadow-flat-3);
 
   --animate-breathe: breathe 4s ease-in-out infinite;
-  --animate-sprout: sprout 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-reveal-scale: reveal-scale 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
   --animate-fade-in-up: fadeInUp 0.5s ease-out;
 
   @keyframes breathe {
@@ -90,7 +90,7 @@
       transform: translateY(-3px) scale(1.02);
     }
   }
-  @keyframes sprout {
+  @keyframes reveal-scale {
     0% {
       transform: scaleY(0);
       opacity: 0;
@@ -131,12 +131,12 @@
   --ink-2: #64646a; /* contraste ~5.9:1 sur --paper (WCAG AA) — était #86868B (~3.6:1, sous le seuil AA) */
   --ink-3: #6e6e73;
 
-  /* Mapping moss → tokens Apple pour rétro-compat */
-  --moss-1: #1d1d1f;
-  --moss-2: #2d2d2f;
-  --moss-3: #86868b;
-  --moss-4: #d2d2d7;
-  --moss-5: #f5f5f7;
+  /* Échelle de mise en avant interactive (focus rings, highlights, badges) */
+  --highlight-1: #1d1d1f;
+  --highlight-2: #2d2d2f;
+  --highlight-3: #86868b;
+  --highlight-4: #d2d2d7;
+  --highlight-5: #f5f5f7;
 
   /* Data signal colors — accents assourdis Apple */
   --mint: #1d8348; /* vert forest sobre */
@@ -176,9 +176,9 @@
   --ring: var(--ink);
 
   /* Ombres désactivées — design flat éditorial */
-  --shadow-leaf: 0 0 0 0 transparent;
-  --shadow-deep: 0 0 0 0 transparent;
-  --shadow-soil: 0 0 0 0 transparent;
+  --shadow-flat-1: 0 0 0 0 transparent;
+  --shadow-flat-2: 0 0 0 0 transparent;
+  --shadow-flat-3: 0 0 0 0 transparent;
 
   /* Grain SVG — texture papier discrète */
   --paper-grain-url: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.14  0 0 0 0 0.18  0 0 0 0 0.14  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
@@ -192,11 +192,11 @@
   --ink: oklch(0.96 0.008 110);
   --ink-2: oklch(0.8 0.01 160);
   --ink-3: oklch(0.62 0.012 160);
-  --moss-1: oklch(0.78 0.06 150);
-  --moss-2: oklch(0.64 0.055 150);
-  --moss-3: oklch(0.5 0.045 150);
-  --moss-4: oklch(0.34 0.03 150);
-  --moss-5: oklch(0.24 0.02 150);
+  --highlight-1: oklch(0.78 0.06 150);
+  --highlight-2: oklch(0.64 0.055 150);
+  --highlight-3: oklch(0.5 0.045 150);
+  --highlight-4: oklch(0.34 0.03 150);
+  --highlight-5: oklch(0.24 0.02 150);
   --gold: oklch(0.72 0.16 145);
   --gold-soft: oklch(0.64 0.14 148);
   --glacier: oklch(0.65 0.08 210);
@@ -275,7 +275,7 @@
   summary,
   .paper-card,
   .paper-card-inset,
-  .moss-badge {
+  .badge-pill {
     transition-property:
       background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter,
       backdrop-filter;
@@ -508,17 +508,17 @@
     color: var(--color-paper);
   }
 
-  .leaf-hover {
+  .hover-border {
     transition:
       border-color 400ms cubic-bezier(0.32, 0.72, 0, 1),
       background-color 400ms cubic-bezier(0.32, 0.72, 0, 1);
   }
-  .leaf-hover:hover {
+  .hover-border:hover {
     border-color: var(--color-ink);
   }
 
   /* CTA principal — pill noir Apple */
-  .btn-plant {
+  .btn-primary {
     background: var(--color-ink);
     color: var(--color-paper);
     border-radius: 980px;
@@ -535,12 +535,12 @@
     justify-content: center;
     gap: 8px;
   }
-  .btn-plant:hover {
+  .btn-primary:hover {
     opacity: 0.85;
   }
 
   /* Secondaire — pill mint filled */
-  .btn-harvest {
+  .btn-accent {
     background: var(--color-mint);
     color: var(--color-paper);
     border: none;
@@ -557,7 +557,7 @@
     justify-content: center;
     gap: 8px;
   }
-  .btn-harvest:hover {
+  .btn-accent:hover {
     opacity: 0.88;
   }
 
@@ -585,7 +585,7 @@
   }
 
   /* Badge Apple — pill Inter, casse normale */
-  .moss-badge {
+  .badge-pill {
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -600,7 +600,7 @@
     color: var(--color-ink);
     border: 1px solid var(--color-paper-3);
   }
-  .moss-badge--accent {
+  .badge-pill--accent {
     color: var(--color-mint);
     border-color: var(--color-mint);
   }

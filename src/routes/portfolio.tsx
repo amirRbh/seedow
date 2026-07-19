@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { GrowthComparison } from "@/components/roots/GrowthComparison";
-import { BadgesCard } from "@/components/garden/SeasonalBadges";
+import { BadgesCard } from "@/components/portfolio/MilestoneBadges";
 import { AllocationBreakdown } from "@/components/portfolio/AllocationBreakdown";
 import { PortfolioMetricsCard } from "@/components/portfolio/PortfolioMetricsCard";
 import { PortfolioHistoryChart } from "@/components/portfolio/PortfolioHistoryChart";
@@ -13,7 +13,7 @@ import { ValuationConsistencyBanner } from "@/components/portfolio/ValuationCons
 import { ImpactCertificate } from "@/components/portfolio/ImpactCertificate";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { ShareToggle } from "@/components/community/ShareToggle";
-import { ImpactRibbon } from "@/components/garden/ImpactRibbon";
+import { ImpactRibbon } from "@/components/portfolio/ImpactRibbon";
 import { ComparatifPanel } from "@/components/portfolio/ComparatifPanel";
 import { AllocationRefiner } from "@/components/portfolio/AllocationRefiner";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -25,7 +25,7 @@ import { useLang } from "@/hooks/useLang";
 import { formatCurrency } from "@/lib/format";
 import { supabase } from "@/integrations/supabase/client";
 import { BADGE_DEFS, computeUnlockedBadgeIds } from "@/lib/portfolio/badges";
-import type { SeasonalBadge } from "@/components/garden/SeasonalBadges";
+import type { MilestoneBadge } from "@/components/portfolio/MilestoneBadges";
 
 export const Route = createFileRoute("/portfolio")({
   beforeLoad: async () => {
@@ -94,13 +94,13 @@ function Portfolio() {
     : 0;
 
   const unlockedBadgeIds = computeUnlockedBadgeIds(portfolio, esgScore);
-  const badges: SeasonalBadge[] = BADGE_DEFS.map((b) => ({
+  const badges: MilestoneBadge[] = BADGE_DEFS.map((b) => ({
     id: b.id,
     icon: b.icon,
     tier: b.tier,
     unlocked: unlockedBadgeIds.has(b.id),
-    name: t(`seasonal_badges.defs.${b.id}.name`),
-    description: t(`seasonal_badges.defs.${b.id}.description`),
+    name: t(`milestone_badges.defs.${b.id}.name`),
+    description: t(`milestone_badges.defs.${b.id}.description`),
   }));
 
   const linesLabel = t(
@@ -197,7 +197,7 @@ function Portfolio() {
               <div className="space-y-3">
                 <h2 className="text-sm font-semibold text-ink">{t("portfolio.key_indicators")}</h2>
                 {isSimple && (
-                  <ExplainerCard tone="moss" dismissKey="portfolio-metrics-simple">
+                  <ExplainerCard tone="highlight" dismissKey="portfolio-metrics-simple">
                     {t("portfolio.simple_explainer_pre")}{" "}
                     <span className="font-semibold">{t("portfolio.simple_explainer_expert")}</span>{" "}
                     {t("portfolio.simple_explainer_post")}

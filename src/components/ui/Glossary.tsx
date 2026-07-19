@@ -116,7 +116,7 @@ export function Glossary({ term, children, variant = "inline", className }: Prop
           aria-label={`Définition : ${entry.title}`}
           className={cn(
             "inline-flex items-baseline gap-1 align-baseline outline-none rounded-sm",
-            "focus-visible:ring-2 focus-visible:ring-moss-1",
+            "focus-visible:ring-2 focus-visible:ring-highlight-1",
             variant === "inline" &&
               "border-b border-dotted border-ink-3 text-inherit hover:text-ink",
             variant === "icon" &&

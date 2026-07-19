@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
-export interface SeasonalBadge {
+export interface MilestoneBadge {
   id: string;
   name: string;
   description: string;
@@ -10,7 +10,7 @@ export interface SeasonalBadge {
   tier: "bronze" | "silver" | "gold";
 }
 
-export function BadgesCard({ badges }: { badges: SeasonalBadge[] }) {
+export function BadgesCard({ badges }: { badges: MilestoneBadge[] }) {
   const { t } = useTranslation();
   const unlocked = badges.filter((b) => b.unlocked);
   const locked = badges.filter((b) => !b.unlocked);
@@ -20,10 +20,10 @@ export function BadgesCard({ badges }: { badges: SeasonalBadge[] }) {
       <div className="flex items-baseline justify-between mb-4">
         <div>
           <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold">
-            {t("seasonal_badges.milestones")}
+            {t("milestone_badges.milestones")}
           </p>
           <h3 className="font-value text-2xl text-ink mt-0.5">
-            {t("seasonal_badges.celebrated", { count: unlocked.length })}
+            {t("milestone_badges.celebrated", { count: unlocked.length })}
           </h3>
         </div>
         <span className="text-xs text-ink-3">
@@ -47,7 +47,7 @@ export function BadgesCard({ badges }: { badges: SeasonalBadge[] }) {
                   ? "bg-[oklch(0.93_0.06_85)] ring-1 ring-gold/40"
                   : badge.tier === "silver"
                     ? "bg-paper-2"
-                    : "bg-moss-5"
+                    : "bg-highlight-5"
               }`}
             >
               {badge.icon}
@@ -62,7 +62,7 @@ export function BadgesCard({ badges }: { badges: SeasonalBadge[] }) {
           <div
             key={badge.id}
             className="flex flex-col items-center gap-1.5 opacity-30"
-            title={t("seasonal_badges.to_unlock", { desc: badge.description })}
+            title={t("milestone_badges.to_unlock", { desc: badge.description })}
           >
             <div className="w-12 h-12 rounded-full bg-paper-2 flex items-center justify-center text-xl grayscale">
               {badge.icon}

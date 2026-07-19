@@ -55,7 +55,7 @@ export function HoldingDetailSheet({ open, onClose, holding, valued }: Props) {
   const hasQuote =
     valued?.currentPrice != null && valued?.entryPrice != null && valued.entryPrice > 0;
   const isUp = (valued?.pnl ?? 0) >= 0;
-  const tone = isUp ? "text-moss-1" : "text-bloom";
+  const tone = isUp ? "text-highlight-1" : "text-bloom";
 
   return (
     <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
@@ -137,7 +137,7 @@ export function HoldingDetailSheet({ open, onClose, holding, valued }: Props) {
             </div>
             <div>
               <p className="text-tag uppercase tracking-wider text-ink-3">Score d'impact</p>
-              <p className="font-value text-body-sm text-moss-1 mt-0.5">
+              <p className="font-value text-body-sm text-highlight-1 mt-0.5">
                 {holding.esgScore.toFixed(0)}/100
               </p>
             </div>
@@ -251,7 +251,7 @@ function FundRejectionCard({ holding }: { holding: ActiveHolding }) {
             setSubmitted(true);
             toast.success("Signal enregistré");
           }}
-          className="flex-1 py-2 rounded-full bg-ink text-paper text-label font-semibold hover:bg-moss-2 transition-colors disabled:opacity-30"
+          className="flex-1 py-2 rounded-full bg-ink text-paper text-label font-semibold hover:bg-highlight-2 transition-colors disabled:opacity-30"
         >
           {busy ? "Envoi…" : "Valider"}
         </button>

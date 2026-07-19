@@ -3,20 +3,20 @@ import { useEffect, useState } from "react";
 interface Props {
   title?: string;
   children: React.ReactNode;
-  tone?: "moss" | "bloom" | "peach" | "sky";
+  tone?: "highlight" | "bloom" | "peach" | "sky";
   /** Si fourni, l'encart peut être dismissé et l'état stocké en localStorage. */
   dismissKey?: string;
 }
 
 const TONE_BG: Record<NonNullable<Props["tone"]>, string> = {
-  moss: "bg-moss-5 border-moss-4",
+  highlight: "bg-highlight-5 border-highlight-4",
   bloom: "bg-[oklch(0.96_0.04_310)] border-[oklch(0.88_0.07_310)]",
   peach: "bg-[oklch(0.96_0.04_45)] border-[oklch(0.88_0.07_45)]",
   sky: "bg-[oklch(0.96_0.03_230)] border-[oklch(0.88_0.06_230)]",
 };
 
 const TONE_DOT: Record<NonNullable<Props["tone"]>, string> = {
-  moss: "bg-moss-1",
+  highlight: "bg-highlight-1",
   bloom: "bg-bloom",
   peach: "bg-rust",
   sky: "bg-sky",
@@ -28,7 +28,7 @@ const STORAGE_PREFIX = "seedow:explainers-dismissed:";
  * Petit encart pédagogique pour expliquer un concept en une phrase.
  * Si `dismissKey` est fourni, un bouton ✕ permet de masquer définitivement.
  */
-export function ExplainerCard({ title, children, tone = "moss", dismissKey }: Props) {
+export function ExplainerCard({ title, children, tone = "highlight", dismissKey }: Props) {
   const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {

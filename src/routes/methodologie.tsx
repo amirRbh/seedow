@@ -617,7 +617,7 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
                       {(p.base * 100).toFixed(0)}%
                     </td>
                     <td
-                      className={`py-2 text-right tabular-nums font-value ${shifted ? "text-moss-1" : "text-ink"}`}
+                      className={`py-2 text-right tabular-nums font-value ${shifted ? "text-highlight-1" : "text-ink"}`}
                     >
                       {(p.current * 100).toFixed(0)}%
                     </td>
@@ -774,7 +774,7 @@ function CarbonCoverage({
   else if (pct >= 30) tone = "partial";
   else tone = "low";
 
-  const barColor = tone === "good" ? "bg-moss-2" : tone === "partial" ? "bg-ink" : "bg-rust";
+  const barColor = tone === "good" ? "bg-highlight-2" : tone === "partial" ? "bg-ink" : "bg-rust";
 
   const advice =
     !hasRealData || pct === 0

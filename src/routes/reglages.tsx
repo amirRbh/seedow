@@ -777,7 +777,7 @@ function CronHealthBlock({
             <span
               className={`w-2 h-2 rounded-full ${
                 lastRun?.status === "ok"
-                  ? "bg-moss-1"
+                  ? "bg-highlight-1"
                   : lastRun?.status === "partial"
                     ? "bg-gold"
                     : "bg-rust"
@@ -800,7 +800,7 @@ function CronHealthBlock({
               >
                 <span
                   className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
-                    r.status === "ok" ? "bg-moss-1" : r.status === "partial" ? "bg-gold" : "bg-rust"
+                    r.status === "ok" ? "bg-highlight-1" : r.status === "partial" ? "bg-gold" : "bg-rust"
                   }`}
                 />
                 <span className="text-ink-3 tabular-nums w-28 flex-shrink-0">
@@ -944,13 +944,13 @@ function MethodologySection() {
                 <p className="font-value text-ink">40–60</p>
                 <p className="text-ink-3">{t("reglages.methodology.esg_composite.scale_medium")}</p>
               </div>
-              <div className="rounded border border-moss-4 bg-moss-5 p-2">
-                <p className="font-value text-moss-1">60–80</p>
-                <p className="text-moss-1">{t("reglages.methodology.esg_composite.scale_good")}</p>
+              <div className="rounded border border-highlight-4 bg-highlight-5 p-2">
+                <p className="font-value text-highlight-1">60–80</p>
+                <p className="text-highlight-1">{t("reglages.methodology.esg_composite.scale_good")}</p>
               </div>
-              <div className="rounded border border-moss-2 bg-moss-5 p-2">
-                <p className="font-value text-moss-1">80–100</p>
-                <p className="text-moss-1">
+              <div className="rounded border border-highlight-2 bg-highlight-5 p-2">
+                <p className="font-value text-highlight-1">80–100</p>
+                <p className="text-highlight-1">
                   {t("reglages.methodology.esg_composite.scale_excellent")}
                 </p>
               </div>
@@ -1061,7 +1061,7 @@ function StatusBanner({
     status === "error"
       ? "border-rust/40 text-rust bg-[oklch(0.97_0.02_45)]"
       : status === "saved"
-        ? "border-moss-1/30 text-moss-1 bg-moss-5"
+        ? "border-highlight-1/30 text-highlight-1 bg-highlight-5"
         : "border-paper-3 text-ink-3 bg-paper-2";
 
   return (

@@ -76,7 +76,7 @@ export function SimulationForm({ onSubmit, onCancel }: Props) {
           type="checkbox"
           checked={stress}
           onChange={(e) => setStress(e.target.checked)}
-          className="accent-moss-3"
+          className="accent-highlight-3"
         />
         {t("ethi.sim.stress")}
       </label>
@@ -90,7 +90,7 @@ export function SimulationForm({ onSubmit, onCancel }: Props) {
         </button>
         <button
           type="submit"
-          className="px-3 py-1.5 rounded-full text-caption bg-moss-2 hover:bg-moss-1 text-paper font-medium transition-colors"
+          className="px-3 py-1.5 rounded-full text-caption bg-highlight-2 hover:bg-highlight-1 text-paper font-medium transition-colors"
         >
           {t("ethi.sim.run")}
         </button>

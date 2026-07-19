@@ -42,7 +42,7 @@ export function BottomNavigation() {
               className={cn(
                 "group relative flex flex-1 flex-col items-center justify-center gap-1 py-3 min-h-[56px]",
                 "outline-none transition-colors duration-150",
-                "focus-visible:ring-2 focus-visible:ring-moss-1 focus-visible:ring-offset-0 rounded-sm",
+                "focus-visible:ring-2 focus-visible:ring-highlight-1 focus-visible:ring-offset-0 rounded-sm",
                 isActive ? "text-ink" : "text-ink-3 hover:text-ink",
               )}
             >
@@ -58,7 +58,7 @@ export function BottomNavigation() {
               {isActive && (
                 <span
                   aria-hidden="true"
-                  className="absolute top-0 left-1/2 -translate-x-1/2 h-px w-8 bg-moss-1"
+                  className="absolute top-0 left-1/2 -translate-x-1/2 h-px w-8 bg-highlight-1"
                 />
               )}
             </Link>

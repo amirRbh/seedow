@@ -93,7 +93,7 @@ export function PortfolioHistoryChart() {
     };
   }, [points]);
 
-  const stroke = isUp ? "var(--moss-1)" : "var(--bloom)";
+  const stroke = isUp ? "var(--highlight-1)" : "var(--bloom)";
 
   return (
     <div className="paper-card p-5">
@@ -104,7 +104,7 @@ export function PortfolioHistoryChart() {
           {points.length > 0 && (
             <p
               className={`text-label font-semibold tabular-nums mt-0.5 ${
-                isUp ? "text-moss-1" : "text-bloom"
+                isUp ? "text-highlight-1" : "text-bloom"
               }`}
             >
               {isUp ? "+" : ""}

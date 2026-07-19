@@ -229,7 +229,7 @@ export function InvestDialog({ trigger, defaultAmount = 200, label }: Props) {
               "w-full h-12 rounded-full font-semibold text-body-sm uppercase tracking-[0.16em] transition-colors flex items-center justify-center gap-2",
               method === "applepay"
                 ? "bg-ink text-paper hover:bg-ink-2"
-                : "bg-moss-1 text-paper hover:bg-moss-2",
+                : "bg-highlight-1 text-paper hover:bg-highlight-2",
               "disabled:opacity-50 disabled:cursor-not-allowed",
             )}
           >

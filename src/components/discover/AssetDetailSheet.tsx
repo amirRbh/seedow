@@ -24,9 +24,9 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
   const { lang } = useLang();
 
   const RISK_LABELS: Record<number, { label: string; tone: string }> = {
-    1: { label: t("asset_detail.risk_labels.1"), tone: "text-moss-1" },
-    2: { label: t("asset_detail.risk_labels.2"), tone: "text-moss-1" },
-    3: { label: t("asset_detail.risk_labels.3"), tone: "text-moss-1" },
+    1: { label: t("asset_detail.risk_labels.1"), tone: "text-highlight-1" },
+    2: { label: t("asset_detail.risk_labels.2"), tone: "text-highlight-1" },
+    3: { label: t("asset_detail.risk_labels.3"), tone: "text-highlight-1" },
     4: { label: t("asset_detail.risk_labels.4"), tone: "text-ink" },
     5: { label: t("asset_detail.risk_labels.5"), tone: "text-rust" },
     6: { label: t("asset_detail.risk_labels.6"), tone: "text-rust" },
@@ -70,8 +70,8 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                   </span>
                 </p>
               </div>
-              <div className="flex items-center gap-1 text-tag font-semibold text-moss-1 bg-moss-5 px-2 py-1 rounded-full border border-moss-4 flex-shrink-0">
-                <span className="w-1.5 h-1.5 rounded-full bg-moss-1" />
+              <div className="flex items-center gap-1 text-tag font-semibold text-highlight-1 bg-highlight-5 px-2 py-1 rounded-full border border-highlight-4 flex-shrink-0">
+                <span className="w-1.5 h-1.5 rounded-full bg-highlight-1" />
                 ESG {asset.overall_esg_score.toFixed(1)}
               </div>
             </div>
@@ -92,7 +92,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                     key={tag}
                     term="SFDR"
                     variant="inline"
-                    className="text-tag bg-moss-5 text-moss-1 font-semibold px-2 py-0.5 rounded-full capitalize border border-solid border-moss-4 hover:text-moss-1"
+                    className="text-tag bg-highlight-5 text-highlight-1 font-semibold px-2 py-0.5 rounded-full capitalize border border-solid border-highlight-4 hover:text-highlight-1"
                   >
                     {tag}
                   </Glossary>
@@ -137,7 +137,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                 step={10}
                 value={[monthly]}
                 onValueChange={(val) => setMonthly(val[0])}
-                className="[&_[data-orientation=horizontal]]:bg-paper-3 [&_[data-radix-slider-range]]:bg-moss-1 [&_[data-radix-slider-thumb]]:border-moss-2 [&_[data-radix-slider-thumb]]:bg-paper"
+                className="[&_[data-orientation=horizontal]]:bg-paper-3 [&_[data-radix-slider-range]]:bg-highlight-1 [&_[data-radix-slider-thumb]]:border-highlight-2 [&_[data-radix-slider-thumb]]:bg-paper"
               />
               <div className="flex justify-between mt-2">
                 <span className="text-tag text-ink-3 font-medium">10 €</span>
@@ -148,7 +148,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
             {/* Résultat dynamique */}
             {co2 != null ? (
               <div className="bg-paper-2 rounded-xl p-3 border border-paper-3 text-center">
-                <p className="font-value text-xl leading-none text-moss-1">
+                <p className="font-value text-xl leading-none text-highlight-1">
                   {co2.toFixed(1)}
                   <span className="text-tag text-ink-3 ml-0.5 font-sans">kg</span>
                 </p>
@@ -347,12 +347,12 @@ function StatTile({
   value: string;
   unit?: string;
   label: string;
-  tone?: "moss" | "default";
+  tone?: "highlight" | "default";
 }) {
   return (
     <div className="bg-paper-2 rounded-xl p-3 text-center border border-paper-3">
       <p
-        className={`font-value text-xl leading-none ${tone === "moss" ? "text-moss-1" : "text-ink"}`}
+        className={`font-value text-xl leading-none ${tone === "highlight" ? "text-highlight-1" : "text-ink"}`}
       >
         {value}
         {unit && <span className="text-caption text-ink-3 ml-0.5 font-sans">{unit}</span>}
@@ -372,7 +372,7 @@ function MiniBar({ label, value }: { label: string; value: number }) {
         <span className="text-tag font-bold text-ink">{value.toFixed(1)}</span>
       </div>
       <div className="h-1 bg-paper-3 rounded-full overflow-hidden">
-        <div className="h-full bg-moss-1 rounded-full" style={{ width: `${value * 10}%` }} />
+        <div className="h-full bg-highlight-1 rounded-full" style={{ width: `${value * 10}%` }} />
       </div>
     </div>
   );

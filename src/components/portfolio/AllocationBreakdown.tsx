@@ -24,10 +24,10 @@ const CLASS_LABELS: Record<string, string> = {
 };
 
 const CLASS_COLOR: Record<string, string> = {
-  equity_dev: "var(--moss-1)",
-  equity_em: "var(--moss-2)",
+  equity_dev: "var(--highlight-1)",
+  equity_em: "var(--highlight-2)",
   thematic: "var(--bloom)",
-  green_bond: "var(--moss-3)",
+  green_bond: "var(--highlight-3)",
   social_bond: "var(--sky)",
   sov_bond: "var(--ink-2)",
   reit: "var(--gold)",
@@ -89,7 +89,7 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
             initial={{ width: 0 }}
             animate={{ width: `${pct}%` }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: i * 0.08 }}
-            style={{ backgroundColor: CLASS_COLOR[cls] ?? "var(--moss-2)" }}
+            style={{ backgroundColor: CLASS_COLOR[cls] ?? "var(--highlight-2)" }}
             className="h-full"
             title={`${CLASS_LABELS[cls] ?? cls} · ${pct.toFixed(1)}%`}
           />
@@ -102,7 +102,7 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
           <div key={cls} className="flex items-center gap-1.5">
             <span
               className="w-2 h-2 rounded-full flex-shrink-0"
-              style={{ backgroundColor: CLASS_COLOR[cls] ?? "var(--moss-2)" }}
+              style={{ backgroundColor: CLASS_COLOR[cls] ?? "var(--highlight-2)" }}
             />
             <span className="text-caption text-ink-2">
               {CLASS_LABELS[cls] ?? cls}
@@ -129,7 +129,7 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
                   onClick={() => setSelected(target)}
                   className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-caption transition-colors ${
                     up
-                      ? "border-moss-1/30 bg-moss-1/5 text-moss-1 hover:bg-moss-1/10"
+                      ? "border-highlight-1/30 bg-highlight-1/5 text-highlight-1 hover:bg-highlight-1/10"
                       : "border-bloom/30 bg-bloom/5 text-bloom hover:bg-bloom/10"
                   }`}
                 >
@@ -154,7 +154,7 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
       <div className="border-t border-paper-3 pt-4 space-y-2.5">
         {holdings.map((h, i) => {
           const amount = (h.allocationPct / 100) * totalAmount;
-          const color = CLASS_COLOR[h.category] ?? "var(--moss-2)";
+          const color = CLASS_COLOR[h.category] ?? "var(--highlight-2)";
           const valued = valuedById.get(h.id);
           const hasMove =
             valued?.currentPrice != null &&
@@ -187,7 +187,7 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
                       {hasMove && (
                         <span
                           className={`flex items-center gap-0.5 text-caption font-semibold tabular-nums ${
-                            up ? "text-moss-1" : "text-bloom"
+                            up ? "text-highlight-1" : "text-bloom"
                           }`}
                         >
                           {up ? (
@@ -207,7 +207,7 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
                       {CLASS_LABELS[h.category] ?? h.category}
                       {h.region && ` · ${h.region}`}
                       {" · ESG "}
-                      <span className="text-moss-1 font-semibold">{h.esgScore.toFixed(0)}</span>
+                      <span className="text-highlight-1 font-semibold">{h.esgScore.toFixed(0)}</span>
                     </p>
                     <p className="text-tag text-ink-3 flex-shrink-0">
                       {amount.toLocaleString("fr-FR", {

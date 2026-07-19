@@ -7,7 +7,7 @@ interface Props {
   metrics: ActivePortfolioMetrics | null;
 }
 
-type Tone = "moss" | "ink" | "bloom" | "peach" | "sky";
+type Tone = "highlight" | "ink" | "bloom" | "peach" | "sky";
 
 interface Item {
   label: string;
@@ -29,7 +29,7 @@ export function PortfolioMetricsCard({ metrics }: Props) {
       hint: t("portfolio_metrics.expected_perf_hint"),
       value: `${(metrics.expected_return * 100).toFixed(1)}%`,
       sub: t("portfolio_metrics.per_year"),
-      tone: "moss",
+      tone: "highlight",
     },
     {
       label: t("portfolio_metrics.impact_score"),
@@ -43,7 +43,7 @@ export function PortfolioMetricsCard({ metrics }: Props) {
       hint: t("portfolio_metrics.co2_hint"),
       value: `${metrics.co2_avoided_tons.toFixed(2)}t`,
       sub: t("portfolio_metrics.per_10k"),
-      tone: "moss",
+      tone: "highlight",
     },
     {
       label: t("portfolio_metrics.possible_variations"),
@@ -74,7 +74,7 @@ export function PortfolioMetricsCard({ metrics }: Props) {
   const visible = isSimple ? items.filter((i) => !i.expertOnly) : items;
 
   const toneClasses: Record<Tone, { text: string; bg: string; border: string }> = {
-    moss: { text: "text-moss-1", bg: "bg-moss-5", border: "border-moss-4" },
+    highlight: { text: "text-highlight-1", bg: "bg-highlight-5", border: "border-highlight-4" },
     bloom: {
       text: "text-bloom",
       bg: "bg-[oklch(0.96_0.04_310)]",

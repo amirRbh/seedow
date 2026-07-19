@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 
-type EventType = "gain" | "plant" | "harvest" | "soil";
-type BadgeVariant = "gain" | "loss" | "plant" | "harvest" | "soil";
+type EventType = "gain" | "deposit" | "withdrawal" | "opening";
+type BadgeVariant = "gain" | "loss" | "deposit" | "withdrawal" | "opening";
 
 interface TimelineEventProps {
   type: EventType;
@@ -20,15 +20,18 @@ export function TimelineEvent({
   badgeVariant = "gain",
   impactChips,
 }: TimelineEventProps) {
-  const dotColor = { gain: "bg-moss-1", plant: "bg-moss-2", harvest: "bg-gold", soil: "bg-ink-3" }[
-    type
-  ];
+  const dotColor = {
+    gain: "bg-highlight-1",
+    deposit: "bg-highlight-2",
+    withdrawal: "bg-gold",
+    opening: "bg-ink-3",
+  }[type];
   const badgeStyles = {
-    gain: "bg-moss-5 text-moss-1",
+    gain: "bg-highlight-5 text-highlight-1",
     loss: "bg-[oklch(0.93_0.05_45)] text-rust",
-    plant: "bg-moss-5 text-moss-1",
-    harvest: "bg-[oklch(0.93_0.06_85)] text-gold",
-    soil: "bg-paper-2 text-ink-3",
+    deposit: "bg-highlight-5 text-highlight-1",
+    withdrawal: "bg-[oklch(0.93_0.06_85)] text-gold",
+    opening: "bg-paper-2 text-ink-3",
   }[badgeVariant];
 
   return (
@@ -62,7 +65,7 @@ export function TimelineEvent({
             {impactChips.map((chip) => (
               <span
                 key={chip}
-                className="text-tag bg-moss-5 text-moss-1 font-semibold px-2 py-0.5 rounded-full"
+                className="text-tag bg-highlight-5 text-highlight-1 font-semibold px-2 py-0.5 rounded-full"
               >
                 {chip}
               </span>

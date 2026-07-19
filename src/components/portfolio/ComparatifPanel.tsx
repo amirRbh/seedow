@@ -25,7 +25,7 @@ function PerfMedaillon({ value, max, accent }: { value: number; max: number; acc
   return (
     <div className="h-1 w-full bg-paper-3 rounded-full overflow-hidden mt-2">
       <div
-        className={cn("h-full rounded-full", accent ? "bg-gold" : "bg-moss-1")}
+        className={cn("h-full rounded-full", accent ? "bg-gold" : "bg-highlight-1")}
         style={{ width: `${w}%` }}
       />
     </div>
@@ -213,7 +213,7 @@ export function ComparatifPanel() {
         </p>
         <Link
           to="/methodologie"
-          className="mt-3 inline-flex items-center gap-2 text-caption font-semibold uppercase tracking-[0.18em] text-ink hover:text-moss-1 transition-colors"
+          className="mt-3 inline-flex items-center gap-2 text-caption font-semibold uppercase tracking-[0.18em] text-ink hover:text-highlight-1 transition-colors"
         >
           Lire la méthodologie complète
           <svg

@@ -14,7 +14,7 @@ interface ImpactRibbonProps {
 
 /**
  * ImpactRibbon — version éditoriale sobre.
- * Fond papier + filet or, KPI signature ; remplace l'ancien gradient moss saturé.
+ * Fond papier + filet or, KPI signature ; remplace l'ancien gradient vert saturé.
  */
 export function ImpactRibbon({
   co2Avoided,

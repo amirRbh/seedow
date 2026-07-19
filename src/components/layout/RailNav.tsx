@@ -72,7 +72,7 @@ export function RailNav() {
       <Link
         to="/dashboard"
         aria-label={t("rail_nav.seedow_home")}
-        className="flex items-center justify-center w-10 h-10 mb-2 outline-none rounded-sm focus-visible:ring-2 focus-visible:ring-moss-1"
+        className="flex items-center justify-center w-10 h-10 mb-2 outline-none rounded-sm focus-visible:ring-2 focus-visible:ring-highlight-1"
       >
         <span className="font-value text-body text-ink tracking-tight leading-none">s</span>
       </Link>
@@ -104,8 +104,8 @@ function RailLink({ item, active }: { item: NavItem; active: boolean }) {
           aria-label={item.label}
           className={cn(
             "relative flex items-center justify-center w-10 h-10 rounded-md transition-colors duration-150",
-            "outline-none focus-visible:ring-2 focus-visible:ring-moss-1",
-            active ? "text-ink bg-moss-5/60" : "text-ink-3 hover:text-ink hover:bg-paper-2",
+            "outline-none focus-visible:ring-2 focus-visible:ring-highlight-1",
+            active ? "text-ink bg-highlight-5/60" : "text-ink-3 hover:text-ink hover:bg-paper-2",
           )}
         >
           <NavIcon type={item.icon} />

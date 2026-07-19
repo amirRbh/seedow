@@ -180,7 +180,7 @@ function Ethi() {
       <header className="px-5 pt-6 pb-3 border-b border-paper/5 safe-area-top">
         <div className="flex items-center justify-between gap-3 max-w-lg mx-auto w-full">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 rounded-full bg-moss-2 flex items-center justify-center flex-shrink-0">
+            <div className="w-10 h-10 rounded-full bg-highlight-2 flex items-center justify-center flex-shrink-0">
               <svg
                 viewBox="0 0 24 24"
                 className="w-5 h-5 text-paper"
@@ -250,7 +250,7 @@ function Ethi() {
             <div className="mb-3">
               <EthiSuggestionChips
                 onSelect={handleChip}
-                hasGarden={(portfolio?.holdings.length ?? 0) > 0}
+                hasPortfolio={(portfolio?.holdings.length ?? 0) > 0}
                 chips={briefing?.chips}
               />
             </div>
@@ -272,7 +272,7 @@ function Ethi() {
             <button
               type="submit"
               disabled={!input.trim() || isLoading}
-              className="w-11 h-11 rounded-full bg-moss-2 hover:bg-moss-1 text-paper flex items-center justify-center disabled:opacity-30 transition-colors"
+              className="w-11 h-11 rounded-full bg-highlight-2 hover:bg-highlight-1 text-paper flex items-center justify-center disabled:opacity-30 transition-colors"
               aria-label={t("ethi.send")}
             >
               <svg

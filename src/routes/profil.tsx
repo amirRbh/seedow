@@ -197,7 +197,7 @@ function ProfilPage() {
                 {meta.causes.map((c) => (
                   <span
                     key={c}
-                    className="px-3 py-1.5 text-label font-medium border border-moss-3 text-moss-1 rounded-full"
+                    className="px-3 py-1.5 text-label font-medium border border-highlight-3 text-highlight-1 rounded-full"
                   >
                     {CAUSE_LABELS[c] ?? c}
                   </span>
@@ -231,7 +231,7 @@ function ProfilPage() {
           <Link
             to="/onboarding"
             search={{ new: 1 }}
-            className="mt-6 inline-flex items-center gap-2 text-caption font-semibold uppercase tracking-[0.18em] text-ink hover:text-moss-1 transition-colors"
+            className="mt-6 inline-flex items-center gap-2 text-caption font-semibold uppercase tracking-[0.18em] text-ink hover:text-highlight-1 transition-colors"
           >
             {t("profile.adjust_values")}
             <svg
@@ -276,7 +276,7 @@ function ProfilPage() {
 
           <Link
             to="/portfolio"
-            className="mt-5 inline-flex items-center gap-2 text-caption font-semibold uppercase tracking-[0.18em] text-ink hover:text-moss-1 transition-colors"
+            className="mt-5 inline-flex items-center gap-2 text-caption font-semibold uppercase tracking-[0.18em] text-ink hover:text-highlight-1 transition-colors"
           >
             {t("profile.see_allocation")}
             <svg
@@ -349,7 +349,7 @@ function ProfilPage() {
               {t("profile.comparison_eyebrow")}
             </p>
             <div className="flex items-baseline justify-between gap-4">
-              <h3 className="font-value text-xl text-ink leading-tight group-hover:text-moss-1 transition-colors">
+              <h3 className="font-value text-xl text-ink leading-tight group-hover:text-highlight-1 transition-colors">
                 {t("profile.comparison_title_pre")} <Glossary term="MSCIWorld">MSCI World</Glossary>
               </h3>
               <svg
@@ -387,7 +387,7 @@ function ProgressItem({ done, label, detail }: { done: boolean; label: string; d
       <span
         aria-hidden="true"
         className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${
-          done ? "bg-moss-1 text-paper" : "border border-paper-3 text-ink-3"
+          done ? "bg-highlight-1 text-paper" : "border border-paper-3 text-ink-3"
         }`}
       >
         {done ? (

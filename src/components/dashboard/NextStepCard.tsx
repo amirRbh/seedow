@@ -49,7 +49,7 @@ export function NextStepCard() {
           }),
           to: "/objectifs" as const,
           cta: t("next_step.follow_goal"),
-          tone: "moss" as const,
+          tone: "highlight" as const,
         };
       }
     }
@@ -78,7 +78,7 @@ export function NextStepCard() {
 
   const toneClasses = {
     gold: "border-gold/40 bg-gold/5",
-    moss: "border-moss-1/30 bg-moss-5/40",
+    highlight: "border-highlight-1/30 bg-highlight-5/40",
     rust: "border-rust/30 bg-[oklch(0.96_0.03_45)]",
     neutral: "border-paper-3 bg-paper-2",
   } as const;

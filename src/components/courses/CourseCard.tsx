@@ -40,8 +40,8 @@ export function CourseCard({ course, isAuthed }: Props) {
 
       <div className="mt-auto pt-4 border-t border-ink/8 flex items-center justify-between">
         {course.isFree ? (
-          <span className="inline-flex items-center gap-1.5 text-tag font-semibold uppercase tracking-[0.18em] text-moss">
-            <span className="w-1.5 h-1.5 bg-moss rounded-full" />
+          <span className="inline-flex items-center gap-1.5 text-tag font-semibold uppercase tracking-[0.18em] text-mint">
+            <span className="w-1.5 h-1.5 bg-mint rounded-full" />
             Gratuit · Lire maintenant
           </span>
         ) : accessible ? (

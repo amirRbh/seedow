@@ -224,7 +224,7 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
               aria-valuemin={PROJECTION_BOUNDS.monthlyMin}
               aria-valuemax={1000}
               aria-valuenow={safe.monthly}
-              className="w-full accent-[var(--moss-1)]"
+              className="w-full accent-[var(--highlight-1)]"
             />
             <div className="flex justify-between text-tag text-ink-3 mt-1 tabular-nums">
               <span>0 €</span>
@@ -316,7 +316,7 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
                   className={cn(
                     "flex-1 py-2 text-label font-medium border rounded-full transition-colors",
                     active
-                      ? "bg-moss-1 text-paper border-moss-1"
+                      ? "bg-highlight-1 text-paper border-highlight-1"
                       : "border-paper-3 text-ink-2 hover:border-ink-3",
                   )}
                 >
@@ -498,8 +498,8 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
                 <stop offset="100%" stopColor="var(--gold)" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="projWithout" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--moss-1)" stopOpacity={0.25} />
-                <stop offset="100%" stopColor="var(--moss-1)" stopOpacity={0} />
+                <stop offset="0%" stopColor="var(--highlight-1)" stopOpacity={0.25} />
+                <stop offset="100%" stopColor="var(--highlight-1)" stopOpacity={0} />
               </linearGradient>
             </defs>
             <XAxis
@@ -560,7 +560,7 @@ export function ProjectionSimulator({ initialAmount, expectedReturn, volatility 
             <Area
               type="monotone"
               dataKey="withoutContrib"
-              stroke="var(--moss-1)"
+              stroke="var(--highlight-1)"
               strokeWidth={1.5}
               fill="url(#projWithout)"
               dot={false}

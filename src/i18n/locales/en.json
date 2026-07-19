@@ -626,7 +626,7 @@
       "verify_email": "Account created. Check your email to finalize then come back.",
       "auth_error": "Authentication error"
     },
-    "planting": {
+    "building": {
       "loading_eyebrow": "Composition in progress",
       "loading_title": "Structuring portfolio",
       "loading_desc": "Constrained Markowitz optimization",
@@ -637,11 +637,11 @@
       "reveal_title": "Your portfolio",
       "reveal_summary": "{{count}} positions · reference capital {{amount}}",
       "dashboard_cta": "Go to dashboard",
-      "save_cta": "Save my garden",
+      "save_cta": "Save my portfolio",
       "save_hint": "Create a free account to save it — no strings attached, 10 seconds."
     },
     "saving": {
-      "title": "Saving your garden…"
+      "title": "Saving your portfolio…"
     },
     "step": {
       "back": "Back",
@@ -992,7 +992,7 @@
     "what_esg_etf": "What is an ESG ETF?",
     "minimum_invest": "How much minimum to invest?"
   },
-  "empty_garden": {
+  "empty_portfolio": {
     "welcome": "Welcome, {{name}}",
     "title": "Compose your first portfolio.",
     "desc": "Four questions to define your convictions. Ethi then structures an allocation aligned with your criteria.",
@@ -1026,15 +1026,15 @@
   "intent_cards": {
     "what_to_do": "What do you want to do?",
     "available_balance": "Available balance:",
-    "plant_hint": "Invest more",
-    "water_hint": "Recurring deposit",
-    "replant_hint": "With Ethi"
+    "invest_hint": "Invest more",
+    "deposit_hint": "Recurring deposit",
+    "rebalance_hint": "With Ethi"
   },
   "portfolio_selector": {
     "new_portfolio": "New portfolio",
     "limit_reached": "3 portfolios limit reached"
   },
-  "garden_viz": {
+  "allocation_list": {
     "allocation_title_one": "Allocation · {{count}} line",
     "allocation_title_other": "Allocation · {{count}} lines",
     "show_less": "Show less",
@@ -1044,17 +1044,17 @@
     "add_position": "+ Add a position",
     "explore": "Explore"
   },
-  "seasonal_badges": {
+  "milestone_badges": {
     "milestones": "Milestones",
     "celebrated_one": "{{count}} celebrated",
     "celebrated_other": "{{count}} celebrated",
     "to_unlock": "To unlock: {{desc}}",
     "defs": {
-      "first_seed": {
+      "first_investment": {
         "name": "First investment",
         "description": "You made your first investment."
       },
-      "patient_gardener": {
+      "patient_investor": {
         "name": "Patient investor",
         "description": "90 days without panicking."
       },
@@ -1070,11 +1070,11 @@
         "name": "Zero footprint",
         "description": "As much CO₂ avoided as your yearly consumption."
       },
-      "forest": {
+      "hundred_trees": {
         "name": "Small forest",
         "description": "100 tree-equivalents financed."
       },
-      "first_harvest": {
+      "first_withdrawal": {
         "name": "First withdrawal",
         "description": "You withdrew for a project close to your heart."
       },
@@ -1491,9 +1491,9 @@
     "failed_suffix": ", {{n}} failed"
   },
   "ethi_greetings": {
-    "rebalance_has_garden": "Hey {{name}} — want to rebalance? I'll review your **{{count}} lines** and tell you what to adjust.",
-    "rebalance_no_garden": "Hey {{name}} — no portfolio to rebalance yet. Shall we build one?",
-    "no_garden": "Hi {{name}} ✨ Your portfolio isn't created yet. Tell me what matters to you, and I'll compose it in 2 min.",
+    "rebalance_has_portfolio": "Hey {{name}} — want to rebalance? I'll review your **{{count}} lines** and tell you what to adjust.",
+    "rebalance_no_portfolio": "Hey {{name}} — no portfolio to rebalance yet. Shall we build one?",
+    "no_portfolio": "Hi {{name}} ✨ Your portfolio isn't created yet. Tell me what matters to you, and I'll compose it in 2 min.",
     "with_quotes": "{{name}}, your portfolio runs on **{{invested}} €** invested, **{{count}} lines** and a P&L of **{{pnl}}** 📈. Shall we look at what's next?",
     "invested_no_quotes": "{{name}}, your portfolio runs on **{{invested}} €** invested and **{{count}} lines**. Shall we look at what's next?",
     "ready_no_funds": "Hi {{name}} ✨ Your portfolio is ready but not funded yet. Shall we set up a first deposit?"
