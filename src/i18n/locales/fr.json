@@ -183,9 +183,6 @@
   "beta": {
     "banner_mode": "Mode démo",
     "banner_detail": "· capital virtuel · cours réels · aucun argent investi",
-    "counter_loading": "Phase bêta — places limitées",
-    "counter_label": "Phase bêta",
-    "counter_taken": "{{taken}} / {{cap}} places prises",
     "feedback_btn": "Feedback",
     "feedback_btn_aria": "Donner un retour",
     "feedback_thanks_title": "Merci pour ton retour.",
@@ -239,7 +236,22 @@
     "key_indicators": "Indicateurs clés",
     "simple_explainer_pre": "L'essentiel : croissance attendue, score ESG et CO₂ évité. Active",
     "simple_explainer_expert": "Expert",
-    "simple_explainer_post": "en haut pour tout voir."
+    "simple_explainer_post": "en haut pour tout voir.",
+    "history_chart": {
+      "title": "Évolution",
+      "loading": "Chargement…",
+      "load_error": "Erreur de chargement",
+      "empty_title": "Pas encore assez de données historiques pour tracer une courbe.",
+      "empty_desc": "La courbe apparaîtra dès que plusieurs jours de cotations seront disponibles.",
+      "value": "Valeur",
+      "invested_legend": "Capital investi",
+      "invested_tooltip": "Investi",
+      "range_1w": "1S",
+      "range_1m": "1M",
+      "range_3m": "3M",
+      "range_1y": "1A",
+      "range_all": "Tout"
+    }
   },
   "objectives": {
     "meta_title": "Objectifs — seedow",
@@ -1033,13 +1045,6 @@
     "explainer": "Le CO₂ évité est une estimation indicatrice calculée à partir des scores ESG de chaque ligne. Elle reflète la réduction d'empreinte liée à l'exclusion des émetteurs les plus carbonés et à la sélection best-in-class. Ce n'est pas un chiffre réglementaire — c'est une mesure de direction.",
     "learn_more": "En savoir plus"
   },
-  "intent_cards": {
-    "what_to_do": "Que veux-tu faire ?",
-    "available_balance": "Solde dispo :",
-    "invest_hint": "Investir plus",
-    "deposit_hint": "Dépôt récurrent",
-    "rebalance_hint": "Avec Ethi"
-  },
   "portfolio_selector": {
     "new_portfolio": "Nouveau portefeuille",
     "limit_reached": "Limite de 3 portefeuilles atteinte"
@@ -1242,45 +1247,6 @@
   "valuation_consistency": {
     "title": "Écart de valorisation détecté",
     "description": "La valeur calculée par la base ({{viewValue}}) diffère du recalcul à partir des poids et des cours ({{expectedValue}}) de <0>{{deltaPct}}%</0> (seuil : {{threshold}}%). Rafraîchis les cours ; si l'écart persiste, la vue est probablement à reconstruire."
-  },
-  "projection_simulator": {
-    "prudent": "Prudent",
-    "central": "Central",
-    "optimistic": "Optimiste",
-    "pea": "PEA",
-    "av": "Assurance-Vie",
-    "cto": "CTO",
-    "contribute_title": "Et si tu versais chaque mois ?",
-    "goal_title": "Quel versement pour ton objectif ?",
-    "contribute_desc": "Capital projeté sur {{years}} ans à partir de {{initial}}.",
-    "goal_desc": "Versement requis pour atteindre ta cible en {{years}} ans.",
-    "tab_contribute": "Je verse",
-    "tab_goal": "J'ai un objectif",
-    "monthly_deposit": "Versement mensuel",
-    "monthly_invalid": "Versement borné entre {{min}} € et {{max}} €.",
-    "target_capital": "Capital cible (€ d'aujourd'hui hors inflation)",
-    "investment_horizon": "Horizon d'investissement",
-    "years_label": "ans",
-    "market_scenario": "Scénario de marché",
-    "tax_envelope": "Enveloppe fiscale",
-    "stress_test": "Test de résistance",
-    "none": "Aucun",
-    "crash": "Krach −30 %",
-    "pause": "Pause 2 ans",
-    "inflation_stress": "Inflation 5 %",
-    "projected_capital_brut": "Capital projeté (brut)",
-    "purchasing_power": "Pouvoir d'achat équivalent aujourd'hui : {{value}} (infl. {{inflation}})",
-    "net_after_tax": "Net après fiscalité",
-    "tax_amount": "impôt {{tax}}",
-    "gross_gain": "Plus-value brute",
-    "estimated_loss": "Perte estimée",
-    "total_contributed": "Total versé : {{total}}",
-    "under_stress": "Sous stress",
-    "vs_central": "vs central",
-    "required_monthly": "Versement mensuel requis",
-    "goal_attain": "Pour atteindre {{target}} ({{nominal}} nominal) en {{years}} ans",
-    "unattainable": "Objectif inatteignable même au plafond {{max}}/mois",
-    "unattainable_hint": "Augmente l'horizon, baisse la cible ou choisis un scénario plus optimiste."
   },
   "community_panel": {
     "risk": "risque",

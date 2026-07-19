@@ -183,9 +183,6 @@
   "beta": {
     "banner_mode": "Demo mode",
     "banner_detail": "· virtual capital · real prices · no money invested",
-    "counter_loading": "Beta phase — limited seats",
-    "counter_label": "Beta phase",
-    "counter_taken": "{{taken}} / {{cap}} seats taken",
     "feedback_btn": "Feedback",
     "feedback_btn_aria": "Give feedback",
     "feedback_thanks_title": "Thanks for the feedback.",
@@ -239,7 +236,22 @@
     "key_indicators": "Key indicators",
     "simple_explainer_pre": "The essentials: expected growth, ESG score and CO₂ avoided. Enable",
     "simple_explainer_expert": "Expert",
-    "simple_explainer_post": "at the top to see everything."
+    "simple_explainer_post": "at the top to see everything.",
+    "history_chart": {
+      "title": "Performance",
+      "loading": "Loading…",
+      "load_error": "Loading error",
+      "empty_title": "Not enough historical data yet to draw a chart.",
+      "empty_desc": "The chart will appear once several days of quotes are available.",
+      "value": "Value",
+      "invested_legend": "Capital invested",
+      "invested_tooltip": "Invested",
+      "range_1w": "1W",
+      "range_1m": "1M",
+      "range_3m": "3M",
+      "range_1y": "1Y",
+      "range_all": "All"
+    }
   },
   "objectives": {
     "meta_title": "Goals — seedow",
@@ -1051,13 +1063,6 @@
     "explainer": "CO₂ avoided is an indicative estimate derived from each holding's ESG score. It reflects the footprint reduction from excluding the most carbon-intensive issuers and selecting best-in-class assets. Not a regulatory figure — a directional measure.",
     "learn_more": "Learn more"
   },
-  "intent_cards": {
-    "what_to_do": "What do you want to do?",
-    "available_balance": "Available balance:",
-    "invest_hint": "Invest more",
-    "deposit_hint": "Recurring deposit",
-    "rebalance_hint": "With Ethi"
-  },
   "portfolio_selector": {
     "new_portfolio": "New portfolio",
     "limit_reached": "3 portfolios limit reached"
@@ -1260,45 +1265,6 @@
   "valuation_consistency": {
     "title": "Valuation gap detected",
     "description": "The value calculated by the database ({{viewValue}}) differs from the recalculation from weights and quotes ({{expectedValue}}) by <0>{{deltaPct}}%</0> (threshold: {{threshold}}%). Refresh quotes; if the gap persists, the view might need reconstruction."
-  },
-  "projection_simulator": {
-    "prudent": "Prudent",
-    "central": "Central",
-    "optimistic": "Optimistic",
-    "pea": "PEA",
-    "av": "Life Insurance",
-    "cto": "CTO",
-    "contribute_title": "What if you invested every month?",
-    "goal_title": "How much for your goal?",
-    "contribute_desc": "Projected capital over {{years}} years starting from {{initial}}.",
-    "goal_desc": "Required deposit to reach your target in {{years}} years.",
-    "tab_contribute": "I deposit",
-    "tab_goal": "I have a goal",
-    "monthly_deposit": "Monthly deposit",
-    "monthly_invalid": "Deposit bounded between {{min}} € and {{max}} €.",
-    "target_capital": "Target capital (today's € excluding inflation)",
-    "investment_horizon": "Investment horizon",
-    "years_label": "years",
-    "market_scenario": "Market scenario",
-    "tax_envelope": "Tax envelope",
-    "stress_test": "Stress test",
-    "none": "None",
-    "crash": "Crash −30 %",
-    "pause": "Pause 2 years",
-    "inflation_stress": "Inflation 5 %",
-    "projected_capital_brut": "Projected capital (gross)",
-    "purchasing_power": "Today's equivalent purchasing power: {{value}} (infl. {{inflation}})",
-    "net_after_tax": "Net after tax",
-    "tax_amount": "tax {{tax}}",
-    "gross_gain": "Gross gain",
-    "estimated_loss": "Estimated loss",
-    "total_contributed": "Total deposited: {{total}}",
-    "under_stress": "Under stress",
-    "vs_central": "vs central",
-    "required_monthly": "Required monthly deposit",
-    "goal_attain": "To reach {{target}} ({{nominal}} nominal) in {{years}} years",
-    "unattainable": "Goal unattainable even at the {{max}}/month cap",
-    "unattainable_hint": "Increase the horizon, lower the target or choose a more optimistic scenario."
   },
   "community_panel": {
     "risk": "risk",

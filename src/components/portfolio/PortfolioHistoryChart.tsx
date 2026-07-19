@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
+import { useTranslation } from "react-i18next";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
+import { useLang } from "@/hooks/useLang";
+import { formatCurrency, formatDate } from "@/lib/format";
 import {
   Area,
   AreaChart,
@@ -15,32 +18,26 @@ import { getPortfolioHistory, type HistoryPoint } from "@/lib/portfolio/history.
 
 type Range = "1W" | "1M" | "3M" | "1Y" | "ALL";
 
-const RANGES: { id: Range; label: string }[] = [
-  { id: "1W", label: "1S" },
-  { id: "1M", label: "1M" },
-  { id: "3M", label: "3M" },
-  { id: "1Y", label: "1A" },
-  { id: "ALL", label: "Tout" },
-];
-
-const fmtEur = (n: number) =>
-  n.toLocaleString("fr-FR", {
-    style: "currency",
-    currency: "EUR",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-
-const fmtDate = (iso: string) =>
-  new Date(iso).toLocaleDateString("fr-FR", { day: "2-digit", month: "short" });
-
 export function PortfolioHistoryChart() {
+  const { t } = useTranslation();
+  const { lang } = useLang();
   const fetchHistory = useServerFn(getPortfolioHistory);
   const { activeId } = useUserPortfolios();
   const [range, setRange] = useState<Range>("3M");
   const [points, setPoints] = useState<HistoryPoint[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const RANGES: { id: Range; label: string }[] = [
+    { id: "1W", label: t("portfolio.history_chart.range_1w") },
+    { id: "1M", label: t("portfolio.history_chart.range_1m") },
+    { id: "3M", label: t("portfolio.history_chart.range_3m") },
+    { id: "1Y", label: t("portfolio.history_chart.range_1y") },
+    { id: "ALL", label: t("portfolio.history_chart.range_all") },
+  ];
+
+  const fmtEur = (n: number) => formatCurrency(n, lang);
+  const fmtDate = (iso: string) => formatDate(iso, lang, { day: "2-digit", month: "short" });
 
   useEffect(() => {
     let cancelled = false;
@@ -53,7 +50,7 @@ export function PortfolioHistoryChart() {
       })
       .catch((e) => {
         if (cancelled) return;
-        setError(e instanceof Error ? e.message : "Erreur de chargement");
+        setError(e instanceof Error ? e.message : t("portfolio.history_chart.load_error"));
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -61,7 +58,7 @@ export function PortfolioHistoryChart() {
     return () => {
       cancelled = true;
     };
-  }, [range, fetchHistory, activeId]);
+  }, [range, fetchHistory, activeId, t]);
 
   const { first, last, deltaPct, deltaAbs, isUp, minY, maxY } = useMemo(() => {
     if (points.length === 0) {
@@ -99,7 +96,9 @@ export function PortfolioHistoryChart() {
     <div className="paper-card p-5">
       <div className="flex items-baseline justify-between mb-3">
         <div>
-          <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold">Évolution</p>
+          <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold">
+            {t("portfolio.history_chart.title")}
+          </p>
           <p className="font-value text-2xl text-ink mt-0.5">{fmtEur(last)}</p>
           {points.length > 0 && (
             <p
@@ -132,7 +131,7 @@ export function PortfolioHistoryChart() {
       <div className="h-44 -mx-2">
         {loading ? (
           <div className="h-full flex items-center justify-center text-caption text-ink-3">
-            Chargement…
+            {t("portfolio.history_chart.loading")}
           </div>
         ) : error ? (
           <div className="h-full flex items-center justify-center text-caption text-rust">
@@ -140,9 +139,9 @@ export function PortfolioHistoryChart() {
           </div>
         ) : points.length < 2 ? (
           <div className="h-full flex items-center justify-center text-caption text-ink-3 text-center px-4">
-            Pas encore assez de données historiques pour tracer une courbe.
+            {t("portfolio.history_chart.empty_title")}
             <br />
-            La courbe apparaîtra dès que plusieurs jours de cotations seront disponibles.
+            {t("portfolio.history_chart.empty_desc")}
           </div>
         ) : (
           <ResponsiveContainer width="100%" height="100%">
@@ -174,7 +173,7 @@ export function PortfolioHistoryChart() {
                 labelStyle={{ color: "var(--paper-2)", marginBottom: 4 }}
                 itemStyle={{ color: "var(--paper)" }}
                 labelFormatter={(d: string) =>
-                  new Date(d).toLocaleDateString("fr-FR", {
+                  formatDate(d, lang, {
                     weekday: "short",
                     day: "2-digit",
                     month: "short",
@@ -183,7 +182,9 @@ export function PortfolioHistoryChart() {
                 }
                 formatter={(v: number, name) => [
                   fmtEur(v),
-                  name === "value" ? "Valeur" : "Investi",
+                  name === "value"
+                    ? t("portfolio.history_chart.value")
+                    : t("portfolio.history_chart.invested_tooltip"),
                 ]}
               />
               <Line
@@ -213,11 +214,11 @@ export function PortfolioHistoryChart() {
         <div className="flex items-center gap-4 mt-3 pt-3 border-t border-paper-3 text-tag text-ink-3">
           <span className="flex items-center gap-1.5">
             <span className="w-2.5 h-0.5 inline-block" style={{ backgroundColor: stroke }} />
-            Valeur
+            {t("portfolio.history_chart.value")}
           </span>
           <span className="flex items-center gap-1.5">
             <span className="w-2.5 h-px inline-block border-t border-dashed border-ink-3" />
-            Capital investi
+            {t("portfolio.history_chart.invested_legend")}
           </span>
           <span className="ml-auto">
             {fmtDate(points[0].date)} → {fmtDate(points[points.length - 1].date)}
