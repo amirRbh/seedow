@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
@@ -19,9 +19,11 @@ import { AllocationRefiner } from "@/components/portfolio/AllocationRefiner";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ExplainerCard } from "@/components/ui/ExplainerCard";
 import { Skeleton } from "@/components/ui/skeleton";
+import { EmptyPortfolioState } from "@/components/portfolio/EmptyPortfolioState";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { useViewMode } from "@/hooks/useViewMode";
+import { useAuth } from "@/hooks/useAuth";
 import { useLang } from "@/hooks/useLang";
 import { formatCurrency } from "@/lib/format";
 import { BADGE_DEFS, computeUnlockedBadgeIds } from "@/lib/portfolio/badges";
@@ -36,6 +38,7 @@ export const Route = createFileRoute("/portfolio")({
 function Portfolio() {
   const { t } = useTranslation();
   const { lang } = useLang();
+  const { user } = useAuth();
   const { portfolio, loading } = useActivePortfolio();
   const valuation = usePortfolioValuation();
   const { isSimple } = useViewMode();
@@ -62,27 +65,16 @@ function Portfolio() {
   }
 
   if (!portfolio) {
+    const userName =
+      (user?.user_metadata as { display_name?: string; full_name?: string } | undefined)
+        ?.display_name ?? user?.email?.split("@")[0] ?? "";
     return (
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="min-h-screen bg-paper"
       >
-        <div className="max-w-lg mx-auto pb-28">
-          <AppHeader eyebrow={t("portfolio.details")} title={t("portfolio.my_portfolio")} />
-          <div className="px-5 pt-8">
-            <div className="border border-dashed border-paper-3 rounded p-6 text-center">
-              <p className="text-body-sm text-ink-2 mb-3">{t("portfolio.no_active")}</p>
-              <Link
-                to="/onboarding"
-                search={{ new: undefined }}
-                className="inline-block px-4 py-2 text-label font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
-              >
-                {t("portfolio.start_onboarding")}
-              </Link>
-            </div>
-          </div>
-        </div>
+        <EmptyPortfolioState userName={userName} />
         <BottomNavigation />
       </motion.div>
     );
