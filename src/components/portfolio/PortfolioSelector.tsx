@@ -15,14 +15,27 @@ export function PortfolioSelector({ compact = false }: { compact?: boolean }) {
   const { portfolios, activeId, setActiveId, canCreateMore, loading } = useUserPortfolios();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+
+  const close = (restoreFocus = true) => {
+    setOpen(false);
+    if (restoreFocus) triggerRef.current?.focus();
+  };
 
   useEffect(() => {
     if (!open) return;
     const onClick = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
     };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+    };
     document.addEventListener("mousedown", onClick);
-    return () => document.removeEventListener("mousedown", onClick);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onClick);
+      document.removeEventListener("keydown", onKeyDown);
+    };
   }, [open]);
 
   if (loading || portfolios.length === 0) return null;
@@ -34,9 +47,10 @@ export function PortfolioSelector({ compact = false }: { compact?: boolean }) {
   return (
     <div ref={ref} className="relative">
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className={`flex items-center gap-1.5 rounded-full border border-paper-3 bg-paper hover:border-highlight-2 transition-colors ${
+        className={`flex items-center gap-1.5 rounded-full border border-paper-3 bg-paper hover:border-highlight-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 focus-visible:ring-offset-1 ${
           compact ? "h-7 px-2.5" : "h-8 px-3"
         }`}
         aria-haspopup="listbox"
@@ -77,11 +91,11 @@ export function PortfolioSelector({ compact = false }: { compact?: boolean }) {
                     key={p.id}
                     onClick={() => {
                       setActiveId(p.id);
-                      setOpen(false);
+                      close();
                     }}
                     role="option"
                     aria-selected={isActive}
-                    className={`w-full flex items-center justify-between gap-2 px-3 py-2 text-left text-label transition-colors ${
+                    className={`w-full flex items-center justify-between gap-2 px-3 py-2 text-left text-label transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-highlight-1 ${
                       isActive ? "bg-highlight-5/40 text-ink" : "text-ink-2 hover:bg-paper-2"
                     }`}
                   >
@@ -111,10 +125,10 @@ export function PortfolioSelector({ compact = false }: { compact?: boolean }) {
               {canCreateMore ? (
                 <button
                   onClick={() => {
-                    setOpen(false);
+                    close(false);
                     navigate({ to: "/onboarding", search: { new: 1 } });
                   }}
-                  className="w-full flex items-center gap-2 px-3 py-2.5 text-left text-label text-highlight-1 hover:bg-highlight-5/30 font-medium"
+                  className="w-full flex items-center gap-2 px-3 py-2.5 text-left text-label text-highlight-1 hover:bg-highlight-5/30 font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-highlight-1"
                 >
                   <span className="w-4 h-4 rounded-full border border-highlight-1 flex items-center justify-center text-tag leading-none">
                     +

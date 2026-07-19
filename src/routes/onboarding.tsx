@@ -78,6 +78,58 @@ type StepId = (typeof STEPS)[number]["id"];
 type Phase = "intro" | "steps" | "preview" | "account" | "naming" | "building" | "saving";
 type Answers = Partial<Record<StepId, string[]>>;
 
+// ─────────────────────────────────────────────────────────
+// Persistance de session — évite de perdre la progression au refresh
+// ou lors d'une redirection OAuth/vérification d'email interrompue.
+// sessionStorage : disparaît à la fermeture de l'onglet, pas de brouillon
+// qui traîne indéfiniment.
+// ─────────────────────────────────────────────────────────
+const DRAFT_KEY = "seedow_onboarding_draft";
+
+interface OnboardingDraft {
+  phase: Phase;
+  stepIndex: number;
+  answers: Answers;
+  portfolioName: string;
+  isAdditive: boolean;
+}
+
+function loadDraft(isAdditive: boolean): OnboardingDraft | null {
+  try {
+    const raw = sessionStorage.getItem(DRAFT_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<OnboardingDraft>;
+    // Un brouillon "nouveau portefeuille" ne doit pas être repris par le flux
+    // du premier portefeuille, et inversement.
+    if (!parsed.phase || Boolean(parsed.isAdditive) !== isAdditive) return null;
+    return {
+      phase: parsed.phase,
+      stepIndex: parsed.stepIndex ?? 0,
+      answers: parsed.answers ?? {},
+      portfolioName: parsed.portfolioName ?? "",
+      isAdditive,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function saveDraft(draft: OnboardingDraft) {
+  try {
+    sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+  } catch {
+    // Stockage indisponible (mode privé strict, quota) : on continue sans persister.
+  }
+}
+
+function clearDraft() {
+  try {
+    sessionStorage.removeItem(DRAFT_KEY);
+  } catch {
+    // ignore
+  }
+}
+
 /** Dérive les paramètres du moteur de portefeuille depuis les réponses de l'onboarding. */
 function answersToParams(answers: Answers): PortfolioParams {
   const causes = ((answers.values ?? []) as CauseTag[]).slice(0, 6);
@@ -116,12 +168,20 @@ function Onboarding() {
   const router = useRouter();
   const { new: isNew } = Route.useSearch();
   const isAdditive = isNew === 1;
-  const [phase, setPhase] = useState<Phase>(isAdditive ? "steps" : "intro");
-  const [stepIndex, setStepIndex] = useState(0);
-  const [answers, setAnswers] = useState<Answers>({});
-  const [portfolioName, setPortfolioName] = useState("");
+  // Ne restaure que le brouillon correspondant au même contexte (premier
+  // portefeuille vs. portefeuille additionnel) — jamais l'un à la place de l'autre.
+  const draft = loadDraft(isAdditive);
+  const [phase, setPhase] = useState<Phase>(draft?.phase ?? (isAdditive ? "steps" : "intro"));
+  const [stepIndex, setStepIndex] = useState(draft?.stepIndex ?? 0);
+  const [answers, setAnswers] = useState<Answers>(draft?.answers ?? {});
+  const [portfolioName, setPortfolioName] = useState(draft?.portfolioName ?? "");
 
   const portfolioParams = useMemo(() => answersToParams(answers), [answers]);
+
+  useEffect(() => {
+    if (phase === "intro") return; // rien à restaurer tant que l'utilisateur n'a pas démarré
+    saveDraft({ phase, stepIndex, answers, portfolioName, isAdditive });
+  }, [phase, stepIndex, answers, portfolioName, isAdditive]);
 
   const completeStep = async (selected: string[]) => {
     const step = STEPS[stepIndex];
@@ -148,7 +208,7 @@ function Onboarding() {
     }
   };
 
-  // Appelé depuis l'écran de preview quand l'utilisateur veut sauvegarder son jardin.
+  // Appelé depuis l'écran de preview quand l'utilisateur veut sauvegarder son portefeuille.
   const handleSave = async () => {
     const { data } = await supabase.auth.getSession();
     if (data.session) setPhase("saving");
@@ -210,6 +270,7 @@ function Onboarding() {
           <BuildingScene
             key="building"
             onEnter={async () => {
+              clearDraft();
               await router.invalidate();
               navigate({ to: "/dashboard" });
             }}
@@ -223,6 +284,7 @@ function Onboarding() {
             key="saving"
             params={portfolioParams}
             onEnter={async () => {
+              clearDraft();
               await router.invalidate();
               navigate({ to: "/dashboard" });
             }}

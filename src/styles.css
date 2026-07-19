@@ -6,10 +6,9 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ═══════════════════════════════════════════════════════════════
-   SEEDOW — Editorial brut, ESG signal-driven
-   Papier ivoire #F5F3EC, encre noir pur, accent mint profond #0B7A3E
-   + ice/solar/alert/volt comme data colors. Typo : Bebas Neue (display)
-   + Inter (body) + IBM Plex Mono (eyebrows / chiffres / labels).
+   SEEDOW — palette Apple (papier blanc, encre #1d1d1f, accent mint)
+   + ice/solar/alert/volt comme data colors. Typo : Inter (display + body)
+   + IBM Plex Mono (chiffres / labels).
 ═══════════════════════════════════════════════════════════════ */
 
 @theme inline {
@@ -138,21 +137,21 @@
   --highlight-4: #d2d2d7;
   --highlight-5: #f5f5f7;
 
-  /* Data signal colors — accents assourdis Apple */
-  --mint: #1d8348; /* vert forest sobre */
-  --ice: #0071e3; /* bleu Apple signature */
+  /* Data signal colors — assombries pour tenir 4.5:1 AA sur --paper-2 (voir audit contraste) */
+  --mint: #1a7a42; /* vert forest sobre */
+  --ice: #0066cc; /* bleu Apple signature */
   --volt: #6e56cf; /* violet doux */
-  --alert: #e11d48; /* rouge saturé */
-  --solar: #b7791f; /* or mat */
+  --alert: #ca1a41; /* rouge saturé */
+  --solar: #895b17; /* or mat */
 
   /* Aliases legacy */
-  --rust: #e11d48;
-  --gold: #1d8348;
-  --gold-soft: #1d8348;
-  --sky: #0071e3;
+  --rust: #ca1a41;
+  --gold: #1a7a42;
+  --gold-soft: #1a7a42;
+  --sky: #0066cc;
   --bloom: #6e56cf;
-  --peach: #b7791f;
-  --glacier: #0071e3;
+  --peach: #895b17;
+  --glacier: #0066cc;
 
   /* shadcn mapping */
   --background: var(--paper);
@@ -646,7 +645,7 @@
   --apple-bg: #ffffff;
   --apple-surface: #f5f5f7;
   --apple-text: #1d1d1f;
-  --apple-text-2: #86868b;
+  --apple-text-2: #64646a; /* aligné sur --ink-2 (5.9:1 AA) — #86868b (3.6:1) échouait le contraste */
   --apple-dark: #1d1d1f;
   --apple-dark-2: #2d2d2f;
   background: var(--apple-bg);

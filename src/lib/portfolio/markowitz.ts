@@ -1,11 +1,8 @@
-import { create, all, type Matrix } from "mathjs";
 // quadprog has no types but we type the call signature locally
 // @ts-expect-error - no published types
 import quadprog from "quadprog";
 import type { Asset, PortfolioParams, PortfolioWeights } from "./types";
 import { getClassBounds, MAX_SINGLE_WEIGHT, MIN_PORTFOLIO_ESG } from "./types";
-
-const math = create(all, {});
 
 interface QPResult {
   solution: number[];
@@ -271,8 +268,3 @@ export function applyConvictionAdjustment(
 
 /** @deprecated Renamed to applyConvictionAdjustment. Kept for back-compat. */
 export const applyBlackLittermanViews = applyConvictionAdjustment;
-
-// Keep export to silence unused-import warning if mathjs functions aren't used
-// in trivial paths — mathjs may be useful for future extensions.
-export const _math: typeof math = math;
-export type _Matrix = Matrix;
