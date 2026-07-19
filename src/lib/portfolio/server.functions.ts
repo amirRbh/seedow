@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { buildPortfolio, type Asset, type PortfolioParams } from "@/lib/portfolio";
+import { buildPortfolio, type Asset, type PortfolioParams, type PortfolioResult } from "@/lib/portfolio";
 
 // ─────────────────────────────────────────────────────────
 // Validation
@@ -139,6 +139,112 @@ export const simulatePortfolio = createServerFn({ method: "POST" })
     };
   });
 
+interface PersistedPortfolio {
+  portfolio_id: string;
+  weights: PortfolioResult["weights"];
+  metrics: PortfolioResult["metrics"];
+  selected: {
+    id: string;
+    ticker: string;
+    name: string;
+    asset_class: string;
+    esg_score: number;
+    ter: number;
+  }[];
+}
+
+/**
+ * Persiste le résultat de buildPortfolio pour un utilisateur : désactive
+ * l'ancien portefeuille actif (mode "replace"), insère le nouveau, et si la
+ * contrainte unique "un seul portefeuille actif par utilisateur" a déclenché
+ * malgré tout (deux requêtes concurrentes de génération, course rare) —
+ * retombe sur le portefeuille actif existant plutôt que de planter l'UI.
+ *
+ * Extrait de generatePortfolio() pour être testable indépendamment de
+ * createServerFn/du middleware d'auth : `userClient` n'a besoin que de la
+ * forme utilisée ci-dessous, pas d'un vrai client Supabase.
+ */
+export async function persistPortfolio(
+  userClient: typeof supabaseAdmin,
+  userId: string,
+  data: z.infer<typeof ParamsSchema>,
+  result: PortfolioResult,
+): Promise<PersistedPortfolio> {
+  const selected = result.selected_assets.map((a) => ({
+    id: a.id,
+    ticker: a.ticker,
+    name: a.name,
+    asset_class: a.asset_class,
+    esg_score: a.esg_score,
+    ter: a.ter,
+  }));
+
+  // 1) En mode "replace", désactiver tous les portefeuilles actifs existants.
+  //    En mode "create", on conserve les jardins existants (le trigger DB applique la limite de 3).
+  if (data.mode === "replace") {
+    const { error: deactivateErr } = await userClient
+      .from("portfolios")
+      .update({ is_active: false })
+      .eq("user_id", userId)
+      .eq("is_active", true)
+      .select("id");
+
+    if (deactivateErr) {
+      console.error("[generatePortfolio] deactivate error:", deactivateErr);
+      throw new Error("Impossible de désactiver le portefeuille précédent. Réessaie dans un instant.");
+    }
+  }
+
+  // 2) Insérer le nouveau portefeuille comme actif
+  const { data: inserted, error } = await userClient
+    .from("portfolios")
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .insert({
+      user_id: userId,
+      name: data.name ?? "Mon portefeuille",
+      causes: data.causes,
+      cause_intensity: data.cause_intensity,
+      exclusions: data.exclusions,
+      risk_target: data.risk_target,
+      horizon_years: data.horizon_years,
+      initial_amount: data.initial_amount,
+      weights: result.weights,
+      metrics: result.metrics as unknown as Record<string, unknown>,
+      methodology_version: result.methodology_version,
+      esg_floor_relaxed: result.esg_floor_relaxed,
+      is_active: true,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("[generatePortfolio] insert error:", error);
+    // Si la contrainte unique a déclenché malgré tout (course rare), on retombe
+    // sur le portefeuille actif existant plutôt que de planter l'UI.
+    if (error.code === "23505") {
+      const { data: existing } = await userClient
+        .from("portfolios")
+        .select("*")
+        .eq("user_id", userId)
+        .eq("is_active", true)
+        .order("generated_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (existing) {
+        await userClient.from("profiles").update({ onboarding_completed: true }).eq("id", userId);
+        return { portfolio_id: existing.id, weights: result.weights, metrics: result.metrics, selected };
+      }
+    }
+    throw new Error("Impossible d'enregistrer le portefeuille. Réessaie dans un instant.");
+  }
+
+  // Mark onboarding complete
+  await userClient.from("profiles").update({ onboarding_completed: true }).eq("id", userId);
+
+  return { portfolio_id: inserted.id, weights: result.weights, metrics: result.metrics, selected };
+}
+
 /**
  * Generate AND persist a portfolio for the authenticated user.
  */
@@ -162,96 +268,7 @@ export const generatePortfolio = createServerFn({ method: "POST" })
       params,
     });
 
-    // 1) En mode "replace", désactiver tous les portefeuilles actifs existants.
-    //    En mode "create", on conserve les jardins existants (le trigger DB applique la limite de 3).
-    if (data.mode === "replace") {
-      const { error: deactivateErr } = await userClient
-        .from("portfolios")
-        .update({ is_active: false })
-        .eq("user_id", userId)
-        .eq("is_active", true)
-        .select("id");
-
-      if (deactivateErr) {
-        console.error("[generatePortfolio] deactivate error:", deactivateErr);
-        throw new Error(
-          "Impossible de désactiver le portefeuille précédent. Réessaie dans un instant.",
-        );
-      }
-    }
-
-    // 2) Insérer le nouveau portefeuille comme actif
-    const { data: inserted, error } = await userClient
-      .from("portfolios")
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .insert({
-        user_id: userId,
-        name: data.name ?? "Mon portefeuille",
-        causes: data.causes,
-        cause_intensity: data.cause_intensity,
-        exclusions: data.exclusions,
-        risk_target: data.risk_target,
-        horizon_years: data.horizon_years,
-        initial_amount: data.initial_amount,
-        weights: result.weights,
-        metrics: result.metrics as unknown as Record<string, unknown>,
-        methodology_version: result.methodology_version,
-        esg_floor_relaxed: result.esg_floor_relaxed,
-        is_active: true,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as any)
-      .select()
-      .single();
-
-    if (error) {
-      console.error("[generatePortfolio] insert error:", error);
-      // Si la contrainte unique a déclenché malgré tout (course rare), on retombe
-      // sur le portefeuille actif existant plutôt que de planter l'UI.
-      if (error.code === "23505") {
-        const { data: existing } = await userClient
-          .from("portfolios")
-          .select("*")
-          .eq("user_id", userId)
-          .eq("is_active", true)
-          .order("generated_at", { ascending: false })
-          .limit(1)
-          .maybeSingle();
-        if (existing) {
-          await userClient.from("profiles").update({ onboarding_completed: true }).eq("id", userId);
-          return {
-            portfolio_id: existing.id,
-            weights: result.weights,
-            metrics: result.metrics,
-            selected: result.selected_assets.map((a) => ({
-              id: a.id,
-              ticker: a.ticker,
-              name: a.name,
-              asset_class: a.asset_class,
-              esg_score: a.esg_score,
-              ter: a.ter,
-            })),
-          };
-        }
-      }
-      throw new Error("Impossible d'enregistrer le portefeuille. Réessaie dans un instant.");
-    }
-
-    // Mark onboarding complete
-    await userClient.from("profiles").update({ onboarding_completed: true }).eq("id", userId);
-
-    return {
-      portfolio_id: inserted.id,
-      weights: result.weights,
-      metrics: result.metrics,
-      selected: result.selected_assets.map((a) => ({
-        id: a.id,
-        ticker: a.ticker,
-        name: a.name,
-        asset_class: a.asset_class,
-        esg_score: a.esg_score,
-        ter: a.ter,
-      })),
-    };
+    return persistPortfolio(userClient as typeof supabaseAdmin, userId, data, result);
   });
 
 const RebalanceSchema = z.object({ portfolio_id: z.string().uuid() });
