@@ -1,19 +1,14 @@
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { ComparatifPanel } from "@/components/portfolio/ComparatifPanel";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
-import { supabase } from "@/integrations/supabase/client";
+import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 
 export const Route = createFileRoute("/comparatif")({
-  beforeLoad: async () => {
-    const { data, error } = await supabase.auth.getUser();
-    if (error || !data.user) {
-      throw redirect({ to: "/auth", search: { redirect: "/comparatif", mode: "login" } });
-    }
-  },
+  beforeLoad: () => requireAuthedUser("/comparatif"),
   head: () => ({
     meta: [
       { title: "Comparatif — Seedow" },

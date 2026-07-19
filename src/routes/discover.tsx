@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
@@ -6,15 +6,10 @@ import { AppHeader } from "@/components/navigation/AppHeader";
 import { AssetScreener } from "@/components/discover/AssetScreener";
 import { CommunityPanel } from "@/components/community/CommunityPanel";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { supabase } from "@/integrations/supabase/client";
+import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 
 export const Route = createFileRoute("/discover")({
-  beforeLoad: async () => {
-    const { data, error } = await supabase.auth.getUser();
-    if (error || !data.user) {
-      throw redirect({ to: "/auth", search: { redirect: "/discover", mode: "login" } });
-    }
-  },
+  beforeLoad: () => requireAuthedUser("/discover"),
   component: Discover,
 });
 

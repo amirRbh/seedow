@@ -7,7 +7,8 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import { AnimatePresence, motion, MotionConfig } from "framer-motion";
-import { Component, useEffect, type ReactNode } from "react";
+import { Component, useEffect, useState, type ReactNode } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import "@/i18n";
 import { LexiconProvider } from "@/hooks/useLexicon";
@@ -169,26 +170,43 @@ function RootComponent() {
     installGlobalErrorReporting();
   }, []);
 
+  // Une instance par rendu racine (pas un singleton module-level) : en SSR,
+  // un client partagé entre requêtes ferait fuiter le cache d'un utilisateur
+  // vers un autre.
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 30_000,
+            retry: 1,
+          },
+        },
+      }),
+  );
+
   return (
     <MotionConfig reducedMotion="user">
       <RootErrorBoundary>
-        <AuthProvider>
-          <UserPortfoliosProvider>
-            <LexiconProvider>
-              <ViewModeProvider>
-                <FocusModeProvider>
-                  <TooltipProvider delayDuration={150}>
-                    <AppShell>
-                      <RouteTransition />
-                    </AppShell>
-                    <Toaster richColors position="bottom-right" />
-                    <CookieNotice />
-                  </TooltipProvider>
-                </FocusModeProvider>
-              </ViewModeProvider>
-            </LexiconProvider>
-          </UserPortfoliosProvider>
-        </AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <UserPortfoliosProvider>
+              <LexiconProvider>
+                <ViewModeProvider>
+                  <FocusModeProvider>
+                    <TooltipProvider delayDuration={150}>
+                      <AppShell>
+                        <RouteTransition />
+                      </AppShell>
+                      <Toaster richColors position="bottom-right" />
+                      <CookieNotice />
+                    </TooltipProvider>
+                  </FocusModeProvider>
+                </ViewModeProvider>
+              </LexiconProvider>
+            </UserPortfoliosProvider>
+          </AuthProvider>
+        </QueryClientProvider>
       </RootErrorBoundary>
     </MotionConfig>
   );

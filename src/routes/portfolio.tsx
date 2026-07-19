@@ -1,4 +1,4 @@
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
@@ -24,17 +24,12 @@ import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { useViewMode } from "@/hooks/useViewMode";
 import { useLang } from "@/hooks/useLang";
 import { formatCurrency } from "@/lib/format";
-import { supabase } from "@/integrations/supabase/client";
 import { BADGE_DEFS, computeUnlockedBadgeIds } from "@/lib/portfolio/badges";
 import type { MilestoneBadge } from "@/components/portfolio/MilestoneBadges";
+import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 
 export const Route = createFileRoute("/portfolio")({
-  beforeLoad: async () => {
-    const { data, error } = await supabase.auth.getUser();
-    if (error || !data.user) {
-      throw redirect({ to: "/auth", search: { redirect: "/portfolio", mode: "login" } });
-    }
-  },
+  beforeLoad: () => requireAuthedUser("/portfolio"),
   component: Portfolio,
 });
 

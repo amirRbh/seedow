@@ -1,4 +1,4 @@
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -12,16 +12,12 @@ import { useAuth } from "@/hooks/useAuth";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
-import { useLang } from "@/hooks/useLang";
 import { supabase } from "@/integrations/supabase/client";
+import { useLang } from "@/hooks/useLang";
+import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 
 export const Route = createFileRoute("/profil")({
-  beforeLoad: async () => {
-    const { data, error } = await supabase.auth.getUser();
-    if (error || !data.user) {
-      throw redirect({ to: "/auth", search: { redirect: "/profil", mode: "login" } });
-    }
-  },
+  beforeLoad: () => requireAuthedUser("/profil"),
   head: () => ({
     meta: [
       { title: "Mon profil d'investisseur — Seedow" },

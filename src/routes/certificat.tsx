@@ -1,4 +1,4 @@
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
@@ -6,17 +6,12 @@ import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { useAuth } from "@/hooks/useAuth";
 import { useLang } from "@/hooks/useLang";
 import { formatCurrency, formatDate } from "@/lib/format";
-import { supabase } from "@/integrations/supabase/client";
 import { KPIFigure } from "@/components/ui/KPIFigure";
 import { fireConfetti } from "@/lib/confetti";
+import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 
 export const Route = createFileRoute("/certificat")({
-  beforeLoad: async () => {
-    const { data, error } = await supabase.auth.getUser();
-    if (error || !data.user) {
-      throw redirect({ to: "/auth", search: { redirect: "/certificat", mode: "login" } });
-    }
-  },
+  beforeLoad: () => requireAuthedUser("/certificat"),
   head: () => ({
     meta: [
       { title: "Certificat d'impact — Seedow" },
