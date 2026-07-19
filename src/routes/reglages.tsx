@@ -479,6 +479,18 @@ function ProfileSection({ email, onSignOut }: { email: string; onSignOut: () => 
               {t("reglages.more_investor_profile")}
             </Link>
             <Link
+              to="/comparatif"
+              className="text-body-sm text-ink-2 hover:text-ink underline-offset-2 hover:underline"
+            >
+              {t("reglages.more_comparatif")}
+            </Link>
+            <Link
+              to="/certificat"
+              className="text-body-sm text-ink-2 hover:text-ink underline-offset-2 hover:underline"
+            >
+              {t("reglages.more_certificate")}
+            </Link>
+            <Link
               to="/cours"
               className="text-body-sm text-ink-2 hover:text-ink underline-offset-2 hover:underline"
             >

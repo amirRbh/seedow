@@ -723,6 +723,8 @@
     "auto_recalc_note": "Toute modification déclenche un recalcul automatique de votre portefeuille selon le pipeline complet (exclusions → best-in-class → optimisation Markowitz contrainte → tilts par convictions).",
     "block_more": "Plus",
     "more_investor_profile": "Voir mon profil investisseur",
+    "more_comparatif": "Comparatif vs ETF classique",
+    "more_certificate": "Mon certificat d'impact",
     "more_courses": "Cours & pédagogie",
     "block_identity": "Identité",
     "email_label": "Adresse email",
@@ -1376,6 +1378,8 @@
     "ethi_assistant": "Ethi (assistant)",
     "investor_profile": "Profil investisseur",
     "courses": "Cours",
+    "comparatif": "Comparatif",
+    "certificate": "Certificat d'impact",
     "aria": "Navigation principale",
     "seedow_home": "Seedow — accueil"
   },
