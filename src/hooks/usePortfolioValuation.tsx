@@ -1,4 +1,5 @@
-import { useEffect, useState, useCallback } from "react";
+import { useCallback } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
@@ -62,50 +63,48 @@ interface ViewRow {
   quote_fetched_at: string | null;
 }
 
+async function fetchValuationRows(userId: string, activeId: string | null): Promise<ViewRow[]> {
+  let query = supabase
+    .from("portfolio_holdings_valued" as never)
+    .select(
+      "portfolio_id, user_id, asset_id, ticker, name, asset_class, weight, total_invested, invested_in_holding, current_price, entry_price, current_value, quote_fetched_at",
+    )
+    .eq("user_id", userId);
+  if (activeId) {
+    query = query.eq("portfolio_id", activeId);
+  }
+  const { data, error } = await query;
+  if (error) throw new Error(error.message);
+  return (data ?? []) as unknown as ViewRow[];
+}
+
 export function usePortfolioValuation(): PortfolioValuation {
   const { user, loading: authLoading } = useAuth();
   const { activeId, loading: pfListLoading } = useUserPortfolios();
-  const [rows, setRows] = useState<ViewRow[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [tick, setTick] = useState(0);
+  const queryClient = useQueryClient();
 
-  const refresh = useCallback(() => setTick((t) => t + 1), []);
+  const ready = !authLoading && !pfListLoading && !!user;
+  const {
+    data,
+    isLoading: queryLoading,
+    error: queryError,
+  } = useQuery({
+    // Shared cache key across every consumer (dashboard, portfolio, comparatif,
+    // InvestDialog...) — previously each call site fetched independently, so a
+    // single page load could fire the same query 3-4 times in parallel.
+    queryKey: ["portfolio-valuation", user?.id, activeId],
+    queryFn: () => fetchValuationRows(user!.id, activeId),
+    enabled: ready,
+    staleTime: 30_000,
+  });
 
-  useEffect(() => {
-    if (authLoading || pfListLoading) return;
-    if (!user) {
-      setRows([]);
-      setLoading(false);
-      return;
-    }
-    let cancelled = false;
-    setLoading(true);
-    setError(null);
-    (async () => {
-      let query = supabase
-        .from("portfolio_holdings_valued" as never)
-        .select(
-          "portfolio_id, user_id, asset_id, ticker, name, asset_class, weight, total_invested, invested_in_holding, current_price, entry_price, current_value, quote_fetched_at",
-        )
-        .eq("user_id", user.id);
-      if (activeId) {
-        query = query.eq("portfolio_id", activeId);
-      }
-      const { data, error } = await query;
-      if (cancelled) return;
-      if (error) {
-        setError(error.message);
-        setRows([]);
-      } else {
-        setRows((data ?? []) as unknown as ViewRow[]);
-      }
-      setLoading(false);
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [user, authLoading, pfListLoading, activeId, tick]);
+  const rows = data ?? [];
+  const loading = authLoading || pfListLoading || (!!user && queryLoading);
+  const error = queryError instanceof Error ? queryError.message : null;
+
+  const refresh = useCallback(() => {
+    void queryClient.invalidateQueries({ queryKey: ["portfolio-valuation", user?.id] });
+  }, [queryClient, user?.id]);
 
   // ── Aggregate ────────────────────────────────────────────
   const num = (v: number | string | null | undefined) =>

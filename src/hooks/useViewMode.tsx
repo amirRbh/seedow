@@ -1,4 +1,12 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 
 export type ViewMode = "simple" | "expert";
 
@@ -26,24 +34,25 @@ export function ViewModeProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const setMode = (m: ViewMode) => {
+  const setMode = useCallback((m: ViewMode) => {
     setModeState(m);
     try {
       localStorage.setItem(STORAGE_KEY, m);
     } catch {
       // ignore
     }
-  };
+  }, []);
 
-  const toggle = () => setMode(mode === "simple" ? "expert" : "simple");
+  const toggle = useCallback(() => {
+    setMode(mode === "simple" ? "expert" : "simple");
+  }, [mode, setMode]);
 
-  return (
-    <ViewModeContext.Provider
-      value={{ mode, setMode, toggle, isSimple: mode === "simple", isExpert: mode === "expert" }}
-    >
-      {children}
-    </ViewModeContext.Provider>
+  const value = useMemo(
+    () => ({ mode, setMode, toggle, isSimple: mode === "simple", isExpert: mode === "expert" }),
+    [mode, setMode, toggle],
   );
+
+  return <ViewModeContext.Provider value={value}>{children}</ViewModeContext.Provider>;
 }
 
 export function useViewMode() {

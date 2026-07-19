@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import type { Database } from "@/integrations/supabase/types";
@@ -26,50 +27,40 @@ export const GOAL_TYPE_LABEL: Record<GoalType, string> = {
   other: "Autre",
 };
 
+async function fetchGoals(userId: string): Promise<FinancialGoal[]> {
+  const { data, error } = await supabase
+    .from("financial_goals")
+    .select(
+      "id, name, goal_type, target_amount, target_date, monthly_contribution, initial_capital, portfolio_id, created_at, updated_at",
+    )
+    .eq("user_id", userId)
+    .order("target_date", { ascending: true });
+  if (error) throw new Error(error.message);
+  return (data ?? []).map((g) => ({
+    ...g,
+    target_amount: Number(g.target_amount),
+    monthly_contribution: Number(g.monthly_contribution),
+    initial_capital: Number(g.initial_capital),
+  }));
+}
+
 export function useFinancialGoals() {
   const { user, loading: authLoading } = useAuth();
-  const [goals, setGoals] = useState<FinancialGoal[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [tick, setTick] = useState(0);
+  const queryClient = useQueryClient();
 
-  const refresh = useCallback(() => setTick((t) => t + 1), []);
+  const ready = !authLoading && !!user;
+  const { data, isLoading: queryLoading } = useQuery({
+    queryKey: ["financial-goals", user?.id],
+    queryFn: () => fetchGoals(user!.id),
+    enabled: ready,
+  });
 
-  useEffect(() => {
-    if (authLoading) return;
-    if (!user) {
-      setGoals([]);
-      setLoading(false);
-      return;
-    }
-    let cancelled = false;
-    setLoading(true);
-    (async () => {
-      const { data, error } = await supabase
-        .from("financial_goals")
-        .select(
-          "id, name, goal_type, target_amount, target_date, monthly_contribution, initial_capital, portfolio_id, created_at, updated_at",
-        )
-        .eq("user_id", user.id)
-        .order("target_date", { ascending: true });
-      if (cancelled) return;
-      if (error) {
-        setGoals([]);
-      } else {
-        setGoals(
-          (data ?? []).map((g) => ({
-            ...g,
-            target_amount: Number(g.target_amount),
-            monthly_contribution: Number(g.monthly_contribution),
-            initial_capital: Number(g.initial_capital),
-          })),
-        );
-      }
-      setLoading(false);
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [user, authLoading, tick]);
+  const goals = data ?? [];
+  const loading = authLoading || (!!user && queryLoading);
+
+  const refresh = useCallback(() => {
+    void queryClient.invalidateQueries({ queryKey: ["financial-goals", user?.id] });
+  }, [queryClient, user?.id]);
 
   return { goals, loading, refresh };
 }

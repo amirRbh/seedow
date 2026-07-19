@@ -3,6 +3,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type ReactNode,
@@ -72,11 +73,12 @@ export function FocusModeProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  return (
-    <FocusModeContext.Provider value={{ focus, setFocus, toggle, prefersReducedMotion }}>
-      {children}
-    </FocusModeContext.Provider>
+  const value = useMemo(
+    () => ({ focus, setFocus, toggle, prefersReducedMotion }),
+    [focus, setFocus, toggle, prefersReducedMotion],
   );
+
+  return <FocusModeContext.Provider value={value}>{children}</FocusModeContext.Provider>;
 }
 
 export function useFocusMode() {

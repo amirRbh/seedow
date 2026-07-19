@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -23,98 +24,83 @@ export interface PortfolioShareRow {
 const SHARE_COLUMNS =
   "id, portfolio_id, public_handle, causes, exclusions, risk_target, horizon_years, weights, expected_return, volatility, esg_score, carbon_intensity, shared_at, updated_at";
 
+async function fetchCommunityShares(filter?: {
+  cause?: string;
+  risk?: "low" | "mid" | "high";
+}): Promise<PortfolioShareRow[]> {
+  const { data, error } = await supabase
+    .from("portfolio_shares")
+    .select(SHARE_COLUMNS)
+    .order("shared_at", { ascending: false })
+    .limit(60);
+  if (error) throw new Error(error.message);
+  let rows = (data ?? []) as PortfolioShareRow[];
+  if (filter?.cause) {
+    rows = rows.filter((r) => r.causes.includes(filter.cause!));
+  }
+  if (filter?.risk) {
+    rows = rows.filter((r) => {
+      const v = Number(r.volatility ?? 0.15);
+      if (filter.risk === "low") return v < 0.1;
+      if (filter.risk === "mid") return v >= 0.1 && v < 0.18;
+      return v >= 0.18;
+    });
+  }
+  return rows;
+}
+
 export function useCommunityShares(filter?: { cause?: string; risk?: "low" | "mid" | "high" }) {
-  const [shares, setShares] = useState<PortfolioShareRow[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data, isLoading } = useQuery({
+    queryKey: ["community-shares", filter?.cause, filter?.risk],
+    queryFn: () => fetchCommunityShares(filter),
+  });
+  return { shares: data ?? [], loading: isLoading };
+}
 
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    (async () => {
-      const { data, error } = await supabase
-        .from("portfolio_shares")
-        .select(SHARE_COLUMNS)
-        .order("shared_at", { ascending: false })
-        .limit(60);
-      if (cancelled) return;
-      if (error) {
-        setShares([]);
-      } else {
-        let rows = (data ?? []) as PortfolioShareRow[];
-        if (filter?.cause) {
-          rows = rows.filter((r) => r.causes.includes(filter.cause!));
-        }
-        if (filter?.risk) {
-          rows = rows.filter((r) => {
-            const v = Number(r.volatility ?? 0.15);
-            if (filter.risk === "low") return v < 0.1;
-            if (filter.risk === "mid") return v >= 0.1 && v < 0.18;
-            return v >= 0.18;
-          });
-        }
-        setShares(rows);
-      }
-      setLoading(false);
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [filter?.cause, filter?.risk]);
-
-  return { shares, loading };
+async function fetchImpactLeaderboard(): Promise<PortfolioShareRow[]> {
+  const { data, error } = await supabase
+    .from("portfolio_shares")
+    .select(SHARE_COLUMNS)
+    .order("esg_score", { ascending: false, nullsFirst: false })
+    .limit(50);
+  if (error) throw new Error(error.message);
+  return (data ?? []) as PortfolioShareRow[];
 }
 
 export function useImpactLeaderboard() {
-  const [rows, setRows] = useState<PortfolioShareRow[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data, isLoading } = useQuery({
+    queryKey: ["impact-leaderboard"],
+    queryFn: fetchImpactLeaderboard,
+  });
+  return { rows: data ?? [], loading: isLoading };
+}
 
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      const { data, error } = await supabase
-        .from("portfolio_shares")
-        .select(SHARE_COLUMNS)
-        .order("esg_score", { ascending: false, nullsFirst: false })
-        .limit(50);
-      if (cancelled) return;
-      if (!error) setRows((data ?? []) as PortfolioShareRow[]);
-      setLoading(false);
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  return { rows, loading };
+async function fetchMyShare(portfolioId: string): Promise<PortfolioShareRow | null> {
+  const { data, error } = await supabase
+    .from("portfolio_shares")
+    .select(SHARE_COLUMNS)
+    .eq("portfolio_id", portfolioId)
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  return (data as PortfolioShareRow | null) ?? null;
 }
 
 export function useMyShare(portfolioId: string | null) {
   const { user } = useAuth();
-  const [share, setShare] = useState<PortfolioShareRow | null>(null);
-  const [tick, setTick] = useState(0);
-  const refresh = useCallback(() => setTick((t) => t + 1), []);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    if (!user || !portfolioId) {
-      setShare(null);
-      return;
-    }
-    let cancelled = false;
-    (async () => {
-      const { data, error } = await supabase
-        .from("portfolio_shares")
-        .select(SHARE_COLUMNS)
-        .eq("portfolio_id", portfolioId)
-        .maybeSingle();
-      if (cancelled) return;
-      if (!error) setShare((data as PortfolioShareRow | null) ?? null);
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [user, portfolioId, tick]);
+  const ready = !!user && !!portfolioId;
+  const { data } = useQuery({
+    queryKey: ["my-share", user?.id, portfolioId],
+    queryFn: () => fetchMyShare(portfolioId!),
+    enabled: ready,
+  });
 
-  return { share, refresh };
+  const refresh = useCallback(() => {
+    void queryClient.invalidateQueries({ queryKey: ["my-share", user?.id, portfolioId] });
+  }, [queryClient, user?.id, portfolioId]);
+
+  return { share: ready ? (data ?? null) : null, refresh };
 }
 
 export async function fetchOrCreatePublicHandle(userId: string): Promise<string> {

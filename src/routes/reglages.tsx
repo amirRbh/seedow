@@ -610,20 +610,27 @@ function NotificationsSection() {
   return (
     <div className="space-y-6">
       <Block title={t("reglages.block_email_notifs")}>
+        <p className="text-label text-ink-3 mb-1">{t("reglages.notif_soon_note")}</p>
         <ToggleRow
           label={t("reglages.notif_recap")}
           checked={emailNotif}
           onChange={setEmailNotif}
+          disabled
+          disabledHint={t("reglages.notif_soon_badge")}
         />
         <ToggleRow
           label={t("reglages.notif_market")}
           checked={marketAlerts}
           onChange={setMarketAlerts}
+          disabled
+          disabledHint={t("reglages.notif_soon_badge")}
         />
         <ToggleRow
           label={t("reglages.notif_report")}
           checked={reportMonthly}
           onChange={setReportMonthly}
+          disabled
+          disabledHint={t("reglages.notif_soon_badge")}
         />
       </Block>
 
@@ -668,22 +675,38 @@ function ToggleRow({
   label,
   checked,
   onChange,
+  disabled,
+  disabledHint,
 }: {
   label: string;
   checked: boolean;
   onChange: (v: boolean) => void;
+  /** Contrôle visible mais inerte tant que le canal d'envoi n'existe pas côté serveur —
+   * un toggle qui ne persiste et n'envoie jamais rien est plus trompeur qu'un contrôle
+   * clairement marqué "à venir". */
+  disabled?: boolean;
+  disabledHint?: string;
 }) {
   return (
     <div className="flex items-center justify-between py-2 border-b border-paper-3 last:border-b-0">
-      <span className="text-body-sm text-ink">{label}</span>
+      <span className="flex items-center gap-2">
+        <span className={`text-body-sm ${disabled ? "text-ink-3" : "text-ink"}`}>{label}</span>
+        {disabled && disabledHint && (
+          <span className="text-tag uppercase tracking-wider text-ink-3 bg-paper-2 border border-paper-3 rounded-full px-2 py-0.5">
+            {disabledHint}
+          </span>
+        )}
+      </span>
       <button
-        onClick={() => onChange(!checked)}
-        className={`w-9 h-5 rounded-full transition-colors relative ${checked ? "bg-ink" : "bg-paper-3"}`}
+        onClick={() => !disabled && onChange(!checked)}
+        disabled={disabled}
+        aria-disabled={disabled}
+        className={`w-9 h-5 rounded-full transition-colors relative ${checked && !disabled ? "bg-ink" : "bg-paper-3"} ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
         aria-pressed={checked}
       >
         <span
           className={`absolute top-0.5 w-4 h-4 bg-paper rounded-full transition-transform ${
-            checked ? "translate-x-[18px]" : "translate-x-0.5"
+            checked && !disabled ? "translate-x-[18px]" : "translate-x-0.5"
           }`}
         />
       </button>

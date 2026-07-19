@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
@@ -39,7 +40,7 @@ const SEVERITY_RANK: Record<AlertSeverity, number> = { alert: 3, warn: 2, info: 
  * Dérive les signaux candidats à partir du portefeuille actif.
  * La persistance + statut lu/écarté est gérée par la table `alerts`.
  */
-function deriveCandidates(args: {
+export function deriveCandidates(args: {
   portfolio: ReturnType<typeof useActivePortfolio>["portfolio"];
   exclusions: string[];
   causes: string[];
@@ -105,93 +106,95 @@ function deriveCandidates(args: {
   return out;
 }
 
+async function fetchPortfolioMeta(portfolioId: string): Promise<{ exclusions: string[]; causes: string[] }> {
+  // Best-effort, comme l'original : une erreur ici ne doit jamais bloquer
+  // l'affichage des alertes existantes, donc on ignore `error` et on retombe
+  // sur des tableaux vides plutôt que de faire planter la requête.
+  const { data } = await supabase
+    .from("portfolios")
+    .select("exclusions, causes")
+    .eq("id", portfolioId)
+    .maybeSingle();
+  return {
+    exclusions: (data?.exclusions ?? []) as string[],
+    causes: (data?.causes ?? []) as string[],
+  };
+}
+
+async function fetchAlerts(
+  userId: string,
+  portfolio: ReturnType<typeof useActivePortfolio>["portfolio"],
+  exclusions: string[],
+  causes: string[],
+): Promise<SmartAlert[]> {
+  const candidates = deriveCandidates({ portfolio, exclusions, causes });
+
+  if (candidates.length > 0) {
+    const payload = candidates.map((c) => ({
+      user_id: userId,
+      portfolio_id: portfolio?.id ?? null,
+      kind: c.kind,
+      severity: c.severity,
+      title: c.title,
+      body: c.body,
+      cta_label: c.ctaLabel ?? null,
+      cta_href: c.ctaHref ?? null,
+      dedup_key: c.dedupKey,
+    }));
+    // ignore on conflict pour ne pas dupliquer (index unique partiel)
+    await supabase
+      .from("alerts")
+      .upsert(payload, { onConflict: "user_id,dedup_key", ignoreDuplicates: true });
+  }
+
+  const { data } = await supabase
+    .from("alerts")
+    .select("*")
+    .eq("user_id", userId)
+    .is("dismissed_at", null)
+    .order("created_at", { ascending: false })
+    .limit(50);
+
+  return (data ?? []).map((r) => ({
+    id: r.id,
+    kind: r.kind as AlertKind,
+    severity: r.severity as AlertSeverity,
+    title: r.title,
+    body: r.body,
+    ctaLabel: r.cta_label ?? undefined,
+    ctaHref: r.cta_href ?? undefined,
+    createdAt: r.created_at,
+    readAt: r.read_at,
+    dedupKey: r.dedup_key,
+  }));
+}
+
 export function useAlerts(): State {
   const { user } = useAuth();
   const { portfolio, loading: pfLoading } = useActivePortfolio();
-  const [exclusions, setExclusions] = useState<string[]>([]);
-  const [causes, setCauses] = useState<string[]>([]);
-  const [loadedMeta, setLoadedMeta] = useState(false);
-  const [rows, setRows] = useState<SmartAlert[]>([]);
-  const [tick, setTick] = useState(0);
+  const queryClient = useQueryClient();
 
-  // 1) Métadonnées portefeuille
-  useEffect(() => {
-    if (!user || !portfolio?.id) {
-      setExclusions([]);
-      setCauses([]);
-      setLoadedMeta(true);
-      return;
-    }
-    let cancelled = false;
-    (async () => {
-      const { data } = await supabase
-        .from("portfolios")
-        .select("exclusions, causes")
-        .eq("id", portfolio.id)
-        .maybeSingle();
-      if (cancelled) return;
-      setExclusions((data?.exclusions ?? []) as string[]);
-      setCauses((data?.causes ?? []) as string[]);
-      setLoadedMeta(true);
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [user, portfolio?.id]);
+  // 1) Métadonnées portefeuille — sans portefeuille actif, il n'y a rien à
+  // charger (exclusions/causes restent vides), donc la requête reste désactivée
+  // et on ne bloque pas sur elle.
+  const metaQuery = useQuery({
+    queryKey: ["portfolio-meta-for-alerts", portfolio?.id],
+    queryFn: () => fetchPortfolioMeta(portfolio!.id),
+    enabled: !!user && !!portfolio?.id,
+  });
+  const exclusions = metaQuery.data?.exclusions ?? [];
+  const causes = metaQuery.data?.causes ?? [];
+  const loadedMeta = !portfolio?.id || metaQuery.isSuccess;
 
-  // 2) Upsert des candidats dérivés, puis lecture depuis la table
-  useEffect(() => {
-    if (!user || !loadedMeta) return;
-    let cancelled = false;
-    (async () => {
-      const candidates = deriveCandidates({ portfolio, exclusions, causes });
-
-      if (candidates.length > 0) {
-        const payload = candidates.map((c) => ({
-          user_id: user.id,
-          portfolio_id: portfolio?.id ?? null,
-          kind: c.kind,
-          severity: c.severity,
-          title: c.title,
-          body: c.body,
-          cta_label: c.ctaLabel ?? null,
-          cta_href: c.ctaHref ?? null,
-          dedup_key: c.dedupKey,
-        }));
-        // ignore on conflict pour ne pas dupliquer (index unique partiel)
-        await supabase
-          .from("alerts")
-          .upsert(payload, { onConflict: "user_id,dedup_key", ignoreDuplicates: true });
-      }
-
-      const { data } = await supabase
-        .from("alerts")
-        .select("*")
-        .eq("user_id", user.id)
-        .is("dismissed_at", null)
-        .order("created_at", { ascending: false })
-        .limit(50);
-
-      if (cancelled || !data) return;
-      setRows(
-        data.map((r) => ({
-          id: r.id,
-          kind: r.kind as AlertKind,
-          severity: r.severity as AlertSeverity,
-          title: r.title,
-          body: r.body,
-          ctaLabel: r.cta_label ?? undefined,
-          ctaHref: r.cta_href ?? undefined,
-          createdAt: r.created_at,
-          readAt: r.read_at,
-          dedupKey: r.dedup_key,
-        })),
-      );
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [user, loadedMeta, portfolio, exclusions, causes, tick]);
+  // 2) Upsert des candidats dérivés, puis lecture depuis la table. Partagé
+  // (même queryKey) entre AlertsBell et CommandPalette — auparavant chacun
+  // relançait indépendamment ce fetch + upsert à chaque montage.
+  const alertsQuery = useQuery({
+    queryKey: ["alerts", user?.id, portfolio?.id, exclusions, causes],
+    queryFn: () => fetchAlerts(user!.id, portfolio, exclusions, causes),
+    enabled: !!user && loadedMeta,
+  });
+  const rows = useMemo(() => alertsQuery.data ?? [], [alertsQuery.data]);
 
   const sorted = useMemo(
     () => [...rows].sort((a, b) => SEVERITY_RANK[b.severity] - SEVERITY_RANK[a.severity]),
@@ -200,6 +203,10 @@ export function useAlerts(): State {
 
   const unread = sorted.filter((a) => !a.readAt && a.severity !== "info").length;
 
+  const invalidateAlerts = useCallback(() => {
+    void queryClient.invalidateQueries({ queryKey: ["alerts", user?.id] });
+  }, [queryClient, user?.id]);
+
   const markAllRead = useCallback(async () => {
     if (!user) return;
     await supabase
@@ -207,13 +214,16 @@ export function useAlerts(): State {
       .update({ read_at: new Date().toISOString() })
       .eq("user_id", user.id)
       .is("read_at", null);
-    setTick((t) => t + 1);
-  }, [user]);
+    invalidateAlerts();
+  }, [user, invalidateAlerts]);
 
-  const dismiss = useCallback(async (id: string) => {
-    await supabase.from("alerts").update({ dismissed_at: new Date().toISOString() }).eq("id", id);
-    setTick((t) => t + 1);
-  }, []);
+  const dismiss = useCallback(
+    async (id: string) => {
+      await supabase.from("alerts").update({ dismissed_at: new Date().toISOString() }).eq("id", id);
+      invalidateAlerts();
+    },
+    [invalidateAlerts],
+  );
 
   return {
     alerts: sorted,
