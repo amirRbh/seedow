@@ -15,6 +15,7 @@ import { NextStepCard } from "@/components/dashboard/NextStepCard";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { supabase } from "@/integrations/supabase/client";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { RealInvestmentInterestCard } from "@/components/beta/RealInvestmentInterestCard";
 import { FeedbackButton } from "@/components/beta/FeedbackButton";
@@ -162,7 +163,17 @@ function Dashboard() {
           className="px-5 pt-8"
         >
           {loading ? (
-            <p className="text-label text-ink-3">{t("dashboard.loading_portfolio")}</p>
+            <div className="space-y-2" aria-label={t("dashboard.loading_portfolio")}>
+              <Skeleton className="h-2 w-full rounded-full" />
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="flex items-center gap-2.5 py-1.5">
+                  <Skeleton className="w-2 h-2 rounded-full flex-shrink-0" />
+                  <Skeleton className="h-3.5 w-14 flex-shrink-0" />
+                  <Skeleton className="h-3.5 flex-1" />
+                  <Skeleton className="h-3.5 w-10 flex-shrink-0" />
+                </div>
+              ))}
+            </div>
           ) : holdings.length === 0 ? (
             <div className="border border-dashed border-paper-3 rounded p-6 text-center">
               <p className="text-body-sm text-ink-2 mb-3">{t("dashboard.empty_portfolio")}</p>

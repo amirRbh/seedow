@@ -18,6 +18,7 @@ import { ComparatifPanel } from "@/components/portfolio/ComparatifPanel";
 import { AllocationRefiner } from "@/components/portfolio/AllocationRefiner";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ExplainerCard } from "@/components/ui/ExplainerCard";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { useViewMode } from "@/hooks/useViewMode";
@@ -46,8 +47,21 @@ function Portfolio() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-paper flex items-center justify-center">
-        <p className="text-label text-ink-3">{t("portfolio.loading")}</p>
+      <div
+        className="min-h-screen bg-paper max-w-lg mx-auto px-5 pt-6 pb-28"
+        aria-label={t("portfolio.loading")}
+      >
+        <div className="flex items-center gap-3">
+          <Skeleton className="w-9 h-9 rounded-full" />
+          <Skeleton className="h-4 w-32" />
+        </div>
+        <Skeleton className="h-8 w-48 mt-8" />
+        <Skeleton className="h-16 w-64 mt-2" />
+        <div className="mt-10 space-y-3">
+          {[0, 1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-16 w-full rounded-2xl" />
+          ))}
+        </div>
       </div>
     );
   }

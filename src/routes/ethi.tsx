@@ -14,6 +14,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useLang } from "@/hooks/useLang";
 import { buildBriefing } from "@/lib/ethi/diagnostics";
 import { runSimulation, formatSimulation } from "@/lib/ethi/simulation";
+import { reportCaughtError } from "@/lib/monitoring/errorReporter";
 
 export const Route = createFileRoute("/ethi")({
   validateSearch: (s: Record<string, unknown>) => ({
@@ -189,7 +190,9 @@ function Ethi() {
         ...prev,
         { id: `a-${Date.now()}`, role: "assistant", content: reply },
       ]);
-    } catch {
+    } catch (err) {
+      console.error("[ethi] send failed", err);
+      reportCaughtError(err, { source: "ethi_send" });
       setMessages((prev) => [
         ...prev,
         { id: `a-${Date.now()}`, role: "assistant", content: t("ethi.error_connection") },

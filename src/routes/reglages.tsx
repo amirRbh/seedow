@@ -22,6 +22,7 @@ import { DeleteAccountDialog } from "@/components/reglages/DeleteAccountDialog";
 import { callAuthed } from "@/lib/authedServerFn";
 import { supabase } from "@/integrations/supabase/client";
 import type { CauseTag, ExclusionTag } from "@/lib/portfolio/types";
+import { reportCaughtError } from "@/lib/monitoring/errorReporter";
 
 export const Route = createFileRoute("/reglages")({
   head: () => ({
@@ -743,6 +744,7 @@ function CronHealthBlock({
   const fetchRuns = useServerFn(fetchFn);
   const [runs, setRuns] = useState<CronRunEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -750,7 +752,11 @@ function CronHealthBlock({
       .then((res) => {
         if (!cancelled) setRuns(res.runs);
       })
-      .catch((e) => console.error("[cron-health]", e))
+      .catch((e) => {
+        console.error("[cron-health]", e);
+        reportCaughtError(e, { source: "cron-health" });
+        if (!cancelled) setError(true);
+      })
       .finally(() => {
         if (!cancelled) setLoading(false);
       });
@@ -769,6 +775,8 @@ function CronHealthBlock({
     <Block title={t(titleKey)}>
       {loading ? (
         <p className="text-label text-ink-3">{t("reglages.methodology.health.loading")}</p>
+      ) : error ? (
+        <p className="text-label text-rust">{t("common.error")}</p>
       ) : runs.length === 0 ? (
         <p className="text-label text-ink-3">{t(emptyKey)}</p>
       ) : (

@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useServerFn } from "@tanstack/react-start";
 import { simulatePortfolio } from "@/lib/portfolio/server.functions";
+import { reportCaughtError } from "@/lib/monitoring/errorReporter";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { MetricLabel } from "@/components/ui/MetricLabel";
 import {
@@ -129,7 +130,10 @@ function MethodologyPage() {
         },
       })
         .then((r) => setResult(r))
-        .catch((e) => console.error("simulate", e))
+        .catch((e) => {
+          console.error("simulate", e);
+          reportCaughtError(e, { source: "methodologie_simulate" });
+        })
         .finally(() => setLoading(false));
     }, 250);
     return () => {
