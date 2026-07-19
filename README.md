@@ -1,21 +1,25 @@
-# Seedow 🌱
+# Seedow
 
 Application web d'investissement éthique et durable construite avec **Lovable**.
-Suivez la croissance de votre portefeuille comme on suit la croissance d'un jardin : par thèmes (Racines, Tronc, Branches), avec des données de marché réelles et un assistant conversationnel (Ethi).
+Un portefeuille structuré par vos convictions (climat, biodiversité, droits humains…), avec des données de marché réelles et un assistant conversationnel (Ethi) qui explique chaque choix — sans jamais rien vendre.
 
-🔗 **Live** : https://seedow.lovable.app
+🔗 **Live** : https://www.seedow.life
 
 ---
 
 ## ✨ Fonctionnalités
 
-- **Découvrir** : explorer des "graines" (assets) classées par thèmes ESG.
-- **Jardin** : visualisation organique de votre portefeuille.
-- **Racines** : valorisation temps réel, P&L, comparaison de croissance avec recalcul manuel et timestamp de dernière mise à jour.
-- **Dashboard** : métriques de portefeuille, allocations, dépôts.
+- **Découvrir** : explorer l'univers d'actifs investissables, filtré par thème ESG, exclusion, classe d'actif.
+- **Portefeuille** : valorisation temps réel, P&L, comparaison de croissance, allocation par classe d'actif.
+- **Objectifs** : suivi d'objectifs financiers (retraite, achat immobilier, études…) liés à un portefeuille.
+- **Comparatif** : performance/frais/impact vs un ETF classique (MSCI World).
+- **Certificat d'impact** : synthèse partageable de l'empreinte du portefeuille.
+- **Dashboard** : métriques de portefeuille, allocations, briefing Ethi.
 - **Ethi** : assistant IA conversationnel (Lovable AI Gateway).
-- **Auth** : inscription / connexion email + Google OAuth.
+- **Auth** : inscription / connexion email + Google OAuth, capacité bêta limitée avec liste d'attente.
 - **Données de marché** : ingestion automatique horaire via cron + Yahoo Finance, stockage dans `asset_quotes` / `asset_prices`.
+
+> Le montant investi est déclaratif (`initial_amount` sur le portefeuille) — il n'y a pas de système de dépôts successifs à ce stade.
 
 ## 🛠️ Stack technique
 
@@ -33,29 +37,34 @@ Suivez la croissance de votre portefeuille comme on suit la croissance d'un jard
 src/
 ├── routes/             # Routing fichier (TanStack Start)
 │   ├── __root.tsx
-│   ├── index.tsx
+│   ├── index.tsx        # landing
+│   ├── onboarding.tsx    # questionnaire → simulation → compte
 │   ├── dashboard.tsx
 │   ├── discover.tsx
-│   ├── portfolio.tsx   # "Racines"
+│   ├── portfolio.tsx
+│   ├── comparatif.tsx
+│   ├── certificat.tsx
+│   ├── objectifs.tsx
 │   ├── ethi.tsx
 │   └── hooks/
 │       └── refresh-market-data.ts  # endpoint cron
 ├── components/
-│   ├── discover/       # SeedCard, DepositSheet, ThemeFilter
-│   ├── garden/         # Visualisation jardin
-│   ├── roots/          # GrowthComparison, TimelineEvent
-│   ├── portfolio/      # Métriques & allocations
-│   ├── ethi/           # Bubble & suggestions IA
-│   └── ui/             # shadcn
-├── hooks/              # useAuth, usePortfolioValuation, useDeposits...
+│   ├── discover/        # AssetScreener, AssetRow, filtres
+│   ├── roots/           # GrowthComparison
+│   ├── portfolio/       # Métriques, allocations, historique
+│   ├── goals/           # Objectifs financiers
+│   ├── ethi/            # Bubble & suggestions IA
+│   ├── community/       # Partage de portefeuille
+│   └── ui/              # shadcn
+├── hooks/               # useAuth, usePortfolioValuation, useActivePortfolio...
 ├── lib/
-│   ├── portfolio/      # engine, markowitz, metrics, server functions
-│   └── market/         # client Yahoo Finance (server)
+│   ├── portfolio/       # engine, markowitz, metrics, server functions
+│   └── market/          # client Yahoo Finance (server)
 └── integrations/
-    └── supabase/       # client + types (auto-générés)
+    └── supabase/        # client + types (auto-générés)
 supabase/
 ├── config.toml
-└── migrations/         # schémas, RLS, cron jobs, vault
+└── migrations/          # schémas, RLS, cron jobs, vault
 ```
 
 ## 🚀 Démarrage local
