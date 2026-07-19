@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { AppShell } from "@/components/layout/AppShell";
 import { CookieNotice } from "@/components/layout/CookieNotice";
 import { installGlobalErrorReporting, reportReactError } from "@/lib/monitoring/errorReporter";
+import { ThemeProvider, THEME_INIT_SCRIPT } from "@/hooks/useTheme";
 
 import appCss from "../styles.css?url";
 
@@ -104,9 +105,11 @@ export const Route = createRootRoute({
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr">
+    <html lang="fr" suppressHydrationWarning>
       <head>
         <HeadContent />
+        {/* eslint-disable-next-line react/no-danger -- lit localStorage avant hydratation, pas d'input utilisateur */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
       <body>
         {children}
@@ -188,25 +191,27 @@ function RootComponent() {
   return (
     <MotionConfig reducedMotion="user">
       <RootErrorBoundary>
-        <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <UserPortfoliosProvider>
-              <LexiconProvider>
-                <ViewModeProvider>
-                  <FocusModeProvider>
-                    <TooltipProvider delayDuration={150}>
-                      <AppShell>
-                        <RouteTransition />
-                      </AppShell>
-                      <Toaster richColors position="bottom-right" />
-                      <CookieNotice />
-                    </TooltipProvider>
-                  </FocusModeProvider>
-                </ViewModeProvider>
-              </LexiconProvider>
-            </UserPortfoliosProvider>
-          </AuthProvider>
-        </QueryClientProvider>
+        <ThemeProvider>
+          <QueryClientProvider client={queryClient}>
+            <AuthProvider>
+              <UserPortfoliosProvider>
+                <LexiconProvider>
+                  <ViewModeProvider>
+                    <FocusModeProvider>
+                      <TooltipProvider delayDuration={150}>
+                        <AppShell>
+                          <RouteTransition />
+                        </AppShell>
+                        <Toaster richColors position="bottom-right" />
+                        <CookieNotice />
+                      </TooltipProvider>
+                    </FocusModeProvider>
+                  </ViewModeProvider>
+                </LexiconProvider>
+              </UserPortfoliosProvider>
+            </AuthProvider>
+          </QueryClientProvider>
+        </ThemeProvider>
       </RootErrorBoundary>
     </MotionConfig>
   );

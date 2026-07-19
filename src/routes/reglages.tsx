@@ -23,6 +23,7 @@ import { callAuthed } from "@/lib/authedServerFn";
 import { supabase } from "@/integrations/supabase/client";
 import type { CauseTag, ExclusionTag } from "@/lib/portfolio/types";
 import { reportCaughtError } from "@/lib/monitoring/errorReporter";
+import { useTheme, type ThemePreference } from "@/hooks/useTheme";
 
 export const Route = createFileRoute("/reglages")({
   head: () => ({
@@ -489,6 +490,10 @@ function ProfileSection({ email, onSignOut }: { email: string; onSignOut: () => 
         </div>
       </Block>
 
+      <Block title={t("reglages.block_appearance")}>
+        <ThemeToggle />
+      </Block>
+
       <Block title={t("reglages.block_security")}>
         <button
           onClick={() => navigate({ to: "/auth" })}
@@ -509,6 +514,38 @@ function ProfileSection({ email, onSignOut }: { email: string; onSignOut: () => 
           {t("reglages.sign_out")}
         </button>
       </Block>
+    </div>
+  );
+}
+
+function ThemeToggle() {
+  const { t } = useTranslation();
+  const { theme, setTheme } = useTheme();
+  const options: { value: ThemePreference; label: string }[] = [
+    { value: "light", label: t("reglages.theme_light") },
+    { value: "dark", label: t("reglages.theme_dark") },
+    { value: "system", label: t("reglages.theme_system") },
+  ];
+  return (
+    <div
+      role="radiogroup"
+      aria-label={t("reglages.block_appearance")}
+      className="inline-flex gap-1 bg-paper-2 rounded-full p-1"
+    >
+      {options.map((opt) => (
+        <button
+          key={opt.value}
+          type="button"
+          role="radio"
+          aria-checked={theme === opt.value}
+          onClick={() => setTheme(opt.value)}
+          className={`px-3.5 py-1.5 rounded-full text-label font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 ${
+            theme === opt.value ? "bg-paper text-ink shadow-sm" : "text-ink-3 hover:text-ink-2"
+          }`}
+        >
+          {opt.label}
+        </button>
+      ))}
     </div>
   );
 }
