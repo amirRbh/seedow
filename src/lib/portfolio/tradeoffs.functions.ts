@@ -69,6 +69,19 @@ interface TradeoffRow {
   alt: PortfolioSnapshot;
 }
 
+interface TradeoffsResult {
+  baseline: PortfolioSnapshot;
+  rows: TradeoffRow[];
+}
+
+// Le calcul complet (baseline + jusqu'à 6 variantes d'exclusion + 2 variantes de
+// risque, chacune une résolution QP quadprog) est coûteux et purement déterministe
+// à partir des paramètres du portefeuille — un même portefeuille non modifié
+// redemande souvent le même écran d'arbitrage dans une même session. Mis en cache
+// avec la même TTL que loadUniverse plutôt que recalculé à chaque appel.
+const _resultsCache = new Map<string, { result: TradeoffsResult; computedAt: number }>();
+const RESULTS_CACHE_TTL_MS = 5 * 60 * 1000;
+
 export const simulateTradeoffs = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => InputSchema.parse(input))
@@ -83,8 +96,6 @@ export const simulateTradeoffs = createServerFn({ method: "POST" })
 
     if (error || !pf) throw new Error("Portefeuille introuvable.");
 
-    const universe = await loadUniverse();
-
     const baseParams: PortfolioParams = {
       causes: (pf.causes ?? []) as CauseTag[],
       cause_intensity: (pf.cause_intensity ?? {}) as Partial<Record<CauseTag, number>>,
@@ -93,6 +104,14 @@ export const simulateTradeoffs = createServerFn({ method: "POST" })
       horizon_years: Number(pf.horizon_years),
       initial_amount: Number(pf.initial_amount),
     };
+
+    const cacheKey = `${data.portfolioId}:${JSON.stringify(baseParams)}`;
+    const cached = _resultsCache.get(cacheKey);
+    if (cached && Date.now() - cached.computedAt < RESULTS_CACHE_TTL_MS) {
+      return cached.result;
+    }
+
+    const universe = await loadUniverse();
 
     const baseline = buildPortfolio({
       universe: universe.assets,
@@ -178,8 +197,16 @@ export const simulateTradeoffs = createServerFn({ method: "POST" })
       pushRow("risk_target", "Cible de risque", "Plus défensif (-2 pts de vol cible)", alt);
     }
 
-    return {
+    const result: TradeoffsResult = {
       baseline: snapshot(baseline),
       rows,
     };
+    // Purge opportuniste des entrées expirées avant d'ajouter la nouvelle —
+    // évite une croissance non bornée de la Map sur la durée de vie du Worker
+    // (contrairement à loadUniverse, ceci est une entrée par portefeuille distinct).
+    for (const [key, entry] of _resultsCache) {
+      if (Date.now() - entry.computedAt >= RESULTS_CACHE_TTL_MS) _resultsCache.delete(key);
+    }
+    _resultsCache.set(cacheKey, { result, computedAt: Date.now() });
+    return result;
   });
