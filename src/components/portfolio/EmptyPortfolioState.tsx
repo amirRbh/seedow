@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
+import { EASE_REVEAL } from "@/lib/motion";
 
 export function EmptyPortfolioState({ userName }: { userName: string }) {
   const { t } = useTranslation();
@@ -18,7 +19,7 @@ export function EmptyPortfolioState({ userName }: { userName: string }) {
           <motion.path
             initial={{ pathLength: 0 }}
             animate={{ pathLength: 1 }}
-            transition={{ duration: 1.4, ease: "easeOut", delay: 0.2 }}
+            transition={{ duration: 1.4, ease: EASE_REVEAL, delay: 0.2 }}
             d="M 0 50 L 40 46 L 80 38 L 120 30 L 160 18 L 200 8"
             stroke="var(--ink)"
             strokeWidth="1"

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useMemo, useState } from "react";
 import { RefreshCw, TrendingUp, TrendingDown } from "lucide-react";
 import { usePortfolioHistory } from "@/hooks/usePortfolioHistory";
+import { EASE_REVEAL } from "@/lib/motion";
 
 interface GrowthComparisonProps {
   currentValue: number;
@@ -277,7 +278,7 @@ function Sparkline({
         strokeLinejoin="round"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
-        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 1, ease: EASE_REVEAL }}
       />
       <circle cx={path.lastX} cy={path.lastY} r={2.5} fill={stroke} />
     </svg>

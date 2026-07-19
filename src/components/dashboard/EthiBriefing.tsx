@@ -8,6 +8,7 @@ import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { computeBriefing, type BriefingSignal } from "@/lib/portfolio/signals";
 import { rebalancePortfolio } from "@/lib/portfolio/server.functions";
+import { EASE_REVEAL } from "@/lib/motion";
 import { callAuthed } from "@/lib/authedServerFn";
 import { GoldRuleReveal } from "@/components/ui/GoldRuleReveal";
 import { formatDate } from "@/lib/format";
@@ -55,7 +56,7 @@ export function EthiBriefing() {
     <motion.section
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, ease: "easeOut" }}
+      transition={{ duration: 0.35, ease: EASE_REVEAL }}
       className="px-5 pt-6"
     >
       <article className="paper-card p-5 md:p-6">

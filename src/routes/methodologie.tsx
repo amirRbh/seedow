@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { useServerFn } from "@tanstack/react-start";
 import { simulatePortfolio } from "@/lib/portfolio/server.functions";
 import { reportCaughtError } from "@/lib/monitoring/errorReporter";
+import { EASE_REVEAL } from "@/lib/motion";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { MetricLabel } from "@/components/ui/MetricLabel";
 import {
@@ -804,7 +805,7 @@ function CarbonCoverage({
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${pct}%` }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
+          transition={{ duration: 0.5, ease: EASE_REVEAL }}
           className={`h-full ${barColor}`}
         />
       </div>

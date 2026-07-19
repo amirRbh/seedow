@@ -7,6 +7,7 @@ import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { KPIFigure } from "@/components/ui/KPIFigure";
 import { AnimatedFigure } from "@/components/ui/AnimatedFigure";
 import { useLang } from "@/hooks/useLang";
+import { EASE_REVEAL } from "@/lib/motion";
 
 /**
  * ImpactHero — second pilier narratif du dashboard, dédié à l'impact nature.
@@ -56,7 +57,7 @@ export function ImpactHero() {
     <motion.section
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
+      transition={{ duration: 0.4, ease: EASE_REVEAL }}
       className="px-5 pt-8"
     >
       <article className="relative overflow-hidden rounded-3xl border border-paper-3 bg-paper paper-grain p-6 md:p-8">
