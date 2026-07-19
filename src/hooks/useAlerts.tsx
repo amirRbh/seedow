@@ -40,7 +40,7 @@ const SEVERITY_RANK: Record<AlertSeverity, number> = { alert: 3, warn: 2, info: 
  * Dérive les signaux candidats à partir du portefeuille actif.
  * La persistance + statut lu/écarté est gérée par la table `alerts`.
  */
-function deriveCandidates(args: {
+export function deriveCandidates(args: {
   portfolio: ReturnType<typeof useActivePortfolio>["portfolio"];
   exclusions: string[];
   causes: string[];
