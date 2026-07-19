@@ -53,73 +53,97 @@
     "expert": "Expert"
   },
   "landing": {
-    "meta_title": "Seedow — Épargner proprement",
-    "meta_desc": "Saisis ton portefeuille, obtiens une analyse transparente : score pondéré, taux de couverture, angles morts assumés. Aucune promesse de placement.",
-    "og_desc": "Analyse transparente. Saisis ton portefeuille, lis ce qu'il finance vraiment.",
-    "eyebrow_edition": "N°01 — Édition 2026 · Analyse d'impact",
-    "subtitle": "Votre argent façonne déjà le monde. Seedow vous montre lequel.",
-    "ribbon_no_bank": "Aucune donnée bancaire stockée",
-    "ribbon_method": "Méthodologie publique",
-    "ribbon_sources": "Sources documentées",
-    "scroll": "Défile",
-    "manifesto_eyebrow": "Manifeste",
-    "manifesto_text": "Un portefeuille n'est pas une collection de lignes et de chiffres. C'est un vote. Chaque euro investi soutient une vision du monde.",
-    "story_eyebrow": "Récit",
-    "story": {
-      "1_title": "Le problème",
-      "1_body": "Pendant des années, nous avons appris à faire attention à ce que nous consommons : produits locaux, moins de déchets, entreprises responsables. Mais une question reste rarement posée — que finance réellement mon argent quand j'investis ? Quelques clics suffisent pour acheter une action ou un ETF ; comprendre son impact réel, lui, reste presque impossible.",
-      "2_title": "Le déclic",
-      "2_body": "Un portefeuille n'est pas seulement une suite de lignes. C'est un vote. Chaque euro investi soutient des entreprises, des secteurs, des comportements. Sans le savoir, votre argent peut financer la transition écologique — ou soutenir des activités qui vont à l'encontre de vos convictions.",
-      "3_title": "La solution",
-      "3_body": "Seedow rend visible ce qui était invisible. En quelques secondes, nous analysons vos investissements pour révéler ce qu'ils racontent vraiment : pas seulement leur performance financière, mais leur histoire, leur impact, les valeurs qu'ils soutiennent.",
-      "4_title": "La mission",
-      "4_body": "Nous croyons qu'investir ne devrait pas être un acte aveugle. Notre mission : permettre à chacun de comprendre où va son argent et quel monde il contribue à construire. Parce qu'avant de chercher à changer le monde, il faut déjà savoir ce que notre argent finance."
+    "nav": {
+      "courses": "Cours",
+      "methodology": "Méthodologie",
+      "my_space": "Mon espace",
+      "login": "Se connecter",
+      "simulate_cta": "Simuler mon portefeuille"
     },
-    "demo_eyebrow": "Démo live",
-    "demo_title_a": "Essaie maintenant.",
-    "demo_title_b": "Sans inscription.",
-    "demo_desc": "Tape un ticker, lis ce que ton portefeuille raconterait. Un avant-goût de l'analyse complète.",
-    "demo_placeholder": "AAPL, TSLA, TTE, MC, NESN…",
-    "demo_input_label": "Ticker à analyser",
-    "demo_kpi_esg": "Score ESG",
-    "demo_kpi_coverage": "Couverture",
-    "demo_sectors": "Secteurs",
-    "demo_data_note": "{{name}} · données démo, analyse complète sur ton portefeuille réel.",
-    "demo_unknown": "Ticker inconnu en démo. Essaie AAPL, TSLA, TTE, MC ou NESN.",
-    "pillars_eyebrow": "Ce qui nous distingue",
-    "pillars_title_a": "Trois engagements,",
-    "pillars_title_b": "aucun compromis.",
-    "pillars": {
-      "1_title": "Analyse",
-      "1_body": "Score ESG pondéré sur ton portefeuille réel. Pas de simulation, pas de classement marketing.",
-      "2_title": "Transparence",
-      "2_body": "Chaque chiffre indique sa source et sa date. La méthodologie est publique et reproductible.",
-      "3_title": "Trous assumés",
-      "3_body": "Les lignes non couvertes restent visibles. Une analyse honnête vaut mieux qu'une moyenne trompeuse."
+    "hero": {
+      "title_line1": "Votre argent",
+      "title_line2_pre": "façonne ",
+      "title_accent": "déjà",
+      "title_line2_post": " le monde.",
+      "subtitle": "Seedow vous montre lequel. Investissement ESG, visualisé clairement, expliqué par une IA qui ne vous vend rien.",
+      "cta_authed": "Accéder à mon espace",
+      "cta_new": "Construire mon portefeuille",
+      "see_courses": "Voir les cours",
+      "no_account_note": "Sans compte · 2 minutes · résultat immédiat",
+      "trust_certified": "Impact certifié",
+      "trust_no_greenwashing": "Zéro greenwashing"
     },
-    "method_eyebrow": "Méthodologie",
-    "method_title_a": "Un score se justifie.",
-    "method_title_b": "Le nôtre se vérifie.",
-    "method_desc": "Exclusions sectorielles, scores ESG pondérés, taux de couverture explicite, sources horodatées. Chaque chiffre affiché peut être tracé jusqu'à sa source publique.",
-    "method_cta": "Lire la méthodologie complète",
-    "faq_eyebrow": "Questions",
-    "faq_title": "Tout ce qu'il faut savoir.",
-    "faqs": {
-      "q1": "Que fait Seedow exactement ?",
-      "a1": "Seedow analyse ton portefeuille existant sous l'angle ESG. Tu saisis tes lignes (ISIN ou ticker, montant ou %), on calcule un score moyen pondéré, un taux de couverture des données et on identifie les angles morts. Aucune promesse de placement — seulement de la lecture.",
-      "q2": "D'où viennent les scores ESG ?",
-      "a2": "Les données proviennent de fournisseurs publics (Yahoo Finance ESG, MSCI ESG quand disponible). Chaque score affiche sa source et sa date. Les lignes non couvertes sont marquées « non analysables » — pas masquées.",
-      "q3": "Est-ce gratuit ?",
-      "a3": "L'analyse est gratuite. À terme, Seedow proposera un service payant de réalignement (recommandations actionnables, suivi). L'analyse elle-même restera ouverte.",
-      "q4": "Mes données sont-elles protégées ?",
-      "a4": "Aucune donnée bancaire n'est stockée. Tu saisis manuellement tes lignes. Tu peux exporter ou supprimer ton compte à tout moment."
+    "problem": {
+      "title_line1": "Ton épargne finance des choses",
+      "title_line2": "que tu n'as jamais choisies.",
+      "subtitle": "La plupart des contrats d'assurance-vie te laissent dans le flou. Seedow rend visible ce qui l'était pas."
     },
-    "final_eyebrow": "Accès anticipé",
-    "final_title_a": "Ton épargne mérite d'être lue.",
-    "final_title_b": "Commence par l'analyser.",
-    "final_cta": "Lancer mon analyse",
-    "footer_copy": "© 2026 Seedow — Lecture éditoriale de l'épargne.",
-    "footer_contact": "Contact"
+    "stats": {
+      "visibility": "de visibilité réelle sur ce que finance ton assurance-vie classique.",
+      "jargon": "de jargon financier entre toi et une décision qui devrait t'appartenir.",
+      "only_app": "seule app qui relie ton portefeuille à son impact réel sur le monde."
+    },
+    "impact": {
+      "eyebrow": "Vois ton impact",
+      "title": "Ton portefeuille, enfin lisible.",
+      "subtitle": "Chaque ligne devient une couleur, une histoire, une réalité concrète. Pas un rapport annuel de 80 pages."
+    },
+    "ethi": {
+      "eyebrow": "Ethi",
+      "title_line1": "Une IA qui répond.",
+      "title_line2": "Pas qui vend.",
+      "subtitle": "Ethi connaît chaque ligne de ton portefeuille. Pose une question, obtiens une réponse claire. Sans jargon, sans pression commerciale.",
+      "chat_q1": "C'est quoi cette ligne à 4% dans mon portefeuille ?",
+      "chat_a1": "Un fonds obligataire vert qui finance des rénovations énergétiques en Europe. Rendement stable, faible volatilité.",
+      "chat_q2": "Et si je veux plus d'impact direct ?",
+      "chat_a2": "Je peux te proposer 3 alternatives équivalentes en risque, avec un score climat supérieur. Tu veux voir ?"
+    },
+    "start": {
+      "title": "Deux façons de commencer.",
+      "subtitle": "Sans carte, sans engagement.",
+      "courses_eyebrow": "Cours · gratuit",
+      "courses_title": "Apprends avant d'investir.",
+      "courses_desc": "12 cours pour décoder la finance responsable, sans jargon.",
+      "courses_cta": "Voir les cours",
+      "space_eyebrow": "Espace · gratuit",
+      "space_title": "Ton tableau de bord ESG.",
+      "space_desc_authed": "Accède à ton espace, simule ton portefeuille, discute avec Ethi.",
+      "space_desc_new": "Simule ton portefeuille en 2 min, puis crée un compte si tu veux le sauvegarder.",
+      "space_cta_authed": "Aller au dashboard",
+      "space_cta_new": "Simuler mon portefeuille",
+      "already_registered": "Déjà inscrit·e ? Se connecter"
+    },
+    "final": {
+      "title_line1": "Prêt à voir où va",
+      "title_accent": "ton argent ?",
+      "subtitle_authed": "Tu es déjà dans la place. Direct à ton espace.",
+      "subtitle_new": "Simule ton portefeuille en 2 minutes, sans compte. Tu décides après.",
+      "cta": "Simuler mon portefeuille",
+      "or_email": "ou reçois les nouveautés par email"
+    },
+    "footer": {
+      "copyright": "© 2026 · Votre argent façonne déjà le monde.",
+      "courses": "Cours",
+      "methodology": "Méthodologie",
+      "my_space": "Mon espace",
+      "login": "Se connecter",
+      "legal": "Mentions légales",
+      "privacy": "Confidentialité",
+      "terms": "CGU",
+      "contact": "Contact"
+    },
+    "cta_form": {
+      "email_placeholder": "ton@email.com",
+      "submit": "Je rejoins",
+      "submitting": "…",
+      "done": "Inscrit ✓",
+      "position_suffix": "sur la liste · on te contacte très vite",
+      "count_plural": "personnes déjà inscrites",
+      "count_singular": "personne déjà inscrite",
+      "places_limited": "places limitées",
+      "waitlist_default": "Rejoins la liste des premiers testeurs",
+      "generic_error": "Une erreur est survenue."
+    }
   },
   "auth": {
     "title_login": "Connexion",

@@ -53,73 +53,97 @@
     "expert": "Expert"
   },
   "landing": {
-    "meta_title": "Seedow — Save cleanly",
-    "meta_desc": "Enter your portfolio, get a transparent analysis: weighted score, coverage rate, honest blind spots. No investment pitch.",
-    "og_desc": "Transparent analysis. Enter your portfolio, see what it really funds.",
-    "eyebrow_edition": "No.01 — 2026 Edition · Impact Analysis",
-    "subtitle": "Your money is already shaping the world. Seedow shows you which one.",
-    "ribbon_no_bank": "No bank data stored",
-    "ribbon_method": "Public methodology",
-    "ribbon_sources": "Documented sources",
-    "scroll": "Scroll",
-    "manifesto_eyebrow": "Manifesto",
-    "manifesto_text": "A portfolio is not a collection of lines and numbers. It's a statement. Every euro invested supports a vision of the world.",
-    "story_eyebrow": "Story",
-    "story": {
-      "1_title": "The problem",
-      "1_body": "For years, we've been encouraged to think carefully about what we consume: sustainable products, less waste, responsible companies. Yet almost no one asks a simple question — what is my money actually financing when I invest? Buying a stock or an ETF takes seconds; understanding its real-world impact can take hours, and most investors never find out.",
-      "2_title": "The realization",
-      "2_body": "A portfolio is more than a collection of assets. It's a statement. Every investment supports companies, industries, and business models that shape the world around us. Without realizing it, your money may be funding the future you believe in — or one that contradicts your values.",
-      "3_title": "The solution",
-      "3_body": "Seedow makes the invisible visible. In seconds, we analyze your investments and reveal the story behind your portfolio — not just its financial performance, but its impact, its footprint, the values it supports.",
-      "4_title": "The mission",
-      "4_body": "We believe investing shouldn't be blind. Our mission is to help people understand where their money goes and what kind of future it helps create. Because before changing the world, you should know what your money is already building."
+    "nav": {
+      "courses": "Courses",
+      "methodology": "Methodology",
+      "my_space": "My space",
+      "login": "Log in",
+      "simulate_cta": "Simulate my portfolio"
     },
-    "demo_eyebrow": "Live demo",
-    "demo_title_a": "Try it now.",
-    "demo_title_b": "No signup.",
-    "demo_desc": "Type a ticker, see what your portfolio would say. A taste of the full analysis.",
-    "demo_placeholder": "AAPL, TSLA, TTE, MC, NESN…",
-    "demo_input_label": "Ticker to analyze",
-    "demo_kpi_esg": "ESG Score",
-    "demo_kpi_coverage": "Coverage",
-    "demo_sectors": "Sectors",
-    "demo_data_note": "{{name}} · demo data, full analysis on your real portfolio.",
-    "demo_unknown": "Unknown ticker in demo. Try AAPL, TSLA, TTE, MC or NESN.",
-    "pillars_eyebrow": "What sets us apart",
-    "pillars_title_a": "Three commitments,",
-    "pillars_title_b": "no compromise.",
-    "pillars": {
-      "1_title": "Analysis",
-      "1_body": "Weighted ESG score on your real portfolio. No simulation, no marketing ranking.",
-      "2_title": "Transparency",
-      "2_body": "Every figure shows its source and date. The methodology is public and reproducible.",
-      "3_title": "Honest gaps",
-      "3_body": "Uncovered holdings stay visible. An honest analysis beats a misleading average."
+    "hero": {
+      "title_line1": "Your money",
+      "title_line2_pre": "is already shaping ",
+      "title_accent": "the world",
+      "title_line2_post": ".",
+      "subtitle": "Seedow shows you which way. ESG investing, visualized clearly, explained by an AI that isn't selling you anything.",
+      "cta_authed": "Go to my space",
+      "cta_new": "Build my portfolio",
+      "see_courses": "See the courses",
+      "no_account_note": "No account · 2 minutes · instant result",
+      "trust_certified": "Certified impact",
+      "trust_no_greenwashing": "Zero greenwashing"
     },
-    "method_eyebrow": "Methodology",
-    "method_title_a": "A score should justify itself.",
-    "method_title_b": "Ours can be verified.",
-    "method_desc": "Sector exclusions, weighted ESG scores, explicit coverage rate, time-stamped sources. Every figure can be traced back to its public source.",
-    "method_cta": "Read the full methodology",
-    "faq_eyebrow": "Questions",
-    "faq_title": "Everything you need to know.",
-    "faqs": {
-      "q1": "What does Seedow actually do?",
-      "a1": "Seedow analyzes your existing portfolio through an ESG lens. You enter your holdings (ISIN or ticker, amount or %), we compute a weighted average score, a data coverage rate and surface the blind spots. No investment pitch — just reading.",
-      "q2": "Where do the ESG scores come from?",
-      "a2": "Data comes from public providers (Yahoo Finance ESG, MSCI ESG when available). Every score shows its source and date. Uncovered holdings are flagged as ‘unanalyzable’ — not hidden.",
-      "q3": "Is it free?",
-      "a3": "The analysis is free. Later, Seedow will offer a paid realignment service (actionable recommendations, monitoring). The analysis itself will stay open.",
-      "q4": "Is my data protected?",
-      "a4": "No bank data is stored. You enter your holdings manually. You can export or delete your account at any time."
+    "problem": {
+      "title_line1": "Your savings are financing things",
+      "title_line2": "you never chose.",
+      "subtitle": "Most life-insurance contracts leave you in the dark. Seedow makes visible what wasn't."
     },
-    "final_eyebrow": "Early access",
-    "final_title_a": "Your savings deserve to be read.",
-    "final_title_b": "Start by analyzing them.",
-    "final_cta": "Start my analysis",
-    "footer_copy": "© 2026 Seedow — Editorial reading of your savings.",
-    "footer_contact": "Contact"
+    "stats": {
+      "visibility": "real visibility into what your standard life-insurance policy actually finances.",
+      "jargon": "financial jargon standing between you and a decision that should be yours.",
+      "only_app": "the only app that connects your portfolio to its real-world impact."
+    },
+    "impact": {
+      "eyebrow": "See your impact",
+      "title": "Your portfolio, finally readable.",
+      "subtitle": "Every line becomes a color, a story, a concrete reality. Not an 80-page annual report."
+    },
+    "ethi": {
+      "eyebrow": "Ethi",
+      "title_line1": "An AI that answers.",
+      "title_line2": "Not one that sells.",
+      "subtitle": "Ethi knows every line of your portfolio. Ask a question, get a clear answer. No jargon, no sales pressure.",
+      "chat_q1": "What's this 4% line in my portfolio?",
+      "chat_a1": "A green bond fund financing energy renovations in Europe. Stable return, low volatility.",
+      "chat_q2": "What if I want more direct impact?",
+      "chat_a2": "I can suggest 3 alternatives with equivalent risk and a higher climate score. Want to see?"
+    },
+    "start": {
+      "title": "Two ways to start.",
+      "subtitle": "No card, no commitment.",
+      "courses_eyebrow": "Courses · free",
+      "courses_title": "Learn before you invest.",
+      "courses_desc": "12 courses to decode responsible finance, no jargon.",
+      "courses_cta": "See the courses",
+      "space_eyebrow": "Space · free",
+      "space_title": "Your ESG dashboard.",
+      "space_desc_authed": "Access your space, simulate your portfolio, chat with Ethi.",
+      "space_desc_new": "Simulate your portfolio in 2 min, then create an account if you want to save it.",
+      "space_cta_authed": "Go to dashboard",
+      "space_cta_new": "Simulate my portfolio",
+      "already_registered": "Already signed up? Log in"
+    },
+    "final": {
+      "title_line1": "Ready to see where",
+      "title_accent": "your money is going?",
+      "subtitle_authed": "You're already in. Straight to your space.",
+      "subtitle_new": "Simulate your portfolio in 2 minutes, no account needed. Decide afterwards.",
+      "cta": "Simulate my portfolio",
+      "or_email": "or get the updates by email"
+    },
+    "footer": {
+      "copyright": "© 2026 · Your money is already shaping the world.",
+      "courses": "Courses",
+      "methodology": "Methodology",
+      "my_space": "My space",
+      "login": "Log in",
+      "legal": "Legal notice",
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "contact": "Contact"
+    },
+    "cta_form": {
+      "email_placeholder": "you@email.com",
+      "submit": "I'm in",
+      "submitting": "…",
+      "done": "Signed up ✓",
+      "position_suffix": "on the list · we'll reach out very soon",
+      "count_plural": "people already signed up",
+      "count_singular": "person already signed up",
+      "places_limited": "limited spots",
+      "waitlist_default": "Join the first testers' list",
+      "generic_error": "Something went wrong."
+    }
   },
   "auth": {
     "title_login": "Sign in",
