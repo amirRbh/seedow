@@ -29,7 +29,7 @@ export function TopBar({ onOpenCommand }: TopBarProps) {
           aria-label={t("nav.back_to_portfolio")}
           className="inline-flex items-center outline-none rounded-sm focus-visible:ring-2 focus-visible:ring-highlight-1"
         >
-          <span className="font-value text-[17px] text-ink tracking-tight">seedow</span>
+          <span className="font-value text-body-xl text-ink tracking-tight">seedow</span>
         </Link>
         <LanguageToggle />
         <span className="h-5 w-px bg-paper-3" aria-hidden="true" />

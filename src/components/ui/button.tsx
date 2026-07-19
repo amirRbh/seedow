@@ -27,7 +27,7 @@ const buttonVariants = cva(
         lg: "h-10 rounded-md px-8",
         icon: "h-9 w-9",
         /** Pill Apple-style — CTA principal (ex-.btn-primary/.btn-accent/.btn-outline-ink). */
-        pill: "h-auto rounded-full px-6 py-3 text-[15px]",
+        pill: "h-auto rounded-full px-6 py-3 text-body-lg",
       },
     },
     defaultVariants: {
