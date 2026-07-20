@@ -143,6 +143,17 @@
       "places_limited": "places limitées",
       "waitlist_default": "Rejoins la liste des premiers testeurs",
       "generic_error": "Une erreur est survenue."
+    },
+    "quick_check": {
+      "eyebrow": "Essaie sans compte",
+      "title": "Ce fonds est-il vraiment vert ?",
+      "subtitle": "Cherche un fonds ou un ETF : score ESG et risque de greenwashing, en moins de 10 secondes.",
+      "placeholder": "Nom, ticker ou émetteur — ex. « clean energy »",
+      "loading": "Chargement de l'univers…",
+      "error": "Données momentanément indisponibles. Réessaie dans un instant.",
+      "no_results": "Aucun fonds trouvé dans notre univers pour cette recherche — on l'élargit chaque semaine.",
+      "cta": "Voir l'analyse complète — créer mon espace",
+      "disclaimer": "Information pédagogique, pas un conseil en investissement."
     }
   },
   "auth": {
@@ -166,7 +177,11 @@
     "have_account": "Déjà inscrit ? ",
     "to_signup": "Créer un compte",
     "to_login": "Se connecter",
-    "auth_error": "Erreur d'authentification"
+    "auth_error": "Erreur d'authentification",
+    "magic_toggle": "Recevoir un lien magique (sans mot de passe)",
+    "magic_use_password": "Utiliser un mot de passe",
+    "btn_magic": "Envoyer le lien magique",
+    "magic_sent": "Lien envoyé ! Vérifie ta boîte mail et clique pour te connecter."
   },
   "waitlist": {
     "meta_title": "Liste d'attente — Seedow",
@@ -1488,5 +1503,48 @@
     "with_quotes": "{{name}}, ton portefeuille tourne sur **{{invested}} €** investis, **{{count}} lignes** et un P&L de **{{pnl}}** 📈. On regarde la suite ?",
     "invested_no_quotes": "{{name}}, ton portefeuille tourne sur **{{invested}} €** investis et **{{count}} lignes**. On regarde la suite ?",
     "ready_no_funds": "Salut {{name}} ✨ Ton portefeuille est prêt mais pas encore alimenté. On programme un premier versement ?"
+  },
+  "transparency": {
+    "section_title": "Transparence des données",
+    "coverage": {
+      "complete": "Données complètes",
+      "partial": "Données partielles",
+      "estimated": "Données estimées"
+    },
+    "coverage_hint": {
+      "complete": "Scores E/S/G du fournisseur, intensité carbone mesurée, classification SFDR et cours à jour : tout est sourcé.",
+      "partial": "Il manque au moins une source (carbone, SFDR ou cours). Les scores affichés restent fournis, pas estimés.",
+      "estimated": "Une partie des chiffres est dérivée du score global faute de données fournisseur. À lire comme un ordre de grandeur."
+    },
+    "gw_label": "Greenwashing",
+    "gw_row_flag": "Risque de greenwashing élevé",
+    "gw_risk": {
+      "low": "risque faible",
+      "medium": "à vérifier",
+      "high": "risque élevé"
+    },
+    "gw_hint_low": "Les revendications du fonds (SFDR, thèmes) sont cohérentes avec ses scores, ses exclusions et ses données carbone.",
+    "reasons": {
+      "art9_low_esg": "Classé Article 9 (« durable ») mais score ESG global inférieur à 6/10.",
+      "art9_no_exclusions": "Classé Article 9 sans aucune exclusion sectorielle formelle.",
+      "sfdr_low_esg": "Revendication durable (Art. 8/9) avec un score ESG inférieur à 5/10.",
+      "sfdr_missing_carbon": "Revendication durable sans donnée d'intensité carbone mesurée.",
+      "sfdr_no_exclusions": "Classé Article 8 sans aucune exclusion sectorielle formelle.",
+      "green_theme_low_climate": "Thème environnemental revendiqué mais score climat inférieur à 5/10.",
+      "claims_on_estimated_data": "Revendication durable appuyée sur des données en partie estimées."
+    },
+    "source_link": "D'où vient ce chiffre ?"
+  },
+  "watchlist": {
+    "follow": "Suivre",
+    "following": "Suivi",
+    "added_toast": "{{name}} ajouté à ta watchlist",
+    "removed_toast": "{{name}} retiré de ta watchlist",
+    "error_toast": "Impossible de mettre à jour la watchlist. Réessaie.",
+    "card_title": "Ta watchlist",
+    "see_all": "Explorer",
+    "empty_desc": "Suis des fonds pour être alerté·e quand leur score ou leur classification change.",
+    "empty_cta": "Découvrir des fonds",
+    "more_count": "+ {{count}} autres dans Découvrir"
   }
 }

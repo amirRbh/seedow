@@ -14,6 +14,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useLang } from "@/hooks/useLang";
 import { buildBriefing } from "@/lib/ethi/diagnostics";
 import { runSimulation, formatSimulation } from "@/lib/ethi/simulation";
+import { trackAppEvent } from "@/lib/analytics/appEvents";
 import { reportCaughtError } from "@/lib/monitoring/errorReporter";
 
 export const Route = createFileRoute("/ethi")({
@@ -129,6 +130,7 @@ function Ethi() {
     setMessages(next);
     setInput("");
     setIsLoading(true);
+    void trackAppEvent("ethi_message_sent");
 
     try {
       const ctx = (() => {

@@ -43,6 +43,9 @@ function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [waitlistDone, setWaitlistDone] = useState<number | null>(null);
+  // Passwordless : moins de friction qu'un mot de passe à inventer/retenir.
+  const [magic, setMagic] = useState(false);
+  const [magicSent, setMagicSent] = useState(false);
 
   const safeRedirect = search.redirect ?? "/dashboard";
   const betaFull = mode === "signup" && capacity?.full === true;
@@ -67,12 +70,29 @@ function AuthPage() {
     setLoading(true);
 
     try {
+      if (mode === "signup" && betaFull) {
+        const res = await joinWaitlist({ data: { email, source: "auth_signup_full" } });
+        setWaitlistDone(res.position);
+        return;
+      }
+      if (magic) {
+        const { error: err } = await supabase.auth.signInWithOtp({
+          email,
+          options: {
+            emailRedirectTo: `${window.location.origin}${safeRedirect}`,
+            // En connexion, ne jamais créer de compte par ce chemin : la
+            // capacité bêta est contrôlée au signup explicite.
+            shouldCreateUser: mode === "signup",
+            ...(mode === "signup"
+              ? { data: { display_name: displayName || email.split("@")[0] } }
+              : {}),
+          },
+        });
+        if (err) throw err;
+        setMagicSent(true);
+        return;
+      }
       if (mode === "signup") {
-        if (betaFull) {
-          const res = await joinWaitlist({ data: { email, source: "auth_signup_full" } });
-          setWaitlistDone(res.position);
-          return;
-        }
         const { error: err } = await supabase.auth.signUp({
           email,
           password,
@@ -189,33 +209,56 @@ function AuthPage() {
             autoComplete="email"
             className="w-full px-3 py-2.5 rounded border border-paper-3 bg-paper text-body-sm text-ink placeholder-ink-3 focus:border-ink focus:outline-none transition-colors"
           />
-          <input
-            type="password"
-            placeholder={t("auth.password_placeholder")}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            minLength={8}
-            autoComplete={mode === "signup" ? "new-password" : "current-password"}
-            className="w-full px-3 py-2.5 rounded border border-paper-3 bg-paper text-body-sm text-ink placeholder-ink-3 focus:border-ink focus:outline-none transition-colors"
-          />
+          {!magic && (
+            <input
+              type="password"
+              placeholder={t("auth.password_placeholder")}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={8}
+              autoComplete={mode === "signup" ? "new-password" : "current-password"}
+              className="w-full px-3 py-2.5 rounded border border-paper-3 bg-paper text-body-sm text-ink placeholder-ink-3 focus:border-ink focus:outline-none transition-colors"
+            />
+          )}
 
+          {magicSent && (
+            <p className="text-label text-highlight-1 bg-highlight-5 border border-highlight-4 rounded px-3 py-2">
+              {t("auth.magic_sent")}
+            </p>
+          )}
           {error && <p className="text-label text-rust">{error}</p>}
 
           <Button
             type="submit"
             size="pill"
-            disabled={loading}
+            disabled={loading || magicSent}
             className="w-full justify-center disabled:opacity-50"
           >
             {loading
               ? t("common.please_wait")
-              : mode === "login"
-                ? t("auth.btn_login")
-                : betaFull
-                  ? t("auth.btn_waitlist")
-                  : t("auth.btn_signup")}
+              : betaFull
+                ? t("auth.btn_waitlist")
+                : magic
+                  ? t("auth.btn_magic")
+                  : mode === "login"
+                    ? t("auth.btn_login")
+                    : t("auth.btn_signup")}
           </Button>
+
+          {!betaFull && (
+            <button
+              type="button"
+              onClick={() => {
+                setMagic((m) => !m);
+                setMagicSent(false);
+                setError(null);
+              }}
+              className="w-full text-center text-label text-ink-3 hover:text-ink underline-offset-4 hover:underline transition-colors"
+            >
+              {magic ? t("auth.magic_use_password") : t("auth.magic_toggle")}
+            </button>
+          )}
         </form>
 
         <p className="mt-6 text-label text-ink-3 text-center">

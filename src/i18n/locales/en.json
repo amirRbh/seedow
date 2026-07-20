@@ -143,6 +143,17 @@
       "places_limited": "limited spots",
       "waitlist_default": "Join the first testers' list",
       "generic_error": "Something went wrong."
+    },
+    "quick_check": {
+      "eyebrow": "Try it without an account",
+      "title": "Is this fund really green?",
+      "subtitle": "Search a fund or ETF: ESG score and greenwashing risk, in under 10 seconds.",
+      "placeholder": "Name, ticker or issuer — e.g. \"clean energy\"",
+      "loading": "Loading the universe…",
+      "error": "Data momentarily unavailable. Try again in a moment.",
+      "no_results": "No fund found in our universe for this search — we expand it every week.",
+      "cta": "See the full analysis — create my space",
+      "disclaimer": "Educational information, not investment advice."
     }
   },
   "auth": {
@@ -166,7 +177,11 @@
     "have_account": "Already registered? ",
     "to_signup": "Create an account",
     "to_login": "Sign in",
-    "auth_error": "Authentication error"
+    "auth_error": "Authentication error",
+    "magic_toggle": "Get a magic link (no password)",
+    "magic_use_password": "Use a password instead",
+    "btn_magic": "Send the magic link",
+    "magic_sent": "Link sent! Check your inbox and click to sign in."
   },
   "waitlist": {
     "meta_title": "Waitlist — Seedow",
@@ -1506,5 +1521,48 @@
     "with_quotes": "{{name}}, your portfolio runs on **{{invested}} €** invested, **{{count}} lines** and a P&L of **{{pnl}}** 📈. Shall we look at what's next?",
     "invested_no_quotes": "{{name}}, your portfolio runs on **{{invested}} €** invested and **{{count}} lines**. Shall we look at what's next?",
     "ready_no_funds": "Hi {{name}} ✨ Your portfolio is ready but not funded yet. Shall we set up a first deposit?"
+  },
+  "transparency": {
+    "section_title": "Data transparency",
+    "coverage": {
+      "complete": "Complete data",
+      "partial": "Partial data",
+      "estimated": "Estimated data"
+    },
+    "coverage_hint": {
+      "complete": "Provider E/S/G scores, measured carbon intensity, SFDR classification and up-to-date price: everything is sourced.",
+      "partial": "At least one source is missing (carbon, SFDR or price). The displayed scores are still provider data, not estimates.",
+      "estimated": "Part of the figures is derived from the overall score for lack of provider data. Read them as an order of magnitude."
+    },
+    "gw_label": "Greenwashing",
+    "gw_row_flag": "High greenwashing risk",
+    "gw_risk": {
+      "low": "low risk",
+      "medium": "worth checking",
+      "high": "high risk"
+    },
+    "gw_hint_low": "The fund's claims (SFDR, themes) are consistent with its scores, exclusions and carbon data.",
+    "reasons": {
+      "art9_low_esg": "Classified Article 9 (\"sustainable\") but overall ESG score below 6/10.",
+      "art9_no_exclusions": "Classified Article 9 without any formal sector exclusion.",
+      "sfdr_low_esg": "Sustainable claim (Art. 8/9) with an ESG score below 5/10.",
+      "sfdr_missing_carbon": "Sustainable claim without measured carbon intensity data.",
+      "sfdr_no_exclusions": "Classified Article 8 without any formal sector exclusion.",
+      "green_theme_low_climate": "Environmental theme claimed but climate score below 5/10.",
+      "claims_on_estimated_data": "Sustainable claim backed by partly estimated data."
+    },
+    "source_link": "Where does this figure come from?"
+  },
+  "watchlist": {
+    "follow": "Follow",
+    "following": "Following",
+    "added_toast": "{{name}} added to your watchlist",
+    "removed_toast": "{{name}} removed from your watchlist",
+    "error_toast": "Couldn't update the watchlist. Try again.",
+    "card_title": "Your watchlist",
+    "see_all": "Explore",
+    "empty_desc": "Follow funds to get alerted when their score or classification changes.",
+    "empty_cta": "Discover funds",
+    "more_count": "+ {{count}} more in Discover"
   }
 }

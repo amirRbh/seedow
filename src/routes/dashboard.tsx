@@ -12,6 +12,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 import { NextStepCard } from "@/components/dashboard/NextStepCard";
+import { WatchlistCard } from "@/components/dashboard/WatchlistCard";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -191,6 +192,9 @@ function Dashboard() {
 
         {/* 3. Prochaine étape — une seule carte contextuelle */}
         <NextStepCard />
+
+        {/* 3a. Watchlist — boucle suivre → alerte → revenir */}
+        <WatchlistCard />
 
         {/* 3b. Capture intention investissement réel */}
         {portfolio && <RealInvestmentInterestCard />}

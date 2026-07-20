@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useAlerts, type AlertSeverity } from "@/hooks/useAlerts";
+import { trackAppEvent } from "@/lib/analytics/appEvents";
 import { cn } from "@/lib/utils";
 
 export function AlertsBell() {
@@ -24,8 +25,9 @@ export function AlertsBell() {
 
   const handleOpen = (next: boolean) => {
     setOpen(next);
-    if (next && unread > 0) {
-      void markAllRead();
+    if (next) {
+      void trackAppEvent("alert_opened", { count, unread });
+      if (unread > 0) void markAllRead();
     }
   };
 

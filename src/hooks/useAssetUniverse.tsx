@@ -2,6 +2,12 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { AssetClass, DiscoverAsset } from "@/lib/discover/types";
+import {
+  assessGreenwashingRisk,
+  computeDataCoverage,
+  GREEN_CAUSE_TAGS,
+  type TransparencyInput,
+} from "@/lib/esg/transparency";
 
 const ASSET_CLASS_LABEL: Record<AssetClass, string> = {
   equity_dev: "Actions monde développé",
@@ -64,9 +70,7 @@ async function fetchAssetUniverse(): Promise<AssetUniverseResult> {
   // l'historique (asset_prices) plutôt que d'afficher "indisponible" —
   // le cron horaire peut être en retard ou avoir échoué ponctuellement,
   // ça ne doit pas rendre l'écran Découverte inutilisable.
-  const missingIds = (assetsRes.data ?? [])
-    .filter((r) => !quoteByAsset.has(r.id))
-    .map((r) => r.id);
+  const missingIds = (assetsRes.data ?? []).filter((r) => !quoteByAsset.has(r.id)).map((r) => r.id);
 
   const fallbackByAsset = new Map<string, { close: number; price_date: string }>();
   if (missingIds.length > 0) {
@@ -95,6 +99,22 @@ async function fetchAssetUniverse(): Promise<AssetUniverseResult> {
     const causeExposure = (r.cause_exposure ?? {}) as Record<string, number>;
     const esg = Number(r.esg_score);
     const carbon = r.carbon_intensity_gco2e_per_eur;
+    const themes = Object.entries(causeExposure)
+      .filter(([, v]) => Number(v) > 0.15)
+      .map(([k]) => k);
+    // Calculé ici (et pas en aval) : c'est le seul endroit où l'on sait encore
+    // si les scores E/S/G viennent du fournisseur ou sont dérivés du score global.
+    const transparencyInput: TransparencyInput = {
+      hasPrice: price != null,
+      hasPillarScores: r.env_score != null && r.social_score != null && r.governance_score != null,
+      hasCarbonData: carbon != null,
+      sfdrArticle: r.sfdr_article,
+      overallEsgScore: esg / 10,
+      climateScore: Number(r.env_score ?? esg) / 10,
+      exclusionsCount: (r.excluded_sectors ?? []).length,
+      claimsGreenTheme: themes.some((th) => GREEN_CAUSE_TAGS.has(th)),
+    };
+    const greenwashing = assessGreenwashingRisk(transparencyInput);
     return {
       id: r.id,
       ticker: r.ticker,
@@ -117,9 +137,10 @@ async function fetchAssetUniverse(): Promise<AssetUniverseResult> {
       sfdr_article: r.sfdr_article,
       exclusions: r.excluded_sectors ?? [],
       tags: r.sfdr_article ? [`SFDR Art. ${r.sfdr_article}`] : [],
-      themes: Object.entries(causeExposure)
-        .filter(([, v]) => Number(v) > 0.15)
-        .map(([k]) => k),
+      themes,
+      data_coverage: computeDataCoverage(transparencyInput),
+      greenwashing_risk: greenwashing.risk,
+      greenwashing_reasons: greenwashing.reasons,
     };
   });
 
