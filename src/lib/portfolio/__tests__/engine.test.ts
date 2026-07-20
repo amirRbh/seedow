@@ -18,6 +18,21 @@ describe("buildPortfolio", () => {
     expect(result.metrics.volatility).toBe(0);
   });
 
+  it("falls back to volatility² on the diagonal when covariance rows are missing", () => {
+    // Actif fraîchement ajouté à l'univers : aucune ligne dans asset_covariance.
+    // Sans repli, sa variance serait 0 → faux "rendement sans risque" que
+    // l'optimiseur surpondérerait. Le portefeuille doit garder une volatilité
+    // strictement positive même avec une matrice de covariance vide.
+    const universe = balancedUniverse();
+    const result = buildPortfolio({
+      universe,
+      covariance: new Map(),
+      params: defaultParams(),
+    });
+    expect(result.selected_assets.length).toBeGreaterThan(0);
+    expect(result.metrics.volatility).toBeGreaterThan(0);
+  });
+
   it("returns an empty result when every asset is excluded", () => {
     const universe = [
       makeAsset({ id: "a", excluded_sectors: ["fossiles"] }),
