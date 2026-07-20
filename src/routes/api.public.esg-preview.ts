@@ -43,7 +43,7 @@ export const Route = createFileRoute("/api/public/esg-preview")({
             )
             .eq("is_active", true)
             .order("esg_score", { ascending: false })
-            .limit(200);
+            .limit(500);
           if (error) throw new Error(error.message);
 
           const items: EsgPreviewAsset[] = (data ?? []).map((r) => {

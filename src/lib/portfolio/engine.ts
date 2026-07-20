@@ -43,6 +43,13 @@ function applyBestInClass(assets: Asset[]): Asset[] {
 
 /**
  * Build covariance sub-matrix for the given asset subset.
+ *
+ * Diagonale absente de la matrice pré-calculée (actif fraîchement ajouté à
+ * l'univers, historique pas encore chargé) : on retombe sur volatility² du
+ * seed plutôt que 0 — une variance nulle ferait passer l'actif pour du
+ * rendement sans risque et l'optimiseur le surpondérerait massivement.
+ * Hors-diagonale absente : 0 (hypothèse non-corrélé), acceptable en attendant
+ * le recalcul du modèle de risque.
  */
 function buildCovariance(assets: Asset[], covMap: Map<string, number>): number[][] {
   const n = assets.length;
@@ -51,7 +58,8 @@ function buildCovariance(assets: Asset[], covMap: Map<string, number>): number[]
     const row: number[] = [];
     for (let j = 0; j < n; j++) {
       const key = `${assets[i].id}|${assets[j].id}`;
-      row.push(covMap.get(key) ?? 0);
+      const fallback = i === j ? assets[i].volatility ** 2 : 0;
+      row.push(covMap.get(key) ?? fallback);
     }
     Σ.push(row);
   }
