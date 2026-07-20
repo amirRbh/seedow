@@ -17,6 +17,7 @@ import {
 } from "@/lib/discover/filters";
 import { useAssetUniverse } from "@/hooks/useAssetUniverse";
 import { triggerMarketRefresh } from "@/lib/market/refresh.functions";
+import { trackAppEvent } from "@/lib/analytics/appEvents";
 import type { DiscoverAsset } from "@/lib/discover/types";
 
 export function AssetScreener() {
@@ -52,6 +53,20 @@ export function AssetScreener() {
   const categories = useMemo(() => uniqueCategories(assets), [assets]);
   const results = useMemo(() => applyFilters(assets, filters), [assets, filters]);
   const activeCount = activeFilterCount(filters);
+
+  // Événement funnel "première recherche de fonds" — débouncé pour ne tracer
+  // qu'une recherche stabilisée, pas chaque frappe.
+  const searchTerm = filters.search.trim();
+  const resultCount = results.length;
+  useEffect(() => {
+    if (searchTerm.length < 2) return;
+    const timer = setTimeout(() => {
+      void trackAppEvent("search_performed", { query: searchTerm, results: resultCount });
+    }, 900);
+    return () => clearTimeout(timer);
+    // resultCount volontairement hors deps : on trace la recherche, pas ses re-rendus.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm]);
 
   // Rendu incrémental : l'univers d'actifs peut compter plusieurs centaines de
   // lignes, chacune un motion.button animé — on n'en monte qu'une page à la

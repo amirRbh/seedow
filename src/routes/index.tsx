@@ -3,6 +3,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { joinWaitlist, getWaitlistCount } from "@/lib/beta/beta.functions";
+import { EsgQuickCheck } from "@/components/landing/EsgQuickCheck";
 
 const SITE_URL = "https://seedow.life";
 
@@ -203,6 +204,9 @@ function Landing() {
           </div>
         </div>
       </section>
+
+      {/* SECTION — quick win : tester un fonds sans compte, la démo qui vend */}
+      <EsgQuickCheck />
 
       {/* SECTION — problème / stats */}
       <section style={{ background: "var(--apple-surface)" }} className="px-6 py-24 md:py-32">

@@ -1,4 +1,5 @@
 import type { Database } from "@/integrations/supabase/types";
+import type { DataCoverage, GreenwashingReason, GreenwashingRisk } from "@/lib/esg/transparency";
 
 export type ExclusionTag = Database["public"]["Enums"]["exclusion_tag"];
 export type AssetClass = Database["public"]["Enums"]["asset_class"];
@@ -32,4 +33,9 @@ export interface DiscoverAsset {
   exclusions: ExclusionTag[];
   tags: string[];
   themes: string[]; // causes dominantes (matche cause_tag)
+  /** Couverture de nos données pour cet actif — affichée, jamais cachée. */
+  data_coverage: DataCoverage;
+  /** Cohérence revendications (SFDR, thèmes) vs données observées. */
+  greenwashing_risk: GreenwashingRisk;
+  greenwashing_reasons: GreenwashingReason[];
 }

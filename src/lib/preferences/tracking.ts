@@ -16,7 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 // ─────────────────────────────────────────────────────────
 const SESSION_KEY = "seedow.pref.session";
 
-function getSessionId(): string | null {
+export function getSessionId(): string | null {
   if (typeof window === "undefined") return null;
   try {
     let id = sessionStorage.getItem(SESSION_KEY);

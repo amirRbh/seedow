@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useRouterState } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { submitBetaFeedback } from "@/lib/beta/beta.functions";
+import { trackAppEvent } from "@/lib/analytics/appEvents";
 import { callAuthed } from "@/lib/authedServerFn";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -40,6 +41,7 @@ export function FeedbackButton() {
         routeWhenSent: pathname,
       });
       setDone(true);
+      void trackAppEvent("feedback_submitted", { route: pathname, nps });
     } catch (err) {
       console.error(err);
     } finally {

@@ -66,6 +66,11 @@ export function AssetRow({ asset, index, onOpen }: Props) {
             : t("discover.row.price_unavailable")}
         </p>
         <p className="text-tag uppercase tracking-wider text-gold font-semibold mt-1">
+          {asset.greenwashing_risk === "high" && (
+            <span className="text-rust mr-1" title={t("transparency.gw_row_flag")} aria-hidden>
+              ⚠
+            </span>
+          )}
           ESG {asset.overall_esg_score.toFixed(1)}
         </p>
       </div>

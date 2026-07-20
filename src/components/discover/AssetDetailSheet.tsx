@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Star } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useTranslation } from "react-i18next";
 import { useLang } from "@/hooks/useLang";
@@ -6,6 +7,13 @@ import { formatCurrency, formatPercent } from "@/lib/format";
 import { Slider } from "@/components/ui/slider";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { Glossary } from "@/components/ui/Glossary";
+import {
+  DataCoverageBadge,
+  GreenwashingBadge,
+  SourceLink,
+} from "@/components/discover/TransparencyBadges";
+import { useWatchlist } from "@/hooks/useWatchlist";
+import { trackAppEvent } from "@/lib/analytics/appEvents";
 import type { DiscoverAsset } from "@/lib/discover/types";
 
 interface Props {
@@ -34,8 +42,15 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
   };
 
   const [monthly, setMonthly] = useState(100);
+  const { isWatched, toggle } = useWatchlist();
+
+  // Événement d'engagement : une fiche ouverte = un actif réellement considéré.
+  useEffect(() => {
+    if (open && asset) void trackAppEvent("asset_viewed", { ticker: asset.ticker });
+  }, [open, asset]);
 
   if (!asset) return null;
+  const watched = isWatched(asset.id);
 
   const risk = asset.risk_level ?? 4;
   const riskInfo = RISK_LABELS[risk];
@@ -165,6 +180,41 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
               <MiniBar label={t("asset_detail.social")} value={asset.social_score} />
               <MiniBar label={t("asset_detail.ethics")} value={asset.governance_score} />
             </div>
+            <div className="mt-2.5">
+              <SourceLink />
+            </div>
+          </section>
+
+          {/* Transparence — on assume publiquement les limites de nos données */}
+          <section>
+            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold mb-2">
+              {t("transparency.section_title")}
+            </p>
+            <div className="paper-card p-3.5 space-y-3">
+              <div className="flex flex-wrap gap-1.5">
+                <DataCoverageBadge coverage={asset.data_coverage} />
+                <GreenwashingBadge
+                  risk={asset.greenwashing_risk}
+                  reasons={asset.greenwashing_reasons}
+                />
+              </div>
+              {/* Raisons en clair : les tooltips ne sont pas accessibles au tap mobile */}
+              {asset.greenwashing_reasons.length > 0 ? (
+                <ul className="space-y-1.5">
+                  {asset.greenwashing_reasons.map((r) => (
+                    <li key={r} className="flex items-start gap-2 text-label text-ink-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-solar mt-1.5 flex-shrink-0" />
+                      {t(`transparency.reasons.${r}`)}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-label text-ink-2">{t("transparency.gw_hint_low")}</p>
+              )}
+              <p className="text-caption text-ink-3 leading-snug">
+                {t(`transparency.coverage_hint.${asset.data_coverage}`)}
+              </p>
+            </div>
           </section>
 
           {/* Risques */}
@@ -256,6 +306,25 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
             className="h-11 px-4 rounded-full bg-paper-2 hover:bg-paper-3 border border-paper-3 text-label font-semibold text-ink-2"
           >
             {t("common.close")}
+          </button>
+          <button
+            type="button"
+            onClick={() => toggle(asset.id, asset.name)}
+            aria-pressed={watched}
+            aria-label={watched ? t("watchlist.following") : t("watchlist.follow")}
+            className={`h-11 px-4 rounded-full border text-label font-semibold flex items-center gap-1.5 transition-colors ${
+              watched
+                ? "bg-gold/15 border-gold text-ink"
+                : "bg-paper-2 border-paper-3 text-ink-2 hover:border-ink/40"
+            }`}
+          >
+            <Star
+              className={`w-4 h-4 transition-transform ${watched ? "fill-gold text-gold scale-110" : ""}`}
+              strokeWidth={2}
+            />
+            <span className="hidden sm:inline">
+              {watched ? t("watchlist.following") : t("watchlist.follow")}
+            </span>
           </button>
           <InvestDialog
             label={t("asset_detail.invest_in", { ticker: asset.ticker })}
