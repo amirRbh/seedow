@@ -1554,11 +1554,14 @@
     "gw_hint_low": "Les revendications du fonds (SFDR, thèmes) sont cohérentes avec ses scores, ses exclusions et ses données carbone.",
     "reasons": {
       "art9_low_esg": "Classé Article 9 (« durable ») mais score ESG global inférieur à 6/10.",
+      "art9_borderline_esg": "Classé Article 9 (« durable ») avec un score ESG à peine au-dessus du seuil (6 à 7/10) — juste, pour une ambition « durable ».",
       "art9_no_exclusions": "Classé Article 9 sans aucune exclusion sectorielle formelle.",
       "sfdr_low_esg": "Revendication durable (Art. 8/9) avec un score ESG inférieur à 5/10.",
+      "sfdr_borderline_esg": "Revendication durable (Art. 8/9) avec un score ESG dans la zone limite (5 à 6/10).",
       "sfdr_missing_carbon": "Revendication durable sans donnée d'intensité carbone mesurée.",
       "sfdr_no_exclusions": "Classé Article 8 sans aucune exclusion sectorielle formelle.",
       "green_theme_low_climate": "Thème environnemental revendiqué mais score climat inférieur à 5/10.",
+      "green_theme_borderline_climate": "Thème environnemental revendiqué avec un score climat à la limite (5 à 6/10).",
       "claims_on_estimated_data": "Revendication durable appuyée sur des données en partie estimées."
     },
     "source_link": "D'où vient ce chiffre ?"
