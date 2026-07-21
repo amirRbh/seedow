@@ -2,9 +2,11 @@ import type { ActivePortfolioMetrics } from "@/hooks/useActivePortfolio";
 import { useTranslation } from "react-i18next";
 import { useViewMode } from "@/hooks/useViewMode";
 import { useLang } from "@/hooks/useLang";
+import { motion } from "framer-motion";
 import { formatNumber, formatPercent } from "@/lib/format";
 import { MetricLabel } from "@/components/ui/MetricLabel";
 import { SourceLink } from "@/components/discover/TransparencyBadges";
+import { DURATION, EASE_REVEAL } from "@/lib/motion";
 
 interface Props {
   metrics: ActivePortfolioMetrics | null;
@@ -103,11 +105,14 @@ export function PortfolioMetricsCard({ metrics }: Props) {
   return (
     <div className="space-y-2">
       <div className="grid gap-2.5 grid-cols-3">
-        {visible.map((it) => {
+        {visible.map((it, i) => {
           const c = toneClasses[it.tone];
           return (
-            <div
+            <motion.div
               key={it.label}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: DURATION.base, ease: EASE_REVEAL, delay: i * 0.05 }}
               className={`rounded-xl p-3 border ${c.bg} ${c.border} relative overflow-visible`}
             >
               <div className="text-tag uppercase tracking-wider text-ink-3 font-semibold leading-tight">
@@ -115,7 +120,7 @@ export function PortfolioMetricsCard({ metrics }: Props) {
               </div>
               <p className={`font-value text-2xl mt-2 leading-none ${c.text}`}>{it.value}</p>
               <p className="text-tag text-ink-3 mt-1.5">{it.sub}</p>
-            </div>
+            </motion.div>
           );
         })}
       </div>

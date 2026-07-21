@@ -16,6 +16,7 @@ import { WatchlistCard } from "@/components/dashboard/WatchlistCard";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AnimatedFigure } from "@/components/ui/AnimatedFigure";
 import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 
 import { RealInvestmentInterestCard } from "@/components/beta/RealInvestmentInterestCard";
@@ -114,13 +115,19 @@ function Dashboard() {
           </p>
           <h2 className="font-value text-6xl text-ink leading-none mt-1">
             <sup className="text-2xl align-super mr-1">€</sup>
-            {totalValue.toLocaleString(lang === "en" ? "en-US" : "fr-FR", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}
+            <AnimatedFigure
+              value={totalValue}
+              from={0}
+              format={(v) =>
+                v.toLocaleString(lang === "en" ? "en-US" : "fr-FR", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })
+              }
+            />
           </h2>
           <div
-            className={`inline-flex items-center gap-1.5 mt-3 px-3 py-1 rounded-full text-xs font-semibold ${
+            className={`inline-flex items-center gap-1.5 mt-3 px-3 py-1 rounded-full text-xs font-semibold transition-colors duration-500 ${
               isGrowing ? "bg-highlight-5 text-highlight-1" : "bg-alert-tint text-rust"
             }`}
           >

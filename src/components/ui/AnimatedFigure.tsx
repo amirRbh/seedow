@@ -2,23 +2,29 @@ import { useEffect, useRef, useState } from "react";
 
 interface Props {
   value: number;
+  /**
+   * Valeur de départ pour animer *à l'apparition* (ex. 0 → valeur). Par défaut
+   * le compteur ne s'anime qu'aux changements de valeur, pas au montage.
+   */
+  from?: number;
   format?: (v: number) => string;
   duration?: number;
   className?: string;
 }
 
 /**
- * Compteur animé — ease-out, 300 ms, tabular-nums.
+ * Compteur animé — ease-out, 600 ms, tabular-nums.
  * Si `prefers-reduced-motion`, affiche directement la valeur cible.
  */
 export function AnimatedFigure({
   value,
+  from,
   format = (v) => v.toLocaleString("fr-FR", { maximumFractionDigits: 2 }),
   duration = 600,
   className,
 }: Props) {
-  const [display, setDisplay] = useState(value);
-  const fromRef = useRef(value);
+  const [display, setDisplay] = useState(from ?? value);
+  const fromRef = useRef(from ?? value);
   const reducedRef = useRef(false);
 
   useEffect(() => {
