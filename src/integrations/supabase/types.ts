@@ -80,6 +80,33 @@ export type Database = {
         }
         Relationships: []
       }
+      app_events: {
+        Row: {
+          id: string
+          name: string
+          occurred_at: string
+          payload: Json
+          session_id: string | null
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          occurred_at?: string
+          payload?: Json
+          session_id?: string | null
+          user_id: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          occurred_at?: string
+          payload?: Json
+          session_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       asset_covariance: {
         Row: {
           asset_a: string
@@ -215,6 +242,45 @@ export type Database = {
             foreignKeyName: "asset_quotes_asset_id_fkey"
             columns: ["asset_id"]
             isOneToOne: true
+            referencedRelation: "assets_missing_market_data"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      asset_score_history: {
+        Row: {
+          asset_id: string
+          captured_at: string
+          esg_score: number | null
+          id: string
+          sfdr_article: number | null
+        }
+        Insert: {
+          asset_id: string
+          captured_at?: string
+          esg_score?: number | null
+          id?: string
+          sfdr_article?: number | null
+        }
+        Update: {
+          asset_id?: string
+          captured_at?: string
+          esg_score?: number | null
+          id?: string
+          sfdr_article?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asset_score_history_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "asset_score_history_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
             referencedRelation: "assets_missing_market_data"
             referencedColumns: ["id"]
           },
@@ -785,28 +851,37 @@ export type Database = {
           avatar_url: string | null
           created_at: string
           display_name: string | null
+          font_scale: string | null
           id: string
           onboarding_completed: boolean
           public_handle: string | null
+          theme: string | null
           updated_at: string
+          view_mode: string | null
         }
         Insert: {
           avatar_url?: string | null
           created_at?: string
           display_name?: string | null
+          font_scale?: string | null
           id: string
           onboarding_completed?: boolean
           public_handle?: string | null
+          theme?: string | null
           updated_at?: string
+          view_mode?: string | null
         }
         Update: {
           avatar_url?: string | null
           created_at?: string
           display_name?: string | null
+          font_scale?: string | null
           id?: string
           onboarding_completed?: boolean
           public_handle?: string | null
+          theme?: string | null
           updated_at?: string
+          view_mode?: string | null
         }
         Relationships: []
       }
@@ -1005,8 +1080,51 @@ export type Database = {
         }
         Relationships: []
       }
+      watchlists: {
+        Row: {
+          asset_id: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          asset_id: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          asset_id?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "watchlists_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "watchlists_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets_missing_market_data"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
+      app_event_first_seen: {
+        Row: {
+          cohort_day: string | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
       assets_missing_market_data: {
         Row: {
           has_live_quote: boolean | null
@@ -1016,6 +1134,34 @@ export type Database = {
           name: string | null
           ticker: string | null
           yahoo_symbol: string | null
+        }
+        Relationships: []
+      }
+      beta_retention_cohorts: {
+        Row: {
+          cohort_day: string | null
+          cohort_size: number | null
+          retained_d1: number | null
+          retained_d7: number | null
+        }
+        Relationships: []
+      }
+      comprehension_overview: {
+        Row: {
+          avg_quiz_pct: number | null
+          mode_expert_users: number | null
+          mode_simple_users: number | null
+          total_completions: number | null
+          users_completed_course: number | null
+          users_started_course: number | null
+        }
+        Relationships: []
+      }
+      comprehension_retention: {
+        Row: {
+          cohort_size: number | null
+          completed_course: boolean | null
+          retained_d7: number | null
         }
         Relationships: []
       }
