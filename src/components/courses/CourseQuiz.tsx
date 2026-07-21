@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { QuizQuestion } from "@/content/courses/types";
 import { cn } from "@/lib/utils";
+import { trackAppEvent } from "@/lib/analytics/appEvents";
 
 interface Props {
   slug: string;
@@ -30,6 +31,9 @@ export function CourseQuiz({ slug, quiz }: Props) {
     } catch {
       // ignore
     }
+    // Cours terminé = quiz validé jusqu'au bout. On mesure le score sans le nom
+    // du cours en clair (slug borné), no-op silencieux pré-auth.
+    void trackAppEvent("course_completed", { slug, score, total: quiz.length });
   }
 
   return (

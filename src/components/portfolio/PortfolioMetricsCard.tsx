@@ -4,6 +4,7 @@ import { useViewMode } from "@/hooks/useViewMode";
 import { useLang } from "@/hooks/useLang";
 import { formatNumber, formatPercent } from "@/lib/format";
 import { MetricLabel } from "@/components/ui/MetricLabel";
+import { SourceLink } from "@/components/discover/TransparencyBadges";
 
 interface Props {
   metrics: ActivePortfolioMetrics | null;
@@ -59,7 +60,10 @@ export function PortfolioMetricsCard({ metrics }: Props) {
     {
       label: t("portfolio_metrics.return_quality"),
       hint: t("portfolio_metrics.sharpe_hint"),
-      value: formatNumber(metrics.sharpe, lang, { maximumFractionDigits: 2, minimumFractionDigits: 2 }),
+      value: formatNumber(metrics.sharpe, lang, {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2,
+      }),
       sub: t("portfolio_metrics.sharpe"),
       tone: "sky",
       expertOnly: true,
@@ -97,22 +101,26 @@ export function PortfolioMetricsCard({ metrics }: Props) {
   };
 
   return (
-    <div className={`grid gap-2.5 ${isSimple ? "grid-cols-3" : "grid-cols-3"}`}>
-      {visible.map((it) => {
-        const c = toneClasses[it.tone];
-        return (
-          <div
-            key={it.label}
-            className={`rounded-xl p-3 border ${c.bg} ${c.border} relative overflow-visible`}
-          >
-            <div className="text-tag uppercase tracking-wider text-ink-3 font-semibold leading-tight">
-              <MetricLabel label={it.label} hint={it.hint} />
+    <div className="space-y-2">
+      <div className="grid gap-2.5 grid-cols-3">
+        {visible.map((it) => {
+          const c = toneClasses[it.tone];
+          return (
+            <div
+              key={it.label}
+              className={`rounded-xl p-3 border ${c.bg} ${c.border} relative overflow-visible`}
+            >
+              <div className="text-tag uppercase tracking-wider text-ink-3 font-semibold leading-tight">
+                <MetricLabel label={it.label} hint={it.hint} />
+              </div>
+              <p className={`font-value text-2xl mt-2 leading-none ${c.text}`}>{it.value}</p>
+              <p className="text-tag text-ink-3 mt-1.5">{it.sub}</p>
             </div>
-            <p className={`font-value text-2xl mt-2 leading-none ${c.text}`}>{it.value}</p>
-            <p className="text-tag text-ink-3 mt-1.5">{it.sub}</p>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
+      {/* Traçabilité : chaque KPI ESG affiché doit être remontable à sa méthodo. */}
+      <SourceLink className="mt-0.5" />
     </div>
   );
 }

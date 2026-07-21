@@ -24,6 +24,8 @@ import { supabase } from "@/integrations/supabase/client";
 import type { CauseTag, ExclusionTag } from "@/lib/portfolio/types";
 import { reportCaughtError } from "@/lib/monitoring/errorReporter";
 import { useTheme, type ThemePreference } from "@/hooks/useTheme";
+import { useFontScale, type FontScale } from "@/hooks/useFontScale";
+import { useViewMode } from "@/hooks/useViewMode";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 
 export const Route = createFileRoute("/reglages")({
@@ -272,7 +274,10 @@ function PreferencesSection() {
               <span>
                 {t("reglages.preview_esg")}{" "}
                 <span className="text-ink font-value tabular-nums">
-                  {formatNumber(preview.esg, lang, { maximumFractionDigits: 1, minimumFractionDigits: 1 })}
+                  {formatNumber(preview.esg, lang, {
+                    maximumFractionDigits: 1,
+                    minimumFractionDigits: 1,
+                  })}
                 </span>
               </span>
               <span>
@@ -527,7 +532,23 @@ function ProfileSection({ email, onSignOut }: { email: string; onSignOut: () => 
       </Block>
 
       <Block title={t("reglages.block_appearance")}>
-        <ThemeToggle />
+        <div className="space-y-6">
+          <div>
+            <p className="text-caption text-ink-3 mb-2">{t("reglages.theme_label")}</p>
+            <ThemeToggle />
+          </div>
+          <div>
+            <p className="text-caption text-ink-3 mb-2">{t("reglages.font_scale_label")}</p>
+            <FontScaleToggle />
+          </div>
+          <div>
+            <p className="text-caption text-ink-3 mb-2">{t("view_mode.label")}</p>
+            <ViewModeControl />
+            <p className="text-caption text-ink-3 mt-2 max-w-md leading-snug">
+              {t("reglages.view_mode_hint")}
+            </p>
+          </div>
+        </div>
       </Block>
 
       <Block title={t("reglages.block_security")}>
@@ -551,6 +572,74 @@ function ProfileSection({ email, onSignOut }: { email: string; onSignOut: () => 
         </button>
       </Block>
     </div>
+  );
+}
+
+function SegmentedControl<T extends string>({
+  ariaLabel,
+  value,
+  options,
+  onChange,
+}: {
+  ariaLabel: string;
+  value: T;
+  options: { value: T; label: string }[];
+  onChange: (v: T) => void;
+}) {
+  return (
+    <div
+      role="radiogroup"
+      aria-label={ariaLabel}
+      className="inline-flex gap-1 bg-paper-2 rounded-full p-1"
+    >
+      {options.map((opt) => (
+        <button
+          key={opt.value}
+          type="button"
+          role="radio"
+          aria-checked={value === opt.value}
+          onClick={() => onChange(opt.value)}
+          className={`px-3.5 py-1.5 rounded-full text-label font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 ${
+            value === opt.value ? "bg-paper text-ink shadow-sm" : "text-ink-3 hover:text-ink-2"
+          }`}
+        >
+          {opt.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function FontScaleToggle() {
+  const { t } = useTranslation();
+  const { scale, setScale } = useFontScale();
+  return (
+    <SegmentedControl<FontScale>
+      ariaLabel={t("reglages.font_scale_label")}
+      value={scale}
+      onChange={setScale}
+      options={[
+        { value: "standard", label: t("reglages.font_scale_standard") },
+        { value: "large", label: t("reglages.font_scale_large") },
+        { value: "xlarge", label: t("reglages.font_scale_xlarge") },
+      ]}
+    />
+  );
+}
+
+function ViewModeControl() {
+  const { t } = useTranslation();
+  const { mode, setMode } = useViewMode();
+  return (
+    <SegmentedControl<"simple" | "expert">
+      ariaLabel={t("view_mode.label")}
+      value={mode}
+      onChange={setMode}
+      options={[
+        { value: "simple", label: t("view_mode.simple") },
+        { value: "expert", label: t("view_mode.expert") },
+      ]}
+    />
   );
 }
 
@@ -904,7 +993,11 @@ function CronHealthBlock({
               >
                 <span
                   className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
-                    r.status === "ok" ? "bg-highlight-1" : r.status === "partial" ? "bg-gold" : "bg-rust"
+                    r.status === "ok"
+                      ? "bg-highlight-1"
+                      : r.status === "partial"
+                        ? "bg-gold"
+                        : "bg-rust"
                   }`}
                 />
                 <span className="text-ink-3 tabular-nums w-28 flex-shrink-0">
@@ -1051,7 +1144,9 @@ function MethodologySection() {
               </div>
               <div className="rounded border border-highlight-4 bg-highlight-5 p-2">
                 <p className="font-value text-highlight-1">60–80</p>
-                <p className="text-highlight-1">{t("reglages.methodology.esg_composite.scale_good")}</p>
+                <p className="text-highlight-1">
+                  {t("reglages.methodology.esg_composite.scale_good")}
+                </p>
               </div>
               <div className="rounded border border-highlight-2 bg-highlight-5 p-2">
                 <p className="font-value text-highlight-1">80–100</p>

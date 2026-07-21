@@ -21,7 +21,9 @@ export type AppEventName =
   | "watchlist_removed"
   | "alert_opened"
   | "ethi_message_sent"
-  | "feedback_submitted";
+  | "feedback_submitted"
+  | "course_started"
+  | "course_completed";
 
 export async function trackAppEvent(
   name: AppEventName,

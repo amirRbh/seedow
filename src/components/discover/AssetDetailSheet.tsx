@@ -6,7 +6,7 @@ import { useLang } from "@/hooks/useLang";
 import { formatCurrency, formatPercent } from "@/lib/format";
 import { Slider } from "@/components/ui/slider";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
-import { Glossary } from "@/components/ui/Glossary";
+import { Glossary, useTermLabel } from "@/components/ui/Glossary";
 import {
   DataCoverageBadge,
   GreenwashingBadge,
@@ -43,6 +43,8 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
 
   const [monthly, setMonthly] = useState(100);
   const { isWatched, toggle } = useWatchlist();
+  // Libellé SFDR adapté au niveau de détail (jargon en Expert, clair en Simple).
+  const sfdrLabel = useTermLabel("SFDR");
 
   // Événement d'engagement : une fiche ouverte = un actif réellement considéré.
   useEffect(() => {
@@ -289,10 +291,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                 value={formatPercent(asset.ter_pct / 100, lang)}
               />
               {asset.sfdr_article && (
-                <IdRow
-                  label={t("asset_detail_sheet.sfdr")}
-                  value={`Article ${asset.sfdr_article}`}
-                />
+                <IdRow label={sfdrLabel} value={`Article ${asset.sfdr_article}`} />
               )}
             </div>
           </section>
