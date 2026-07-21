@@ -3,6 +3,8 @@ import { useMemo, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { COURSES } from "@/content/courses";
 import { CourseCard } from "@/components/courses/CourseCard";
+import { CourseProgressBanner } from "@/components/courses/CourseProgressBanner";
+import { useCourseProgress } from "@/hooks/useCourseProgress";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { cn } from "@/lib/utils";
 
@@ -35,12 +37,17 @@ function CoursesIndex() {
   const isAuthed = !!user;
   const [filter, setFilter] = useState<Filter>("all");
 
+  const allSlugs = useMemo(() => COURSES.map((c) => c.slug), []);
+  const progress = useCourseProgress(allSlugs);
+
   const filtered = useMemo(() => {
     if (filter === "all") return COURSES;
     return COURSES.filter((c) => c.track === filter);
   }, [filter]);
 
   const freeCount = COURSES.filter((c) => c.isFree).length;
+  // Prochain cours non terminé (dans l'ordre pédagogique de COURSES) : point de reprise.
+  const resumeCourse = COURSES.find((c) => !progress.isCompleted(c.slug));
 
   return (
     <div className="bg-paper text-ink min-h-screen paper-grain">
@@ -104,6 +111,15 @@ function CoursesIndex() {
           </p>
         </section>
 
+        {progress.ready && progress.completedCount > 0 && (
+          <CourseProgressBanner
+            completedCount={progress.completedCount}
+            total={COURSES.length}
+            resumeSlug={resumeCourse?.slug}
+            resumeTitle={resumeCourse?.title}
+          />
+        )}
+
         <div className="flex flex-wrap items-center gap-3 mb-10">
           <FilterButton active={filter === "all"} onClick={() => setFilter("all")}>
             Tous · {COURSES.length}
@@ -118,7 +134,13 @@ function CoursesIndex() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
           {filtered.map((course) => (
-            <CourseCard key={course.slug} course={course} isAuthed={isAuthed} />
+            <CourseCard
+              key={course.slug}
+              course={course}
+              isAuthed={isAuthed}
+              completed={progress.isCompleted(course.slug)}
+              score={progress.scoreOf(course.slug)}
+            />
           ))}
         </div>
 

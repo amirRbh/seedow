@@ -7,6 +7,7 @@ import { formatCurrency, formatPercent } from "@/lib/format";
 import { Slider } from "@/components/ui/slider";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { Glossary, useTermLabel } from "@/components/ui/Glossary";
+import { RelatedCourse } from "@/components/courses/RelatedCourse";
 import {
   DataCoverageBadge,
   GreenwashingBadge,
@@ -216,6 +217,12 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
               <p className="text-caption text-ink-3 leading-snug">
                 {t(`transparency.coverage_hint.${asset.data_coverage}`)}
               </p>
+              {asset.greenwashing_risk !== "low" && (
+                <RelatedCourse
+                  slug="greenwashing-6-signaux"
+                  reason={t("transparency.learn_greenwashing")}
+                />
+              )}
             </div>
           </section>
 
