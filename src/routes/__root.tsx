@@ -25,6 +25,7 @@ import { CookieNotice } from "@/components/layout/CookieNotice";
 import { installGlobalErrorReporting, reportReactError } from "@/lib/monitoring/errorReporter";
 import { ThemeProvider, THEME_INIT_SCRIPT } from "@/hooks/useTheme";
 import { FontScaleProvider, FONT_SCALE_INIT_SCRIPT } from "@/hooks/useFontScale";
+import { PreferenceSync } from "@/components/PreferenceSync";
 
 import appCss from "../styles.css?url";
 
@@ -204,6 +205,7 @@ function RootComponent() {
                     <ViewModeProvider>
                       <FocusModeProvider>
                         <TooltipProvider delayDuration={150}>
+                          <PreferenceSync />
                           <AppShell>
                             <RouteTransition />
                           </AppShell>
