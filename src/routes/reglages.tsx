@@ -26,6 +26,7 @@ import { reportCaughtError } from "@/lib/monitoring/errorReporter";
 import { useTheme, type ThemePreference } from "@/hooks/useTheme";
 import { useFontScale, type FontScale } from "@/hooks/useFontScale";
 import { useViewMode } from "@/hooks/useViewMode";
+import { resetIntro } from "@/lib/intro";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 
 export const Route = createFileRoute("/reglages")({
@@ -500,6 +501,13 @@ function ProfileSection({ email, onSignOut }: { email: string; onSignOut: () => 
               className="text-body-sm text-ink-2 hover:text-ink underline-offset-2 hover:underline"
             >
               {t("reglages.more_courses")}
+            </Link>
+            <Link
+              to="/comprendre"
+              onClick={resetIntro}
+              className="text-body-sm text-ink-2 hover:text-ink underline-offset-2 hover:underline"
+            >
+              {t("reglages.more_intro")}
             </Link>
           </div>
         </Block>

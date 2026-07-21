@@ -21,6 +21,7 @@ import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 import { RealInvestmentInterestCard } from "@/components/beta/RealInvestmentInterestCard";
 import { FeedbackButton } from "@/components/beta/FeedbackButton";
 import { ImpactHero } from "@/components/impact/ImpactHero";
+import { LearnIntroCard } from "@/components/dashboard/LearnIntroCard";
 
 export const Route = createFileRoute("/dashboard")({
   beforeLoad: () => requireAuthedUser("/dashboard"),
@@ -97,6 +98,9 @@ function Dashboard() {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
       <div className="max-w-lg mx-auto pb-28">
         <AppHeader eyebrow={greeting} title={userName} showPortfolioSelector />
+
+        {/* 0. Accueil néophyte — onboarding pédagogique, dismissible */}
+        <LearnIntroCard />
 
         {/* 1. Bloc valeur */}
         <motion.section

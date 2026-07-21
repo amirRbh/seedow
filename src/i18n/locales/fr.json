@@ -52,6 +52,12 @@
     "simple": "Simple",
     "expert": "Expert"
   },
+  "learn_intro": {
+    "eyebrow": "Nouveau ici ?",
+    "body": "Deux minutes pour comprendre l'essentiel : transparence des chiffres, mode simple et repérage du greenwashing.",
+    "cta": "Comprendre Seedow",
+    "dismiss": "Masquer"
+  },
   "landing": {
     "nav": {
       "courses": "Cours",
@@ -741,6 +747,7 @@
     "more_comparatif": "Comparatif vs ETF classique",
     "more_certificate": "Mon certificat d'impact",
     "more_courses": "Cours & pédagogie",
+    "more_intro": "Revoir la présentation",
     "block_identity": "Identité",
     "email_label": "Adresse email",
     "display_name_label": "Nom affiché",
