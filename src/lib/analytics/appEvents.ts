@@ -23,7 +23,8 @@ export type AppEventName =
   | "ethi_message_sent"
   | "feedback_submitted"
   | "course_started"
-  | "course_completed";
+  | "course_completed"
+  | "view_mode_changed";
 
 export async function trackAppEvent(
   name: AppEventName,

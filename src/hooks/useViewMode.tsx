@@ -10,6 +10,7 @@ import {
 } from "react";
 import i18n from "i18next";
 import { toast } from "sonner";
+import { trackAppEvent } from "@/lib/analytics/appEvents";
 
 export type ViewMode = "simple" | "expert";
 
@@ -54,6 +55,8 @@ export function ViewModeProvider({ children }: { children: ReactNode }) {
       toast.success(i18n.t(`view_mode.toast_${m}`), {
         description: i18n.t(`view_mode.toast_${m}_desc`),
       });
+      // Mesure d'adoption du mode (compréhension) — seulement sur action réelle.
+      void trackAppEvent("view_mode_changed", { mode: m });
     }
     setModeState(m);
     try {

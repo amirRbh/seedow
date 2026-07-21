@@ -1,7 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { getBetaAdminStats, type BetaAdminStats, type BetaTester } from "@/lib/beta/beta.functions";
+import {
+  getBetaAdminStats,
+  getComprehensionStats,
+  type BetaAdminStats,
+  type BetaTester,
+  type ComprehensionStats,
+} from "@/lib/beta/beta.functions";
 import { callAuthed } from "@/lib/authedServerFn";
 import { useLang } from "@/hooks/useLang";
 import { formatCurrency, formatDate } from "@/lib/format";
@@ -14,6 +20,7 @@ function AdminBetaPage() {
   const { t } = useTranslation();
   const { lang } = useLang();
   const [stats, setStats] = useState<BetaAdminStats | null>(null);
+  const [comp, setComp] = useState<ComprehensionStats | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState("");
 
@@ -23,6 +30,10 @@ function AdminBetaPage() {
       .catch((err) =>
         setError(err instanceof Error ? err.message : t("admin_beta.error_fallback")),
       );
+    // Métriques de compréhension : best-effort, ne bloque pas la page si absent.
+    callAuthed(getComprehensionStats, undefined as never)
+      .then(setComp)
+      .catch(() => setComp(null));
   }, [t]);
 
   const filteredTesters = useMemo(() => {
@@ -172,6 +183,9 @@ function AdminBetaPage() {
         </div>
         <p className="text-caption text-ink-3 mt-2">{t("admin_beta.funnel_hint")}</p>
       </section>
+
+      {/* Compréhension */}
+      {comp && <ComprehensionSection comp={comp} />}
 
       {/* Market data ingestion health */}
       <section>
@@ -391,6 +405,63 @@ function TesterRow({
         )}
       </td>
     </tr>
+  );
+}
+
+function ComprehensionSection({ comp }: { comp: ComprehensionStats }) {
+  const { t } = useTranslation();
+  const pct = (v: number | null) => (v == null ? "—" : `${Math.round(v * 100)}%`);
+  const lift =
+    comp.retentionD7Completers != null && comp.retentionD7NonCompleters != null
+      ? comp.retentionD7Completers - comp.retentionD7NonCompleters
+      : null;
+
+  return (
+    <section>
+      <h2 className="font-display text-lg text-ink mb-3">{t("admin_beta.comprehension_title")}</h2>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+        <Kpi
+          label={t("admin_beta.comprehension_completers")}
+          value={String(comp.usersCompletedCourse)}
+        />
+        <Kpi
+          label={t("admin_beta.comprehension_completions")}
+          value={String(comp.totalCompletions)}
+        />
+        <Kpi
+          label={t("admin_beta.comprehension_avg_quiz")}
+          value={comp.avgQuizPct != null ? `${comp.avgQuizPct}%` : "—"}
+        />
+        <Kpi
+          label={t("admin_beta.comprehension_mode_split")}
+          value={`${comp.modeSimpleUsers} / ${comp.modeExpertUsers}`}
+        />
+      </div>
+      <div className="border border-paper-3 rounded-2xl p-4">
+        <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold mb-3">
+          {t("admin_beta.comprehension_retention_title")}
+        </p>
+        <div className="flex items-center justify-between text-body-sm py-1.5">
+          <span className="text-ink">{t("admin_beta.comprehension_with_course")}</span>
+          <span className="font-value tabular-nums text-ink">
+            {pct(comp.retentionD7Completers)}
+          </span>
+        </div>
+        <div className="flex items-center justify-between text-body-sm py-1.5 border-t border-paper-3">
+          <span className="text-ink-2">{t("admin_beta.comprehension_without_course")}</span>
+          <span className="font-value tabular-nums text-ink-2">
+            {pct(comp.retentionD7NonCompleters)}
+          </span>
+        </div>
+        {lift != null && (
+          <p className={`text-caption mt-2 ${lift >= 0 ? "text-forest" : "text-rust"}`}>
+            {lift >= 0 ? "+" : ""}
+            {Math.round(lift * 100)} {t("admin_beta.comprehension_lift_suffix")}
+          </p>
+        )}
+      </div>
+      <p className="text-caption text-ink-3 mt-2">{t("admin_beta.comprehension_hint")}</p>
+    </section>
   );
 }
 

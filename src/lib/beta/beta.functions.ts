@@ -468,3 +468,64 @@ export const getBetaAdminStats = createServerFn({ method: "GET" })
       clientErrors24h: clientErrors24hRes.count ?? 0,
     };
   });
+
+// ─────────────────────────────────────────────────────────────────────────
+// Mesure de la compréhension (admin) — s'appuie sur les vues SQL
+// comprehension_overview / comprehension_retention (migration 20260721140000).
+// ─────────────────────────────────────────────────────────────────────────
+
+export interface ComprehensionStats {
+  usersStartedCourse: number;
+  usersCompletedCourse: number;
+  totalCompletions: number;
+  avgQuizPct: number | null;
+  modeSimpleUsers: number;
+  modeExpertUsers: number;
+  /** Rétention J7 des utilisateurs ayant terminé au moins un cours (0..1). */
+  retentionD7Completers: number | null;
+  /** Rétention J7 des utilisateurs n'ayant terminé aucun cours (0..1). */
+  retentionD7NonCompleters: number | null;
+}
+
+export const getComprehensionStats = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<ComprehensionStats> => {
+    const { data: isAdmin } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
+    if (!isAdmin) throw new Error("Forbidden");
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    // Vues pas encore dans les types générés par Lovable Cloud.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const admin = supabaseAdmin as any;
+
+    const [overviewRes, retentionRes] = await Promise.all([
+      admin.from("comprehension_overview").select("*").maybeSingle(),
+      admin.from("comprehension_retention").select("*"),
+    ]);
+
+    const o = overviewRes.data ?? {};
+    const ratio = (row: { cohort_size: number; retained_d7: number } | undefined) =>
+      row && row.cohort_size > 0 ? row.retained_d7 / row.cohort_size : null;
+
+    const rows = (retentionRes.data ?? []) as Array<{
+      completed_course: boolean;
+      cohort_size: number;
+      retained_d7: number;
+    }>;
+    const completers = rows.find((r) => r.completed_course === true);
+    const nonCompleters = rows.find((r) => r.completed_course === false);
+
+    return {
+      usersStartedCourse: Number(o.users_started_course ?? 0),
+      usersCompletedCourse: Number(o.users_completed_course ?? 0),
+      totalCompletions: Number(o.total_completions ?? 0),
+      avgQuizPct: o.avg_quiz_pct != null ? Number(o.avg_quiz_pct) : null,
+      modeSimpleUsers: Number(o.mode_simple_users ?? 0),
+      modeExpertUsers: Number(o.mode_expert_users ?? 0),
+      retentionD7Completers: ratio(completers),
+      retentionD7NonCompleters: ratio(nonCompleters),
+    };
+  });
