@@ -50,7 +50,11 @@
   "view_mode": {
     "label": "Niveau de détail",
     "simple": "Simple",
-    "expert": "Expert"
+    "expert": "Expert",
+    "toast_simple": "Mode simple activé",
+    "toast_simple_desc": "Termes en langage clair, indicateurs avancés masqués.",
+    "toast_expert": "Mode expert activé",
+    "toast_expert_desc": "Tous les indicateurs, avec la terminologie d'origine."
   },
   "learn_intro": {
     "eyebrow": "Nouveau ici ?",
@@ -485,6 +489,16 @@
     "kpi_errors_24h": "Erreurs client (24h)",
     "funnel_title": "Fonnel d'onboarding (30 derniers jours)",
     "funnel_hint": "Complétées / entrées par étape · dernière ligne = allocation présentée puis acceptée.",
+    "comprehension_title": "Compréhension",
+    "comprehension_completers": "Ont terminé un cours",
+    "comprehension_completions": "Cours terminés (total)",
+    "comprehension_avg_quiz": "Score de quiz moyen",
+    "comprehension_mode_split": "Mode simple / expert",
+    "comprehension_retention_title": "Rétention J7 : cours terminé ou non",
+    "comprehension_with_course": "Ont terminé ≥ 1 cours",
+    "comprehension_without_course": "Aucun cours terminé",
+    "comprehension_lift_suffix": "points de rétention J7 (cours vs sans cours)",
+    "comprehension_hint": "Le pari de Seedow est la compréhension : on mesure si les cours et le mode simple aident réellement, et si finir un cours corrèle avec une meilleure rétention.",
     "funnel_step_values": "1. Valeurs",
     "funnel_step_exclusions": "2. Exclusions",
     "funnel_step_objective": "3. Objectif",

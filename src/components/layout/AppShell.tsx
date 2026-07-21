@@ -202,7 +202,7 @@ function FocusToggle({ focus, onToggle }: { focus: boolean; onToggle: () => void
       </TooltipTrigger>
       <TooltipContent side="left" sideOffset={8} className="text-caption">
         {focus ? t("focus_mode.show_chrome") : t("focus_mode.hide_chrome")}
-        <kbd className="ml-2 text-tag text-ink-3 font-mono">.</kbd>
+        <kbd className="ml-2 text-tag text-paper/55 font-mono">.</kbd>
       </TooltipContent>
     </Tooltip>
   );

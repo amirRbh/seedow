@@ -50,7 +50,11 @@
   "view_mode": {
     "label": "Detail level",
     "simple": "Simple",
-    "expert": "Expert"
+    "expert": "Expert",
+    "toast_simple": "Simple mode on",
+    "toast_simple_desc": "Plain-language terms, advanced metrics hidden.",
+    "toast_expert": "Expert mode on",
+    "toast_expert_desc": "All metrics, with the original terminology."
   },
   "learn_intro": {
     "eyebrow": "New here?",
@@ -485,6 +489,16 @@
     "kpi_errors_24h": "Client errors (24h)",
     "funnel_title": "Onboarding funnel (last 30 days)",
     "funnel_hint": "Completed / entered per step · last row = allocation shown then accepted.",
+    "comprehension_title": "Comprehension",
+    "comprehension_completers": "Completed a course",
+    "comprehension_completions": "Course completions (total)",
+    "comprehension_avg_quiz": "Average quiz score",
+    "comprehension_mode_split": "Simple / expert mode",
+    "comprehension_retention_title": "D7 retention: completed a course or not",
+    "comprehension_with_course": "Completed ≥ 1 course",
+    "comprehension_without_course": "No course completed",
+    "comprehension_lift_suffix": "D7 retention points (course vs none)",
+    "comprehension_hint": "Seedow's bet is comprehension: we measure whether courses and simple mode actually help, and whether finishing a course correlates with better retention.",
     "funnel_step_values": "1. Values",
     "funnel_step_exclusions": "2. Exclusions",
     "funnel_step_objective": "3. Objective",
