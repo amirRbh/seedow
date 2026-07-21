@@ -50,7 +50,11 @@
   "view_mode": {
     "label": "Niveau de détail",
     "simple": "Simple",
-    "expert": "Expert"
+    "expert": "Expert",
+    "toast_simple": "Mode simple activé",
+    "toast_simple_desc": "Termes en langage clair, indicateurs avancés masqués.",
+    "toast_expert": "Mode expert activé",
+    "toast_expert_desc": "Tous les indicateurs, avec la terminologie d'origine."
   },
   "learn_intro": {
     "eyebrow": "Nouveau ici ?",

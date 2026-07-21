@@ -58,7 +58,12 @@ export function RailNav() {
   const SECONDARY: NavItem[] = [
     { key: "profil", path: "/profil", label: t("rail_nav.investor_profile"), icon: "profil" },
     { key: "comparatif", path: "/comparatif", label: t("rail_nav.comparatif"), icon: "comparatif" },
-    { key: "certificat", path: "/certificat", label: t("rail_nav.certificate"), icon: "certificat" },
+    {
+      key: "certificat",
+      path: "/certificat",
+      label: t("rail_nav.certificate"),
+      icon: "certificat",
+    },
     { key: "cours", path: "/cours", label: t("rail_nav.courses"), icon: "cours" },
     {
       key: "methodologie",
@@ -124,7 +129,7 @@ function RailLink({ item, active }: { item: NavItem; active: boolean }) {
       <TooltipContent side="right" sideOffset={8} className="text-caption">
         <span>{item.label}</span>
         {item.shortcut && (
-          <kbd className="ml-2 text-tag text-ink-3 font-mono tracking-wide">{item.shortcut}</kbd>
+          <kbd className="ml-2 text-tag text-paper/55 font-mono tracking-wide">{item.shortcut}</kbd>
         )}
       </TooltipContent>
     </Tooltip>

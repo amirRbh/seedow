@@ -4,9 +4,12 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
+import i18n from "i18next";
+import { toast } from "sonner";
 
 export type ViewMode = "simple" | "expert";
 
@@ -24,6 +27,10 @@ const STORAGE_KEY = "seedow:view-mode";
 
 export function ViewModeProvider({ children }: { children: ReactNode }) {
   const [mode, setModeState] = useState<ViewMode>("simple");
+  const modeRef = useRef<ViewMode>(mode);
+  useEffect(() => {
+    modeRef.current = mode;
+  }, [mode]);
 
   useEffect(() => {
     try {
@@ -35,6 +42,13 @@ export function ViewModeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const setMode = useCallback((m: ViewMode) => {
+    // Retour immédiat et explicite : la bascule ne doit jamais sembler sans
+    // effet, même sur un écran où peu de contenu change visiblement.
+    if (m !== modeRef.current) {
+      toast.success(i18n.t(`view_mode.toast_${m}`), {
+        description: i18n.t(`view_mode.toast_${m}_desc`),
+      });
+    }
     setModeState(m);
     try {
       localStorage.setItem(STORAGE_KEY, m);

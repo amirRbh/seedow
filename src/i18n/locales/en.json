@@ -50,7 +50,11 @@
   "view_mode": {
     "label": "Detail level",
     "simple": "Simple",
-    "expert": "Expert"
+    "expert": "Expert",
+    "toast_simple": "Simple mode on",
+    "toast_simple_desc": "Plain-language terms, advanced metrics hidden.",
+    "toast_expert": "Expert mode on",
+    "toast_expert_desc": "All metrics, with the original terminology."
   },
   "learn_intro": {
     "eyebrow": "New here?",
