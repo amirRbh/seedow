@@ -1572,11 +1572,14 @@
     "gw_hint_low": "The fund's claims (SFDR, themes) are consistent with its scores, exclusions and carbon data.",
     "reasons": {
       "art9_low_esg": "Classified Article 9 (\"sustainable\") but overall ESG score below 6/10.",
+      "art9_borderline_esg": "Classified Article 9 (\"sustainable\") with an ESG score barely above the floor (6 to 7/10) — thin for a \"sustainable\" claim.",
       "art9_no_exclusions": "Classified Article 9 without any formal sector exclusion.",
       "sfdr_low_esg": "Sustainable claim (Art. 8/9) with an ESG score below 5/10.",
+      "sfdr_borderline_esg": "Sustainable claim (Art. 8/9) with an ESG score in the grey zone (5 to 6/10).",
       "sfdr_missing_carbon": "Sustainable claim without measured carbon intensity data.",
       "sfdr_no_exclusions": "Classified Article 8 without any formal sector exclusion.",
       "green_theme_low_climate": "Environmental theme claimed but climate score below 5/10.",
+      "green_theme_borderline_climate": "Environmental theme claimed with a climate score right at the edge (5 to 6/10).",
       "claims_on_estimated_data": "Sustainable claim backed by partly estimated data."
     },
     "source_link": "Where does this figure come from?"

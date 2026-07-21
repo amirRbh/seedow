@@ -92,4 +92,70 @@ describe("assessGreenwashingRisk", () => {
     expect(res.risk).toBe("high");
     expect(res.reasons.length).toBeGreaterThanOrEqual(3);
   });
+
+  // ── Tolérance : la zone limite juste au-dessus du plancher ─────────────────
+  describe("borderline tolerance bands", () => {
+    it("flags an Article 9 fund whose ESG just clears the floor as medium", () => {
+      const res = assessGreenwashingRisk(input({ sfdrArticle: 9, overallEsgScore: 6.5 }));
+      expect(res.risk).toBe("medium");
+      expect(res.reasons).toContain("art9_borderline_esg");
+      expect(res.reasons).not.toContain("art9_low_esg");
+    });
+
+    it("does not flag an Article 9 fund comfortably above the floor", () => {
+      const res = assessGreenwashingRisk(input({ sfdrArticle: 9, overallEsgScore: 7.5 }));
+      expect(res.reasons).not.toContain("art9_borderline_esg");
+      expect(res.reasons).not.toContain("art9_low_esg");
+    });
+
+    it("flags a sustainable fund whose ESG sits in the grey zone as medium", () => {
+      const res = assessGreenwashingRisk(input({ sfdrArticle: 8, overallEsgScore: 5.5 }));
+      expect(res.risk).toBe("medium");
+      expect(res.reasons).toContain("sfdr_borderline_esg");
+    });
+
+    it("does not double-count the grey zone for Article 9 (floor already at 6)", () => {
+      const res = assessGreenwashingRisk(input({ sfdrArticle: 9, overallEsgScore: 5.5 }));
+      expect(res.risk).toBe("high");
+      expect(res.reasons).toContain("art9_low_esg");
+      expect(res.reasons).not.toContain("sfdr_borderline_esg");
+    });
+
+    it("flags a green theme with a borderline climate score as medium", () => {
+      const res = assessGreenwashingRisk(
+        input({ sfdrArticle: null, claimsGreenTheme: true, climateScore: 5.5 }),
+      );
+      expect(res.risk).toBe("medium");
+      expect(res.reasons).toEqual(["green_theme_borderline_climate"]);
+    });
+  });
+
+  // ── Robustesse : les "ombres" (données manquantes ou aberrantes) ───────────
+  describe("input robustness", () => {
+    it("neutralises an out-of-range SFDR article instead of misfiring", () => {
+      const res = assessGreenwashingRisk(
+        input({ sfdrArticle: 7, overallEsgScore: 2, exclusionsCount: 0, hasCarbonData: false }),
+      );
+      // Article 7 n'existe pas : aucune revendication durable → aucun drapeau.
+      expect(res.risk).toBe("low");
+      expect(res.reasons).toEqual([]);
+    });
+
+    it("does not assert a contradiction from a non-finite score", () => {
+      const res = assessGreenwashingRisk(input({ sfdrArticle: 9, overallEsgScore: Number.NaN }));
+      expect(res.reasons).not.toContain("art9_low_esg");
+      expect(res.reasons).not.toContain("art9_borderline_esg");
+    });
+
+    it("clamps an absurdly low score into the contradiction band", () => {
+      const res = assessGreenwashingRisk(input({ sfdrArticle: 9, overallEsgScore: -3 }));
+      expect(res.risk).toBe("high");
+      expect(res.reasons).toContain("art9_low_esg");
+    });
+
+    it("treats a negative exclusions count as zero", () => {
+      const res = assessGreenwashingRisk(input({ sfdrArticle: 9, exclusionsCount: -2 }));
+      expect(res.reasons).toContain("art9_no_exclusions");
+    });
+  });
 });

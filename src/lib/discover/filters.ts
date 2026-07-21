@@ -27,6 +27,9 @@ const REGION_LABEL: Record<string, string> = {
   europe: "Europe",
   us: "USA",
   em: "Émergents",
+  japan: "Japon",
+  pacific: "Asie-Pacifique",
+  asia: "Asie-Pacifique",
 };
 
 /** Normalize `region` (code technique en base) en bucket lisible pour le filtre. */
@@ -35,10 +38,19 @@ export function dominantRegion(asset: DiscoverAsset): string {
   return REGION_LABEL[key] ?? "Autre";
 }
 
-// Doit rester aligné avec REGION_LABEL ci-dessus : la colonne `region` en base
-// ne contient que world/europe/us/em, donc une option ici sans entrée dans
-// REGION_LABEL ne matchera jamais aucun actif (voir dominantRegion).
-export const REGION_OPTIONS = ["Monde", "Europe", "USA", "Émergents", "Autre"];
+// Doit rester aligné avec REGION_LABEL ci-dessus : une option ici sans entrée
+// correspondante dans REGION_LABEL ne matcherait jamais aucun actif (voir
+// dominantRegion). "Japon" et "Asie-Pacifique" couvrent les fonds japonais et
+// pacifiques ajoutés aux vagues d'élargissement de l'univers.
+export const REGION_OPTIONS = [
+  "Monde",
+  "Europe",
+  "USA",
+  "Japon",
+  "Asie-Pacifique",
+  "Émergents",
+  "Autre",
+];
 
 export function uniqueCategories(assets: DiscoverAsset[]): string[] {
   return Array.from(new Set(assets.map((a) => a.category))).sort();
