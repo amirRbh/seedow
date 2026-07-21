@@ -52,6 +52,12 @@
     "simple": "Simple",
     "expert": "Expert"
   },
+  "learn_intro": {
+    "eyebrow": "New here?",
+    "body": "Two minutes to grasp the essentials: transparent figures, simple mode, and spotting greenwashing.",
+    "cta": "Understand Seedow",
+    "dismiss": "Dismiss"
+  },
   "landing": {
     "nav": {
       "courses": "Courses",
@@ -736,15 +742,22 @@
     "more_comparatif": "Comparison vs a classic ETF",
     "more_certificate": "My impact certificate",
     "more_courses": "Courses & learning",
+    "more_intro": "Replay the intro",
     "block_identity": "Identity",
     "email_label": "Email address",
     "display_name_label": "Display name",
     "display_name_placeholder": "Your name",
     "save": "Save",
     "block_appearance": "Appearance",
+    "theme_label": "Theme",
     "theme_light": "Light",
     "theme_dark": "Dark",
     "theme_system": "System",
+    "font_scale_label": "Text size",
+    "font_scale_standard": "Standard",
+    "font_scale_large": "Large",
+    "font_scale_xlarge": "Extra large",
+    "view_mode_hint": "Simple mode translates financial terms into plain language and hides advanced metrics. Expert mode shows everything, with the original terminology.",
     "block_security": "Security",
     "change_password": "Change my password",
     "block_session": "Session",
@@ -1524,6 +1537,7 @@
   },
   "transparency": {
     "section_title": "Data transparency",
+    "learn_greenwashing": "Understand it in 6 min",
     "coverage": {
       "complete": "Complete data",
       "partial": "Partial data",

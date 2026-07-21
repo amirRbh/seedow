@@ -52,6 +52,12 @@
     "simple": "Simple",
     "expert": "Expert"
   },
+  "learn_intro": {
+    "eyebrow": "Nouveau ici ?",
+    "body": "Deux minutes pour comprendre l'essentiel : transparence des chiffres, mode simple et repérage du greenwashing.",
+    "cta": "Comprendre Seedow",
+    "dismiss": "Masquer"
+  },
   "landing": {
     "nav": {
       "courses": "Cours",
@@ -741,15 +747,22 @@
     "more_comparatif": "Comparatif vs ETF classique",
     "more_certificate": "Mon certificat d'impact",
     "more_courses": "Cours & pédagogie",
+    "more_intro": "Revoir la présentation",
     "block_identity": "Identité",
     "email_label": "Adresse email",
     "display_name_label": "Nom affiché",
     "display_name_placeholder": "Votre nom",
     "save": "Enregistrer",
     "block_appearance": "Apparence",
+    "theme_label": "Thème",
     "theme_light": "Clair",
     "theme_dark": "Sombre",
     "theme_system": "Système",
+    "font_scale_label": "Taille du texte",
+    "font_scale_standard": "Standard",
+    "font_scale_large": "Grand",
+    "font_scale_xlarge": "Très grand",
+    "view_mode_hint": "Le mode Simple traduit les termes financiers en langage clair et masque les indicateurs avancés. Le mode Expert affiche tout, avec la terminologie d'origine.",
     "block_security": "Sécurité",
     "change_password": "Changer mon mot de passe",
     "block_session": "Session",
@@ -1506,6 +1519,7 @@
   },
   "transparency": {
     "section_title": "Transparence des données",
+    "learn_greenwashing": "Comprendre en 6 min",
     "coverage": {
       "complete": "Données complètes",
       "partial": "Données partielles",

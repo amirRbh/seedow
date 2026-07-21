@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useAuth } from "@/hooks/useAuth";
+import { trackAppEvent } from "@/lib/analytics/appEvents";
 import { getCourse, getNextCourse } from "@/content/courses";
 import { CourseArticle } from "@/components/courses/CourseArticle";
 import { CourseQuiz } from "@/components/courses/CourseQuiz";
@@ -56,6 +58,12 @@ function CoursePage() {
 
   const truncated = !course.isFree && !isAuthed;
   const visibleSections = truncated ? course.sections.slice(0, 3) : course.sections;
+
+  // Mesure d'engagement pédagogique : un cours réellement ouvert (accès complet,
+  // pas l'aperçu tronqué pré-auth). trackAppEvent no-op silencieusement pré-auth.
+  useEffect(() => {
+    if (!truncated) void trackAppEvent("course_started", { slug: course.slug });
+  }, [truncated, course.slug]);
 
   return (
     <div className="bg-paper text-ink min-h-screen paper-grain">

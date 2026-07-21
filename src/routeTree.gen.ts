@@ -23,6 +23,7 @@ import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CoursRouteImport } from './routes/cours'
 import { Route as ConfidentialiteRouteImport } from './routes/confidentialite'
+import { Route as ComprendreRouteImport } from './routes/comprendre'
 import { Route as ComparatifRouteImport } from './routes/comparatif'
 import { Route as CommunauteRouteImport } from './routes/communaute'
 import { Route as CguRouteImport } from './routes/cgu'
@@ -111,6 +112,11 @@ const CoursRoute = CoursRouteImport.update({
 const ConfidentialiteRoute = ConfidentialiteRouteImport.update({
   id: '/confidentialite',
   path: '/confidentialite',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComprendreRoute = ComprendreRouteImport.update({
+  id: '/comprendre',
+  path: '/comprendre',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ComparatifRoute = ComparatifRouteImport.update({
@@ -218,6 +224,7 @@ export interface FileRoutesByFullPath {
   '/cgu': typeof CguRoute
   '/communaute': typeof CommunauteRoute
   '/comparatif': typeof ComparatifRoute
+  '/comprendre': typeof ComprendreRoute
   '/confidentialite': typeof ConfidentialiteRoute
   '/cours': typeof CoursRouteWithChildren
   '/dashboard': typeof DashboardRoute
@@ -252,6 +259,7 @@ export interface FileRoutesByTo {
   '/cgu': typeof CguRoute
   '/communaute': typeof CommunauteRoute
   '/comparatif': typeof ComparatifRoute
+  '/comprendre': typeof ComprendreRoute
   '/confidentialite': typeof ConfidentialiteRoute
   '/dashboard': typeof DashboardRoute
   '/discover': typeof DiscoverRoute
@@ -287,6 +295,7 @@ export interface FileRoutesById {
   '/cgu': typeof CguRoute
   '/communaute': typeof CommunauteRoute
   '/comparatif': typeof ComparatifRoute
+  '/comprendre': typeof ComprendreRoute
   '/confidentialite': typeof ConfidentialiteRoute
   '/cours': typeof CoursRouteWithChildren
   '/dashboard': typeof DashboardRoute
@@ -323,6 +332,7 @@ export interface FileRouteTypes {
     | '/cgu'
     | '/communaute'
     | '/comparatif'
+    | '/comprendre'
     | '/confidentialite'
     | '/cours'
     | '/dashboard'
@@ -357,6 +367,7 @@ export interface FileRouteTypes {
     | '/cgu'
     | '/communaute'
     | '/comparatif'
+    | '/comprendre'
     | '/confidentialite'
     | '/dashboard'
     | '/discover'
@@ -391,6 +402,7 @@ export interface FileRouteTypes {
     | '/cgu'
     | '/communaute'
     | '/comparatif'
+    | '/comprendre'
     | '/confidentialite'
     | '/cours'
     | '/dashboard'
@@ -427,6 +439,7 @@ export interface RootRouteChildren {
   CguRoute: typeof CguRoute
   CommunauteRoute: typeof CommunauteRoute
   ComparatifRoute: typeof ComparatifRoute
+  ComprendreRoute: typeof ComprendreRoute
   ConfidentialiteRoute: typeof ConfidentialiteRoute
   CoursRoute: typeof CoursRouteWithChildren
   DashboardRoute: typeof DashboardRoute
@@ -549,6 +562,13 @@ declare module '@tanstack/react-router' {
       path: '/confidentialite'
       fullPath: '/confidentialite'
       preLoaderRoute: typeof ConfidentialiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comprendre': {
+      id: '/comprendre'
+      path: '/comprendre'
+      fullPath: '/comprendre'
+      preLoaderRoute: typeof ComprendreRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/comparatif': {
@@ -730,6 +750,7 @@ const rootRouteChildren: RootRouteChildren = {
   CguRoute: CguRoute,
   CommunauteRoute: CommunauteRoute,
   ComparatifRoute: ComparatifRoute,
+  ComprendreRoute: ComprendreRoute,
   ConfidentialiteRoute: ConfidentialiteRoute,
   CoursRoute: CoursRouteWithChildren,
   DashboardRoute: DashboardRoute,

@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { KPIFigure } from "@/components/ui/KPIFigure";
-import { Glossary } from "@/components/ui/Glossary";
+import { Glossary, GLOSSARY } from "@/components/ui/Glossary";
+import { useViewMode } from "@/hooks/useViewMode";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { cn } from "@/lib/utils";
@@ -242,11 +243,17 @@ interface RowProps {
 }
 
 function CompareRow({ label, term, seedowValue, msciValue, seedowWins, note, bar }: RowProps) {
+  const { isSimple } = useViewMode();
+  // Mode Simple : le libellé de ligne passe en langage clair. Mode Expert :
+  // on garde le libellé éditorial d'origine. Le ⓘ ouvre la définition complète.
+  const rowLabel = isSimple ? GLOSSARY[term].simple : label;
   return (
     <div className="py-4">
       <div className="flex items-baseline justify-between gap-4">
         <div className="flex items-center gap-2 min-w-0">
-          <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold">{label}</p>
+          <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold">
+            {rowLabel}
+          </p>
           <Glossary term={term} variant="icon" />
         </div>
       </div>
