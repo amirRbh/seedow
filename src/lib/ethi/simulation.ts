@@ -78,13 +78,17 @@ export function formatSimulation(
         }`
       : "";
 
-  const action = en
-    ? `**Action.** Set up the monthly transfer now — every month skipped costs more than a bad market year.`
-    : `**Action.** Programme ce versement mensuel dès maintenant — chaque mois sauté coûte plus qu'une mauvaise année de marché.`;
+  // Clôture volontairement explicative et neutre : Ethi n'incite jamais à
+  // investir, ne fabrique pas d'urgence et ne fait pas de growth (CLAUDE.md
+  // §5.2 / §5.6 / §1.5). On explique le mécanisme et on invite à explorer,
+  // sans impératif du type « programme ce versement maintenant ».
+  const piste = en
+    ? `**Worth exploring.** The gap between what you put in and the result comes from compound interest — the longer the horizon, the larger that share. Try other durations or amounts to see how the range moves.`
+    : `**Piste à explorer.** L'écart entre ce que tu verses et le résultat vient des intérêts composés — plus l'horizon est long, plus cette part grandit. Teste d'autres durées ou montants pour voir comment la fourchette bouge.`;
 
   const disclaimer = en
     ? `\n\n_⚠️ Estimate based on average assumptions. Past performance does not guarantee future returns, and your capital is not guaranteed._`
     : `\n\n_⚠️ Estimation basée sur des hypothèses moyennes. Les performances passées ne préjugent pas du futur, et ton capital n'est pas garanti._`;
 
-  return `${header}\n\n${constat}\n${impact}${shockLine}\n${action}${disclaimer}`;
+  return `${header}\n\n${constat}\n${impact}${shockLine}\n${piste}${disclaimer}`;
 }
