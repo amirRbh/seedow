@@ -35,33 +35,26 @@ Un portefeuille structuré par vos convictions (climat, biodiversité, droits hu
 
 ```
 src/
-├── routes/             # Routing fichier (TanStack Start)
-│   ├── __root.tsx
-│   ├── index.tsx        # landing
-│   ├── onboarding.tsx    # questionnaire → simulation → compte
-│   ├── dashboard.tsx
-│   ├── discover.tsx
-│   ├── portfolio.tsx
-│   ├── comparatif.tsx
-│   ├── certificat.tsx
-│   ├── objectifs.tsx
-│   ├── ethi.tsx
-│   └── hooks/
-│       └── refresh-market-data.ts  # endpoint cron
-├── components/
-│   ├── discover/        # AssetScreener, AssetRow, filtres
-│   ├── roots/           # GrowthComparison
-│   ├── portfolio/       # Métriques, allocations, historique
-│   ├── goals/           # Objectifs financiers
-│   ├── ethi/            # Bubble & suggestions IA
-│   ├── community/       # Partage de portefeuille
-│   └── ui/              # shadcn
+├── routes/             # Routing fichier (TanStack Start) — voir CLAUDE.md §3
+│   ├── __root.tsx · index.tsx (landing) · onboarding.tsx · auth.tsx · waitlist.tsx
+│   ├── dashboard.tsx · discover.tsx · portfolio.tsx · comparatif.tsx · certificat.tsx
+│   ├── objectifs.tsx · ethi.tsx · comprendre.tsx · methodologie.tsx
+│   ├── cours.tsx · communaute.tsx · profil.tsx · reglages.tsx  (+ pages légales)
+│   ├── _authenticated/  # layout + garde d'auth (route.tsx, admin.beta.tsx)
+│   ├── api.ethi.ts · api.public.esg-preview.ts   # endpoints server (pas des routes UI)
+│   ├── hooks/           # crons : refresh-market-data.ts, recompute-risk-model.ts
+│   └── mcp.ts · [.mcp]/ · [.well-known]/          # serveur MCP + OAuth
+├── components/          # par domaine : discover, roots, portfolio, goals, dashboard,
+│   │                    #   impact, ethi, community, courses, landing, alerts, beta,
+│   │                    #   profil, reglages, layout, navigation
+│   └── ui/              # shadcn (regénéré, pas customisé à la main)
 ├── hooks/               # useAuth, usePortfolioValuation, useActivePortfolio...
-├── lib/
-│   ├── portfolio/       # engine, markowitz, metrics, server functions
-│   └── market/          # client Yahoo Finance (server)
+├── lib/                 # logique métier : portfolio (engine/markowitz/metrics),
+│   │                    #   market (Yahoo Finance, server), esg (greenwashing),
+│   │                    #   ethi, mcp, account, auth, beta, preferences, analytics
+├── i18n/ · content/     # locales (i18next) & contenu des cours
 └── integrations/
-    └── supabase/        # client + types (auto-générés)
+    └── supabase/        # client + types (auto-générés — ne pas éditer)
 supabase/
 ├── config.toml
 └── migrations/          # schémas, RLS, cron jobs, vault
