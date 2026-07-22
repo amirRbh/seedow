@@ -107,12 +107,20 @@ type Phase = "intro" | "steps" | "preview" | "account" | "naming" | "building" |
 type Answers = Partial<Record<StepId, string[]>>;
 
 // ─────────────────────────────────────────────────────────
-// Persistance de session — évite de perdre la progression au refresh
-// ou lors d'une redirection OAuth/vérification d'email interrompue.
-// sessionStorage : disparaît à la fermeture de l'onglet, pas de brouillon
-// qui traîne indéfiniment.
+// Persistance du brouillon d'onboarding.
+//
+// localStorage (et non sessionStorage) : la confirmation d'email s'ouvre
+// presque toujours dans un NOUVEL onglet/appareil — une nouvelle session
+// navigateur où sessionStorage est vide. Avec sessionStorage, l'utilisateur
+// qui revient via le lien email reperdait toute sa progression et repartait
+// du questionnaire à zéro (le pire point d'abandon). localStorage survit à ce
+// round-trip et au flux OAuth.
+//
+// Contrepartie (un brouillon qui traînerait indéfiniment) : on horodate et on
+// expire au bout de DRAFT_MAX_AGE_MS, et on nettoie à la fin de l'onboarding.
 // ─────────────────────────────────────────────────────────
 const DRAFT_KEY = "seedow_onboarding_draft";
+const DRAFT_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 24 h
 
 interface OnboardingDraft {
   phase: Phase;
@@ -124,9 +132,14 @@ interface OnboardingDraft {
 
 function loadDraft(isAdditive: boolean): OnboardingDraft | null {
   try {
-    const raw = sessionStorage.getItem(DRAFT_KEY);
+    const raw = localStorage.getItem(DRAFT_KEY);
     if (!raw) return null;
-    const parsed = JSON.parse(raw) as Partial<OnboardingDraft>;
+    const parsed = JSON.parse(raw) as Partial<OnboardingDraft> & { savedAt?: number };
+    // Brouillon expiré : on le purge et on repart proprement.
+    if (typeof parsed.savedAt === "number" && Date.now() - parsed.savedAt > DRAFT_MAX_AGE_MS) {
+      clearDraft();
+      return null;
+    }
     // Un brouillon "nouveau portefeuille" ne doit pas être repris par le flux
     // du premier portefeuille, et inversement.
     if (!parsed.phase || Boolean(parsed.isAdditive) !== isAdditive) return null;
@@ -144,7 +157,7 @@ function loadDraft(isAdditive: boolean): OnboardingDraft | null {
 
 function saveDraft(draft: OnboardingDraft) {
   try {
-    sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+    localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...draft, savedAt: Date.now() }));
   } catch {
     // Stockage indisponible (mode privé strict, quota) : on continue sans persister.
   }
@@ -152,7 +165,7 @@ function saveDraft(draft: OnboardingDraft) {
 
 function clearDraft() {
   try {
-    sessionStorage.removeItem(DRAFT_KEY);
+    localStorage.removeItem(DRAFT_KEY);
   } catch {
     // ignore
   }
@@ -210,6 +223,28 @@ function Onboarding() {
     if (phase === "intro") return; // rien à restaurer tant que l'utilisateur n'a pas démarré
     saveDraft({ phase, stepIndex, answers, portfolioName, isAdditive });
   }, [phase, stepIndex, answers, portfolioName, isAdditive]);
+
+  // Retour authentifié : après confirmation d'email (le plus souvent dans un
+  // nouvel onglet) ou après OAuth, l'utilisateur revient sur /onboarding déjà
+  // connecté, avec un brouillon restauré au mur "account". On saute alors ce
+  // mur et on reprend exactement là où il en était, au lieu de le re-présenter.
+  // onAuthStateChange couvre le cas où la session n'est établie qu'APRÈS le
+  // montage (traitement asynchrone du token présent dans l'URL de retour).
+  useEffect(() => {
+    if (phase !== "account") return;
+    let cancelled = false;
+    const advanceIfAuthed = (hasSession: boolean) => {
+      if (!cancelled && hasSession) setPhase(isAdditive ? "naming" : "saving");
+    };
+    void supabase.auth.getSession().then(({ data }) => advanceIfAuthed(Boolean(data.session)));
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) =>
+      advanceIfAuthed(Boolean(session)),
+    );
+    return () => {
+      cancelled = true;
+      sub.subscription.unsubscribe();
+    };
+  }, [phase, isAdditive]);
 
   const completeStep = async (selected: string[]) => {
     const step = STEPS[stepIndex];
@@ -405,6 +440,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
   const [error, setError] = useState<string | null>(null);
   const { capacity } = useBetaCapacity();
   const [waitlistDone, setWaitlistDone] = useState<number | null>(null);
+  const [pendingEmail, setPendingEmail] = useState<string | null>(null);
   const betaFull = mode === "signup" && capacity?.full === true;
 
   const onGoogle = async () => {
@@ -436,7 +472,12 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
         });
         if (err) throw err;
         if (!data.session) {
-          throw new Error(t("onboarding.account.verify_email"));
+          // Confirmation d'email requise : ce n'est pas une erreur. On montre un
+          // état calme et rassurant. La progression est gardée (localStorage) et
+          // le lien de l'email ramène l'utilisateur exactement ici (voir l'effet
+          // de reprise authentifiée dans Onboarding).
+          setPendingEmail(email);
+          return;
         }
       } else {
         const { error: err } = await supabase.auth.signInWithPassword({ email, password });
@@ -504,7 +545,33 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
           </div>
         </motion.div>
 
-        <h2 className="font-value text-2xl text-paper pt-8">
+        {pendingEmail ? (
+          <div className="mt-8 flex items-start gap-3 rounded-2xl border border-paper/15 bg-paper/5 px-4 py-4">
+            <div className="w-9 h-9 rounded-full bg-highlight-2 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg
+                viewBox="0 0 24 24"
+                className="w-4 h-4 text-paper"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <path d="M22 6l-10 7L2 6" />
+              </svg>
+            </div>
+            <div className="min-w-0">
+              <p className="text-body-sm text-paper leading-relaxed">
+                {t("onboarding.account.verify_email")}
+              </p>
+              <p className="mt-1.5 text-label text-paper/60 break-all">{pendingEmail}</p>
+            </div>
+          </div>
+        ) : (
+          <>
+            <h2 className="font-value text-2xl text-paper pt-8">
           {waitlistDone !== null
             ? t("onboarding.account.title_waitlisted")
             : mode === "login"
@@ -622,6 +689,8 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
                 : t("onboarding.account.link_signup")}
             </button>
           </p>
+        )}
+          </>
         )}
       </div>
     </motion.div>
