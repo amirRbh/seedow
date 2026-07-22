@@ -8,6 +8,12 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+
+# Lockfiles: bun.lock (text) is the single source of truth — see CLAUDE.md §6.
+# Block the binary Bun lock and the npm lock so drift can't creep back in.
+bun.lockb
+package-lock.json
+
 dist
 dist-ssr
 .output
