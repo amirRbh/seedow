@@ -119,7 +119,9 @@ export async function persistPortfolio(
 
     if (deactivateErr) {
       console.error("[generatePortfolio] deactivate error:", deactivateErr);
-      throw new Error("Impossible de désactiver le portefeuille précédent. Réessaie dans un instant.");
+      throw new Error(
+        "Impossible de désactiver le portefeuille précédent. Réessaie dans un instant.",
+      );
     }
   }
 
@@ -161,7 +163,12 @@ export async function persistPortfolio(
         .maybeSingle();
       if (existing) {
         await userClient.from("profiles").update({ onboarding_completed: true }).eq("id", userId);
-        return { portfolio_id: existing.id, weights: result.weights, metrics: result.metrics, selected };
+        return {
+          portfolio_id: existing.id,
+          weights: result.weights,
+          metrics: result.metrics,
+          selected,
+        };
       }
     }
     throw new Error("Impossible d'enregistrer le portefeuille. Réessaie dans un instant.");
@@ -197,6 +204,87 @@ export const generatePortfolio = createServerFn({ method: "POST" })
     });
 
     return persistPortfolio(userClient as typeof supabaseAdmin, userId, data, result);
+  });
+
+const BacktestSchema = ParamsSchema.extend({
+  /** Fenêtre d'estimation en jours de bourse (défaut ~1 an). */
+  estimation_window: z.number().int().min(30).max(756).default(252),
+  /** Fréquence de rebalancement en jours de bourse (défaut ~trimestriel). */
+  rebalance_every: z.number().int().min(5).max(252).default(63),
+});
+
+const BACKTEST_HISTORY_DAYS = 1095; // ~3 ans
+
+/** Sous-échantillonne une courbe à ~`target` points pour un payload léger. */
+function downsample<T>(arr: T[], target = 180): T[] {
+  if (arr.length <= target) return arr;
+  const step = arr.length / target;
+  const out: T[] = [];
+  for (let i = 0; i < target; i++) out.push(arr[Math.floor(i * step)]);
+  out.push(arr[arr.length - 1]);
+  return out;
+}
+
+/**
+ * Backtest walk-forward hors échantillon sur l'univers réel — réservé aux admins.
+ *
+ * ATTENTION coût : recalcule le modèle de risque (shrinkage Ledoit-Wolf,
+ * O(n²·T)) à chaque rebalancement sur ~3 ans d'historique. C'est un outil
+ * d'ÉVALUATION (valider une méthode, comparer au 1/N), pas une fonctionnalité
+ * live à mettre sur un chemin de requête public : on dépasserait les limites CPU
+ * d'un Worker Cloudflare. Gardé admin + rate-limité en conséquence.
+ */
+export const backtestPortfolio = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) => BacktestSchema.parse(input))
+  .handler(async ({ data, context }) => {
+    const { userId, supabase } = context;
+    const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: userId, _role: "admin" });
+    if (!isAdmin) throw new Error("Forbidden");
+
+    const { runBacktest } = await import("./backtest");
+    const universe = await loadUniverse(supabase as typeof supabaseAdmin);
+
+    const cutoff = new Date(Date.now() - BACKTEST_HISTORY_DAYS * 86_400_000)
+      .toISOString()
+      .slice(0, 10);
+    const pricesByAsset = new Map<string, { date: string; close: number }[]>();
+    for (const a of universe.assets) {
+      const { data: rows } = await (supabase as typeof supabaseAdmin)
+        .from("asset_prices")
+        .select("price_date, close")
+        .eq("asset_id", a.id)
+        .gte("price_date", cutoff)
+        .order("price_date", { ascending: true });
+      pricesByAsset.set(
+        a.id,
+        (rows ?? []).map((r) => ({ date: r.price_date as string, close: Number(r.close) })),
+      );
+    }
+
+    const params: PortfolioParams = {
+      causes: data.causes,
+      cause_intensity: data.cause_intensity,
+      exclusions: data.exclusions,
+      risk_target: data.risk_target,
+      horizon_years: data.horizon_years,
+      initial_amount: data.initial_amount,
+    };
+
+    const result = runBacktest({
+      universe: universe.assets,
+      pricesByAsset,
+      params,
+      config: { estimationWindow: data.estimation_window, rebalanceEvery: data.rebalance_every },
+    });
+
+    // Payload léger : courbes sous-échantillonnées + métriques.
+    return {
+      dates: downsample(result.dates),
+      seedow: { curve: downsample(result.seedow.curve), perf: result.seedow.perf },
+      equalWeight: { curve: downsample(result.equalWeight.curve), perf: result.equalWeight.perf },
+      oos_days: result.dates.length,
+    };
   });
 
 const RebalanceSchema = z.object({ portfolio_id: z.string().uuid() });
