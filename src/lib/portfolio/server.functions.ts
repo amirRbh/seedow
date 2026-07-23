@@ -52,7 +52,7 @@ export const simulatePortfolio = createServerFn({ method: "POST" })
 
     // Résumé d'impact réel : couverture par des données MSCI réelles + intensité
     // carbone WACI pondérée (sur la part couverte). Rien n'est extrapolé.
-    const { computePortfolioWaci } = await import("@/lib/esg/carbon");
+    const { computePortfolioWaci, relativeIntensityVsBenchmark } = await import("@/lib/esg/carbon");
     const portfolioWaci = computePortfolioWaci(
       result.selected_assets.map((a) => ({
         weight: result.weights[a.id] ?? 0,
@@ -60,9 +60,30 @@ export const simulatePortfolio = createServerFn({ method: "POST" })
       })),
     );
     let msciWeight = 0;
+    let qualityNum = 0;
+    let qualityWeight = 0;
     for (const a of result.selected_assets) {
-      if ((a.esg_score_source ?? "").startsWith("MSCI")) msciWeight += result.weights[a.id] ?? 0;
+      const w = result.weights[a.id] ?? 0;
+      if ((a.esg_score_source ?? "").startsWith("MSCI")) msciWeight += w;
+      const q = a.msci_esg_quality_score;
+      if (q != null && Number.isFinite(q)) {
+        qualityNum += w * q;
+        qualityWeight += w;
+      }
     }
+    const msciQuality = qualityWeight > 0 ? qualityNum / qualityWeight : null;
+
+    // WACI de référence d'un ETF actions monde « classique » (indice parent
+    // MSCI ACWI). Source à confirmer : MSCI ACWI Climate Indexes Report
+    // (msci.com, section « Index Carbon Footprint Metrics », WACI de l'indice
+    // PARENT MSCI ACWI, Scope 1+2, avec sa date). Laissé à null tant que la
+    // valeur exacte n'est pas vérifiée sur le rapport daté — on n'affiche pas de
+    // comparaison sur un chiffre non sourcé (contrat de transparence §1.2).
+    const BENCHMARK_ACWI_WACI: number | null = null;
+    const vsBenchmark =
+      BENCHMARK_ACWI_WACI != null
+        ? relativeIntensityVsBenchmark(portfolioWaci.waci, BENCHMARK_ACWI_WACI)
+        : null;
 
     return {
       weights: result.weights,
@@ -79,10 +100,14 @@ export const simulatePortfolio = createServerFn({ method: "POST" })
       impact: {
         /** Part du portefeuille notée avec des données MSCI réelles (0..1). */
         msci_coverage: msciWeight,
+        /** Score de qualité ESG MSCI moyen pondéré (0-10), sur la part couverte. null sinon. */
+        msci_quality: msciQuality,
         /** Intensité carbone WACI moyenne pondérée (tCO₂e/M$ CA), sur part couverte. */
         waci: portfolioWaci.waci,
         /** Part du portefeuille disposant d'un WACI réel (0..1). */
         waci_coverage: portfolioWaci.coverage,
+        /** Écart relatif d'intensité vs ETF monde classique (null tant que benchmark non sourcé). */
+        vs_benchmark_delta_pct: vsBenchmark?.deltaPct ?? null,
       },
       excluded_count: result.excluded_count,
       universe_size: universe.assets.length,

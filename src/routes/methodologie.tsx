@@ -780,11 +780,19 @@ function ImpactPanel({
   impact,
   t,
 }: {
-  impact: { msci_coverage: number; waci: number | null; waci_coverage: number };
+  impact: {
+    msci_coverage: number;
+    msci_quality?: number | null;
+    waci: number | null;
+    waci_coverage: number;
+    vs_benchmark_delta_pct?: number | null;
+  };
   t: (k: string, opts?: Record<string, unknown>) => string;
 }) {
   const msciPct = Math.round(Math.max(0, Math.min(1, impact.msci_coverage)) * 100);
   const waciPct = Math.round(Math.max(0, Math.min(1, impact.waci_coverage)) * 100);
+  const delta = impact.vs_benchmark_delta_pct;
+  const quality = impact.msci_quality;
   return (
     <div className="border border-paper-3 p-4">
       <p className="text-tag uppercase tracking-[0.12em] text-ink-3 font-medium">
@@ -794,6 +802,12 @@ function ImpactPanel({
         <span className="text-label text-ink-2">{t("methodologie.impact_msci_coverage")}</span>
         <span className="font-value text-body tabular-nums">{msciPct}%</span>
       </div>
+      {quality != null && (
+        <div className="mt-2 flex items-baseline justify-between">
+          <span className="text-label text-ink-2">{t("methodologie.impact_msci_quality")}</span>
+          <span className="font-value text-body tabular-nums">{quality.toFixed(1)} / 10</span>
+        </div>
+      )}
       {impact.waci != null ? (
         <div className="mt-2 flex items-baseline justify-between">
           <span className="text-label text-ink-2">{t("methodologie.impact_waci")}</span>
@@ -805,6 +819,17 @@ function ImpactPanel({
         <p className="text-caption text-ink-3 mt-2 leading-relaxed">
           {t("methodologie.impact_waci_none")}
         </p>
+      )}
+      {delta != null && (
+        <div className="mt-2 flex items-baseline justify-between">
+          <span className="text-label text-ink-2">{t("methodologie.impact_vs_benchmark")}</span>
+          <span
+            className={`font-value text-body tabular-nums ${delta >= 0 ? "text-highlight-2" : "text-rust"}`}
+          >
+            {delta >= 0 ? "−" : "+"}
+            {Math.abs(Math.round(delta * 100))}%
+          </span>
+        </div>
       )}
       <p className="text-caption text-ink-3 mt-3 leading-relaxed">
         {t("methodologie.impact_note")}
