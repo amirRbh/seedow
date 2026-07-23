@@ -839,7 +839,7 @@
       },
       "sources": {
         "title": "Sources de données",
-        "esg": "Scores ESG : modèle propriétaire Seedow (méthode par catégorie de fonds) et, pour quelques actifs, Yahoo — la source est stockée par actif (esg_score_source). Le raccordement de fournisseurs tiers (MSCI, Sustainalytics) est une évolution prévue, non encore active.",
+        "esg": "Scores ESG : données MSCI ESG Research (via les fiches émetteurs iShares/BlackRock) pour les fonds couverts, sinon modèle propriétaire Seedow ou Yahoo — la source et la date sont stockées par actif (esg_score_source, esg_data_asof). Le raccordement se poursuit fonds par fonds.",
         "carbon": "Intensité carbone (gCO₂e/€ investi) : champ prévu par actif avec source et date. Aucun fournisseur d'émissions n'est encore branché — la couverture réelle est aujourd'hui à 0 %, ce que la page méthodologie affiche honnêtement.",
         "sfdr": "Classification SFDR : prospectus émetteurs (iShares, Lyxor, Amundi)",
         "prices": "Prix et volatilités : Yahoo Finance, séries historiques 5 ans, covariances recalculées hebdomadairement"
@@ -926,6 +926,11 @@
     "metric_carbon_intensity": "Intensité carbone réelle",
     "metric_carbon_intensity_hint": "Moyenne pondérée sur les actifs couverts",
     "metric_carbon_unavailable": "Donnée indisponible",
+    "impact_title": "Impact & données réelles",
+    "impact_msci_coverage": "Noté avec données MSCI réelles",
+    "impact_waci": "Intensité carbone (WACI)",
+    "impact_waci_none": "Intensité carbone réelle indisponible sur la sélection — en cours de raccordement.",
+    "impact_note": "WACI = intensité carbone moyenne pondérée en tCO₂e par M$ de chiffre d'affaires (indicateur PAI SFDR, source MSCI via fiches émetteurs). Le reste du portefeuille est en notation propriétaire, en cours de raccordement.",
     "allocation_title": "Allocation",
     "loading": "Recalcul…",
     "positions_count_one": "{{count}} position",

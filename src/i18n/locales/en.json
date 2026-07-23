@@ -857,7 +857,7 @@
       },
       "sources": {
         "title": "Data sources",
-        "esg": "ESG scores: Seedow's proprietary model (fund-category method) and, for a few assets, Yahoo — the source is stored per asset (esg_score_source). Connecting third-party providers (MSCI, Sustainalytics) is planned, not yet active.",
+        "esg": "ESG scores: MSCI ESG Research data (via iShares/BlackRock issuer fact sheets) for covered funds, otherwise Seedow's proprietary model or Yahoo — the source and date are stored per asset (esg_score_source, esg_data_asof). Provider connection is rolling out fund by fund.",
         "carbon": "Carbon intensity (gCO₂e/€ invested): a per-asset field with source and date is in place, but no emissions provider is connected yet — real coverage is currently 0%, which the methodology page shows honestly.",
         "sfdr": "SFDR classification: issuer prospectuses (iShares, Lyxor, Amundi)",
         "prices": "Prices and volatilities: Yahoo Finance, 5-year historical series, covariances recalculated weekly"
@@ -944,6 +944,11 @@
     "metric_carbon_intensity": "Actual carbon intensity",
     "metric_carbon_intensity_hint": "Weighted average over covered assets",
     "metric_carbon_unavailable": "Data unavailable",
+    "impact_title": "Impact & real data",
+    "impact_msci_coverage": "Rated with real MSCI data",
+    "impact_waci": "Carbon intensity (WACI)",
+    "impact_waci_none": "Real carbon intensity unavailable for this selection — connection in progress.",
+    "impact_note": "WACI = weighted average carbon intensity in tCO₂e per $M of revenue (SFDR PAI indicator, MSCI data via issuer fact sheets). The rest of the portfolio uses proprietary scoring, connection in progress.",
     "allocation_title": "Allocation",
     "loading": "Recalculating…",
     "positions_count_one": "{{count}} position",

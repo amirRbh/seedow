@@ -448,6 +448,8 @@ function MethodologyPage() {
               t={t}
             />
 
+            {result?.impact && <ImpactPanel impact={result.impact} t={t} />}
+
             <div>
               <div className="flex items-baseline justify-between border-b border-paper-3 pb-2">
                 <p className="text-tag uppercase tracking-[0.12em] text-ink-3 font-medium">
@@ -557,8 +559,12 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
   // tant que son flux n'est pas connecté (contrat de transparence Seedow).
   const sources = [
     {
+      name: "MSCI ESG Research (fiches iShares/BlackRock)",
+      scope: "Fonds couverts — score, intensité carbone WACI et date « as of » tracés par actif",
+    },
+    {
       name: "Notation propriétaire Seedow (v1)",
-      scope: "Majorité de l'univers — méthode par catégorie de fonds, tracée par actif",
+      scope: "Reste de l'univers, en cours de raccordement",
     },
     { name: "Yahoo Finance (ESG)", scope: "Couverture complémentaire, quelques actifs" },
   ];
@@ -591,10 +597,11 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
             ))}
           </ul>
           <p className="text-caption text-ink-3 mt-3 leading-relaxed">
-            Aujourd'hui, la note vient d'un modèle propriétaire Seedow (méthode par catégorie de
-            fonds) et, pour quelques actifs, de Yahoo. Le raccordement de fournisseurs tiers (MSCI,
-            Sustainalytics) est une évolution prévue : le cas échéant, chaque fournisseur sera nommé
-            sur la fiche de l'actif et sa note renormalisée sur une échelle 0–100 homogène.
+            Le raccordement des données MSCI ESG a commencé : pour les fonds couverts, le score, la
+            date « as of » et l'intensité carbone WACI proviennent des fiches émetteurs (iShares /
+            BlackRock) et sont tracés par actif. Le reste de l'univers reste en notation
+            propriétaire Seedow le temps du raccordement — la source exacte est indiquée sur chaque
+            fiche.
           </p>
         </div>
 
@@ -765,6 +772,43 @@ function MetricRow({
         {sub && <p className="text-tag text-ink-3 mt-0.5">{sub}</p>}
       </div>
       <span className="font-value text-body-lg tabular-nums">{value}</span>
+    </div>
+  );
+}
+
+function ImpactPanel({
+  impact,
+  t,
+}: {
+  impact: { msci_coverage: number; waci: number | null; waci_coverage: number };
+  t: (k: string, opts?: Record<string, unknown>) => string;
+}) {
+  const msciPct = Math.round(Math.max(0, Math.min(1, impact.msci_coverage)) * 100);
+  const waciPct = Math.round(Math.max(0, Math.min(1, impact.waci_coverage)) * 100);
+  return (
+    <div className="border border-paper-3 p-4">
+      <p className="text-tag uppercase tracking-[0.12em] text-ink-3 font-medium">
+        {t("methodologie.impact_title")}
+      </p>
+      <div className="mt-3 flex items-baseline justify-between">
+        <span className="text-label text-ink-2">{t("methodologie.impact_msci_coverage")}</span>
+        <span className="font-value text-body tabular-nums">{msciPct}%</span>
+      </div>
+      {impact.waci != null ? (
+        <div className="mt-2 flex items-baseline justify-between">
+          <span className="text-label text-ink-2">{t("methodologie.impact_waci")}</span>
+          <span className="font-value text-body tabular-nums">
+            {Math.round(impact.waci)} tCO₂e/M$ · {waciPct}%
+          </span>
+        </div>
+      ) : (
+        <p className="text-caption text-ink-3 mt-2 leading-relaxed">
+          {t("methodologie.impact_waci_none")}
+        </p>
+      )}
+      <p className="text-caption text-ink-3 mt-3 leading-relaxed">
+        {t("methodologie.impact_note")}
+      </p>
     </div>
   );
 }

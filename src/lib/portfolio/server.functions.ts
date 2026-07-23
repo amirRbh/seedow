@@ -49,6 +49,21 @@ export const simulatePortfolio = createServerFn({ method: "POST" })
       covariance: universe.covariance,
       params,
     });
+
+    // Résumé d'impact réel : couverture par des données MSCI réelles + intensité
+    // carbone WACI pondérée (sur la part couverte). Rien n'est extrapolé.
+    const { computePortfolioWaci } = await import("@/lib/esg/carbon");
+    const portfolioWaci = computePortfolioWaci(
+      result.selected_assets.map((a) => ({
+        weight: result.weights[a.id] ?? 0,
+        waci: a.waci_tco2e_per_musd_sales ?? null,
+      })),
+    );
+    let msciWeight = 0;
+    for (const a of result.selected_assets) {
+      if ((a.esg_score_source ?? "").startsWith("MSCI")) msciWeight += result.weights[a.id] ?? 0;
+    }
+
     return {
       weights: result.weights,
       metrics: result.metrics,
@@ -58,8 +73,17 @@ export const simulatePortfolio = createServerFn({ method: "POST" })
         name: a.name,
         asset_class: a.asset_class,
         esg_score: a.esg_score,
+        esg_score_source: a.esg_score_source,
         ter: a.ter,
       })),
+      impact: {
+        /** Part du portefeuille notée avec des données MSCI réelles (0..1). */
+        msci_coverage: msciWeight,
+        /** Intensité carbone WACI moyenne pondérée (tCO₂e/M$ CA), sur part couverte. */
+        waci: portfolioWaci.waci,
+        /** Part du portefeuille disposant d'un WACI réel (0..1). */
+        waci_coverage: portfolioWaci.coverage,
+      },
       excluded_count: result.excluded_count,
       universe_size: universe.assets.length,
       esg_floor_relaxed: result.esg_floor_relaxed,
@@ -119,7 +143,9 @@ export async function persistPortfolio(
 
     if (deactivateErr) {
       console.error("[generatePortfolio] deactivate error:", deactivateErr);
-      throw new Error("Impossible de désactiver le portefeuille précédent. Réessaie dans un instant.");
+      throw new Error(
+        "Impossible de désactiver le portefeuille précédent. Réessaie dans un instant.",
+      );
     }
   }
 
@@ -161,7 +187,12 @@ export async function persistPortfolio(
         .maybeSingle();
       if (existing) {
         await userClient.from("profiles").update({ onboarding_completed: true }).eq("id", userId);
-        return { portfolio_id: existing.id, weights: result.weights, metrics: result.metrics, selected };
+        return {
+          portfolio_id: existing.id,
+          weights: result.weights,
+          metrics: result.metrics,
+          selected,
+        };
       }
     }
     throw new Error("Impossible d'enregistrer le portefeuille. Réessaie dans un instant.");
@@ -197,6 +228,87 @@ export const generatePortfolio = createServerFn({ method: "POST" })
     });
 
     return persistPortfolio(userClient as typeof supabaseAdmin, userId, data, result);
+  });
+
+const BacktestSchema = ParamsSchema.extend({
+  /** Fenêtre d'estimation en jours de bourse (défaut ~1 an). */
+  estimation_window: z.number().int().min(30).max(756).default(252),
+  /** Fréquence de rebalancement en jours de bourse (défaut ~trimestriel). */
+  rebalance_every: z.number().int().min(5).max(252).default(63),
+});
+
+const BACKTEST_HISTORY_DAYS = 1095; // ~3 ans
+
+/** Sous-échantillonne une courbe à ~`target` points pour un payload léger. */
+function downsample<T>(arr: T[], target = 180): T[] {
+  if (arr.length <= target) return arr;
+  const step = arr.length / target;
+  const out: T[] = [];
+  for (let i = 0; i < target; i++) out.push(arr[Math.floor(i * step)]);
+  out.push(arr[arr.length - 1]);
+  return out;
+}
+
+/**
+ * Backtest walk-forward hors échantillon sur l'univers réel — réservé aux admins.
+ *
+ * ATTENTION coût : recalcule le modèle de risque (shrinkage Ledoit-Wolf,
+ * O(n²·T)) à chaque rebalancement sur ~3 ans d'historique. C'est un outil
+ * d'ÉVALUATION (valider une méthode, comparer au 1/N), pas une fonctionnalité
+ * live à mettre sur un chemin de requête public : on dépasserait les limites CPU
+ * d'un Worker Cloudflare. Gardé admin + rate-limité en conséquence.
+ */
+export const backtestPortfolio = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) => BacktestSchema.parse(input))
+  .handler(async ({ data, context }) => {
+    const { userId, supabase } = context;
+    const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: userId, _role: "admin" });
+    if (!isAdmin) throw new Error("Forbidden");
+
+    const { runBacktest } = await import("./backtest");
+    const universe = await loadUniverse(supabase as typeof supabaseAdmin);
+
+    const cutoff = new Date(Date.now() - BACKTEST_HISTORY_DAYS * 86_400_000)
+      .toISOString()
+      .slice(0, 10);
+    const pricesByAsset = new Map<string, { date: string; close: number }[]>();
+    for (const a of universe.assets) {
+      const { data: rows } = await (supabase as typeof supabaseAdmin)
+        .from("asset_prices")
+        .select("price_date, close")
+        .eq("asset_id", a.id)
+        .gte("price_date", cutoff)
+        .order("price_date", { ascending: true });
+      pricesByAsset.set(
+        a.id,
+        (rows ?? []).map((r) => ({ date: r.price_date as string, close: Number(r.close) })),
+      );
+    }
+
+    const params: PortfolioParams = {
+      causes: data.causes,
+      cause_intensity: data.cause_intensity,
+      exclusions: data.exclusions,
+      risk_target: data.risk_target,
+      horizon_years: data.horizon_years,
+      initial_amount: data.initial_amount,
+    };
+
+    const result = runBacktest({
+      universe: universe.assets,
+      pricesByAsset,
+      params,
+      config: { estimationWindow: data.estimation_window, rebalanceEvery: data.rebalance_every },
+    });
+
+    // Payload léger : courbes sous-échantillonnées + métriques.
+    return {
+      dates: downsample(result.dates),
+      seedow: { curve: downsample(result.seedow.curve), perf: result.seedow.perf },
+      equalWeight: { curve: downsample(result.equalWeight.curve), perf: result.equalWeight.perf },
+      oos_days: result.dates.length,
+    };
   });
 
 const RebalanceSchema = z.object({ portfolio_id: z.string().uuid() });
