@@ -61,7 +61,7 @@ export const Route = createFileRoute("/hooks/recompute-risk-model")({
           );
         }
 
-        const { stats, covariance, skipped } = buildRiskModel(pricesByAsset);
+        const { stats, covariance, skipped, diagnostics } = buildRiskModel(pricesByAsset);
 
         let assetsUpdated = 0;
         for (const [id, s] of stats) {
@@ -108,7 +108,7 @@ export const Route = createFileRoute("/hooks/recompute-risk-model")({
             assets_ok: assetsUpdated,
             assets_failed: skipped.length,
             duration_ms: durationMs,
-            details: { skipped, history_window_days: HISTORY_WINDOW_DAYS },
+            details: { skipped, history_window_days: HISTORY_WINDOW_DAYS, ...diagnostics },
           });
         } catch (logErr) {
           console.error("[recompute-risk-model] cron_run_log insert failed:", logErr);
