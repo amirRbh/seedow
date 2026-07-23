@@ -657,7 +657,9 @@
         "10_desc": "Just testing",
         "50_desc": "A serious commitment",
         "100_desc": "A real start",
-        "500_desc": "An ambitious start"
+        "500_desc": "An ambitious start",
+        "custom_label": "A different amount",
+        "custom_placeholder": "e.g. 2,000"
       }
     },
     "intro": {
