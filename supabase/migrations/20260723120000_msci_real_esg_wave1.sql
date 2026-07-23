@@ -70,3 +70,18 @@ UPDATE public.assets SET
   carbon_intensity_source = 'MSCI WACI (iShares fact sheet)',
   carbon_intensity_updated_at = '2026-06-19T00:00:00Z'
 WHERE ticker = 'ESGD';
+
+-- ESGE — iShares ESG Aware MSCI EM ETF
+--   MSCI ESG Rating AA · Quality 7.95/10 · WACI 119.07 tCO2e/M$ sales (cov 99.17%)
+--   ITR >2.5-3.0°C · données MSCI as of 2026-03-20 (holdings 2026-02-28)
+--   Source : fiche produit ESGE, ishares.com
+UPDATE public.assets SET
+  esg_score = 79.5,
+  msci_esg_quality_score = 7.95,
+  esg_score_source = 'MSCI ESG Fund Ratings (iShares fact sheet)',
+  esg_data_asof = '2026-03-20',
+  waci_tco2e_per_musd_sales = 119.07,
+  implied_temp_rise = '>2.5-3.0°C',
+  carbon_intensity_source = 'MSCI WACI (iShares fact sheet)',
+  carbon_intensity_updated_at = '2026-03-20T00:00:00Z'
+WHERE ticker = 'ESGE';

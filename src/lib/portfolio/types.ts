@@ -37,6 +37,15 @@ export interface Asset {
   cause_exposure: Record<string, number>;
   excluded_sectors: ExclusionTag[];
   description: string | null;
+  // Données fournisseur réelles (divulgations émetteurs), optionnelles :
+  /** WACI MSCI : intensité carbone tCO₂e/M$ de CA (indicateur PAI SFDR). */
+  waci_tco2e_per_musd_sales?: number | null;
+  /** Score de qualité ESG MSCI pour fonds (0-10). */
+  msci_esg_quality_score?: number | null;
+  /** Bande d'Implied Temperature Rise MSCI (ex. ">2.5-3.0°C"). */
+  implied_temp_rise?: string | null;
+  /** Date « as of » de la donnée ESG/carbone fournisseur (ISO). */
+  esg_data_asof?: string | null;
 }
 
 /**

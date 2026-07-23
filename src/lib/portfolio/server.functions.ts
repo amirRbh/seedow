@@ -49,6 +49,21 @@ export const simulatePortfolio = createServerFn({ method: "POST" })
       covariance: universe.covariance,
       params,
     });
+
+    // Résumé d'impact réel : couverture par des données MSCI réelles + intensité
+    // carbone WACI pondérée (sur la part couverte). Rien n'est extrapolé.
+    const { computePortfolioWaci } = await import("@/lib/esg/carbon");
+    const portfolioWaci = computePortfolioWaci(
+      result.selected_assets.map((a) => ({
+        weight: result.weights[a.id] ?? 0,
+        waci: a.waci_tco2e_per_musd_sales ?? null,
+      })),
+    );
+    let msciWeight = 0;
+    for (const a of result.selected_assets) {
+      if ((a.esg_score_source ?? "").startsWith("MSCI")) msciWeight += result.weights[a.id] ?? 0;
+    }
+
     return {
       weights: result.weights,
       metrics: result.metrics,
@@ -58,8 +73,17 @@ export const simulatePortfolio = createServerFn({ method: "POST" })
         name: a.name,
         asset_class: a.asset_class,
         esg_score: a.esg_score,
+        esg_score_source: a.esg_score_source,
         ter: a.ter,
       })),
+      impact: {
+        /** Part du portefeuille notée avec des données MSCI réelles (0..1). */
+        msci_coverage: msciWeight,
+        /** Intensité carbone WACI moyenne pondérée (tCO₂e/M$ CA), sur part couverte. */
+        waci: portfolioWaci.waci,
+        /** Part du portefeuille disposant d'un WACI réel (0..1). */
+        waci_coverage: portfolioWaci.coverage,
+      },
       excluded_count: result.excluded_count,
       universe_size: universe.assets.length,
       esg_floor_relaxed: result.esg_floor_relaxed,
