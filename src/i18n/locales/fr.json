@@ -839,8 +839,8 @@
       },
       "sources": {
         "title": "Sources de données",
-        "esg": "Scores ESG par pilier (E/S/G) : MSCI ESG Research, Sustainalytics, ESG Book, Yahoo Sustainability",
-        "carbon": "Intensité carbone (gCO₂e/€ investi) : Trucost, ISS ESG, Yahoo Sustainability — avec date et provider stockés par actif",
+        "esg": "Scores ESG : modèle propriétaire Seedow (méthode par catégorie de fonds) et, pour quelques actifs, Yahoo — la source est stockée par actif (esg_score_source). Le raccordement de fournisseurs tiers (MSCI, Sustainalytics) est une évolution prévue, non encore active.",
+        "carbon": "Intensité carbone (gCO₂e/€ investi) : champ prévu par actif avec source et date. Aucun fournisseur d'émissions n'est encore branché — la couverture réelle est aujourd'hui à 0 %, ce que la page méthodologie affiche honnêtement.",
         "sfdr": "Classification SFDR : prospectus émetteurs (iShares, Lyxor, Amundi)",
         "prices": "Prix et volatilités : Yahoo Finance, séries historiques 5 ans, covariances recalculées hebdomadairement"
       },
@@ -849,7 +849,7 @@
         "desc_1": "Le score ESG va de 0 à 100.",
         "desc_2": "Au lieu dune moyenne fixe 40/40/20, les piliers E, S et G sont repondérés en fonction des causes que vous activez dans vos préférences. Le score reflète ainsi ce qui compte vraiment pour vous.",
         "pillars_title": "1. Trois piliers indépendants",
-        "pillar_e": "Environnement (E) — émissions CO₂ scope 1-2-3, intensité carbone, eau, déchets, exposition renouvelables.",
+        "pillar_e": "Environnement (E) — émissions CO₂ scope 1-2 (scope 3 quand l'émetteur le publie), intensité carbone, eau, déchets, exposition renouvelables.",
         "pillar_s": "Social (S) — droits humains, conditions de travail, égalité F/H, sécurité produit, relations communautés.",
         "pillar_g": "Gouvernance (G) — indépendance du conseil, rémunération dirigeants, éthique fiscale, transparence, anti-corruption.",
         "fallback_note": "Quand un pilier nest pas publié pour un actif, on retombe automatiquement sur le score ESG global comme valeur de repli (fallback documenté).",

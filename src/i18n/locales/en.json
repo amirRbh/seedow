@@ -857,8 +857,8 @@
       },
       "sources": {
         "title": "Data sources",
-        "esg": "ESG scores by pillar (E/S/G): MSCI ESG Research, Sustainalytics, ESG Book, Yahoo Sustainability",
-        "carbon": "Carbon intensity (gCO₂e/€ invested): Trucost, ISS ESG, Yahoo Sustainability — with date and provider stored per asset",
+        "esg": "ESG scores: Seedow's proprietary model (fund-category method) and, for a few assets, Yahoo — the source is stored per asset (esg_score_source). Connecting third-party providers (MSCI, Sustainalytics) is planned, not yet active.",
+        "carbon": "Carbon intensity (gCO₂e/€ invested): a per-asset field with source and date is in place, but no emissions provider is connected yet — real coverage is currently 0%, which the methodology page shows honestly.",
         "sfdr": "SFDR classification: issuer prospectuses (iShares, Lyxor, Amundi)",
         "prices": "Prices and volatilities: Yahoo Finance, 5-year historical series, covariances recalculated weekly"
       },
@@ -867,7 +867,7 @@
         "desc_1": "The ESG score ranges from 0 to 100.",
         "desc_2": "Instead of a fixed 40/40/20 average, the E, S, and G pillars are reweighted based on the causes you activate in your preferences. The score thus reflects what really matters to you.",
         "pillars_title": "1. Three independent pillars",
-        "pillar_e": "Environment (E) — scope 1-2-3 CO₂ emissions, carbon intensity, water, waste, renewables exposure.",
+        "pillar_e": "Environment (E) — scope 1-2 CO₂ emissions (scope 3 when the issuer discloses it), carbon intensity, water, waste, renewables exposure.",
         "pillar_s": "Social (S) — human rights, working conditions, gender equality, product safety, community relations.",
         "pillar_g": "Governance (G) — board independence, executive compensation, tax ethics, transparency, anti-corruption.",
         "fallback_note": "When a pillar is not published for an asset, we automatically fall back on the global ESG score (documented fallback).",

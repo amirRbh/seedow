@@ -239,14 +239,21 @@ function equalWeight(assets: Asset[]): PortfolioWeights {
 }
 
 /**
- * Conviction-based expected-return adjustment.
+ * Conviction-based preference tilt applied to the optimisation objective.
  *
  * NOTE — this is NOT a full Black-Litterman implementation (no τ·Σ prior, no
- * P/Q/Ω view matrices). It is a deliberately simple linear shift on expected
- * returns to express user convictions before the QP runs. Documented as
- * "ajustement par convictions" in the methodology page.
+ * P/Q/Ω view matrices). It is a deliberately simple, bounded linear tilt of the
+ * objective's linear term to express user convictions before the QP runs.
  *
- * Boost is capped at +1.5% per perfectly-aligned, fully-weighted cause.
+ * Interpretation matters for defensibility: this is a *preference* tilt (a taste
+ * for cause-aligned assets), NOT a claim of extra expected return / alpha —
+ * consistent with treating ESG as a preference in the ESG-efficient frontier
+ * (Pedersen, Fitzgibbons & Pomorski, JFE 2021). Crucially, the *reported*
+ * portfolio expected return (see engine.ts, `μFinal`) is computed on the
+ * UN-tilted expected returns, so the number shown to the user is never inflated
+ * by their convictions — the tilt only changes which assets get weight.
+ *
+ * Tilt is bounded at +1.5% per perfectly-aligned, fully-weighted cause.
  */
 export function applyConvictionAdjustment(
   assets: Asset[],

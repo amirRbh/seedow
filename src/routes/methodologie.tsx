@@ -552,14 +552,15 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
     },
   ];
 
+  // Sources réellement branchées en base (champ `esg_score_source`). On n'affiche
+  // que ce qui alimente vraiment les scores — pas de nom de fournisseur tiers
+  // tant que son flux n'est pas connecté (contrat de transparence Seedow).
   const sources = [
-    { name: "MSCI ESG", scope: "Actions monde développé & émergent" },
-    { name: "Sustainalytics (Morningstar)", scope: "ETF, obligations, thématiques" },
-    { name: "Yahoo Finance ESG", scope: "Couverture complémentaire large" },
     {
-      name: "Notation manuelle interne",
-      scope: "Fonds thématiques niches (obligations sociales, biodiversité)",
+      name: "Notation propriétaire Seedow (v1)",
+      scope: "Majorité de l'univers — méthode par catégorie de fonds, tracée par actif",
     },
+    { name: "Yahoo Finance (ESG)", scope: "Couverture complémentaire, quelques actifs" },
   ];
 
   return (
@@ -590,9 +591,10 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
             ))}
           </ul>
           <p className="text-caption text-ink-3 mt-3 leading-relaxed">
-            Les échelles fournisseurs divergent (MSCI note AAA→CCC, Sustainalytics 0-100 « risk »…).
-            Nous les renormalisons sur une échelle 0–100 homogène pour rendre les actifs
-            comparables.
+            Aujourd'hui, la note vient d'un modèle propriétaire Seedow (méthode par catégorie de
+            fonds) et, pour quelques actifs, de Yahoo. Le raccordement de fournisseurs tiers (MSCI,
+            Sustainalytics) est une évolution prévue : le cas échéant, chaque fournisseur sera nommé
+            sur la fiche de l'actif et sa note renormalisée sur une échelle 0–100 homogène.
           </p>
         </div>
 
@@ -652,7 +654,9 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
           </li>
           <li>
             <span className="font-value text-ink">Best-in-class.</span> Dans chaque classe d'actifs,
-            on ne garde que les meilleurs quintiles sur le score composite pondéré par vos causes.
+            on ne garde que la moitié la mieux notée (au-dessus de la médiane) sur le score
+            composite pondéré par vos causes. Une classe de 3 actifs ou moins est conservée entière
+            pour ne pas l'assécher.
           </li>
           <li>
             <span className="font-value text-ink">Plancher portefeuille.</span> Score ESG moyen
@@ -661,8 +665,10 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
             honnêtement.
           </li>
           <li>
-            <span className="font-value text-ink">Tilts par conviction.</span> L'intensité de chaque
-            cause (0–100 %) réajuste les poids piliers et biaise la sélection thématique associée.
+            <span className="font-value text-ink">Tilts par conviction.</span> Activer une cause
+            réajuste les poids des piliers E/S/G (voir grille ci-dessus). Son intensité (0–100 %)
+            oriente en plus l'optimiseur vers les actifs exposés à cette cause — un tilt borné, qui
+            n'entre pas dans le rendement attendu affiché.
           </li>
         </ol>
       </div>

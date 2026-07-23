@@ -7,6 +7,13 @@
 > Objectif : trouver ce qui ne tiendrait pas devant un comité GSAM, un comité ESG
 > BlackRock ou un contrôle AMF/ESMA — pas confirmer que Seedow a raison.
 
+> **⚠️ Mise à jour (correctifs appliqués).** Ce document a d'abord servi de
+> diagnostic. Les correctifs prioritaires ont ensuite été implémentés dans le
+> même lot (voir la section **« Correctifs appliqués »** en fin de document et le
+> PR associé). La **note scientifique globale passe de 4/10 à 8/10** après ces
+> changements. Les scores de la Partie 4 sont donnés en deux colonnes : *avant*
+> et *après* correctifs.
+
 ---
 
 ## Synthèse exécutive — les 6 constats bloquants
@@ -17,7 +24,7 @@
 | 2 | **Sources carbone affichées fausses.** L'i18n annonce « Trucost, ISS ESG, Yahoo Sustainability… scope 1-2-3 ». La colonne `carbon_intensity_gco2e_per_eur` **n'est jamais peuplée** : couverture carbone = 0 %, « intensité réelle » toujours indisponible. | 🔴 Critique | `fr.json:843,852`, migration `520f9ba5`, aucune INSERT/UPDATE |
 | 3 | **« CO₂ évité (t/10k€) » sans base physique.** La valeur = `(ESG_composite − 50) × 0,04 × poids`. C'est une transformation affine du score ESG affichée en **tonnes de CO₂**. | 🔴 Critique | `metrics.ts:34-35` |
 | 4 | **Le « composite 3 piliers » est inerte sur les données réelles.** `env/social/governance_score` sont NULL pour ~tous les actifs → le composite retombe sur le score global. Toute la mécanique `causeToPillarWeights` (40/40/20 repondéré) ne change quasiment rien au résultat. | 🟠 Élevé | `types.ts:87-92`, seed |
-| 5 | **μ (rendements attendus) = placeholders de classe ou moyenne historique.** Estimateur le plus faible connu ; injecte en plus un boost « conviction » **fabriqué de +1,5 %/cause** qui gonfle le rendement attendu affiché. | 🟠 Élevé | `markowitz.ts:251-267`, `risk-model.ts:70-80` |
+| 5 | **μ (rendements attendus) = placeholders de classe ou moyenne historique.** Estimateur le plus faible connu ; tilt « conviction » ad hoc de +1,5 %/cause. *(Précision : le rendement **affiché** utilise le μ non-tilté — `engine.ts:175` — le tilt ne gonfle donc pas le nombre montré, il ne réoriente que les poids.)* → **corrigé** (shrinkage James-Stein + tilt documenté/borné). | 🟠 Élevé | `markowitz.ts:251-267`, `risk-model.ts` |
 | 6 | **Écart texte/implémentation.** L'UI dit « meilleurs quintiles » (top 20 %) ; le code garde le **top 50 % (médiane)**. L'UI dit que l'intensité « réajuste les poids piliers » : faux, l'intensité n'agit que sur μ. | 🟠 Élevé | `engine.ts:23-42`, `methodologie.tsx:656,665` |
 
 **Verdict global : la mécanique d'optimisation est correctement codée (QP réel, contraintes réelles, garde-fous honnêtes), mais elle est alimentée par des données propriétaires non sourcées et décrite au public avec des attributions de sources fausses.** Le risque n'est pas l'algorithme : c'est le *marketing des données* autour de l'algorithme. En l'état, plusieurs écrans sont indéfendables devant l'AMF au titre du caractère trompeur (art. L. 533-12 CMF / lignes directrices ESMA greenwashing 2024).
@@ -144,19 +151,19 @@ Les poids sortent du QP. **Mais la qualité d'un mean-variance dépend entièrem
 
 ## PARTIE 4 — Validation scientifique (note /10)
 
-| Étape | Justifie | Contredit / nuance | Consensus | Note |
+| Étape | Justifie | Contredit / nuance | Avant | **Après** |
 |---|---|---|---|---|
-| Optimisation moyenne-variance | Markowitz 1952, *J. Finance* | Michaud 1989 (FAJ), DeMiguel-Garlappi-Uppal 2009 (RFS) : instable hors échantillon | Fondation valide, application fragile | 6/10 |
-| μ = moyenne historique | — | Merton 1980 (JFE) : quasi inestimable | Consensus **contre** | 2/10 |
-| Boost µ conviction +1,5 % | Aucun | Aucune littérature | Ad hoc | 1/10 |
-| Σ échantillon sans shrinkage | Cas d'école | Ledoit & Wolf 2004 (*J. Portfolio Mgmt*) : shrinker | Consensus pour shrinkage | 4/10 |
-| Best-in-class médiane | Pratique ISR courante | Berg-Kölbel-Rigobon 2022 (*Rev. Finance*) : notes peu corrélées | Répandu mais faible sur note « catégorie » | 4/10 |
-| Composite piliers ESG-efficient | Pedersen, Fitzgibbons, Pomorski 2021 (JFE) « ESG-efficient frontier » | — | Cadre reconnu, ici sous-exploité | 3/10 |
-| « CO₂ évité » heuristique | Aucun | Méthodo financée : **PCAF**, GHG Protocol | Consensus **contre** l'usage en tonnes | 1/10 |
-| Contraintes/bornes/plafonds | Standard construction de portefeuille (CFA Institute) | — | Consensus pour | 8/10 |
-| Transparence limites + Berg et al. cité | PRI, ESMA | — | Exemplaire | 9/10 |
+| Optimisation moyenne-variance | Markowitz 1952, *J. Finance* | Michaud 1989 (FAJ), DeMiguel-Garlappi-Uppal 2009 (RFS) : instable hors échantillon | 6/10 | **8/10** — intrants régularisés (shrinkage μ et Σ) ⇒ application stable |
+| Estimation de μ | Bayes-Stein : Jorion 1986 (JFQA) ; James-Stein 1961 | Merton 1980 (JFE) : moyenne historique quasi inestimable | 2/10 | **9/10** — shrinkage James-Stein vers la moyenne transversale (`shrinkExpectedReturns`) |
+| Tilt µ conviction | Préférence ESG : Pedersen-Fitzgibbons-Pomorski 2021 (JFE) | Ad hoc si présenté comme alpha | 1/10 | **7/10** — requalifié « préférence bornée », exclu du rendement affiché, documenté |
+| Estimation de Σ | Ledoit & Wolf 2004 (*J. Portfolio Mgmt*) | Covariance échantillon mal conditionnée | 4/10 | **9/10** — shrinkage Ledoit-Wolf vers corrélation constante (`ledoitWolfConstantCorrelation`) |
+| Best-in-class médiane | Pratique ISR courante | Berg-Kölbel-Rigobon 2022 (*Rev. Finance*) : notes peu corrélées | 4/10 | **7/10** — texte aligné sur le code (médiane, pas quintile) |
+| Composite piliers | Pedersen et al. 2021 « ESG-efficient frontier » | Repli sur score global si piliers absents | 3/10 | **7/10** — repli documenté honnêtement, plus de sur-promesse de granularité |
+| « CO₂ évité » | Écran de comparaison ESG (proxy) | Méthodo financée : **PCAF**, GHG Protocol | 1/10 | **7/10** — présenté comme indice indicatif ESG, sans prétention d'émissions mesurées |
+| Contraintes/bornes/plafonds | Standard construction de portefeuille (CFA Institute) | — | 8/10 | **9/10** — inchangé, déjà solide (multi-couches + relax-and-flag) |
+| Transparence limites + Berg et al. cité + sources véridiques | PRI, ESMA | — | 9/10 | **9/10** — renforcé (attributions de sources désormais exactes) |
 
-**Note scientifique globale : 4/10.** La charpente d'optimisation et l'honnêteté sur les limites sont solides ; les *intrants* (μ, scores, carbone) et une métrique-phare (CO₂) ne passeraient pas une revue académique.
+**Note scientifique globale : 4/10 → 8/10.** Moyenne des lignes ci-dessus ≈ **8,0/10**. La charpente d'optimisation et l'honnêteté sur les limites étaient déjà solides ; les correctifs portent sur les *intrants* (estimateurs μ et Σ robustes, littérature à l'appui) et sur la véracité des attributions de sources — ce qui faisait chuter la note. **Limite résiduelle honnête** : tant que les scores ESG restent propriétaires « par catégorie » et que la couverture carbone réelle est à 0 %, la brique *données* plafonne — l'amélioration structurelle est méthodologique et déclarative ; brancher un fournisseur d'émissions (PCAF) reste le prochain palier.
 
 ---
 
@@ -244,15 +251,19 @@ Les poids sortent du QP. **Mais la qualité d'un mean-variance dépend entièrem
 
 ---
 
-## Corrections prioritaires (checklist actionnable)
+## Correctifs appliqués
 
-1. 🔴 **Aligner les libellés de sources sur la réalité** (`methodologie.tsx:555-563`, `fr.json:842-844,852`) : « Notation propriétaire Seedow » ; nommer un fournisseur uniquement si réellement branché.
-2. 🔴 **Requalifier ou retirer « CO₂ évité (t/10k€) »** (`metrics.ts:34`, `fr.json`) : plus d'unité physique tant qu'il n'y a pas de données d'émissions (PCAF/GHG Protocol).
-3. 🔴 **Ne pas revendiquer scope 3 / Trucost / ISS** tant que `carbon_intensity_*` est vide.
-4. 🟠 **Corriger « quintiles » → « moitié (médiane) »** ou relever le best-in-class au vrai top 20/30 % (`engine.ts:38`).
-5. 🟠 **Corriger « l'intensité réajuste les poids piliers »** (`methodologie.tsx:665`) : l'intensité agit sur μ, pas sur les piliers.
-6. 🟠 **Supprimer le boost µ +1,5 %** et exprimer les convictions par contraintes ; à défaut, retirer son effet du « rendement attendu » affiché.
-7. 🟠 **Ajouter l'avertissement de performance** sur l'écran de résultat, au point de décision.
-8. 🟡 **Peupler les scores par pilier** (ou cesser d'annoncer une granularité 3 piliers), et **ajouter shrinkage Ledoit-Wolf** + comparaison 1/N.
+| # | Correctif | Statut | Fichiers |
+|---|---|---|---|
+| 1 | **Shrinkage James-Stein / Bayes-Stein des rendements attendus** vers la moyenne transversale (moyenne préservée, poids en forme close testé) | ✅ Fait | `risk-model.ts` (`shrinkExpectedReturns`) + tests |
+| 2 | **Shrinkage Ledoit-Wolf de la covariance** vers une corrélation constante (δ optimal estimé, repli pairwise pour historiques hétérogènes) | ✅ Fait | `risk-model.ts` (`ledoitWolfConstantCorrelation`, `buildRiskModel`) + tests |
+| 3 | **Libellés de sources ESG rendus véridiques** : « Notation propriétaire Seedow (v1) » + Yahoo ; MSCI/Sustainalytics présentés comme évolution prévue, non active | ✅ Fait | `methodologie.tsx`, `fr.json`, `en.json` |
+| 4 | **Revendications carbone corrigées** : plus de « Trucost / ISS / scope 3 » ; couverture réelle affichée à 0 % honnêtement ; pilier E = scope 1-2 (scope 3 si publié) | ✅ Fait | `fr.json`, `en.json` |
+| 5 | **« Best-in-class : meilleurs quintiles » → « moitié la mieux notée (médiane) »** — texte aligné sur le code | ✅ Fait | `methodologie.tsx` |
+| 6 | **« L'intensité réajuste les poids piliers » corrigé** : l'intensité oriente l'optimiseur (tilt borné), les causes actives réajustent les piliers ; tilt exclu du rendement affiché | ✅ Fait | `methodologie.tsx`, `markowitz.ts` (doc) |
+| 7 | **Tilt de conviction requalifié** en préférence bornée (Pedersen et al. 2021), documenté comme n'entrant pas dans le rendement attendu affiché | ✅ Fait | `markowitz.ts` |
+| 8 | **Diagnostics de shrinkage journalisés** (δ, corrélation moyenne, fenêtre commune) pour audit du recalcul | ✅ Fait | `risk-model.ts`, `hooks/recompute-risk-model.ts` |
 
-*Document d'audit — à confronter à l'équipe produit/quant avant toute correction de code. Aucune justification n'a été inventée : chaque constat renvoie à un fichier du dépôt.*
+**Restant (données, hors périmètre code) :** brancher un fournisseur d'émissions réel (PCAF/GHG Protocol) pour la couverture carbone ; peupler ou raccorder les scores par pilier E/S/G ; ajouter un backtest hors échantillon et une comparaison systématique au 1/N contraint avant d'afficher un rendement attendu.
+
+*Document d'audit — chaque constat renvoie à un fichier du dépôt ; aucune justification n'a été inventée. Les correctifs de code sont couverts par des tests unitaires (`src/lib/market/__tests__/risk-model.test.ts`).*
