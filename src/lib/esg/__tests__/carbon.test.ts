@@ -3,6 +3,8 @@ import {
   computePortfolioCarbon,
   financedEmissionsKgPerYear,
   avoidedVsBenchmarkKgPerYear,
+  computePortfolioWaci,
+  relativeIntensityVsBenchmark,
   type AssetCarbonInput,
 } from "../carbon";
 
@@ -93,5 +95,42 @@ describe("avoidedVsBenchmarkKgPerYear", () => {
         10000,
       ),
     ).toBeNull();
+  });
+});
+
+describe("computePortfolioWaci", () => {
+  it("weights WACI only over covered assets", () => {
+    const w = computePortfolioWaci([
+      { weight: 0.5, waci: 60 },
+      { weight: 0.5, waci: null },
+    ]);
+    expect(w.coverage).toBeCloseTo(0.5, 12);
+    expect(w.waci).toBeCloseTo(60, 12);
+  });
+
+  it("returns null WACI when no asset has data", () => {
+    const w = computePortfolioWaci([{ weight: 1, waci: null }]);
+    expect(w.waci).toBeNull();
+    expect(w.coverage).toBe(0);
+  });
+});
+
+describe("relativeIntensityVsBenchmark", () => {
+  it("is positive (cleaner) when the portfolio WACI is below the benchmark", () => {
+    // (150 - 60)/150 = 0.6 → 60% moins intensif
+    const c = relativeIntensityVsBenchmark(60, 150);
+    expect(c!.deltaPct).toBeCloseTo(0.6, 12);
+    expect(c!.cleaner).toBe(true);
+  });
+
+  it("is negative (not cleaner) when the portfolio is more intensive", () => {
+    const c = relativeIntensityVsBenchmark(200, 150);
+    expect(c!.deltaPct).toBeLessThan(0);
+    expect(c!.cleaner).toBe(false);
+  });
+
+  it("returns null when data is missing or benchmark invalid", () => {
+    expect(relativeIntensityVsBenchmark(null, 150)).toBeNull();
+    expect(relativeIntensityVsBenchmark(60, 0)).toBeNull();
   });
 });

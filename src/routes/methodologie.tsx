@@ -557,8 +557,12 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
   // tant que son flux n'est pas connecté (contrat de transparence Seedow).
   const sources = [
     {
+      name: "MSCI ESG Research (fiches iShares/BlackRock)",
+      scope: "Fonds couverts — score, intensité carbone WACI et date « as of » tracés par actif",
+    },
+    {
       name: "Notation propriétaire Seedow (v1)",
-      scope: "Majorité de l'univers — méthode par catégorie de fonds, tracée par actif",
+      scope: "Reste de l'univers, en cours de raccordement",
     },
     { name: "Yahoo Finance (ESG)", scope: "Couverture complémentaire, quelques actifs" },
   ];
@@ -591,10 +595,11 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
             ))}
           </ul>
           <p className="text-caption text-ink-3 mt-3 leading-relaxed">
-            Aujourd'hui, la note vient d'un modèle propriétaire Seedow (méthode par catégorie de
-            fonds) et, pour quelques actifs, de Yahoo. Le raccordement de fournisseurs tiers (MSCI,
-            Sustainalytics) est une évolution prévue : le cas échéant, chaque fournisseur sera nommé
-            sur la fiche de l'actif et sa note renormalisée sur une échelle 0–100 homogène.
+            Le raccordement des données MSCI ESG a commencé : pour les fonds couverts, le score, la
+            date « as of » et l'intensité carbone WACI proviennent des fiches émetteurs (iShares /
+            BlackRock) et sont tracés par actif. Le reste de l'univers reste en notation
+            propriétaire Seedow le temps du raccordement — la source exacte est indiquée sur chaque
+            fiche.
           </p>
         </div>
 

@@ -118,3 +118,59 @@ export function avoidedVsBenchmarkKgPerYear(
   const deltaGPerEur = benchmarkIntensityGco2ePerEur - carbon.intensityGco2ePerEur;
   return (deltaGPerEur * coveredAmount) / 1000; // g → kg
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// WACI (Weighted Average Carbon Intensity, tCO₂e / M$ de CA) — l'indicateur PAI
+// SFDR publié par les émetteurs. Intensité « par revenu » : sert à COMPARER un
+// portefeuille à un indice de référence (« vs ETF/banque classique »), PAS à
+// calculer des émissions absolues « par € investi » (ne pas convertir en km).
+// ─────────────────────────────────────────────────────────────────────────────
+
+export interface AssetWaciInput {
+  weight: number;
+  /** WACI tCO₂e/M$ de CA, ou null si non renseigné. */
+  waci: number | null;
+}
+
+export interface PortfolioWaci {
+  /** WACI moyen pondéré sur la part couverte. null si couverture nulle. */
+  waci: number | null;
+  /** Part du poids disposant d'un WACI réel (0..1). */
+  coverage: number;
+}
+
+/** Agrège le WACI d'un portefeuille sur les seuls actifs qui en ont un. */
+export function computePortfolioWaci(assets: AssetWaciInput[]): PortfolioWaci {
+  let numerator = 0;
+  let covered = 0;
+  for (const a of assets) {
+    if (!Number.isFinite(a.weight) || a.weight <= 0) continue;
+    if (a.waci == null || !Number.isFinite(a.waci) || a.waci < 0) continue;
+    numerator += a.weight * a.waci;
+    covered += a.weight;
+  }
+  return { waci: covered > 0 ? numerator / covered : null, coverage: covered };
+}
+
+export interface IntensityComparison {
+  /** Écart relatif vs référence, (bench − port)/bench. Positif = plus propre. */
+  deltaPct: number;
+  /** true si le portefeuille est MOINS intensif que la référence. */
+  cleaner: boolean;
+}
+
+/**
+ * Compare l'intensité carbone (WACI) du portefeuille à un indice de référence.
+ * Le WACI du benchmark doit être fourni avec sa source/date par l'appelant (ex.
+ * WACI du MSCI World). Signe honnête : renvoie une valeur négative si le
+ * portefeuille est PLUS intensif (pas de sur-promesse — CLAUDE.md §1.3).
+ */
+export function relativeIntensityVsBenchmark(
+  portfolioWaci: number | null,
+  benchmarkWaci: number,
+): IntensityComparison | null {
+  if (portfolioWaci == null || !Number.isFinite(portfolioWaci)) return null;
+  if (!Number.isFinite(benchmarkWaci) || benchmarkWaci <= 0) return null;
+  const deltaPct = (benchmarkWaci - portfolioWaci) / benchmarkWaci;
+  return { deltaPct, cleaner: deltaPct > 0 };
+}
