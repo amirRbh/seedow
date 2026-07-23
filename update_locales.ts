@@ -53,7 +53,9 @@ const onboardingFr = {
             "100": "100 €",
             "100_desc": "Un vrai démarrage",
             "500": "500 €",
-            "500_desc": "Un démarrage ambitieux"
+            "500_desc": "Un démarrage ambitieux",
+            "custom_label": "Un autre montant",
+            "custom_placeholder": "ex. 2 000"
         }
     },
     "intro": {
@@ -162,7 +164,9 @@ const onboardingEn = {
             "100": "€100",
             "100_desc": "A real start",
             "500": "€500",
-            "500_desc": "An ambitious start"
+            "500_desc": "An ambitious start",
+            "custom_label": "A different amount",
+            "custom_placeholder": "e.g. 2,000"
         }
     },
     "intro": {

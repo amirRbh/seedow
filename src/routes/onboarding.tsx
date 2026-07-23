@@ -831,6 +831,8 @@ function Step({
   const { t } = useTranslation();
   const [selected, setSelected] = useState<string[]>([]);
   const [enteredAt] = useState(() => Date.now());
+  const isAmount = step.id === "amount";
+  const [customAmount, setCustomAmount] = useState("");
 
   // Tracking : entrée dans l'étape
   useEffect(() => {
@@ -845,6 +847,7 @@ function Step({
     const wasSelected = selected.includes(id);
     if (step.multi) setSelected((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
     else setSelected([id]);
+    if (isAmount) setCustomAmount(""); // taper un préréglage remplace la saisie libre
 
     // Tracking : log chaque choix granulaire (best-effort).
     // Mapping étape → step enum :
@@ -861,6 +864,16 @@ function Step({
         dwellMs: Date.now() - enteredAt,
       });
     }
+  };
+
+  // Saisie libre du montant (step "amount") : on n'accepte que des chiffres,
+  // on retire les zéros en tête et on borne à 7 chiffres. Un montant valide
+  // devient la sélection ; un champ vide/nul désélectionne (bouton désactivé).
+  const onCustomAmount = (raw: string) => {
+    const digits = raw.replace(/\D/g, "").replace(/^0+/, "").slice(0, 7);
+    setCustomAmount(digits);
+    const n = Number(digits);
+    setSelected(n > 0 ? [String(n)] : []);
   };
 
   return (
@@ -990,6 +1003,33 @@ function Step({
               </motion.button>
             );
           })}
+
+          {isAmount && (
+            <div className="pt-1">
+              <label
+                htmlFor="onboarding-custom-amount"
+                className="block text-caption text-paper/50 mb-2"
+              >
+                {t("onboarding.steps.amount.custom_label")}
+              </label>
+              <div
+                className="flex items-center gap-2 p-3.5 rounded-2xl border border-white/25"
+                style={{ backgroundColor: "rgba(255,255,255,0.06)" }}
+              >
+                <span className="text-paper/60 text-lg" aria-hidden="true">
+                  €
+                </span>
+                <input
+                  id="onboarding-custom-amount"
+                  inputMode="numeric"
+                  value={customAmount}
+                  onChange={(e) => onCustomAmount(e.target.value)}
+                  placeholder={t("onboarding.steps.amount.custom_placeholder")}
+                  className="flex-1 bg-transparent outline-none text-paper text-[16px] placeholder-paper/30"
+                />
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

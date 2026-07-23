@@ -657,7 +657,9 @@
         "10_desc": "Je teste tranquille",
         "50_desc": "Un engagement sérieux",
         "100_desc": "Un vrai démarrage",
-        "500_desc": "Un démarrage ambitieux"
+        "500_desc": "Un démarrage ambitieux",
+        "custom_label": "Un autre montant",
+        "custom_placeholder": "ex. 2 000"
       }
     },
     "intro": {
