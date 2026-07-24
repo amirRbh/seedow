@@ -73,13 +73,13 @@ export const simulatePortfolio = createServerFn({ method: "POST" })
     }
     const msciQuality = qualityWeight > 0 ? qualityNum / qualityWeight : null;
 
-    // WACI de référence d'un ETF actions monde « classique » (indice parent
-    // MSCI ACWI). Source à confirmer : MSCI ACWI Climate Indexes Report
-    // (msci.com, section « Index Carbon Footprint Metrics », WACI de l'indice
-    // PARENT MSCI ACWI, Scope 1+2, avec sa date). Laissé à null tant que la
-    // valeur exacte n'est pas vérifiée sur le rapport daté — on n'affiche pas de
-    // comparaison sur un chiffre non sourcé (contrat de transparence §1.2).
-    const BENCHMARK_ACWI_WACI: number | null = null;
+    // WACI de référence d'un ETF actions monde « classique » = indice PARENT
+    // MSCI ACWI. Valeur VÉRIFIÉE : 115 tCO₂e/M$ de CA (Scope 1+2), ligne « Wtd
+    // avg carbon intensity (t CO2e/$M sales) » du MSCI ACWI Climate Indexes
+    // Report, as of 2026-06-30 (msci.com). Même métrique/scope que le WACI des
+    // fiches fonds → comparaison homogène. À mettre à jour à chaque nouveau
+    // rapport MSCI daté.
+    const BENCHMARK_ACWI_WACI: number | null = 115;
     const vsBenchmark =
       BENCHMARK_ACWI_WACI != null
         ? relativeIntensityVsBenchmark(portfolioWaci.waci, BENCHMARK_ACWI_WACI)

@@ -932,7 +932,7 @@
     "impact_waci": "Intensité carbone (WACI)",
     "impact_vs_benchmark": "vs ETF monde classique",
     "impact_waci_none": "Intensité carbone réelle indisponible sur la sélection — en cours de raccordement.",
-    "impact_note": "WACI = intensité carbone moyenne pondérée en tCO₂e par M$ de chiffre d'affaires (indicateur PAI SFDR, source MSCI via fiches émetteurs). Le reste du portefeuille est en notation propriétaire, en cours de raccordement.",
+    "impact_note": "WACI = intensité carbone moyenne pondérée en tCO₂e par M$ de chiffre d'affaires (indicateur PAI SFDR, source MSCI via fiches émetteurs). La comparaison « vs ETF monde classique » utilise le WACI de l'indice parent MSCI ACWI (Scope 1+2 : 115, MSCI ACWI Climate Indexes Report, juin 2026). Le reste du portefeuille est en notation propriétaire, en cours de raccordement.",
     "allocation_title": "Allocation",
     "loading": "Recalcul…",
     "positions_count_one": "{{count}} position",
