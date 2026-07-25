@@ -4,40 +4,42 @@ import { useTranslation } from "react-i18next";
 import { KPIFigure } from "@/components/ui/KPIFigure";
 import { AnimatedFigure } from "@/components/ui/AnimatedFigure";
 import { useLang } from "@/hooks/useLang";
+import type { PortfolioImpactView } from "@/lib/impact/portfolioImpact";
 
 interface ImpactRibbonProps {
-  co2Avoided: number;
-  treesEquivalent: number;
-  energyFinanced: number;
-  esgScore: number; // 0–10
+  /** Vue d'impact honnête (cf. lib/impact/portfolioImpact). */
+  impact: PortfolioImpactView;
+  /** Score ESG sur 10 (échelle de la page portefeuille). */
+  esgScore10: number;
 }
 
 /**
- * ImpactRibbon — version éditoriale sobre.
- * Fond papier + filet or, KPI signature ; remplace l'ancien gradient vert saturé.
+ * ImpactRibbon — bloc impact de la page portefeuille.
+ *
+ * Comme ImpactHero, n'affiche un chiffre carbone que s'il est réellement mesuré.
+ * Fini l'heuristique inventée (arbres = co2×45, énergie = montant/5) : elle est
+ * remplacée par l'empreinte financée réelle ou un état honnête « en cours de mesure ».
  */
-export function ImpactRibbon({
-  co2Avoided,
-  treesEquivalent,
-  energyFinanced,
-  esgScore,
-}: ImpactRibbonProps) {
+export function ImpactRibbon({ impact, esgScore10 }: ImpactRibbonProps) {
   const { t } = useTranslation();
   const { lang } = useLang();
+  const numLocale = lang === "en" ? "en-US" : "fr-FR";
 
-  const co2Display = co2Avoided >= 1 ? co2Avoided : co2Avoided * 1000;
-  const co2Unit = co2Avoided >= 1 ? t("impact_ribbon.tonnes") : t("impact_ribbon.kg");
-  const energyLabel =
-    energyFinanced >= 1000
-      ? (energyFinanced / 1000).toFixed(1)
-      : Math.round(energyFinanced).toString();
-  const energyUnit = energyFinanced >= 1000 ? "MWh" : "kWh";
+  const kg = impact.financedEmissionsKgPerYear;
+  const inTonnes = kg != null && kg >= 1000;
+  const footprintValue = kg == null ? 0 : inTonnes ? kg / 1000 : kg;
+  const footprintUnit = inTonnes ? "t" : "kg";
 
   const fmt = (v: number) =>
-    v.toLocaleString(lang === "en" ? "en-US" : "fr-FR", {
-      minimumFractionDigits: co2Avoided >= 1 ? 2 : 0,
-      maximumFractionDigits: co2Avoided >= 1 ? 2 : 0,
+    v.toLocaleString(numLocale, {
+      minimumFractionDigits: inTonnes ? 2 : 0,
+      maximumFractionDigits: inTonnes ? 2 : 0,
     });
+
+  const carEquiv = impact.presentation.show
+    ? impact.presentation.equivalences.find((e) => e.factorId === "car_km")
+    : undefined;
+  const coveragePct = Math.round(impact.coverage * 100);
 
   return (
     <motion.div
@@ -48,48 +50,90 @@ export function ImpactRibbon({
       <div className="gold-rule mb-5" aria-hidden />
 
       <p className="text-tag uppercase tracking-[0.22em] font-semibold text-gold">
-        {t("impact_ribbon.real_impact")}
+        {impact.measured ? t("impact_hero.eyebrow") : t("impact_hero.not_measured_eyebrow")}
       </p>
 
-      <p className="text-tag uppercase tracking-[0.22em] font-semibold text-ink-3 mt-4">
-        {t("impact_ribbon.co2_label")}
-      </p>
-      <div className="mt-1 kpi-figure flex items-baseline gap-2 text-6xl leading-none">
-        <AnimatedFigure value={co2Display} format={fmt} />
-        <span className="text-lg font-medium tracking-normal text-ink-3 font-sans">{co2Unit}</span>
-      </div>
-      <p className="text-body-sm text-ink-2 mt-2">{t("impact_ribbon.co2_avoided_desc")}</p>
-      <p className="mt-2 text-xs text-ink-3 leading-relaxed max-w-md">
-        {t("impact_ribbon.explainer")}{" "}
-        <Link
-          to="/methodologie"
-          className="underline underline-offset-2 hover:text-gold transition-colors"
-        >
-          {t("impact_ribbon.learn_more")}
-        </Link>
-      </p>
+      {impact.measured ? (
+        <>
+          <p className="text-tag uppercase tracking-[0.22em] font-semibold text-ink-3 mt-4">
+            {t("impact_hero.footprint_label")}
+          </p>
+          <div className="mt-1 kpi-figure flex items-baseline gap-2 text-6xl leading-none">
+            <AnimatedFigure value={footprintValue} format={fmt} />
+            <span className="text-lg font-medium tracking-normal text-ink-3 font-sans">
+              {footprintUnit} CO₂e{t("impact_hero.per_year")}
+            </span>
+          </div>
+          {carEquiv && (
+            <p className="mt-2 text-xs text-ink-3 italic">
+              {t("impact_hero.equivalence_prefix")}{" "}
+              {Math.round(Math.abs(carEquiv.value)).toLocaleString(numLocale)}{" "}
+              {t("impact.equiv.car_km")} · {carEquiv.source} {carEquiv.asOf}
+            </p>
+          )}
+          <p className="mt-2 text-xs text-ink-3 leading-relaxed max-w-md">
+            {t("impact_hero.coverage_line", { coverage: coveragePct })} — {t("impact_hero.explainer")}{" "}
+            <Link
+              to="/methodologie"
+              className="underline underline-offset-2 hover:text-gold transition-colors"
+            >
+              {t("impact_hero.learn_more")}
+            </Link>
+          </p>
+        </>
+      ) : (
+        <>
+          <p className="text-tag uppercase tracking-[0.22em] font-semibold text-ink-3 mt-4">
+            {t("impact_hero.not_measured_label")}
+          </p>
+          <div className="mt-1 kpi-figure flex items-baseline gap-2 text-6xl leading-none">
+            <AnimatedFigure value={esgScore10} format={(v) => v.toFixed(1)} />
+            <span className="text-lg font-medium tracking-normal text-ink-3 font-sans">/10</span>
+          </div>
+          <p className="mt-2 text-xs text-ink-3 leading-relaxed max-w-md">
+            {t("impact_hero.not_measured_note")}{" "}
+            <Link
+              to="/methodologie"
+              className="underline underline-offset-2 hover:text-gold transition-colors"
+            >
+              {t("impact_hero.learn_more")}
+            </Link>
+          </p>
+        </>
+      )}
 
       <div className="gold-rule my-5" aria-hidden />
 
       <div className="grid grid-cols-3 gap-4">
         <KPIFigure
-          value={Math.round(treesEquivalent).toLocaleString(lang === "en" ? "en-US" : "fr-FR")}
-          label={t("impact_ribbon.trees_label")}
-          size="sm"
-        />
-        <KPIFigure
-          value={energyLabel}
-          unit={energyUnit}
-          label={t("impact_ribbon.energy_label")}
-          size="sm"
-        />
-        <KPIFigure
-          value={esgScore.toFixed(1)}
+          value={esgScore10.toFixed(1)}
           unit="/10"
-          label={t("impact_ribbon.impact_score")}
+          label={t("impact_hero.impact_score_label")}
           size="sm"
           accent
         />
+        {impact.measured && impact.intensityGco2ePerEur != null ? (
+          <>
+            <KPIFigure
+              value={impact.intensityGco2ePerEur.toLocaleString(numLocale, {
+                maximumFractionDigits: 1,
+              })}
+              unit="gCO₂e/€"
+              label={t("impact_hero.intensity_label")}
+              size="sm"
+            />
+            <KPIFigure
+              value={coveragePct.toString()}
+              unit="%"
+              label={t("impact_hero.coverage_label")}
+              size="sm"
+            />
+          </>
+        ) : (
+          <div className="col-span-2 flex items-center">
+            <p className="text-xs text-ink-3 leading-relaxed">{t("impact.reason.no_data")}</p>
+          </div>
+        )}
       </div>
     </motion.div>
   );

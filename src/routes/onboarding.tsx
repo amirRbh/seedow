@@ -30,6 +30,7 @@ import { lovable } from "@/integrations/lovable";
 import { joinWaitlist } from "@/lib/beta/beta.functions";
 import { useBetaCapacity } from "@/hooks/useBetaCapacity";
 import { generatePortfolio, simulatePortfolio } from "@/lib/portfolio/server.functions";
+import { MirrorReveal, type MirrorImpact } from "@/components/onboarding/MirrorReveal";
 import { callAuthed } from "@/lib/authedServerFn";
 import { trackPreference, type PreferenceStep } from "@/lib/preferences/tracking";
 import type { CauseTag, ExclusionTag, PortfolioParams } from "@/lib/portfolio/types";
@@ -1067,6 +1068,11 @@ function PreviewScene({ params, onSave }: { params: PortfolioParams; onSave: () 
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [selected, setSelected] = useState<SelectedAsset[]>([]);
   const [weights, setWeights] = useState<Record<string, number>>({});
+  const [mirror, setMirror] = useState<{
+    impact: MirrorImpact;
+    excludedCount: number;
+    universeSize: number;
+  } | null>(null);
   const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
@@ -1079,6 +1085,16 @@ function PreviewScene({ params, onSave }: { params: PortfolioParams; onSave: () 
         if (cancelled) return;
         setSelected(result.selected.map((s) => ({ id: s.id, ticker: s.ticker, name: s.name })));
         setWeights(result.weights as Record<string, number>);
+        setMirror({
+          impact: {
+            waci: result.impact?.waci ?? null,
+            waci_coverage: result.impact?.waci_coverage ?? 0,
+            vs_benchmark_delta_pct: result.impact?.vs_benchmark_delta_pct ?? null,
+            benchmark_waci: result.impact?.benchmark_waci ?? null,
+          },
+          excludedCount: result.excluded_count ?? 0,
+          universeSize: result.universe_size ?? 0,
+        });
         setPhase("reveal");
         void trackPreference({
           step: "allocation_seen",
@@ -1172,6 +1188,14 @@ function PreviewScene({ params, onSave }: { params: PortfolioParams; onSave: () 
                 Aperçu · pas encore sauvegardé
               </p>
             </div>
+            {mirror && (
+              <MirrorReveal
+                impact={mirror.impact}
+                excludedCount={mirror.excludedCount}
+                universeSize={mirror.universeSize}
+                exclusionsCount={params.exclusions.length}
+              />
+            )}
             <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium text-center">
               {t("onboarding.building.reveal_eyebrow")}
             </p>

@@ -395,12 +395,14 @@
     "reference": "Référence",
     "holder": "Titulaire",
     "portfolio_line": "Portefeuille « {{name}} » · {{value}}",
-    "kpi_co2": "CO₂ évité",
-    "kpi_trees": "Arbres équivalents",
-    "kpi_energy": "Énergie verte",
+    "kpi_footprint": "Empreinte carbone financée",
+    "kpi_intensity": "Intensité carbone",
+    "kpi_coverage": "Couverture données",
     "kpi_impact": "Score d'impact",
+    "footprint_not_measured": "Empreinte carbone : non encore mesurée sur ce portefeuille. Nous n'affichons aucun chiffre carbone tant qu'il n'est pas mesuré à partir des données émetteurs.",
+    "footprint_note": "Empreinte financée réelle, calculée à partir de l'intensité carbone des émetteurs (gCO₂e/€/an) sur la part couverte ({{coverage}} %). Ce n'est pas un chiffre réglementaire certifié.",
     "methodology": "Méthodologie",
-    "methodology_body": "Les indicateurs sont calculés à partir de la composition réelle du portefeuille, pondérée par les expositions ESG des sous-jacents (filtre d'exclusions, sélection best-in-class, score composite E/S/G). Le CO₂ évité est une estimation indicative dérivée des scores ESG, non un chiffre réglementaire.",
+    "methodology_body": "Les indicateurs sont calculés à partir de la composition réelle du portefeuille, pondérée par les expositions ESG des sous-jacents (filtre d'exclusions, sélection best-in-class, score composite E/S/G). L'empreinte carbone, quand elle est affichée, provient des divulgations d'intensité carbone des émetteurs (méthode PCAF/GHG Protocol) sur la seule part couverte par une donnée mesurée — jamais d'une estimation dérivée du score ESG.",
     "verification_label": "Vérification & méthodologie complète :",
     "issued_on": "Émis le {{date}}",
     "default_holder": "Investisseur Seedow"
@@ -1097,16 +1099,55 @@
     "learn_more": "Voir la méthodologie"
   },
   "impact_hero": {
-    "eyebrow": "Impact réel",
-    "co2_label": "CO₂ évité (estimation)",
-    "headline": "Chaque euro investi réduit l'empreinte carbone et finance la transition.",
-    "equivalence_trees": "≈ {{count}} arbres absorbant du CO₂ pendant 1 an",
-    "equivalence_trips": "≈ {{count}} trajets Paris–Lyon en voiture évités",
-    "impact_score_label": "Score impact",
+    "eyebrow": "Empreinte carbone",
+    "footprint_label": "Empreinte carbone financée",
+    "footprint_headline": "Ce que ton portefeuille émet vraiment, mesuré ligne par ligne — pas estimé.",
+    "coverage_line": "Mesuré sur {{coverage}}% du portefeuille · données émetteurs",
+    "equivalence_prefix": "Soit à peu près",
+    "per_year": "/an",
+    "not_measured_eyebrow": "Impact",
+    "not_measured_label": "Score d'impact ESG",
+    "not_measured_headline": "L'empreinte carbone chiffrée s'affiche dès que les données émetteurs couvrent ton portefeuille.",
+    "not_measured_note": "On préfère ne rien afficher plutôt qu'un chiffre inventé.",
+    "intensity_label": "Intensité carbone",
+    "coverage_label": "Couverture données",
+    "impact_score_label": "Score d'impact",
     "see_methodology": "Méthodologie",
     "see_detail": "Détail de l'impact",
-    "explainer": "Le CO₂ évité est une estimation indicatrice calculée à partir des scores ESG de chaque ligne. Elle reflète la réduction d'empreinte liée à l'exclusion des émetteurs les plus carbonés et à la sélection best-in-class. Ce n'est pas un chiffre réglementaire — c'est une mesure de direction.",
+    "explainer": "L'empreinte financée est calculée à partir de l'intensité carbone réelle des émetteurs (gCO₂e/€/an), sur la seule part du portefeuille couverte par une donnée mesurée. Ce n'est pas un chiffre réglementaire certifié.",
     "learn_more": "En savoir plus"
+  },
+  "impact": {
+    "equiv": {
+      "car_km": "km en voiture",
+      "flight_paris_ny": "allers-retours Paris–New York en avion",
+      "beef_meal": "repas avec bœuf",
+      "smartphone": "smartphones fabriqués"
+    },
+    "unit": {
+      "km": "km",
+      "round_trip": "A/R",
+      "meal": "repas",
+      "unit": "u."
+    },
+    "reason": {
+      "no_data": "Empreinte carbone pas encore mesurée sur ce portefeuille.",
+      "estimated_only": "Donnée estimée — pas d'équivalence tant qu'elle n'est pas mesurée.",
+      "low_coverage": "Couverture des données trop faible pour une équivalence fiable."
+    }
+  },
+  "mirror": {
+    "eyebrow": "Le miroir",
+    "title": "Voilà ce que tu changes.",
+    "classic_label": "Un ETF Monde classique",
+    "yours_label": "Ton portefeuille",
+    "waci_unit": "tCO₂e/M$ de CA",
+    "cleaner": "−{{pct}}% d'intensité carbone que l'indice de référence.",
+    "dirtier": "+{{pct}}% d'intensité carbone que l'indice de référence.",
+    "intensity_pending": "Intensité carbone en cours de mesure sur cet aperçu.",
+    "exclusions_line": "{{sectors}} secteurs que tu refuses, écartés. {{excluded}} lignes filtrées sur {{universe}} de l'univers investissable.",
+    "benchmark_source": "Réf. : WACI MSCI ACWI = {{value}} tCO₂e/M$ de CA (Scope 1+2), rapport MSCI Climate.",
+    "reveal_hint": "Chiffres réels calculés sur ta sélection. Rien n'est extrapolé."
   },
   "portfolio_selector": {
     "new_portfolio": "Nouveau portefeuille",
