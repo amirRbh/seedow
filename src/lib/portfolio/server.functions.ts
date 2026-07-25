@@ -74,16 +74,11 @@ export const simulatePortfolio = createServerFn({ method: "POST" })
     const msciQuality = qualityWeight > 0 ? qualityNum / qualityWeight : null;
 
     // WACI de référence d'un ETF actions monde « classique » = indice PARENT
-    // MSCI ACWI. Valeur VÉRIFIÉE : 115 tCO₂e/M$ de CA (Scope 1+2), ligne « Wtd
-    // avg carbon intensity (t CO2e/$M sales) » du MSCI ACWI Climate Indexes
-    // Report, as of 2026-06-30 (msci.com). Même métrique/scope que le WACI des
-    // fiches fonds → comparaison homogène. À mettre à jour à chaque nouveau
-    // rapport MSCI daté.
-    const BENCHMARK_ACWI_WACI: number | null = 115;
-    const vsBenchmark =
-      BENCHMARK_ACWI_WACI != null
-        ? relativeIntensityVsBenchmark(portfolioWaci.waci, BENCHMARK_ACWI_WACI)
-        : null;
+    // MSCI ACWI. Constante VÉRIFIÉE, sourcée et datée, centralisée dans
+    // lib/esg/benchmark (source unique, réutilisée côté client).
+    const { ACWI_WACI_TCO2E_PER_MUSD } = await import("@/lib/esg/benchmark");
+    const BENCHMARK_ACWI_WACI = ACWI_WACI_TCO2E_PER_MUSD;
+    const vsBenchmark = relativeIntensityVsBenchmark(portfolioWaci.waci, BENCHMARK_ACWI_WACI);
 
     return {
       weights: result.weights,

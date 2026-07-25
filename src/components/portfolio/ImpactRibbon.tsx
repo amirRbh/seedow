@@ -50,7 +50,11 @@ export function ImpactRibbon({ impact, esgScore10 }: ImpactRibbonProps) {
       <div className="gold-rule mb-5" aria-hidden />
 
       <p className="text-tag uppercase tracking-[0.22em] font-semibold text-gold">
-        {impact.measured ? t("impact_hero.eyebrow") : t("impact_hero.not_measured_eyebrow")}
+        {impact.measured
+          ? t("impact_hero.eyebrow")
+          : impact.intensity
+            ? t("impact_hero.intensity_eyebrow")
+            : t("impact_hero.not_measured_eyebrow")}
       </p>
 
       {impact.measured ? (
@@ -74,6 +78,49 @@ export function ImpactRibbon({ impact, esgScore10 }: ImpactRibbonProps) {
           <p className="mt-2 text-xs text-ink-3 leading-relaxed max-w-md">
             {t("impact_hero.coverage_line", { coverage: coveragePct })} —{" "}
             {t("impact_hero.explainer")}{" "}
+            <Link
+              to="/methodologie"
+              className="underline underline-offset-2 hover:text-gold transition-colors"
+            >
+              {t("impact_hero.learn_more")}
+            </Link>
+          </p>
+        </>
+      ) : impact.intensity ? (
+        <>
+          <p className="text-tag uppercase tracking-[0.22em] font-semibold text-ink-3 mt-4">
+            {t("impact_hero.intensity_label")}
+          </p>
+          <div className="mt-1 kpi-figure flex items-baseline gap-2 text-6xl leading-none">
+            <AnimatedFigure
+              value={impact.intensity.waci}
+              format={(v) => v.toLocaleString(numLocale, { maximumFractionDigits: 0 })}
+            />
+            <span className="text-lg font-medium tracking-normal text-ink-3 font-sans">
+              {t("impact_hero.intensity_unit")}
+            </span>
+          </div>
+          {impact.intensity.vsBenchmarkDeltaPct != null && (
+            <div
+              className={`mt-2 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${
+                impact.intensity.cleaner
+                  ? "bg-highlight-5 text-highlight-1"
+                  : "bg-alert-tint text-rust"
+              }`}
+            >
+              {t(
+                impact.intensity.cleaner
+                  ? "impact_hero.vs_benchmark_cleaner"
+                  : "impact_hero.vs_benchmark_dirtier",
+                { pct: Math.round(Math.abs(impact.intensity.vsBenchmarkDeltaPct) * 100) },
+              )}
+            </div>
+          )}
+          <p className="mt-2 text-xs text-ink-3 leading-relaxed max-w-md">
+            {t("impact_hero.intensity_coverage_line", {
+              coverage: Math.round(impact.intensity.coverage * 100),
+            })}{" "}
+            — {t("impact_hero.intensity_explainer")}{" "}
             <Link
               to="/methodologie"
               className="underline underline-offset-2 hover:text-gold transition-colors"
@@ -125,6 +172,21 @@ export function ImpactRibbon({ impact, esgScore10 }: ImpactRibbonProps) {
             />
             <KPIFigure
               value={coveragePct.toString()}
+              unit="%"
+              label={t("impact_hero.coverage_label")}
+              size="sm"
+            />
+          </>
+        ) : impact.intensity ? (
+          <>
+            <KPIFigure
+              value={impact.intensity.waci.toLocaleString(numLocale, { maximumFractionDigits: 0 })}
+              unit={t("impact_hero.intensity_unit")}
+              label={t("impact_hero.intensity_label")}
+              size="sm"
+            />
+            <KPIFigure
+              value={Math.round(impact.intensity.coverage * 100).toString()}
               unit="%"
               label={t("impact_hero.coverage_label")}
               size="sm"

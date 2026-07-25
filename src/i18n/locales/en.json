@@ -405,7 +405,9 @@
     "methodology_body": "Indicators are computed from the actual portfolio composition, weighted by the ESG exposures of underlyings (exclusion filter, best-in-class selection, composite E/S/G score). The carbon footprint, when shown, comes from issuers' carbon-intensity disclosures (PCAF/GHG Protocol method) over the measured-data share only — never from an estimate derived from the ESG score.",
     "verification_label": "Verification & full methodology:",
     "issued_on": "Issued on {{date}}",
-    "default_holder": "Seedow Investor"
+    "default_holder": "Seedow Investor",
+    "kpi_intensity_waci": "Carbon intensity",
+    "intensity_note": "Carbon intensity (WACI) from issuer disclosures, compared to a standard World ETF (MSCI ACWI). Not a certified regulatory figure."
   },
   "profile": {
     "meta_title": "My investor profile — Seedow",
@@ -1133,7 +1135,15 @@
     "see_methodology": "Methodology",
     "see_detail": "Impact details",
     "explainer": "The financed footprint is computed from issuers' real carbon intensity (gCO₂e/€/yr), over the share of the portfolio covered by measured data only. Not a certified regulatory figure.",
-    "learn_more": "Learn more"
+    "learn_more": "Learn more",
+    "intensity_eyebrow": "Carbon intensity",
+    "intensity_headline": "Your portfolio's carbon intensity, from real issuer data.",
+    "intensity_unit": "tCO₂e/$M revenue",
+    "intensity_coverage_line": "Measured on {{coverage}}% of the portfolio · MSCI WACI",
+    "vs_benchmark_cleaner": "−{{pct}}% intensity vs a standard World ETF",
+    "vs_benchmark_dirtier": "+{{pct}}% intensity vs a standard World ETF",
+    "benchmark_ref": "World ETF ref.: {{bench}} tCO₂e/$M · {{source}}",
+    "intensity_explainer": "Carbon intensity (WACI) comes from issuer disclosures, compared to a standard World ETF (MSCI ACWI index). Not a certified regulatory figure."
   },
   "impact": {
     "equiv": {

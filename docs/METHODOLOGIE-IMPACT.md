@@ -122,6 +122,15 @@ WACI à celui du **MSCI ACWI** (indice parent, non filtré) :
   montre que des nombres réels calculés sur la sélection : WACI, écart vs indice,
   nombre de secteurs exclus, lignes filtrées de l'univers. Si le WACI n'est pas
   couvert, le miroir affiche « intensité en cours de mesure » au lieu d'inventer.
+- **L'intensité WACI est aussi l'état « mesuré » du dashboard et du certificat.**
+  Comme l'empreinte par € investi n'est pas encore sourçable (réservée à une
+  divulgation future), `ImpactHero` / `ImpactRibbon` / `certificat` affichent, par
+  ordre de préférence : (1) l'empreinte financée par € si elle existe un jour,
+  (2) **sinon l'intensité WACI + l'écart vs ETF Monde** (sourçable dès aujourd'hui
+  via les fiches fonds), (3) sinon le score ESG seul. Le WACI est agrégé dans les
+  métriques du portefeuille (`computeMetrics`) sur la seule part couverte, avec sa
+  couverture affichée. Le benchmark est centralisé dans `lib/esg/benchmark.ts`
+  (source unique, serveur + client).
 
 ---
 

@@ -25,6 +25,10 @@ export interface ActivePortfolioMetrics {
   // générés depuis l'ajout de la méthodo carbone ; null/absente sur les plus anciens.
   carbon_intensity_gco2e_per_eur: number | null;
   carbon_intensity_coverage: number;
+  // WACI émetteurs (données MSCI réelles) — présent sur les portefeuilles générés
+  // depuis l'ajout de l'agrégation WACI ; null/absent sur les plus anciens.
+  waci_tco2e_per_musd_sales: number | null;
+  waci_coverage: number;
   diversification: number;
 }
 

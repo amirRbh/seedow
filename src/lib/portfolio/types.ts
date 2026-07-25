@@ -124,6 +124,11 @@ export interface PortfolioMetrics {
   // null if no asset in the selection has a carbon_intensity_gco2e_per_eur value.
   carbon_intensity_gco2e_per_eur: number | null; // weighted, gCO2e per € per year
   carbon_intensity_coverage: number; // 0..1, share of weight with real data
+  // WACI (tCO2e / M$ de CA) pondéré sur la part couverte — donnée émetteurs réelle,
+  // sert à comparer l'intensité carbone à un indice de référence (« vs ETF Monde »).
+  // null si aucun actif de la sélection n'a de WACI renseigné.
+  waci_tco2e_per_musd_sales: number | null;
+  waci_coverage: number; // 0..1, share of weight with a real WACI
   by_class: Record<AssetClass, number>;
   by_region: Record<string, number>;
   diversification: number; // 1 - HHI

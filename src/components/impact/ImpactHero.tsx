@@ -65,7 +65,11 @@ export function ImpactHero() {
         <header className="flex items-baseline justify-between gap-3">
           <p className="text-tag uppercase tracking-[0.22em] font-semibold text-gold">
             <span className="opacity-70">N° 02 ·</span>{" "}
-            {impact.measured ? t("impact_hero.eyebrow") : t("impact_hero.not_measured_eyebrow")}
+            {impact.measured
+              ? t("impact_hero.eyebrow")
+              : impact.intensity
+                ? t("impact_hero.intensity_eyebrow")
+                : t("impact_hero.not_measured_eyebrow")}
           </p>
           <Link
             to="/methodologie"
@@ -99,6 +103,65 @@ export function ImpactHero() {
             <p className="mt-3 text-xs text-ink-3 leading-relaxed max-w-md">
               {t("impact_hero.coverage_line", { coverage: coveragePct })} —{" "}
               {t("impact_hero.explainer")}{" "}
+              <Link
+                to="/methodologie"
+                className="underline underline-offset-2 hover:text-gold transition-colors"
+              >
+                {t("impact_hero.learn_more")}
+              </Link>
+            </p>
+          </div>
+        ) : impact.intensity ? (
+          <div className="mt-6">
+            <p className="text-tag uppercase tracking-[0.22em] font-semibold text-ink-3 mb-3">
+              {t("impact_hero.intensity_label")}
+            </p>
+            <div className="kpi-figure flex items-baseline gap-3 text-7xl md:text-8xl leading-none">
+              <AnimatedFigure
+                value={impact.intensity.waci}
+                format={(v) => v.toLocaleString(numLocale, { maximumFractionDigits: 0 })}
+              />
+              <span className="text-2xl md:text-3xl font-medium tracking-normal text-ink-3 font-sans">
+                {t("impact_hero.intensity_unit")}
+              </span>
+            </div>
+            <p className="mt-4 font-display text-base md:text-lg text-ink-2 max-w-md leading-snug">
+              {t("impact_hero.intensity_headline")}
+            </p>
+            {impact.intensity.vsBenchmarkDeltaPct != null && (
+              <div
+                className={`mt-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${
+                  impact.intensity.cleaner
+                    ? "bg-highlight-5 text-highlight-1"
+                    : "bg-alert-tint text-rust"
+                }`}
+              >
+                <svg
+                  viewBox="0 0 16 16"
+                  className="w-3 h-3"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                >
+                  {impact.intensity.cleaner ? (
+                    <polyline points="2,12 6,7 10,9 14,3" />
+                  ) : (
+                    <polyline points="2,4 6,9 10,7 14,13" />
+                  )}
+                </svg>
+                {t(
+                  impact.intensity.cleaner
+                    ? "impact_hero.vs_benchmark_cleaner"
+                    : "impact_hero.vs_benchmark_dirtier",
+                  { pct: Math.round(Math.abs(impact.intensity.vsBenchmarkDeltaPct) * 100) },
+                )}
+              </div>
+            )}
+            <p className="mt-3 text-xs text-ink-3 leading-relaxed max-w-md">
+              {t("impact_hero.intensity_coverage_line", {
+                coverage: Math.round(impact.intensity.coverage * 100),
+              })}{" "}
+              — {t("impact_hero.intensity_explainer")}{" "}
               <Link
                 to="/methodologie"
                 className="underline underline-offset-2 hover:text-gold transition-colors"
@@ -155,6 +218,23 @@ export function ImpactHero() {
               />
               <KPIFigure
                 value={coveragePct.toString()}
+                unit="%"
+                label={t("impact_hero.coverage_label")}
+                size="sm"
+              />
+            </>
+          ) : impact.intensity ? (
+            <>
+              <KPIFigure
+                value={impact.intensity.waci.toLocaleString(numLocale, {
+                  maximumFractionDigits: 0,
+                })}
+                unit={t("impact_hero.intensity_unit")}
+                label={t("impact_hero.intensity_label")}
+                size="sm"
+              />
+              <KPIFigure
+                value={Math.round(impact.intensity.coverage * 100).toString()}
                 unit="%"
                 label={t("impact_hero.coverage_label")}
                 size="sm"

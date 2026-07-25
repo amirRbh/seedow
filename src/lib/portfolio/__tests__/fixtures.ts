@@ -15,6 +15,7 @@ export interface AssetOverrides {
   carbon_intensity_gco2e_per_eur?: number | null;
   carbon_intensity_source?: string | null;
   carbon_intensity_updated_at?: string | null;
+  waci_tco2e_per_musd_sales?: number | null;
   sfdr_article?: number | null;
   expected_return?: number;
   volatility?: number;
@@ -42,6 +43,7 @@ export function makeAsset(overrides: AssetOverrides = {}): Asset {
     carbon_intensity_gco2e_per_eur: overrides.carbon_intensity_gco2e_per_eur ?? null,
     carbon_intensity_source: overrides.carbon_intensity_source ?? null,
     carbon_intensity_updated_at: overrides.carbon_intensity_updated_at ?? null,
+    waci_tco2e_per_musd_sales: overrides.waci_tco2e_per_musd_sales ?? null,
     sfdr_article: overrides.sfdr_article ?? null,
     expected_return: overrides.expected_return ?? 0.06,
     volatility: overrides.volatility ?? 0.15,
