@@ -72,7 +72,8 @@ export function ImpactRibbon({ impact, esgScore10 }: ImpactRibbonProps) {
             </p>
           )}
           <p className="mt-2 text-xs text-ink-3 leading-relaxed max-w-md">
-            {t("impact_hero.coverage_line", { coverage: coveragePct })} — {t("impact_hero.explainer")}{" "}
+            {t("impact_hero.coverage_line", { coverage: coveragePct })} —{" "}
+            {t("impact_hero.explainer")}{" "}
             <Link
               to="/methodologie"
               className="underline underline-offset-2 hover:text-gold transition-colors"

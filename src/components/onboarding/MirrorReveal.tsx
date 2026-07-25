@@ -86,8 +86,18 @@ export function MirrorReveal({ impact, excludedCount, universeSize, exclusionsCo
             cleaner ? "bg-highlight-5 text-highlight-1" : "bg-alert-tint text-rust"
           }`}
         >
-          <svg viewBox="0 0 16 16" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5">
-            {cleaner ? <polyline points="2,12 6,7 10,9 14,3" /> : <polyline points="2,4 6,9 10,7 14,13" />}
+          <svg
+            viewBox="0 0 16 16"
+            className="w-3 h-3"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+          >
+            {cleaner ? (
+              <polyline points="2,12 6,7 10,9 14,3" />
+            ) : (
+              <polyline points="2,4 6,9 10,7 14,13" />
+            )}
           </svg>
           {t(cleaner ? "mirror.cleaner" : "mirror.dirtier", { pct: deltaPct })}
         </div>

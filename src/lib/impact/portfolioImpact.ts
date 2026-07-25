@@ -64,8 +64,7 @@ export function buildPortfolioImpact(
     ? Math.max(0, Math.min(1, metrics.carbon_intensity_coverage))
     : 0;
 
-  const hasIntensity =
-    rawIntensity != null && Number.isFinite(rawIntensity) && rawIntensity >= 0;
+  const hasIntensity = rawIntensity != null && Number.isFinite(rawIntensity) && rawIntensity >= 0;
   const measured = hasIntensity && coverage > 0;
 
   const carbon: PortfolioCarbon = {

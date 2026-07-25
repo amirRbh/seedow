@@ -97,7 +97,8 @@ export function ImpactHero() {
               </p>
             )}
             <p className="mt-3 text-xs text-ink-3 leading-relaxed max-w-md">
-              {t("impact_hero.coverage_line", { coverage: coveragePct })} — {t("impact_hero.explainer")}{" "}
+              {t("impact_hero.coverage_line", { coverage: coveragePct })} —{" "}
+              {t("impact_hero.explainer")}{" "}
               <Link
                 to="/methodologie"
                 className="underline underline-offset-2 hover:text-gold transition-colors"
@@ -161,9 +162,7 @@ export function ImpactHero() {
             </>
           ) : (
             <div className="col-span-2 flex items-center">
-              <p className="text-xs text-ink-3 leading-relaxed">
-                {t("impact.reason.no_data")}
-              </p>
+              <p className="text-xs text-ink-3 leading-relaxed">{t("impact.reason.no_data")}</p>
             </div>
           )}
         </div>
