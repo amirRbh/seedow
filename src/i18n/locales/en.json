@@ -908,7 +908,11 @@
         "title": "Engine version",
         "desc": "Methodology v1.1 · E/S/G pillars weighted by causes, real carbon intensity, source traceability. Revised quarterly."
       }
-    }
+    },
+    "notif_alerts": "Email alerts (ESG score, greenwashing)",
+    "notif_alerts_hint": "Get an email when an asset you follow degrades (ESG score drop, SFDR change). Off by default — your choice, and you can turn it off anytime.",
+    "notif_alerts_on": "Email alerts enabled.",
+    "notif_alerts_off": "Email alerts disabled."
   },
   "methodologie": {
     "title": "Methodology",

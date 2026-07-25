@@ -890,7 +890,11 @@
         "title": "Version du moteur",
         "desc": "Méthodologie v1.1 · piliers E/S/G pondérés par causes, intensité carbone réelle, traçabilité des sources. Révisée trimestriellement."
       }
-    }
+    },
+    "notif_alerts": "Alertes email (score ESG, greenwashing)",
+    "notif_alerts_hint": "Reçois un email quand un actif que tu suis se dégrade (score ESG en baisse, changement SFDR). Désactivé par défaut — tu choisis, et tu peux couper à tout moment.",
+    "notif_alerts_on": "Alertes email activées.",
+    "notif_alerts_off": "Alertes email désactivées."
   },
   "methodologie": {
     "title": "Méthodologie",
