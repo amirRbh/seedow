@@ -28,6 +28,7 @@ import { useFontScale, type FontScale } from "@/hooks/useFontScale";
 import { useViewMode } from "@/hooks/useViewMode";
 import { resetIntro } from "@/lib/intro";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
+import { useNotificationPreferences } from "@/hooks/useNotificationPreferences";
 
 export const Route = createFileRoute("/reglages")({
   head: () => ({
@@ -689,11 +690,25 @@ function ThemeToggle() {
 
 function NotificationsSection() {
   const { t } = useTranslation();
-  const [emailNotif, setEmailNotif] = useState(true);
+  // Alertes email : préférence RÉELLE et persistée (opt-in). Remplace la maquette.
+  const { emailAlerts, setEmailAlerts, loading: prefsLoading } = useNotificationPreferences();
+  const [savingPref, setSavingPref] = useState(false);
   const [marketAlerts, setMarketAlerts] = useState(false);
   const [reportMonthly, setReportMonthly] = useState(true);
   const exportFn = useServerFn(exportAccountData);
   const [exporting, setExporting] = useState(false);
+
+  const onToggleEmailAlerts = async (v: boolean) => {
+    setSavingPref(true);
+    try {
+      await setEmailAlerts(v);
+      toast.success(v ? t("reglages.notif_alerts_on") : t("reglages.notif_alerts_off"));
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : t("common.error"));
+    } finally {
+      setSavingPref(false);
+    }
+  };
 
   const onExport = async () => {
     setExporting(true);
@@ -719,14 +734,17 @@ function NotificationsSection() {
   return (
     <div className="space-y-6">
       <Block title={t("reglages.block_email_notifs")}>
-        <p className="text-label text-ink-3 mb-1">{t("reglages.notif_soon_note")}</p>
+        {/* Alerte email : réelle et persistée (opt-in). */}
         <ToggleRow
-          label={t("reglages.notif_recap")}
-          checked={emailNotif}
-          onChange={setEmailNotif}
-          disabled
-          disabledHint={t("reglages.notif_soon_badge")}
+          label={t("reglages.notif_alerts")}
+          checked={emailAlerts}
+          onChange={onToggleEmailAlerts}
+          disabled={prefsLoading || savingPref}
         />
+        <p className="text-tag text-ink-3 mt-1 mb-3 leading-snug">
+          {t("reglages.notif_alerts_hint")}
+        </p>
+        {/* Canaux pas encore construits — honnêtement marqués « à venir ». */}
         <ToggleRow
           label={t("reglages.notif_market")}
           checked={marketAlerts}

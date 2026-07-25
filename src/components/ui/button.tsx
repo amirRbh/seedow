@@ -19,7 +19,8 @@ const buttonVariants = cva(
         /** Pill mint filled — CTA secondaire (ex-.btn-accent). */
         accent: "bg-mint text-paper shadow-none hover:opacity-90",
         /** Pill outline encre, s'inverse en plein au survol (ex-.btn-outline-ink). */
-        "outline-ink": "border border-ink bg-transparent text-ink shadow-none hover:bg-ink hover:text-paper",
+        "outline-ink":
+          "border border-ink bg-transparent text-ink shadow-none hover:bg-ink hover:text-paper",
       },
       size: {
         default: "h-9 px-4 py-2",

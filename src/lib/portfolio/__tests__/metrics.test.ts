@@ -23,6 +23,26 @@ describe("computeMetrics", () => {
     expect(Number.isNaN(m.sharpe)).toBe(false);
   });
 
+  it("agrège le WACI sur la seule part couverte (données émetteurs réelles)", () => {
+    const a = makeAsset({ id: "a", waci_tco2e_per_musd_sales: 100 });
+    const b = makeAsset({ id: "b" }); // pas de WACI
+    const cov = [
+      [0.01, 0],
+      [0, 0.01],
+    ];
+    const m = computeMetrics([a, b], { a: 0.6, b: 0.4 }, cov, [0.05, 0.05]);
+    // Moyenne pondérée sur la part couverte (a seul) : 100.
+    expect(m.waci_tco2e_per_musd_sales).toBeCloseTo(100, 6);
+    expect(m.waci_coverage).toBeCloseTo(0.6, 6);
+  });
+
+  it("WACI null quand aucun actif ne le renseigne", () => {
+    const a = makeAsset({ id: "a" });
+    const m = computeMetrics([a], { a: 1 }, [[0.01]], [0.05]);
+    expect(m.waci_tco2e_per_musd_sales).toBeNull();
+    expect(m.waci_coverage).toBe(0);
+  });
+
   it("computes wᵀΣw exactly for a hand-worked 2-asset case", () => {
     const a = makeAsset({ id: "a", volatility: 0.1 });
     const b = makeAsset({ id: "b", volatility: 0.2 });

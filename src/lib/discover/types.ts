@@ -29,6 +29,7 @@ export interface DiscoverAsset {
   ter_pct: number; // %
   risk_level: 1 | 2 | 3 | 4 | 5 | 6 | 7; // SRRI approximé depuis la volatilité annualisée
   co2_factor_per_1k_eur: number | null; // kg CO2e / 1000€ investis/an, null si non mesuré
+  waci_tco2e_per_musd_sales: number | null; // WACI MSCI (intensité par revenu), null si non renseigné
   sfdr_article: number | null;
   exclusions: ExclusionTag[];
   tags: string[];

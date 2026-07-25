@@ -8,17 +8,17 @@
 
 ## Priorisation impact J7 (résumé exécutif)
 
-| Priorité | Item | Effort | Pourquoi J7 |
-|---|---|---|---|
-| P0 | 🆕 Quick win pré-auth (recherche ESG + badge greenwashing sur la landing) | moyen | Convertit la waitlist en comptes activés — sans activation, pas de J7 |
-| P0 | 🆕 Watchlist + carte dashboard | moyen | Crée la raison de revenir (suivre → alerte → retour) |
-| P0 | 🆕 Instrumentation `app_events` + vues rétention J1/J7 | rapide | On ne peut pas améliorer ce qu'on ne mesure pas |
-| P1 | 🆕 Badges transparence + risque greenwashing + « D'où vient ce chiffre ? » | moyen | Différenciateur confiance = raison de rester |
-| P1 | 🆕 Magic link | rapide | -1 friction à l'entrée et au retour |
-| P1 | 🔜 Alertes greenwashing temps réel sur la watchlist | moyen | Transforme la watchlist en moteur de notifications |
-| P2 | 🔜 Ethi proactif + mémoire + réponses structurées | structurant | Rétention long terme, pas critique J7 |
-| P2 | 🔜 Dashboard adaptatif (scoring d'engagement) | structurant | Utile quand il y aura assez de modules concurrents |
-| P2 | 🔜 Comparateur côte à côte, parrainage, éditorial in-app | moyen | Croissance/engagement, après le socle |
+| Priorité | Item                                                                       | Effort      | Pourquoi J7                                                           |
+| -------- | -------------------------------------------------------------------------- | ----------- | --------------------------------------------------------------------- |
+| P0       | 🆕 Quick win pré-auth (recherche ESG + badge greenwashing sur la landing)  | moyen       | Convertit la waitlist en comptes activés — sans activation, pas de J7 |
+| P0       | 🆕 Watchlist + carte dashboard                                             | moyen       | Crée la raison de revenir (suivre → alerte → retour)                  |
+| P0       | 🆕 Instrumentation `app_events` + vues rétention J1/J7                     | rapide      | On ne peut pas améliorer ce qu'on ne mesure pas                       |
+| P1       | 🆕 Badges transparence + risque greenwashing + « D'où vient ce chiffre ? » | moyen       | Différenciateur confiance = raison de rester                          |
+| P1       | 🆕 Magic link                                                              | rapide      | -1 friction à l'entrée et au retour                                   |
+| P1       | 🔜 Alertes greenwashing temps réel sur la watchlist                        | moyen       | Transforme la watchlist en moteur de notifications                    |
+| P2       | 🔜 Ethi proactif + mémoire + réponses structurées                          | structurant | Rétention long terme, pas critique J7                                 |
+| P2       | 🔜 Dashboard adaptatif (scoring d'engagement)                              | structurant | Utile quand il y aura assez de modules concurrents                    |
+| P2       | 🔜 Comparateur côte à côte, parrainage, éditorial in-app                   | moyen       | Croissance/engagement, après le socle                                 |
 
 ---
 

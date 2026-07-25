@@ -405,7 +405,9 @@
     "methodology_body": "Les indicateurs sont calculés à partir de la composition réelle du portefeuille, pondérée par les expositions ESG des sous-jacents (filtre d'exclusions, sélection best-in-class, score composite E/S/G). L'empreinte carbone, quand elle est affichée, provient des divulgations d'intensité carbone des émetteurs (méthode PCAF/GHG Protocol) sur la seule part couverte par une donnée mesurée — jamais d'une estimation dérivée du score ESG.",
     "verification_label": "Vérification & méthodologie complète :",
     "issued_on": "Émis le {{date}}",
-    "default_holder": "Investisseur Seedow"
+    "default_holder": "Investisseur Seedow",
+    "kpi_intensity_waci": "Intensité carbone",
+    "intensity_note": "Intensité carbone (WACI) issue des divulgations émetteurs, comparée à un ETF Monde classique (MSCI ACWI). Ce n'est pas un chiffre réglementaire certifié."
   },
   "profile": {
     "meta_title": "Mon profil d'investisseur — Seedow",
@@ -888,7 +890,11 @@
         "title": "Version du moteur",
         "desc": "Méthodologie v1.1 · piliers E/S/G pondérés par causes, intensité carbone réelle, traçabilité des sources. Révisée trimestriellement."
       }
-    }
+    },
+    "notif_alerts": "Alertes email (score ESG, greenwashing)",
+    "notif_alerts_hint": "Reçois un email quand un actif que tu suis se dégrade (score ESG en baisse, changement SFDR). Désactivé par défaut — tu choisis, et tu peux couper à tout moment.",
+    "notif_alerts_on": "Alertes email activées.",
+    "notif_alerts_off": "Alertes email désactivées."
   },
   "methodologie": {
     "title": "Méthodologie",
@@ -1065,7 +1071,8 @@
       "volatility_desc": "Les actions individuelles peuvent connaître de forts mouvements à court terme.",
       "thematic_risk_title": "Risque thématique",
       "thematic_risk_desc": "Secteur concentré et sensible à la réglementation et aux cycles d'innovation."
-    }
+    },
+    "carbon_intensity": "Intensité carbone (WACI)"
   },
   "theme_filter": {
     "all": "Tout"
@@ -1115,7 +1122,15 @@
     "see_methodology": "Méthodologie",
     "see_detail": "Détail de l'impact",
     "explainer": "L'empreinte financée est calculée à partir de l'intensité carbone réelle des émetteurs (gCO₂e/€/an), sur la seule part du portefeuille couverte par une donnée mesurée. Ce n'est pas un chiffre réglementaire certifié.",
-    "learn_more": "En savoir plus"
+    "learn_more": "En savoir plus",
+    "intensity_eyebrow": "Intensité carbone",
+    "intensity_headline": "L'intensité carbone de ton portefeuille, sur données émetteurs réelles.",
+    "intensity_unit": "tCO₂e/M$ de CA",
+    "intensity_coverage_line": "Mesuré sur {{coverage}}% du portefeuille · WACI MSCI",
+    "vs_benchmark_cleaner": "−{{pct}}% d'intensité qu'un ETF Monde classique",
+    "vs_benchmark_dirtier": "+{{pct}}% d'intensité qu'un ETF Monde classique",
+    "benchmark_ref": "Réf. ETF Monde : {{bench}} tCO₂e/M$ · {{source}}",
+    "intensity_explainer": "L'intensité carbone (WACI) vient des divulgations émetteurs. On la compare à un ETF Monde classique (indice MSCI ACWI). Ce n'est pas un chiffre réglementaire certifié."
   },
   "impact": {
     "equiv": {

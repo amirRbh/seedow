@@ -106,6 +106,8 @@ export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
         co2_avoided_tons: 0,
         carbon_intensity_gco2e_per_eur: null,
         carbon_intensity_coverage: 0,
+        waci_tco2e_per_musd_sales: null,
+        waci_coverage: 0,
         by_class: {} as never,
         by_region: {},
         diversification: 0,

@@ -111,7 +111,8 @@ function RootShell({ children }: { children: React.ReactNode }) {
     <html lang="fr" suppressHydrationWarning>
       <head>
         <HeadContent />
-        {/* eslint-disable-next-line react/no-danger -- lit localStorage avant hydratation, pas d'input utilisateur */}
+        {/* Script d'init thème/police exécuté avant hydratation — contenu 100% statique
+            (constantes), aucun input utilisateur, donc pas de risque XSS. */}
         <script
           dangerouslySetInnerHTML={{ __html: `${THEME_INIT_SCRIPT}\n${FONT_SCALE_INIT_SCRIPT}` }}
         />

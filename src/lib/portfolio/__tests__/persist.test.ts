@@ -73,11 +73,16 @@ describe("persistPortfolio", () => {
     } as unknown as typeof supabaseAdmin;
 
     await expect(
-      persistPortfolio(mockClient, "user-1", { ...defaultParams(), mode: "create" as const }, result),
+      persistPortfolio(
+        mockClient,
+        "user-1",
+        { ...defaultParams(), mode: "create" as const },
+        result,
+      ),
     ).rejects.toThrow("Impossible d'enregistrer le portefeuille");
   });
 
-  it("skips the deactivate step entirely in \"create\" mode", async () => {
+  it('skips the deactivate step entirely in "create" mode', async () => {
     let deactivateCalled = false;
     const insertedRow = { id: "new-portfolio-id" };
 

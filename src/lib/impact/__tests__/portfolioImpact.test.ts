@@ -62,4 +62,48 @@ describe("buildPortfolioImpact", () => {
     expect(view.financedEmissionsKgPerYear).toBeNull();
     expect(view.presentation.show).toBe(false);
   });
+
+  it("expose l'intensité WACI + comparaison au benchmark quand un WACI réel existe", () => {
+    // WACI 57,5 < benchmark ACWI 115 → portefeuille moins intensif (−50%).
+    const view = buildPortfolioImpact(
+      {
+        carbon_intensity_gco2e_per_eur: null,
+        carbon_intensity_coverage: 0,
+        waci_tco2e_per_musd_sales: 57.5,
+        waci_coverage: 1,
+        esg_score: 80,
+      },
+      1000,
+    );
+    expect(view.intensity).not.toBeNull();
+    expect(view.intensity?.waci).toBe(57.5);
+    expect(view.intensity?.benchmarkWaci).toBe(115);
+    expect(view.intensity?.cleaner).toBe(true);
+    expect(view.intensity?.vsBenchmarkDeltaPct).toBeCloseTo(0.5, 3);
+    // L'empreinte par € reste absente (non sourçable) : mesuré=false.
+    expect(view.measured).toBe(false);
+  });
+
+  it("signale honnêtement un portefeuille PLUS intensif que la référence", () => {
+    const view = buildPortfolioImpact(
+      {
+        carbon_intensity_gco2e_per_eur: null,
+        carbon_intensity_coverage: 0,
+        waci_tco2e_per_musd_sales: 172.5, // > 115
+        waci_coverage: 1,
+        esg_score: 60,
+      },
+      1000,
+    );
+    expect(view.intensity?.cleaner).toBe(false);
+    expect(view.intensity?.vsBenchmarkDeltaPct).toBeLessThan(0);
+  });
+
+  it("pas d'intensité WACI sans donnée réelle", () => {
+    const view = buildPortfolioImpact(
+      { carbon_intensity_gco2e_per_eur: null, carbon_intensity_coverage: 0, esg_score: 70 },
+      1000,
+    );
+    expect(view.intensity).toBeNull();
+  });
 });

@@ -15,17 +15,14 @@ import {
 } from "@/components/discover/TransparencyBadges";
 import { useWatchlist } from "@/hooks/useWatchlist";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
+import { relativeIntensityVsBenchmark } from "@/lib/esg/carbon";
+import { ACWI_WACI_TCO2E_PER_MUSD, ACWI_WACI_SOURCE, ACWI_WACI_ASOF } from "@/lib/esg/benchmark";
 import type { DiscoverAsset } from "@/lib/discover/types";
 
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   asset: DiscoverAsset | null;
-}
-
-function co2AvoidedFor(monthly: number, co2FactorPer1k: number) {
-  const annualK = (monthly * 12) / 1000;
-  return co2FactorPer1k * annualK;
 }
 
 export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
@@ -61,10 +58,13 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
   // Risques propres au type d'actif
   const risksList = buildRisks(asset, t);
 
-  const co2 =
-    asset.co2_factor_per_1k_eur != null
-      ? co2AvoidedFor(monthly, asset.co2_factor_per_1k_eur)
-      : null;
+  // Intensité carbone RÉELLE (WACI MSCI), monthly-indépendante. Comparée à un ETF
+  // Monde classique (benchmark sourcé). Affichée seulement si mesurée — jamais
+  // d'estimation dérivée du score ESG (cf. méthodo impact).
+  const waci = asset.waci_tco2e_per_musd_sales;
+  const intensityCmp =
+    waci != null ? relativeIntensityVsBenchmark(waci, ACWI_WACI_TCO2E_PER_MUSD) : null;
+  const numLocale = lang === "en" ? "en-US" : "fr-FR";
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -163,15 +163,42 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
               </div>
             </div>
 
-            {/* Résultat dynamique */}
-            {co2 != null ? (
-              <div className="bg-paper-2 rounded-xl p-3 border border-paper-3 text-center">
-                <p className="font-value text-xl leading-none text-highlight-1">
-                  {co2.toFixed(1)}
-                  <span className="text-tag text-ink-3 ml-0.5 font-sans">kg</span>
-                </p>
+            {/* Intensité carbone RÉELLE (WACI MSCI) — mesurée, comparée à l'ETF Monde.
+                Jamais d'estimation dérivée du score ESG. */}
+            {waci != null ? (
+              <div className="bg-paper-2 rounded-xl p-3 border border-paper-3">
+                <div className="flex items-baseline justify-between gap-2">
+                  <p className="font-value text-xl leading-none text-ink">
+                    {waci.toLocaleString(numLocale, { maximumFractionDigits: 0 })}
+                    <span className="text-tag text-ink-3 ml-1 font-sans">
+                      {t("impact_hero.intensity_unit")}
+                    </span>
+                  </p>
+                  {intensityCmp && (
+                    <span
+                      className={`text-tag font-semibold px-2 py-0.5 rounded-full ${
+                        intensityCmp.cleaner
+                          ? "bg-highlight-5 text-highlight-1"
+                          : "bg-alert-tint text-rust"
+                      }`}
+                    >
+                      {t(
+                        intensityCmp.cleaner
+                          ? "impact_hero.vs_benchmark_cleaner"
+                          : "impact_hero.vs_benchmark_dirtier",
+                        { pct: Math.round(Math.abs(intensityCmp.deltaPct) * 100) },
+                      )}
+                    </span>
+                  )}
+                </div>
                 <p className="text-tag text-ink-3 mt-1.5 font-medium uppercase tracking-wider">
-                  {t("asset_detail.co2_avoided")}
+                  {t("asset_detail.carbon_intensity")}
+                </p>
+                <p className="text-tag text-ink-3 mt-1 leading-snug">
+                  {t("impact_hero.benchmark_ref", {
+                    bench: ACWI_WACI_TCO2E_PER_MUSD,
+                    source: `${ACWI_WACI_SOURCE} · ${ACWI_WACI_ASOF}`,
+                  })}
                 </p>
               </div>
             ) : (

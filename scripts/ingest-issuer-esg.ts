@@ -30,14 +30,30 @@ const PROXY_CA = "/root/.ccr/ca-bundle.crt";
 const SOURCE = "MSCI ESG Fund Ratings (iShares fact sheet)";
 const BASE = "https://www.ishares.com/us/literature/fact-sheet";
 
-// Fiches produit iShares (US) — slugs CONFIRMÉS (URL résolue en 200). Ajoute
-// d'autres fonds iShares US ici ; le script signale les 404 sans planter.
+// Fiches produit iShares (US) — slugs CONFIRMÉS (URL résolue en 200, vérifiée
+// contre le product-screener officiel iShares + probe HTTP). Ce sont TOUS les
+// ETF iShares US listés dans l'univers Seedow qui exposent une fiche produit
+// exploitable par le parser US. Le script signale les 404 sans planter.
+//
+// Couverts ici : tous les iShares US de l'univers dont la fiche produit expose
+// une section durabilité MSCI exploitable (vérifié en exécution — 10 fonds
+// parsés avec WACI + score ESG réels).
+// Volontairement EXCLUS (vérifié, pas d'oubli) :
+//   - CRBN, SUSA : dans l'univers mais aucune fiche PDF US résolvable (toutes
+//     les variantes de slug renvoient 404 sur ishares.com/us).
+//   - WOOD : fiche résolvable (200) mais SANS section durabilité MSCI exploitable
+//     à ce jour → le parser ne produit rien. À réintégrer si iShares l'ajoute.
+//   - MPCT + les fonds UCITS (ECAR, HEAL, SAEM, SUAS, SUJP) : absents du
+//     product-screener US iShares → cotés en Europe, autre site/format de fiche
+//     non géré par `parseISharesFactSheet` (format US). À traiter par un parser
+//     UCITS dédié le jour où on ingère ces fonds.
 const FUNDS: { ticker: string; slug: string }[] = [
   { ticker: "ESGU", slug: "esgu-ishares-esg-aware-msci-usa-etf" },
   { ticker: "ESGD", slug: "esgd-ishares-esg-aware-msci-eafe-etf" },
   { ticker: "ESGE", slug: "esge-ishares-esg-aware-msci-em-etf" },
   { ticker: "DSI", slug: "dsi-ishares-esg-msci-kld-400-etf" },
   { ticker: "SUSL", slug: "susl-ishares-esg-msci-usa-leaders-etf" },
+  { ticker: "EAGG", slug: "eagg-ishares-esg-aware-u-s-aggregate-bond-etf" },
   { ticker: "ICLN", slug: "icln-ishares-global-clean-energy-etf" },
   { ticker: "SUSC", slug: "susc-ishares-esg-aware-usd-corporate-bond-etf" },
   { ticker: "SUSB", slug: "susb-ishares-esg-aware-1-5-year-usd-corporate-bond-etf" },

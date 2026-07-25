@@ -5,9 +5,7 @@
   "auth": {
     "type": "oauth",
     "issuer": "https://bhwueoedpupohjsxgzth.supabase.co/auth/v1",
-    "accepted_audiences": [
-      "authenticated"
-    ]
+    "accepted_audiences": ["authenticated"]
   },
   "mcp": {
     "server": {
@@ -50,9 +48,7 @@
               "description": "Portfolio UUID (from list_my_portfolios)."
             }
           },
-          "required": [
-            "portfolio_id"
-          ],
+          "required": ["portfolio_id"],
           "additionalProperties": false,
           "$schema": "http://json-schema.org/draft-07/schema#"
         },

@@ -171,6 +171,24 @@ function CertificatPage() {
                 size="lg"
               />
             </>
+          ) : impact?.intensity ? (
+            <>
+              <KPIFigure
+                label={t("certificate.kpi_intensity_waci")}
+                value={impact.intensity.waci.toLocaleString(numLocale, {
+                  maximumFractionDigits: 0,
+                })}
+                unit="tCO₂e/M$"
+                size="lg"
+                accent
+              />
+              <KPIFigure
+                label={t("certificate.kpi_coverage")}
+                value={Math.round(impact.intensity.coverage * 100).toString()}
+                unit="%"
+                size="lg"
+              />
+            </>
           ) : null}
           <KPIFigure
             label={t("certificate.kpi_impact")}
@@ -183,7 +201,9 @@ function CertificatPage() {
         <p className="mt-4 text-caption text-ink-3 leading-relaxed max-w-3xl">
           {impact?.measured
             ? t("certificate.footprint_note", { coverage: coveragePct })
-            : t("certificate.footprint_not_measured")}
+            : impact?.intensity
+              ? t("certificate.intensity_note")
+              : t("certificate.footprint_not_measured")}
         </p>
 
         <section className="mt-12">

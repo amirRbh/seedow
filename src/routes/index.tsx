@@ -326,9 +326,7 @@ function Landing() {
               <h3 className="apple-title mt-2" style={{ fontSize: "clamp(28px, 3.5vw, 40px)" }}>
                 {t("landing.start.courses_title")}
               </h3>
-              <p className="apple-subtitle mt-4 max-w-[380px]">
-                {t("landing.start.courses_desc")}
-              </p>
+              <p className="apple-subtitle mt-4 max-w-[380px]">{t("landing.start.courses_desc")}</p>
               <Link to="/cours" className="apple-link mt-8">
                 {t("landing.start.courses_cta")} <span aria-hidden>›</span>
               </Link>

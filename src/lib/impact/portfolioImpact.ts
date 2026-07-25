@@ -14,8 +14,13 @@
  * carbone (PCAF/GHG Protocol) et le module d'équivalences (ADEME, sourcé/daté).
  */
 
-import { financedEmissionsKgPerYear, type PortfolioCarbon } from "@/lib/esg/carbon";
+import {
+  financedEmissionsKgPerYear,
+  relativeIntensityVsBenchmark,
+  type PortfolioCarbon,
+} from "@/lib/esg/carbon";
 import { presentImpact, type ImpactPresentation } from "@/lib/impact/equivalences";
+import { ACWI_WACI_TCO2E_PER_MUSD } from "@/lib/esg/benchmark";
 
 /** Sous-ensemble des métriques persistées nécessaires au calcul d'impact. */
 export interface PortfolioImpactMetrics {
@@ -23,8 +28,31 @@ export interface PortfolioImpactMetrics {
   carbon_intensity_gco2e_per_eur: number | null;
   /** Part du poids du portefeuille couverte par une intensité réelle (0..1). */
   carbon_intensity_coverage: number;
+  /** WACI pondéré tCO₂e/M$ CA (donnée émetteurs), ou null si non couvert. */
+  waci_tco2e_per_musd_sales?: number | null;
+  /** Part du poids couverte par un WACI réel (0..1). */
+  waci_coverage?: number;
   /** Score d'impact ESG (0..100) — toujours réel, calculé par le moteur. */
   esg_score: number;
+}
+
+/**
+ * Intensité carbone WACI + comparaison à un indice de référence. C'est la donnée
+ * carbone RÉELLEMENT sourçable aujourd'hui (fiches fonds MSCI), à la différence de
+ * l'empreinte par € investi (réservée à une divulgation future). Sert d'état
+ * « mesuré » de repli quand l'empreinte par € n'est pas disponible.
+ */
+export interface PortfolioIntensityView {
+  /** WACI pondéré du portefeuille (tCO₂e/M$ CA), sur la part couverte. */
+  waci: number;
+  /** Part du portefeuille disposant d'un WACI réel (0..1). */
+  coverage: number;
+  /** WACI de référence (ETF Monde), sourcé. */
+  benchmarkWaci: number;
+  /** Écart relatif vs référence, (bench − port)/bench. Positif = moins intensif. */
+  vsBenchmarkDeltaPct: number | null;
+  /** true si le portefeuille est MOINS intensif que la référence. */
+  cleaner: boolean;
 }
 
 export interface PortfolioImpactView {
@@ -45,7 +73,13 @@ export interface PortfolioImpactView {
    * UNIQUEMENT si mesuré ET couverture ≥ seuil ; sinon reasonKey explique pourquoi.
    */
   presentation: ImpactPresentation;
-  /** Score d'impact ESG (0..100) — le repère honnête à afficher quand le carbone n'est pas mesuré. */
+  /**
+   * Intensité carbone WACI + comparaison au benchmark, ou null si aucun WACI réel.
+   * État « mesuré » sourçable dès aujourd'hui, à afficher quand l'empreinte par €
+   * (`measured`) n'est pas disponible.
+   */
+  intensity: PortfolioIntensityView | null;
+  /** Score d'impact ESG (0..100) — le repère honnête à afficher quand rien n'est mesuré. */
   esgScore: number;
 }
 
@@ -80,12 +114,30 @@ export function buildPortfolioImpact(
     coverage,
   });
 
+  // Intensité WACI + comparaison au benchmark, dès qu'un WACI réel existe.
+  const rawWaci = metrics.waci_tco2e_per_musd_sales;
+  const waciCoverage = Number.isFinite(metrics.waci_coverage ?? NaN)
+    ? Math.max(0, Math.min(1, metrics.waci_coverage as number))
+    : 0;
+  let intensity: PortfolioIntensityView | null = null;
+  if (rawWaci != null && Number.isFinite(rawWaci) && rawWaci >= 0 && waciCoverage > 0) {
+    const cmp = relativeIntensityVsBenchmark(rawWaci, ACWI_WACI_TCO2E_PER_MUSD);
+    intensity = {
+      waci: rawWaci,
+      coverage: waciCoverage,
+      benchmarkWaci: ACWI_WACI_TCO2E_PER_MUSD,
+      vsBenchmarkDeltaPct: cmp?.deltaPct ?? null,
+      cleaner: cmp?.cleaner ?? false,
+    };
+  }
+
   return {
     measured,
     intensityGco2ePerEur: measured ? rawIntensity : null,
     coverage,
     financedEmissionsKgPerYear: financed,
     presentation,
+    intensity,
     esgScore: Number.isFinite(metrics.esg_score) ? metrics.esg_score : 0,
   };
 }

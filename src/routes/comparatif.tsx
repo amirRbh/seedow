@@ -40,7 +40,9 @@ function ComparatifPage() {
   if (!portfolio) {
     const userName =
       (user?.user_metadata as { display_name?: string; full_name?: string } | undefined)
-        ?.display_name ?? user?.email?.split("@")[0] ?? "";
+        ?.display_name ??
+      user?.email?.split("@")[0] ??
+      "";
     return (
       <div className="min-h-screen bg-paper">
         <EmptyPortfolioState userName={userName} />

@@ -30,11 +30,11 @@ quand la donnée n'existe pas.
 
 ## 1. Deux grandeurs, jamais confondues
 
-| Grandeur | Définition | Unité | Sert à |
-|---|---|---|---|
-| **Intensité carbone** | Émissions par euro investi et par an | gCO₂e/€/an | Comparer deux portefeuilles de tailles différentes |
-| **Empreinte financée** | Intensité × montant investi (part couverte) | kg CO₂e/an | Rendre l'impact concret pour l'utilisateur |
-| **WACI** | Weighted Average Carbon Intensity, émissions par M$ de chiffre d'affaires | tCO₂e/M$ CA | Comparer à un **indice de référence** (« vs ETF Monde ») |
+| Grandeur               | Définition                                                                | Unité       | Sert à                                                   |
+| ---------------------- | ------------------------------------------------------------------------- | ----------- | -------------------------------------------------------- |
+| **Intensité carbone**  | Émissions par euro investi et par an                                      | gCO₂e/€/an  | Comparer deux portefeuilles de tailles différentes       |
+| **Empreinte financée** | Intensité × montant investi (part couverte)                               | kg CO₂e/an  | Rendre l'impact concret pour l'utilisateur               |
+| **WACI**               | Weighted Average Carbon Intensity, émissions par M$ de chiffre d'affaires | tCO₂e/M$ CA | Comparer à un **indice de référence** (« vs ETF Monde ») |
 
 - **Intensité** et **empreinte financée** suivent la logique **PCAF** (Partnership
   for Carbon Accounting Financials) / **GHG Protocol** : on attribue à
@@ -71,12 +71,12 @@ montant total : on n'extrapole jamais la donnée manquante.
 `src/lib/impact/equivalences.ts` → `presentImpact()` applique une règle unique et
 non négociable pour l'affichage d'équivalences concrètes (« ≈ X km en voiture ») :
 
-| Condition | Affichage |
-|---|---|
-| Pas de donnée carbone (`intensité = null`) | **Aucun chiffre carbone.** État « en cours de mesure » + score ESG réel. |
-| Donnée **estimée** (basis ≠ `measured`) | Pas d'équivalence. Raison explicite. |
-| Donnée mesurée mais **couverture < 50 %** | Empreinte affichable, mais **pas d'équivalence** (`impact.reason.low_coverage`). |
-| Donnée mesurée **et couverture ≥ 50 %** | Empreinte + équivalences concrètes sourcées. |
+| Condition                                  | Affichage                                                                        |
+| ------------------------------------------ | -------------------------------------------------------------------------------- |
+| Pas de donnée carbone (`intensité = null`) | **Aucun chiffre carbone.** État « en cours de mesure » + score ESG réel.         |
+| Donnée **estimée** (basis ≠ `measured`)    | Pas d'équivalence. Raison explicite.                                             |
+| Donnée mesurée mais **couverture < 50 %**  | Empreinte affichable, mais **pas d'équivalence** (`impact.reason.low_coverage`). |
+| Donnée mesurée **et couverture ≥ 50 %**    | Empreinte + équivalences concrètes sourcées.                                     |
 
 Point d'entrée UI unique : `src/lib/impact/portfolioImpact.ts` →
 `buildPortfolioImpact(metrics, montant)`. Tout composant qui affiche un chiffre
@@ -89,12 +89,12 @@ carbone **doit** passer par lui. `ImpactHero` et `certificat` le font.
 Une équivalence n'est qu'une multiplication par un facteur **ADEME Base Carbone®**,
 nommé, daté et attribué à l'écran (`ADEME_FACTORS`) :
 
-| Équivalence | Facteur | Source | Millésime |
-|---|---|---|---|
-| km en voiture | 0,193 kgCO₂e/km | ADEME Base Carbone | 2023 |
-| A/R Paris–New York (avion) | 1 800 kgCO₂e | ADEME / DGAC | 2023 |
-| Repas avec bœuf | 7 kgCO₂e | ADEME Agribalyse | 2023 |
-| Fabrication d'un smartphone | 57 kgCO₂e | ADEME | 2022 |
+| Équivalence                 | Facteur         | Source             | Millésime |
+| --------------------------- | --------------- | ------------------ | --------- |
+| km en voiture               | 0,193 kgCO₂e/km | ADEME Base Carbone | 2023      |
+| A/R Paris–New York (avion)  | 1 800 kgCO₂e    | ADEME / DGAC       | 2023      |
+| Repas avec bœuf             | 7 kgCO₂e        | ADEME Agribalyse   | 2023      |
+| Fabrication d'un smartphone | 57 kgCO₂e       | ADEME              | 2022      |
 
 À réviser à chaque publication d'une nouvelle Base Carbone. **Ne jamais coder un
 facteur « de mémoire »** sans source vérifiable.
@@ -110,8 +110,8 @@ kWh de façon défendable au niveau d'un investisseur individuel.
 Pour situer un portefeuille face à un « ETF Monde classique », on compare son
 WACI à celui du **MSCI ACWI** (indice parent, non filtré) :
 
-- **Référence : 115 tCO₂e/M$ de CA** (Scope 1+2), ligne *« Wtd avg carbon
-  intensity (t CO₂e/$M sales) »* du **MSCI ACWI Climate Indexes Report, as of
+- **Référence : 115 tCO₂e/M$ de CA** (Scope 1+2), ligne _« Wtd avg carbon
+  intensity (t CO₂e/$M sales) »_ du **MSCI ACWI Climate Indexes Report, as of
   2026-06-30** (msci.com). Constante `BENCHMARK_ACWI_WACI` dans
   `src/lib/portfolio/server.functions.ts`, **à mettre à jour à chaque nouveau
   rapport MSCI daté**.
@@ -122,6 +122,15 @@ WACI à celui du **MSCI ACWI** (indice parent, non filtré) :
   montre que des nombres réels calculés sur la sélection : WACI, écart vs indice,
   nombre de secteurs exclus, lignes filtrées de l'univers. Si le WACI n'est pas
   couvert, le miroir affiche « intensité en cours de mesure » au lieu d'inventer.
+- **L'intensité WACI est aussi l'état « mesuré » du dashboard et du certificat.**
+  Comme l'empreinte par € investi n'est pas encore sourçable (réservée à une
+  divulgation future), `ImpactHero` / `ImpactRibbon` / `certificat` affichent, par
+  ordre de préférence : (1) l'empreinte financée par € si elle existe un jour,
+  (2) **sinon l'intensité WACI + l'écart vs ETF Monde** (sourçable dès aujourd'hui
+  via les fiches fonds), (3) sinon le score ESG seul. Le WACI est agrégé dans les
+  métriques du portefeuille (`computeMetrics`) sur la seule part couverte, avec sa
+  couverture affichée. Le benchmark est centralisé dans `lib/esg/benchmark.ts`
+  (source unique, serveur + client).
 
 ---
 
@@ -141,16 +150,16 @@ WACI à celui du **MSCI ACWI** (indice parent, non filtré) :
 
 ## 7. Carte du code
 
-| Rôle | Fichier |
-|---|---|
-| Agrégation carbone PCAF (intensité, empreinte, couverture, qualité) | `src/lib/esg/carbon.ts` |
-| WACI + comparaison indice | `src/lib/esg/carbon.ts` |
-| Équivalences ADEME + règle de visibilité | `src/lib/impact/equivalences.ts` |
-| Vue d'impact honnête pour l'UI (point d'entrée unique) | `src/lib/impact/portfolioImpact.ts` |
-| Dashboard — bloc impact | `src/components/impact/ImpactHero.tsx` |
-| Certificat | `src/routes/certificat.tsx` |
-| Miroir d'onboarding | `src/components/onboarding/MirrorReveal.tsx` |
-| Calcul serveur (WACI, écart, univers) | `src/lib/portfolio/server.functions.ts` |
+| Rôle                                                                | Fichier                                      |
+| ------------------------------------------------------------------- | -------------------------------------------- |
+| Agrégation carbone PCAF (intensité, empreinte, couverture, qualité) | `src/lib/esg/carbon.ts`                      |
+| WACI + comparaison indice                                           | `src/lib/esg/carbon.ts`                      |
+| Équivalences ADEME + règle de visibilité                            | `src/lib/impact/equivalences.ts`             |
+| Vue d'impact honnête pour l'UI (point d'entrée unique)              | `src/lib/impact/portfolioImpact.ts`          |
+| Dashboard — bloc impact                                             | `src/components/impact/ImpactHero.tsx`       |
+| Certificat                                                          | `src/routes/certificat.tsx`                  |
+| Miroir d'onboarding                                                 | `src/components/onboarding/MirrorReveal.tsx` |
+| Calcul serveur (WACI, écart, univers)                               | `src/lib/portfolio/server.functions.ts`      |
 
 Toute évolution de la méthodo se fait **dans `lib/`** (avec tests), jamais en
 recodant une formule dans un composant.
