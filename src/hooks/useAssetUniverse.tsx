@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import type { AssetClass, DiscoverAsset } from "@/lib/discover/types";
+import type { AssetClass, DiscoverAsset, ExclusionTag } from "@/lib/discover/types";
 import {
   assessGreenwashingRisk,
   computeDataCoverage,
@@ -49,12 +49,39 @@ interface AssetUniverseResult {
   missingPriceCount: number;
 }
 
+// Forme de ligne `assets` lue ici. `waci_tco2e_per_musd_sales` existe en DB
+// (migration wave1) mais pas encore dans les types Supabase auto-générés
+// (types.ts, non éditable à la main §1.6) : on lit la table via un cast local
+// commenté et on retype la ligne ici, comme le reste du code accédant aux
+// colonnes récentes. À retirer après régénération des types.
+interface AssetRow {
+  id: string;
+  ticker: string;
+  name: string;
+  asset_class: AssetClass;
+  region: string | null;
+  currency: string | null;
+  issuer: string | null;
+  ter: number;
+  esg_score: number;
+  env_score: number | null;
+  social_score: number | null;
+  governance_score: number | null;
+  carbon_intensity_gco2e_per_eur: number | null;
+  waci_tco2e_per_musd_sales: number | null;
+  sfdr_article: number | null;
+  volatility: number;
+  cause_exposure: Record<string, number> | null;
+  excluded_sectors: ExclusionTag[] | null;
+  description: string | null;
+}
+
 async function fetchAssetUniverse(): Promise<AssetUniverseResult> {
   const [assetsRes, quotesRes] = await Promise.all([
-    supabase
-      .from("assets")
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (supabase.from("assets") as any)
       .select(
-        "id, ticker, name, asset_class, region, currency, issuer, ter, esg_score, env_score, social_score, governance_score, carbon_intensity_gco2e_per_eur, sfdr_article, volatility, cause_exposure, excluded_sectors, description",
+        "id, ticker, name, asset_class, region, currency, issuer, ter, esg_score, env_score, social_score, governance_score, carbon_intensity_gco2e_per_eur, waci_tco2e_per_musd_sales, sfdr_article, volatility, cause_exposure, excluded_sectors, description",
       )
       .eq("is_active", true),
     supabase.from("asset_quotes").select("asset_id, price, fetched_at"),
@@ -64,13 +91,14 @@ async function fetchAssetUniverse(): Promise<AssetUniverseResult> {
     throw new Error((assetsRes.error ?? quotesRes.error)?.message ?? "Erreur inconnue");
   }
 
+  const assetRows = (assetsRes.data ?? []) as AssetRow[];
   const quoteByAsset = new Map((quotesRes.data ?? []).map((q) => [q.asset_id, q]));
 
   // Actifs sans cours live : on retombe sur le dernier close connu dans
   // l'historique (asset_prices) plutôt que d'afficher "indisponible" —
   // le cron horaire peut être en retard ou avoir échoué ponctuellement,
   // ça ne doit pas rendre l'écran Découverte inutilisable.
-  const missingIds = (assetsRes.data ?? []).filter((r) => !quoteByAsset.has(r.id)).map((r) => r.id);
+  const missingIds = assetRows.filter((r) => !quoteByAsset.has(r.id)).map((r) => r.id);
 
   const fallbackByAsset = new Map<string, { close: number; price_date: string }>();
   if (missingIds.length > 0) {
@@ -91,7 +119,7 @@ async function fetchAssetUniverse(): Promise<AssetUniverseResult> {
   }
 
   let stillMissing = 0;
-  const mapped: DiscoverAsset[] = (assetsRes.data ?? []).map((r) => {
+  const mapped: DiscoverAsset[] = assetRows.map((r) => {
     const quote = quoteByAsset.get(r.id);
     const fallback = fallbackByAsset.get(r.id);
     const price = quote?.price != null ? Number(quote.price) : (fallback?.close ?? null);
@@ -134,6 +162,8 @@ async function fetchAssetUniverse(): Promise<AssetUniverseResult> {
       ter_pct: Number(r.ter) * 100,
       risk_level: riskLevelFromVolatility(Number(r.volatility)),
       co2_factor_per_1k_eur: carbon != null ? Number(carbon) : null,
+      waci_tco2e_per_musd_sales:
+        r.waci_tco2e_per_musd_sales != null ? Number(r.waci_tco2e_per_musd_sales) : null,
       sfdr_article: r.sfdr_article,
       exclusions: r.excluded_sectors ?? [],
       tags: r.sfdr_article ? [`SFDR Art. ${r.sfdr_article}`] : [],

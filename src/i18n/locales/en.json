@@ -1085,7 +1085,8 @@
       "volatility_desc": "Individual stocks can experience sharp short-term movements.",
       "thematic_risk_title": "Thematic risk",
       "thematic_risk_desc": "Concentrated sector sensitive to regulation and innovation cycles."
-    }
+    },
+    "carbon_intensity": "Carbon intensity (WACI)"
   },
   "theme_filter": {
     "all": "All"

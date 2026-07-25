@@ -1067,7 +1067,8 @@
       "volatility_desc": "Les actions individuelles peuvent connaître de forts mouvements à court terme.",
       "thematic_risk_title": "Risque thématique",
       "thematic_risk_desc": "Secteur concentré et sensible à la réglementation et aux cycles d'innovation."
-    }
+    },
+    "carbon_intensity": "Intensité carbone (WACI)"
   },
   "theme_filter": {
     "all": "Tout"

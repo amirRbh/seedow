@@ -9,6 +9,7 @@ import { AnimatedFigure } from "@/components/ui/AnimatedFigure";
 import { useLang } from "@/hooks/useLang";
 import { EASE_REVEAL } from "@/lib/motion";
 import { buildPortfolioImpact } from "@/lib/impact/portfolioImpact";
+import { ACWI_WACI_SOURCE, ACWI_WACI_ASOF } from "@/lib/esg/benchmark";
 
 /**
  * ImpactHero — pilier « impact nature » du dashboard.
@@ -168,6 +169,12 @@ export function ImpactHero() {
               >
                 {t("impact_hero.learn_more")}
               </Link>
+            </p>
+            <p className="mt-2 text-tag text-ink-3 leading-snug">
+              {t("impact_hero.benchmark_ref", {
+                bench: impact.intensity.benchmarkWaci,
+                source: `${ACWI_WACI_SOURCE} · ${ACWI_WACI_ASOF}`,
+              })}
             </p>
           </div>
         ) : (
