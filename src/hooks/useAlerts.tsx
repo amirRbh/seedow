@@ -106,7 +106,9 @@ export function deriveCandidates(args: {
   return out;
 }
 
-async function fetchPortfolioMeta(portfolioId: string): Promise<{ exclusions: string[]; causes: string[] }> {
+async function fetchPortfolioMeta(
+  portfolioId: string,
+): Promise<{ exclusions: string[]; causes: string[] }> {
   // Best-effort, comme l'original : une erreur ici ne doit jamais bloquer
   // l'affichage des alertes existantes, donc on ignore `error` et on retombe
   // sur des tableaux vides plutôt que de faire planter la requête.

@@ -345,7 +345,11 @@ function BeforeAfter({
               <td
                 className={cn(
                   "py-1.5 pl-3 text-right tabular-nums text-caption w-20",
-                  m.positive === null ? "text-ink-3" : m.positive ? "text-highlight-2" : "text-rust",
+                  m.positive === null
+                    ? "text-ink-3"
+                    : m.positive
+                      ? "text-highlight-2"
+                      : "text-rust",
                 )}
               >
                 {m.deltaLabel}

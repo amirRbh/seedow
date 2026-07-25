@@ -14,7 +14,12 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
-import { buildPortfolio, type CauseTag, type ExclusionTag, type PortfolioParams } from "@/lib/portfolio";
+import {
+  buildPortfolio,
+  type CauseTag,
+  type ExclusionTag,
+  type PortfolioParams,
+} from "@/lib/portfolio";
 import { loadUniverse } from "./universe.server";
 
 const InputSchema = z.object({ portfolioId: z.string().uuid() });

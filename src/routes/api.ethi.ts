@@ -52,7 +52,10 @@ const ContextSchema = z
       .record(key, z.union([text(120), num, z.null()]))
       .nullable()
       .optional(),
-    diagnostics: z.array(z.record(key, z.union([text(120), num]))).max(20).optional(),
+    diagnostics: z
+      .array(z.record(key, z.union([text(120), num])))
+      .max(20)
+      .optional(),
     holdings: z.array(CtxHoldingSchema).max(100).optional(),
   })
   .optional();

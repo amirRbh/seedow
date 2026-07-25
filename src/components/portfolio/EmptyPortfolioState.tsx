@@ -40,8 +40,12 @@ export function EmptyPortfolioState({ userName }: { userName: string }) {
       <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium">
         {t("empty_portfolio.welcome", { name: userName })}
       </p>
-      <h1 className="font-value text-3xl text-ink mt-2 leading-tight">{t("empty_portfolio.title")}</h1>
-      <p className="text-sm text-ink-2 mt-4 max-w-md leading-relaxed">{t("empty_portfolio.desc")}</p>
+      <h1 className="font-value text-3xl text-ink mt-2 leading-tight">
+        {t("empty_portfolio.title")}
+      </h1>
+      <p className="text-sm text-ink-2 mt-4 max-w-md leading-relaxed">
+        {t("empty_portfolio.desc")}
+      </p>
 
       <div className="mt-10 flex items-center gap-4">
         <Button asChild size="pill">

@@ -43,7 +43,11 @@ async function fetchHistoryFactors(
   days: number,
 ): Promise<HistoryFactor[]> {
   // 1) récupère les weights du portefeuille actif
-  let pfQ = supabase.from("portfolios").select("id, weights").eq("user_id", userId).eq("is_active", true);
+  let pfQ = supabase
+    .from("portfolios")
+    .select("id, weights")
+    .eq("user_id", userId)
+    .eq("is_active", true);
   if (activeId) pfQ = pfQ.eq("id", activeId);
   else pfQ = pfQ.order("generated_at", { ascending: false }).limit(1);
 

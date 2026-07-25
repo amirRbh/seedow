@@ -9,6 +9,7 @@
 **Mission.** Seedow est une application d'investissement éthique et durable. Elle structure un portefeuille selon les convictions de l'utilisateur (climat, biodiversité, droits humains…), avec des données de marché réelles, et un assistant conversationnel — **Ethi** — qui explique chaque choix sans jamais rien vendre.
 
 **Signature de marque** (issue de la DA des carousels, à respecter dans toute communication produit) :
+
 > « Ce n'est pas une fatalité. C'est un choix. Le tien aussi. »
 
 **Non négociables :**
@@ -28,18 +29,22 @@
 Déduits du positionnement produit et des thèmes récurrents des carousels (dette publique, Livret A, premier achat immobilier à 36,5 ans en moyenne, paiement en 4x, Bitcoin, greenwashing, Shein/Temu).
 
 ### Léa, 27 ans — l'investisseuse débutante engagée
+
 Premier salaire stable depuis 2-3 ans. Envie d'investir mais méfiante : elle a vu le mot « Bitcoin » partout sans jamais comprendre comment ça marche (statistique produit : 93 % des Français le connaissent, 17 % savent comment ça fonctionne). Elle veut que son argent soit cohérent avec ses valeurs, sans passer des heures à éplucher des rapports ESG. **Besoin produit** : pédagogie sans jargon, preuve que ce n'est pas plus compliqué qu'un Livret A.
 
 ### Karim, 34 ans — l'épargnant désabusé
+
 Il a de l'épargne dormante sur un Livret A dont il sait qu'il ne suit pas l'inflation. Méfiant envers les banques traditionnelles après avoir lu des articles sur leur financement des énergies fossiles. Pas militant, juste lassé de sentir que son argent travaille contre ses valeurs sans qu'il l'ait choisi. **Besoin produit** : transparence radicale, comparaison claire avec ce qu'il connaît (ETF classique, banque actuelle).
 
 ### Inès, 31 ans — la pressée qui ne veut pas se faire avoir
+
 Elle a été échaudée par un paiement en 4x qu'elle n'avait pas identifié comme un crédit, ou par un abonnement dont le prix a grimpé sans qu'elle le remarque (Netflix +66 % depuis 2014 cité dans les carousels). Elle scrute les petites lignes maintenant. **Besoin produit** : rien de caché, aucune surprise tarifaire, un onboarding rapide (elle décroche si c'est long).
 
 ### Thomas, 40 ans — le sceptique du greenwashing
+
 A déjà vu des banques afficher « nous sommes engagés pour la planète » sans que les faits suivent. Il ne fait plus confiance aux discours, seulement aux chiffres vérifiables. **Besoin produit** : sources primaires visibles, droit de réponse des tiers cités, aucune slide qui affirme sans preuve.
 
-*Ces personas doivent guider les décisions UX (pédagogie, pas de jargon non défini) et éditoriales (jamais d'affirmation non sourcée) — pas seulement le marketing.*
+_Ces personas doivent guider les décisions UX (pédagogie, pas de jargon non défini) et éditoriales (jamais d'affirmation non sourcée) — pas seulement le marketing._
 
 ---
 
@@ -117,18 +122,18 @@ Direction artistique extraite des supports de contenu (`seedow_carousel_duel.htm
 
 ### Palette (design tokens, identiques sur tous les supports — à porter tels quels dans `styles.css`)
 
-| Token | Valeur | Usage |
-|---|---|---|
-| `--paper` | `#FFFFFF` | Fond neutre principal |
-| `--paper-2` | `#F5F5F7` | Fond secondaire / page |
-| `--paper-3` | `#D2D2D7` | Bordures, séparateurs |
-| `--ink` | `#1D1D1F` | Texte principal, fonds sombres |
-| `--ink-2` | `#86868B` | Texte secondaire, métadonnées |
-| `--mint` | `#1D8348` | **Positif** — bonne nouvelle, chiffre favorable, CTA de marque |
-| `--ice` | `#0071E3` | Information neutre / lien |
-| `--volt` | `#6E56CF` | Accent secondaire (usage rare, à ne pas banaliser) |
-| `--alert` | `#E11D48` | **Négatif** — chiffre défavorable, alerte, danger réel (pas de sur-usage : perd son sens si trop fréquent) |
-| `--solar` | `#B7791F` | Nuance d'avertissement doux (usage rare) |
+| Token       | Valeur    | Usage                                                                                                      |
+| ----------- | --------- | ---------------------------------------------------------------------------------------------------------- |
+| `--paper`   | `#FFFFFF` | Fond neutre principal                                                                                      |
+| `--paper-2` | `#F5F5F7` | Fond secondaire / page                                                                                     |
+| `--paper-3` | `#D2D2D7` | Bordures, séparateurs                                                                                      |
+| `--ink`     | `#1D1D1F` | Texte principal, fonds sombres                                                                             |
+| `--ink-2`   | `#86868B` | Texte secondaire, métadonnées                                                                              |
+| `--mint`    | `#1D8348` | **Positif** — bonne nouvelle, chiffre favorable, CTA de marque                                             |
+| `--ice`     | `#0071E3` | Information neutre / lien                                                                                  |
+| `--volt`    | `#6E56CF` | Accent secondaire (usage rare, à ne pas banaliser)                                                         |
+| `--alert`   | `#E11D48` | **Négatif** — chiffre défavorable, alerte, danger réel (pas de sur-usage : perd son sens si trop fréquent) |
+| `--solar`   | `#B7791F` | Nuance d'avertissement doux (usage rare)                                                                   |
 
 **Sémantique stricte à respecter** : mint = positif/marque, alert = négatif réel — ne jamais inverser ces deux couleurs, l'utilisateur les lit comme un code binaire (l'exemple type est l'enchaînement mint/alert dans le format « Le Duel »).
 
@@ -183,6 +188,7 @@ Ethi est l'assistant conversationnel du produit (Lovable AI Gateway, Gemini/GPT-
 > Cette section est un squelette à tenir à jour — elle liste ce qui est confirmé par le repo (README) en `Fait / Beta`. Les colonnes `Next` et `Later` sont à remplir en équipe ; ne pas les considérer comme engagées tant qu'elles n'ont pas été validées.
 
 **Fait / Beta actuelle**
+
 - Découvrir (univers d'actifs filtré par thème ESG, exclusion, classe d'actif)
 - Portefeuille (valorisation temps réel, P&L, allocation)
 - Objectifs financiers liés à un portefeuille
@@ -198,9 +204,9 @@ Ethi est l'assistant conversationnel du produit (Lovable AI Gateway, Gemini/GPT-
 - Ingestion de données de marché horaire (Yahoo Finance) + recalcul du modèle de risque
 - Serveur MCP (exposition d'outils Seedow via le protocole MCP)
 
-**Next** — *(à compléter par l'équipe produit)*
+**Next** — _(à compléter par l'équipe produit)_
 
-**Later** — *(à compléter par l'équipe produit)*
+**Later** — _(à compléter par l'équipe produit)_
 
 ---
 
@@ -222,4 +228,4 @@ Ethi est l'assistant conversationnel du produit (Lovable AI Gateway, Gemini/GPT-
 
 ---
 
-*Dernière mise à jour : synthèse initiale à partir du README du repo `amirRbh/seedow` et des 5 fichiers de DA carousels fournis, puis réconciliation de l'arborescence §3 avec l'état réel de `src/routes` et unification du lockfile Bun (§6). À maintenir à jour à chaque décision structurante — ce fichier n'a de valeur que s'il reste vrai.*
+_Dernière mise à jour : synthèse initiale à partir du README du repo `amirRbh/seedow` et des 5 fichiers de DA carousels fournis, puis réconciliation de l'arborescence §3 avec l'état réel de `src/routes` et unification du lockfile Bun (§6). À maintenir à jour à chaque décision structurante — ce fichier n'a de valeur que s'il reste vrai._

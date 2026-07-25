@@ -175,7 +175,9 @@ function CertificatPage() {
             <>
               <KPIFigure
                 label={t("certificate.kpi_intensity_waci")}
-                value={impact.intensity.waci.toLocaleString(numLocale, { maximumFractionDigits: 0 })}
+                value={impact.intensity.waci.toLocaleString(numLocale, {
+                  maximumFractionDigits: 0,
+                })}
                 unit="tCO₂e/M$"
                 size="lg"
                 accent

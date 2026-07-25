@@ -100,7 +100,10 @@ export function PortfolioSelector({ compact = false }: { compact?: boolean }) {
                     }`}
                   >
                     <span className="flex items-center gap-2 truncate">
-                      <span aria-hidden className="w-1.5 h-1.5 rounded-full bg-paper-3 flex-shrink-0" />
+                      <span
+                        aria-hidden
+                        className="w-1.5 h-1.5 rounded-full bg-paper-3 flex-shrink-0"
+                      />
                       <span className="font-medium truncate">{p.name}</span>
                     </span>
                     {isActive && (

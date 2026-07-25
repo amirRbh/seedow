@@ -58,9 +58,9 @@ describe("deriveCandidates", () => {
     });
 
     const withCauses = deriveCandidates({ portfolio, exclusions: [], causes: ["climat"] });
-    expect(withCauses.some((a) => a.kind === "esg_drift" && a.dedupKey === "esg:portfolio-1:weak")).toBe(
-      true,
-    );
+    expect(
+      withCauses.some((a) => a.kind === "esg_drift" && a.dedupKey === "esg:portfolio-1:weak"),
+    ).toBe(true);
 
     const withoutCauses = deriveCandidates({ portfolio, exclusions: [], causes: [] });
     expect(withoutCauses.some((a) => a.dedupKey === "esg:portfolio-1:weak")).toBe(false);
