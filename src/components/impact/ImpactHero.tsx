@@ -8,50 +8,49 @@ import { KPIFigure } from "@/components/ui/KPIFigure";
 import { AnimatedFigure } from "@/components/ui/AnimatedFigure";
 import { useLang } from "@/hooks/useLang";
 import { EASE_REVEAL } from "@/lib/motion";
+import { buildPortfolioImpact } from "@/lib/impact/portfolioImpact";
 
 /**
- * ImpactHero — second pilier narratif du dashboard, dédié à l'impact nature.
- * Traitement éditorial Institutional White : papier, filet or, KPI signature.
+ * ImpactHero — pilier « impact nature » du dashboard.
+ *
+ * Ne présente un chiffre carbone QUE s'il est réellement mesuré (données
+ * émetteurs, cf. lib/impact/portfolioImpact). Sinon, état honnête : score ESG
+ * réel + mention « en cours de mesure ». Aucune heuristique inventée (plus
+ * d'« arbres équivalents » ni d'« énergie = montant/5 »).
  */
 export function ImpactHero() {
   const { t } = useTranslation();
   const { lang } = useLang();
   const { portfolio } = useActivePortfolio();
   const valuation = usePortfolioValuation();
+  const numLocale = lang === "en" ? "en-US" : "fr-FR";
 
-  const data = useMemo(() => {
-    if (!portfolio) return null;
+  const impact = useMemo(() => {
+    if (!portfolio?.metrics) return null;
     const totalInvested = valuation.totalInvested || portfolio.initial_amount || 0;
     if (totalInvested <= 0) return null;
-    const co2Tons = portfolio.metrics?.co2_avoided_tons
-      ? (portfolio.metrics.co2_avoided_tons * Math.max(totalInvested, 1)) / 10000
-      : 0;
-    const trees = Math.round(co2Tons * 45);
-    const energy = Math.round(totalInvested / 5); // kWh — même heuristique que /portfolio
-    const esg = portfolio.metrics?.esg_score ?? 0;
-    return { co2Tons, trees, energy, esg };
+    return buildPortfolioImpact(portfolio.metrics, totalInvested);
   }, [portfolio, valuation.totalInvested]);
 
-  if (!portfolio || !data) return null;
+  if (!portfolio || !impact) return null;
 
-  const co2Display = data.co2Tons >= 1 ? data.co2Tons : data.co2Tons * 1000;
-  const co2Unit = data.co2Tons >= 1 ? t("impact_ribbon.tonnes") : t("impact_ribbon.kg");
-
-  // Équivalence concrète — déterministe, hydration-safe
-  const equivalence =
-    data.co2Tons >= 1
-      ? t("impact_hero.equivalence_trips", { count: Math.max(1, Math.round(data.co2Tons * 6)) })
-      : t("impact_hero.equivalence_trees", { count: Math.max(1, data.trees) });
-
-  const energyLabel =
-    data.energy >= 1000 ? (data.energy / 1000).toFixed(1) : Math.round(data.energy).toString();
-  const energyUnit = data.energy >= 1000 ? "MWh" : "kWh";
+  const kg = impact.financedEmissionsKgPerYear;
+  const inTonnes = kg != null && kg >= 1000;
+  const footprintValue = kg == null ? 0 : inTonnes ? kg / 1000 : kg;
+  const footprintUnit = inTonnes ? "t" : "kg";
 
   const fmt = (v: number) =>
-    v.toLocaleString(lang === "en" ? "en-US" : "fr-FR", {
-      minimumFractionDigits: data.co2Tons >= 1 ? 2 : 0,
-      maximumFractionDigits: data.co2Tons >= 1 ? 2 : 0,
+    v.toLocaleString(numLocale, {
+      minimumFractionDigits: inTonnes ? 2 : 0,
+      maximumFractionDigits: inTonnes ? 2 : 0,
     });
+
+  // Équivalence concrète — uniquement si la donnée est mesurée ET assez couverte.
+  const carEquiv = impact.presentation.show
+    ? impact.presentation.equivalences.find((e) => e.factorId === "car_km")
+    : undefined;
+
+  const coveragePct = Math.round(impact.coverage * 100);
 
   return (
     <motion.section
@@ -61,12 +60,12 @@ export function ImpactHero() {
       className="px-5 pt-8"
     >
       <article className="relative overflow-hidden rounded-3xl border border-paper-3 bg-paper paper-grain p-6 md:p-8">
-        {/* Filet or en tête */}
         <div className="gold-rule mb-5" aria-hidden />
 
         <header className="flex items-baseline justify-between gap-3">
           <p className="text-tag uppercase tracking-[0.22em] font-semibold text-gold">
-            <span className="opacity-70">N° 02 ·</span> {t("impact_hero.eyebrow")}
+            <span className="opacity-70">N° 02 ·</span>{" "}
+            {impact.measured ? t("impact_hero.eyebrow") : t("impact_hero.not_measured_eyebrow")}
           </p>
           <Link
             to="/methodologie"
@@ -76,55 +75,96 @@ export function ImpactHero() {
           </Link>
         </header>
 
-        {/* Hero CO₂ */}
-        <div className="mt-6">
-          <p className="text-tag uppercase tracking-[0.22em] font-semibold text-ink-3 mb-3">
-            {t("impact_hero.co2_label")}
-          </p>
-          <div className="kpi-figure flex items-baseline gap-3 text-7xl md:text-8xl leading-none">
-            <AnimatedFigure value={co2Display} format={fmt} />
-            <span className="text-2xl md:text-3xl font-medium tracking-normal text-ink-3 font-sans">
-              {co2Unit}
-            </span>
+        {impact.measured ? (
+          <div className="mt-6">
+            <p className="text-tag uppercase tracking-[0.22em] font-semibold text-ink-3 mb-3">
+              {t("impact_hero.footprint_label")}
+            </p>
+            <div className="kpi-figure flex items-baseline gap-3 text-7xl md:text-8xl leading-none">
+              <AnimatedFigure value={footprintValue} format={fmt} />
+              <span className="text-2xl md:text-3xl font-medium tracking-normal text-ink-3 font-sans">
+                {footprintUnit} CO₂e{t("impact_hero.per_year")}
+              </span>
+            </div>
+            <p className="mt-4 font-display text-base md:text-lg text-ink-2 max-w-md leading-snug">
+              {t("impact_hero.footprint_headline")}
+            </p>
+            {carEquiv && (
+              <p className="mt-2 text-xs text-ink-3 italic">
+                {t("impact_hero.equivalence_prefix")}{" "}
+                {Math.round(Math.abs(carEquiv.value)).toLocaleString(numLocale)}{" "}
+                {t("impact.equiv.car_km")} · {carEquiv.source} {carEquiv.asOf}
+              </p>
+            )}
+            <p className="mt-3 text-xs text-ink-3 leading-relaxed max-w-md">
+              {t("impact_hero.coverage_line", { coverage: coveragePct })} —{" "}
+              {t("impact_hero.explainer")}{" "}
+              <Link
+                to="/methodologie"
+                className="underline underline-offset-2 hover:text-gold transition-colors"
+              >
+                {t("impact_hero.learn_more")}
+              </Link>
+            </p>
           </div>
-          <p className="mt-4 font-display text-base md:text-lg text-ink-2 max-w-md leading-snug">
-            {t("impact_hero.headline")}
-          </p>
-          <p className="mt-2 text-xs text-ink-3 italic">{equivalence}</p>
-          <p className="mt-3 text-xs text-ink-3 leading-relaxed max-w-md">
-            {t("impact_hero.explainer")}{" "}
-            <Link
-              to="/methodologie"
-              className="underline underline-offset-2 hover:text-gold transition-colors"
-            >
-              {t("impact_hero.learn_more")}
-            </Link>
-          </p>
-        </div>
+        ) : (
+          <div className="mt-6">
+            <p className="text-tag uppercase tracking-[0.22em] font-semibold text-ink-3 mb-3">
+              {t("impact_hero.not_measured_label")}
+            </p>
+            <div className="kpi-figure flex items-baseline gap-3 text-7xl md:text-8xl leading-none">
+              <AnimatedFigure value={impact.esgScore} format={(v) => v.toFixed(0)} />
+              <span className="text-2xl md:text-3xl font-medium tracking-normal text-ink-3 font-sans">
+                /100
+              </span>
+            </div>
+            <p className="mt-4 font-display text-base md:text-lg text-ink-2 max-w-md leading-snug">
+              {t("impact_hero.not_measured_headline")}
+            </p>
+            <p className="mt-3 text-xs text-ink-3 leading-relaxed max-w-md">
+              {t("impact_hero.not_measured_note")}{" "}
+              <Link
+                to="/methodologie"
+                className="underline underline-offset-2 hover:text-gold transition-colors"
+              >
+                {t("impact_hero.learn_more")}
+              </Link>
+            </p>
+          </div>
+        )}
 
-        {/* Filet or */}
         <div className="gold-rule my-6" aria-hidden />
 
-        {/* Bandeau mini-KPI */}
         <div className="grid grid-cols-3 gap-4">
           <KPIFigure
-            value={data.trees.toLocaleString(lang === "en" ? "en-US" : "fr-FR")}
-            label={t("impact_ribbon.trees_label")}
-            size="sm"
-          />
-          <KPIFigure
-            value={energyLabel}
-            unit={energyUnit}
-            label={t("impact_ribbon.energy_label")}
-            size="sm"
-          />
-          <KPIFigure
-            value={data.esg.toFixed(0)}
+            value={impact.esgScore.toFixed(0)}
             unit="/100"
             label={t("impact_hero.impact_score_label")}
             size="sm"
             accent
           />
+          {impact.measured && impact.intensityGco2ePerEur != null ? (
+            <>
+              <KPIFigure
+                value={impact.intensityGco2ePerEur.toLocaleString(numLocale, {
+                  maximumFractionDigits: 1,
+                })}
+                unit="gCO₂e/€"
+                label={t("impact_hero.intensity_label")}
+                size="sm"
+              />
+              <KPIFigure
+                value={coveragePct.toString()}
+                unit="%"
+                label={t("impact_hero.coverage_label")}
+                size="sm"
+              />
+            </>
+          ) : (
+            <div className="col-span-2 flex items-center">
+              <p className="text-xs text-ink-3 leading-relaxed">{t("impact.reason.no_data")}</p>
+            </div>
+          )}
         </div>
 
         <div className="mt-6 flex items-center justify-end">

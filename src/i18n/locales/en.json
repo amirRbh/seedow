@@ -395,12 +395,14 @@
     "reference": "Reference",
     "holder": "Holder",
     "portfolio_line": "Portfolio \"{{name}}\" · {{value}}",
-    "kpi_co2": "CO₂ avoided",
-    "kpi_trees": "Equivalent trees",
-    "kpi_energy": "Green energy",
+    "kpi_footprint": "Financed carbon footprint",
+    "kpi_intensity": "Carbon intensity",
+    "kpi_coverage": "Data coverage",
     "kpi_impact": "Impact score",
+    "footprint_not_measured": "Carbon footprint: not yet measured for this portfolio. We show no carbon figure until it is measured from issuer data.",
+    "footprint_note": "Real financed footprint, computed from issuers' carbon intensity (gCO₂e/€/yr) over the covered share ({{coverage}}%). Not a certified regulatory figure.",
     "methodology": "Methodology",
-    "methodology_body": "Indicators are computed from the actual portfolio composition, weighted by the ESG exposures of underlyings (exclusion filter, best-in-class selection, composite E/S/G score). CO₂ avoided is an indicative estimate derived from ESG scores, not a regulatory figure.",
+    "methodology_body": "Indicators are computed from the actual portfolio composition, weighted by the ESG exposures of underlyings (exclusion filter, best-in-class selection, composite E/S/G score). The carbon footprint, when shown, comes from issuers' carbon-intensity disclosures (PCAF/GHG Protocol method) over the measured-data share only — never from an estimate derived from the ESG score.",
     "verification_label": "Verification & full methodology:",
     "issued_on": "Issued on {{date}}",
     "default_holder": "Seedow Investor"
@@ -1115,16 +1117,55 @@
     "learn_more": "See methodology"
   },
   "impact_hero": {
-    "eyebrow": "Real impact",
-    "co2_label": "CO₂ avoided (estimate)",
-    "headline": "Every euro invested reduces carbon footprint and funds the transition.",
-    "equivalence_trees": "≈ {{count}} trees absorbing CO₂ for 1 year",
-    "equivalence_trips": "≈ {{count}} Paris–Lyon car trips avoided",
+    "eyebrow": "Carbon footprint",
+    "footprint_label": "Financed carbon footprint",
+    "footprint_headline": "What your portfolio actually emits, measured holding by holding — not estimated.",
+    "coverage_line": "Measured on {{coverage}}% of the portfolio · issuer data",
+    "equivalence_prefix": "Roughly",
+    "per_year": "/yr",
+    "not_measured_eyebrow": "Impact",
+    "not_measured_label": "ESG impact score",
+    "not_measured_headline": "The carbon footprint figure appears as soon as issuer data covers your portfolio.",
+    "not_measured_note": "We'd rather show nothing than an invented number.",
+    "intensity_label": "Carbon intensity",
+    "coverage_label": "Data coverage",
     "impact_score_label": "Impact score",
     "see_methodology": "Methodology",
     "see_detail": "Impact details",
-    "explainer": "CO₂ avoided is an indicative estimate derived from each holding's ESG score. It reflects the footprint reduction from excluding the most carbon-intensive issuers and selecting best-in-class assets. Not a regulatory figure — a directional measure.",
+    "explainer": "The financed footprint is computed from issuers' real carbon intensity (gCO₂e/€/yr), over the share of the portfolio covered by measured data only. Not a certified regulatory figure.",
     "learn_more": "Learn more"
+  },
+  "impact": {
+    "equiv": {
+      "car_km": "km driven by car",
+      "flight_paris_ny": "Paris–New York round trips by plane",
+      "beef_meal": "beef meals",
+      "smartphone": "smartphones manufactured"
+    },
+    "unit": {
+      "km": "km",
+      "round_trip": "r/t",
+      "meal": "meals",
+      "unit": "u."
+    },
+    "reason": {
+      "no_data": "Carbon footprint not yet measured for this portfolio.",
+      "estimated_only": "Estimated data — no equivalence until it is measured.",
+      "low_coverage": "Data coverage too low for a reliable equivalence."
+    }
+  },
+  "mirror": {
+    "eyebrow": "The mirror",
+    "title": "Here's what you change.",
+    "classic_label": "A standard World ETF",
+    "yours_label": "Your portfolio",
+    "waci_unit": "tCO₂e/$M revenue",
+    "cleaner": "−{{pct}}% carbon intensity vs the reference index.",
+    "dirtier": "+{{pct}}% carbon intensity vs the reference index.",
+    "intensity_pending": "Carbon intensity still being measured on this preview.",
+    "exclusions_line": "{{sectors}} sectors you refuse, screened out. {{excluded}} holdings filtered from {{universe}} in the investable universe.",
+    "benchmark_source": "Ref.: MSCI ACWI WACI = {{value}} tCO₂e/$M revenue (Scope 1+2), MSCI Climate report.",
+    "reveal_hint": "Real figures computed on your selection. Nothing is extrapolated."
   },
   "portfolio_selector": {
     "new_portfolio": "New portfolio",

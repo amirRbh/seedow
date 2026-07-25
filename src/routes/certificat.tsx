@@ -8,6 +8,7 @@ import { useLang } from "@/hooks/useLang";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { KPIFigure } from "@/components/ui/KPIFigure";
 import { fireConfetti } from "@/lib/confetti";
+import { buildPortfolioImpact } from "@/lib/impact/portfolioImpact";
 import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 
 export const Route = createFileRoute("/certificat")({
@@ -59,12 +60,15 @@ function CertificatPage() {
   const totalInvested = valuation.totalInvested || portfolio.initial_amount;
   const totalValue = valuation.currentValue || totalInvested;
 
-  const co2 = portfolio.metrics?.co2_avoided_tons
-    ? Number(((portfolio.metrics.co2_avoided_tons * Math.max(totalInvested, 1)) / 10000).toFixed(2))
-    : 0;
-  const trees = Math.round(co2 * 45);
-  const energy = Math.round(totalInvested / 5);
+  // Impact honnête : empreinte carbone RÉELLE (données émetteurs) ou rien.
+  // Plus d'heuristique inventée (arbres = co2×45, énergie = montant/5).
+  const impact = portfolio.metrics
+    ? buildPortfolioImpact(portfolio.metrics, Math.max(totalInvested, 0))
+    : null;
   const esgScore = portfolio.metrics?.esg_score ?? 0;
+  const footprintKg = impact?.financedEmissionsKgPerYear ?? null;
+  const footprintInTonnes = footprintKg != null && footprintKg >= 1000;
+  const coveragePct = impact ? Math.round(impact.coverage * 100) : 0;
 
   const today = new Date();
   const dateLong = formatDate(today, lang, { day: "numeric", month: "long", year: "numeric" });
@@ -139,24 +143,35 @@ function CertificatPage() {
         </section>
 
         <section className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-8">
-          <KPIFigure
-            label={t("certificate.kpi_co2")}
-            value={co2 >= 1 ? co2.toFixed(2) : (co2 * 1000).toFixed(0)}
-            unit={co2 >= 1 ? "t" : "kg"}
-            size="lg"
-            accent
-          />
-          <KPIFigure
-            label={t("certificate.kpi_trees")}
-            value={trees.toLocaleString(numLocale)}
-            size="lg"
-          />
-          <KPIFigure
-            label={t("certificate.kpi_energy")}
-            value={energy >= 1000 ? (energy / 1000).toFixed(1) : energy.toLocaleString(numLocale)}
-            unit={energy >= 1000 ? "MWh" : "kWh"}
-            size="lg"
-          />
+          {impact?.measured && footprintKg != null ? (
+            <>
+              <KPIFigure
+                label={t("certificate.kpi_footprint")}
+                value={
+                  footprintInTonnes
+                    ? (footprintKg / 1000).toFixed(2)
+                    : footprintKg.toLocaleString(numLocale, { maximumFractionDigits: 0 })
+                }
+                unit={`${footprintInTonnes ? "t" : "kg"} CO₂e/an`}
+                size="lg"
+                accent
+              />
+              <KPIFigure
+                label={t("certificate.kpi_intensity")}
+                value={(impact.intensityGco2ePerEur ?? 0).toLocaleString(numLocale, {
+                  maximumFractionDigits: 1,
+                })}
+                unit="gCO₂e/€"
+                size="lg"
+              />
+              <KPIFigure
+                label={t("certificate.kpi_coverage")}
+                value={coveragePct.toString()}
+                unit="%"
+                size="lg"
+              />
+            </>
+          ) : null}
           <KPIFigure
             label={t("certificate.kpi_impact")}
             value={esgScore.toFixed(0)}
@@ -166,9 +181,9 @@ function CertificatPage() {
         </section>
 
         <p className="mt-4 text-caption text-ink-3 leading-relaxed max-w-3xl">
-          Le CO₂ évité est une <span className="text-ink-2 font-medium">estimation indicative</span>{" "}
-          dérivée du score ESG du portefeuille — ce n'est pas un chiffre réglementaire ni une mesure
-          carbone certifiée.
+          {impact?.measured
+            ? t("certificate.footprint_note", { coverage: coveragePct })
+            : t("certificate.footprint_not_measured")}
         </p>
 
         <section className="mt-12">

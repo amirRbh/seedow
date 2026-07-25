@@ -14,6 +14,7 @@ import { ImpactCertificate } from "@/components/portfolio/ImpactCertificate";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { ShareToggle } from "@/components/community/ShareToggle";
 import { ImpactRibbon } from "@/components/portfolio/ImpactRibbon";
+import { buildPortfolioImpact } from "@/lib/impact/portfolioImpact";
 import { ComparatifPanel } from "@/components/portfolio/ComparatifPanel";
 import { AllocationRefiner } from "@/components/portfolio/AllocationRefiner";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -85,11 +86,10 @@ function Portfolio() {
   const gain = valuation.pnl;
   const returnPct = valuation.returnPct;
 
-  const co2 = portfolio.metrics?.co2_avoided_tons
-    ? Number(((portfolio.metrics.co2_avoided_tons * Math.max(totalInvested, 1)) / 10000).toFixed(2))
-    : 0;
-  const trees = Math.round(co2 * 45);
-  const energy = Math.round(totalInvested / 5);
+  // Impact honnête : empreinte carbone réelle (données émetteurs) ou rien.
+  const impact = portfolio.metrics
+    ? buildPortfolioImpact(portfolio.metrics, Math.max(totalInvested, 0))
+    : null;
   const esgScore = portfolio.metrics?.esg_score
     ? Number((portfolio.metrics.esg_score / 10).toFixed(1))
     : 0;
@@ -189,12 +189,7 @@ function Portfolio() {
             </TabsContent>
 
             <TabsContent value="impact" className="pt-5 space-y-5">
-              <ImpactRibbon
-                co2Avoided={co2}
-                treesEquivalent={trees}
-                energyFinanced={energy}
-                esgScore={esgScore}
-              />
+              {impact && <ImpactRibbon impact={impact} esgScore10={esgScore} />}
               <div className="space-y-3">
                 <h2 className="text-sm font-semibold text-ink">{t("portfolio.key_indicators")}</h2>
                 {isSimple && (

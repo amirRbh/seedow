@@ -108,6 +108,8 @@ export const simulatePortfolio = createServerFn({ method: "POST" })
         waci_coverage: portfolioWaci.coverage,
         /** Écart relatif d'intensité vs ETF monde classique (null tant que benchmark non sourcé). */
         vs_benchmark_delta_pct: vsBenchmark?.deltaPct ?? null,
+        /** WACI de référence utilisé pour la comparaison (tCO₂e/M$ CA), sourcé MSCI ACWI. null si non défini. */
+        benchmark_waci: BENCHMARK_ACWI_WACI,
       },
       excluded_count: result.excluded_count,
       universe_size: universe.assets.length,
