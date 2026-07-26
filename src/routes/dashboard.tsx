@@ -25,6 +25,7 @@ import { ImpactHero } from "@/components/impact/ImpactHero";
 import { LearnIntroCard } from "@/components/dashboard/LearnIntroCard";
 import { GuestBanner } from "@/components/dashboard/GuestBanner";
 import { CompleteProfileBanner } from "@/components/dashboard/CompleteProfileBanner";
+import { UnderstandPortfolioCard } from "@/components/dashboard/UnderstandPortfolioCard";
 import { GuestDashboard } from "@/components/dashboard/GuestDashboard";
 import { clearGuestSimulation } from "@/lib/beta/guest";
 
@@ -257,6 +258,13 @@ function Dashboard() {
             />
           )}
         </motion.section>
+
+        {/* 2b. Comprends ton portefeuille — cours contextuels */}
+        {portfolio && holdings.length > 0 && (
+          <section className="px-5 pt-8">
+            <UnderstandPortfolioCard />
+          </section>
+        )}
 
         {/* 3. Prochaine étape — une seule carte contextuelle */}
         <NextStepCard />

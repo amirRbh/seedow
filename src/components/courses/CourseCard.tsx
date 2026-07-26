@@ -10,8 +10,7 @@ interface Props {
   score?: CourseScore | null;
 }
 
-export function CourseCard({ course, isAuthed, completed = false, score }: Props) {
-  const accessible = course.isFree || isAuthed;
+export function CourseCard({ course, completed = false, score }: Props) {
   const trackLabel = course.track === "esg" ? "Finance ESG" : "Finance";
   const levelLabel = course.level === "debutant" ? "Débutant" : "Intermédiaire";
 
@@ -22,7 +21,6 @@ export function CourseCard({ course, isAuthed, completed = false, score }: Props
       className={cn(
         "group relative flex flex-col gap-4 bg-paper p-6 md:p-7 border transition-all hover:border-gold/60 hover:shadow-sm",
         completed ? "border-mint/40" : "border-ink/8",
-        !accessible && "opacity-95",
       )}
     >
       {completed && (
@@ -54,19 +52,10 @@ export function CourseCard({ course, isAuthed, completed = false, score }: Props
             <CheckIcon />
             {score ? `Quiz ${score.score}/${score.total}` : "Terminé"}
           </span>
-        ) : course.isFree ? (
+        ) : (
           <span className="inline-flex items-center gap-1.5 text-tag font-semibold uppercase tracking-[0.18em] text-mint">
             <span className="w-1.5 h-1.5 bg-mint rounded-full" />
-            Gratuit · Lire maintenant
-          </span>
-        ) : accessible ? (
-          <span className="text-tag font-semibold uppercase tracking-[0.18em] text-ink-3">
-            Accessible
-          </span>
-        ) : (
-          <span className="inline-flex items-center gap-1.5 text-tag font-semibold uppercase tracking-[0.18em] text-ink-3">
-            <LockIcon />
-            Compte gratuit requis
+            Lecture libre
           </span>
         )}
         <span className="text-xs text-ink-3 group-hover:text-gold transition-colors">
@@ -91,22 +80,6 @@ function CheckIcon() {
       aria-hidden="true"
     >
       <path d="M20 6 9 17l-5-5" />
-    </svg>
-  );
-}
-
-function LockIcon() {
-  return (
-    <svg
-      width="10"
-      height="10"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <rect x="5" y="11" width="14" height="10" rx="1" />
-      <path d="M8 11V7a4 4 0 0 1 8 0v4" />
     </svg>
   );
 }

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { EsgQuickCheck } from "@/components/landing/EsgQuickCheck";
+import { LandingCourses } from "@/components/landing/LandingCourses";
 
 const SITE_URL = "https://seedow.life";
 
@@ -326,6 +327,9 @@ function Landing() {
           </div>
         </div>
       </section>
+
+      {/* SECTION — apprendre d'abord, sans compte (rétention) */}
+      <LandingCourses />
 
       {/* SECTION — deux façons de commencer */}
       <section style={{ background: "var(--apple-surface)" }} className="px-6 py-24 md:py-32">

@@ -836,6 +836,54 @@ function Intro({ onStart }: { onStart: () => void }) {
   );
 }
 
+// Micro-explicatif « Pourquoi ça compte ? » par étape — repliable, répond au
+// doute en contexte sans rallonger le flux (persona Inès : décroche si c'est
+// long). Le cours s'ouvre dans un nouvel onglet pour ne jamais perdre la
+// progression de l'onboarding.
+const EXPLAINER_COURSE: Record<(typeof STEPS)[number]["id"], string> = {
+  values: "esg-cest-quoi",
+  exclusions: "exclusions-sectorielles",
+  objective: "risque-volatilite-drawdown",
+  amount: "interets-composes",
+};
+
+function StepExplainer({ stepId }: { stepId: (typeof STEPS)[number]["id"] }) {
+  const { t } = useTranslation();
+  const slug = EXPLAINER_COURSE[stepId];
+  return (
+    <details className="group mt-4 rounded-2xl border border-white/15 bg-white/[0.04] px-4 py-3">
+      <summary className="flex items-center justify-between gap-3 cursor-pointer list-none text-caption font-semibold text-paper/70 hover:text-paper transition-colors">
+        <span>{t("onboarding.explainer.summary")}</span>
+        <svg
+          aria-hidden
+          viewBox="0 0 24 24"
+          width={16}
+          height={16}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="flex-shrink-0 transition-transform duration-300 group-open:rotate-180"
+        >
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </summary>
+      <p className="mt-3 text-body-sm leading-relaxed text-paper/70">
+        {t(`onboarding.explainer.${stepId}`)}
+      </p>
+      <a
+        href={`/cours/${slug}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-2 inline-flex items-center gap-1 text-caption font-semibold text-mint hover:opacity-80 transition-opacity"
+      >
+        {t("onboarding.explainer.link")} <span aria-hidden>↗</span>
+      </a>
+    </details>
+  );
+}
+
 function Step({
   step,
   stepIndex,
@@ -970,6 +1018,8 @@ function Step({
         >
           {t(`onboarding.steps.${step.id}.question`)}
         </motion.h2>
+
+        <StepExplainer stepId={step.id} />
 
         <div className="pt-5 pb-32 space-y-2.5">
           {step.options.map((option, i) => {

@@ -15,13 +15,13 @@ export const Route = createFileRoute("/cours/")({
       {
         name: "description",
         content:
-          "Apprends la finance et l'investissement ESG sans jargon. 3 cours gratuits, 9 cours accessibles avec un compte gratuit. Quiz inclus.",
+          "Apprends la finance et l'investissement ESG sans jargon. 12 cours en accès libre — quiz et certificat avec un compte gratuit.",
       },
       { property: "og:title", content: "Cours — Seedow" },
       {
         property: "og:description",
         content:
-          "12 cours pour comprendre la finance et l'ESG sans jargon. 3 gratuits, le reste avec un compte gratuit sans engagement.",
+          "12 cours pour comprendre la finance et l'ESG sans jargon, en accès libre. Quiz et certificat avec un compte gratuit, sans engagement.",
       },
       { property: "og:url", content: "https://seedow.life/cours" },
     ],
@@ -45,7 +45,6 @@ function CoursesIndex() {
     return COURSES.filter((c) => c.track === filter);
   }, [filter]);
 
-  const freeCount = COURSES.filter((c) => c.isFree).length;
   // Prochain cours non terminé (dans l'ordre pédagogique de COURSES) : point de reprise.
   const resumeCourse = COURSES.find((c) => !progress.isCompleted(c.slug));
 
@@ -106,8 +105,8 @@ function CoursesIndex() {
           <div className="gold-rule mb-7" />
           <p className="text-lg md:text-xl text-ink-2 leading-relaxed">
             Douze cours courts pour comprendre comment fonctionne ton argent et ce que veut vraiment
-            dire « investir responsable ». {freeCount} cours sont gratuits, le reste est accessible
-            avec un compte sans engagement.
+            dire « investir responsable ». Tous en accès libre — le quiz et le certificat de
+            progression demandent un compte gratuit, sans engagement.
           </p>
         </section>
 

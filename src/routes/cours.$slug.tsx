@@ -5,7 +5,8 @@ import { trackAppEvent } from "@/lib/analytics/appEvents";
 import { getCourse, getNextCourse } from "@/content/courses";
 import { CourseArticle } from "@/components/courses/CourseArticle";
 import { CourseQuiz } from "@/components/courses/CourseQuiz";
-import { CoursePaywall } from "@/components/courses/CoursePaywall";
+import { CourseQuizGate } from "@/components/courses/CourseQuizGate";
+import { markCourseOpened } from "@/lib/courses/reading";
 import { LanguageToggle } from "@/components/LanguageToggle";
 
 export const Route = createFileRoute("/cours/$slug")({
@@ -52,18 +53,16 @@ export const Route = createFileRoute("/cours/$slug")({
 function CoursePage() {
   const { course } = Route.useLoaderData();
   const { user } = useAuth();
-  const isAuthed = course.isFree || !!user;
-  const accessible = course.isFree || isAuthed;
+  const isAuthed = !!user;
   const next = getNextCourse(course.slug);
 
-  const truncated = !course.isFree && !isAuthed;
-  const visibleSections = truncated ? course.sections.slice(0, 3) : course.sections;
-
-  // Mesure d'engagement pédagogique : un cours réellement ouvert (accès complet,
-  // pas l'aperçu tronqué pré-auth). trackAppEvent no-op silencieusement pré-auth.
+  // Modèle « contenu libre, quiz/certificat gatés » : la lecture est toujours
+  // complète pour tout le monde ; seul le quiz de validation demande un compte.
   useEffect(() => {
-    if (!truncated) void trackAppEvent("course_started", { slug: course.slug });
-  }, [truncated, course.slug]);
+    void trackAppEvent("course_started", { slug: course.slug });
+    // Suivi de lecture anonyme : permet de reprendre là où l'on s'est arrêté.
+    markCourseOpened(course.slug);
+  }, [course.slug]);
 
   return (
     <div className="bg-paper text-ink min-h-screen paper-grain">
@@ -94,15 +93,15 @@ function CoursePage() {
       </header>
 
       <main className="px-6 md:px-12 py-12 md:py-20">
-        <CourseArticle course={course} sections={visibleSections} truncated={truncated} />
+        <CourseArticle course={course} sections={course.sections} truncated={false} />
 
-        {truncated ? (
-          <CoursePaywall redirectTo={`/cours/${course.slug}`} />
-        ) : accessible ? (
+        {isAuthed ? (
           <CourseQuiz slug={course.slug} quiz={course.quiz} />
-        ) : null}
+        ) : (
+          <CourseQuizGate slug={course.slug} />
+        )}
 
-        {accessible && next && (
+        {next && (
           <section className="max-w-2xl mx-auto mt-20 pt-10 border-t border-ink/10">
             <p className="eyebrow mb-4">Cours suivant</p>
             <Link

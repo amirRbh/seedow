@@ -159,7 +159,16 @@
       "cta": "See the full analysis — create my space",
       "disclaimer": "Educational information, not investment advice."
     },
-    "badge_simulation": "Seedow is a simulation tool. No real money is invested here."
+    "badge_simulation": "Seedow is a simulation tool. No real money is invested here.",
+    "learn": {
+      "eyebrow": "Learn first",
+      "title": "Understand before you invest. No account.",
+      "subtitle": "Reading the courses is free. The quiz and the progress certificate come with a free account.",
+      "resume_prefix": "Pick up where you left off",
+      "resume_cta": "Continue",
+      "read_cta": "Read",
+      "see_all": "See all {{count}} courses"
+    }
   },
   "auth": {
     "title_login": "Sign in",
@@ -255,6 +264,10 @@
       "save_hint": "No credit card · 30 seconds",
       "expired_title": "Your simulation has expired or can't be found.",
       "expired_cta": "Start a new simulation"
+    },
+    "understand": {
+      "eyebrow": "Understand your portfolio",
+      "subtitle": "In 2 minutes, understand what’s in your portfolio."
     }
   },
   "portfolio": {
@@ -746,6 +759,14 @@
       "back": "Back",
       "progress": "{{current}}/{{total}}",
       "continue": "Continue"
+    },
+    "explainer": {
+      "summary": "Why does this matter? · 30 s",
+      "link": "Read the course",
+      "values": "Your convictions steer the selection: we overweight aligned companies, without ever turning a conviction into a return promise.",
+      "exclusions": "Excluding a sector means refusing to fund it — a binary, verifiable criterion, not an opinion.",
+      "objective": "Your goal sets the horizon, and thus the acceptable level of risk: the further out, the more volatility you can absorb.",
+      "amount": "The simulated amount commits to nothing. It's there to visualize the allocation and the effect of compound interest over time."
     }
   },
   "reglages": {

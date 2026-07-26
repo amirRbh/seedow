@@ -7,6 +7,7 @@ import { formatCurrency } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { AllocationList, type AllocationHolding } from "@/components/portfolio/AllocationList";
 import { GuestBanner } from "@/components/dashboard/GuestBanner";
+import { UnderstandPortfolioCard } from "@/components/dashboard/UnderstandPortfolioCard";
 import { readGuestSimulation, type GuestSimulation } from "@/lib/beta/guest";
 
 /**
@@ -90,6 +91,11 @@ export function GuestDashboard() {
             maxSlots={Math.max(5, holdings.length)}
             onEmptySlotClick={() => navigate({ to: "/onboarding", search: { guest: true } })}
           />
+        </section>
+
+        {/* Comprends ce que tu viens de simuler — cours contextuels */}
+        <section className="pt-8">
+          <UnderstandPortfolioCard cause={sim.cause} />
         </section>
 
         {/* Conversion — créer un compte pour sauvegarder */}
