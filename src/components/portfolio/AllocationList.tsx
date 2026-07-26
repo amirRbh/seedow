@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useLang } from "@/hooks/useLang";
 import { formatPercent } from "@/lib/format";
 import { EASE_REVEAL } from "@/lib/motion";
+import { ESGAlertBadge } from "@/components/portfolio/ESGAlertBadge";
 
 export interface AllocationHolding {
   id: string;
@@ -14,6 +15,9 @@ export interface AllocationHolding {
   performancePct: number;
   esgScore: number;
   category: string;
+  /** Score ESG précédent connu — sert à signaler une baisse significative.
+   *  Optionnel : absent tant que l'historique ESG n'est pas en base. */
+  previousEsgScore?: number | null;
 }
 
 interface AllocationListProps {
@@ -109,7 +113,14 @@ export function AllocationList({
             <span className="font-value text-label text-ink tracking-tight w-14 flex-shrink-0">
               {holding.ticker}
             </span>
-            <span className="text-caption text-ink-3 truncate flex-1">{holding.name}</span>
+            <span className="text-caption text-ink-3 truncate flex-1 inline-flex items-center gap-1.5 min-w-0">
+              <span className="truncate">{holding.name}</span>
+              <ESGAlertBadge
+                assetName={holding.name}
+                esgScore={holding.esgScore}
+                previousEsgScore={holding.previousEsgScore}
+              />
+            </span>
             <span className="text-label font-medium tabular-nums text-ink w-12 text-right flex-shrink-0">
               {formatPercent(holding.allocationPct / 100, lang, 1)}
             </span>

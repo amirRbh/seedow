@@ -1698,5 +1698,8 @@
     "q8_a": "Vérifie tes spams. Sinon, écris-nous à support@seedow.life.",
     "contact_prefix": "Tu ne trouves pas ta réponse ?",
     "contact_link": "Écris-nous."
+  },
+  "esg_alert": {
+    "tooltip": "Le score ESG de {{asset}} a récemment baissé. Tu veux que je t’explique pourquoi ?"
   }
 }

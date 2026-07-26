@@ -1716,5 +1716,8 @@
     "q8_a": "Check your spam folder. Otherwise, email us at support@seedow.life.",
     "contact_prefix": "Can't find your answer?",
     "contact_link": "Email us."
+  },
+  "esg_alert": {
+    "tooltip": "The ESG score of {{asset}} recently dropped. Want me to explain why?"
   }
 }
