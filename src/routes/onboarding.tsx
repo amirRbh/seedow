@@ -28,7 +28,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { joinWaitlist } from "@/lib/beta/beta.functions";
-import { writeGuestSimulation, type GuestSimulation } from "@/lib/beta/guest";
+import { writeGuestSimulation, readGuestSimulation, type GuestSimulation } from "@/lib/beta/guest";
 import { useBetaCapacity } from "@/hooks/useBetaCapacity";
 import { generatePortfolio, simulatePortfolio } from "@/lib/portfolio/server.functions";
 import { MirrorReveal, type MirrorImpact } from "@/components/onboarding/MirrorReveal";
@@ -37,9 +37,10 @@ import { trackPreference, type PreferenceStep } from "@/lib/preferences/tracking
 import type { CauseTag, ExclusionTag, PortfolioParams } from "@/lib/portfolio/types";
 
 export const Route = createFileRoute("/onboarding")({
-  validateSearch: (s: Record<string, unknown>): { new?: 1; guest?: true } => ({
+  validateSearch: (s: Record<string, unknown>): { new?: 1; guest?: true; resume?: "guest" } => ({
     new: s.new === 1 || s.new === "1" ? 1 : undefined,
     guest: s.guest === true || s.guest === "true" ? true : undefined,
+    resume: s.resume === "guest" ? "guest" : undefined,
   }),
   // Pas de guard auth : on laisse l'utilisateur répondre aux questions sans compte,
   // et on lui montre son allocation simulée (phase "preview", non persistée) avant
@@ -210,16 +211,37 @@ function objectiveToRiskHorizon(obj: string | undefined): { risk: number; horizo
 function Onboarding() {
   const navigate = useNavigate();
   const router = useRouter();
-  const { new: isNew, guest } = Route.useSearch();
+  const { new: isNew, guest, resume } = Route.useSearch();
   const isAdditive = isNew === 1;
   const isGuest = guest === true;
+  // Reprise « invité → compte » : l'invité a déjà répondu au questionnaire, on
+  // le mène directement au mur de création de compte (déterministe depuis l'URL,
+  // donc sans écart d'hydratation). Les réponses sont réinjectées côté client.
+  const isGuestResume = resume === "guest";
   // Ne restaure que le brouillon correspondant au même contexte (premier
   // portefeuille vs. portefeuille additionnel) — jamais l'un à la place de l'autre.
   const draft = loadDraft(isAdditive);
-  const [phase, setPhase] = useState<Phase>(draft?.phase ?? (isAdditive ? "steps" : "intro"));
+  const [phase, setPhase] = useState<Phase>(
+    isGuestResume ? "account" : (draft?.phase ?? (isAdditive ? "steps" : "intro")),
+  );
   const [stepIndex, setStepIndex] = useState(draft?.stepIndex ?? 0);
   const [answers, setAnswers] = useState<Answers>(draft?.answers ?? {});
   const [portfolioName, setPortfolioName] = useState(draft?.portfolioName ?? "");
+
+  // Réinjecte les réponses de la simulation invité (localStorage, client-only).
+  // Si la simulation a expiré, on repart proprement du questionnaire.
+  useEffect(() => {
+    if (!isGuestResume) return;
+    const sim = readGuestSimulation();
+    if (sim?.answers && Object.keys(sim.answers).length > 0) {
+      setAnswers(sim.answers as Answers);
+    } else {
+      setStepIndex(0);
+      setPhase("steps");
+    }
+    // Au montage uniquement : la reprise ne dépend que de l'URL.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const portfolioParams = useMemo(() => answersToParams(answers), [answers]);
 
@@ -291,6 +313,9 @@ function Onboarding() {
         cause: portfolioParams.causes[0] ?? "climat",
         amount: portfolioParams.initial_amount,
         allocation: holdings,
+        // Réponses conservées : si l'invité crée un compte, on reconstruit son
+        // portefeuille sans lui refaire remplir le questionnaire.
+        answers,
       });
       clearDraft();
       void navigate({ to: "/dashboard", search: { guest: true } });
