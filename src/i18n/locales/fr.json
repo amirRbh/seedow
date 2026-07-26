@@ -81,7 +81,10 @@
       "see_courses": "Voir les cours",
       "no_account_note": "Sans compte · 2 minutes · résultat immédiat",
       "trust_certified": "Impact certifié",
-      "trust_no_greenwashing": "Zéro greenwashing"
+      "trust_no_greenwashing": "Zéro greenwashing",
+      "cta_new_account": "Créer mon compte — gratuit",
+      "cta_guest": "Simuler sans compte",
+      "trust_line": "Sans carte bancaire. Sans engagement. 30 secondes."
     },
     "problem": {
       "title_line1": "Ton épargne finance des choses",
@@ -106,7 +109,8 @@
       "chat_q1": "C'est quoi cette ligne à 4% dans mon portefeuille ?",
       "chat_a1": "Un fonds obligataire vert qui finance des rénovations énergétiques en Europe. Rendement stable, faible volatilité.",
       "chat_q2": "Et si je veux plus d'impact direct ?",
-      "chat_a2": "Je peux te proposer 3 alternatives équivalentes en risque, avec un score climat supérieur. Tu veux voir ?"
+      "chat_a2": "Je peux te proposer 3 alternatives équivalentes en risque, avec un score climat supérieur. Tu veux voir ?",
+      "example_label": "Exemple de conversation"
     },
     "start": {
       "title": "Deux façons de commencer.",
@@ -140,19 +144,9 @@
       "legal": "Mentions légales",
       "privacy": "Confidentialité",
       "terms": "CGU",
-      "contact": "Contact"
-    },
-    "cta_form": {
-      "email_placeholder": "ton@email.com",
-      "submit": "Je rejoins",
-      "submitting": "…",
-      "done": "Inscrit ✓",
-      "position_suffix": "sur la liste · on te contacte très vite",
-      "count_plural": "personnes déjà inscrites",
-      "count_singular": "personne déjà inscrite",
-      "places_limited": "places limitées",
-      "waitlist_default": "Rejoins la liste des premiers testeurs",
-      "generic_error": "Une erreur est survenue."
+      "contact": "Contact",
+      "pricing": "Tarifs",
+      "help": "Aide"
     },
     "quick_check": {
       "eyebrow": "Essaie sans compte",
@@ -164,7 +158,8 @@
       "no_results": "Aucun fonds trouvé dans notre univers pour cette recherche — on l'élargit chaque semaine.",
       "cta": "Voir l'analyse complète — créer mon espace",
       "disclaimer": "Information pédagogique, pas un conseil en investissement."
-    }
+    },
+    "badge_simulation": "Seedow est un outil de simulation. Aucun argent réel n'est investi ici."
   },
   "auth": {
     "title_login": "Connexion",
@@ -241,7 +236,17 @@
     "empty_portfolio": "Ton portefeuille est encore vide.",
     "first_investment": "Faire mon premier investissement",
     "see_detail": "Voir le détail",
-    "see_detail_desc": "Performance, allocation, impact, comparatif"
+    "see_detail_desc": "Performance, allocation, impact, comparatif",
+    "guest_banner": {
+      "aria": "Mode invité",
+      "text": "Tu explores en mode invité. Crée un compte pour sauvegarder ce portefeuille.",
+      "cta": "Créer mon compte",
+      "dismiss": "Ignorer"
+    },
+    "complete_profile": {
+      "text": "Complète ton profil pour qu'Ethi te parle encore mieux.",
+      "cta": "Compléter"
+    }
   },
   "portfolio": {
     "loading": "Chargement du portefeuille…",
@@ -381,7 +386,10 @@
       "years": "Durée",
       "stress": "Inclure un stress-test (−20 %)",
       "run": "Calculer"
-    }
+    },
+    "feedback_helpful": "Réponse utile",
+    "feedback_not_helpful": "Réponse peu utile",
+    "feedback_thanks": "Merci pour ton retour."
   },
   "certificate": {
     "meta_title": "Certificat d'impact — Seedow",
@@ -1642,5 +1650,56 @@
     "empty_desc": "Suis des fonds pour être alerté·e quand leur score ou leur classification change.",
     "empty_cta": "Découvrir des fonds",
     "more_count": "+ {{count}} autres dans Découvrir"
+  },
+  "tarifs": {
+    "meta_title": "Tarifs — Seedow",
+    "meta_description": "Une tarification transparente. Seedow est gratuit pendant la bêta ouverte : aucune commission cachée, aucun vendeur.",
+    "eyebrow": "Tarifs",
+    "title": "Une tarification transparente",
+    "free_now": "Seedow est gratuit pendant la bêta.",
+    "future": "Quand nous lancerons une version payante, ce sera : un abonnement mensuel transparent, aucune commission cachée, aucun vendeur qui te harcèle.",
+    "notice": "Tu seras prévenu 30 jours avant tout changement.",
+    "table_title": "Bêta gratuite",
+    "features": {
+      "simulation": "Simulation de portefeuille",
+      "ethi": "Chat avec Ethi",
+      "certificat": "Certificat d'impact",
+      "cours": "Cours éducatifs",
+      "export": "Export de données"
+    },
+    "cta": "Profiter de la bêta gratuite",
+    "faq_prefix": "Des questions ?",
+    "faq_link": "Consulte notre centre d'aide."
+  },
+  "aide": {
+    "meta_title": "Centre d'aide — Seedow",
+    "meta_description": "Les réponses aux questions les plus fréquentes sur Seedow, en français simple.",
+    "eyebrow": "Aide",
+    "title": "Centre d'aide",
+    "subtitle": "Les réponses aux questions les plus fréquentes, sans jargon.",
+    "q1_q": "Est-ce que Seedow investit mon argent ?",
+    "q1_a": "Non. Seedow est un outil de simulation : aucun argent réel n'est transféré ni investi.",
+    "q2_q": "C'est gratuit ?",
+    "q2_a": "Oui, pendant toute la durée de la bêta ouverte.",
+    "q3_q": "Mes données sont-elles vendues ?",
+    "q3_a": "Non, jamais. Elles ne servent qu'à personnaliser ton expérience.",
+    "q4_q": "Comment supprimer mon compte ?",
+    "q4_a": "Dans Réglages → Confidentialité, via « Supprimer mon compte ». La suppression est définitive.",
+    "q4_a_link": "Aller aux réglages",
+    "q5_q": "Ethi me conseille d'acheter ou de vendre ?",
+    "q5_a": "Non. Ethi explique et informe, il ne recommande jamais une décision d'achat ou de vente.",
+    "q6_q": "D'où viennent les scores ESG ?",
+    "q6_a": "Notre méthode complète — sources, calcul, limites — est détaillée sur la page Méthodologie.",
+    "q6_a_link": "Voir la méthodologie",
+    "q7_q": "Puis-je exporter mon portefeuille ?",
+    "q7_a": "Oui, en JSON depuis Réglages → Données personnelles.",
+    "q7_a_link": "Aller aux réglages",
+    "q8_q": "Je ne reçois pas l'email de confirmation.",
+    "q8_a": "Vérifie tes spams. Sinon, écris-nous à support@seedow.life.",
+    "contact_prefix": "Tu ne trouves pas ta réponse ?",
+    "contact_link": "Écris-nous."
+  },
+  "esg_alert": {
+    "tooltip": "Le score ESG de {{asset}} a récemment baissé. Tu veux que je t’explique pourquoi ?"
   }
 }

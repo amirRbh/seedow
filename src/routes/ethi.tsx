@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { EthiBubble } from "@/components/ethi/EthiBubble";
 import { EthiSuggestionChips, type SuggestionChip } from "@/components/ethi/EthiSuggestionChips";
+import { MessageFeedback } from "@/components/ethi/MessageFeedback";
 import { SimulationForm, type SimulationFormValues } from "@/components/ethi/SimulationForm";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { supabase } from "@/integrations/supabase/client";
@@ -284,7 +285,13 @@ function Ethi() {
           </div>
           <AnimatePresence initial={false}>
             {messages.map((m) => (
-              <EthiBubble key={m.id} role={m.role} content={m.content} />
+              <div key={m.id}>
+                <EthiBubble role={m.role} content={m.content} />
+                {/* Feedback seulement sous une vraie réponse d'Ethi, pas le briefing d'accueil. */}
+                {m.role === "assistant" && m.id !== "welcome" && m.content.trim().length > 0 && (
+                  <MessageFeedback messageId={m.id} />
+                )}
+              </div>
             ))}
             {isLoading && <EthiBubble key="typing" role="assistant" content="" typing />}
           </AnimatePresence>
