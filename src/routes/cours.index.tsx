@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { COURSES } from "@/content/courses";
 import { CourseCard } from "@/components/courses/CourseCard";
 import { CourseProgressBanner } from "@/components/courses/CourseProgressBanner";
+import { CourseCertificate } from "@/components/courses/CourseCertificate";
 import { useCourseProgress } from "@/hooks/useCourseProgress";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { cn } from "@/lib/utils";
@@ -47,6 +48,28 @@ function CoursesIndex() {
 
   // Prochain cours non terminé (dans l'ordre pédagogique de COURSES) : point de reprise.
   const resumeCourse = COURSES.find((c) => !progress.isCompleted(c.slug));
+
+  // Certificat de progression (comptes uniquement) — chiffres réels par piste.
+  const financeCourses = COURSES.filter((c) => c.track === "finance");
+  const esgCourses = COURSES.filter((c) => c.track === "esg");
+  const certificateTracks = [
+    {
+      label: "Finance",
+      done: financeCourses.filter((c) => progress.isCompleted(c.slug)).length,
+      total: financeCourses.length,
+    },
+    {
+      label: "Finance ESG",
+      done: esgCourses.filter((c) => progress.isCompleted(c.slug)).length,
+      total: esgCourses.length,
+    },
+  ];
+  const meta = user?.user_metadata as { display_name?: string; full_name?: string } | undefined;
+  const learnerName =
+    meta?.display_name?.trim() ||
+    meta?.full_name?.trim() ||
+    user?.email?.split("@")[0] ||
+    "Apprenant·e Seedow";
 
   return (
     <div className="bg-paper text-ink min-h-screen paper-grain">
@@ -117,6 +140,17 @@ function CoursesIndex() {
             resumeSlug={resumeCourse?.slug}
             resumeTitle={resumeCourse?.title}
           />
+        )}
+
+        {isAuthed && progress.ready && progress.completedCount > 0 && (
+          <section className="mb-14">
+            <CourseCertificate
+              name={learnerName}
+              completed={progress.completedCount}
+              total={COURSES.length}
+              tracks={certificateTracks}
+            />
+          </section>
         )}
 
         <div className="flex flex-wrap items-center gap-3 mb-10">

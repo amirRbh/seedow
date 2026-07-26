@@ -52,7 +52,7 @@ export function GuestBanner({ guestParam = false }: { guestParam?: boolean }) {
           {t("dashboard.guest_banner.text")}
         </p>
         <Button asChild variant="accent" size="sm" className="rounded-full flex-shrink-0">
-          <Link to="/onboarding" search={{ new: undefined }}>
+          <Link to="/onboarding" search={{ resume: "guest" }}>
             {t("dashboard.guest_banner.cta")}
           </Link>
         </Button>

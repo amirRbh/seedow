@@ -22,6 +22,12 @@ export interface GuestSimulation {
   amount: number;
   /** Allocation générée : ticker/nom + poids en %. */
   allocation: { ticker: string; name: string; allocationPct: number }[];
+  /**
+   * Réponses brutes de l'onboarding (par étape), pour pouvoir reconstruire le
+   * portefeuille réel si l'invité crée un compte — sans lui refaire remplir le
+   * questionnaire. Optionnel (rétrocompat des simulations déjà stockées).
+   */
+  answers?: Record<string, string[]>;
   /** Horodatage de création (Date.now()), sert au calcul d'expiration. */
   createdAt: number;
 }

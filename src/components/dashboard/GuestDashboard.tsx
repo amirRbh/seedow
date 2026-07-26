@@ -103,7 +103,7 @@ export function GuestDashboard() {
           <div className="rounded-[18px] bg-ink text-paper p-6 text-center">
             <p className="font-value text-lg">{t("dashboard.guest_dashboard.save_title")}</p>
             <Button asChild variant="accent" size="pill" className="mt-4">
-              <Link to="/onboarding" search={{ new: undefined }}>
+              <Link to="/onboarding" search={{ resume: "guest" }}>
                 {t("dashboard.guest_dashboard.save_cta")}
               </Link>
             </Button>
