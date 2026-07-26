@@ -173,7 +173,7 @@ function Landing() {
                 <Link to="/onboarding" className="apple-btn-primary">
                   {t("landing.hero.cta_new_account")}
                 </Link>
-                <Link to="/onboarding" className="apple-btn-secondary">
+                <Link to="/onboarding" search={{ guest: true }} className="apple-btn-secondary">
                   {t("landing.hero.cta_guest")}
                 </Link>
               </>

@@ -246,6 +246,15 @@
     "complete_profile": {
       "text": "Complete your profile so Ethi can help you even better.",
       "cta": "Complete"
+    },
+    "guest_dashboard": {
+      "eyebrow": "Your simulation",
+      "value_label": "Simulated amount",
+      "save_title": "Save this portfolio.",
+      "save_cta": "Create my account — free",
+      "save_hint": "No credit card · 30 seconds",
+      "expired_title": "Your simulation has expired or can't be found.",
+      "expired_cta": "Start a new simulation"
     }
   },
   "portfolio": {

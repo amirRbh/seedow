@@ -246,6 +246,15 @@
     "complete_profile": {
       "text": "Complète ton profil pour qu'Ethi te parle encore mieux.",
       "cta": "Compléter"
+    },
+    "guest_dashboard": {
+      "eyebrow": "Ta simulation",
+      "value_label": "Montant simulé",
+      "save_title": "Sauvegarde ce portefeuille.",
+      "save_cta": "Créer mon compte — gratuit",
+      "save_hint": "Sans carte bancaire · 30 secondes",
+      "expired_title": "Ta simulation a expiré ou est introuvable.",
+      "expired_cta": "Lancer une nouvelle simulation"
     }
   },
   "portfolio": {

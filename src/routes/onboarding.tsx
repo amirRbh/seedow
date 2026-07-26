@@ -28,6 +28,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { joinWaitlist } from "@/lib/beta/beta.functions";
+import { writeGuestSimulation, type GuestSimulation } from "@/lib/beta/guest";
 import { useBetaCapacity } from "@/hooks/useBetaCapacity";
 import { generatePortfolio, simulatePortfolio } from "@/lib/portfolio/server.functions";
 import { MirrorReveal, type MirrorImpact } from "@/components/onboarding/MirrorReveal";
@@ -36,8 +37,9 @@ import { trackPreference, type PreferenceStep } from "@/lib/preferences/tracking
 import type { CauseTag, ExclusionTag, PortfolioParams } from "@/lib/portfolio/types";
 
 export const Route = createFileRoute("/onboarding")({
-  validateSearch: (s: Record<string, unknown>): { new?: 1 } => ({
+  validateSearch: (s: Record<string, unknown>): { new?: 1; guest?: true } => ({
     new: s.new === 1 || s.new === "1" ? 1 : undefined,
+    guest: s.guest === true || s.guest === "true" ? true : undefined,
   }),
   // Pas de guard auth : on laisse l'utilisateur répondre aux questions sans compte,
   // et on lui montre son allocation simulée (phase "preview", non persistée) avant
@@ -208,8 +210,9 @@ function objectiveToRiskHorizon(obj: string | undefined): { risk: number; horizo
 function Onboarding() {
   const navigate = useNavigate();
   const router = useRouter();
-  const { new: isNew } = Route.useSearch();
+  const { new: isNew, guest } = Route.useSearch();
   const isAdditive = isNew === 1;
+  const isGuest = guest === true;
   // Ne restaure que le brouillon correspondant au même contexte (premier
   // portefeuille vs. portefeuille additionnel) — jamais l'un à la place de l'autre.
   const draft = loadDraft(isAdditive);
@@ -273,10 +276,27 @@ function Onboarding() {
   };
 
   // Appelé depuis l'écran de preview quand l'utilisateur veut sauvegarder son portefeuille.
-  const handleSave = async () => {
+  // `holdings` : l'allocation simulée déjà calculée par la preview.
+  const handleSave = async (holdings: GuestSimulation["allocation"]) => {
     const { data } = await supabase.auth.getSession();
-    if (data.session) setPhase("saving");
-    else setPhase("account");
+    if (data.session) {
+      setPhase("saving");
+      return;
+    }
+    // Mode invité : pas de mur d'inscription. On persiste la simulation côté
+    // navigateur (7 jours) et on ouvre le dashboard invité — la création de
+    // compte est proposée là-bas, sans friction, pour sauvegarder.
+    if (isGuest) {
+      writeGuestSimulation({
+        cause: portfolioParams.causes[0] ?? "climat",
+        amount: portfolioParams.initial_amount,
+        allocation: holdings,
+      });
+      clearDraft();
+      void navigate({ to: "/dashboard", search: { guest: true } });
+      return;
+    }
+    setPhase("account");
   };
 
   return (
@@ -1060,7 +1080,13 @@ interface SelectedAsset {
 // (mur d'inscription repoussé après la preview, pas avant)
 // ─────────────────────────────────────────────────────────
 
-function PreviewScene({ params, onSave }: { params: PortfolioParams; onSave: () => void }) {
+function PreviewScene({
+  params,
+  onSave,
+}: {
+  params: PortfolioParams;
+  onSave: (holdings: GuestSimulation["allocation"]) => void;
+}) {
   const { t } = useTranslation();
   const { lang } = useLang();
   const simulate = useServerFn(simulatePortfolio);
@@ -1246,7 +1272,15 @@ function PreviewScene({ params, onSave }: { params: PortfolioParams; onSave: () 
                   step: "allocation_accepted",
                   payload: { position_count: selected.length },
                 });
-                onSave();
+                const holdings = selected
+                  .map((a) => ({
+                    ticker: a.ticker,
+                    name: a.name,
+                    allocationPct: (weights[a.id] ?? 0) * 100,
+                  }))
+                  .filter((h) => h.allocationPct > 0.5)
+                  .sort((a, b) => b.allocationPct - a.allocationPct);
+                onSave(holdings);
               }}
               className="mt-8 w-full py-3 rounded-full bg-ink text-paper font-semibold text-body-sm hover:bg-highlight-2 transition-colors flex items-center justify-center gap-2"
             >
