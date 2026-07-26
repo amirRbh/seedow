@@ -25,14 +25,42 @@ import { ImpactHero } from "@/components/impact/ImpactHero";
 import { LearnIntroCard } from "@/components/dashboard/LearnIntroCard";
 import { GuestBanner } from "@/components/dashboard/GuestBanner";
 import { CompleteProfileBanner } from "@/components/dashboard/CompleteProfileBanner";
+import { UnderstandPortfolioCard } from "@/components/dashboard/UnderstandPortfolioCard";
+import { GuestDashboard } from "@/components/dashboard/GuestDashboard";
+import { clearGuestSimulation } from "@/lib/beta/guest";
 
 export const Route = createFileRoute("/dashboard")({
   validateSearch: (s: Record<string, unknown>): { guest?: true } => ({
     guest: s.guest === true || s.guest === "true" ? true : undefined,
   }),
-  beforeLoad: () => requireAuthedUser("/dashboard"),
-  component: Dashboard,
+  // Le mode invité (?guest=true) contourne le mur d'inscription : la garde ne
+  // redirige vers /auth que les visiteurs non connectés ET non invités.
+  beforeLoad: ({ search }) => {
+    if (!search.guest) return requireAuthedUser("/dashboard");
+  },
+  component: DashboardEntry,
 });
+
+/**
+ * Aiguillage : dashboard authentifié (données réelles) vs dashboard invité
+ * (simulation locale). On attend la résolution de l'auth pour ne pas afficher
+ * la vue invité à un utilisateur connecté (ni l'inverse).
+ */
+function DashboardEntry() {
+  const { user, loading } = useAuth();
+  const { guest } = Route.useSearch();
+
+  // Un compte réel rend la simulation invité caduque : on la purge.
+  useEffect(() => {
+    if (user) clearGuestSimulation();
+  }, [user]);
+
+  if (loading) return <div className="min-h-screen bg-paper" aria-hidden />;
+  if (user) return <Dashboard />;
+  if (guest) return <GuestDashboard />;
+  // Non connecté et non invité : la garde beforeLoad a déjà redirigé vers /auth.
+  return <div className="min-h-screen bg-paper" aria-hidden />;
+}
 
 function getGreetingKey(hour: number) {
   if (hour < 12) return "dashboard.greeting_morning";
@@ -230,6 +258,13 @@ function Dashboard() {
             />
           )}
         </motion.section>
+
+        {/* 2b. Comprends ton portefeuille — cours contextuels */}
+        {portfolio && holdings.length > 0 && (
+          <section className="px-5 pt-8">
+            <UnderstandPortfolioCard />
+          </section>
+        )}
 
         {/* 3. Prochaine étape — une seule carte contextuelle */}
         <NextStepCard />

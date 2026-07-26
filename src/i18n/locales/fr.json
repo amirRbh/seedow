@@ -159,7 +159,16 @@
       "cta": "Voir l'analyse complète — créer mon espace",
       "disclaimer": "Information pédagogique, pas un conseil en investissement."
     },
-    "badge_simulation": "Seedow est un outil de simulation. Aucun argent réel n'est investi ici."
+    "badge_simulation": "Seedow est un outil de simulation. Aucun argent réel n'est investi ici.",
+    "learn": {
+      "eyebrow": "Apprends d’abord",
+      "title": "Comprendre avant d’investir. Sans compte.",
+      "subtitle": "La lecture des cours est libre. Le quiz et le certificat de progression, avec un compte gratuit.",
+      "resume_prefix": "Reprends où tu t’es arrêté",
+      "resume_cta": "Continuer",
+      "read_cta": "Lire",
+      "see_all": "Voir les {{count}} cours"
+    }
   },
   "auth": {
     "title_login": "Connexion",
@@ -246,6 +255,19 @@
     "complete_profile": {
       "text": "Complète ton profil pour qu'Ethi te parle encore mieux.",
       "cta": "Compléter"
+    },
+    "guest_dashboard": {
+      "eyebrow": "Ta simulation",
+      "value_label": "Montant simulé",
+      "save_title": "Sauvegarde ce portefeuille.",
+      "save_cta": "Créer mon compte — gratuit",
+      "save_hint": "Sans carte bancaire · 30 secondes",
+      "expired_title": "Ta simulation a expiré ou est introuvable.",
+      "expired_cta": "Lancer une nouvelle simulation"
+    },
+    "understand": {
+      "eyebrow": "Comprends ton portefeuille",
+      "subtitle": "En 2 minutes, comprends ce qu’il y a dans ton portefeuille."
     }
   },
   "portfolio": {
@@ -737,6 +759,14 @@
       "back": "Retour",
       "progress": "{{current}}/{{total}}",
       "continue": "Continuer"
+    },
+    "explainer": {
+      "summary": "Pourquoi ça compte ? · 30 s",
+      "link": "Lire le cours",
+      "values": "Tes convictions orientent la sélection : on surpondère les entreprises alignées, sans jamais transformer une conviction en promesse de rendement.",
+      "exclusions": "Exclure un secteur, c'est refuser de le financer — un critère binaire et vérifiable, pas un avis.",
+      "objective": "Ton objectif fixe l'horizon, et donc le niveau de risque acceptable : plus l'échéance est lointaine, plus on peut encaisser la volatilité.",
+      "amount": "Le montant simulé n'engage rien. Il sert à visualiser l'allocation et l'effet des intérêts composés dans le temps."
     }
   },
   "reglages": {
