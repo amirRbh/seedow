@@ -81,7 +81,10 @@
       "see_courses": "See the courses",
       "no_account_note": "No account · 2 minutes · instant result",
       "trust_certified": "Certified impact",
-      "trust_no_greenwashing": "Zero greenwashing"
+      "trust_no_greenwashing": "Zero greenwashing",
+      "cta_new_account": "Create my account — free",
+      "cta_guest": "Simulate without an account",
+      "trust_line": "No credit card. No commitment. 30 seconds."
     },
     "problem": {
       "title_line1": "Your savings are financing things",
@@ -106,7 +109,8 @@
       "chat_q1": "What's this 4% line in my portfolio?",
       "chat_a1": "A green bond fund financing energy renovations in Europe. Stable return, low volatility.",
       "chat_q2": "What if I want more direct impact?",
-      "chat_a2": "I can suggest 3 alternatives with equivalent risk and a higher climate score. Want to see?"
+      "chat_a2": "I can suggest 3 alternatives with equivalent risk and a higher climate score. Want to see?",
+      "example_label": "Example conversation"
     },
     "start": {
       "title": "Two ways to start.",
@@ -140,19 +144,9 @@
       "legal": "Legal notice",
       "privacy": "Privacy",
       "terms": "Terms",
-      "contact": "Contact"
-    },
-    "cta_form": {
-      "email_placeholder": "you@email.com",
-      "submit": "I'm in",
-      "submitting": "…",
-      "done": "Signed up ✓",
-      "position_suffix": "on the list · we'll reach out very soon",
-      "count_plural": "people already signed up",
-      "count_singular": "person already signed up",
-      "places_limited": "limited spots",
-      "waitlist_default": "Join the first testers' list",
-      "generic_error": "Something went wrong."
+      "contact": "Contact",
+      "pricing": "Pricing",
+      "help": "Help"
     },
     "quick_check": {
       "eyebrow": "Try it without an account",
@@ -164,7 +158,8 @@
       "no_results": "No fund found in our universe for this search — we expand it every week.",
       "cta": "See the full analysis — create my space",
       "disclaimer": "Educational information, not investment advice."
-    }
+    },
+    "badge_simulation": "Seedow is a simulation tool. No real money is invested here."
   },
   "auth": {
     "title_login": "Sign in",
@@ -381,7 +376,10 @@
       "years": "Horizon",
       "stress": "Include a stress-test (−20%)",
       "run": "Compute"
-    }
+    },
+    "feedback_helpful": "Helpful answer",
+    "feedback_not_helpful": "Not helpful",
+    "feedback_thanks": "Thanks for your feedback."
   },
   "certificate": {
     "meta_title": "Impact certificate — Seedow",
@@ -1660,5 +1658,53 @@
     "empty_desc": "Follow funds to get alerted when their score or classification changes.",
     "empty_cta": "Discover funds",
     "more_count": "+ {{count}} more in Discover"
+  },
+  "tarifs": {
+    "meta_title": "Pricing — Seedow",
+    "meta_description": "Transparent pricing. Seedow is free during the open beta: no hidden fees, no salespeople.",
+    "eyebrow": "Pricing",
+    "title": "Transparent pricing",
+    "free_now": "Seedow is free during the beta.",
+    "future": "When we launch a paid version, it will be: a transparent monthly subscription, no hidden fees, no salesperson hassling you.",
+    "notice": "You'll be notified 30 days before any change.",
+    "table_title": "Free beta",
+    "features": {
+      "simulation": "Portfolio simulation",
+      "ethi": "Chat with Ethi",
+      "certificat": "Impact certificate",
+      "cours": "Educational courses",
+      "export": "Data export"
+    },
+    "cta": "Enjoy the free beta",
+    "faq_prefix": "Questions?",
+    "faq_link": "Check our help center."
+  },
+  "aide": {
+    "meta_title": "Help center — Seedow",
+    "meta_description": "Answers to the most common questions about Seedow, in plain language.",
+    "eyebrow": "Help",
+    "title": "Help center",
+    "subtitle": "Answers to the most common questions, without jargon.",
+    "q1_q": "Does Seedow invest my money?",
+    "q1_a": "No. Seedow is a simulation tool: no real money is transferred or invested.",
+    "q2_q": "Is it free?",
+    "q2_a": "Yes, for the entire duration of the open beta.",
+    "q3_q": "Is my data sold?",
+    "q3_a": "No, never. It's only used to personalize your experience.",
+    "q4_q": "How do I delete my account?",
+    "q4_a": "In Settings → Privacy, via “Delete my account”. Deletion is permanent.",
+    "q4_a_link": "Go to settings",
+    "q5_q": "Does Ethi advise me to buy or sell?",
+    "q5_a": "No. Ethi explains and informs, it never recommends a buy or sell decision.",
+    "q6_q": "Where do the ESG scores come from?",
+    "q6_a": "Our full method — sources, calculation, limits — is detailed on the Methodology page.",
+    "q6_a_link": "See the methodology",
+    "q7_q": "Can I export my portfolio?",
+    "q7_a": "Yes, as JSON from Settings → Personal data.",
+    "q7_a_link": "Go to settings",
+    "q8_q": "I'm not receiving the confirmation email.",
+    "q8_a": "Check your spam folder. Otherwise, email us at support@seedow.life.",
+    "contact_prefix": "Can't find your answer?",
+    "contact_link": "Email us."
   }
 }

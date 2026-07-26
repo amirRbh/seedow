@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WaitlistRouteImport } from './routes/waitlist'
+import { Route as TarifsRouteImport } from './routes/tarifs'
 import { Route as ReglagesRouteImport } from './routes/reglages'
 import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
@@ -29,6 +30,7 @@ import { Route as CommunauteRouteImport } from './routes/communaute'
 import { Route as CguRouteImport } from './routes/cgu'
 import { Route as CertificatRouteImport } from './routes/certificat'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AideRouteImport } from './routes/aide'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CoursIndexRouteImport } from './routes/cours.index'
@@ -48,6 +50,11 @@ import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.
 const WaitlistRoute = WaitlistRouteImport.update({
   id: '/waitlist',
   path: '/waitlist',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TarifsRoute = TarifsRouteImport.update({
+  id: '/tarifs',
+  path: '/tarifs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReglagesRoute = ReglagesRouteImport.update({
@@ -145,6 +152,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AideRoute = AideRouteImport.update({
+  id: '/aide',
+  path: '/aide',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
@@ -226,6 +238,7 @@ const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/aide': typeof AideRoute
   '/auth': typeof AuthRoute
   '/certificat': typeof CertificatRoute
   '/cgu': typeof CguRoute
@@ -245,6 +258,7 @@ export interface FileRoutesByFullPath {
   '/portfolio': typeof PortfolioRoute
   '/profil': typeof ProfilRoute
   '/reglages': typeof ReglagesRoute
+  '/tarifs': typeof TarifsRoute
   '/waitlist': typeof WaitlistRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -262,6 +276,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/aide': typeof AideRoute
   '/auth': typeof AuthRoute
   '/certificat': typeof CertificatRoute
   '/cgu': typeof CguRoute
@@ -280,6 +295,7 @@ export interface FileRoutesByTo {
   '/portfolio': typeof PortfolioRoute
   '/profil': typeof ProfilRoute
   '/reglages': typeof ReglagesRoute
+  '/tarifs': typeof TarifsRoute
   '/waitlist': typeof WaitlistRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -299,6 +315,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/aide': typeof AideRoute
   '/auth': typeof AuthRoute
   '/certificat': typeof CertificatRoute
   '/cgu': typeof CguRoute
@@ -318,6 +335,7 @@ export interface FileRoutesById {
   '/portfolio': typeof PortfolioRoute
   '/profil': typeof ProfilRoute
   '/reglages': typeof ReglagesRoute
+  '/tarifs': typeof TarifsRoute
   '/waitlist': typeof WaitlistRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -337,6 +355,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/aide'
     | '/auth'
     | '/certificat'
     | '/cgu'
@@ -356,6 +375,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/profil'
     | '/reglages'
+    | '/tarifs'
     | '/waitlist'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
@@ -373,6 +393,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/aide'
     | '/auth'
     | '/certificat'
     | '/cgu'
@@ -391,6 +412,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/profil'
     | '/reglages'
+    | '/tarifs'
     | '/waitlist'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
@@ -409,6 +431,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/aide'
     | '/auth'
     | '/certificat'
     | '/cgu'
@@ -428,6 +451,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/profil'
     | '/reglages'
+    | '/tarifs'
     | '/waitlist'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
@@ -447,6 +471,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AideRoute: typeof AideRoute
   AuthRoute: typeof AuthRoute
   CertificatRoute: typeof CertificatRoute
   CguRoute: typeof CguRoute
@@ -466,6 +491,7 @@ export interface RootRouteChildren {
   PortfolioRoute: typeof PortfolioRoute
   ProfilRoute: typeof ProfilRoute
   ReglagesRoute: typeof ReglagesRoute
+  TarifsRoute: typeof TarifsRoute
   WaitlistRoute: typeof WaitlistRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -485,6 +511,13 @@ declare module '@tanstack/react-router' {
       path: '/waitlist'
       fullPath: '/waitlist'
       preLoaderRoute: typeof WaitlistRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tarifs': {
+      id: '/tarifs'
+      path: '/tarifs'
+      fullPath: '/tarifs'
+      preLoaderRoute: typeof TarifsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reglages': {
@@ -618,6 +651,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/aide': {
+      id: '/aide'
+      path: '/aide'
+      fullPath: '/aide'
+      preLoaderRoute: typeof AideRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -766,6 +806,7 @@ const ObjectifsRouteWithChildren = ObjectifsRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AideRoute: AideRoute,
   AuthRoute: AuthRoute,
   CertificatRoute: CertificatRoute,
   CguRoute: CguRoute,
@@ -785,6 +826,7 @@ const rootRouteChildren: RootRouteChildren = {
   PortfolioRoute: PortfolioRoute,
   ProfilRoute: ProfilRoute,
   ReglagesRoute: ReglagesRoute,
+  TarifsRoute: TarifsRoute,
   WaitlistRoute: WaitlistRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:

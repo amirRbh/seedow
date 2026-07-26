@@ -121,6 +121,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     pathname.startsWith("/cours") ||
     pathname.startsWith("/auth") ||
     pathname.startsWith("/onboarding") ||
+    pathname.startsWith("/tarifs") ||
+    pathname.startsWith("/aide") ||
     pathname.startsWith("/certificat");
 
   const showBanner = showBetaBannerFor(pathname);

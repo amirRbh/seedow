@@ -1,8 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
-import { joinWaitlist, getWaitlistCount } from "@/lib/beta/beta.functions";
 import { EsgQuickCheck } from "@/components/landing/EsgQuickCheck";
 
 const SITE_URL = "https://seedow.life";
@@ -38,11 +37,6 @@ function Landing() {
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => setIsAuthed(!!session));
     return () => sub.subscription.unsubscribe();
   }, []);
-
-  const scrollToCta = () => {
-    document.getElementById("cta")?.scrollIntoView({ behavior: "smooth" });
-    setTimeout(() => document.getElementById("cta-email")?.focus(), 400);
-  };
 
   const STATS: { figure: string; text: string; color: string }[] = [
     { figure: "0%", color: "var(--apple-text)", text: t("landing.stats.visibility") },
@@ -175,19 +169,38 @@ function Landing() {
                 {t("landing.hero.cta_authed")}
               </Link>
             ) : (
-              <Link to="/onboarding" className="apple-btn-primary">
-                {t("landing.hero.cta_new")}
-              </Link>
+              <>
+                <Link to="/onboarding" className="apple-btn-primary">
+                  {t("landing.hero.cta_new_account")}
+                </Link>
+                <Link to="/onboarding" className="apple-btn-secondary">
+                  {t("landing.hero.cta_guest")}
+                </Link>
+              </>
             )}
-            <Link to="/cours" className="apple-link">
-              {t("landing.hero.see_courses")} <span aria-hidden>›</span>
-            </Link>
           </div>
           {!isAuthed && (
             <p className="mt-4 text-body-sm text-[color:var(--apple-text-2)]">
-              {t("landing.hero.no_account_note")}
+              {t("landing.hero.trust_line")}
             </p>
           )}
+
+          {/* Badge simulation — cadre attendu : Seedow simule, n'investit pas. */}
+          <div
+            className="mt-8 inline-flex items-center gap-2 px-4 py-2 text-body-sm text-[color:var(--apple-text-2)]"
+            style={{
+              background: "var(--paper-2)",
+              border: "1px solid var(--paper-3)",
+              borderRadius: 14,
+            }}
+          >
+            <span
+              aria-hidden
+              className="inline-block w-2 h-2 rounded-full flex-shrink-0"
+              style={{ background: "var(--ice)" }}
+            />
+            {t("landing.badge_simulation")}
+          </div>
 
           {/* Trust line */}
           <div
@@ -299,7 +312,13 @@ function Landing() {
           </p>
 
           {/* Chat mockup */}
-          <div className="mt-16 mx-auto max-w-[560px] flex flex-col gap-3 text-left">
+          <p
+            className="mt-14 text-body-sm font-mono"
+            style={{ color: "#a1a1a6", letterSpacing: "0.02em" }}
+          >
+            {t("landing.ethi.example_label")}
+          </p>
+          <div className="mt-4 mx-auto max-w-[560px] flex flex-col gap-3 text-left">
             <ChatBubble side="user">{t("landing.ethi.chat_q1")}</ChatBubble>
             <ChatBubble side="ethi">{t("landing.ethi.chat_a1")}</ChatBubble>
             <ChatBubble side="user">{t("landing.ethi.chat_q2")}</ChatBubble>
@@ -378,18 +397,26 @@ function Landing() {
           <p className="apple-subtitle mx-auto max-w-[520px] mt-6">
             {isAuthed ? t("landing.final.subtitle_authed") : t("landing.final.subtitle_new")}
           </p>
-          {!isAuthed && (
-            <div className="mt-10 flex flex-col items-center gap-4">
-              <Link to="/onboarding" className="apple-btn-primary">
-                {t("landing.final.cta")}
+          <div className="mt-10 flex flex-col items-center gap-4">
+            {isAuthed ? (
+              <Link to="/dashboard" className="apple-btn-primary">
+                {t("landing.hero.cta_authed")}
               </Link>
-              <p className="text-body-sm text-[color:var(--apple-text-2)]">
-                {t("landing.final.or_email")}
-              </p>
-            </div>
-          )}
-          <div className="mt-6">
-            <CtaForm isAuthed={isAuthed} />
+            ) : (
+              <>
+                <div className="flex flex-wrap items-center justify-center gap-4">
+                  <Link to="/onboarding" className="apple-btn-primary">
+                    {t("landing.hero.cta_new_account")}
+                  </Link>
+                  <Link to="/onboarding" className="apple-btn-secondary">
+                    {t("landing.hero.cta_guest")}
+                  </Link>
+                </div>
+                <p className="text-body-sm text-[color:var(--apple-text-2)]">
+                  {t("landing.hero.trust_line")}
+                </p>
+              </>
+            )}
           </div>
         </div>
       </section>
@@ -421,6 +448,12 @@ function Landing() {
             </Link>
             <Link to="/methodologie" className="hover:text-[color:var(--apple-text)]">
               {t("landing.footer.methodology")}
+            </Link>
+            <Link to="/tarifs" className="hover:text-[color:var(--apple-text)]">
+              {t("landing.footer.pricing")}
+            </Link>
+            <Link to="/aide" className="hover:text-[color:var(--apple-text)]">
+              {t("landing.footer.help")}
             </Link>
             {isAuthed ? (
               <Link to="/dashboard" className="hover:text-[color:var(--apple-text)]">
@@ -472,107 +505,6 @@ function ChatBubble({ side, children }: { side: "user" | "ethi"; children: React
         {children}
       </div>
     </div>
-  );
-}
-
-function CtaForm({ isAuthed }: { isAuthed: boolean | null }) {
-  const { t } = useTranslation();
-  const [email, setEmail] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [done, setDone] = useState(false);
-  const [position, setPosition] = useState<number | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  // Compteur réel — jamais de chiffre inventé. `null` tant qu'on n'a pas la
-  // vraie valeur, pour ne rien afficher plutôt que d'afficher un chiffre faux.
-  const [waitlistCount, setWaitlistCount] = useState<number | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    getWaitlistCount()
-      .then((res) => {
-        if (!cancelled) setWaitlistCount(res.count);
-      })
-      .catch(() => {
-        /* silencieux : pas de compteur plutôt qu'un compteur faux */
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const onSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setSubmitting(true);
-    try {
-      const res = await joinWaitlist({ data: { email, source: "landing_cta" } });
-      setPosition(res.position);
-      setDone(true);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : t("landing.cta_form.generic_error"));
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  if (isAuthed) {
-    return (
-      <Link to="/dashboard" className="apple-btn-primary">
-        {t("landing.hero.cta_authed")}
-      </Link>
-    );
-  }
-
-  return (
-    <>
-      <form
-        onSubmit={onSubmit}
-        className="flex flex-col sm:flex-row gap-3 max-w-[460px] mx-auto items-center justify-center"
-      >
-        <input
-          id="cta-email"
-          type="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder={t("landing.cta_form.email_placeholder")}
-          disabled={done}
-          className="apple-input w-full sm:w-auto sm:flex-1"
-        />
-        <button
-          type="submit"
-          disabled={submitting || done}
-          className="apple-btn-primary disabled:opacity-70"
-        >
-          {done
-            ? t("landing.cta_form.done")
-            : submitting
-              ? t("landing.cta_form.submitting")
-              : t("landing.cta_form.submit")}
-        </button>
-      </form>
-      <div className="text-body-sm text-[color:var(--apple-text-2)] mt-5">
-        {position !== null ? (
-          <>
-            <span className="font-semibold text-[color:var(--apple-text)]">#{position}</span>{" "}
-            {t("landing.cta_form.position_suffix")}
-          </>
-        ) : waitlistCount !== null && waitlistCount > 0 ? (
-          <>
-            <span className="font-semibold text-[color:var(--apple-text)]">{waitlistCount}</span>{" "}
-            {waitlistCount > 1
-              ? t("landing.cta_form.count_plural")
-              : t("landing.cta_form.count_singular")}{" "}
-            · {t("landing.cta_form.places_limited")}
-          </>
-        ) : (
-          <>
-            {t("landing.cta_form.waitlist_default")} · {t("landing.cta_form.places_limited")}
-          </>
-        )}
-      </div>
-      {error && <p className="text-body-sm text-red-500 mt-3">{error}</p>}
-    </>
   );
 }
 
