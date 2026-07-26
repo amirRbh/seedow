@@ -236,7 +236,17 @@
     "empty_portfolio": "Your portfolio is still empty.",
     "first_investment": "Make my first investment",
     "see_detail": "See details",
-    "see_detail_desc": "Performance, allocation, impact, comparison"
+    "see_detail_desc": "Performance, allocation, impact, comparison",
+    "guest_banner": {
+      "aria": "Guest mode",
+      "text": "You're exploring in guest mode. Create an account to save this portfolio.",
+      "cta": "Create my account",
+      "dismiss": "Dismiss"
+    },
+    "complete_profile": {
+      "text": "Complete your profile so Ethi can help you even better.",
+      "cta": "Complete"
+    }
   },
   "portfolio": {
     "loading": "Loading portfolio…",

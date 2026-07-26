@@ -23,8 +23,13 @@ import { RealInvestmentInterestCard } from "@/components/beta/RealInvestmentInte
 import { FeedbackButton } from "@/components/beta/FeedbackButton";
 import { ImpactHero } from "@/components/impact/ImpactHero";
 import { LearnIntroCard } from "@/components/dashboard/LearnIntroCard";
+import { GuestBanner } from "@/components/dashboard/GuestBanner";
+import { CompleteProfileBanner } from "@/components/dashboard/CompleteProfileBanner";
 
 export const Route = createFileRoute("/dashboard")({
+  validateSearch: (s: Record<string, unknown>): { guest?: true } => ({
+    guest: s.guest === true || s.guest === "true" ? true : undefined,
+  }),
   beforeLoad: () => requireAuthedUser("/dashboard"),
   component: Dashboard,
 });
@@ -41,6 +46,7 @@ function Dashboard() {
   const { lang } = useLang();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { guest } = Route.useSearch();
   const { portfolio, loading, error: portfolioError } = useActivePortfolio();
   const { portfolios, loading: pfListLoading, error: pfListError } = useUserPortfolios();
   const valuation = usePortfolioValuation();
@@ -97,8 +103,14 @@ function Dashboard() {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
+      {/* Bandeau mode invité — sticky, pleine largeur (hors conteneur centré) */}
+      <GuestBanner guestParam={guest ?? false} />
+
       <div className="max-w-lg mx-auto pb-28">
         <AppHeader eyebrow={greeting} title={userName} showPortfolioSelector />
+
+        {/* Profiling progressif — n'apparaît que si le profil est incomplet */}
+        <CompleteProfileBanner />
 
         {/* 0. Accueil néophyte — onboarding pédagogique, dismissible */}
         <LearnIntroCard />
@@ -182,12 +194,30 @@ function Dashboard() {
               ))}
             </div>
           ) : holdings.length === 0 ? (
-            <div className="border border-dashed border-paper-3 rounded p-6 text-center">
-              <p className="text-body-sm text-ink-2 mb-3">{t("dashboard.empty_portfolio")}</p>
+            <div className="border border-dashed border-paper-3 rounded-[14px] p-8 text-center flex flex-col items-center">
+              {/* Illustration légère — pousse/graine, décorative */}
+              <svg
+                viewBox="0 0 48 48"
+                className="w-10 h-10 text-ink-3 mb-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.6}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M24 42V22" />
+                <path d="M24 26c0-6 4-11 11-12 0 6-4 11-11 12Z" />
+                <path d="M24 30c0-5-3-9-9-10 0 5 3 9 9 10Z" />
+                <path d="M14 42h20" />
+              </svg>
+              <p className="text-body-sm text-ink-2 mb-4 max-w-[240px]">
+                {t("dashboard.empty_portfolio")}
+              </p>
               <Link
                 to="/onboarding"
                 search={{ new: undefined }}
-                className="inline-block px-4 py-2 text-label font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
+                className="inline-block px-4 py-2 text-label font-medium border border-ink rounded-full hover:bg-ink hover:text-paper transition-colors"
               >
                 {t("dashboard.first_investment")}
               </Link>

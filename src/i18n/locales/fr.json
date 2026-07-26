@@ -236,7 +236,17 @@
     "empty_portfolio": "Ton portefeuille est encore vide.",
     "first_investment": "Faire mon premier investissement",
     "see_detail": "Voir le détail",
-    "see_detail_desc": "Performance, allocation, impact, comparatif"
+    "see_detail_desc": "Performance, allocation, impact, comparatif",
+    "guest_banner": {
+      "aria": "Mode invité",
+      "text": "Tu explores en mode invité. Crée un compte pour sauvegarder ce portefeuille.",
+      "cta": "Créer mon compte",
+      "dismiss": "Ignorer"
+    },
+    "complete_profile": {
+      "text": "Complète ton profil pour qu'Ethi te parle encore mieux.",
+      "cta": "Compléter"
+    }
   },
   "portfolio": {
     "loading": "Chargement du portefeuille…",
