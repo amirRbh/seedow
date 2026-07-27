@@ -1749,5 +1749,56 @@
   },
   "esg_alert": {
     "tooltip": "The ESG score of {{asset}} recently dropped. Want me to explain why?"
+  },
+  "impact_translator": {
+    "eyebrow": "Your impact, concretely",
+    "source_prefix": "Source:",
+    "tab": {
+      "monde": "Vs the world",
+      "tangible": "Made tangible",
+      "finance": "What I fund",
+      "exclusions": "My exclusions"
+    },
+    "vs_world": {
+      "cleaner": "less carbon-intensive than a classic World ETF.",
+      "dirtier": "more carbon-intensive than a classic World ETF.",
+      "you": "Your portfolio",
+      "benchmark": "World ETF (MSCI ACWI)",
+      "unit": "tCO₂e / $M of revenue",
+      "pending": "The reference carbon intensity isn't available yet for this portfolio (issuer data still being aggregated)."
+    },
+    "tangible": {
+      "amount_label": "Amount invested",
+      "footprint_label": "Estimated financed footprint",
+      "per_year": "CO₂e / year",
+      "pending": "The carbon footprint figure will appear once issuer data covers your portfolio. We fabricate nothing in the meantime.",
+      "esg_fallback": "In the meantime, your honest benchmark: ESG impact score {{score}}/100."
+    },
+    "finance": {
+      "note": "Your money concretely funds these positions. Per-project physical metrics depend on issuer disclosures (coming).",
+      "pending": "Positions unavailable for this portfolio."
+    },
+    "exclusions": {
+      "body": "The sectors you excluded are fully removed from the investment universe, upstream of portfolio construction.",
+      "pending": "The amount of your capital steered away from each sector requires sourced, dated sector weights — coming, never guessed.",
+      "method_link": "See the methodology"
+    },
+    "confidence": {
+      "high": "Complete issuer data · {{pct}}%",
+      "partial": "Estimate · {{pct}}% of issuer data",
+      "low": "Issuer data in progress"
+    },
+    "class": {
+      "equity_dev": "Developed equities",
+      "equity_em": "Emerging equities",
+      "thematic": "Thematic",
+      "green_bond": "Green bonds",
+      "social_bond": "Social bonds",
+      "sov_bond": "Sovereign bonds",
+      "corporate_bond": "Corporate bonds",
+      "reit": "Listed real estate",
+      "commodity": "Commodities",
+      "cash": "Cash"
+    }
   }
 }

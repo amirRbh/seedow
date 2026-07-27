@@ -13,8 +13,7 @@ import { ValuationConsistencyBanner } from "@/components/portfolio/ValuationCons
 import { ImpactCertificate } from "@/components/portfolio/ImpactCertificate";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { ShareToggle } from "@/components/community/ShareToggle";
-import { ImpactRibbon } from "@/components/portfolio/ImpactRibbon";
-import { buildPortfolioImpact } from "@/lib/impact/portfolioImpact";
+import { ImpactTranslator } from "@/components/impact/ImpactTranslator";
 import { ComparatifPanel } from "@/components/portfolio/ComparatifPanel";
 import { AllocationRefiner } from "@/components/portfolio/AllocationRefiner";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -88,10 +87,6 @@ function Portfolio() {
   const gain = valuation.pnl;
   const returnPct = valuation.returnPct;
 
-  // Impact honnête : empreinte carbone réelle (données émetteurs) ou rien.
-  const impact = portfolio.metrics
-    ? buildPortfolioImpact(portfolio.metrics, Math.max(totalInvested, 0))
-    : null;
   const esgScore = portfolio.metrics?.esg_score
     ? Number((portfolio.metrics.esg_score / 10).toFixed(1))
     : 0;
@@ -191,7 +186,13 @@ function Portfolio() {
             </TabsContent>
 
             <TabsContent value="impact" className="pt-5 space-y-5">
-              {impact && <ImpactRibbon impact={impact} esgScore10={esgScore} />}
+              {portfolio.metrics && (
+                <ImpactTranslator
+                  metrics={portfolio.metrics}
+                  holdings={portfolio.holdings}
+                  defaultAmount={Math.max(totalInvested, 0)}
+                />
+              )}
               <div className="space-y-3">
                 <h2 className="text-sm font-semibold text-ink">{t("portfolio.key_indicators")}</h2>
                 {isSimple && (
