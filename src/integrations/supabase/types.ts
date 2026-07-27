@@ -297,6 +297,7 @@ export type Database = {
           currency: string
           description: string | null
           env_score: number | null
+          esg_data_asof: string | null
           esg_score: number
           esg_score_fetched_at: string | null
           esg_score_source: string | null
@@ -304,9 +305,11 @@ export type Database = {
           expected_return: number
           governance_score: number | null
           id: string
+          implied_temp_rise: string | null
           is_active: boolean
           isin: string | null
           issuer: string | null
+          msci_esg_quality_score: number | null
           name: string
           region: string | null
           sfdr_article: number | null
@@ -315,6 +318,7 @@ export type Database = {
           ticker: string
           updated_at: string
           volatility: number
+          waci_tco2e_per_musd_sales: number | null
           yahoo_symbol: string | null
         }
         Insert: {
@@ -327,6 +331,7 @@ export type Database = {
           currency?: string
           description?: string | null
           env_score?: number | null
+          esg_data_asof?: string | null
           esg_score?: number
           esg_score_fetched_at?: string | null
           esg_score_source?: string | null
@@ -334,9 +339,11 @@ export type Database = {
           expected_return?: number
           governance_score?: number | null
           id?: string
+          implied_temp_rise?: string | null
           is_active?: boolean
           isin?: string | null
           issuer?: string | null
+          msci_esg_quality_score?: number | null
           name: string
           region?: string | null
           sfdr_article?: number | null
@@ -345,6 +352,7 @@ export type Database = {
           ticker: string
           updated_at?: string
           volatility?: number
+          waci_tco2e_per_musd_sales?: number | null
           yahoo_symbol?: string | null
         }
         Update: {
@@ -357,6 +365,7 @@ export type Database = {
           currency?: string
           description?: string | null
           env_score?: number | null
+          esg_data_asof?: string | null
           esg_score?: number
           esg_score_fetched_at?: string | null
           esg_score_source?: string | null
@@ -364,9 +373,11 @@ export type Database = {
           expected_return?: number
           governance_score?: number | null
           id?: string
+          implied_temp_rise?: string | null
           is_active?: boolean
           isin?: string | null
           issuer?: string | null
+          msci_esg_quality_score?: number | null
           name?: string
           region?: string | null
           sfdr_article?: number | null
@@ -375,6 +386,7 @@ export type Database = {
           ticker?: string
           updated_at?: string
           volatility?: number
+          waci_tco2e_per_musd_sales?: number | null
           yahoo_symbol?: string | null
         }
         Relationships: []
