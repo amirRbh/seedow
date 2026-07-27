@@ -1731,5 +1731,56 @@
   },
   "esg_alert": {
     "tooltip": "Le score ESG de {{asset}} a récemment baissé. Tu veux que je t’explique pourquoi ?"
+  },
+  "impact_translator": {
+    "eyebrow": "Ton impact, concrètement",
+    "source_prefix": "Source :",
+    "tab": {
+      "monde": "Vs le monde",
+      "tangible": "Rendu tangible",
+      "finance": "Ce que je finance",
+      "exclusions": "Mes exclusions"
+    },
+    "vs_world": {
+      "cleaner": "moins intense carbone qu'un ETF Monde classique.",
+      "dirtier": "plus intense carbone qu'un ETF Monde classique.",
+      "you": "Ton portefeuille",
+      "benchmark": "ETF Monde (MSCI ACWI)",
+      "unit": "tCO₂e / M$ de chiffre d'affaires",
+      "pending": "L'intensité carbone de référence n'est pas encore disponible pour ce portefeuille (données émetteurs en cours d'agrégation)."
+    },
+    "tangible": {
+      "amount_label": "Montant investi",
+      "footprint_label": "Empreinte financée estimée",
+      "per_year": "CO₂e / an",
+      "pending": "L'empreinte carbone chiffrée s'affichera dès que les données émetteurs couvriront ton portefeuille. On ne fabrique aucun chiffre en attendant.",
+      "esg_fallback": "En attendant, ton repère honnête : score d'impact ESG {{score}}/100."
+    },
+    "finance": {
+      "note": "Ton argent finance concrètement ces positions. Les métriques physiques par projet dépendent des divulgations émetteurs (à venir).",
+      "pending": "Positions indisponibles pour ce portefeuille."
+    },
+    "exclusions": {
+      "body": "Les secteurs que tu as exclus sont totalement retirés de l'univers d'investissement, en amont de la construction du portefeuille.",
+      "pending": "Le montant de ton capital détourné de chaque secteur nécessite des parts sectorielles sourcées et datées — à venir, jamais estimé au doigt mouillé.",
+      "method_link": "Voir la méthodologie"
+    },
+    "confidence": {
+      "high": "Données émetteurs complètes · {{pct}}%",
+      "partial": "Estimation · {{pct}}% des données émetteurs",
+      "low": "Données émetteurs en cours"
+    },
+    "class": {
+      "equity_dev": "Actions développées",
+      "equity_em": "Actions émergentes",
+      "thematic": "Thématique",
+      "green_bond": "Obligations vertes",
+      "social_bond": "Obligations sociales",
+      "sov_bond": "Obligations souveraines",
+      "corporate_bond": "Obligations d'entreprise",
+      "reit": "Immobilier coté",
+      "commodity": "Matières premières",
+      "cash": "Liquidités"
+    }
   }
 }
