@@ -61,7 +61,15 @@ export function ImpactHero() {
       className="px-5 pt-8"
     >
       <article className="relative overflow-hidden rounded-3xl border border-paper-3 bg-paper paper-grain p-6 md:p-8">
-        <div className="gold-rule mb-5" aria-hidden />
+        {/* Filigrane éditorial */}
+        <span
+          aria-hidden
+          className="pointer-events-none select-none absolute -right-4 -top-4 font-display text-[8rem] md:text-[11rem] leading-none tracking-tighter text-ink/[0.04]"
+        >
+          IMPACT
+        </span>
+
+        <div className="gold-rule mb-5 relative" aria-hidden />
 
         <header className="flex items-baseline justify-between gap-3">
           <p className="text-tag uppercase tracking-[0.22em] font-semibold text-gold">
