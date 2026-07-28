@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
+import type { CauseTag } from "@/lib/portfolio/types";
 
 export interface ActiveHolding {
   id: string;
@@ -12,6 +13,11 @@ export interface ActiveHolding {
   allocationPct: number; // 0..100
   esgScore: number;
   region: string | null;
+  /**
+   * Intensité par cause déclarée sur l'actif (0..1 par cause). Vide si non
+   * renseigné. Sert à répartir un holding entre plusieurs thèmes de façon pondérée.
+   */
+  causeExposure: Partial<Record<CauseTag, number>>;
 }
 
 export interface ActivePortfolioMetrics {
@@ -77,7 +83,7 @@ async function fetchActivePortfolio(
   if (ids.length > 0) {
     const { data: assets, error: aErr } = await supabase
       .from("assets")
-      .select("id, ticker, name, asset_class, esg_score, region")
+      .select("id, ticker, name, asset_class, esg_score, region, cause_exposure")
       .in("id", ids);
     if (aErr) throw new Error(aErr.message);
     holdings = (assets ?? []).map((a) => ({
@@ -88,6 +94,7 @@ async function fetchActivePortfolio(
       allocationPct: (weights[a.id] ?? 0) * 100,
       esgScore: Number(a.esg_score),
       region: a.region,
+      causeExposure: (a.cause_exposure ?? {}) as Partial<Record<CauseTag, number>>,
     }));
     holdings.sort((a, b) => b.allocationPct - a.allocationPct);
   }

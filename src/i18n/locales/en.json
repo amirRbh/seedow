@@ -1188,6 +1188,27 @@
     "benchmark_ref": "World ETF ref.: {{bench}} tCO₂e/$M · {{source}}",
     "intensity_explainer": "Carbon intensity (WACI) comes from issuer disclosures, compared to a standard World ETF (MSCI ACWI index). Not a certified regulatory figure."
   },
+  "impact_stack": {
+    "subheading": "YOUR FOOTPRINT, IN NUMBERS",
+    "method": "METHOD",
+    "mod1_eyebrow": "N° 01 · FINANCED FOOTPRINT",
+    "mod1_meta_coverage": "COVERAGE {{pct}}%",
+    "mod1_meta_method": "PCAF METHOD",
+    "mod1_intensity_note": "WEIGHTED CARBON INTENSITY (WACI) · PER-EURO FOOTPRINT UNAVAILABLE",
+    "mod1_pending": "FOOTPRINT BEING MEASURED — NOTHING INVENTED",
+    "mod2_eyebrow": "N° 02 · VS. WORLD ETF (ACWI)",
+    "mod2_yours": "YOUR PORTFOLIO",
+    "mod2_bench": "WORLD ETF",
+    "mod2_verdict_cleaner": "LESS INTENSITY",
+    "mod2_verdict_dirtier": "MORE INTENSITY",
+    "mod2_pending": "COMPARISON AVAILABLE ONCE WACI DATA COVERS THE PORTFOLIO",
+    "mod3_eyebrow": "N° 03 · WHERE YOUR MONEY GOES",
+    "mod3_others": "OTHER THEMES",
+    "mod3_unclassified": "UNCLASSIFIED",
+    "mod3_empty": "NO THEMATIC EXPOSURE DECLARED ON THESE ASSETS",
+    "mod3_meta": "BASED ON DECLARED EXPOSURE OF {{n}} ASSETS",
+    "mod3_source": "ISSUER DATA · SEEDOW"
+  },
   "impact": {
     "equiv": {
       "car_km": "km driven by car",

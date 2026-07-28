@@ -21,7 +21,7 @@ import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 
 import { RealInvestmentInterestCard } from "@/components/beta/RealInvestmentInterestCard";
 import { FeedbackButton } from "@/components/beta/FeedbackButton";
-import { ImpactHero } from "@/components/impact/ImpactHero";
+import { ImpactStack } from "@/components/impact/ImpactStack";
 import { LearnIntroCard } from "@/components/dashboard/LearnIntroCard";
 import { GuestBanner } from "@/components/dashboard/GuestBanner";
 import { CompleteProfileBanner } from "@/components/dashboard/CompleteProfileBanner";
@@ -200,7 +200,7 @@ function Dashboard() {
         </motion.section>
 
         {/* 1b. Impact nature — mis en avant juste après la valeur */}
-        {portfolio && holdings.length > 0 && <ImpactHero />}
+        {portfolio && holdings.length > 0 && <ImpactStack />}
 
         {/* 2. Aperçu portefeuille */}
         <motion.section

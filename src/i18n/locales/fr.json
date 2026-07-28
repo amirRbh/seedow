@@ -1170,6 +1170,27 @@
     "benchmark_ref": "Réf. ETF Monde : {{bench}} tCO₂e/M$ · {{source}}",
     "intensity_explainer": "L'intensité carbone (WACI) vient des divulgations émetteurs. On la compare à un ETF Monde classique (indice MSCI ACWI). Ce n'est pas un chiffre réglementaire certifié."
   },
+  "impact_stack": {
+    "subheading": "TON EMPREINTE, EN CHIFFRES",
+    "method": "MÉTHODE",
+    "mod1_eyebrow": "N° 01 · EMPREINTE FINANCÉE",
+    "mod1_meta_coverage": "COUVERTURE {{pct}}%",
+    "mod1_meta_method": "MÉTHODE PCAF",
+    "mod1_intensity_note": "INTENSITÉ CARBONE PONDÉRÉE (WACI) · EMPREINTE PAR € NON DISPONIBLE",
+    "mod1_pending": "EMPREINTE EN COURS DE MESURE — AUCUN CHIFFRE INVENTÉ",
+    "mod2_eyebrow": "N° 02 · VS. ETF MONDE (ACWI)",
+    "mod2_yours": "TON PORTEFEUILLE",
+    "mod2_bench": "ETF MONDE",
+    "mod2_verdict_cleaner": "D'INTENSITÉ EN MOINS",
+    "mod2_verdict_dirtier": "D'INTENSITÉ EN PLUS",
+    "mod2_pending": "COMPARAISON DISPONIBLE DÈS QUE LES DONNÉES WACI COUVRENT LE PORTEFEUILLE",
+    "mod3_eyebrow": "N° 03 · OÙ VA TON ARGENT",
+    "mod3_others": "AUTRES THÈMES",
+    "mod3_unclassified": "NON CLASSÉ",
+    "mod3_empty": "AUCUNE EXPOSITION THÉMATIQUE DÉCLARÉE SUR CES ACTIFS",
+    "mod3_meta": "BASÉ SUR L'EXPOSITION DÉCLARÉE DES {{n}} ACTIFS",
+    "mod3_source": "DONNÉES ÉMETTEURS · SEEDOW"
+  },
   "impact": {
     "equiv": {
       "car_km": "km en voiture",

@@ -11,6 +11,7 @@ function makeHolding(overrides: Partial<ActiveHolding> = {}): ActiveHolding {
     allocationPct: 10,
     esgScore: 75,
     region: "world",
+    causeExposure: {},
     ...overrides,
   };
 }
