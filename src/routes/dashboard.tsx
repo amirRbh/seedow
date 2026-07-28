@@ -200,7 +200,7 @@ function Dashboard() {
         </motion.section>
 
         {/* 1b. Impact nature — mis en avant juste après la valeur */}
-        {portfolio && holdings.length > 0 && <ImpactHero />}
+        {portfolio && holdings.length > 0 && <ImpactStack />}
 
         {/* 2. Aperçu portefeuille */}
         <motion.section
