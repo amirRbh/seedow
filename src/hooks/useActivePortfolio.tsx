@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
+import type { CauseTag } from "@/lib/portfolio/types";
 
 export interface ActiveHolding {
   id: string;
@@ -12,6 +13,8 @@ export interface ActiveHolding {
   allocationPct: number; // 0..100
   esgScore: number;
   region: string | null;
+  /** Tags de causes déclarés sur l'actif. Vide si non renseigné. */
+  causes: CauseTag[];
 }
 
 export interface ActivePortfolioMetrics {
