@@ -11,6 +11,7 @@ import { PortfolioHistoryChart } from "@/components/portfolio/PortfolioHistoryCh
 import { MarketFreshnessBanner } from "@/components/portfolio/MarketFreshnessBanner";
 import { ValuationConsistencyBanner } from "@/components/portfolio/ValuationConsistencyBanner";
 import { ImpactCertificate } from "@/components/portfolio/ImpactCertificate";
+import { ImpactHero } from "@/components/impact/ImpactHero";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { ShareToggle } from "@/components/community/ShareToggle";
 import { ImpactTranslator } from "@/components/impact/ImpactTranslator";
@@ -123,6 +124,9 @@ function Portfolio() {
           onRefreshed={() => valuation.refresh()}
         />
         <ValuationConsistencyBanner consistency={valuation.consistency} />
+
+        {/* Impact — hero éditorial toujours visible, avant les onglets */}
+        <ImpactHero />
 
         <section className="px-5 pt-4">
           <Tabs defaultValue="performance">
