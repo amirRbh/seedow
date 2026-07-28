@@ -125,8 +125,6 @@ function Portfolio() {
         />
         <ValuationConsistencyBanner consistency={valuation.consistency} />
 
-        {/* Impact — hero éditorial toujours visible, avant les onglets */}
-        <ImpactHero />
 
         <section className="px-5 pt-4">
           <Tabs defaultValue="performance">
