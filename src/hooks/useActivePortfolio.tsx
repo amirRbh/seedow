@@ -80,7 +80,7 @@ async function fetchActivePortfolio(
   if (ids.length > 0) {
     const { data: assets, error: aErr } = await supabase
       .from("assets")
-      .select("id, ticker, name, asset_class, esg_score, region")
+      .select("id, ticker, name, asset_class, esg_score, region, causes")
       .in("id", ids);
     if (aErr) throw new Error(aErr.message);
     holdings = (assets ?? []).map((a) => ({
@@ -91,6 +91,7 @@ async function fetchActivePortfolio(
       allocationPct: (weights[a.id] ?? 0) * 100,
       esgScore: Number(a.esg_score),
       region: a.region,
+      causes: (a.causes ?? []) as CauseTag[],
     }));
     holdings.sort((a, b) => b.allocationPct - a.allocationPct);
   }
