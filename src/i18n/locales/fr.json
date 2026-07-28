@@ -1803,5 +1803,65 @@
       "commodity": "Matières premières",
       "cash": "Liquidités"
     }
+  },
+  "impact_living": {
+    "eyebrow": "N° 01 · La preuve vivante",
+    "title": "Ton monde vivant",
+    "live": "En direct",
+    "how_it_works": "Comment ça marche",
+    "ethi": {
+      "germination": "Ton monde n'attend qu'une graine. Dès ton premier euro, il commence à pousser.",
+      "alive": "Aujourd'hui, ton monde compte {{seeds}} graines vivantes, réparties sur {{themes}} convictions."
+    },
+    "vivant": {
+      "aria_intro": "Organisme d'impact de ton portefeuille, réparti par conviction :",
+      "aria_germination": "Organisme d'impact en germination : aucune ligne pour l'instant."
+    },
+    "cause": {
+      "climat": "Climat",
+      "biodiversite": "Biodiversité",
+      "humain": "Droits humains",
+      "egalite": "Égalité F/H",
+      "tech": "Tech éthique",
+      "circulaire": "Économie circulaire"
+    },
+    "fil": {
+      "title": "Le fil de ton impact",
+      "since": "Depuis le {{date}}",
+      "source_prefix": "Source :",
+      "tone": {
+        "growth": "Bonne nouvelle",
+        "identity": "Repère",
+        "neutral": "Mesure",
+        "caution": "Point de vigilance"
+      },
+      "identity": {
+        "headline": "Ton argent finance {{count}} entreprises, sur {{themes}} convictions.",
+        "body": "Ta conviction principale, {{cause}}, pèse {{pct}} % de ton monde."
+      },
+      "cleaner": {
+        "headline": "Ton portefeuille est {{pct}} % moins intensif en carbone qu'un ETF Monde.",
+        "body": "Mesuré sur {{coverage}} % de ton portefeuille, à partir des données émetteurs."
+      },
+      "dirtier": {
+        "headline": "Ton portefeuille est {{pct}} % plus intensif en carbone qu'un ETF Monde.",
+        "body": "On te le dit franchement : c'est un point à surveiller, pas une fatalité."
+      },
+      "measured": {
+        "headline": "L'empreinte financée équivaut à environ {{km}} km en voiture par an.",
+        "body": "Mesuré sur {{coverage}} % de ton portefeuille. C'est une empreinte, pas un « CO₂ évité »."
+      },
+      "measuring": {
+        "headline": "L'empreinte carbone de ton monde est en cours de mesure.",
+        "body": "On préfère ne rien afficher plutôt qu'un chiffre inventé. Dès que les données émetteurs couvrent tes lignes, elles apparaissent ici."
+      },
+      "first_cause": {
+        "headline": "{{cause}} domine ton monde, à {{pct}} %."
+      }
+    },
+    "proof": {
+      "title": "Voir la preuve",
+      "subtitle": "Les chiffres, les sources et la méthode — repliés, jamais cachés."
+    }
   }
 }

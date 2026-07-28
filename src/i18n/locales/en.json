@@ -1821,5 +1821,65 @@
       "commodity": "Commodities",
       "cash": "Cash"
     }
+  },
+  "impact_living": {
+    "eyebrow": "No. 01 · Living proof",
+    "title": "Your living world",
+    "live": "Live",
+    "how_it_works": "How it works",
+    "ethi": {
+      "germination": "Your world is waiting for a single seed. From your very first euro, it starts to grow.",
+      "alive": "Today, your world holds {{seeds}} living seeds across {{themes}} convictions."
+    },
+    "vivant": {
+      "aria_intro": "Impact organism of your portfolio, broken down by conviction:",
+      "aria_germination": "Impact organism germinating: no holdings yet."
+    },
+    "cause": {
+      "climat": "Climate",
+      "biodiversite": "Biodiversity",
+      "humain": "Human rights",
+      "egalite": "Gender equality",
+      "tech": "Ethical tech",
+      "circulaire": "Circular economy"
+    },
+    "fil": {
+      "title": "Your impact feed",
+      "since": "Since {{date}}",
+      "source_prefix": "Source:",
+      "tone": {
+        "growth": "Good news",
+        "identity": "Marker",
+        "neutral": "Measurement",
+        "caution": "Watch point"
+      },
+      "identity": {
+        "headline": "Your money funds {{count}} companies, across {{themes}} convictions.",
+        "body": "Your leading conviction, {{cause}}, makes up {{pct}}% of your world."
+      },
+      "cleaner": {
+        "headline": "Your portfolio is {{pct}}% less carbon-intensive than a World ETF.",
+        "body": "Measured on {{coverage}}% of your portfolio, from issuer data."
+      },
+      "dirtier": {
+        "headline": "Your portfolio is {{pct}}% more carbon-intensive than a World ETF.",
+        "body": "We'll say it plainly: it's something to watch, not a fate."
+      },
+      "measured": {
+        "headline": "The financed footprint is roughly {{km}} km by car per year.",
+        "body": "Measured on {{coverage}}% of your portfolio. This is a footprint, not 'avoided CO₂'."
+      },
+      "measuring": {
+        "headline": "Your world's carbon footprint is still being measured.",
+        "body": "We'd rather show nothing than an invented number. As soon as issuer data covers your holdings, it appears here."
+      },
+      "first_cause": {
+        "headline": "{{cause}} leads your world, at {{pct}}%."
+      }
+    },
+    "proof": {
+      "title": "See the proof",
+      "subtitle": "The figures, sources and method — folded away, never hidden."
+    }
   }
 }
