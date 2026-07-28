@@ -188,6 +188,7 @@ function Portfolio() {
             </TabsContent>
 
             <TabsContent value="impact" className="pt-5 space-y-5">
+              <ImpactHero />
               {portfolio.metrics && (
                 <ImpactTranslator
                   metrics={portfolio.metrics}
