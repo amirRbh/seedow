@@ -13,8 +13,11 @@ export interface ActiveHolding {
   allocationPct: number; // 0..100
   esgScore: number;
   region: string | null;
-  /** Tags de causes déclarés sur l'actif. Vide si non renseigné. */
-  causes: CauseTag[];
+  /**
+   * Intensité par cause déclarée sur l'actif (0..1 par cause). Vide si non
+   * renseigné. Sert à répartir un holding entre plusieurs thèmes de façon pondérée.
+   */
+  causeExposure: Partial<Record<CauseTag, number>>;
 }
 
 export interface ActivePortfolioMetrics {
