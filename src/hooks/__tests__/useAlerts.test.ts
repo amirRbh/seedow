@@ -24,6 +24,7 @@ function makePortfolio(overrides: Partial<ActivePortfolio> = {}): ActivePortfoli
     generated_at: new Date().toISOString(),
     holdings: [makeHolding()],
     metrics: null,
+    exclusions: [],
     ...overrides,
   };
 }

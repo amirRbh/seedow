@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
@@ -6,25 +6,19 @@ import { AppHeader } from "@/components/navigation/AppHeader";
 import { GrowthComparison } from "@/components/roots/GrowthComparison";
 import { BadgesCard } from "@/components/portfolio/MilestoneBadges";
 import { AllocationBreakdown } from "@/components/portfolio/AllocationBreakdown";
-import { PortfolioMetricsCard } from "@/components/portfolio/PortfolioMetricsCard";
 import { PortfolioHistoryChart } from "@/components/portfolio/PortfolioHistoryChart";
 import { MarketFreshnessBanner } from "@/components/portfolio/MarketFreshnessBanner";
 import { ValuationConsistencyBanner } from "@/components/portfolio/ValuationConsistencyBanner";
-import { ImpactCertificate } from "@/components/portfolio/ImpactCertificate";
-import { ImpactHero } from "@/components/impact/ImpactHero";
-import { ImpactLiving } from "@/components/impact/ImpactLiving";
+import { ImpactExperience } from "@/components/impact/ImpactExperience";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { ShareToggle } from "@/components/community/ShareToggle";
-import { ImpactTranslator } from "@/components/impact/ImpactTranslator";
 import { ComparatifPanel } from "@/components/portfolio/ComparatifPanel";
 import { AllocationRefiner } from "@/components/portfolio/AllocationRefiner";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { ExplainerCard } from "@/components/ui/ExplainerCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyPortfolioState } from "@/components/portfolio/EmptyPortfolioState";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
-import { useViewMode } from "@/hooks/useViewMode";
 import { useAuth } from "@/hooks/useAuth";
 import { useLang } from "@/hooks/useLang";
 import { formatCurrency } from "@/lib/format";
@@ -32,7 +26,15 @@ import { BADGE_DEFS, computeUnlockedBadgeIds } from "@/lib/portfolio/badges";
 import type { MilestoneBadge } from "@/components/portfolio/MilestoneBadges";
 import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 
+const PORTFOLIO_TABS = ["performance", "allocation", "affiner", "impact", "comparatif"] as const;
+
 export const Route = createFileRoute("/portfolio")({
+  // `?tab=impact` permet d'ouvrir directement un onglet (ex. depuis le dashboard).
+  validateSearch: (s: Record<string, unknown>): { tab?: (typeof PORTFOLIO_TABS)[number] } => ({
+    tab: PORTFOLIO_TABS.includes(s.tab as (typeof PORTFOLIO_TABS)[number])
+      ? (s.tab as (typeof PORTFOLIO_TABS)[number])
+      : undefined,
+  }),
   beforeLoad: () => requireAuthedUser("/portfolio"),
   component: Portfolio,
 });
@@ -41,9 +43,10 @@ function Portfolio() {
   const { t } = useTranslation();
   const { lang } = useLang();
   const { user } = useAuth();
+  const { tab } = Route.useSearch();
+  const navigate = useNavigate();
   const { portfolio, loading } = useActivePortfolio();
   const valuation = usePortfolioValuation();
-  const { isSimple } = useViewMode();
 
   if (loading) {
     return (
@@ -127,7 +130,18 @@ function Portfolio() {
         <ValuationConsistencyBanner consistency={valuation.consistency} />
 
         <section className="px-5 pt-4">
-          <Tabs defaultValue="performance">
+          <Tabs
+            value={tab ?? "performance"}
+            onValueChange={(v) =>
+              navigate({
+                to: "/portfolio",
+                search: {
+                  tab: v === "performance" ? undefined : (v as (typeof PORTFOLIO_TABS)[number]),
+                },
+                replace: true,
+              })
+            }
+          >
             <TabsList className="w-full grid grid-cols-5 h-auto bg-paper-2 p-1">
               <TabsTrigger value="performance" className="text-caption uppercase tracking-[0.12em]">
                 {t("portfolio.tab_perf")}
@@ -187,59 +201,8 @@ function Portfolio() {
               <AllocationRefiner portfolioId={portfolio.id} />
             </TabsContent>
 
-            <TabsContent value="impact" className="pt-5 space-y-6">
-              {/* La Preuve Vivante — l'organisme + le fil, en tête. */}
-              <ImpactLiving />
-
-              {/* La preuve : chiffres, sources et méthode. Repliés, jamais cachés. */}
-              <details className="group rounded-3xl border border-paper-3 bg-paper-2/50 open:bg-paper-2/30">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-5 [&::-webkit-details-marker]:hidden">
-                  <span className="block">
-                    <span className="block text-sm font-semibold text-ink">
-                      {t("impact_living.proof.title")}
-                    </span>
-                    <span className="mt-0.5 block text-xs text-ink-2">
-                      {t("impact_living.proof.subtitle")}
-                    </span>
-                  </span>
-                  <svg
-                    viewBox="0 0 24 24"
-                    className="h-4 w-4 flex-none text-ink-3 transition-transform duration-300 group-open:rotate-180"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    aria-hidden
-                  >
-                    <path d="M6 9l6 6 6-6" />
-                  </svg>
-                </summary>
-                <div className="space-y-5 border-t border-paper-3 px-5 pb-5 pt-5">
-                  <ImpactHero />
-                  {portfolio.metrics && (
-                    <ImpactTranslator
-                      metrics={portfolio.metrics}
-                      holdings={portfolio.holdings}
-                      defaultAmount={Math.max(totalInvested, 0)}
-                    />
-                  )}
-                  <div className="space-y-3">
-                    <h2 className="text-sm font-semibold text-ink">
-                      {t("portfolio.key_indicators")}
-                    </h2>
-                    {isSimple && (
-                      <ExplainerCard tone="highlight" dismissKey="portfolio-metrics-simple">
-                        {t("portfolio.simple_explainer_pre")}{" "}
-                        <span className="font-semibold">
-                          {t("portfolio.simple_explainer_expert")}
-                        </span>{" "}
-                        {t("portfolio.simple_explainer_post")}
-                      </ExplainerCard>
-                    )}
-                    <PortfolioMetricsCard metrics={portfolio.metrics} />
-                  </div>
-                  <ImpactCertificate />
-                </div>
-              </details>
+            <TabsContent value="impact" className="pt-5">
+              <ImpactExperience />
             </TabsContent>
 
             <TabsContent value="comparatif" className="pt-5">

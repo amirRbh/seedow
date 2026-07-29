@@ -1161,6 +1161,102 @@
     "explainer": "CO₂ avoided is an indicative estimate derived from each holding's ESG score. Not a regulatory figure — a directional measure.",
     "learn_more": "See methodology"
   },
+  "impact_common": {
+    "companies_one": "{{count}} company",
+    "companies_other": "{{count}} companies",
+    "convictions_one": "{{count}} conviction",
+    "convictions_other": "{{count}} convictions"
+  },
+  "impact_signal": {
+    "source_prefix": "Source:",
+    "tone": {
+      "positive": "Good news",
+      "caution": "Watch point",
+      "neutral": "Benchmark"
+    },
+    "cleaner": "Your portfolio emits {{pct}}% less CO₂ than a standard World ETF.",
+    "dirtier": "Your portfolio emits {{pct}}% more CO₂ than a standard World ETF.",
+    "footprint": "Your financed footprint is about {{km}} km of driving per year.",
+    "esg": "Your ESG impact score is {{score}}/100."
+  },
+  "impact_moment": {
+    "aria": "Open my impact detail",
+    "eyebrow": "Your impact · live",
+    "cta": "See my impact",
+    "headline": "Your money finances {{companies}}, serving {{convictions}}.",
+    "headline_no_themes": "Your money finances {{companies}} across the world."
+  },
+  "impact_xp": {
+    "title": "Your impact",
+    "eyebrow": "No. 01 · Your impact",
+    "how_it_works": "How it works",
+    "coverage": "measured on {{pct}}% of the portfolio",
+    "manifesto": {
+      "headline": "Your money isn't just parked. It acts.",
+      "sub": "{{companies}} financed · {{convictions}}",
+      "since": "since {{date}}",
+      "germination": "Your world is one seed away.",
+      "germination_sub": "From your very first euro invested, your impact starts taking shape here — theme by theme, company by company."
+    },
+    "convictions": {
+      "title": "Where your money goes",
+      "subtitle": "Each conviction, its real weight in your portfolio and the ESG strength of the companies behind it.",
+      "unclassified": "Not tied to a conviction",
+      "unclassified_note": "Share of the portfolio with no declared thematic exposure. We show it honestly rather than assigning it by default."
+    },
+    "tier": {
+      "solid": "Solid",
+      "growing": "Improving",
+      "watch": "Watch",
+      "unknown": "Data pending"
+    },
+    "vs_world": {
+      "title": "Against the world",
+      "subtitle": "Your portfolio's carbon intensity compared to a standard World ETF.",
+      "cleaner": "less carbon-intensive than a standard World ETF.",
+      "dirtier": "more carbon-intensive than a standard World ETF.",
+      "you": "Your portfolio",
+      "benchmark": "World ETF (MSCI ACWI)",
+      "unit": "tCO₂e / $M revenue",
+      "pending": "The reference carbon intensity isn't available for this portfolio yet — issuer data is still being aggregated. We won't fabricate any number in the meantime."
+    },
+    "tangible": {
+      "title": "Made tangible",
+      "subtitle": "The carbon footprint your capital finances, translated into concrete terms.",
+      "footprint_label": "Financed footprint",
+      "per_year": "CO₂e / year",
+      "pending": "The measured carbon footprint will appear as soon as issuer data covers your portfolio. We won't fabricate any number in the meantime.",
+      "esg_fallback": "In the meantime, your honest benchmark: ESG impact score {{score}}/100."
+    },
+    "finance": {
+      "title": "What your money finances",
+      "subtitle": "The real companies behind your portfolio — not an abstraction.",
+      "note": "Your money concretely finances these positions. Physical per-project metrics depend on issuer disclosures (coming soon).",
+      "more": "+ {{count}} more positions"
+    },
+    "exclusions": {
+      "title": "What your money refuses",
+      "subtitle": "The sectors you chose to exclude are removed from your universe, upstream. Your money can't finance them.",
+      "note": "Exclusion applied before the portfolio is built — not a cosmetic filter after the fact.",
+      "tag": {
+        "fossiles": "Fossil fuels",
+        "armes": "Weapons",
+        "tabac": "Tobacco",
+        "jeux": "Gambling",
+        "animaux": "Animal testing",
+        "fast-fashion": "Fast fashion"
+      }
+    },
+    "fil": {
+      "title": "Your impact feed",
+      "subtitle": "The dated, sourced story of what your money does, since your first euro."
+    },
+    "proof": {
+      "title": "See the proof",
+      "subtitle": "The raw figures, sources and method — folded away, never hidden.",
+      "indicators": "Key indicators"
+    }
+  },
   "impact_hero": {
     "eyebrow": "Carbon footprint",
     "footprint_label": "Financed carbon footprint",

@@ -1143,6 +1143,102 @@
     "explainer": "Le CO₂ évité est une estimation indicative calculée à partir des scores ESG de chaque ligne. Ce n'est pas un chiffre réglementaire — c'est une mesure de direction.",
     "learn_more": "Voir la méthodologie"
   },
+  "impact_common": {
+    "companies_one": "{{count}} entreprise",
+    "companies_other": "{{count}} entreprises",
+    "convictions_one": "{{count}} conviction",
+    "convictions_other": "{{count}} convictions"
+  },
+  "impact_signal": {
+    "source_prefix": "Source :",
+    "tone": {
+      "positive": "Bonne nouvelle",
+      "caution": "Point de vigilance",
+      "neutral": "Repère"
+    },
+    "cleaner": "Ton portefeuille émet {{pct}} % de CO₂ en moins qu'un ETF Monde classique.",
+    "dirtier": "Ton portefeuille émet {{pct}} % de CO₂ en plus qu'un ETF Monde classique.",
+    "footprint": "Ton empreinte financée équivaut à environ {{km}} km en voiture par an.",
+    "esg": "Ton score d'impact ESG est de {{score}}/100."
+  },
+  "impact_moment": {
+    "aria": "Ouvrir le détail de mon impact",
+    "eyebrow": "Ton impact · en direct",
+    "cta": "Voir mon impact",
+    "headline": "Ton argent finance {{companies}}, au service de {{convictions}}.",
+    "headline_no_themes": "Ton argent finance {{companies}} à travers le monde."
+  },
+  "impact_xp": {
+    "title": "Ton impact",
+    "eyebrow": "N° 01 · Ton impact",
+    "how_it_works": "Comment ça marche",
+    "coverage": "mesuré sur {{pct}} % du portefeuille",
+    "manifesto": {
+      "headline": "Ton argent n'est pas juste placé. Il agit.",
+      "sub": "{{companies}} financées · {{convictions}}",
+      "since": "depuis {{date}}",
+      "germination": "Ton monde n'attend qu'une graine.",
+      "germination_sub": "Dès ton premier euro investi, ton impact commence à se dessiner ici — thème par thème, entreprise par entreprise."
+    },
+    "convictions": {
+      "title": "Où va ton argent",
+      "subtitle": "Chaque conviction, son poids réel dans ton portefeuille et la solidité ESG des entreprises qui la portent.",
+      "unclassified": "Non rattaché à une conviction",
+      "unclassified_note": "Part du portefeuille sans exposition thématique déclarée. On l'affiche honnêtement plutôt que de l'attribuer d'office."
+    },
+    "tier": {
+      "solid": "Solide",
+      "growing": "En progrès",
+      "watch": "À surveiller",
+      "unknown": "Donnée en cours"
+    },
+    "vs_world": {
+      "title": "Face au monde",
+      "subtitle": "L'intensité carbone de ton portefeuille comparée à un ETF Monde classique.",
+      "cleaner": "moins intense en carbone qu'un ETF Monde classique.",
+      "dirtier": "plus intense en carbone qu'un ETF Monde classique.",
+      "you": "Ton portefeuille",
+      "benchmark": "ETF Monde (MSCI ACWI)",
+      "unit": "tCO₂e / M$ de chiffre d'affaires",
+      "pending": "L'intensité carbone de référence n'est pas encore disponible pour ce portefeuille — les données émetteurs sont en cours d'agrégation. On ne fabrique aucun chiffre en attendant."
+    },
+    "tangible": {
+      "title": "Rendu tangible",
+      "subtitle": "L'empreinte carbone que ton capital finance, traduite en repères concrets.",
+      "footprint_label": "Empreinte financée",
+      "per_year": "CO₂e / an",
+      "pending": "L'empreinte carbone chiffrée s'affichera dès que les données émetteurs couvriront ton portefeuille. On ne fabrique aucun chiffre en attendant.",
+      "esg_fallback": "En attendant, ton repère honnête : score d'impact ESG {{score}}/100."
+    },
+    "finance": {
+      "title": "Ce que ton argent finance",
+      "subtitle": "Les entreprises réelles derrière ton portefeuille — pas une abstraction.",
+      "note": "Ton argent finance concrètement ces positions. Les métriques physiques par projet dépendent des divulgations émetteurs (à venir).",
+      "more": "+ {{count}} autres positions"
+    },
+    "exclusions": {
+      "title": "Ce que ton argent refuse",
+      "subtitle": "Les secteurs que tu as choisi d'exclure sont retirés de ton univers, en amont. Ton argent ne peut pas les financer.",
+      "note": "Exclusion appliquée avant la construction du portefeuille — pas un filtre cosmétique après coup.",
+      "tag": {
+        "fossiles": "Énergies fossiles",
+        "armes": "Armement",
+        "tabac": "Tabac",
+        "jeux": "Jeux d'argent",
+        "animaux": "Tests sur animaux",
+        "fast-fashion": "Fast fashion"
+      }
+    },
+    "fil": {
+      "title": "Le fil de ton impact",
+      "subtitle": "La story datée et sourcée de ce que ton argent fait, depuis ton premier euro."
+    },
+    "proof": {
+      "title": "Voir la preuve",
+      "subtitle": "Les chiffres bruts, les sources et la méthode — repliés, jamais cachés.",
+      "indicators": "Indicateurs clés"
+    }
+  },
   "impact_hero": {
     "eyebrow": "Empreinte carbone",
     "footprint_label": "Empreinte carbone financée",
