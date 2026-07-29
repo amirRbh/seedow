@@ -950,14 +950,22 @@
   top: -180px;
   left: 50%;
   transform: translateX(-50%);
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--mint) 20%, transparent), transparent 70%);
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--mint) 20%, transparent),
+    transparent 70%
+  );
 }
 .apple-landing .apple-aura--ice {
   width: 560px;
   height: 560px;
   top: 240px;
   right: -180px;
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--ice) 14%, transparent), transparent 70%);
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--ice) 14%, transparent),
+    transparent 70%
+  );
 }
 
 .apple-grad {
