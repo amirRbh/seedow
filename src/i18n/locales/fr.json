@@ -93,13 +93,18 @@
     },
     "stats": {
       "visibility": "de visibilité réelle sur ce que finance ton assurance-vie classique.",
+      "visibility_src": "contrats multisupports · 2025",
       "jargon": "de jargon financier entre toi et une décision qui devrait t'appartenir.",
-      "only_app": "seule app qui relie ton portefeuille à son impact réel sur le monde."
+      "jargon_src": "17 % savent ce qu'est un ETF",
+      "only_app": "seule app qui relie ton portefeuille à son impact réel sur le monde.",
+      "only_app_src": "marché FR · juillet 2026"
     },
     "impact": {
       "eyebrow": "Vois ton impact",
       "title": "Ton portefeuille, enfin lisible.",
-      "subtitle": "Chaque ligne devient une couleur, une histoire, une réalité concrète. Pas un rapport annuel de 80 pages."
+      "subtitle": "Chaque ligne devient une couleur, une histoire, une réalité concrète. Pas un rapport annuel de 80 pages.",
+      "card_label": "Allocation · aperçu",
+      "card_live": "valorisation en direct"
     },
     "ethi": {
       "eyebrow": "Ethi",

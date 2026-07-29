@@ -93,13 +93,18 @@
     },
     "stats": {
       "visibility": "real visibility into what your standard life-insurance policy actually finances.",
+      "visibility_src": "unit-linked policies · 2025",
       "jargon": "financial jargon standing between you and a decision that should be yours.",
-      "only_app": "the only app that connects your portfolio to its real-world impact."
+      "jargon_src": "17% know what an ETF is",
+      "only_app": "the only app that connects your portfolio to its real-world impact.",
+      "only_app_src": "FR market · July 2026"
     },
     "impact": {
       "eyebrow": "See your impact",
       "title": "Your portfolio, finally readable.",
-      "subtitle": "Every line becomes a color, a story, a concrete reality. Not an 80-page annual report."
+      "subtitle": "Every line becomes a color, a story, a concrete reality. Not an 80-page annual report.",
+      "card_label": "Allocation · preview",
+      "card_live": "live valuation"
     },
     "ethi": {
       "eyebrow": "Ethi",
