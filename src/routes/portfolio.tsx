@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
@@ -44,6 +44,7 @@ function Portfolio() {
   const { lang } = useLang();
   const { user } = useAuth();
   const { tab } = Route.useSearch();
+  const navigate = useNavigate();
   const { portfolio, loading } = useActivePortfolio();
   const valuation = usePortfolioValuation();
 
@@ -129,7 +130,18 @@ function Portfolio() {
         <ValuationConsistencyBanner consistency={valuation.consistency} />
 
         <section className="px-5 pt-4">
-          <Tabs defaultValue={tab ?? "performance"}>
+          <Tabs
+            value={tab ?? "performance"}
+            onValueChange={(v) =>
+              navigate({
+                to: "/portfolio",
+                search: {
+                  tab: v === "performance" ? undefined : (v as (typeof PORTFOLIO_TABS)[number]),
+                },
+                replace: true,
+              })
+            }
+          >
             <TabsList className="w-full grid grid-cols-5 h-auto bg-paper-2 p-1">
               <TabsTrigger value="performance" className="text-caption uppercase tracking-[0.12em]">
                 {t("portfolio.tab_perf")}

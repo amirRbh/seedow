@@ -1216,6 +1216,19 @@
       "note": "Ton argent finance concrètement ces positions. Les métriques physiques par projet dépendent des divulgations émetteurs (à venir).",
       "more": "+ {{count}} autres positions"
     },
+    "exclusions": {
+      "title": "Ce que ton argent refuse",
+      "subtitle": "Les secteurs que tu as choisi d'exclure sont retirés de ton univers, en amont. Ton argent ne peut pas les financer.",
+      "note": "Exclusion appliquée avant la construction du portefeuille — pas un filtre cosmétique après coup.",
+      "tag": {
+        "fossiles": "Énergies fossiles",
+        "armes": "Armement",
+        "tabac": "Tabac",
+        "jeux": "Jeux d'argent",
+        "animaux": "Tests sur animaux",
+        "fast-fashion": "Fast fashion"
+      }
+    },
     "fil": {
       "title": "Le fil de ton impact",
       "subtitle": "La story datée et sourcée de ce que ton argent fait, depuis ton premier euro."

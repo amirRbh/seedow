@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { useActivePortfolio, type ActiveHolding } from "@/hooks/useActivePortfolio";
+import type { ExclusionTag } from "@/lib/discover/types";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { useViewMode } from "@/hooks/useViewMode";
 import { useLang } from "@/hooks/useLang";
@@ -104,10 +105,11 @@ export function ImpactExperience() {
           <VsWorldSection intensity={impact.intensity} />
           <TangibleSection impact={impact} numLocale={numLocale} />
           <HoldingsSection holdings={holdings} numLocale={numLocale} />
+          <ExclusionsSection exclusions={portfolio.exclusions} />
 
           <div className="space-y-3">
             <SectionHeading
-              n="06"
+              n="07"
               title={t("impact_xp.fil.title")}
               subtitle={t("impact_xp.fil.subtitle")}
             />
@@ -571,6 +573,62 @@ function HoldingsSection({
           </p>
         )}
         <p className="mt-3 text-caption leading-snug text-ink-3">{t("impact_xp.finance.note")}</p>
+      </div>
+    </div>
+  );
+}
+
+/* ──────────────────────── 6. Ce qu'il refuse ──────────────────────── */
+
+/** Ordre canonique d'affichage des exclusions (stable, indépendant de la DB). */
+const EXCLUSION_ORDER: ExclusionTag[] = [
+  "fossiles",
+  "armes",
+  "tabac",
+  "jeux",
+  "animaux",
+  "fast-fashion",
+];
+
+function ExclusionsSection({ exclusions }: { exclusions: ExclusionTag[] }) {
+  const { t } = useTranslation();
+  const list = EXCLUSION_ORDER.filter((e) => exclusions.includes(e));
+  if (list.length === 0) return null;
+
+  return (
+    <div className="space-y-4">
+      <SectionHeading
+        n="06"
+        title={t("impact_xp.exclusions.title")}
+        subtitle={t("impact_xp.exclusions.subtitle")}
+      />
+      <div className="rounded-3xl border border-paper-3 bg-paper p-5 md:p-6">
+        <ul className="flex flex-wrap gap-2">
+          {list.map((e) => (
+            <li
+              key={e}
+              className="inline-flex items-center gap-2 rounded-full border border-paper-3 bg-paper-2 px-3 py-1.5"
+            >
+              <svg
+                viewBox="0 0 16 16"
+                className="h-3.5 w-3.5 flex-none text-ink-3"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                aria-hidden
+              >
+                <circle cx="8" cy="8" r="6.25" />
+                <line x1="3.6" y1="3.6" x2="12.4" y2="12.4" />
+              </svg>
+              <span className="text-body-sm text-ink line-through decoration-ink-3/60">
+                {t(`impact_xp.exclusions.tag.${e}`)}
+              </span>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-4 text-caption leading-snug text-ink-3">
+          {t("impact_xp.exclusions.note")}
+        </p>
       </div>
     </div>
   );

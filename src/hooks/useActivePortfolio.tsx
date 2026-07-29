@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 import type { CauseTag } from "@/lib/portfolio/types";
+import type { ExclusionTag } from "@/lib/discover/types";
 
 export interface ActiveHolding {
   id: string;
@@ -45,6 +46,8 @@ export interface ActivePortfolio {
   generated_at: string;
   holdings: ActiveHolding[];
   metrics: ActivePortfolioMetrics | null;
+  /** Secteurs exclus par l'utilisateur, retirés en amont de la construction. */
+  exclusions: ExclusionTag[];
 }
 
 interface State {
@@ -60,7 +63,7 @@ async function fetchActivePortfolio(
 ): Promise<ActivePortfolio | null> {
   let query = supabase
     .from("portfolios")
-    .select("id, name, initial_amount, generated_at, weights, metrics")
+    .select("id, name, initial_amount, generated_at, weights, metrics, exclusions")
     .eq("user_id", userId)
     .eq("is_active", true);
 
@@ -106,6 +109,7 @@ async function fetchActivePortfolio(
     generated_at: pf.generated_at,
     holdings,
     metrics: (pf.metrics ?? null) as ActivePortfolioMetrics | null,
+    exclusions: (pf.exclusions ?? []) as ExclusionTag[],
   };
 }
 

@@ -1234,6 +1234,19 @@
       "note": "Your money concretely finances these positions. Physical per-project metrics depend on issuer disclosures (coming soon).",
       "more": "+ {{count}} more positions"
     },
+    "exclusions": {
+      "title": "What your money refuses",
+      "subtitle": "The sectors you chose to exclude are removed from your universe, upstream. Your money can't finance them.",
+      "note": "Exclusion applied before the portfolio is built — not a cosmetic filter after the fact.",
+      "tag": {
+        "fossiles": "Fossil fuels",
+        "armes": "Weapons",
+        "tabac": "Tobacco",
+        "jeux": "Gambling",
+        "animaux": "Animal testing",
+        "fast-fashion": "Fast fashion"
+      }
+    },
     "fil": {
       "title": "Your impact feed",
       "subtitle": "The dated, sourced story of what your money does, since your first euro."
