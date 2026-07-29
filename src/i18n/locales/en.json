@@ -1189,25 +1189,17 @@
     "intensity_explainer": "Carbon intensity (WACI) comes from issuer disclosures, compared to a standard World ETF (MSCI ACWI index). Not a certified regulatory figure."
   },
   "impact_stack": {
-    "subheading": "YOUR FOOTPRINT, IN NUMBERS",
+    "eyebrow": "IMPACT · REAL DATA",
     "method": "METHOD",
-    "mod1_eyebrow": "N° 01 · FINANCED FOOTPRINT",
-    "mod1_meta_coverage": "COVERAGE {{pct}}%",
-    "mod1_meta_method": "PCAF METHOD",
-    "mod1_intensity_note": "WEIGHTED CARBON INTENSITY (WACI) · PER-EURO FOOTPRINT UNAVAILABLE",
-    "mod1_pending": "FOOTPRINT BEING MEASURED — NOTHING INVENTED",
-    "mod2_eyebrow": "N° 02 · VS. WORLD ETF (ACWI)",
-    "mod2_yours": "YOUR PORTFOLIO",
-    "mod2_bench": "WORLD ETF",
-    "mod2_verdict_cleaner": "LESS INTENSITY",
-    "mod2_verdict_dirtier": "MORE INTENSITY",
-    "mod2_pending": "COMPARISON AVAILABLE ONCE WACI DATA COVERS THE PORTFOLIO",
-    "mod3_eyebrow": "N° 03 · WHERE YOUR MONEY GOES",
-    "mod3_others": "OTHER THEMES",
-    "mod3_unclassified": "UNCLASSIFIED",
-    "mod3_empty": "NO THEMATIC EXPOSURE DECLARED ON THESE ASSETS",
-    "mod3_meta": "BASED ON DECLARED EXPOSURE OF {{n}} ASSETS",
-    "mod3_source": "ISSUER DATA · SEEDOW"
+    "k_esg": "ESG SCORE",
+    "k_esg_note": "WEIGHTED AVERAGE OF HELD ASSETS",
+    "k_vs": "VS. WORLD ETF",
+    "k_vs_note_cleaner": "CARBON INTENSITY BELOW INDEX (REF. {{bench}} tCO₂e/$M)",
+    "k_vs_note_dirtier": "CARBON INTENSITY ABOVE INDEX (REF. {{bench}} tCO₂e/$M)",
+    "k_vs_pending": "COMPARISON AVAILABLE ONCE WACI DATA COVERS THE PORTFOLIO",
+    "k_waci": "INTENSITY (WACI)",
+    "k_waci_note": "MEASURED ON {{pct}}% OF PORTFOLIO · ISSUER SOURCE",
+    "k_waci_pending": "NO ISSUER WACI AVAILABLE YET"
   },
   "impact": {
     "equiv": {
