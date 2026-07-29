@@ -8,3 +8,4 @@ routeTree.gen.ts
 # Fichiers auto-générés (Lovable Cloud) — ne jamais formater/éditer à la main (§1.6)
 src/integrations/supabase/types.ts
 src/integrations/supabase/client.ts
+.lovable/
