@@ -39,10 +39,20 @@ function Landing() {
     return () => sub.subscription.unsubscribe();
   }, []);
 
-  const STATS: { figure: string; text: string; color: string }[] = [
-    { figure: "0%", color: "var(--apple-text)", text: t("landing.stats.visibility") },
-    { figure: "∞", color: "var(--apple-text)", text: t("landing.stats.jargon") },
-    { figure: "1", color: "var(--mint)", text: t("landing.stats.only_app") },
+  const STATS: { figure: string; text: string; src: string; color?: string; grad?: boolean }[] = [
+    {
+      figure: "0%",
+      color: "var(--apple-text)",
+      text: t("landing.stats.visibility"),
+      src: t("landing.stats.visibility_src"),
+    },
+    {
+      figure: "∞",
+      color: "var(--apple-text)",
+      text: t("landing.stats.jargon"),
+      src: t("landing.stats.jargon_src"),
+    },
+    { figure: "1", grad: true, text: t("landing.stats.only_app"), src: t("landing.stats.only_app_src") },
   ];
 
   return (
@@ -103,62 +113,23 @@ function Landing() {
         </div>
       </nav>
 
-      {/* HERO — Monolith */}
-      <section className="relative overflow-hidden px-6 pt-24 pb-24 md:pt-32 md:pb-32">
-        {/* Massive SEEDOW wordmark en fond */}
-        <div
-          aria-hidden
-          className="absolute inset-x-0 top-[10%] text-center select-none pointer-events-none whitespace-nowrap"
-          style={{
-            fontWeight: 900,
-            fontSize: "22vw",
-            lineHeight: 1,
-            letterSpacing: "-0.06em",
-            color: "#F5F5F7",
-          }}
-        >
-          SEEDOW
-        </div>
-
-        {/* Glows statiques */}
-        <div
-          aria-hidden
-          className="absolute pointer-events-none rounded-full"
-          style={{
-            width: 384,
-            height: 384,
-            bottom: "-10%",
-            right: "-5%",
-            background: "rgba(29,131,72,0.06)",
-            filter: "blur(120px)",
-          }}
-        />
-        <div
-          aria-hidden
-          className="absolute pointer-events-none rounded-full"
-          style={{
-            width: 384,
-            height: 384,
-            top: "-10%",
-            left: "-5%",
-            background: "rgba(0,113,227,0.06)",
-            filter: "blur(120px)",
-          }}
-        />
+      {/* HERO — DA « synthèse » : auras de marque + dégradé mint→ice */}
+      <section className="relative overflow-hidden px-6 pt-20 pb-24 md:pt-24 md:pb-28">
+        <div aria-hidden className="apple-aura apple-aura--mint" />
+        <div aria-hidden className="apple-aura apple-aura--ice" />
 
         <div className="relative z-10 max-w-6xl mx-auto flex flex-col items-center text-center">
-          {/* Barre mint accent */}
-          <div
-            aria-hidden
-            className="mb-10 rounded-full"
-            style={{ width: 48, height: 4, background: "var(--mint)" }}
-          />
+          {/* Badge marque avec point live */}
+          <span className="apple-badge">
+            <span aria-hidden className="apple-live" />
+            {t("landing.hero.trust_certified")} · {t("landing.hero.trust_no_greenwashing")}
+          </span>
 
-          <h1 className="apple-title apple-title-lg mx-auto max-w-[900px]">
+          <h1 className="apple-title apple-title-lg mx-auto max-w-[900px] mt-7">
             {t("landing.hero.title_line1")}
             <br />
             {t("landing.hero.title_line2_pre")}
-            <span style={{ color: "var(--mint)" }}>{t("landing.hero.title_accent")}</span>
+            <span className="apple-grad">{t("landing.hero.title_accent")}</span>
             {t("landing.hero.title_line2_post")}
           </h1>
 
@@ -202,20 +173,6 @@ function Landing() {
             />
             {t("landing.badge_simulation")}
           </div>
-
-          {/* Trust line */}
-          <div
-            className="mt-16 flex items-center gap-4 text-caption font-bold uppercase text-[color:var(--apple-text-2)]"
-            style={{ letterSpacing: "0.2em" }}
-          >
-            <span>{t("landing.hero.trust_certified")}</span>
-            <span
-              aria-hidden
-              className="inline-block rounded-full"
-              style={{ width: 4, height: 4, background: "#d2d2d7" }}
-            />
-            <span>{t("landing.hero.trust_no_greenwashing")}</span>
-          </div>
         </div>
       </section>
 
@@ -237,12 +194,12 @@ function Landing() {
             {STATS.map((s, i) => (
               <div key={i} style={{ animationDelay: `${0.15 + i * 0.12}s` }}>
                 <div
-                  className="font-semibold"
+                  className={s.grad ? "apple-grad font-bold" : "font-bold"}
                   style={{
                     fontSize: "clamp(72px, 10vw, 120px)",
                     lineHeight: 0.9,
                     letterSpacing: "-0.05em",
-                    color: s.color,
+                    color: s.grad ? undefined : s.color,
                   }}
                 >
                   {s.figure}
@@ -250,6 +207,7 @@ function Landing() {
                 <p className="mt-4 text-body-lg leading-[1.45] text-[color:var(--apple-text-2)] max-w-[240px] mx-auto">
                   {s.text}
                 </p>
+                <p className="apple-stat-src">{s.src}</p>
               </div>
             ))}
           </div>
@@ -267,11 +225,24 @@ function Landing() {
             {t("landing.impact.subtitle")}
           </p>
 
-          {/* Mockup visuel simplifié */}
+          {/* Aperçu allocation — carte produit */}
           <div
-            className="mt-16 mx-auto max-w-[820px] apple-card"
-            style={{ background: "var(--apple-surface)", padding: "48px 32px" }}
+            className="mt-16 mx-auto max-w-[820px] apple-card apple-lift text-left"
+            style={{
+              background: "var(--apple-bg)",
+              border: "1px solid var(--paper-3)",
+              padding: "28px 28px 34px",
+            }}
           >
+            <div className="flex items-center justify-between mb-7">
+              <span className="text-body-sm font-semibold text-[color:var(--apple-text)]">
+                {t("landing.impact.card_label")}
+              </span>
+              <span className="inline-flex items-center gap-2 font-mono text-caption text-[color:var(--mint)]">
+                <span aria-hidden className="apple-live" />
+                {t("landing.impact.card_live")}
+              </span>
+            </div>
             <div className="grid grid-cols-3 md:grid-cols-6 gap-3 items-end">
               {ALLOCATION.map((a, i) => (
                 <div key={i} className="flex flex-col items-center gap-2">
@@ -284,7 +255,7 @@ function Landing() {
                     }}
                   />
                   <div className="text-caption text-[color:var(--apple-text-2)]">{a.label}</div>
-                  <div className="text-body-sm font-semibold text-[color:var(--apple-text)]">
+                  <div className="text-body-sm font-semibold text-[color:var(--apple-text)] tabular-nums">
                     {a.weight}%
                   </div>
                 </div>
@@ -342,7 +313,10 @@ function Landing() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
-            <article className="apple-card p-10 md:p-12 text-center flex flex-col items-center">
+            <article
+              className="apple-card apple-lift p-10 md:p-12 text-center flex flex-col items-center"
+              style={{ border: "1px solid var(--paper-3)" }}
+            >
               <p className="apple-eyebrow" style={{ color: "var(--ice)" }}>
                 {t("landing.start.courses_eyebrow")}
               </p>
@@ -355,7 +329,10 @@ function Landing() {
               </Link>
             </article>
 
-            <article className="apple-card p-10 md:p-12 text-center flex flex-col items-center">
+            <article
+              className="apple-card apple-lift p-10 md:p-12 text-center flex flex-col items-center"
+              style={{ border: "1px solid var(--paper-3)" }}
+            >
               <p className="apple-eyebrow" style={{ color: "var(--mint)" }}>
                 {t("landing.start.space_eyebrow")}
               </p>
@@ -391,12 +368,13 @@ function Landing() {
       </section>
 
       {/* CTA FINAL */}
-      <section id="cta" className="px-6 py-28 md:py-36 text-center">
-        <div>
+      <section id="cta" className="relative overflow-hidden px-6 py-28 md:py-36 text-center">
+        <div aria-hidden className="apple-aura apple-aura--mint" style={{ top: "auto", bottom: -260 }} />
+        <div className="relative z-10">
           <h2 className="apple-title apple-title-lg mx-auto max-w-[760px]">
             {t("landing.final.title_line1")}
             <br />
-            <span style={{ color: "var(--mint)" }}>{t("landing.final.title_accent")}</span>
+            <span className="apple-grad">{t("landing.final.title_accent")}</span>
           </h2>
           <p className="apple-subtitle mx-auto max-w-[520px] mt-6">
             {isAuthed ? t("landing.final.subtitle_authed") : t("landing.final.subtitle_new")}
@@ -515,10 +493,10 @@ function ChatBubble({ side, children }: { side: "user" | "ethi"; children: React
 /* ---------- Content ---------- */
 
 const ALLOCATION: { label: string; weight: number; color: string }[] = [
-  { label: "ETF Monde", weight: 32, color: "#1d1d1f" },
+  { label: "ETF Monde", weight: 32, color: "var(--ink)" },
   { label: "Clean Energy", weight: 22, color: "var(--mint)" },
   { label: "Green Bonds", weight: 18, color: "var(--ice)" },
   { label: "REIT ESG", weight: 12, color: "var(--volt)" },
-  { label: "Corp Bonds", weight: 10, color: "#86868b" },
-  { label: "Cash", weight: 6, color: "#d2d2d7" },
+  { label: "Corp Bonds", weight: 10, color: "var(--ink-2)" },
+  { label: "Cash", weight: 6, color: "var(--paper-3)" },
 ];

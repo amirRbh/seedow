@@ -932,3 +932,105 @@
     animation: none !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   Landing « synthèse » — DA premium (auras, dégradé de marque,
+   micro-interactions). Scopé .apple-landing, tokens uniquement.
+═══════════════════════════════════════════════════════════════ */
+.apple-landing .apple-aura {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 999px;
+  z-index: 0;
+  filter: blur(30px);
+}
+.apple-landing .apple-aura--mint {
+  width: min(900px, 120vw);
+  height: 620px;
+  top: -180px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--mint) 20%, transparent),
+    transparent 70%
+  );
+}
+.apple-landing .apple-aura--ice {
+  width: 560px;
+  height: 560px;
+  top: 240px;
+  right: -180px;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--ice) 14%, transparent),
+    transparent 70%
+  );
+}
+
+.apple-grad {
+  background: linear-gradient(100deg, var(--mint) 0%, var(--ice) 130%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.apple-landing .apple-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  color: var(--apple-text-2);
+  background: color-mix(in srgb, var(--paper) 72%, transparent);
+  border: 1px solid var(--paper-3);
+  border-radius: 100px;
+  padding: 7px 15px;
+  backdrop-filter: blur(8px);
+}
+
+.apple-live {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--mint);
+  flex: none;
+  animation: halo-pulse 2.4s infinite;
+}
+@keyframes halo-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--mint) 45%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 9px color-mix(in srgb, var(--mint) 0%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--mint) 0%, transparent);
+  }
+}
+
+.apple-lift {
+  transition:
+    transform 0.3s cubic-bezier(0.32, 0.72, 0, 1),
+    box-shadow 0.3s ease;
+}
+.apple-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 22px 50px -30px rgba(0, 0, 0, 0.25);
+}
+
+.apple-stat-src {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--apple-text-2);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .apple-live {
+    animation: none !important;
+  }
+  .apple-lift:hover {
+    transform: none !important;
+  }
+}
