@@ -106,7 +106,11 @@ export function ImpactExperience() {
           <HoldingsSection holdings={holdings} numLocale={numLocale} />
 
           <div className="space-y-3">
-            <SectionHeading n="06" title={t("impact_xp.fil.title")} subtitle={t("impact_xp.fil.subtitle")} />
+            <SectionHeading
+              n="06"
+              title={t("impact_xp.fil.title")}
+              subtitle={t("impact_xp.fil.subtitle")}
+            />
             <LeFil dispatches={dispatches} />
           </div>
         </>
@@ -214,22 +218,26 @@ const TIER_STYLE: Record<ConvictionTier, { bar: string; dot: string }> = {
 function ConvictionsSection({ model }: { model: ConvictionsModel }) {
   const { t } = useTranslation();
   if (model.convictions.length === 0 && model.unclassifiedPct <= 0) return null;
-  const maxPct = Math.max(
-    ...model.convictions.map((c) => c.pct),
-    model.unclassifiedPct,
-    1,
-  );
+  const maxPct = Math.max(...model.convictions.map((c) => c.pct), model.unclassifiedPct, 1);
 
   return (
     <div className="space-y-4">
-      <SectionHeading n="02" title={t("impact_xp.convictions.title")} subtitle={t("impact_xp.convictions.subtitle")} />
+      <SectionHeading
+        n="02"
+        title={t("impact_xp.convictions.title")}
+        subtitle={t("impact_xp.convictions.subtitle")}
+      />
       <div className="rounded-3xl border border-paper-3 bg-paper p-5 md:p-6">
         <ul className="space-y-4">
           {model.convictions.map((c, i) => (
             <ConvictionRow key={c.cause} c={c} maxPct={maxPct} index={i} />
           ))}
           {model.unclassifiedPct > 0.5 && (
-            <UnclassifiedRow pct={model.unclassifiedPct} maxPct={maxPct} index={model.convictions.length} />
+            <UnclassifiedRow
+              pct={model.unclassifiedPct}
+              maxPct={maxPct}
+              index={model.convictions.length}
+            />
           )}
         </ul>
       </div>
@@ -312,12 +320,18 @@ function VsWorldSection({ intensity }: { intensity: PortfolioIntensityView | nul
 
   return (
     <div className="space-y-4">
-      <SectionHeading n="03" title={t("impact_xp.vs_world.title")} subtitle={t("impact_xp.vs_world.subtitle")} />
+      <SectionHeading
+        n="03"
+        title={t("impact_xp.vs_world.title")}
+        subtitle={t("impact_xp.vs_world.subtitle")}
+      />
       <div className="rounded-3xl border border-paper-3 bg-paper p-5 md:p-6">
         {hasDelta ? (
           <VsWorldBars intensity={intensity} fmt={fmt} />
         ) : (
-          <p className="text-body-sm leading-relaxed text-ink-2">{t("impact_xp.vs_world.pending")}</p>
+          <p className="text-body-sm leading-relaxed text-ink-2">
+            {t("impact_xp.vs_world.pending")}
+          </p>
         )}
       </div>
     </div>
@@ -410,11 +424,16 @@ function TangibleSection({
   numLocale: string;
 }) {
   const { t } = useTranslation();
-  const measured = impact.measured && impact.presentation.show && impact.financedEmissionsKgPerYear != null;
+  const measured =
+    impact.measured && impact.presentation.show && impact.financedEmissionsKgPerYear != null;
 
   return (
     <div className="space-y-4">
-      <SectionHeading n="04" title={t("impact_xp.tangible.title")} subtitle={t("impact_xp.tangible.subtitle")} />
+      <SectionHeading
+        n="04"
+        title={t("impact_xp.tangible.title")}
+        subtitle={t("impact_xp.tangible.subtitle")}
+      />
       <div className="rounded-3xl border border-paper-3 bg-paper p-5 md:p-6">
         {measured ? (
           <TangibleMeasured
@@ -425,7 +444,9 @@ function TangibleSection({
           />
         ) : (
           <div className="space-y-3">
-            <p className="text-body-sm leading-relaxed text-ink-2">{t("impact_xp.tangible.pending")}</p>
+            <p className="text-body-sm leading-relaxed text-ink-2">
+              {t("impact_xp.tangible.pending")}
+            </p>
             <p className="text-body-sm text-ink-2">
               {t("impact_xp.tangible.esg_fallback", { score: Math.round(impact.esgScore) })}
             </p>
@@ -520,7 +541,11 @@ function HoldingsSection({
 
   return (
     <div className="space-y-4">
-      <SectionHeading n="05" title={t("impact_xp.finance.title")} subtitle={t("impact_xp.finance.subtitle")} />
+      <SectionHeading
+        n="05"
+        title={t("impact_xp.finance.title")}
+        subtitle={t("impact_xp.finance.subtitle")}
+      />
       <div className="rounded-3xl border border-paper-3 bg-paper p-5 md:p-6">
         <ul className="flex flex-col divide-y divide-paper-3">
           {holdings.slice(0, 6).map((h) => (
