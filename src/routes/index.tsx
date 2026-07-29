@@ -52,7 +52,12 @@ function Landing() {
       text: t("landing.stats.jargon"),
       src: t("landing.stats.jargon_src"),
     },
-    { figure: "1", grad: true, text: t("landing.stats.only_app"), src: t("landing.stats.only_app_src") },
+    {
+      figure: "1",
+      grad: true,
+      text: t("landing.stats.only_app"),
+      src: t("landing.stats.only_app_src"),
+    },
   ];
 
   return (
@@ -369,7 +374,11 @@ function Landing() {
 
       {/* CTA FINAL */}
       <section id="cta" className="relative overflow-hidden px-6 py-28 md:py-36 text-center">
-        <div aria-hidden className="apple-aura apple-aura--mint" style={{ top: "auto", bottom: -260 }} />
+        <div
+          aria-hidden
+          className="apple-aura apple-aura--mint"
+          style={{ top: "auto", bottom: -260 }}
+        />
         <div className="relative z-10">
           <h2 className="apple-title apple-title-lg mx-auto max-w-[760px]">
             {t("landing.final.title_line1")}
