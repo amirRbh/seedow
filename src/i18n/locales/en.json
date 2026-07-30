@@ -173,6 +173,59 @@
       "resume_cta": "Continue",
       "read_cta": "Read",
       "see_all": "See all {{count}} courses"
+    },
+    "rayon_x": {
+      "another": "Analyze another fund",
+      "cta_hint": "Tap a fund for the full breakdown.",
+      "band": {
+        "tresaligne": "Highly aligned",
+        "plutot": "Fairly aligned",
+        "mitige": "Mixed",
+        "peu": "Weakly aligned",
+        "contra": "Contradictory"
+      },
+      "verdict": {
+        "tresaligne": "This fund avoids most of what you reject.",
+        "plutot": "Heading the right way, with some blind spots.",
+        "mitige": "As much alignment as contradiction.",
+        "peu": "Largely funds what you wanted to avoid.",
+        "contra": "At odds with the values it claims."
+      },
+      "pillar": {
+        "env": "Environment",
+        "social": "Social",
+        "gouv": "Governance"
+      },
+      "ter_label": "Annual fee (TER):",
+      "finances_pos": "What this fund finances",
+      "finances_pos_empty": "No impact theme declared for this asset.",
+      "not_excluded": "What this fund does not exclude",
+      "not_excluded_empty": "This fund formally excludes every controversial sector you can refuse.",
+      "flags": "Worth checking",
+      "themes_labels": {
+        "climat": "Climate",
+        "biodiversite": "Biodiversity",
+        "humain": "Human rights",
+        "egalite": "G/W equality",
+        "tech": "Ethical tech",
+        "circulaire": "Circular economy"
+      },
+      "sectors_labels": {
+        "fossiles": "Fossil fuels",
+        "armes": "Armament",
+        "tabac": "Tobacco",
+        "jeux": "Gambling",
+        "animaux": "Animal testing",
+        "fast-fashion": "Fast fashion"
+      },
+      "sources": "Source {{source}} · {{coverage}}",
+      "source_unknown": "aggregated",
+      "asof": "as of {{date}}",
+      "bridge_eyebrow": "And your whole portfolio?",
+      "bridge_title": "A fund is just one piece.",
+      "bridge_sub": "See the real impact of all your holdings — and what drags it down.",
+      "bridge_cta": "Analyze my whole portfolio",
+      "disclaimer": "Information & education. Seedow makes no buy or sell recommendation."
     }
   },
   "auth": {
@@ -772,6 +825,18 @@
       "exclusions": "Excluding a sector means refusing to fund it — a binary, verifiable criterion, not an opinion.",
       "objective": "Your goal sets the horizon, and thus the acceptable level of risk: the further out, the more volatility you can absorb.",
       "amount": "The simulated amount commits to nothing. It's there to visualize the allocation and the effect of compound interest over time."
+    },
+    "planting": {
+      "loading_eyebrow": "Composition in progress",
+      "loading_title": "Structuring portfolio",
+      "loading_desc": "Constrained Markowitz optimization",
+      "error_eyebrow": "Error",
+      "error_title": "Could not generate portfolio",
+      "error_fallback": "Error during generation",
+      "reveal_eyebrow": "Target allocation",
+      "reveal_title": "Your portfolio",
+      "reveal_summary": "{{count}} positions · reference capital {{amount}}",
+      "dashboard_cta": "Go to dashboard"
     }
   },
   "reglages": {

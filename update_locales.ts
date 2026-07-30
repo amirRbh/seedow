@@ -3,6 +3,26 @@ import { readFileSync, writeFileSync } from "fs";
 const fr = JSON.parse(readFileSync("src/i18n/locales/fr.json", "utf-8"));
 const en = JSON.parse(readFileSync("src/i18n/locales/en.json", "utf-8"));
 
+type Json = Record<string, unknown>;
+
+/**
+ * Fusion récursive non destructive : les blocs déclarés ici sont appliqués
+ * PAR-DESSUS le JSON existant sans supprimer les clés que le JSON a gagnées
+ * depuis (sinon ré-exécuter ce script effacerait toute chaîne ajoutée à la
+ * main entre-temps). Le script reste ainsi idempotent.
+ */
+function deepMerge(base: unknown, override: Json): Json {
+  const out: Json = base && typeof base === "object" ? { ...(base as Json) } : {};
+  for (const [key, value] of Object.entries(override)) {
+    const prev = out[key];
+    out[key] =
+      value && typeof value === "object" && !Array.isArray(value)
+        ? deepMerge(prev, value as Json)
+        : value;
+  }
+  return out;
+}
+
 const onboardingFr = {
   steps: {
     values: {
@@ -232,8 +252,121 @@ const onboardingEn = {
   },
 };
 
-fr.onboarding = onboardingFr;
-en.onboarding = onboardingEn;
+fr.onboarding = deepMerge(fr.onboarding, onboardingFr);
+en.onboarding = deepMerge(en.onboarding, onboardingEn);
 
-writeFileSync("src/i18n/locales/fr.json", JSON.stringify(fr, null, 2), "utf-8");
-writeFileSync("src/i18n/locales/en.json", JSON.stringify(en, null, 2), "utf-8");
+// ── Rayon X : reveal « Ce fonds est-il vraiment vert ? » sur la landing ──────
+const rayonXFr = {
+  another: "Analyser un autre fonds",
+  cta_hint: "Clique sur un fonds pour l'analyse complète.",
+  band: {
+    tresaligne: "Très aligné",
+    plutot: "Plutôt aligné",
+    mitige: "Mitigé",
+    peu: "Peu aligné",
+    contra: "Contradictoire",
+  },
+  verdict: {
+    tresaligne: "Ce fonds évite l'essentiel de ce que tu rejettes.",
+    plutot: "Va dans le bon sens, avec quelques angles morts.",
+    mitige: "Autant d'alignement que de contradictions.",
+    peu: "Finance largement ce que tu voulais éviter.",
+    contra: "À l'opposé des valeurs qu'il revendique.",
+  },
+  pillar: {
+    env: "Environnement",
+    social: "Social",
+    gouv: "Gouvernance",
+  },
+  ter_label: "Frais annuels (TER) :",
+  finances_pos: "Ce que ce fonds finance",
+  finances_pos_empty: "Aucun thème d'impact déclaré sur cet actif.",
+  not_excluded: "Ce que ce fonds n'exclut pas",
+  not_excluded_empty:
+    "Ce fonds exclut formellement tous les secteurs controversés que tu peux refuser.",
+  flags: "À vérifier",
+  themes_labels: {
+    climat: "Climat",
+    biodiversite: "Biodiversité",
+    humain: "Droits humains",
+    egalite: "Égalité F/H",
+    tech: "Tech éthique",
+    circulaire: "Économie circulaire",
+  },
+  sectors_labels: {
+    fossiles: "Énergies fossiles",
+    armes: "Armement",
+    tabac: "Tabac",
+    jeux: "Jeux d'argent",
+    animaux: "Tests animaux",
+    "fast-fashion": "Fast fashion",
+  },
+  sources: "Source {{source}} · {{coverage}}",
+  source_unknown: "agrégée",
+  asof: "au {{date}}",
+  bridge_eyebrow: "Et tout ton portefeuille ?",
+  bridge_title: "Un fonds n'est qu'une pièce.",
+  bridge_sub: "Vois l'impact réel de l'ensemble de tes placements — et ce qui le tire vers le bas.",
+  bridge_cta: "Analyser tout mon portefeuille",
+  disclaimer: "Information & pédagogie. Seedow n'émet aucune recommandation d'achat ou de vente.",
+};
+
+const rayonXEn = {
+  another: "Analyze another fund",
+  cta_hint: "Tap a fund for the full breakdown.",
+  band: {
+    tresaligne: "Highly aligned",
+    plutot: "Fairly aligned",
+    mitige: "Mixed",
+    peu: "Weakly aligned",
+    contra: "Contradictory",
+  },
+  verdict: {
+    tresaligne: "This fund avoids most of what you reject.",
+    plutot: "Heading the right way, with some blind spots.",
+    mitige: "As much alignment as contradiction.",
+    peu: "Largely funds what you wanted to avoid.",
+    contra: "At odds with the values it claims.",
+  },
+  pillar: {
+    env: "Environment",
+    social: "Social",
+    gouv: "Governance",
+  },
+  ter_label: "Annual fee (TER):",
+  finances_pos: "What this fund finances",
+  finances_pos_empty: "No impact theme declared for this asset.",
+  not_excluded: "What this fund does not exclude",
+  not_excluded_empty: "This fund formally excludes every controversial sector you can refuse.",
+  flags: "Worth checking",
+  themes_labels: {
+    climat: "Climate",
+    biodiversite: "Biodiversity",
+    humain: "Human rights",
+    egalite: "G/W equality",
+    tech: "Ethical tech",
+    circulaire: "Circular economy",
+  },
+  sectors_labels: {
+    fossiles: "Fossil fuels",
+    armes: "Armament",
+    tabac: "Tobacco",
+    jeux: "Gambling",
+    animaux: "Animal testing",
+    "fast-fashion": "Fast fashion",
+  },
+  sources: "Source {{source}} · {{coverage}}",
+  source_unknown: "aggregated",
+  asof: "as of {{date}}",
+  bridge_eyebrow: "And your whole portfolio?",
+  bridge_title: "A fund is just one piece.",
+  bridge_sub: "See the real impact of all your holdings — and what drags it down.",
+  bridge_cta: "Analyze my whole portfolio",
+  disclaimer: "Information & education. Seedow makes no buy or sell recommendation.",
+};
+
+const mergedFr = deepMerge(fr, { landing: { rayon_x: rayonXFr } });
+const mergedEn = deepMerge(en, { landing: { rayon_x: rayonXEn } });
+
+writeFileSync("src/i18n/locales/fr.json", JSON.stringify(mergedFr, null, 2) + "\n", "utf-8");
+writeFileSync("src/i18n/locales/en.json", JSON.stringify(mergedEn, null, 2) + "\n", "utf-8");
