@@ -173,6 +173,59 @@
       "resume_cta": "Continuer",
       "read_cta": "Lire",
       "see_all": "Voir les {{count}} cours"
+    },
+    "rayon_x": {
+      "another": "Analyser un autre fonds",
+      "cta_hint": "Clique sur un fonds pour l'analyse complète.",
+      "band": {
+        "tresaligne": "Très aligné",
+        "plutot": "Plutôt aligné",
+        "mitige": "Mitigé",
+        "peu": "Peu aligné",
+        "contra": "Contradictoire"
+      },
+      "verdict": {
+        "tresaligne": "Ce fonds évite l'essentiel de ce que tu rejettes.",
+        "plutot": "Va dans le bon sens, avec quelques angles morts.",
+        "mitige": "Autant d'alignement que de contradictions.",
+        "peu": "Finance largement ce que tu voulais éviter.",
+        "contra": "À l'opposé des valeurs qu'il revendique."
+      },
+      "pillar": {
+        "env": "Environnement",
+        "social": "Social",
+        "gouv": "Gouvernance"
+      },
+      "ter_label": "Frais annuels (TER) :",
+      "finances_pos": "Ce que ce fonds finance",
+      "finances_pos_empty": "Aucun thème d'impact déclaré sur cet actif.",
+      "not_excluded": "Ce que ce fonds n'exclut pas",
+      "not_excluded_empty": "Ce fonds exclut formellement tous les secteurs controversés que tu peux refuser.",
+      "flags": "À vérifier",
+      "themes_labels": {
+        "climat": "Climat",
+        "biodiversite": "Biodiversité",
+        "humain": "Droits humains",
+        "egalite": "Égalité F/H",
+        "tech": "Tech éthique",
+        "circulaire": "Économie circulaire"
+      },
+      "sectors_labels": {
+        "fossiles": "Énergies fossiles",
+        "armes": "Armement",
+        "tabac": "Tabac",
+        "jeux": "Jeux d'argent",
+        "animaux": "Tests animaux",
+        "fast-fashion": "Fast fashion"
+      },
+      "sources": "Source {{source}} · {{coverage}}",
+      "source_unknown": "agrégée",
+      "asof": "au {{date}}",
+      "bridge_eyebrow": "Et tout ton portefeuille ?",
+      "bridge_title": "Un fonds n'est qu'une pièce.",
+      "bridge_sub": "Vois l'impact réel de l'ensemble de tes placements — et ce qui le tire vers le bas.",
+      "bridge_cta": "Analyser tout mon portefeuille",
+      "disclaimer": "Information & pédagogie. Seedow n'émet aucune recommandation d'achat ou de vente."
     }
   },
   "auth": {
@@ -772,6 +825,18 @@
       "exclusions": "Exclure un secteur, c'est refuser de le financer — un critère binaire et vérifiable, pas un avis.",
       "objective": "Ton objectif fixe l'horizon, et donc le niveau de risque acceptable : plus l'échéance est lointaine, plus on peut encaisser la volatilité.",
       "amount": "Le montant simulé n'engage rien. Il sert à visualiser l'allocation et l'effet des intérêts composés dans le temps."
+    },
+    "planting": {
+      "loading_eyebrow": "Composition en cours",
+      "loading_title": "Structuration du portefeuille",
+      "loading_desc": "Optimisation Markowitz contrainte",
+      "error_eyebrow": "Erreur",
+      "error_title": "Impossible de générer le portefeuille",
+      "error_fallback": "Erreur lors de la génération",
+      "reveal_eyebrow": "Allocation cible",
+      "reveal_title": "Votre portefeuille",
+      "reveal_summary": "{{count}} positions · capital de référence {{amount}}",
+      "dashboard_cta": "Accéder au tableau de bord"
     }
   },
   "reglages": {
