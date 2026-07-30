@@ -142,7 +142,7 @@ function Portfolio() {
               })
             }
           >
-            <TabsList className="w-full grid grid-cols-5 h-auto bg-paper-2 p-1">
+            <TabsList className="w-full grid grid-cols-3 gap-1 sm:grid-cols-5 sm:gap-0 h-auto bg-paper-2 p-1">
               <TabsTrigger value="performance" className="text-caption uppercase tracking-[0.12em]">
                 {t("portfolio.tab_perf")}
               </TabsTrigger>

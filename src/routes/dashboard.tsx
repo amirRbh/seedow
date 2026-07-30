@@ -153,8 +153,8 @@ function Dashboard() {
           <p className="text-caption uppercase tracking-wider text-ink-3 font-medium">
             {t("dashboard.total_value")}
           </p>
-          <h2 className="font-value text-6xl text-ink leading-none mt-1">
-            <sup className="text-2xl align-super mr-1">€</sup>
+          <h2 className="font-value text-figure-hero text-ink mt-1">
+            <sup className="text-xl sm:text-2xl align-super mr-1">€</sup>
             <AnimatedFigure
               value={totalValue}
               from={0}

@@ -288,6 +288,17 @@
   line-height: 1.04;
   letter-spacing: -0.02em;
 }
+/* Chiffre héros (valeur du portefeuille, montant simulé) — fluide plutôt
+   qu'un text-6xl fixe (60px) qui débordait à droite sur les petits écrans
+   dès qu'un montant dépassait ~5 chiffres. Se réduit avec la largeur du
+   viewport (borne basse ~40px sur mobile), remonte à 60px sur desktop.
+   Les bornes suivent --font-scale pour rester accessibles ; un seul endroit
+   à faire évoluer. */
+@utility text-figure-hero {
+  font-size: clamp(calc(2.5rem * var(--font-scale)), 12vw, calc(3.75rem * var(--font-scale)));
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
 
 @layer base {
   * {

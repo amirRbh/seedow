@@ -74,7 +74,7 @@ export function GuestDashboard() {
           <p className="text-caption uppercase tracking-wider text-ink-3 font-medium mt-4">
             {t("dashboard.guest_dashboard.value_label")}
           </p>
-          <h1 className="font-value text-6xl text-ink leading-none mt-1">
+          <h1 className="font-value text-figure-hero text-ink mt-1">
             {formatCurrency(sim.amount, lang)}
           </h1>
         </header>

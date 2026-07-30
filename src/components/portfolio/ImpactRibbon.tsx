@@ -62,7 +62,7 @@ export function ImpactRibbon({ impact, esgScore10 }: ImpactRibbonProps) {
           <p className="text-tag uppercase tracking-[0.22em] font-semibold text-ink-3 mt-4">
             {t("impact_hero.footprint_label")}
           </p>
-          <div className="mt-1 kpi-figure flex items-baseline gap-2 text-6xl leading-none">
+          <div className="mt-1 kpi-figure flex flex-wrap items-baseline gap-x-2 text-5xl sm:text-6xl leading-none">
             <AnimatedFigure value={footprintValue} format={fmt} />
             <span className="text-lg font-medium tracking-normal text-ink-3 font-sans">
               {footprintUnit} CO₂e{t("impact_hero.per_year")}
@@ -91,7 +91,7 @@ export function ImpactRibbon({ impact, esgScore10 }: ImpactRibbonProps) {
           <p className="text-tag uppercase tracking-[0.22em] font-semibold text-ink-3 mt-4">
             {t("impact_hero.intensity_label")}
           </p>
-          <div className="mt-1 kpi-figure flex items-baseline gap-2 text-6xl leading-none">
+          <div className="mt-1 kpi-figure flex flex-wrap items-baseline gap-x-2 text-5xl sm:text-6xl leading-none">
             <AnimatedFigure
               value={impact.intensity.waci}
               format={(v) => v.toLocaleString(numLocale, { maximumFractionDigits: 0 })}
@@ -134,7 +134,7 @@ export function ImpactRibbon({ impact, esgScore10 }: ImpactRibbonProps) {
           <p className="text-tag uppercase tracking-[0.22em] font-semibold text-ink-3 mt-4">
             {t("impact_hero.not_measured_label")}
           </p>
-          <div className="mt-1 kpi-figure flex items-baseline gap-2 text-6xl leading-none">
+          <div className="mt-1 kpi-figure flex flex-wrap items-baseline gap-x-2 text-5xl sm:text-6xl leading-none">
             <AnimatedFigure value={esgScore10} format={(v) => v.toFixed(1)} />
             <span className="text-lg font-medium tracking-normal text-ink-3 font-sans">/10</span>
           </div>
