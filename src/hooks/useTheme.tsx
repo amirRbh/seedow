@@ -35,14 +35,14 @@ function applyToDocument(resolved: ResolvedTheme) {
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<ThemePreference>(() => {
-    if (typeof window === "undefined") return "system";
+    if (typeof window === "undefined") return "light";
     try {
       const stored = window.localStorage.getItem(STORAGE_KEY);
       if (stored === "light" || stored === "dark" || stored === "system") return stored;
     } catch {
       /* ignore */
     }
-    return "system";
+    return "light";
   });
 
   const resolvedTheme = useMemo(() => resolve(theme), [theme]);
@@ -93,7 +93,7 @@ export const THEME_INIT_SCRIPT = `
 (function() {
   try {
     var stored = localStorage.getItem("${STORAGE_KEY}");
-    var theme = (stored === "light" || stored === "dark" || stored === "system") ? stored : "system";
+    var theme = (stored === "light" || stored === "dark" || stored === "system") ? stored : "light";
     var isDark = theme === "dark" || (theme === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
     if (isDark) document.documentElement.classList.add("dark");
   } catch (e) {}
