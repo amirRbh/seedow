@@ -93,7 +93,7 @@ export const THEME_INIT_SCRIPT = `
 (function() {
   try {
     var stored = localStorage.getItem("${STORAGE_KEY}");
-    var theme = (stored === "light" || stored === "dark" || stored === "system") ? stored : "system";
+    var theme = (stored === "light" || stored === "dark" || stored === "system") ? stored : "light";
     var isDark = theme === "dark" || (theme === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
     if (isDark) document.documentElement.classList.add("dark");
   } catch (e) {}
