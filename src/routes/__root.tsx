@@ -75,16 +75,15 @@ export const Route = createRootRoute({
         content:
           "Investis, suis ta performance, mesure ton impact. Une expérience claire et responsable.",
       },
+      { property: "og:image", content: "https://seedow.life/og-seedow.jpg" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
       {
-        property: "og:image",
-        content:
-          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/19e08fb9-f330-450c-bd8c-8e92d139eed3/id-preview-4e3b9288--8da0a748-e3ac-433b-89b0-062aead1a028.lovable.app-1776452888382.png",
+        property: "og:image:alt",
+        content: "Seedow — Votre argent façonne déjà le monde",
       },
-      {
-        name: "twitter:image",
-        content:
-          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/19e08fb9-f330-450c-bd8c-8e92d139eed3/id-preview-4e3b9288--8da0a748-e3ac-433b-89b0-062aead1a028.lovable.app-1776452888382.png",
-      },
+      { name: "twitter:image", content: "https://seedow.life/og-seedow.jpg" },
+
       { name: "twitter:card", content: "summary_large_image" },
       { name: "theme-color", content: "#0d1f14" },
       { name: "mobile-web-app-capable", content: "yes" },
