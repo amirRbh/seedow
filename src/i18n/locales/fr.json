@@ -1718,7 +1718,8 @@
     "comparatif": "Comparatif",
     "certificate": "Certificat d'impact",
     "aria": "Navigation principale",
-    "seedow_home": "Seedow — accueil"
+    "seedow_home": "Seedow — accueil",
+    "vote": "Le Vote"
   },
   "asset_class": {
     "equity_dev": "Actions développées",
@@ -2035,6 +2036,62 @@
     "proof": {
       "title": "Voir la preuve",
       "subtitle": "Les chiffres, les sources et la méthode — repliés, jamais cachés."
+    }
+  },
+  "vote": {
+    "eyebrow": "Ton argent vote",
+    "title": "Le Vote",
+    "section_eyebrow": "Le Bloc",
+    "section_title": "Ton argent n'est plus un chiffre. C'est une voix.",
+    "section_kicker": "Quand tu possèdes une entreprise, tu as un droit de vote à son assemblée générale. Seul, tu pèses peu. Ensemble, vous formez un bloc. Voici les votes ouverts.",
+    "loading": "Chargement…",
+    "empty_title": "Aucun vote pour l'instant.",
+    "empty_desc": "La saison des assemblées générales arrive. Reviens bientôt.",
+    "open_heading": "Ouverts au vote",
+    "closed_heading": "Résultats",
+    "disclaimer": "Seedow agrège des intentions de vote et porte une voix collective. Les données de résolution sont publiques et sourcées ; la transmission du vote réel aux assemblées se fait par étapes. Seedow ne te dit jamais comment voter.",
+    "back": "Tous les votes",
+    "not_found_title": "Vote introuvable",
+    "not_found_desc": "Cette résolution n'existe pas ou a été retirée.",
+    "voted_confirm": "Ton vote « {{choice}} » est enregistré.",
+    "change_vote": "Changer mon vote",
+    "casting": "Envoi…",
+    "source": "Source : {{name}}",
+    "share_text": "Mon argent a une voix. Je vote sur : {{title}} — sur seedow.",
+    "choice_for": "Pour",
+    "choice_against": "Contre",
+    "choice_abstain": "M'abstenir",
+    "status": {
+      "closed": "Clos",
+      "last_day": "Dernier jour",
+      "days_left": "Clôture · J−{{n}}"
+    },
+    "list": {
+      "bloc_empty": "Personne n'a encore voté",
+      "bloc_count": "{{formatted}} dans le Bloc",
+      "voted": "Ton vote : {{choice}}",
+      "see_result": "Voir le résultat",
+      "give_voice": "Donner ma voix"
+    },
+    "explainer": {
+      "who": "Ethi t'explique"
+    },
+    "bloc": {
+      "aria": "Le Bloc, décompte des votes en direct",
+      "live": "Le Bloc · en direct",
+      "empty_title": "Sois la première voix.",
+      "empty_desc": "Personne n'a encore voté sur cette résolution. Ton vote ouvre le Bloc.",
+      "you_line": "Vous êtes {{n}} à voter « {{choice}} ».",
+      "total_line": "{{n}} personnes ont déjà voté.",
+      "split_aria": "Contre la direction : {{against}}. Pour la direction : {{forCount}}.",
+      "reinforce": "Renforcer le Bloc — partager"
+    },
+    "result": {
+      "official": "Résultat officiel",
+      "pending": "Résultat à venir",
+      "bloc_title": "Comment le Bloc Seedow a voté",
+      "bloc_empty": "Aucun membre du Bloc n'avait voté sur cette résolution.",
+      "bloc_line": "Sur {{total}} votes Seedow, {{against}} ont voté contre la direction ({{pct}} %)."
     }
   }
 }

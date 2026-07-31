@@ -1736,7 +1736,8 @@
     "comparatif": "Comparison",
     "certificate": "Impact certificate",
     "aria": "Main navigation",
-    "seedow_home": "Seedow — home"
+    "seedow_home": "Seedow — home",
+    "vote": "The Vote"
   },
   "asset_class": {
     "equity_dev": "Developed equities",
@@ -2053,6 +2054,62 @@
     "proof": {
       "title": "See the proof",
       "subtitle": "The figures, sources and method — folded away, never hidden."
+    }
+  },
+  "vote": {
+    "eyebrow": "Your money votes",
+    "title": "The Vote",
+    "section_eyebrow": "The Bloc",
+    "section_title": "Your money is no longer a number. It's a voice.",
+    "section_kicker": "When you own a company, you have the right to vote at its shareholder meeting. Alone, you barely count. Together, you form a bloc. Here are the open votes.",
+    "loading": "Loading…",
+    "empty_title": "No votes yet.",
+    "empty_desc": "Shareholder-meeting season is coming. Check back soon.",
+    "open_heading": "Open for voting",
+    "closed_heading": "Results",
+    "disclaimer": "Seedow aggregates voting intentions and carries a collective voice. Resolution data is public and sourced; transmitting the actual vote to meetings rolls out in stages. Seedow never tells you how to vote.",
+    "back": "All votes",
+    "not_found_title": "Vote not found",
+    "not_found_desc": "This resolution doesn't exist or was withdrawn.",
+    "voted_confirm": "Your “{{choice}}” vote is recorded.",
+    "change_vote": "Change my vote",
+    "casting": "Sending…",
+    "source": "Source: {{name}}",
+    "share_text": "My money has a voice. I'm voting on: {{title}} — on seedow.",
+    "choice_for": "For",
+    "choice_against": "Against",
+    "choice_abstain": "Abstain",
+    "status": {
+      "closed": "Closed",
+      "last_day": "Last day",
+      "days_left": "Closes · {{n}}d left"
+    },
+    "list": {
+      "bloc_empty": "No one has voted yet",
+      "bloc_count": "{{formatted}} in the Bloc",
+      "voted": "Your vote: {{choice}}",
+      "see_result": "See the result",
+      "give_voice": "Give my voice"
+    },
+    "explainer": {
+      "who": "Ethi explains"
+    },
+    "bloc": {
+      "aria": "The Bloc, live vote count",
+      "live": "The Bloc · live",
+      "empty_title": "Be the first voice.",
+      "empty_desc": "No one has voted on this resolution yet. Your vote opens the Bloc.",
+      "you_line": "You're {{n}} voting “{{choice}}”.",
+      "total_line": "{{n}} people have already voted.",
+      "split_aria": "Against management: {{against}}. For management: {{forCount}}.",
+      "reinforce": "Reinforce the Bloc — share"
+    },
+    "result": {
+      "official": "Official result",
+      "pending": "Result pending",
+      "bloc_title": "How the Seedow Bloc voted",
+      "bloc_empty": "No Bloc member had voted on this resolution.",
+      "bloc_line": "Of {{total}} Seedow votes, {{against}} voted against management ({{pct}}%)."
     }
   }
 }
