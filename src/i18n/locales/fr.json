@@ -368,7 +368,10 @@
       "range_1m": "1M",
       "range_3m": "3M",
       "range_1y": "1A",
-      "range_all": "Tout"
+      "range_all": "Tout",
+      "plain_reading_up": "En clair : tu as déposé {{invested}}. Aujourd'hui, ton portefeuille vaut {{value}} — soit {{gain}} de plus que tes dépôts.",
+      "plain_reading_down": "En clair : tu as déposé {{invested}}. Aujourd'hui, ton portefeuille vaut {{value}} — soit {{gain}} de moins que tes dépôts.",
+      "plain_reading_flat": "En clair : tu as déposé {{invested}}, et c'est exactement la valeur de ton portefeuille aujourd'hui."
     },
     "tab_refine_simple": "Ajuster"
   },
@@ -1769,7 +1772,9 @@
     "chart_aria": "Évolution de la valeur du portefeuille",
     "no_data": "Aucune donnée de marché",
     "building_history": "Historique en cours de constitution…",
-    "today": "aujourd'hui"
+    "today": "aujourd'hui",
+    "legend_value": "ta valeur",
+    "legend_deposited": "ce que tu as déposé"
   },
   "asset_detail_sheet": {
     "summary": "Résumé",

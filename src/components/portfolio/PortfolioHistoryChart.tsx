@@ -60,7 +60,7 @@ export function PortfolioHistoryChart() {
     };
   }, [range, fetchHistory, activeId, t]);
 
-  const { first, last, deltaPct, deltaAbs, isUp, minY, maxY } = useMemo(() => {
+  const { first, last, deltaPct, deltaAbs, isUp, minY, maxY, investedNow } = useMemo(() => {
     if (points.length === 0) {
       return {
         first: 0,
@@ -70,6 +70,7 @@ export function PortfolioHistoryChart() {
         isUp: true,
         minY: 0,
         maxY: 1,
+        investedNow: 0,
       };
     }
     const f = points[0].value;
@@ -87,8 +88,19 @@ export function PortfolioHistoryChart() {
       isUp: l >= f,
       minY: lo - pad,
       maxY: hi + pad,
+      investedNow: points[points.length - 1].invested,
     };
   }, [points]);
+
+  // Lecture en clair : la valeur d'aujourd'hui (aire colorée) vs les dépôts
+  // (ligne pointillée) — le "so what" du graphe pour un débutant.
+  const gainVsDeposit = last - investedNow;
+  const plainReadingKey =
+    Math.abs(gainVsDeposit) < 0.005
+      ? "portfolio.history_chart.plain_reading_flat"
+      : gainVsDeposit > 0
+        ? "portfolio.history_chart.plain_reading_up"
+        : "portfolio.history_chart.plain_reading_down";
 
   const stroke = isUp ? "var(--highlight-1)" : "var(--rust)";
 
@@ -224,6 +236,16 @@ export function PortfolioHistoryChart() {
             {fmtDate(points[0].date)} → {fmtDate(points[points.length - 1].date)}
           </span>
         </div>
+      )}
+
+      {points.length >= 2 && (
+        <p className="text-caption text-ink-2 leading-relaxed mt-2.5">
+          {t(plainReadingKey, {
+            invested: fmtEur(investedNow),
+            value: fmtEur(last),
+            gain: fmtEur(Math.abs(gainVsDeposit)),
+          })}
+        </p>
       )}
     </div>
   );

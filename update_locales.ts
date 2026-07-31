@@ -397,20 +397,50 @@ const assetDetailEn = {
   risk_scale:
     "On a scale of 1 (very stable) to 7 (very turbulent). A world equity ETF sits around 4-5.",
 };
-const portfolioFr = { tab_refine_simple: "Ajuster" };
-const portfolioEn = { tab_refine_simple: "Adjust" };
+const portfolioFr = {
+  tab_refine_simple: "Ajuster",
+  history_chart: {
+    plain_reading_up:
+      "En clair : tu as déposé {{invested}}. Aujourd'hui, ton portefeuille vaut {{value}} — soit {{gain}} de plus que tes dépôts.",
+    plain_reading_down:
+      "En clair : tu as déposé {{invested}}. Aujourd'hui, ton portefeuille vaut {{value}} — soit {{gain}} de moins que tes dépôts.",
+    plain_reading_flat:
+      "En clair : tu as déposé {{invested}}, et c'est exactement la valeur de ton portefeuille aujourd'hui.",
+  },
+};
+const portfolioEn = {
+  tab_refine_simple: "Adjust",
+  history_chart: {
+    plain_reading_up:
+      "In short: you deposited {{invested}}. Today your portfolio is worth {{value}} — that's {{gain}} more than your deposits.",
+    plain_reading_down:
+      "In short: you deposited {{invested}}. Today your portfolio is worth {{value}} — that's {{gain}} less than your deposits.",
+    plain_reading_flat:
+      "In short: you deposited {{invested}}, which is exactly your portfolio's value today.",
+  },
+};
+const growthComparisonFr = {
+  legend_value: "ta valeur",
+  legend_deposited: "ce que tu as déposé",
+};
+const growthComparisonEn = {
+  legend_value: "your value",
+  legend_deposited: "what you deposited",
+};
 
 const mergedFr = deepMerge(fr, {
   landing: { rayon_x: rayonXFr },
   dashboard: dashboardFr,
   asset_detail: assetDetailFr,
   portfolio: portfolioFr,
+  growth_comparison: growthComparisonFr,
 });
 const mergedEn = deepMerge(en, {
   landing: { rayon_x: rayonXEn },
   dashboard: dashboardEn,
   asset_detail: assetDetailEn,
   portfolio: portfolioEn,
+  growth_comparison: growthComparisonEn,
 });
 
 writeFileSync("src/i18n/locales/fr.json", JSON.stringify(mergedFr, null, 2) + "\n", "utf-8");
