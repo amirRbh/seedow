@@ -23,7 +23,11 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:url", content: SITE_URL },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: `${SITE_URL}/og-seedow.jpg` },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: `${SITE_URL}/og-seedow.jpg` },
     ],
+
     links: [{ rel: "canonical", href: SITE_URL }],
   }),
   component: Landing,
