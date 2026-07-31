@@ -368,7 +368,10 @@
       "range_1m": "1M",
       "range_3m": "3M",
       "range_1y": "1Y",
-      "range_all": "All"
+      "range_all": "All",
+      "plain_reading_up": "In short: you deposited {{invested}}. Today your portfolio is worth {{value}} — that's {{gain}} more than your deposits.",
+      "plain_reading_down": "In short: you deposited {{invested}}. Today your portfolio is worth {{value}} — that's {{gain}} less than your deposits.",
+      "plain_reading_flat": "In short: you deposited {{invested}}, which is exactly your portfolio's value today."
     },
     "tab_refine_simple": "Adjust"
   },
@@ -1787,7 +1790,9 @@
     "chart_aria": "Portfolio value evolution",
     "no_data": "No market data",
     "building_history": "History being built…",
-    "today": "today"
+    "today": "today",
+    "legend_value": "your value",
+    "legend_deposited": "what you deposited"
   },
   "asset_detail_sheet": {
     "summary": "Summary",

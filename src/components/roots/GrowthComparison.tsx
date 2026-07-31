@@ -99,6 +99,21 @@ export function GrowthComparison({
           hasHistory={hasHistory}
           t={t}
         />
+        {hasHistory && (
+          <div className="mt-2 flex items-center gap-3 text-tag text-ink-3">
+            <span className="flex items-center gap-1.5">
+              <span
+                className="w-2.5 h-0.5 inline-block rounded-full"
+                style={{ backgroundColor: isGrowing ? "var(--highlight-1)" : "var(--rust)" }}
+              />
+              {t("growth_comparison.legend_value")}
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="w-2.5 h-px inline-block border-t border-dashed border-ink-3" />
+              {t("growth_comparison.legend_deposited")}
+            </span>
+          </div>
+        )}
         <div className="mt-2 flex items-center justify-between">
           <div className="flex gap-1">
             {([30, 90, 365] as Range[]).map((r) => (
