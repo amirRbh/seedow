@@ -42,6 +42,12 @@ export const GLOSSARY = {
     simple: "Variations possibles",
     body: "Amplitude des variations d'un actif sur un an. 12 % signifie que sur un an, la valeur fluctue typiquement de ±12 %. Faible volatilité = parcours plus stable.",
   },
+  Risque: {
+    title: "Niveau de risque",
+    simple: "Niveau de risque",
+    long: "Indicateur SRI 1–7",
+    body: "Échelle réglementaire de 1 à 7 : 1 = très stable, 7 = très volatil. Un ETF actions monde se situe typiquement autour de 4-5. Plus le niveau est élevé, plus la valeur peut varier fortement.",
+  },
   MSCIWorld: {
     title: "MSCI World",
     simple: "Indice de référence mondial",

@@ -88,10 +88,13 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                   </span>
                 </p>
               </div>
-              <div className="flex items-center gap-1 text-tag font-semibold text-highlight-1 bg-highlight-5 px-2 py-1 rounded-full border border-highlight-4 flex-shrink-0">
-                <span className="w-1.5 h-1.5 rounded-full bg-highlight-1" />
+              <Glossary
+                term="ESG"
+                className="flex items-center gap-1 text-tag font-semibold !text-highlight-1 hover:!text-highlight-1 bg-highlight-5 px-2 py-1 rounded-full border !border-solid !border-highlight-4 flex-shrink-0"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-highlight-1" aria-hidden="true" />
                 ESG {asset.overall_esg_score.toFixed(1)}
-              </div>
+              </Glossary>
             </div>
           </SheetHeader>
         </div>
@@ -259,10 +262,13 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
               {t("asset_detail.risks_title")}
             </p>
             <div className="paper-card p-3.5">
-              <div className="flex items-center justify-between pb-3 mb-3 border-b border-dashed border-paper-3">
-                <span className="text-caption text-ink-3 font-medium">
+              <div className="flex items-center justify-between pb-3 border-b border-dashed border-paper-3">
+                <Glossary
+                  term="Risque"
+                  className="text-caption !text-ink-3 hover:!text-ink-2 font-medium"
+                >
                   {t("asset_detail.risk_level")}
-                </span>
+                </Glossary>
                 <div className="flex items-center gap-2">
                   <div className="flex gap-0.5">
                     {[1, 2, 3, 4, 5, 6, 7].map((n) => (
@@ -277,6 +283,10 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                   </span>
                 </div>
               </div>
+              {/* Ancrage de l'échelle : un "4/7" ne veut rien dire sans repère */}
+              <p className="text-tag text-ink-3 leading-snug pt-2.5 pb-3">
+                {t("asset_detail.risk_scale")}
+              </p>
               <ul className="space-y-2">
                 {risksList.map((r) => (
                   <li key={r.title} className="flex items-start gap-2">

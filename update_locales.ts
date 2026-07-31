@@ -365,8 +365,53 @@ const rayonXEn = {
   disclaimer: "Information & education. Seedow makes no buy or sell recommendation.",
 };
 
-const mergedFr = deepMerge(fr, { landing: { rayon_x: rayonXFr } });
-const mergedEn = deepMerge(en, { landing: { rayon_x: rayonXEn } });
+// Clarté & accessibilité (débutants) — voir audit "clarity-accessibility".
+// Ces blocs sont fusionnés de façon non destructive par-dessus le JSON existant.
+const dashboardFr = {
+  since_start: "depuis ton premier dépôt",
+  why_cta: "Pourquoi ce chiffre ?",
+  why_assets_one: "Tu détiens {{count}} actif.",
+  why_assets_other: "Tu détiens {{count}} actifs.",
+  why_moves: "Leur cours de bourse évolue chaque heure — c'est ce qui fait bouger ce total.",
+  why_gain: "Aujourd'hui, ils valent {{amount}} de plus que ce que tu as déposé.",
+  why_loss: "Aujourd'hui, ils valent {{amount}} de moins que ce que tu as déposé.",
+  why_flat: "Aujourd'hui, ils valent autant que ce que tu as déposé.",
+  why_virtual: "Capital virtuel — aucun argent réel n'est investi ici.",
+};
+const dashboardEn = {
+  since_start: "since your first deposit",
+  why_cta: "Why this number?",
+  why_assets_one: "You hold {{count}} asset.",
+  why_assets_other: "You hold {{count}} assets.",
+  why_moves: "Their market price changes every hour — that's what moves this total.",
+  why_gain: "Today they're worth {{amount}} more than what you deposited.",
+  why_loss: "Today they're worth {{amount}} less than what you deposited.",
+  why_flat: "Today they're worth the same as what you deposited.",
+  why_virtual: "Virtual capital — no real money is invested here.",
+};
+const assetDetailFr = {
+  risk_scale:
+    "Sur une échelle de 1 (très stable) à 7 (très agité). Un ETF actions monde se situe autour de 4-5.",
+};
+const assetDetailEn = {
+  risk_scale:
+    "On a scale of 1 (very stable) to 7 (very turbulent). A world equity ETF sits around 4-5.",
+};
+const portfolioFr = { tab_refine_simple: "Ajuster" };
+const portfolioEn = { tab_refine_simple: "Adjust" };
+
+const mergedFr = deepMerge(fr, {
+  landing: { rayon_x: rayonXFr },
+  dashboard: dashboardFr,
+  asset_detail: assetDetailFr,
+  portfolio: portfolioFr,
+});
+const mergedEn = deepMerge(en, {
+  landing: { rayon_x: rayonXEn },
+  dashboard: dashboardEn,
+  asset_detail: assetDetailEn,
+  portfolio: portfolioEn,
+});
 
 writeFileSync("src/i18n/locales/fr.json", JSON.stringify(mergedFr, null, 2) + "\n", "utf-8");
 writeFileSync("src/i18n/locales/en.json", JSON.stringify(mergedEn, null, 2) + "\n", "utf-8");

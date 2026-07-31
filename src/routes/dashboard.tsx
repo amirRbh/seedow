@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
@@ -79,6 +79,7 @@ function Dashboard() {
   const { portfolios, loading: pfListLoading, error: pfListError } = useUserPortfolios();
   const valuation = usePortfolioValuation();
   const [greeting, setGreeting] = useState(t("dashboard.greeting_fallback"));
+  const [whyOpen, setWhyOpen] = useState(false);
   const hasSeenPortfolioRef = useRef(false);
 
   useEffect(() => {
@@ -188,6 +189,61 @@ function Dashboard() {
             {formatCurrency(gain, lang)} · {formatPercent(returnPct / 100, lang, 2)}
             <span className="text-ink-3 font-normal ml-1">{t("dashboard.since_start")}</span>
           </div>
+
+          {/* Pourquoi ce chiffre bouge — désamorce l'opacité du total pour un néophyte */}
+          {portfolio && holdings.length > 0 && (
+            <div className="mt-3">
+              <button
+                type="button"
+                onClick={() => setWhyOpen((o) => !o)}
+                aria-expanded={whyOpen}
+                className="inline-flex items-center gap-1 text-caption text-ink-3 hover:text-ink-2 border-b border-dotted border-ink-3/60 transition-colors"
+              >
+                {t("dashboard.why_cta")}
+                <svg
+                  viewBox="0 0 16 16"
+                  className={`w-3 h-3 transition-transform ${whyOpen ? "rotate-180" : ""}`}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  aria-hidden="true"
+                >
+                  <path d="M4 6l4 4 4-4" />
+                </svg>
+              </button>
+              <AnimatePresence initial={false}>
+                {whyOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="mt-2 rounded-[14px] bg-paper-2 border border-paper-3 p-3.5 text-body-sm text-ink-2 leading-relaxed space-y-1.5">
+                      <p>
+                        {t("dashboard.why_assets", { count: holdings.length })}{" "}
+                        {t("dashboard.why_moves")}
+                      </p>
+                      <p>
+                        {gain > 0
+                          ? t("dashboard.why_gain", {
+                              amount: formatCurrency(Math.abs(gain), lang),
+                            })
+                          : gain < 0
+                            ? t("dashboard.why_loss", {
+                                amount: formatCurrency(Math.abs(gain), lang),
+                              })
+                            : t("dashboard.why_flat")}
+                      </p>
+                      <p className="text-caption text-ink-3">{t("dashboard.why_virtual")}</p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
 
           {portfolio && (
             <div className="mt-5">

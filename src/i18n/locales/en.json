@@ -296,7 +296,7 @@
     "greeting_fallback": "Hello",
     "welcome": "Welcome",
     "total_value": "Total value",
-    "since_start": "since inception",
+    "since_start": "since your first deposit",
     "invest_demo": "Invest (demo)",
     "demo_mode_capital": "Demo mode · virtual capital",
     "loading_portfolio": "Loading your portfolio…",
@@ -326,7 +326,15 @@
     "understand": {
       "eyebrow": "Understand your portfolio",
       "subtitle": "In 2 minutes, understand what’s in your portfolio."
-    }
+    },
+    "why_cta": "Why this number?",
+    "why_assets_one": "You hold {{count}} asset.",
+    "why_assets_other": "You hold {{count}} assets.",
+    "why_moves": "Their market price changes every hour — that's what moves this total.",
+    "why_gain": "Today they're worth {{amount}} more than what you deposited.",
+    "why_loss": "Today they're worth {{amount}} less than what you deposited.",
+    "why_flat": "Today they're worth the same as what you deposited.",
+    "why_virtual": "Virtual capital — no real money is invested here."
   },
   "portfolio": {
     "loading": "Loading portfolio…",
@@ -361,7 +369,8 @@
       "range_3m": "3M",
       "range_1y": "1Y",
       "range_all": "All"
-    }
+    },
+    "tab_refine_simple": "Adjust"
   },
   "objectives": {
     "meta_title": "Goals — seedow",
@@ -1198,7 +1207,8 @@
       "thematic_risk_title": "Thematic risk",
       "thematic_risk_desc": "Concentrated sector sensitive to regulation and innovation cycles."
     },
-    "carbon_intensity": "Carbon intensity (WACI)"
+    "carbon_intensity": "Carbon intensity (WACI)",
+    "risk_scale": "On a scale of 1 (very stable) to 7 (very turbulent). A world equity ETF sits around 4-5."
   },
   "theme_filter": {
     "all": "All"
