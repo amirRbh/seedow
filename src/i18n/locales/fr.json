@@ -296,7 +296,7 @@
     "greeting_fallback": "Bonjour",
     "welcome": "Bienvenue",
     "total_value": "Valeur totale",
-    "since_start": "depuis le départ",
+    "since_start": "depuis ton premier dépôt",
     "invest_demo": "Investir (démo)",
     "demo_mode_capital": "Mode démo · capital virtuel",
     "loading_portfolio": "Chargement de ton portefeuille…",
@@ -326,7 +326,15 @@
     "understand": {
       "eyebrow": "Comprends ton portefeuille",
       "subtitle": "En 2 minutes, comprends ce qu’il y a dans ton portefeuille."
-    }
+    },
+    "why_cta": "Pourquoi ce chiffre ?",
+    "why_assets_one": "Tu détiens {{count}} actif.",
+    "why_assets_other": "Tu détiens {{count}} actifs.",
+    "why_moves": "Leur cours de bourse évolue chaque heure — c'est ce qui fait bouger ce total.",
+    "why_gain": "Aujourd'hui, ils valent {{amount}} de plus que ce que tu as déposé.",
+    "why_loss": "Aujourd'hui, ils valent {{amount}} de moins que ce que tu as déposé.",
+    "why_flat": "Aujourd'hui, ils valent autant que ce que tu as déposé.",
+    "why_virtual": "Capital virtuel — aucun argent réel n'est investi ici."
   },
   "portfolio": {
     "loading": "Chargement du portefeuille…",
@@ -361,7 +369,8 @@
       "range_3m": "3M",
       "range_1y": "1A",
       "range_all": "Tout"
-    }
+    },
+    "tab_refine_simple": "Ajuster"
   },
   "objectives": {
     "meta_title": "Objectifs — seedow",
@@ -1180,7 +1189,8 @@
       "thematic_risk_title": "Risque thématique",
       "thematic_risk_desc": "Secteur concentré et sensible à la réglementation et aux cycles d'innovation."
     },
-    "carbon_intensity": "Intensité carbone (WACI)"
+    "carbon_intensity": "Intensité carbone (WACI)",
+    "risk_scale": "Sur une échelle de 1 (très stable) à 7 (très agité). Un ETF actions monde se situe autour de 4-5."
   },
   "theme_filter": {
     "all": "Tout"

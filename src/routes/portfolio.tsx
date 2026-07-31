@@ -17,6 +17,7 @@ import { AllocationRefiner } from "@/components/portfolio/AllocationRefiner";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyPortfolioState } from "@/components/portfolio/EmptyPortfolioState";
+import { useViewMode } from "@/hooks/useViewMode";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { useAuth } from "@/hooks/useAuth";
@@ -44,6 +45,7 @@ function Portfolio() {
   const { lang } = useLang();
   const { user } = useAuth();
   const { tab } = Route.useSearch();
+  const { isSimple } = useViewMode();
   const navigate = useNavigate();
   const { portfolio, loading } = useActivePortfolio();
   const valuation = usePortfolioValuation();
@@ -150,7 +152,7 @@ function Portfolio() {
                 {t("portfolio.tab_allocation")}
               </TabsTrigger>
               <TabsTrigger value="affiner" className="text-caption uppercase tracking-[0.12em]">
-                {t("portfolio.tab_refine")}
+                {isSimple ? t("portfolio.tab_refine_simple") : t("portfolio.tab_refine")}
               </TabsTrigger>
               <TabsTrigger value="impact" className="text-caption uppercase tracking-[0.12em]">
                 {t("portfolio.tab_impact")}
