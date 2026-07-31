@@ -109,6 +109,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           navigate({ to: "/objectifs" });
           return;
         }
+        if (key === "v") {
+          e.preventDefault();
+          navigate({ to: "/vote" });
+          return;
+        }
       }
     };
 

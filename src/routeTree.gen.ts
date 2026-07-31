@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WaitlistRouteImport } from './routes/waitlist'
+import { Route as VoteRouteImport } from './routes/vote'
 import { Route as TarifsRouteImport } from './routes/tarifs'
 import { Route as ReglagesRouteImport } from './routes/reglages'
 import { Route as ProfilRouteImport } from './routes/profil'
@@ -35,6 +36,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CoursIndexRouteImport } from './routes/cours.index'
 import { Route as ObjectifsGoalIdRouteImport } from './routes/objectifs.$goalId'
+import { Route as VoteResolutionIdRouteImport } from './routes/vote.$resolutionId'
 import { Route as HooksRefreshMarketDataRouteImport } from './routes/hooks/refresh-market-data'
 import { Route as HooksRecomputeRiskModelRouteImport } from './routes/hooks/recompute-risk-model'
 import { Route as HooksDispatchNotificationsRouteImport } from './routes/hooks/dispatch-notifications'
@@ -50,6 +52,11 @@ import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.
 const WaitlistRoute = WaitlistRouteImport.update({
   id: '/waitlist',
   path: '/waitlist',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VoteRoute = VoteRouteImport.update({
+  id: '/vote',
+  path: '/vote',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TarifsRoute = TarifsRouteImport.update({
@@ -176,6 +183,11 @@ const ObjectifsGoalIdRoute = ObjectifsGoalIdRouteImport.update({
   path: '/$goalId',
   getParentRoute: () => ObjectifsRoute,
 } as any)
+const VoteResolutionIdRoute = VoteResolutionIdRouteImport.update({
+  id: '/$resolutionId',
+  path: '/$resolutionId',
+  getParentRoute: () => VoteRoute,
+} as any)
 const HooksRefreshMarketDataRoute = HooksRefreshMarketDataRouteImport.update({
   id: '/hooks/refresh-market-data',
   path: '/hooks/refresh-market-data',
@@ -273,6 +285,8 @@ export interface FileRoutesByFullPath {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/beta': typeof AuthenticatedAdminBetaRoute
   '/api/public/esg-preview': typeof ApiPublicEsgPreviewRoute
+  '/vote': typeof VoteRouteWithChildren
+  '/vote/$resolutionId': typeof VoteResolutionIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -310,6 +324,8 @@ export interface FileRoutesByTo {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/beta': typeof AuthenticatedAdminBetaRoute
   '/api/public/esg-preview': typeof ApiPublicEsgPreviewRoute
+  '/vote': typeof VoteRouteWithChildren
+  '/vote/$resolutionId': typeof VoteResolutionIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -350,6 +366,8 @@ export interface FileRoutesById {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/admin/beta': typeof AuthenticatedAdminBetaRoute
   '/api/public/esg-preview': typeof ApiPublicEsgPreviewRoute
+  '/vote': typeof VoteRouteWithChildren
+  '/vote/$resolutionId': typeof VoteResolutionIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -390,6 +408,8 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/admin/beta'
     | '/api/public/esg-preview'
+    | '/vote'
+    | '/vote/$resolutionId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -427,6 +447,8 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/admin/beta'
     | '/api/public/esg-preview'
+    | '/vote'
+    | '/vote/$resolutionId'
   id:
     | '__root__'
     | '/'
@@ -466,6 +488,8 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/admin/beta'
     | '/api/public/esg-preview'
+    | '/vote'
+    | '/vote/$resolutionId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -502,6 +526,7 @@ export interface RootRouteChildren {
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   ApiPublicEsgPreviewRoute: typeof ApiPublicEsgPreviewRoute
+  VoteRoute: typeof VoteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -512,6 +537,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/waitlist'
       preLoaderRoute: typeof WaitlistRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/vote': {
+      id: '/vote'
+      path: '/vote'
+      fullPath: '/vote'
+      preLoaderRoute: typeof VoteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vote/$resolutionId': {
+      id: '/vote/$resolutionId'
+      path: '/$resolutionId'
+      fullPath: '/vote/$resolutionId'
+      preLoaderRoute: typeof VoteResolutionIdRouteImport
+      parentRoute: typeof VoteRoute
     }
     '/tarifs': {
       id: '/tarifs'
@@ -803,6 +842,16 @@ const ObjectifsRouteWithChildren = ObjectifsRoute._addFileChildren(
   ObjectifsRouteChildren,
 )
 
+interface VoteRouteChildren {
+  VoteResolutionIdRoute: typeof VoteResolutionIdRoute
+}
+
+const VoteRouteChildren: VoteRouteChildren = {
+  VoteResolutionIdRoute: VoteResolutionIdRoute,
+}
+
+const VoteRouteWithChildren = VoteRoute._addFileChildren(VoteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
@@ -828,6 +877,7 @@ const rootRouteChildren: RootRouteChildren = {
   ReglagesRoute: ReglagesRoute,
   TarifsRoute: TarifsRoute,
   WaitlistRoute: WaitlistRoute,
+  VoteRoute: VoteRouteWithChildren,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,

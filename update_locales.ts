@@ -428,12 +428,132 @@ const growthComparisonEn = {
   legend_deposited: "what you deposited",
 };
 
+// ── Ton Argent Vote (le Bloc) ────────────────────────────────────────────────
+const voteFr = {
+  eyebrow: "Ton argent vote",
+  title: "Le Vote",
+  section_eyebrow: "Le Bloc",
+  section_title: "Ton argent n'est plus un chiffre. C'est une voix.",
+  section_kicker:
+    "Quand tu possèdes une entreprise, tu as un droit de vote à son assemblée générale. Seul, tu pèses peu. Ensemble, vous formez un bloc. Voici les votes ouverts.",
+  loading: "Chargement…",
+  empty_title: "Aucun vote pour l'instant.",
+  empty_desc: "La saison des assemblées générales arrive. Reviens bientôt.",
+  open_heading: "Ouverts au vote",
+  closed_heading: "Résultats",
+  disclaimer:
+    "Seedow agrège des intentions de vote et porte une voix collective. Les données de résolution sont publiques et sourcées ; la transmission du vote réel aux assemblées se fait par étapes. Seedow ne te dit jamais comment voter.",
+  back: "Tous les votes",
+  not_found_title: "Vote introuvable",
+  not_found_desc: "Cette résolution n'existe pas ou a été retirée.",
+  voted_confirm: "Ton vote « {{choice}} » est enregistré.",
+  change_vote: "Changer mon vote",
+  casting: "Envoi…",
+  source: "Source : {{name}}",
+  share_text: "Mon argent a une voix. Je vote sur : {{title}} — sur seedow.",
+  choice_for: "Pour",
+  choice_against: "Contre",
+  choice_abstain: "M'abstenir",
+  status: {
+    closed: "Clos",
+    last_day: "Dernier jour",
+    days_left: "Clôture · J−{{n}}",
+  },
+  list: {
+    bloc_empty: "Personne n'a encore voté",
+    bloc_count: "{{formatted}} dans le Bloc",
+    voted: "Ton vote : {{choice}}",
+    see_result: "Voir le résultat",
+    give_voice: "Donner ma voix",
+  },
+  explainer: {
+    who: "Ethi t'explique",
+  },
+  bloc: {
+    aria: "Le Bloc, décompte des votes en direct",
+    live: "Le Bloc · en direct",
+    empty_title: "Sois la première voix.",
+    empty_desc: "Personne n'a encore voté sur cette résolution. Ton vote ouvre le Bloc.",
+    you_line: "Vous êtes {{n}} à voter « {{choice}} ».",
+    total_line: "{{n}} personnes ont déjà voté.",
+    split_aria: "Contre la direction : {{against}}. Pour la direction : {{forCount}}.",
+    reinforce: "Renforcer le Bloc — partager",
+  },
+  result: {
+    official: "Résultat officiel",
+    pending: "Résultat à venir",
+    bloc_title: "Comment le Bloc Seedow a voté",
+    bloc_empty: "Aucun membre du Bloc n'avait voté sur cette résolution.",
+    bloc_line: "Sur {{total}} votes Seedow, {{against}} ont voté contre la direction ({{pct}} %).",
+  },
+};
+const voteEn = {
+  eyebrow: "Your money votes",
+  title: "The Vote",
+  section_eyebrow: "The Bloc",
+  section_title: "Your money is no longer a number. It's a voice.",
+  section_kicker:
+    "When you own a company, you have the right to vote at its shareholder meeting. Alone, you barely count. Together, you form a bloc. Here are the open votes.",
+  loading: "Loading…",
+  empty_title: "No votes yet.",
+  empty_desc: "Shareholder-meeting season is coming. Check back soon.",
+  open_heading: "Open for voting",
+  closed_heading: "Results",
+  disclaimer:
+    "Seedow aggregates voting intentions and carries a collective voice. Resolution data is public and sourced; transmitting the actual vote to meetings rolls out in stages. Seedow never tells you how to vote.",
+  back: "All votes",
+  not_found_title: "Vote not found",
+  not_found_desc: "This resolution doesn't exist or was withdrawn.",
+  voted_confirm: "Your “{{choice}}” vote is recorded.",
+  change_vote: "Change my vote",
+  casting: "Sending…",
+  source: "Source: {{name}}",
+  share_text: "My money has a voice. I'm voting on: {{title}} — on seedow.",
+  choice_for: "For",
+  choice_against: "Against",
+  choice_abstain: "Abstain",
+  status: {
+    closed: "Closed",
+    last_day: "Last day",
+    days_left: "Closes · {{n}}d left",
+  },
+  list: {
+    bloc_empty: "No one has voted yet",
+    bloc_count: "{{formatted}} in the Bloc",
+    voted: "Your vote: {{choice}}",
+    see_result: "See the result",
+    give_voice: "Give my voice",
+  },
+  explainer: {
+    who: "Ethi explains",
+  },
+  bloc: {
+    aria: "The Bloc, live vote count",
+    live: "The Bloc · live",
+    empty_title: "Be the first voice.",
+    empty_desc: "No one has voted on this resolution yet. Your vote opens the Bloc.",
+    you_line: "You're {{n}} voting “{{choice}}”.",
+    total_line: "{{n}} people have already voted.",
+    split_aria: "Against management: {{against}}. For management: {{forCount}}.",
+    reinforce: "Reinforce the Bloc — share",
+  },
+  result: {
+    official: "Official result",
+    pending: "Result pending",
+    bloc_title: "How the Seedow Bloc voted",
+    bloc_empty: "No Bloc member had voted on this resolution.",
+    bloc_line: "Of {{total}} Seedow votes, {{against}} voted against management ({{pct}}%).",
+  },
+};
+
 const mergedFr = deepMerge(fr, {
   landing: { rayon_x: rayonXFr },
   dashboard: dashboardFr,
   asset_detail: assetDetailFr,
   portfolio: portfolioFr,
   growth_comparison: growthComparisonFr,
+  rail_nav: { vote: "Le Vote" },
+  vote: voteFr,
 });
 const mergedEn = deepMerge(en, {
   landing: { rayon_x: rayonXEn },
@@ -441,6 +561,8 @@ const mergedEn = deepMerge(en, {
   asset_detail: assetDetailEn,
   portfolio: portfolioEn,
   growth_comparison: growthComparisonEn,
+  rail_nav: { vote: "The Vote" },
+  vote: voteEn,
 });
 
 writeFileSync("src/i18n/locales/fr.json", JSON.stringify(mergedFr, null, 2) + "\n", "utf-8");
