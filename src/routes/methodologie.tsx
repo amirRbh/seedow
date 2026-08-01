@@ -414,24 +414,28 @@ function MethodologyPage() {
             <div className="border-t border-b border-paper-3 divide-y divide-paper-3">
               <MetricRow
                 label={t("methodologie.metric_return")}
+                id="metric-return"
                 tip={t("methodologie.tips.return")}
                 value={result ? formatPercent(result.metrics.expected_return, lang) : "—"}
                 sub={t("methodologie.metric_return_hint")}
               />
               <MetricRow
                 label={t("methodologie.metric_volatility")}
+                id="metric-volatility"
                 tip={t("methodologie.tips.volatility")}
                 value={result ? formatPercent(result.metrics.volatility, lang) : "—"}
                 sub={t("methodologie.metric_volatility_hint")}
               />
               <MetricRow
                 label={t("methodologie.metric_sharpe")}
+                id="metric-sharpe"
                 tip={t("methodologie.tips.sharpe")}
                 value={result ? formatNumber(result.metrics.sharpe, lang) : "—"}
                 sub={t("methodologie.metric_sharpe_hint")}
               />
               <MetricRow
                 label={t("methodologie.metric_esg")}
+                id="metric-esg"
                 tip={t("methodologie.tips.esg")}
                 value={
                   result
@@ -442,12 +446,14 @@ function MethodologyPage() {
               />
               <MetricRow
                 label={t("methodologie.metric_fees")}
+                id="metric-fees"
                 tip={t("methodologie.tips.fees")}
                 value={result ? formatPercent(result.metrics.ter, lang) : "—"}
                 sub={t("methodologie.metric_fees_hint")}
               />
               <MetricRow
                 label={t("methodologie.metric_co2")}
+                id="metric-co2"
                 tip={t("methodologie.tips.co2")}
                 value={
                   result ? `${formatNumber(result.metrics.co2_avoided_tons, lang)} t / 10k€` : "—"
@@ -456,6 +462,7 @@ function MethodologyPage() {
               />
               <MetricRow
                 label={t("methodologie.metric_carbon_intensity")}
+                id="metric-carbon-intensity"
                 tip={t("methodologie.tips.carbon_intensity")}
                 value={
                   result?.metrics.carbon_intensity_gco2e_per_eur != null
@@ -786,14 +793,16 @@ function MetricRow({
   value,
   sub,
   tip,
+  id,
 }: {
   label: string;
   value: string;
   sub?: string;
   tip?: string;
+  id?: string;
 }) {
   return (
-    <div className="flex items-baseline justify-between py-2.5">
+    <div id={id} className="flex items-baseline justify-between py-2.5">
       <div>
         <p className="text-label text-ink">
           <MetricLabel label={label} hint={tip} />

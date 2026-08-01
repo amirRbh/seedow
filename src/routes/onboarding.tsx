@@ -460,7 +460,7 @@ function NamePortfolioStep({
 
         <button
           onClick={() => onConfirm(name.trim() || t("onboarding.naming.default_name"))}
-          className="mt-8 w-full py-4 rounded-full bg-ink text-paper font-semibold text-sm hover:opacity-90 transition-colors"
+          className="mt-8 w-full h-14 flex items-center justify-center rounded-full bg-ink text-paper font-semibold text-sm hover:opacity-90 transition-colors"
         >
           {t("onboarding.naming.validate")}
         </button>
@@ -703,7 +703,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3.5 rounded-full bg-ink text-paper font-semibold text-body-sm hover:opacity-90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed mt-2"
+                  className="w-full h-14 flex items-center justify-center rounded-full bg-ink text-paper font-semibold text-body-sm hover:opacity-90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed mt-2"
                 >
                   {loading
                     ? t("onboarding.account.waiting")
@@ -1268,7 +1268,7 @@ function PreviewScene({
                   .sort((a, b) => b.allocationPct - a.allocationPct);
                 onSave(holdings);
               }}
-              className="mt-8 w-full py-3 rounded-full bg-ink text-paper font-semibold text-body-sm hover:bg-highlight-2 transition-colors flex items-center justify-center gap-2"
+              className="mt-8 w-full h-14 rounded-full bg-ink text-paper font-semibold text-body-sm hover:bg-highlight-2 transition-colors flex items-center justify-center gap-2"
             >
               {t("onboarding.building.save_cta")}
               <svg
@@ -1568,7 +1568,7 @@ function BuildingScene({
                 });
                 onEnter();
               }}
-              className="mt-8 w-full py-3 rounded-full bg-ink text-paper font-semibold text-body-sm hover:bg-highlight-2 transition-colors flex items-center justify-center gap-2"
+              className="mt-8 w-full h-14 rounded-full bg-ink text-paper font-semibold text-body-sm hover:bg-highlight-2 transition-colors flex items-center justify-center gap-2"
             >
               {t("onboarding.building.dashboard_cta")}
               <svg
