@@ -274,8 +274,12 @@ function Ethi() {
         </div>
       </header>
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-6 pb-44">
-        <div className="max-w-lg mx-auto min-h-full flex flex-col justify-end space-y-4">
+      <div
+        ref={scrollRef}
+        className="flex-1 overflow-y-auto px-5 py-6 pb-44 flex flex-col justify-end"
+      >
+        <div className="w-full max-w-lg mx-auto space-y-4">
+
 
           <div className="rounded-2xl border border-paper-3 bg-paper-2 px-4 py-2.5 flex items-start gap-2 text-caption leading-snug text-ink-2">
             <span
