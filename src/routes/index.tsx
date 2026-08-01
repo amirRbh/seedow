@@ -93,11 +93,7 @@ function Landing() {
               {t("landing.nav.methodology")}
             </Link>
             {isAuthed ? (
-              <Link
-                to="/dashboard"
-                className="apple-btn-primary"
-                style={{ padding: "6px 14px", fontSize: 13 }}
-              >
+              <Link to="/dashboard" className="apple-btn-primary apple-btn-primary--sm">
                 {t("landing.nav.my_space")}
               </Link>
             ) : (
@@ -109,11 +105,7 @@ function Landing() {
                 >
                   {t("landing.nav.login")}
                 </Link>
-                <Link
-                  to="/onboarding"
-                  className="apple-btn-primary"
-                  style={{ padding: "6px 14px", fontSize: 13 }}
-                >
+                <Link to="/onboarding" className="apple-btn-primary apple-btn-primary--sm">
                   {t("landing.nav.simulate_cta")}
                 </Link>
               </>
