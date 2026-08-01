@@ -622,15 +622,102 @@ const wrappedEn = {
   },
 };
 
+// ── Le Réveil (fil de conscience quotidien) ──────────────────────────────────
+const reveilFr = {
+  eyebrow: "Le Réveil",
+  title: "Le Réveil",
+  loading: "Lecture de tes lignes…",
+  subtitle: "{{n}} choses à savoir sur les entreprises que tu détiens et suis, aujourd'hui.",
+  subtitle_empty: "Rien à signaler aujourd'hui sur tes lignes. Reviens demain.",
+  empty_title: "Ton réveil est calme.",
+  empty_desc:
+    "Ajoute des entreprises à ton portefeuille ou à ta liste de suivi, et Le Réveil te dira ce que la donnée en pense.",
+  empty_cta: "Découvrir des entreprises",
+  source_today: "Aujourd'hui",
+  cta_vote: "Voter",
+  cta_why: "Voir pourquoi",
+  tone: { action: "À faire", caution: "Attention", bright: "Bonne nouvelle" },
+  vote: {
+    headline: "Un vote arrive sur {{company}}.",
+    body: "Tu peux peser dessus. Clôture dans {{n}} jour(s).",
+  },
+  greenwashing: {
+    headline_owned: "{{company}} : le discours ne colle pas à la donnée.",
+    headline_watched: "{{company}} (suivie) : le discours ne colle pas à la donnée.",
+    generic: "Notre détection signale un écart entre ses revendications et les données observées.",
+  },
+  bright: {
+    headline_owned: "{{company}} tient ses engagements.",
+    headline_watched: "{{company}} (suivie) tient ses engagements.",
+    body: "Score ESG solide ({{score}}/10) et aucune incohérence détectée.",
+  },
+  reason: {
+    art9_low_esg: "Se dit « durable » (SFDR 9) mais son score ESG est faible.",
+    art9_borderline_esg: "Label « durable » (SFDR 9), score ESG tout juste à la limite.",
+    art9_no_exclusions: "Se dit « durable » sans exclure aucun secteur controversé.",
+    sfdr_low_esg: "Revendique un objectif ESG (SFDR 8) avec un score faible.",
+    sfdr_borderline_esg: "Objectif ESG affiché (SFDR 8), score à la limite.",
+    sfdr_missing_carbon: "Revendique un objectif ESG sans donnée carbone mesurée.",
+    sfdr_no_exclusions: "Objectif ESG affiché, mais aucun secteur exclu.",
+    green_theme_low_climate: "Thème « vert » revendiqué, score climat faible.",
+    green_theme_borderline_climate: "Thème « vert », score climat tout juste à la limite.",
+    claims_on_estimated_data: "Revendications basées sur des données estimées, pas mesurées.",
+  },
+  teaser: { count: "{{n}} à voir", cta: "Ouvrir Le Réveil" },
+};
+const reveilEn = {
+  eyebrow: "Morning read",
+  title: "Morning read",
+  loading: "Reading your holdings…",
+  subtitle: "{{n}} things to know about the companies you hold and follow, today.",
+  subtitle_empty: "Nothing to flag on your holdings today. Check back tomorrow.",
+  empty_title: "Your morning is quiet.",
+  empty_desc:
+    "Add companies to your portfolio or watchlist, and the Morning Read will tell you what the data thinks.",
+  empty_cta: "Discover companies",
+  source_today: "Today",
+  cta_vote: "Vote",
+  cta_why: "See why",
+  tone: { action: "To do", caution: "Heads up", bright: "Good news" },
+  vote: {
+    headline: "A vote is coming on {{company}}.",
+    body: "You can weigh in. Closes in {{n}} day(s).",
+  },
+  greenwashing: {
+    headline_owned: "{{company}}: the claims don't match the data.",
+    headline_watched: "{{company}} (watched): the claims don't match the data.",
+    generic: "Our detection flags a gap between its claims and the observed data.",
+  },
+  bright: {
+    headline_owned: "{{company}} walks the talk.",
+    headline_watched: "{{company}} (watched) walks the talk.",
+    body: "Solid ESG score ({{score}}/10) and no inconsistency detected.",
+  },
+  reason: {
+    art9_low_esg: 'Calls itself "sustainable" (SFDR 9) but its ESG score is low.',
+    art9_borderline_esg: '"Sustainable" label (SFDR 9), ESG score barely at the line.',
+    art9_no_exclusions: 'Calls itself "sustainable" while excluding no controversial sector.',
+    sfdr_low_esg: "Claims an ESG objective (SFDR 8) with a low score.",
+    sfdr_borderline_esg: "ESG objective stated (SFDR 8), borderline score.",
+    sfdr_missing_carbon: "Claims an ESG objective with no measured carbon data.",
+    sfdr_no_exclusions: "ESG objective stated, yet no sector excluded.",
+    green_theme_low_climate: '"Green" theme claimed, low climate score.',
+    green_theme_borderline_climate: '"Green" theme, climate score barely at the line.',
+    claims_on_estimated_data: "Claims based on estimated data, not measured.",
+  },
+  teaser: { count: "{{n}} to see", cta: "Open the Morning Read" },
+};
+
 const mergedFr = deepMerge(fr, {
   landing: { rayon_x: rayonXFr },
   dashboard: dashboardFr,
   asset_detail: assetDetailFr,
   portfolio: portfolioFr,
   growth_comparison: growthComparisonFr,
-  rail_nav: { vote: "Le Vote", wrapped: "Bilan" },
+  rail_nav: { vote: "Le Vote", wrapped: "Bilan", reveil: "Le Réveil" },
   vote: voteFr,
   wrapped: wrappedFr,
+  reveil: reveilFr,
 });
 const mergedEn = deepMerge(en, {
   landing: { rayon_x: rayonXEn },
@@ -638,9 +725,10 @@ const mergedEn = deepMerge(en, {
   asset_detail: assetDetailEn,
   portfolio: portfolioEn,
   growth_comparison: growthComparisonEn,
-  rail_nav: { vote: "The Vote", wrapped: "Recap" },
+  rail_nav: { vote: "The Vote", wrapped: "Recap", reveil: "Morning" },
   vote: voteEn,
   wrapped: wrappedEn,
+  reveil: reveilEn,
 });
 
 writeFileSync("src/i18n/locales/fr.json", JSON.stringify(mergedFr, null, 2) + "\n", "utf-8");

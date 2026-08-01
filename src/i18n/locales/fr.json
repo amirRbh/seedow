@@ -1720,7 +1720,8 @@
     "aria": "Navigation principale",
     "seedow_home": "Seedow — accueil",
     "vote": "Le Vote",
-    "wrapped": "Bilan"
+    "wrapped": "Bilan",
+    "reveil": "Le Réveil"
   },
   "asset_class": {
     "equity_dev": "Actions développées",
@@ -2130,6 +2131,54 @@
       "bloc_line": "Mon plus grand Bloc : {{total}} personnes — {{company}}.",
       "tagline": "Ce n'est pas une fatalité. C'est un choix. Le tien aussi.",
       "text": "Mon bilan Seedow : mon argent a une voix. Et le tien ?"
+    }
+  },
+  "reveil": {
+    "eyebrow": "Le Réveil",
+    "title": "Le Réveil",
+    "loading": "Lecture de tes lignes…",
+    "subtitle": "{{n}} choses à savoir sur les entreprises que tu détiens et suis, aujourd'hui.",
+    "subtitle_empty": "Rien à signaler aujourd'hui sur tes lignes. Reviens demain.",
+    "empty_title": "Ton réveil est calme.",
+    "empty_desc": "Ajoute des entreprises à ton portefeuille ou à ta liste de suivi, et Le Réveil te dira ce que la donnée en pense.",
+    "empty_cta": "Découvrir des entreprises",
+    "source_today": "Aujourd'hui",
+    "cta_vote": "Voter",
+    "cta_why": "Voir pourquoi",
+    "tone": {
+      "action": "À faire",
+      "caution": "Attention",
+      "bright": "Bonne nouvelle"
+    },
+    "vote": {
+      "headline": "Un vote arrive sur {{company}}.",
+      "body": "Tu peux peser dessus. Clôture dans {{n}} jour(s)."
+    },
+    "greenwashing": {
+      "headline_owned": "{{company}} : le discours ne colle pas à la donnée.",
+      "headline_watched": "{{company}} (suivie) : le discours ne colle pas à la donnée.",
+      "generic": "Notre détection signale un écart entre ses revendications et les données observées."
+    },
+    "bright": {
+      "headline_owned": "{{company}} tient ses engagements.",
+      "headline_watched": "{{company}} (suivie) tient ses engagements.",
+      "body": "Score ESG solide ({{score}}/10) et aucune incohérence détectée."
+    },
+    "reason": {
+      "art9_low_esg": "Se dit « durable » (SFDR 9) mais son score ESG est faible.",
+      "art9_borderline_esg": "Label « durable » (SFDR 9), score ESG tout juste à la limite.",
+      "art9_no_exclusions": "Se dit « durable » sans exclure aucun secteur controversé.",
+      "sfdr_low_esg": "Revendique un objectif ESG (SFDR 8) avec un score faible.",
+      "sfdr_borderline_esg": "Objectif ESG affiché (SFDR 8), score à la limite.",
+      "sfdr_missing_carbon": "Revendique un objectif ESG sans donnée carbone mesurée.",
+      "sfdr_no_exclusions": "Objectif ESG affiché, mais aucun secteur exclu.",
+      "green_theme_low_climate": "Thème « vert » revendiqué, score climat faible.",
+      "green_theme_borderline_climate": "Thème « vert », score climat tout juste à la limite.",
+      "claims_on_estimated_data": "Revendications basées sur des données estimées, pas mesurées."
+    },
+    "teaser": {
+      "count": "{{n}} à voir",
+      "cta": "Ouvrir Le Réveil"
     }
   }
 }

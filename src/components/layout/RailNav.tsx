@@ -15,7 +15,8 @@ type IconKey =
   | "comparatif"
   | "certificat"
   | "vote"
-  | "wrapped";
+  | "wrapped"
+  | "reveil";
 
 type NavItem = {
   key: string;
@@ -55,6 +56,13 @@ export function RailNav() {
       shortcut: "g o",
     },
     { key: "discover", path: "/discover", label: t("bottom_nav.explore"), icon: "decouvrir" },
+    {
+      key: "reveil",
+      path: "/reveil",
+      label: t("rail_nav.reveil"),
+      icon: "reveil",
+      shortcut: "g r",
+    },
     { key: "vote", path: "/vote", label: t("rail_nav.vote"), icon: "vote", shortcut: "g v" },
     { key: "ethi", path: "/ethi", label: t("rail_nav.ethi_assistant"), icon: "ethi" },
   ];
@@ -242,6 +250,19 @@ function NavIcon({ type }: { type: IconKey }) {
           <path d="M12 3v18" />
           <path d="M5 8l7-5 7 5" />
           <path d="M5 8v8l7 5 7-5V8" />
+        </svg>
+      );
+    case "reveil":
+      return (
+        <svg {...common}>
+          <path d="M17 18a5 5 0 0 0-10 0" />
+          <path d="M12 2v7" />
+          <path d="m4.9 10.9 1.4 1.4" />
+          <path d="M2 18h2" />
+          <path d="M20 18h2" />
+          <path d="m17.7 12.3 1.4-1.4" />
+          <path d="M22 22H2" />
+          <path d="m8 6 4-4 4 4" />
         </svg>
       );
   }
