@@ -49,6 +49,8 @@
   },
   "view_mode": {
     "label": "Detail level",
+    "simple_hint": "Plain language, advanced metrics hidden.",
+    "expert_hint": "All metrics: volatility, Sharpe, WACI, TER.",
     "simple": "Simple",
     "expert": "Expert",
     "toast_simple": "Simple mode on",
@@ -321,6 +323,8 @@
       "save_cta": "Create my account — free",
       "save_hint": "No credit card · 30 seconds",
       "expired_title": "Your simulation has expired or can't be found.",
+      "expired_desc": "Guest simulations live in your browser and don't last. Start a new one in 2 minutes — no data, no account, no commitment.",
+      "expired_secondary": "Or start with the free courses",
       "expired_cta": "Start a new simulation"
     },
     "understand": {
@@ -767,7 +771,7 @@
       }
     },
     "intro": {
-      "eyebrow": "Allocation Advisor",
+      "eyebrow": "Allocation simulator",
       "title": "Let's build your portfolio.",
       "description": "Four questions, two minutes. Ethi structures an allocation aligned with your convictions and exclusions.",
       "step_01": "Your values",
