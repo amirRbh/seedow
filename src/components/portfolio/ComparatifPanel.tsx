@@ -162,10 +162,10 @@ export function ComparatifPanel() {
         <KPIFigure
           size="sm"
           label={t("comparatif_panel.gap_msci")}
-          value={`${delta10y >= 0 ? "+" : ""}${delta10y.toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`}
+          value={`${delta10y! >= 0 ? "+" : ""}${delta10y!.toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`}
           unit="€"
           hint={
-            delta10y >= 0
+            delta10y! >= 0
               ? t("comparatif_panel.above_benchmark")
               : t("comparatif_panel.below_benchmark")
           }
@@ -189,12 +189,12 @@ export function ComparatifPanel() {
             label={t("comparatif_panel.expected_perf")}
             term="MSCIWorld"
             seedowValue={`${(seedow.expectedReturn * 100).toFixed(1)} %`}
-            msciValue={`${(MSCI_WORLD.expectedReturn * 100).toFixed(1)} %`}
-            seedowWins={seedow.expectedReturn >= MSCI_WORLD.expectedReturn}
+            msciValue={`${(ref.expectedReturn * 100).toFixed(1)} %`}
+            seedowWins={seedow.expectedReturn >= ref.expectedReturn}
             bar={
               <PerfMedaillon
                 value={seedow.expectedReturn}
-                max={Math.max(seedow.expectedReturn, MSCI_WORLD.expectedReturn)}
+                max={Math.max(seedow.expectedReturn, ref.expectedReturn)}
                 accent
               />
             }
@@ -203,39 +203,39 @@ export function ComparatifPanel() {
             label={t("comparatif_panel.volatility")}
             term="Volatilite"
             seedowValue={`${(seedow.volatility * 100).toFixed(1)} %`}
-            msciValue={`${(MSCI_WORLD.volatility * 100).toFixed(1)} %`}
-            seedowWins={seedow.volatility <= MSCI_WORLD.volatility}
+            msciValue={`${(ref.volatility * 100).toFixed(1)} %`}
+            seedowWins={seedow.volatility <= ref.volatility}
             note={t("comparatif_panel.lower_stable")}
           />
           <CompareRow
             label={t("comparatif_panel.annual_fees")}
             term="TER"
             seedowValue={`${(seedow.ter * 100).toFixed(2)} %`}
-            msciValue={`${(MSCI_WORLD.ter * 100).toFixed(2)} %`}
-            seedowWins={seedow.ter <= MSCI_WORLD.ter}
+            msciValue={`${(ref.ter * 100).toFixed(2)} %`}
+            seedowWins={seedow.ter <= ref.ter}
             note={t("comparatif_panel.lower_net")}
           />
           <CompareRow
             label={t("comparatif_panel.impact_score")}
             term="ESG"
             seedowValue={`${seedow.esgScore.toFixed(0)} / 100`}
-            msciValue={`${MSCI_WORLD.esgScore} / 100`}
-            seedowWins={seedow.esgScore >= MSCI_WORLD.esgScore}
+            msciValue={`${ref.esgScore} / 100`}
+            seedowWins={seedow.esgScore >= ref.esgScore}
             note={t("comparatif_panel.higher_durable")}
           />
           <CompareRow
             label={t("comparatif_panel.carbon_intensity")}
             term="CO2"
             seedowValue={`${seedow.carbonIntensityGperEur.toFixed(0)} g/€`}
-            msciValue={`${MSCI_WORLD.carbonIntensityGperEur} g/€`}
-            seedowWins={seedow.carbonIntensityGperEur <= MSCI_WORLD.carbonIntensityGperEur}
+            msciValue={`${ref.carbonIntensityGperEur} g/€`}
+            seedowWins={seedow.carbonIntensityGperEur <= ref.carbonIntensityGperEur}
             note={t("comparatif_panel.per_euro")}
           />
           <CompareRow
             label={t("comparatif_panel.classification")}
             term="SFDR"
             seedowValue={seedow.sfdr}
-            msciValue={MSCI_WORLD.sfdr}
+            msciValue={ref.sfdr}
             seedowWins={seedow.sfdr.includes("8") || seedow.sfdr.includes("9")}
           />
         </div>
@@ -253,18 +253,18 @@ export function ComparatifPanel() {
           <KPIFigure
             size="md"
             label={t("comparatif_panel.co2_avoided")}
-            value={co2EvitedKg.toLocaleString("fr-FR", {
+            value={co2EvitedKg!.toLocaleString("fr-FR", {
               minimumFractionDigits: 0,
               maximumFractionDigits: 0,
             })}
             unit="kg/an"
             accent
-            hint={t("comparatif_panel.paris_lyon_trips", { count: Math.round(co2EvitedKg / 120) })}
+            hint={t("comparatif_panel.paris_lyon_trips", { count: Math.round(co2EvitedKg! / 120) })}
           />
           <KPIFigure
             size="md"
             label={t("comparatif_panel.saved_fees")}
-            value={`${Math.max(0, (MSCI_WORLD.ter - seedow.ter) * capital).toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`}
+            value={`${Math.max(0, (ref.ter - seedow.ter) * capital).toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`}
             unit="€/an"
             hint={t("comparatif_panel.for_invested", {
               amount: capital.toLocaleString("fr-FR", {
@@ -349,7 +349,7 @@ function CompareRow({ label, term, seedowValue, msciValue, seedowWins, note, bar
         </div>
         <div>
           <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold mb-1">
-            MSCI World
+            {t(benchmark.labelKey)}
           </p>
           <p className="kpi-figure text-xl text-ink-2 tabular-nums">{msciValue}</p>
         </div>
