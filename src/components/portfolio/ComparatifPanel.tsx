@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { KPIFigure } from "@/components/ui/KPIFigure";
 import { Glossary, GLOSSARY } from "@/components/ui/Glossary";
@@ -21,6 +22,27 @@ const MSCI_WORLD = {
   sfdr: "Article 6",
 } as const;
 
+type BenchmarkData = typeof MSCI_WORLD;
+
+/**
+ * Références de comparaison disponibles. Seul MSCI World dispose aujourd'hui de
+ * données réelles chargées (cf. audit — aucune table `benchmarks` en base pour les
+ * autres indices). On liste les autres références demandées par les utilisateurs
+ * SANS inventer de chiffre : `data: null` déclenche un état honnête dans l'UI
+ * plutôt qu'une valeur fabriquée (contrat de transparence).
+ */
+interface BenchmarkOption {
+  id: "msci_world" | "sp500" | "cac40";
+  labelKey: string;
+  data: BenchmarkData | null;
+}
+
+const BENCHMARK_OPTIONS: BenchmarkOption[] = [
+  { id: "msci_world", labelKey: "comparatif_panel.benchmark_msci_world", data: MSCI_WORLD },
+  { id: "sp500", labelKey: "comparatif_panel.benchmark_sp500", data: null },
+  { id: "cac40", labelKey: "comparatif_panel.benchmark_cac40", data: null },
+];
+
 function PerfMedaillon({ value, max, accent }: { value: number; max: number; accent?: boolean }) {
   const w = Math.max(4, Math.min(100, (Math.abs(value) / max) * 100));
   return (
@@ -40,10 +62,14 @@ export function ComparatifPanel() {
   const { t } = useTranslation();
   const { portfolio } = useActivePortfolio();
   const valuation = usePortfolioValuation();
+  const [benchmarkId, setBenchmarkId] = useState<BenchmarkOption["id"]>("msci_world");
 
   if (!portfolio) {
     return <p className="text-label text-ink-3">{t("comparatif_panel.no_active")}</p>;
   }
+
+  const benchmark = BENCHMARK_OPTIONS.find((b) => b.id === benchmarkId) ?? BENCHMARK_OPTIONS[0];
+  const ref = benchmark.data;
 
   const metrics = portfolio.metrics;
   const seedow = {
@@ -61,16 +87,61 @@ export function ComparatifPanel() {
   const capital = valuation.totalInvested || portfolio.initial_amount || 10_000;
   const project = (r: number) => capital * Math.pow(1 + r, 10);
   const seedow10y = project(seedow.expectedReturn);
-  const msci10y = project(MSCI_WORLD.expectedReturn);
-  const delta10y = seedow10y - msci10y;
+  const ref10y = ref ? project(ref.expectedReturn) : null;
+  const delta10y = ref10y !== null ? seedow10y - ref10y : null;
 
-  const co2EvitedKg = Math.max(
-    0,
-    ((MSCI_WORLD.carbonIntensityGperEur - seedow.carbonIntensityGperEur) * capital) / 1000,
+  const co2EvitedKg = ref
+    ? Math.max(0, ((ref.carbonIntensityGperEur - seedow.carbonIntensityGperEur) * capital) / 1000)
+    : null;
+
+  const BenchmarkSelector = (
+    <div className="flex flex-wrap gap-2 mb-6" role="tablist" aria-label={t("comparatif_panel.benchmark_label")}>
+      {BENCHMARK_OPTIONS.map((opt) => (
+        <button
+          key={opt.id}
+          type="button"
+          role="tab"
+          aria-selected={benchmarkId === opt.id}
+          onClick={() => setBenchmarkId(opt.id)}
+          className={cn(
+            "px-3 py-1.5 rounded-full text-caption uppercase tracking-wider font-semibold border transition-colors",
+            benchmarkId === opt.id
+              ? "bg-ink text-paper border-ink"
+              : "bg-transparent text-ink-3 border-paper-3 hover:border-ink-2",
+          )}
+        >
+          {t(opt.labelKey)}
+          {!opt.data && <span aria-hidden> ·</span>}
+        </button>
+      ))}
+    </div>
   );
+
+  if (!ref) {
+    return (
+      <div>
+        <p className="text-caption uppercase tracking-wider text-ink-3 mb-3">
+          {t("comparatif_panel.benchmark_label")}
+        </p>
+        {BenchmarkSelector}
+        <div className="border border-paper-3 rounded-2xl p-6 text-center">
+          <p className="text-body font-semibold text-ink">
+            {t("comparatif_panel.benchmark_no_data_title")}
+          </p>
+          <p className="mt-2 text-label text-ink-3 leading-relaxed">
+            {t("comparatif_panel.benchmark_no_data_body")}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
+      <p className="text-caption uppercase tracking-wider text-ink-3 mb-3">
+        {t("comparatif_panel.benchmark_label")}
+      </p>
+      {BenchmarkSelector}
       <div className="grid grid-cols-2 gap-4">
         <KPIFigure
           size="sm"
