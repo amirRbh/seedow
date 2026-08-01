@@ -1719,7 +1719,8 @@
     "certificate": "Certificat d'impact",
     "aria": "Navigation principale",
     "seedow_home": "Seedow — accueil",
-    "vote": "Le Vote"
+    "vote": "Le Vote",
+    "wrapped": "Bilan"
   },
   "asset_class": {
     "equity_dev": "Actions développées",
@@ -2104,6 +2105,31 @@
       "subline_choice": "personnes votent « {{choice}} ».",
       "subline_total": "personnes ont déjà voté.",
       "tagline": "Ce n'est pas une fatalité. C'est un choix. Le tien aussi."
+    }
+  },
+  "wrapped": {
+    "link": "Voir mon bilan",
+    "card_eyebrow": "Mon bilan Seedow",
+    "loading": "Un instant…",
+    "close": "Fermer",
+    "tap_hint": "Touche pour continuer",
+    "intro_title": "Ton bilan Seedow",
+    "intro_sub": "Ce que ton argent a dit, cette année.",
+    "votes_label": "votes exprimés dans le Bloc",
+    "refusals_label": "fois où tu as dit non à la direction",
+    "refusals_label_short": "refus assumés",
+    "bloc_label": "personnes dans le plus grand Bloc que tu as rejoint — {{company}}",
+    "empty_title": "Ton bilan t'attend.",
+    "empty_desc": "Tu n'as pas encore voté. Rejoins un premier Bloc, et ton bilan prend vie.",
+    "empty_cta": "Voir les votes ouverts",
+    "final_title": "Voilà ton bilan.",
+    "final_sub": "Partage-le : ton argent a une voix, montre-la.",
+    "share_cta": "Partager mon bilan",
+    "final_vote_cta": "Rejoindre un vote",
+    "share": {
+      "bloc_line": "Mon plus grand Bloc : {{total}} personnes — {{company}}.",
+      "tagline": "Ce n'est pas une fatalité. C'est un choix. Le tien aussi.",
+      "text": "Mon bilan Seedow : mon argent a une voix. Et le tien ?"
     }
   }
 }

@@ -20,18 +20,26 @@ export interface BlocShareCardData {
   tagline: string; // signature de marque
 }
 
-const DA = {
+/** Palette de la DA §4 en hex (le canvas ne lit pas les tokens oklch). */
+export const CARD_DA = {
   ink: "#1d1d1f",
   paper: "#f5f5f7",
   ink2: "#86868b",
   mint: "#34c77b", // mint lisible sur fond encre (variante sombre de --mint)
 };
 
-const W = 1080;
-const H = 1350;
-const PAD = 96;
+const DA = CARD_DA;
 
-function wrapLines(
+/** Format story partagé par toutes les cartes Seedow. */
+export const CARD_W = 1080;
+export const CARD_H = 1350;
+export const CARD_PAD = 96;
+
+const W = CARD_W;
+const H = CARD_H;
+const PAD = CARD_PAD;
+
+export function wrapLines(
   ctx: CanvasRenderingContext2D,
   text: string,
   maxWidth: number,
@@ -65,7 +73,7 @@ function wrapLines(
   return lines;
 }
 
-async function ensureFonts(): Promise<void> {
+export async function ensureCardFonts(): Promise<void> {
   if (typeof document === "undefined" || !document.fonts) return;
   try {
     await Promise.all([
@@ -88,7 +96,7 @@ export async function renderBlocShareCard(data: BlocShareCardData): Promise<Blob
   if (typeof document === "undefined") {
     throw new Error("renderBlocShareCard doit être appelé côté navigateur.");
   }
-  await ensureFonts();
+  await ensureCardFonts();
 
   const canvas = document.createElement("canvas");
   canvas.width = W;
