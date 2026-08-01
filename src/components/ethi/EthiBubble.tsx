@@ -25,7 +25,7 @@ export function EthiBubble({ role, content, typing }: EthiBubbleProps) {
     >
       <div className={`max-w-[85%] ${isUser ? "ml-auto" : "w-full"}`}>
         {!isUser && (
-          <p className="text-tag text-paper/40 font-semibold mb-1.5 ml-1">
+          <p className="text-tag text-ink-3 font-semibold mb-1.5 ml-1">
             {t("ethi.your_advisor")}
           </p>
         )}
@@ -34,7 +34,7 @@ export function EthiBubble({ role, content, typing }: EthiBubbleProps) {
           className={`rounded-2xl px-4 py-3 text-body-sm leading-relaxed ${
             isUser
               ? "bg-highlight-2 text-paper rounded-br-sm"
-              : "bg-paper/10 text-paper border border-paper/10 rounded-bl-sm"
+              : "bg-paper-2 text-ink border border-paper-3 rounded-bl-sm"
           }`}
         >
           {typing ? (
@@ -62,7 +62,7 @@ function TypingDots() {
           key={i}
           animate={{ y: [0, -4, 0], opacity: [0.3, 1, 0.3] }}
           transition={{ duration: 1, repeat: Infinity, delay: i * 0.15 }}
-          className="w-1.5 h-1.5 bg-paper/60 rounded-full"
+          className="w-1.5 h-1.5 bg-ink-3 rounded-full"
         />
       ))}
     </div>
