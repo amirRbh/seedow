@@ -84,30 +84,40 @@ function ViewModeToggle() {
       aria-label={t("view_mode.label")}
       className="inline-flex items-center h-7 rounded-full border border-paper-3 bg-paper overflow-hidden"
     >
-      <button
-        type="button"
-        onClick={() => setMode("simple")}
-        aria-pressed={mode === "simple"}
-        className={cn(
-          "px-2.5 h-7 text-tag font-semibold uppercase tracking-[0.16em] transition-colors duration-150",
-          "outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 focus-visible:ring-inset",
-          mode === "simple" ? "bg-ink text-paper" : "text-ink-3 hover:text-ink",
-        )}
-      >
-        {t("view_mode.simple")}
-      </button>
-      <button
-        type="button"
-        onClick={() => setMode("expert")}
-        aria-pressed={mode === "expert"}
-        className={cn(
-          "px-2.5 h-7 text-tag font-semibold uppercase tracking-[0.16em] transition-colors duration-150 border-l border-paper-3",
-          "outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 focus-visible:ring-inset",
-          mode === "expert" ? "bg-ink text-paper" : "text-ink-3 hover:text-ink",
-        )}
-      >
-        {t("view_mode.expert")}
-      </button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            type="button"
+            onClick={() => setMode("simple")}
+            aria-pressed={mode === "simple"}
+            className={cn(
+              "px-2.5 h-7 text-tag font-semibold uppercase tracking-[0.16em] transition-colors duration-150",
+              "outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 focus-visible:ring-inset",
+              mode === "simple" ? "bg-ink text-paper" : "text-ink-3 hover:text-ink",
+            )}
+          >
+            {t("view_mode.simple")}
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom">{t("view_mode.simple_hint")}</TooltipContent>
+      </Tooltip>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            type="button"
+            onClick={() => setMode("expert")}
+            aria-pressed={mode === "expert"}
+            className={cn(
+              "px-2.5 h-7 text-tag font-semibold uppercase tracking-[0.16em] transition-colors duration-150 border-l border-paper-3",
+              "outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 focus-visible:ring-inset",
+              mode === "expert" ? "bg-ink text-paper" : "text-ink-3 hover:text-ink",
+            )}
+          >
+            {t("view_mode.expert")}
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom">{t("view_mode.expert_hint")}</TooltipContent>
+      </Tooltip>
     </div>
   );
 }
