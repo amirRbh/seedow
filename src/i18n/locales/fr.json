@@ -2092,6 +2092,18 @@
       "bloc_title": "Comment le Bloc Seedow a voté",
       "bloc_empty": "Aucun membre du Bloc n'avait voté sur cette résolution.",
       "bloc_line": "Sur {{total}} votes Seedow, {{against}} ont voté contre la direction ({{pct}} %)."
+    },
+    "teaser": {
+      "eyebrow": "Un vote arrive",
+      "be_first": "Sois la première voix",
+      "bloc_count": "{{formatted}} dans le Bloc",
+      "cta": "Donner ma voix",
+      "cta_voted": "Voir le Bloc"
+    },
+    "share": {
+      "subline_choice": "personnes votent « {{choice}} ».",
+      "subline_total": "personnes ont déjà voté.",
+      "tagline": "Ce n'est pas une fatalité. C'est un choix. Le tien aussi."
     }
   }
 }

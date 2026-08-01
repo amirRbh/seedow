@@ -486,6 +486,18 @@ const voteFr = {
     bloc_empty: "Aucun membre du Bloc n'avait voté sur cette résolution.",
     bloc_line: "Sur {{total}} votes Seedow, {{against}} ont voté contre la direction ({{pct}} %).",
   },
+  teaser: {
+    eyebrow: "Un vote arrive",
+    be_first: "Sois la première voix",
+    bloc_count: "{{formatted}} dans le Bloc",
+    cta: "Donner ma voix",
+    cta_voted: "Voir le Bloc",
+  },
+  share: {
+    subline_choice: "personnes votent « {{choice}} ».",
+    subline_total: "personnes ont déjà voté.",
+    tagline: "Ce n'est pas une fatalité. C'est un choix. Le tien aussi.",
+  },
 };
 const voteEn = {
   eyebrow: "Your money votes",
@@ -543,6 +555,18 @@ const voteEn = {
     bloc_title: "How the Seedow Bloc voted",
     bloc_empty: "No Bloc member had voted on this resolution.",
     bloc_line: "Of {{total}} Seedow votes, {{against}} voted against management ({{pct}}%).",
+  },
+  teaser: {
+    eyebrow: "A vote is coming",
+    be_first: "Be the first voice",
+    bloc_count: "{{formatted}} in the Bloc",
+    cta: "Give my voice",
+    cta_voted: "See the Bloc",
+  },
+  share: {
+    subline_choice: "people vote “{{choice}}”.",
+    subline_total: "people have already voted.",
+    tagline: "It's not inevitable. It's a choice. Yours too.",
   },
 };
 

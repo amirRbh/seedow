@@ -8,6 +8,7 @@ import {
   isVotable,
   daysUntilClose,
   isVoteChoice,
+  soonestClosingOpen,
 } from "../bloc";
 
 describe("isVoteChoice", () => {
@@ -119,5 +120,36 @@ describe("daysUntilClose", () => {
 
   it("returns null for an unparseable date", () => {
     expect(daysUntilClose("not-a-date", now)).toBeNull();
+  });
+});
+
+describe("soonestClosingOpen", () => {
+  const now = new Date("2026-05-01T00:00:00Z");
+
+  it("picks the open resolution closing soonest", () => {
+    const items = [
+      { id: "a", status: "open" as const, closesAt: "2026-05-20T00:00:00Z" },
+      { id: "b", status: "open" as const, closesAt: "2026-05-05T00:00:00Z" },
+      { id: "c", status: "open" as const, closesAt: "2026-06-01T00:00:00Z" },
+    ];
+    expect(soonestClosingOpen(items, now)?.id).toBe("b");
+  });
+
+  it("ignores closed and past-deadline resolutions", () => {
+    const items = [
+      { id: "past", status: "open" as const, closesAt: "2026-04-01T00:00:00Z" },
+      { id: "closed", status: "closed" as const, closesAt: "2026-05-03T00:00:00Z" },
+      { id: "live", status: "open" as const, closesAt: "2026-05-10T00:00:00Z" },
+    ];
+    expect(soonestClosingOpen(items, now)?.id).toBe("live");
+  });
+
+  it("returns null when nothing is votable", () => {
+    const items = [{ id: "x", status: "closed" as const, closesAt: "2026-05-10T00:00:00Z" }];
+    expect(soonestClosingOpen(items, now)).toBeNull();
+  });
+
+  it("returns null for an empty list", () => {
+    expect(soonestClosingOpen([], now)).toBeNull();
   });
 });
