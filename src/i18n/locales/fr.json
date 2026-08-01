@@ -307,7 +307,10 @@
     "objectives": "Objectifs",
     "explore": "Explorer",
     "ethi": "Ethi",
-    "aria": "Navigation principale"
+    "aria": "Navigation principale",
+    "reveil": "Réveil",
+    "vote": "Le Vote",
+    "profile": "Profil"
   },
   "dashboard": {
     "greeting_morning": "Belle matinée",
@@ -882,6 +885,15 @@
       "reveal_title": "Votre portefeuille",
       "reveal_summary": "{{count}} positions · capital de référence {{amount}}",
       "dashboard_cta": "Accéder au tableau de bord"
+    },
+    "intro": {
+      "eyebrow": "Conseiller en allocation",
+      "title": "Composons votre portefeuille.",
+      "description": "Quatre questions, deux minutes. Ethi structure une allocation alignée sur vos convictions et vos exclusions.",
+      "step_01": "Tes valeurs",
+      "step_02": "Ton portefeuille",
+      "step_03": "Ton suivi",
+      "start": "Commencer"
     }
   },
   "reglages": {

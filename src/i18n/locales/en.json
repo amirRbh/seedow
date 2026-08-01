@@ -307,7 +307,10 @@
     "objectives": "Goals",
     "explore": "Explore",
     "ethi": "Ethi",
-    "aria": "Main navigation"
+    "aria": "Main navigation",
+    "reveil": "Morning",
+    "vote": "The Vote",
+    "profile": "Profile"
   },
   "dashboard": {
     "greeting_morning": "Good morning",
@@ -882,6 +885,15 @@
       "reveal_title": "Your portfolio",
       "reveal_summary": "{{count}} positions · reference capital {{amount}}",
       "dashboard_cta": "Go to dashboard"
+    },
+    "intro": {
+      "eyebrow": "Allocation Advisor",
+      "title": "Let's build your portfolio.",
+      "description": "Four questions, two minutes. Ethi structures an allocation aligned with your convictions and exclusions.",
+      "step_01": "Your values",
+      "step_02": "Your portfolio",
+      "step_03": "Your tracking",
+      "start": "Start"
     }
   },
   "reglages": {

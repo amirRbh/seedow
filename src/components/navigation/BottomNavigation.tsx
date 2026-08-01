@@ -2,7 +2,7 @@ import { Link, useLocation } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 
-type IconKey = "portefeuille" | "analyse" | "objectifs" | "decouvrir" | "ethi";
+type IconKey = "reveil" | "vote" | "analyse" | "profil";
 
 type NavItem = {
   key: string;
@@ -11,16 +11,18 @@ type NavItem = {
   icon: IconKey;
 };
 
+// Core loop du produit : Voir (Le Réveil) → Agir (Le Vote) → son argent
+// (Portefeuille) → soi (Profil). Volontairement réduit à 4 entrées : chaque
+// onglet porte une seule intention, aucune surface « robo-advisor » ici.
 const NAV_ITEMS: NavItem[] = [
-  { key: "dashboard", path: "/dashboard", labelKey: "bottom_nav.home", icon: "portefeuille" },
+  { key: "reveil", path: "/reveil", labelKey: "bottom_nav.reveil", icon: "reveil" },
+  { key: "vote", path: "/vote", labelKey: "bottom_nav.vote", icon: "vote" },
   { key: "portfolio", path: "/portfolio", labelKey: "bottom_nav.portfolio", icon: "analyse" },
-  { key: "objectifs", path: "/objectifs", labelKey: "bottom_nav.objectives", icon: "objectifs" },
-  { key: "discover", path: "/discover", labelKey: "bottom_nav.explore", icon: "decouvrir" },
-  { key: "ethi", path: "/ethi", labelKey: "bottom_nav.ethi", icon: "ethi" },
+  { key: "profil", path: "/profil", labelKey: "bottom_nav.profile", icon: "profil" },
 ];
 
 /**
- * Barre de navigation éditoriale — 5 entrées alignées sur le rail desktop.
+ * Barre de navigation éditoriale — 4 entrées, alignées sur le rail desktop.
  */
 export function BottomNavigation() {
   const location = useLocation();
@@ -80,12 +82,25 @@ function NavIcon({ type }: { type: IconKey }) {
     strokeLinejoin: "round" as const,
   };
   switch (type) {
-    case "portefeuille":
+    case "reveil":
       return (
         <svg {...common}>
-          <rect x="3" y="6" width="18" height="13" rx="1.5" />
-          <path d="M3 10h18" />
-          <path d="M16 14h2" />
+          <path d="M17 18a5 5 0 0 0-10 0" />
+          <path d="M12 2v7" />
+          <path d="m4.9 10.9 1.4 1.4" />
+          <path d="M2 18h2" />
+          <path d="M20 18h2" />
+          <path d="m17.7 12.3 1.4-1.4" />
+          <path d="M22 22H2" />
+          <path d="m8 6 4-4 4 4" />
+        </svg>
+      );
+    case "vote":
+      return (
+        <svg {...common}>
+          <path d="M5 21h14" />
+          <path d="M6 21v-6l6-3 6 3v6" />
+          <path d="m9 12 3 3 3-3" />
         </svg>
       );
     case "analyse":
@@ -98,25 +113,11 @@ function NavIcon({ type }: { type: IconKey }) {
           <path d="M21 21V9" />
         </svg>
       );
-    case "objectifs":
+    case "profil":
       return (
         <svg {...common}>
-          <circle cx="12" cy="12" r="9" />
-          <circle cx="12" cy="12" r="5" />
-          <circle cx="12" cy="12" r="1.5" fill="currentColor" />
-        </svg>
-      );
-    case "ethi":
-      return (
-        <svg {...common}>
-          <path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0 1 1 21 12Z" />
-        </svg>
-      );
-    case "decouvrir":
-      return (
-        <svg {...common}>
-          <circle cx="12" cy="12" r="9" />
-          <path d="m15 9-2 4-4 2 2-4 4-2Z" />
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" />
         </svg>
       );
   }
