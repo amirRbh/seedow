@@ -309,6 +309,14 @@ function Ethi() {
             />
             <span>{t("ethi.disclaimer")}</span>
           </div>
+          {/* Briefing d'accueil en cours de calcul : squelette plutôt que bulle vide. */}
+          {dataLoading && messages.length <= 1 && (
+            <div className="space-y-2" aria-hidden>
+              <div className="h-3 w-2/3 rounded-full bg-paper-3 animate-pulse" />
+              <div className="h-3 w-5/6 rounded-full bg-paper-3 animate-pulse" />
+              <div className="h-3 w-1/2 rounded-full bg-paper-3 animate-pulse" />
+            </div>
+          )}
           <AnimatePresence initial={false}>
             {messages.map((m) => (
               <div key={m.id}>
