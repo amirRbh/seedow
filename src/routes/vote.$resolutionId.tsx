@@ -11,6 +11,7 @@ import { useMyVotes, useCastVote } from "@/hooks/useResolutions";
 import { getResolution } from "@/lib/vote/vote.functions";
 import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 import { daysUntilClose, type VoteChoice } from "@/lib/vote/bloc";
+import { renderBlocShareCard, downloadBlob } from "@/lib/vote/shareCard";
 import { formatDate } from "@/lib/format";
 import { useLang } from "@/hooks/useLang";
 
@@ -38,14 +39,45 @@ function ResolutionPage() {
 
   const myChoice: VoteChoice | null = myVotes[resolutionId] ?? null;
 
+  // Partage du Bloc : une image PNG à la DA (le moment viral), via le partage
+  // natif si dispo, sinon téléchargement + lien copié.
   const share = async () => {
+    if (!data) return;
+    const r = data.resolution;
+    const b = data.bloc;
     const url = typeof window !== "undefined" ? window.location.href : "";
-    const text = data ? t("vote.share_text", { title: data.resolution.title }) : "";
+    const text = t("vote.share_text", { title: r.title });
+    const nf = new Intl.NumberFormat(lang === "en" ? "en-US" : "fr-FR");
+    const featured = myChoice ? b[myChoice] : b.total;
+    const subline = myChoice
+      ? t("vote.share.subline_choice", { choice: t(`vote.choice_${myChoice}`) })
+      : t("vote.share.subline_total");
+
     try {
-      if (typeof navigator !== "undefined" && navigator.share) {
+      const blob = await renderBlocShareCard({
+        eyebrow: t("vote.bloc.live"),
+        wordmarkRight: t("vote.title"),
+        bigNumber: nf.format(Math.max(featured, myChoice ? 1 : 0)),
+        subline,
+        company: r.company,
+        title: r.title,
+        tagline: t("vote.share.tagline"),
+      });
+      const file = new File([blob], "seedow-vote.png", { type: "image/png" });
+
+      if (
+        typeof navigator !== "undefined" &&
+        navigator.canShare?.({ files: [file] }) &&
+        navigator.share
+      ) {
+        await navigator.share({ files: [file], text, title: "seedow" });
+      } else if (typeof navigator !== "undefined" && navigator.share) {
         await navigator.share({ title: "seedow", text, url });
-      } else if (typeof navigator !== "undefined" && navigator.clipboard) {
-        await navigator.clipboard.writeText(`${text} ${url}`.trim());
+      } else {
+        downloadBlob(blob, "seedow-vote.png");
+        if (typeof navigator !== "undefined" && navigator.clipboard) {
+          await navigator.clipboard.writeText(`${text} ${url}`.trim());
+        }
       }
     } catch {
       // partage annulé par l'utilisateur — rien à signaler

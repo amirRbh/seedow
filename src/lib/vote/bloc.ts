@@ -106,3 +106,21 @@ export function daysUntilClose(closesAt: string, now: Date = new Date()): number
   if (diffMs <= 0) return 0;
   return Math.ceil(diffMs / (24 * 60 * 60 * 1000));
 }
+
+/**
+ * Parmi une liste de résolutions, celle encore ouverte au vote dont la clôture
+ * est la plus proche — le meilleur candidat à mettre en avant (dashboard). Les
+ * dates inexploitables passent en dernier. `null` si aucune n'est votable.
+ */
+export function soonestClosingOpen<T extends { status: "open" | "closed"; closesAt: string }>(
+  items: readonly T[],
+  now: Date = new Date(),
+): T | null {
+  const votable = items.filter((item) => isVotable(item, now));
+  if (votable.length === 0) return null;
+  const rank = (c: string) => {
+    const t = new Date(c).getTime();
+    return Number.isNaN(t) ? Number.POSITIVE_INFINITY : t;
+  };
+  return votable.reduce((best, cur) => (rank(cur.closesAt) < rank(best.closesAt) ? cur : best));
+}
