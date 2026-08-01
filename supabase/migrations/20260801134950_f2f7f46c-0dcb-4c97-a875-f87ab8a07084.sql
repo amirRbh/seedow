@@ -1,0 +1,1 @@
+ALTER TYPE public.alert_kind ADD VALUE IF NOT EXISTS 'greenwashing';

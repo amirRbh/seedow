@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { EsgQuickCheck } from "@/components/landing/EsgQuickCheck";
 import { LandingCourses } from "@/components/landing/LandingCourses";
+import { KPIFigure } from "@/components/ui/KPIFigure";
 
 const SITE_URL = "https://seedow.life";
 
@@ -93,11 +94,7 @@ function Landing() {
               {t("landing.nav.methodology")}
             </Link>
             {isAuthed ? (
-              <Link
-                to="/dashboard"
-                className="apple-btn-primary"
-                style={{ padding: "6px 14px", fontSize: 13 }}
-              >
+              <Link to="/dashboard" className="apple-btn-primary apple-btn-primary--sm">
                 {t("landing.nav.my_space")}
               </Link>
             ) : (
@@ -109,11 +106,7 @@ function Landing() {
                 >
                   {t("landing.nav.login")}
                 </Link>
-                <Link
-                  to="/onboarding"
-                  className="apple-btn-primary"
-                  style={{ padding: "6px 14px", fontSize: 13 }}
-                >
+                <Link to="/onboarding" className="apple-btn-primary apple-btn-primary--sm">
                   {t("landing.nav.simulate_cta")}
                 </Link>
               </>
@@ -313,6 +306,86 @@ function Landing() {
             <ChatBubble side="ethi">{t("landing.ethi.chat_a1")}</ChatBubble>
             <ChatBubble side="user">{t("landing.ethi.chat_q2")}</ChatBubble>
             <ChatBubble side="ethi">{t("landing.ethi.chat_a2")}</ChatBubble>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION — comment ça marche (preuve produit, sobre) */}
+      <section className="px-6 py-24 md:py-32">
+        <div className="max-w-[980px] mx-auto">
+          <div className="text-center">
+            <p className="apple-eyebrow" style={{ color: "var(--mint)" }}>
+              {t("landing.how.eyebrow")}
+            </p>
+            <h2 className="apple-title mx-auto max-w-[720px] mt-3">{t("landing.how.title")}</h2>
+            <p className="apple-subtitle mx-auto max-w-[560px] mt-5">{t("landing.how.subtitle")}</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-10 mt-16 text-left">
+            {[
+              { num: t("landing.how.step1_num"), title: t("landing.how.step1_title"), desc: t("landing.how.step1_desc") },
+              { num: t("landing.how.step2_num"), title: t("landing.how.step2_title"), desc: t("landing.how.step2_desc") },
+              { num: t("landing.how.step3_num"), title: t("landing.how.step3_title"), desc: t("landing.how.step3_desc") },
+            ].map((step) => (
+              <div key={step.num}>
+                <div
+                  className="font-mono text-body-sm"
+                  style={{ color: "var(--apple-text-2)", letterSpacing: "0.04em" }}
+                >
+                  {step.num}
+                </div>
+                <h3 className="mt-3 text-body-lg font-semibold text-[color:var(--apple-text)]">
+                  {step.title}
+                </h3>
+                <p className="mt-2 text-body-sm leading-[1.5] text-[color:var(--apple-text-2)]">
+                  {step.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Preuve produit — aperçu statique d'un composant réel de l'app, pas une image inventée */}
+          <div className="mt-16">
+            <p className="text-caption uppercase tracking-[0.18em] text-[color:var(--apple-text-2)] text-center mb-4">
+              {t("landing.how.preview_label")}
+            </p>
+            <div
+              className="mx-auto max-w-[560px] apple-card"
+              style={{ border: "1px solid var(--paper-3)", padding: "20px 20px 26px" }}
+              aria-hidden
+            >
+              <div className="grid grid-cols-2 gap-4">
+                <KPIFigure
+                  size="sm"
+                  label={t("comparatif_panel.simulated_10y")}
+                  value="24 180"
+                  unit="€"
+                  accent
+                  hint={t("comparatif_panel.on_invested", { amount: "10 000" })}
+                />
+                <KPIFigure
+                  size="sm"
+                  label={t("comparatif_panel.impact_score")}
+                  value="74 / 100"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Méthodologie ouverte */}
+          <div
+            className="mt-16 mx-auto max-w-[720px] text-center apple-card apple-lift"
+            style={{ border: "1px solid var(--paper-3)", padding: "32px 28px" }}
+          >
+            <h3 className="text-body-lg font-semibold text-[color:var(--apple-text)]">
+              {t("landing.how.methodology_title")}
+            </h3>
+            <p className="mt-3 text-body-sm leading-[1.5] text-[color:var(--apple-text-2)] max-w-[520px] mx-auto">
+              {t("landing.how.methodology_desc")}
+            </p>
+            <Link to="/methodologie" className="apple-link mt-5 inline-flex">
+              {t("landing.how.methodology_cta")} <span aria-hidden>›</span>
+            </Link>
           </div>
         </div>
       </section>

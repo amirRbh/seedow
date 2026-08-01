@@ -1230,6 +1230,7 @@ export type Database = {
         | "performance"
         | "fresh_quotes"
         | "concentration"
+        | "greenwashing"
       alert_severity: "info" | "warn" | "alert"
       app_role: "admin" | "user"
       asset_class:
@@ -1409,6 +1410,7 @@ export const Constants = {
         "performance",
         "fresh_quotes",
         "concentration",
+        "greenwashing",
       ],
       alert_severity: ["info", "warn", "alert"],
       app_role: ["admin", "user"],

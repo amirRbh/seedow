@@ -228,6 +228,24 @@
       "bridge_sub": "Vois l'impact réel de l'ensemble de tes placements — et ce qui le tire vers le bas.",
       "bridge_cta": "Analyser tout mon portefeuille",
       "disclaimer": "Information & pédagogie. Seedow n'émet aucune recommandation d'achat ou de vente."
+    },
+    "how": {
+      "eyebrow": "COMMENT ÇA MARCHE",
+      "title": "Trois étapes, deux minutes, zéro engagement.",
+      "subtitle": "Aucune carte bancaire, aucun rendez-vous commercial. Tu vois ton portefeuille avant de décider quoi que ce soit.",
+      "step1_num": "01",
+      "step1_title": "Réponds à 4 questions",
+      "step1_desc": "Tes causes, ton horizon, ton niveau de risque. Deux minutes, sans compte.",
+      "step2_num": "02",
+      "step2_title": "Reçois un portefeuille simulé",
+      "step2_desc": "Allocation optimisée, score d'impact, comparaison à un ETF Monde classique — tout est visible immédiatement.",
+      "step3_num": "03",
+      "step3_title": "Comprends chaque chiffre",
+      "step3_desc": "Ethi t'explique le portefeuille en langage clair, et la méthodologie complète est publique.",
+      "methodology_title": "Une méthodologie ouverte, pas une boîte noire",
+      "methodology_desc": "Chaque pondération, chaque exclusion, chaque limite connue de notre modèle est documentée publiquement — y compris ce qu'il ne sait pas encore faire.",
+      "methodology_cta": "Lire la méthodologie complète",
+      "preview_label": "Aperçu — extrait réel de l'app"
     }
   },
   "auth": {
@@ -338,7 +356,21 @@
     "why_gain": "Aujourd'hui, ils valent {{amount}} de plus que ce que tu as déposé.",
     "why_loss": "Aujourd'hui, ils valent {{amount}} de moins que ce que tu as déposé.",
     "why_flat": "Aujourd'hui, ils valent autant que ce que tu as déposé.",
-    "why_virtual": "Capital virtuel — aucun argent réel n'est investi ici."
+    "why_virtual": "Capital virtuel — aucun argent réel n'est investi ici.",
+    "action_of_day": {
+      "complete_profile": {
+        "text": "Complète ton profil pour que Seedow personnalise vraiment tes suggestions.",
+        "cta": "Compléter"
+      },
+      "greenwashing": {
+        "eyebrow": "Alerte à vérifier",
+        "text": "Un écart entre le discours et les données a été détecté sur {{company}}, que tu détiens.",
+        "cta": "Voir l'alerte"
+      }
+    },
+    "explore": {
+      "title": "Explorer"
+    }
   },
   "portfolio": {
     "loading": "Chargement du portefeuille…",
@@ -731,7 +763,9 @@
         "tech": "Tech éthique",
         "tech_desc": "IA responsable",
         "circulaire": "Économie circulaire",
-        "circulaire_desc": "Zéro déchet"
+        "circulaire_desc": "Zéro déchet",
+        "selected_count": "{{count}}/{{max}} sélectionnées",
+        "limit_reached": "Limite atteinte — décoche une cause pour en choisir une autre."
       },
       "exclusions": {
         "ethiMessage": "Parfait 💚 Et à l'inverse, qu'est-ce que tu refuses absolument de financer ?",
@@ -770,14 +804,9 @@
         "custom_placeholder": "ex. 2 000"
       }
     },
-    "intro": {
-      "eyebrow": "Simulateur d'allocation",
-      "title": "Composons votre portefeuille.",
-      "description": "Quatre questions, deux minutes. Ethi structure une allocation alignée sur vos convictions et vos exclusions.",
-      "step_01": "Tes valeurs",
-      "step_02": "Ton portefeuille",
-      "step_03": "Ton suivi",
-      "start": "Commencer"
+    "header": {
+      "title": "Composons ton portefeuille.",
+      "meta": "4 questions · 2 minutes · sans compte"
     },
     "naming": {
       "title": "Nomme ton portefeuille",
@@ -1146,7 +1175,12 @@
     "carbon_coverage_advice_none": "Aucun actif du portefeuille ne publie encore son intensité carbone officielle. Le chiffre affiché reste une estimation indicative.",
     "carbon_coverage_advice_low": "Trop peu d'actifs publient leur empreinte carbone. À prendre avec prudence.",
     "carbon_coverage_advice_mid": "Couverture partielle : le chiffre est extrapolé sur la part renseignée du portefeuille.",
-    "carbon_coverage_advice_high": "Bonne couverture : le chiffre est fiable pour un reporting indicatif."
+    "carbon_coverage_advice_high": "Bonne couverture : le chiffre est fiable pour un reporting indicatif.",
+    "proprietary_notice_title": "Notation propriétaire Seedow (v1)",
+    "proprietary_notice_body": "Une partie de l'univers est notée avec une notation propriétaire Seedow (v1), et non par MSCI. Elle sert le temps du raccordement des flux de données tierces — la source exacte (MSCI, Seedow ou Yahoo Finance) est indiquée sur chaque fiche actif.",
+    "details_pipeline_toggle": "Voir le détail des 5 étapes",
+    "details_esg_toggle": "Voir le détail des scores ESG (sources, grille, limites)",
+    "source_link_label": "D'où vient ce chiffre ?"
   },
   "seed_card": {
     "id_card": "Carte d'identité"
@@ -1324,6 +1358,17 @@
       "title": "Voir la preuve",
       "subtitle": "Les chiffres bruts, les sources et la méthode — repliés, jamais cachés.",
       "indicators": "Indicateurs clés"
+    },
+    "lever": {
+      "title": "Et si tu poussais le curseur climat ?",
+      "subtitle": "Simule l'effet d'une exposition climat plus forte sur ton intensité carbone et ta volatilité.",
+      "slider_label": "+{{pct}} % d'exposition climat",
+      "current": "Aujourd'hui",
+      "estimated": "Avec le curseur",
+      "waci_label": "Intensité carbone (tCO₂e / M$ CA)",
+      "volatility_label": "Volatilité annualisée",
+      "method": "Méthode : interpolation linéaire entre les données réelles de ton portefeuille et celles de ta ligne détenue la moins intensive en carbone. Une estimation, pas une garantie.",
+      "unavailable": "Le levier climat s'affichera dès que les données carbone par ligne du portefeuille seront disponibles — on ne simule rien sans données réelles."
     }
   },
   "impact_hero": {
@@ -1574,7 +1619,13 @@
     "methodology": "Méthodologie",
     "methodology_body": "Le benchmark utilise les caractéristiques moyennes d'un ETF MSCI World UCITS (IWDA / EUNL) : performance annualisée long terme de 7,2 % (net dividendes), volatilité 15,5 %, TER 0,20 %, score MSCI ESG ~52, intensité carbone 165 gCO₂e par euro investi.",
     "read_methodology": "Lire la méthodologie complète",
-    "no_active": "Aucun portefeuille actif."
+    "no_active": "Aucun portefeuille actif.",
+    "benchmark_label": "Comparer à",
+    "benchmark_msci_world": "ETF MSCI World",
+    "benchmark_sp500": "S&P 500",
+    "benchmark_cac40": "CAC 40",
+    "benchmark_no_data_title": "Pas encore de données réelles",
+    "benchmark_no_data_body": "Seedow n'affiche que des chiffres vérifiés. Cette référence n'a pas encore de données réelles chargées en base — aucune valeur n'est inventée à sa place."
   },
   "market_freshness": {
     "stale_title": "Prix de marché un peu anciens",
@@ -2184,5 +2235,84 @@
       "count": "{{n}} à voir",
       "cta": "Ouvrir Le Réveil"
     }
+  },
+  "glossary": {
+    "terms": {
+      "waci": {
+        "label": "WACI",
+        "definition": "Intensité carbone moyenne pondérée d'un portefeuille, exprimée en tonnes de CO2e par million de dollars de chiffre d'affaires des entreprises détenues."
+      },
+      "tco2e_per_musd": {
+        "label": "tCO2e/M$ de CA",
+        "definition": "Unité de mesure des émissions de gaz à effet de serre rapportées au chiffre d'affaires : plus le chiffre est bas, moins l'entreprise émet par dollar gagné."
+      },
+      "carbon_intensity": {
+        "label": "Intensité carbone",
+        "definition": "Quantité de CO2 émise rapportée à une unité (chiffre d'affaires ou euro investi) : elle permet de comparer des entreprises de tailles différentes."
+      },
+      "data_coverage": {
+        "label": "Couverture de données",
+        "definition": "Part du portefeuille pour laquelle on dispose de données réelles (plutôt qu'estimées) sur un indicateur donné."
+      },
+      "msci_acwi": {
+        "label": "MSCI ACWI",
+        "definition": "Indice boursier mondial qui regroupe des milliers d'entreprises de pays développés et émergents, souvent utilisé comme référence de marché."
+      },
+      "best_in_class": {
+        "label": "Best-in-class",
+        "definition": "Méthode qui consiste à ne garder, dans chaque catégorie, que les entreprises les mieux notées sur des critères ESG plutôt que d'exclure un secteur entier."
+      },
+      "markowitz": {
+        "label": "Markowitz",
+        "definition": "Méthode mathématique qui répartit un investissement entre plusieurs actifs pour viser le meilleur rendement possible pour un niveau de risque donné."
+      },
+      "ter": {
+        "label": "TER",
+        "definition": "Frais annuels totaux prélevés sur un fonds, exprimés en pourcentage du montant investi (ex. 0,20 % = 2 € par an pour 1 000 € placés)."
+      },
+      "drawdown": {
+        "label": "Drawdown",
+        "definition": "Baisse maximale observée entre un sommet et un creux de la valeur d'un portefeuille, avant qu'il ne remonte."
+      },
+      "volatility": {
+        "label": "Volatilité",
+        "definition": "Ampleur des variations de valeur d'un placement dans le temps : plus elle est élevée, plus les hausses et les baisses sont marquées."
+      },
+      "sfdr_89": {
+        "label": "SFDR 8/9",
+        "definition": "Classification européenne des fonds selon leurs engagements environnementaux et sociaux : l'article 9 vise un objectif durable explicite, l'article 8 promeut des caractéristiques durables sans en faire l'objectif principal."
+      },
+      "etf": {
+        "label": "ETF",
+        "definition": "Fonds coté en bourse qui réplique un indice ou un panier d'actifs, permettant d'investir dans plusieurs entreprises en une seule opération."
+      },
+      "sector_exclusion": {
+        "label": "Exclusion sectorielle",
+        "definition": "Retrait automatique et sans exception d'un secteur entier (ex. armement, tabac) de l'univers d'investissement, avant tout calcul de score."
+      },
+      "esg_score": {
+        "label": "Score ESG",
+        "definition": "Note composite évaluant les pratiques Environnementales, Sociales et de Gouvernance d'une entreprise, sur 100."
+      },
+      "concentration": {
+        "label": "Concentration",
+        "definition": "Mesure de la part du portefeuille détenue par un petit nombre de lignes : plus elle est élevée, plus le portefeuille dépend de quelques actifs."
+      },
+      "benchmark": {
+        "label": "Benchmark",
+        "definition": "Indice ou portefeuille de référence auquel on compare la performance ou les caractéristiques d'un investissement."
+      }
+    }
+  },
+  "courses": {
+    "resume": "Reprendre",
+    "resume_course": "Reprendre : {{title}}",
+    "start_here": "Commence ici",
+    "status_not_started": "À commencer",
+    "status_in_progress": "Commencé",
+    "status_completed": "Terminé",
+    "progress_title": "Ta progression",
+    "progress_count": "{{done}} / {{total}} cours terminés",
+    "progress_all_done": "Bravo — tu as terminé tous les cours. 🌱"
   }
 }

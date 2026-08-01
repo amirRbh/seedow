@@ -587,6 +587,18 @@
      système de boutons pour toute l'app (hors .apple-landing, scope isolé
      volontairement pour la landing page). */
 
+  /* Couleur de texte des boutons pleins : classe dédiée car twMerge supprime
+     text-paper quand la taille "pill" apporte text-body-lg (même groupe). */
+  .btn-on-ink {
+    color: var(--color-paper);
+  }
+  .btn-on-paper {
+    color: var(--color-ink);
+  }
+  .btn-on-paper:hover {
+    color: var(--color-paper);
+  }
+
   .bubble-ethi {
     background: var(--color-paper-2);
     color: var(--color-ink);
@@ -706,13 +718,20 @@
   font-weight: 500;
   font-size: 17px;
   letter-spacing: -0.01em;
-  padding: 12px 24px;
+  height: 44px;
+  padding: 0 24px;
   border-radius: 980px;
   border: none;
   cursor: pointer;
   transition:
     opacity 0.2s ease,
     transform 0.2s ease;
+}
+/* Variante compacte — même hauteur logique que la nav, cohérente entre écrans (§20). */
+.apple-btn-primary--sm {
+  height: 32px;
+  padding: 0 16px;
+  font-size: 13px;
 }
 .apple-btn-primary:hover {
   opacity: 0.85;
@@ -725,7 +744,8 @@
   color: var(--apple-text);
   font-weight: 500;
   font-size: 17px;
-  padding: 12px 24px;
+  height: 44px;
+  padding: 0 24px;
   border-radius: 980px;
   border: none;
   cursor: pointer;
@@ -979,11 +999,10 @@
   );
 }
 
+/* Ancien nom conservé pour compat (utilisé dans plusieurs sections landing) :
+   c'est désormais une couleur de signal UNIE (--mint), plus un dégradé. */
 .apple-grad {
-  background: linear-gradient(100deg, var(--mint) 0%, var(--ice) 130%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--mint);
 }
 
 .apple-landing .apple-badge {

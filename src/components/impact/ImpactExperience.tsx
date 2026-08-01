@@ -21,6 +21,8 @@ import { carbonConfidenceTier } from "@/lib/impact/translator";
 import type { PortfolioImpactView, PortfolioIntensityView } from "@/lib/impact/portfolioImpact";
 import { ACWI_WACI_SOURCE, ACWI_WACI_ASOF } from "@/lib/esg/benchmark";
 import { LeFil } from "@/components/impact/LeFil";
+import { ClimateLeverCard } from "@/components/impact/ClimateLeverCard";
+import type { LeverHolding } from "@/lib/impact/lever";
 import { SignalLine } from "@/components/impact/shared";
 import { PortfolioMetricsCard } from "@/components/portfolio/PortfolioMetricsCard";
 import { ImpactCertificate } from "@/components/portfolio/ImpactCertificate";
@@ -103,6 +105,22 @@ export function ImpactExperience() {
         <>
           <ConvictionsSection model={convictions} />
           <VsWorldSection intensity={impact.intensity} />
+          <ClimateLeverCard
+            currentWaci={portfolio.metrics?.waci_tco2e_per_musd_sales ?? null}
+            waciCoverage={portfolio.metrics?.waci_coverage ?? 0}
+            currentVolatility={portfolio.metrics?.volatility ?? null}
+            holdings={holdings.map(
+              (h): LeverHolding => ({
+                weight: h.allocationPct / 100,
+                // Le WACI/volatilité par ligne ne sont pas encore exposés par
+                // useActivePortfolio : le levier restera masqué tant que ces
+                // données réelles ne remontent pas (aucune valeur inventée).
+                waci: null,
+                volatility: null,
+              }),
+            )}
+            numLocale={numLocale}
+          />
           <TangibleSection impact={impact} numLocale={numLocale} />
           <HoldingsSection holdings={holdings} numLocale={numLocale} />
           <ExclusionsSection exclusions={portfolio.exclusions} />

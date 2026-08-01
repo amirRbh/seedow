@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { formatNumber, formatPercent } from "@/lib/format";
 import { MetricLabel } from "@/components/ui/MetricLabel";
 import { SourceLink } from "@/components/discover/TransparencyBadges";
+import { Link } from "@tanstack/react-router";
 import { DURATION, EASE_REVEAL } from "@/lib/motion";
 
 interface Props {
@@ -21,6 +22,7 @@ interface Item {
   sub: string;
   tone: Tone;
   expertOnly?: boolean;
+  anchor?: string;
 }
 
 export function PortfolioMetricsCard({ metrics }: Props) {
@@ -32,6 +34,7 @@ export function PortfolioMetricsCard({ metrics }: Props) {
   const items: Item[] = [
     {
       label: t("portfolio_metrics.expected_perf"),
+      anchor: "metric-return",
       hint: t("portfolio_metrics.expected_perf_hint"),
       value: formatPercent(metrics.expected_return, lang, 1),
       sub: t("portfolio_metrics.per_year"),
@@ -39,6 +42,7 @@ export function PortfolioMetricsCard({ metrics }: Props) {
     },
     {
       label: t("portfolio_metrics.impact_score"),
+      anchor: "metric-esg",
       hint: t("portfolio_metrics.impact_score_hint"),
       value: formatNumber(metrics.esg_score, lang, { maximumFractionDigits: 0 }),
       sub: t("portfolio_metrics.out_of_100"),
@@ -46,6 +50,7 @@ export function PortfolioMetricsCard({ metrics }: Props) {
     },
     {
       label: t("portfolio_metrics.co2_avoided"),
+      anchor: "metric-co2",
       hint: t("portfolio_metrics.co2_hint"),
       value: `${formatNumber(metrics.co2_avoided_tons, lang, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}t`,
       sub: t("portfolio_metrics.per_10k"),
@@ -53,6 +58,7 @@ export function PortfolioMetricsCard({ metrics }: Props) {
     },
     {
       label: t("portfolio_metrics.possible_variations"),
+      anchor: "metric-volatility",
       hint: t("portfolio_metrics.volatility_hint"),
       value: formatPercent(metrics.volatility, lang, 1),
       sub: t("portfolio_metrics.per_year"),
@@ -61,6 +67,7 @@ export function PortfolioMetricsCard({ metrics }: Props) {
     },
     {
       label: t("portfolio_metrics.return_quality"),
+      anchor: "metric-sharpe",
       hint: t("portfolio_metrics.sharpe_hint"),
       value: formatNumber(metrics.sharpe, lang, {
         maximumFractionDigits: 2,
@@ -72,6 +79,7 @@ export function PortfolioMetricsCard({ metrics }: Props) {
     },
     {
       label: t("portfolio_metrics.annual_fees"),
+      anchor: "metric-fees",
       hint: t("portfolio_metrics.ter_hint"),
       value: formatPercent(metrics.ter, lang, 2),
       sub: t("portfolio_metrics.per_year"),
@@ -119,7 +127,19 @@ export function PortfolioMetricsCard({ metrics }: Props) {
                 <MetricLabel label={it.label} hint={it.hint} />
               </div>
               <p className={`font-value text-2xl mt-2 leading-none ${c.text}`}>{it.value}</p>
-              <p className="text-tag text-ink-3 mt-1.5">{it.sub}</p>
+              <p className="text-tag text-ink-3 mt-1.5 flex items-center justify-between gap-1">
+                <span>{it.sub}</span>
+                {it.anchor && (
+                  <Link
+                    to="/methodologie"
+                    hash={it.anchor}
+                    className="text-ink-3 hover:text-ink underline decoration-dotted underline-offset-2 shrink-0"
+                    aria-label={t("transparency.source_link")}
+                  >
+                    ?
+                  </Link>
+                )}
+              </p>
             </motion.div>
           );
         })}

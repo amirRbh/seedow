@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import type { Course } from "@/content/courses";
 import type { CourseScore } from "@/hooks/useCourseProgress";
+import type { CourseStatus } from "@/lib/courses/status";
 import { cn } from "@/lib/utils";
 
 interface Props {
@@ -8,11 +10,26 @@ interface Props {
   isAuthed: boolean;
   completed?: boolean;
   score?: CourseScore | null;
+  status?: CourseStatus;
+  isStartHere?: boolean;
 }
 
-export function CourseCard({ course, completed = false, score }: Props) {
+export function CourseCard({
+  course,
+  completed = false,
+  score,
+  status = "not_started",
+  isStartHere = false,
+}: Props) {
+  const { t } = useTranslation();
   const trackLabel = course.track === "esg" ? "Finance ESG" : "Finance";
   const levelLabel = course.level === "debutant" ? "Débutant" : "Intermédiaire";
+  const statusLabel =
+    status === "completed"
+      ? t("courses.status_completed")
+      : status === "in_progress"
+        ? t("courses.status_in_progress")
+        : t("courses.status_not_started");
 
   return (
     <Link
@@ -26,7 +43,12 @@ export function CourseCard({ course, completed = false, score }: Props) {
       {completed && (
         <span className="absolute top-0 right-0 inline-flex items-center gap-1 bg-mint/15 text-mint text-tag font-semibold uppercase tracking-[0.18em] px-2.5 py-1">
           <CheckIcon />
-          Terminé
+          {t("courses.status_completed")}
+        </span>
+      )}
+      {!completed && isStartHere && (
+        <span className="absolute top-0 right-0 inline-flex items-center gap-1 bg-gold/15 text-gold text-tag font-semibold uppercase tracking-[0.18em] px-2.5 py-1">
+          {t("courses.start_here")}
         </span>
       )}
       <div className="flex items-center justify-between text-tag font-semibold uppercase tracking-[0.18em] text-ink-3">
@@ -50,12 +72,22 @@ export function CourseCard({ course, completed = false, score }: Props) {
         {completed ? (
           <span className="inline-flex items-center gap-1.5 text-tag font-semibold uppercase tracking-[0.18em] text-mint">
             <CheckIcon />
-            {score ? `Quiz ${score.score}/${score.total}` : "Terminé"}
+            {score ? `Quiz ${score.score}/${score.total}` : statusLabel}
           </span>
         ) : (
-          <span className="inline-flex items-center gap-1.5 text-tag font-semibold uppercase tracking-[0.18em] text-mint">
-            <span className="w-1.5 h-1.5 bg-mint rounded-full" />
-            Lecture libre
+          <span
+            className={cn(
+              "inline-flex items-center gap-1.5 text-tag font-semibold uppercase tracking-[0.18em]",
+              status === "in_progress" ? "text-gold" : "text-mint",
+            )}
+          >
+            <span
+              className={cn(
+                "w-1.5 h-1.5 rounded-full",
+                status === "in_progress" ? "bg-gold" : "bg-mint",
+              )}
+            />
+            {statusLabel}
           </span>
         )}
         <span className="text-xs text-ink-3 group-hover:text-gold transition-colors">

@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { KPIFigure } from "@/components/ui/KPIFigure";
 import { Glossary, GLOSSARY } from "@/components/ui/Glossary";
@@ -21,6 +22,27 @@ const MSCI_WORLD = {
   sfdr: "Article 6",
 } as const;
 
+type BenchmarkData = typeof MSCI_WORLD;
+
+/**
+ * Références de comparaison disponibles. Seul MSCI World dispose aujourd'hui de
+ * données réelles chargées (cf. audit — aucune table `benchmarks` en base pour les
+ * autres indices). On liste les autres références demandées par les utilisateurs
+ * SANS inventer de chiffre : `data: null` déclenche un état honnête dans l'UI
+ * plutôt qu'une valeur fabriquée (contrat de transparence).
+ */
+interface BenchmarkOption {
+  id: "msci_world" | "sp500" | "cac40";
+  labelKey: string;
+  data: BenchmarkData | null;
+}
+
+const BENCHMARK_OPTIONS: BenchmarkOption[] = [
+  { id: "msci_world", labelKey: "comparatif_panel.benchmark_msci_world", data: MSCI_WORLD },
+  { id: "sp500", labelKey: "comparatif_panel.benchmark_sp500", data: null },
+  { id: "cac40", labelKey: "comparatif_panel.benchmark_cac40", data: null },
+];
+
 function PerfMedaillon({ value, max, accent }: { value: number; max: number; accent?: boolean }) {
   const w = Math.max(4, Math.min(100, (Math.abs(value) / max) * 100));
   return (
@@ -40,10 +62,14 @@ export function ComparatifPanel() {
   const { t } = useTranslation();
   const { portfolio } = useActivePortfolio();
   const valuation = usePortfolioValuation();
+  const [benchmarkId, setBenchmarkId] = useState<BenchmarkOption["id"]>("msci_world");
 
   if (!portfolio) {
     return <p className="text-label text-ink-3">{t("comparatif_panel.no_active")}</p>;
   }
+
+  const benchmark = BENCHMARK_OPTIONS.find((b) => b.id === benchmarkId) ?? BENCHMARK_OPTIONS[0];
+  const ref = benchmark.data;
 
   const metrics = portfolio.metrics;
   const seedow = {
@@ -61,16 +87,61 @@ export function ComparatifPanel() {
   const capital = valuation.totalInvested || portfolio.initial_amount || 10_000;
   const project = (r: number) => capital * Math.pow(1 + r, 10);
   const seedow10y = project(seedow.expectedReturn);
-  const msci10y = project(MSCI_WORLD.expectedReturn);
-  const delta10y = seedow10y - msci10y;
+  const ref10y = ref ? project(ref.expectedReturn) : null;
+  const delta10y = ref10y !== null ? seedow10y - ref10y : null;
 
-  const co2EvitedKg = Math.max(
-    0,
-    ((MSCI_WORLD.carbonIntensityGperEur - seedow.carbonIntensityGperEur) * capital) / 1000,
+  const co2EvitedKg = ref
+    ? Math.max(0, ((ref.carbonIntensityGperEur - seedow.carbonIntensityGperEur) * capital) / 1000)
+    : null;
+
+  const BenchmarkSelector = (
+    <div className="flex flex-wrap gap-2 mb-6" role="tablist" aria-label={t("comparatif_panel.benchmark_label")}>
+      {BENCHMARK_OPTIONS.map((opt) => (
+        <button
+          key={opt.id}
+          type="button"
+          role="tab"
+          aria-selected={benchmarkId === opt.id}
+          onClick={() => setBenchmarkId(opt.id)}
+          className={cn(
+            "px-3 py-1.5 rounded-full text-caption uppercase tracking-wider font-semibold border transition-colors",
+            benchmarkId === opt.id
+              ? "bg-ink text-paper border-ink"
+              : "bg-transparent text-ink-3 border-paper-3 hover:border-ink-2",
+          )}
+        >
+          {t(opt.labelKey)}
+          {!opt.data && <span aria-hidden> ·</span>}
+        </button>
+      ))}
+    </div>
   );
+
+  if (!ref) {
+    return (
+      <div>
+        <p className="text-caption uppercase tracking-wider text-ink-3 mb-3">
+          {t("comparatif_panel.benchmark_label")}
+        </p>
+        {BenchmarkSelector}
+        <div className="border border-paper-3 rounded-2xl p-6 text-center">
+          <p className="text-body font-semibold text-ink">
+            {t("comparatif_panel.benchmark_no_data_title")}
+          </p>
+          <p className="mt-2 text-label text-ink-3 leading-relaxed">
+            {t("comparatif_panel.benchmark_no_data_body")}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
+      <p className="text-caption uppercase tracking-wider text-ink-3 mb-3">
+        {t("comparatif_panel.benchmark_label")}
+      </p>
+      {BenchmarkSelector}
       <div className="grid grid-cols-2 gap-4">
         <KPIFigure
           size="sm"
@@ -91,10 +162,10 @@ export function ComparatifPanel() {
         <KPIFigure
           size="sm"
           label={t("comparatif_panel.gap_msci")}
-          value={`${delta10y >= 0 ? "+" : ""}${delta10y.toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`}
+          value={`${delta10y! >= 0 ? "+" : ""}${delta10y!.toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`}
           unit="€"
           hint={
-            delta10y >= 0
+            delta10y! >= 0
               ? t("comparatif_panel.above_benchmark")
               : t("comparatif_panel.below_benchmark")
           }
@@ -115,56 +186,62 @@ export function ComparatifPanel() {
 
         <div className="mt-6 border-t border-b border-paper-3 divide-y divide-paper-3">
           <CompareRow
+            benchmarkLabel={t(benchmark.labelKey)}
             label={t("comparatif_panel.expected_perf")}
             term="MSCIWorld"
             seedowValue={`${(seedow.expectedReturn * 100).toFixed(1)} %`}
-            msciValue={`${(MSCI_WORLD.expectedReturn * 100).toFixed(1)} %`}
-            seedowWins={seedow.expectedReturn >= MSCI_WORLD.expectedReturn}
+            msciValue={`${(ref.expectedReturn * 100).toFixed(1)} %`}
+            seedowWins={seedow.expectedReturn >= ref.expectedReturn}
             bar={
               <PerfMedaillon
                 value={seedow.expectedReturn}
-                max={Math.max(seedow.expectedReturn, MSCI_WORLD.expectedReturn)}
+                max={Math.max(seedow.expectedReturn, ref.expectedReturn)}
                 accent
               />
             }
           />
           <CompareRow
+            benchmarkLabel={t(benchmark.labelKey)}
             label={t("comparatif_panel.volatility")}
             term="Volatilite"
             seedowValue={`${(seedow.volatility * 100).toFixed(1)} %`}
-            msciValue={`${(MSCI_WORLD.volatility * 100).toFixed(1)} %`}
-            seedowWins={seedow.volatility <= MSCI_WORLD.volatility}
+            msciValue={`${(ref.volatility * 100).toFixed(1)} %`}
+            seedowWins={seedow.volatility <= ref.volatility}
             note={t("comparatif_panel.lower_stable")}
           />
           <CompareRow
+            benchmarkLabel={t(benchmark.labelKey)}
             label={t("comparatif_panel.annual_fees")}
             term="TER"
             seedowValue={`${(seedow.ter * 100).toFixed(2)} %`}
-            msciValue={`${(MSCI_WORLD.ter * 100).toFixed(2)} %`}
-            seedowWins={seedow.ter <= MSCI_WORLD.ter}
+            msciValue={`${(ref.ter * 100).toFixed(2)} %`}
+            seedowWins={seedow.ter <= ref.ter}
             note={t("comparatif_panel.lower_net")}
           />
           <CompareRow
+            benchmarkLabel={t(benchmark.labelKey)}
             label={t("comparatif_panel.impact_score")}
             term="ESG"
             seedowValue={`${seedow.esgScore.toFixed(0)} / 100`}
-            msciValue={`${MSCI_WORLD.esgScore} / 100`}
-            seedowWins={seedow.esgScore >= MSCI_WORLD.esgScore}
+            msciValue={`${ref.esgScore} / 100`}
+            seedowWins={seedow.esgScore >= ref.esgScore}
             note={t("comparatif_panel.higher_durable")}
           />
           <CompareRow
+            benchmarkLabel={t(benchmark.labelKey)}
             label={t("comparatif_panel.carbon_intensity")}
             term="CO2"
             seedowValue={`${seedow.carbonIntensityGperEur.toFixed(0)} g/€`}
-            msciValue={`${MSCI_WORLD.carbonIntensityGperEur} g/€`}
-            seedowWins={seedow.carbonIntensityGperEur <= MSCI_WORLD.carbonIntensityGperEur}
+            msciValue={`${ref.carbonIntensityGperEur} g/€`}
+            seedowWins={seedow.carbonIntensityGperEur <= ref.carbonIntensityGperEur}
             note={t("comparatif_panel.per_euro")}
           />
           <CompareRow
+            benchmarkLabel={t(benchmark.labelKey)}
             label={t("comparatif_panel.classification")}
             term="SFDR"
             seedowValue={seedow.sfdr}
-            msciValue={MSCI_WORLD.sfdr}
+            msciValue={ref.sfdr}
             seedowWins={seedow.sfdr.includes("8") || seedow.sfdr.includes("9")}
           />
         </div>
@@ -182,18 +259,18 @@ export function ComparatifPanel() {
           <KPIFigure
             size="md"
             label={t("comparatif_panel.co2_avoided")}
-            value={co2EvitedKg.toLocaleString("fr-FR", {
+            value={co2EvitedKg!.toLocaleString("fr-FR", {
               minimumFractionDigits: 0,
               maximumFractionDigits: 0,
             })}
             unit="kg/an"
             accent
-            hint={t("comparatif_panel.paris_lyon_trips", { count: Math.round(co2EvitedKg / 120) })}
+            hint={t("comparatif_panel.paris_lyon_trips", { count: Math.round(co2EvitedKg! / 120) })}
           />
           <KPIFigure
             size="md"
             label={t("comparatif_panel.saved_fees")}
-            value={`${Math.max(0, (MSCI_WORLD.ter - seedow.ter) * capital).toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`}
+            value={`${Math.max(0, (ref.ter - seedow.ter) * capital).toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`}
             unit="€/an"
             hint={t("comparatif_panel.for_invested", {
               amount: capital.toLocaleString("fr-FR", {
@@ -234,6 +311,8 @@ export function ComparatifPanel() {
 
 interface RowProps {
   label: string;
+  /** Libellé de la référence comparée (benchmark sélectionné), déjà traduit. */
+  benchmarkLabel: string;
   term: "MSCIWorld" | "Volatilite" | "TER" | "ESG" | "CO2" | "SFDR";
   seedowValue: string;
   msciValue: string;
@@ -242,7 +321,16 @@ interface RowProps {
   bar?: React.ReactNode;
 }
 
-function CompareRow({ label, term, seedowValue, msciValue, seedowWins, note, bar }: RowProps) {
+function CompareRow({
+  label,
+  benchmarkLabel,
+  term,
+  seedowValue,
+  msciValue,
+  seedowWins,
+  note,
+  bar,
+}: RowProps) {
   const { isSimple } = useViewMode();
   // Mode Simple : le libellé de ligne passe en langage clair. Mode Expert :
   // on garde le libellé éditorial d'origine. Le ⓘ ouvre la définition complète.
@@ -278,7 +366,7 @@ function CompareRow({ label, term, seedowValue, msciValue, seedowWins, note, bar
         </div>
         <div>
           <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold mb-1">
-            MSCI World
+            {benchmarkLabel}
           </p>
           <p className="kpi-figure text-xl text-ink-2 tabular-nums">{msciValue}</p>
         </div>

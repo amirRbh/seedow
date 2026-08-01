@@ -10,6 +10,7 @@ import { reportCaughtError } from "@/lib/monitoring/errorReporter";
 import { EASE_REVEAL } from "@/lib/motion";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { MetricLabel } from "@/components/ui/MetricLabel";
+import { GlossaryTerm } from "@/components/common/GlossaryTerm";
 import {
   DEFAULT_PILLAR_WEIGHTS,
   MIN_PORTFOLIO_ESG,
@@ -189,8 +190,28 @@ function MethodologyPage() {
         </p>
       </header>
 
-      {/* Reading guide for beginners */}
-      <section className="max-w-6xl mx-auto px-6 pt-10">
+      {/* Mise en avant : une partie de l'univers n'est pas notée par MSCI */}
+      <section className="max-w-6xl mx-auto px-6 pt-8">
+        <div
+          id="notation-source"
+          className="border border-ink/20 bg-ink/[0.03] px-5 py-4 flex items-start gap-3"
+        >
+          <span aria-hidden className="mt-0.5 text-ink-3">
+            ⚠
+          </span>
+          <div>
+            <p className="font-value text-body-sm text-ink">
+              {t("methodologie.proprietary_notice_title")}
+            </p>
+            <p className="text-label text-ink-2 mt-1 leading-relaxed">
+              {t("methodologie.proprietary_notice_body")}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Reading guide for beginners — écran d'entrée, résumé "en 30 secondes" */}
+      <section id="en-30-secondes" className="max-w-6xl mx-auto px-6 pt-10">
         <div className="border border-paper-3 bg-paper-2/40 p-6 md:p-8 grid md:grid-cols-[1fr_1.2fr] gap-6 md:gap-10">
           <div>
             <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium">
@@ -221,25 +242,28 @@ function MethodologyPage() {
         </div>
       </section>
 
-      {/* Pipeline visualization */}
-      <section className="max-w-6xl mx-auto px-6 py-12">
-        <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium mb-8">
-          {t("methodologie.pipeline_title")}
-        </p>
-        <ol className="grid grid-cols-1 md:grid-cols-5 gap-px bg-paper-3 border border-paper-3">
-          {STAGES.map((s) => (
-            <li key={s.id} className="bg-paper p-5">
-              <span className="font-value text-caption text-ink-3 tabular-nums">0{s.id}</span>
-              <h3 className="font-value text-[16px] text-ink mt-1">
-                <MetricLabel label={s.name} hint={s.tip} />
-              </h3>
-              <p className="text-label text-ink-2 mt-2 leading-relaxed">{s.desc}</p>
-            </li>
-          ))}
-        </ol>
+      {/* Pipeline visualization — détail analytique replié sous le résumé "30 secondes" */}
+      <section id="pipeline" className="max-w-6xl mx-auto px-6 py-12">
+        <details className="group">
+          <summary className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium mb-8 cursor-pointer select-none list-none flex items-center gap-2">
+            <span className="inline-block transition-transform group-open:rotate-90">›</span>
+            {t("methodologie.pipeline_title")} — {t("methodologie.details_pipeline_toggle")}
+          </summary>
+          <ol className="grid grid-cols-1 md:grid-cols-5 gap-px bg-paper-3 border border-paper-3 mt-6">
+            {STAGES.map((s) => (
+              <li key={s.id} className="bg-paper p-5">
+                <span className="font-value text-caption text-ink-3 tabular-nums">0{s.id}</span>
+                <h3 className="font-value text-[16px] text-ink mt-1">
+                  <MetricLabel label={s.name} hint={s.tip} />
+                </h3>
+                <p className="text-label text-ink-2 mt-2 leading-relaxed">{s.desc}</p>
+              </li>
+            ))}
+          </ol>
+        </details>
       </section>
 
-      {/* ESG Transparency — grille de notation, sources et limites */}
+      {/* ESG Transparency — grille de notation, sources et limites (repliable) */}
       <EsgTransparencySection activeCauses={causes} />
 
       {/* Simulator */}
@@ -390,24 +414,28 @@ function MethodologyPage() {
             <div className="border-t border-b border-paper-3 divide-y divide-paper-3">
               <MetricRow
                 label={t("methodologie.metric_return")}
+                id="metric-return"
                 tip={t("methodologie.tips.return")}
                 value={result ? formatPercent(result.metrics.expected_return, lang) : "—"}
                 sub={t("methodologie.metric_return_hint")}
               />
               <MetricRow
                 label={t("methodologie.metric_volatility")}
+                id="metric-volatility"
                 tip={t("methodologie.tips.volatility")}
                 value={result ? formatPercent(result.metrics.volatility, lang) : "—"}
                 sub={t("methodologie.metric_volatility_hint")}
               />
               <MetricRow
                 label={t("methodologie.metric_sharpe")}
+                id="metric-sharpe"
                 tip={t("methodologie.tips.sharpe")}
                 value={result ? formatNumber(result.metrics.sharpe, lang) : "—"}
                 sub={t("methodologie.metric_sharpe_hint")}
               />
               <MetricRow
                 label={t("methodologie.metric_esg")}
+                id="metric-esg"
                 tip={t("methodologie.tips.esg")}
                 value={
                   result
@@ -418,12 +446,14 @@ function MethodologyPage() {
               />
               <MetricRow
                 label={t("methodologie.metric_fees")}
+                id="metric-fees"
                 tip={t("methodologie.tips.fees")}
                 value={result ? formatPercent(result.metrics.ter, lang) : "—"}
                 sub={t("methodologie.metric_fees_hint")}
               />
               <MetricRow
                 label={t("methodologie.metric_co2")}
+                id="metric-co2"
                 tip={t("methodologie.tips.co2")}
                 value={
                   result ? `${formatNumber(result.metrics.co2_avoided_tons, lang)} t / 10k€` : "—"
@@ -432,6 +462,7 @@ function MethodologyPage() {
               />
               <MetricRow
                 label={t("methodologie.metric_carbon_intensity")}
+                id="metric-carbon-intensity"
                 tip={t("methodologie.tips.carbon_intensity")}
                 value={
                   result?.metrics.carbon_intensity_gco2e_per_eur != null
@@ -570,19 +601,23 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
   ];
 
   return (
-    <section className="max-w-6xl mx-auto px-6 py-12 border-t border-paper-3">
-      <div className="mb-8">
-        <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium">
-          Transparence · Notation ESG
-        </p>
-        <h2 className="font-value text-3xl mt-2">D'où viennent les scores ESG</h2>
-        <p className="text-body-sm text-ink-2 mt-3 max-w-2xl leading-relaxed">
-          Chaque actif reçoit un score composite 0–100 sur trois piliers. Voici les sources, la
-          grille de pondération, et ce que la note ne dit pas.
-        </p>
-      </div>
+    <section id="esg-scores" className="max-w-6xl mx-auto px-6 py-12 border-t border-paper-3">
+      <details className="group">
+        <summary className="cursor-pointer select-none list-none">
+          <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium">
+            Transparence · Notation ESG
+          </p>
+          <h2 className="font-value text-3xl mt-2 flex items-center gap-2">
+            <span className="inline-block transition-transform group-open:rotate-90">›</span>
+            D'où viennent les scores ESG
+          </h2>
+          <p className="text-body-sm text-ink-2 mt-3 max-w-2xl leading-relaxed">
+            Chaque actif reçoit un score composite 0–100 sur trois piliers. Cliquez pour voir les
+            sources, la grille de pondération, et ce que la note ne dit pas.
+          </p>
+        </summary>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div id="sources" className="grid gap-6 md:grid-cols-2 mt-6">
         {/* Bloc 1 — Sources */}
         <div className="border border-paper-3 p-5 bg-paper-2/30">
           <p className="text-tag uppercase tracking-[0.15em] text-ink-3 font-medium mb-3">
@@ -729,6 +764,7 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
           </Link>
         </div>
       </div>
+      </details>
     </section>
   );
 }
@@ -757,14 +793,16 @@ function MetricRow({
   value,
   sub,
   tip,
+  id,
 }: {
   label: string;
   value: string;
   sub?: string;
   tip?: string;
+  id?: string;
 }) {
   return (
-    <div className="flex items-baseline justify-between py-2.5">
+    <div id={id} className="flex items-baseline justify-between py-2.5">
       <div>
         <p className="text-label text-ink">
           <MetricLabel label={label} hint={tip} />

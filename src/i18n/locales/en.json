@@ -228,6 +228,24 @@
       "bridge_sub": "See the real impact of all your holdings — and what drags it down.",
       "bridge_cta": "Analyze my whole portfolio",
       "disclaimer": "Information & education. Seedow makes no buy or sell recommendation."
+    },
+    "how": {
+      "eyebrow": "HOW IT WORKS",
+      "title": "Three steps, two minutes, zero commitment.",
+      "subtitle": "No card required, no sales call. You see your portfolio before deciding anything.",
+      "step1_num": "01",
+      "step1_title": "Answer 4 questions",
+      "step1_desc": "Your causes, your horizon, your risk tolerance. Two minutes, no account needed.",
+      "step2_num": "02",
+      "step2_title": "Get a simulated portfolio",
+      "step2_desc": "Optimized allocation, impact score, comparison to a classic World ETF — all visible instantly.",
+      "step3_num": "03",
+      "step3_title": "Understand every number",
+      "step3_desc": "Ethi explains the portfolio in plain language, and the full methodology is public.",
+      "methodology_title": "An open methodology, not a black box",
+      "methodology_desc": "Every weighting, every exclusion, every known limit of our model is publicly documented — including what it can't do yet.",
+      "methodology_cta": "Read the full methodology",
+      "preview_label": "Preview — real excerpt from the app"
     }
   },
   "auth": {
@@ -338,7 +356,21 @@
     "why_gain": "Today they're worth {{amount}} more than what you deposited.",
     "why_loss": "Today they're worth {{amount}} less than what you deposited.",
     "why_flat": "Today they're worth the same as what you deposited.",
-    "why_virtual": "Virtual capital — no real money is invested here."
+    "why_virtual": "Virtual capital — no real money is invested here.",
+    "action_of_day": {
+      "complete_profile": {
+        "text": "Complete your profile so Seedow can truly personalise your suggestions.",
+        "cta": "Complete"
+      },
+      "greenwashing": {
+        "eyebrow": "Alert to check",
+        "text": "A gap between the claims and the data was detected on {{company}}, which you hold.",
+        "cta": "See the alert"
+      }
+    },
+    "explore": {
+      "title": "Explore"
+    }
   },
   "portfolio": {
     "loading": "Loading portfolio…",
@@ -731,7 +763,9 @@
         "tech": "Ethical Tech",
         "tech_desc": "Responsible AI",
         "circulaire": "Circular economy",
-        "circulaire_desc": "Zero waste"
+        "circulaire_desc": "Zero waste",
+        "selected_count": "{{count}}/{{max}} selected",
+        "limit_reached": "Limit reached — unselect a cause to choose another."
       },
       "exclusions": {
         "ethiMessage": "Perfect 💚 And on the flip side, what do you absolutely refuse to fund?",
@@ -770,14 +804,9 @@
         "custom_placeholder": "e.g. 2,000"
       }
     },
-    "intro": {
-      "eyebrow": "Allocation simulator",
+    "header": {
       "title": "Let's build your portfolio.",
-      "description": "Four questions, two minutes. Ethi structures an allocation aligned with your convictions and exclusions.",
-      "step_01": "Your values",
-      "step_02": "Your portfolio",
-      "step_03": "Your tracking",
-      "start": "Start"
+      "meta": "4 questions · 2 minutes · no account needed"
     },
     "naming": {
       "title": "Name your portfolio",
@@ -1164,7 +1193,12 @@
     "carbon_coverage_advice_none": "No portfolio asset publishes official carbon intensity yet. The figure shown remains indicative.",
     "carbon_coverage_advice_low": "Too few assets publish their carbon footprint. Take the figure with caution.",
     "carbon_coverage_advice_mid": "Partial coverage: the figure is extrapolated from the documented part of the portfolio.",
-    "carbon_coverage_advice_high": "Good coverage: the figure is reliable for indicative reporting."
+    "carbon_coverage_advice_high": "Good coverage: the figure is reliable for indicative reporting.",
+    "proprietary_notice_title": "Seedow proprietary rating (v1)",
+    "proprietary_notice_body": "Part of the investment universe is rated using Seedow's proprietary rating (v1), not MSCI. It applies while third-party data feeds are being connected — the exact source (MSCI, Seedow, or Yahoo Finance) is shown on every asset sheet.",
+    "details_pipeline_toggle": "Show the 5-step detail",
+    "details_esg_toggle": "Show ESG score detail (sources, grid, limits)",
+    "source_link_label": "Where does this number come from?"
   },
   "seed_card": {
     "id_card": "Identity card"
@@ -1342,6 +1376,17 @@
       "title": "See the proof",
       "subtitle": "The raw figures, sources and method — folded away, never hidden.",
       "indicators": "Key indicators"
+    },
+    "lever": {
+      "title": "What if you pushed the climate slider?",
+      "subtitle": "Simulate the effect of a stronger climate exposure on your carbon intensity and volatility.",
+      "slider_label": "+{{pct}}% climate exposure",
+      "current": "Today",
+      "estimated": "With the slider",
+      "waci_label": "Carbon intensity (tCO₂e / M$ revenue)",
+      "volatility_label": "Annualised volatility",
+      "method": "Method: linear interpolation between your portfolio's real data and your held line with the lowest carbon intensity. An estimate, not a guarantee.",
+      "unavailable": "The climate lever will appear once per-line carbon data is available for the portfolio — nothing is simulated without real data."
     }
   },
   "impact_hero": {
@@ -1592,7 +1637,13 @@
     "methodology": "Methodology",
     "methodology_body": "The benchmark uses the average characteristics of a MSCI World UCITS ETF (IWDA / EUNL): long-term annualized performance of 7.2% (net dividends), volatility 15.5%, TER 0.20%, MSCI ESG score ~52, carbon intensity 165 gCO₂e per euro invested.",
     "read_methodology": "Read the full methodology",
-    "no_active": "No active portfolio."
+    "no_active": "No active portfolio.",
+    "benchmark_label": "Compare to",
+    "benchmark_msci_world": "MSCI World ETF",
+    "benchmark_sp500": "S&P 500",
+    "benchmark_cac40": "CAC 40",
+    "benchmark_no_data_title": "No real data yet",
+    "benchmark_no_data_body": "Seedow only shows verified figures. This benchmark has no real data loaded yet in our database — we never invent a value instead."
   },
   "market_freshness": {
     "stale_title": "Market prices a bit old",
@@ -2202,5 +2253,84 @@
       "count": "{{n}} to see",
       "cta": "Open the Morning Read"
     }
+  },
+  "glossary": {
+    "terms": {
+      "waci": {
+        "label": "WACI",
+        "definition": "Weighted Average Carbon Intensity: a portfolio's average carbon footprint, measured in tonnes of CO2e per million dollars of revenue of the companies held."
+      },
+      "tco2e_per_musd": {
+        "label": "tCO2e/$M revenue",
+        "definition": "A measure of greenhouse gas emissions relative to revenue: the lower the figure, the less a company emits per dollar earned."
+      },
+      "carbon_intensity": {
+        "label": "Carbon intensity",
+        "definition": "The amount of CO2 emitted relative to a unit (revenue or euro invested), allowing comparison between companies of different sizes."
+      },
+      "data_coverage": {
+        "label": "Data coverage",
+        "definition": "The share of the portfolio for which real data (rather than estimates) is available on a given indicator."
+      },
+      "msci_acwi": {
+        "label": "MSCI ACWI",
+        "definition": "A global stock index covering thousands of companies from developed and emerging markets, often used as a market benchmark."
+      },
+      "best_in_class": {
+        "label": "Best-in-class",
+        "definition": "An approach that keeps only the highest-rated companies in each category on ESG criteria, instead of excluding an entire sector."
+      },
+      "markowitz": {
+        "label": "Markowitz",
+        "definition": "A mathematical method that allocates an investment across several assets to aim for the best possible return for a given level of risk."
+      },
+      "ter": {
+        "label": "TER",
+        "definition": "Total annual fees charged on a fund, expressed as a percentage of the amount invested (e.g. 0.20% = €2 per year for €1,000 invested)."
+      },
+      "drawdown": {
+        "label": "Drawdown",
+        "definition": "The largest drop observed between a peak and a trough in a portfolio's value, before it recovers."
+      },
+      "volatility": {
+        "label": "Volatility",
+        "definition": "The size of the swings in an investment's value over time: the higher it is, the sharper the ups and downs."
+      },
+      "sfdr_89": {
+        "label": "SFDR 8/9",
+        "definition": "European fund classification based on environmental and social commitments: Article 9 targets an explicit sustainable objective, Article 8 promotes sustainable features without making it the main goal."
+      },
+      "etf": {
+        "label": "ETF",
+        "definition": "An exchange-traded fund that tracks an index or basket of assets, letting you invest in many companies in a single transaction."
+      },
+      "sector_exclusion": {
+        "label": "Sector exclusion",
+        "definition": "The automatic, no-exception removal of an entire sector (e.g. weapons, tobacco) from the investment universe, before any scoring is done."
+      },
+      "esg_score": {
+        "label": "ESG score",
+        "definition": "A composite score out of 100 assessing a company's Environmental, Social and Governance practices."
+      },
+      "concentration": {
+        "label": "Concentration",
+        "definition": "A measure of how much of a portfolio is held in a small number of positions: the higher it is, the more the portfolio depends on a few assets."
+      },
+      "benchmark": {
+        "label": "Benchmark",
+        "definition": "A reference index or portfolio against which the performance or characteristics of an investment are compared."
+      }
+    }
+  },
+  "courses": {
+    "resume": "Resume",
+    "resume_course": "Resume: {{title}}",
+    "start_here": "Start here",
+    "status_not_started": "Not started",
+    "status_in_progress": "In progress",
+    "status_completed": "Completed",
+    "progress_title": "Your progress",
+    "progress_count": "{{done}} / {{total}} courses completed",
+    "progress_all_done": "Well done — you've completed all the courses. 🌱"
   }
 }
