@@ -817,7 +817,7 @@ function Intro({ onStart }: { onStart: () => void }) {
           { n: "02", l: t("onboarding.intro.step_02") },
           { n: "03", l: t("onboarding.intro.step_03") },
         ].map((s, i) => (
-          <li key={s.n} className={`border-t pt-2 ${i === 0 ? "border-paper" : "border-paper-3"}`}>
+          <li key={s.n} className={`border-t pt-2 ${i === 0 ? "border-ink" : "border-paper-3"}`}>
             <p className="font-value text-tag tabular-nums tracking-widest text-ink-3">{s.n}</p>
             <p
               className={`text-caption uppercase tracking-[0.16em] mt-1 ${
