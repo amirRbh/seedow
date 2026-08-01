@@ -276,7 +276,7 @@ function Ethi() {
 
       <div
         ref={scrollRef}
-        className="flex-1 overflow-y-auto px-5 py-6 pb-44 flex flex-col justify-end"
+        className="flex-1 overflow-y-auto px-5 py-6 pb-64 flex flex-col justify-end"
       >
         <div className="w-full max-w-lg mx-auto space-y-4">
 
