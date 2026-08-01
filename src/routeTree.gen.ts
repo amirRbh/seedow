@@ -9,11 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WrappedRouteImport } from './routes/wrapped'
 import { Route as WaitlistRouteImport } from './routes/waitlist'
 import { Route as VoteRouteImport } from './routes/vote'
-import { Route as WrappedRouteImport } from './routes/wrapped'
-import { Route as ReveilRouteImport } from './routes/reveil'
 import { Route as TarifsRouteImport } from './routes/tarifs'
+import { Route as ReveilRouteImport } from './routes/reveil'
 import { Route as ReglagesRouteImport } from './routes/reglages'
 import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
@@ -37,8 +37,8 @@ import { Route as AideRouteImport } from './routes/aide'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CoursIndexRouteImport } from './routes/cours.index'
-import { Route as ObjectifsGoalIdRouteImport } from './routes/objectifs.$goalId'
 import { Route as VoteResolutionIdRouteImport } from './routes/vote.$resolutionId'
+import { Route as ObjectifsGoalIdRouteImport } from './routes/objectifs.$goalId'
 import { Route as HooksRefreshMarketDataRouteImport } from './routes/hooks/refresh-market-data'
 import { Route as HooksRecomputeRiskModelRouteImport } from './routes/hooks/recompute-risk-model'
 import { Route as HooksDispatchNotificationsRouteImport } from './routes/hooks/dispatch-notifications'
@@ -51,6 +51,11 @@ import { Route as AuthenticatedAdminBetaRouteImport } from './routes/_authentica
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 
+const WrappedRoute = WrappedRouteImport.update({
+  id: '/wrapped',
+  path: '/wrapped',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WaitlistRoute = WaitlistRouteImport.update({
   id: '/waitlist',
   path: '/waitlist',
@@ -61,19 +66,14 @@ const VoteRoute = VoteRouteImport.update({
   path: '/vote',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WrappedRoute = WrappedRouteImport.update({
-  id: '/wrapped',
-  path: '/wrapped',
+const TarifsRoute = TarifsRouteImport.update({
+  id: '/tarifs',
+  path: '/tarifs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReveilRoute = ReveilRouteImport.update({
   id: '/reveil',
   path: '/reveil',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TarifsRoute = TarifsRouteImport.update({
-  id: '/tarifs',
-  path: '/tarifs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReglagesRoute = ReglagesRouteImport.update({
@@ -190,15 +190,15 @@ const CoursIndexRoute = CoursIndexRouteImport.update({
   path: '/',
   getParentRoute: () => CoursRoute,
 } as any)
-const ObjectifsGoalIdRoute = ObjectifsGoalIdRouteImport.update({
-  id: '/$goalId',
-  path: '/$goalId',
-  getParentRoute: () => ObjectifsRoute,
-} as any)
 const VoteResolutionIdRoute = VoteResolutionIdRouteImport.update({
   id: '/$resolutionId',
   path: '/$resolutionId',
   getParentRoute: () => VoteRoute,
+} as any)
+const ObjectifsGoalIdRoute = ObjectifsGoalIdRouteImport.update({
+  id: '/$goalId',
+  path: '/$goalId',
+  getParentRoute: () => ObjectifsRoute,
 } as any)
 const HooksRefreshMarketDataRoute = HooksRefreshMarketDataRouteImport.update({
   id: '/hooks/refresh-market-data',
@@ -282,8 +282,11 @@ export interface FileRoutesByFullPath {
   '/portfolio': typeof PortfolioRoute
   '/profil': typeof ProfilRoute
   '/reglages': typeof ReglagesRoute
+  '/reveil': typeof ReveilRoute
   '/tarifs': typeof TarifsRoute
+  '/vote': typeof VoteRouteWithChildren
   '/waitlist': typeof WaitlistRoute
+  '/wrapped': typeof WrappedRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/api/ethi': typeof ApiEthiRoute
@@ -292,15 +295,12 @@ export interface FileRoutesByFullPath {
   '/hooks/recompute-risk-model': typeof HooksRecomputeRiskModelRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
+  '/vote/$resolutionId': typeof VoteResolutionIdRoute
   '/cours/': typeof CoursIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/beta': typeof AuthenticatedAdminBetaRoute
   '/api/public/esg-preview': typeof ApiPublicEsgPreviewRoute
-  '/vote': typeof VoteRouteWithChildren
-  '/vote/$resolutionId': typeof VoteResolutionIdRoute
-  '/wrapped': typeof WrappedRoute
-  '/reveil': typeof ReveilRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -323,8 +323,11 @@ export interface FileRoutesByTo {
   '/portfolio': typeof PortfolioRoute
   '/profil': typeof ProfilRoute
   '/reglages': typeof ReglagesRoute
+  '/reveil': typeof ReveilRoute
   '/tarifs': typeof TarifsRoute
+  '/vote': typeof VoteRouteWithChildren
   '/waitlist': typeof WaitlistRoute
+  '/wrapped': typeof WrappedRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/api/ethi': typeof ApiEthiRoute
@@ -333,15 +336,12 @@ export interface FileRoutesByTo {
   '/hooks/recompute-risk-model': typeof HooksRecomputeRiskModelRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
+  '/vote/$resolutionId': typeof VoteResolutionIdRoute
   '/cours': typeof CoursIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/beta': typeof AuthenticatedAdminBetaRoute
   '/api/public/esg-preview': typeof ApiPublicEsgPreviewRoute
-  '/vote': typeof VoteRouteWithChildren
-  '/vote/$resolutionId': typeof VoteResolutionIdRoute
-  '/wrapped': typeof WrappedRoute
-  '/reveil': typeof ReveilRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -367,8 +367,11 @@ export interface FileRoutesById {
   '/portfolio': typeof PortfolioRoute
   '/profil': typeof ProfilRoute
   '/reglages': typeof ReglagesRoute
+  '/reveil': typeof ReveilRoute
   '/tarifs': typeof TarifsRoute
+  '/vote': typeof VoteRouteWithChildren
   '/waitlist': typeof WaitlistRoute
+  '/wrapped': typeof WrappedRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/api/ethi': typeof ApiEthiRoute
@@ -377,15 +380,12 @@ export interface FileRoutesById {
   '/hooks/recompute-risk-model': typeof HooksRecomputeRiskModelRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
+  '/vote/$resolutionId': typeof VoteResolutionIdRoute
   '/cours/': typeof CoursIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/admin/beta': typeof AuthenticatedAdminBetaRoute
   '/api/public/esg-preview': typeof ApiPublicEsgPreviewRoute
-  '/vote': typeof VoteRouteWithChildren
-  '/vote/$resolutionId': typeof VoteResolutionIdRoute
-  '/wrapped': typeof WrappedRoute
-  '/reveil': typeof ReveilRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -411,8 +411,11 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/profil'
     | '/reglages'
+    | '/reveil'
     | '/tarifs'
+    | '/vote'
     | '/waitlist'
+    | '/wrapped'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/api/ethi'
@@ -421,15 +424,12 @@ export interface FileRouteTypes {
     | '/hooks/recompute-risk-model'
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
+    | '/vote/$resolutionId'
     | '/cours/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/admin/beta'
     | '/api/public/esg-preview'
-    | '/vote'
-    | '/vote/$resolutionId'
-    | '/wrapped'
-    | '/reveil'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -452,8 +452,11 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/profil'
     | '/reglages'
+    | '/reveil'
     | '/tarifs'
+    | '/vote'
     | '/waitlist'
+    | '/wrapped'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/api/ethi'
@@ -462,15 +465,12 @@ export interface FileRouteTypes {
     | '/hooks/recompute-risk-model'
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
+    | '/vote/$resolutionId'
     | '/cours'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/admin/beta'
     | '/api/public/esg-preview'
-    | '/vote'
-    | '/vote/$resolutionId'
-    | '/wrapped'
-    | '/reveil'
   id:
     | '__root__'
     | '/'
@@ -495,8 +495,11 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/profil'
     | '/reglages'
+    | '/reveil'
     | '/tarifs'
+    | '/vote'
     | '/waitlist'
+    | '/wrapped'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/api/ethi'
@@ -505,15 +508,12 @@ export interface FileRouteTypes {
     | '/hooks/recompute-risk-model'
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
+    | '/vote/$resolutionId'
     | '/cours/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/admin/beta'
     | '/api/public/esg-preview'
-    | '/vote'
-    | '/vote/$resolutionId'
-    | '/wrapped'
-    | '/reveil'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -539,8 +539,11 @@ export interface RootRouteChildren {
   PortfolioRoute: typeof PortfolioRoute
   ProfilRoute: typeof ProfilRoute
   ReglagesRoute: typeof ReglagesRoute
+  ReveilRoute: typeof ReveilRoute
   TarifsRoute: typeof TarifsRoute
+  VoteRoute: typeof VoteRouteWithChildren
   WaitlistRoute: typeof WaitlistRoute
+  WrappedRoute: typeof WrappedRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   ApiEthiRoute: typeof ApiEthiRoute
@@ -550,13 +553,17 @@ export interface RootRouteChildren {
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   ApiPublicEsgPreviewRoute: typeof ApiPublicEsgPreviewRoute
-  VoteRoute: typeof VoteRouteWithChildren
-  WrappedRoute: typeof WrappedRoute
-  ReveilRoute: typeof ReveilRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/wrapped': {
+      id: '/wrapped'
+      path: '/wrapped'
+      fullPath: '/wrapped'
+      preLoaderRoute: typeof WrappedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/waitlist': {
       id: '/waitlist'
       path: '/waitlist'
@@ -571,11 +578,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VoteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/wrapped': {
-      id: '/wrapped'
-      path: '/wrapped'
-      fullPath: '/wrapped'
-      preLoaderRoute: typeof WrappedRouteImport
+    '/tarifs': {
+      id: '/tarifs'
+      path: '/tarifs'
+      fullPath: '/tarifs'
+      preLoaderRoute: typeof TarifsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reveil': {
@@ -583,20 +590,6 @@ declare module '@tanstack/react-router' {
       path: '/reveil'
       fullPath: '/reveil'
       preLoaderRoute: typeof ReveilRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/vote/$resolutionId': {
-      id: '/vote/$resolutionId'
-      path: '/$resolutionId'
-      fullPath: '/vote/$resolutionId'
-      preLoaderRoute: typeof VoteResolutionIdRouteImport
-      parentRoute: typeof VoteRoute
-    }
-    '/tarifs': {
-      id: '/tarifs'
-      path: '/tarifs'
-      fullPath: '/tarifs'
-      preLoaderRoute: typeof TarifsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reglages': {
@@ -760,6 +753,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CoursIndexRouteImport
       parentRoute: typeof CoursRoute
     }
+    '/vote/$resolutionId': {
+      id: '/vote/$resolutionId'
+      path: '/$resolutionId'
+      fullPath: '/vote/$resolutionId'
+      preLoaderRoute: typeof VoteResolutionIdRouteImport
+      parentRoute: typeof VoteRoute
+    }
     '/objectifs/$goalId': {
       id: '/objectifs/$goalId'
       path: '/$goalId'
@@ -915,11 +915,11 @@ const rootRouteChildren: RootRouteChildren = {
   PortfolioRoute: PortfolioRoute,
   ProfilRoute: ProfilRoute,
   ReglagesRoute: ReglagesRoute,
-  TarifsRoute: TarifsRoute,
-  WaitlistRoute: WaitlistRoute,
-  VoteRoute: VoteRouteWithChildren,
-  WrappedRoute: WrappedRoute,
   ReveilRoute: ReveilRoute,
+  TarifsRoute: TarifsRoute,
+  VoteRoute: VoteRouteWithChildren,
+  WaitlistRoute: WaitlistRoute,
+  WrappedRoute: WrappedRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
