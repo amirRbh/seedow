@@ -54,3 +54,29 @@ export const lexicon = {
 } as const;
 
 export type Lexicon = typeof lexicon;
+
+/**
+ * Glossaire contextuel — identifiants stables des termes techniques
+ * définis en i18n (namespace "glossary.terms.<id>.label|definition").
+ * Alimente le composant <GlossaryTerm /> (src/components/common/GlossaryTerm.tsx).
+ */
+export const GLOSSARY_TERMS = [
+  "waci",
+  "tco2e_per_musd",
+  "carbon_intensity",
+  "data_coverage",
+  "msci_acwi",
+  "best_in_class",
+  "markowitz",
+  "ter",
+  "drawdown",
+  "volatility",
+  "sfdr_89",
+  "etf",
+  "sector_exclusion",
+  "esg_score",
+  "concentration",
+  "benchmark",
+] as const;
+
+export type GlossaryTermId = (typeof GLOSSARY_TERMS)[number];
