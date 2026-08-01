@@ -587,6 +587,18 @@
      système de boutons pour toute l'app (hors .apple-landing, scope isolé
      volontairement pour la landing page). */
 
+  /* Couleur de texte des boutons pleins : classe dédiée car twMerge supprime
+     text-paper quand la taille "pill" apporte text-body-lg (même groupe). */
+  .btn-on-ink {
+    color: var(--color-paper);
+  }
+  .btn-on-paper {
+    color: var(--color-ink);
+  }
+  .btn-on-paper:hover {
+    color: var(--color-paper);
+  }
+
   .bubble-ethi {
     background: var(--color-paper-2);
     color: var(--color-ink);

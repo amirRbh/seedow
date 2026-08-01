@@ -9,18 +9,18 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-ink [color:var(--color-paper)] shadow hover:bg-ink/90",
-        destructive: "bg-alert [color:var(--color-paper)] shadow-sm hover:bg-alert/90",
+        default: "bg-ink btn-on-ink shadow hover:bg-ink/90",
+        destructive: "bg-alert btn-on-ink shadow-sm hover:bg-alert/90",
         outline:
           "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
         secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-ink underline-offset-4 hover:underline",
         /** Pill mint filled — CTA secondaire (ex-.btn-accent). */
-        accent: "bg-mint [color:var(--color-paper)] shadow-none hover:opacity-90",
+        accent: "bg-mint btn-on-ink shadow-none hover:opacity-90",
         /** Pill outline encre, s'inverse en plein au survol (ex-.btn-outline-ink). */
         "outline-ink":
-          "border border-ink bg-transparent [color:var(--color-ink)] shadow-none hover:bg-ink hover:[color:var(--color-paper)]",
+          "border border-ink bg-transparent btn-on-paper shadow-none hover:bg-ink",
       },
       size: {
         default: "h-9 px-4 py-2",
