@@ -14,6 +14,7 @@ import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 import { NextStepCard } from "@/components/dashboard/NextStepCard";
 import { WatchlistCard } from "@/components/dashboard/WatchlistCard";
 import { VoteTeaserCard } from "@/components/vote/VoteTeaserCard";
+import { ReveilTeaserCard } from "@/components/reveil/ReveilTeaserCard";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -325,6 +326,9 @@ function Dashboard() {
 
         {/* 3. Prochaine étape — une seule carte contextuelle */}
         <NextStepCard />
+
+        {/* 3-Réveil. Le fil de conscience du jour — la surface de retour quotidien */}
+        <ReveilTeaserCard />
 
         {/* 3a. Watchlist — boucle suivre → alerte → revenir */}
         <WatchlistCard />

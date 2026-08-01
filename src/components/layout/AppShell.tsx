@@ -114,6 +114,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           navigate({ to: "/vote" });
           return;
         }
+        if (key === "r") {
+          e.preventDefault();
+          navigate({ to: "/reveil" });
+          return;
+        }
       }
     };
 

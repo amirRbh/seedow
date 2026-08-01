@@ -1738,7 +1738,8 @@
     "aria": "Main navigation",
     "seedow_home": "Seedow — home",
     "vote": "The Vote",
-    "wrapped": "Recap"
+    "wrapped": "Recap",
+    "reveil": "Morning"
   },
   "asset_class": {
     "equity_dev": "Developed equities",
@@ -2148,6 +2149,54 @@
       "bloc_line": "My biggest Bloc: {{total}} people — {{company}}.",
       "tagline": "It's not inevitable. It's a choice. Yours too.",
       "text": "My Seedow recap: my money has a voice. What about yours?"
+    }
+  },
+  "reveil": {
+    "eyebrow": "Morning read",
+    "title": "Morning read",
+    "loading": "Reading your holdings…",
+    "subtitle": "{{n}} things to know about the companies you hold and follow, today.",
+    "subtitle_empty": "Nothing to flag on your holdings today. Check back tomorrow.",
+    "empty_title": "Your morning is quiet.",
+    "empty_desc": "Add companies to your portfolio or watchlist, and the Morning Read will tell you what the data thinks.",
+    "empty_cta": "Discover companies",
+    "source_today": "Today",
+    "cta_vote": "Vote",
+    "cta_why": "See why",
+    "tone": {
+      "action": "To do",
+      "caution": "Heads up",
+      "bright": "Good news"
+    },
+    "vote": {
+      "headline": "A vote is coming on {{company}}.",
+      "body": "You can weigh in. Closes in {{n}} day(s)."
+    },
+    "greenwashing": {
+      "headline_owned": "{{company}}: the claims don't match the data.",
+      "headline_watched": "{{company}} (watched): the claims don't match the data.",
+      "generic": "Our detection flags a gap between its claims and the observed data."
+    },
+    "bright": {
+      "headline_owned": "{{company}} walks the talk.",
+      "headline_watched": "{{company}} (watched) walks the talk.",
+      "body": "Solid ESG score ({{score}}/10) and no inconsistency detected."
+    },
+    "reason": {
+      "art9_low_esg": "Calls itself \"sustainable\" (SFDR 9) but its ESG score is low.",
+      "art9_borderline_esg": "\"Sustainable\" label (SFDR 9), ESG score barely at the line.",
+      "art9_no_exclusions": "Calls itself \"sustainable\" while excluding no controversial sector.",
+      "sfdr_low_esg": "Claims an ESG objective (SFDR 8) with a low score.",
+      "sfdr_borderline_esg": "ESG objective stated (SFDR 8), borderline score.",
+      "sfdr_missing_carbon": "Claims an ESG objective with no measured carbon data.",
+      "sfdr_no_exclusions": "ESG objective stated, yet no sector excluded.",
+      "green_theme_low_climate": "\"Green\" theme claimed, low climate score.",
+      "green_theme_borderline_climate": "\"Green\" theme, climate score barely at the line.",
+      "claims_on_estimated_data": "Claims based on estimated data, not measured."
+    },
+    "teaser": {
+      "count": "{{n}} to see",
+      "cta": "Open the Morning Read"
     }
   }
 }

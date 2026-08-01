@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as WaitlistRouteImport } from './routes/waitlist'
 import { Route as VoteRouteImport } from './routes/vote'
 import { Route as WrappedRouteImport } from './routes/wrapped'
+import { Route as ReveilRouteImport } from './routes/reveil'
 import { Route as TarifsRouteImport } from './routes/tarifs'
 import { Route as ReglagesRouteImport } from './routes/reglages'
 import { Route as ProfilRouteImport } from './routes/profil'
@@ -63,6 +64,11 @@ const VoteRoute = VoteRouteImport.update({
 const WrappedRoute = WrappedRouteImport.update({
   id: '/wrapped',
   path: '/wrapped',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReveilRoute = ReveilRouteImport.update({
+  id: '/reveil',
+  path: '/reveil',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TarifsRoute = TarifsRouteImport.update({
@@ -294,6 +300,7 @@ export interface FileRoutesByFullPath {
   '/vote': typeof VoteRouteWithChildren
   '/vote/$resolutionId': typeof VoteResolutionIdRoute
   '/wrapped': typeof WrappedRoute
+  '/reveil': typeof ReveilRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -334,6 +341,7 @@ export interface FileRoutesByTo {
   '/vote': typeof VoteRouteWithChildren
   '/vote/$resolutionId': typeof VoteResolutionIdRoute
   '/wrapped': typeof WrappedRoute
+  '/reveil': typeof ReveilRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -377,6 +385,7 @@ export interface FileRoutesById {
   '/vote': typeof VoteRouteWithChildren
   '/vote/$resolutionId': typeof VoteResolutionIdRoute
   '/wrapped': typeof WrappedRoute
+  '/reveil': typeof ReveilRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -420,6 +429,7 @@ export interface FileRouteTypes {
     | '/vote'
     | '/vote/$resolutionId'
     | '/wrapped'
+    | '/reveil'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -460,6 +470,7 @@ export interface FileRouteTypes {
     | '/vote'
     | '/vote/$resolutionId'
     | '/wrapped'
+    | '/reveil'
   id:
     | '__root__'
     | '/'
@@ -502,6 +513,7 @@ export interface FileRouteTypes {
     | '/vote'
     | '/vote/$resolutionId'
     | '/wrapped'
+    | '/reveil'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -540,6 +552,7 @@ export interface RootRouteChildren {
   ApiPublicEsgPreviewRoute: typeof ApiPublicEsgPreviewRoute
   VoteRoute: typeof VoteRouteWithChildren
   WrappedRoute: typeof WrappedRoute
+  ReveilRoute: typeof ReveilRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -563,6 +576,13 @@ declare module '@tanstack/react-router' {
       path: '/wrapped'
       fullPath: '/wrapped'
       preLoaderRoute: typeof WrappedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reveil': {
+      id: '/reveil'
+      path: '/reveil'
+      fullPath: '/reveil'
+      preLoaderRoute: typeof ReveilRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/vote/$resolutionId': {
@@ -899,6 +919,7 @@ const rootRouteChildren: RootRouteChildren = {
   WaitlistRoute: WaitlistRoute,
   VoteRoute: VoteRouteWithChildren,
   WrappedRoute: WrappedRoute,
+  ReveilRoute: ReveilRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
