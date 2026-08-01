@@ -3,6 +3,12 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
+import { useAssetUniverse } from "@/hooks/useAssetUniverse";
+import {
+  buildGreenwashingAlertCandidates,
+  sortAlertsByPriority,
+  type GreenwashingSignalInput,
+} from "@/lib/esg/esg-alert";
 
 export type AlertSeverity = "info" | "warn" | "alert";
 export type AlertKind =
@@ -11,7 +17,8 @@ export type AlertKind =
   | "missed_contribution"
   | "performance"
   | "fresh_quotes"
-  | "concentration";
+  | "concentration"
+  | "greenwashing";
 
 export interface SmartAlert {
   id: string;
@@ -44,10 +51,40 @@ export function deriveCandidates(args: {
   portfolio: ReturnType<typeof useActivePortfolio>["portfolio"];
   exclusions: string[];
   causes: string[];
+  /** Signaux de greenwashing par actif (id) — optionnel, tel que dérivé de l'univers ESG. */
+  greenwashingSignals?: ReadonlyMap<string, GreenwashingSignalInput>;
+  /** Horodatage de la détection, pour un libellé factuel daté (défaut : maintenant). */
+  detectedAt?: Date;
 }): Array<Omit<SmartAlert, "id" | "createdAt" | "readAt">> {
-  const { portfolio, exclusions, causes } = args;
+  const { portfolio, exclusions, causes, greenwashingSignals, detectedAt } = args;
   if (!portfolio) return [];
   const out: Array<Omit<SmartAlert, "id" | "createdAt" | "readAt">> = [];
+
+  // Alerte greenwashing personnalisée (§14) : uniquement sur les lignes RÉELLEMENT
+  // détenues, avec le poids réel de la ligne et la date de détection — jamais si
+  // l'exposition est inconnue (cf. buildGreenwashingAlertCandidates).
+  if (greenwashingSignals && greenwashingSignals.size > 0) {
+    const dateLabel = (detectedAt ?? new Date()).toLocaleDateString("fr-FR", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+    const gwCandidates = buildGreenwashingAlertCandidates(
+      portfolio.holdings.map((h) => ({ id: h.id, name: h.name, allocationPct: h.allocationPct })),
+      greenwashingSignals,
+    );
+    for (const gw of gwCandidates) {
+      out.push({
+        kind: "greenwashing",
+        severity: gw.risk === "high" ? "alert" : "warn",
+        title: "Écart entre discours et données détecté",
+        body: `${gw.holdingName} pèse ${gw.allocationPct.toFixed(1)} % de ton portefeuille. Détection Seedow du ${dateLabel}${gw.reasonKey ? " (écart de cohérence ESG)" : ""}.`,
+        ctaLabel: "Voir l'actif",
+        ctaHref: "/discover",
+        dedupKey: `greenwashing:${portfolio.id}:${gw.holdingId}`,
+      });
+    }
+  }
 
   const top = portfolio.holdings[0];
   if (top && top.allocationPct >= 40) {
