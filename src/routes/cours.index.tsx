@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { COURSES } from "@/content/courses";
 import { CourseCard } from "@/components/courses/CourseCard";
@@ -7,6 +7,8 @@ import { CourseProgressBanner } from "@/components/courses/CourseProgressBanner"
 import { CourseCertificate } from "@/components/courses/CourseCertificate";
 import { useCourseProgress } from "@/hooks/useCourseProgress";
 import { LanguageToggle } from "@/components/LanguageToggle";
+import { getReadingState } from "@/lib/courses/reading";
+import { computeCourseStatuses } from "@/lib/courses/status";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/cours/")({
@@ -46,8 +48,32 @@ function CoursesIndex() {
     return COURSES.filter((c) => c.track === filter);
   }, [filter]);
 
-  // Prochain cours non terminé (dans l'ordre pédagogique de COURSES) : point de reprise.
-  const resumeCourse = COURSES.find((c) => !progress.isCompleted(c.slug));
+  // Lecture locale (sans compte) : lue après montage pour rester SSR-safe.
+  const [reading, setReading] = useState<{ opened: string[]; lastOpened: string | null }>({
+    opened: [],
+    lastOpened: null,
+  });
+  useEffect(() => {
+    const state = getReadingState();
+    setReading({ opened: state.opened, lastOpened: state.lastOpened });
+  }, []);
+
+  // Statuts par cours dans l'ordre pédagogique : terminé / commencé / à commencer,
+  // + le premier non terminé marqué « Commence ici ».
+  const statusBySlug = useMemo(() => {
+    const completed = allSlugs.filter((slug) => progress.isCompleted(slug));
+    const entries = computeCourseStatuses(allSlugs, completed, reading.opened);
+    return new Map(entries.map((e) => [e.slug, e]));
+  }, [allSlugs, progress, reading.opened]);
+
+  // Point de reprise : le dernier cours ouvert s'il n'est pas terminé,
+  // sinon le premier cours non terminé de l'ordre pédagogique.
+  const lastOpenedCourse =
+    reading.lastOpened && !progress.isCompleted(reading.lastOpened)
+      ? COURSES.find((c) => c.slug === reading.lastOpened)
+      : undefined;
+  const resumeCourse = lastOpenedCourse ?? COURSES.find((c) => !progress.isCompleted(c.slug));
+  const hasActivity = progress.completedCount > 0 || reading.opened.length > 0;
 
   // Certificat de progression (comptes uniquement) — chiffres réels par piste.
   const financeCourses = COURSES.filter((c) => c.track === "finance");
@@ -133,7 +159,7 @@ function CoursesIndex() {
           </p>
         </section>
 
-        {progress.ready && progress.completedCount > 0 && (
+        {progress.ready && hasActivity && (
           <CourseProgressBanner
             completedCount={progress.completedCount}
             total={COURSES.length}
@@ -173,6 +199,8 @@ function CoursesIndex() {
               isAuthed={isAuthed}
               completed={progress.isCompleted(course.slug)}
               score={progress.scoreOf(course.slug)}
+              status={statusBySlug.get(course.slug)?.status}
+              isStartHere={statusBySlug.get(course.slug)?.isStartHere}
             />
           ))}
         </div>
