@@ -18,6 +18,21 @@ import { runSimulation, formatSimulation } from "@/lib/ethi/simulation";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
 import { reportCaughtError } from "@/lib/monitoring/errorReporter";
 
+/**
+ * Révèle un texte par petits paquets de mots (~28 ms) : effet de frappe sobre,
+ * sans dépendre d'un flux SSE côté serveur. Résout quand tout est affiché.
+ */
+async function revealProgressively(full: string, onChunk: (partial: string) => void) {
+  const words = full.split(/(\s+)/);
+  let acc = "";
+  for (let i = 0; i < words.length; i += 3) {
+    acc += words.slice(i, i + 3).join("");
+    onChunk(acc);
+    await new Promise((r) => setTimeout(r, 28));
+  }
+  onChunk(full);
+}
+
 export const Route = createFileRoute("/ethi")({
   validateSearch: (s: Record<string, unknown>) => ({
     intent: (s.intent as string | undefined) ?? undefined,
@@ -189,10 +204,16 @@ function Ethi() {
       });
       const json = (await res.json()) as { content?: string; error?: string };
       const reply = json.content ?? json.error ?? t("ethi.error_no_response");
-      setMessages((prev) => [
-        ...prev,
-        { id: `a-${Date.now()}`, role: "assistant", content: reply },
-      ]);
+      // L'endpoint répond en une fois : on révèle le texte progressivement pour
+      // que la lecture démarre tout de suite plutôt qu'un bloc surgissant.
+      const replyId = `a-${Date.now()}`;
+      setMessages((prev) => [...prev, { id: replyId, role: "assistant", content: "" }]);
+      setIsLoading(false);
+      await revealProgressively(reply, (partial) => {
+        setMessages((prev) =>
+          prev.map((m) => (m.id === replyId ? { ...m, content: partial } : m)),
+        );
+      });
     } catch (err) {
       console.error("[ethi] send failed", err);
       reportCaughtError(err, { source: "ethi_send" });
