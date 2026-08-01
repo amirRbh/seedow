@@ -46,18 +46,30 @@ export function GuestDashboard() {
     return <div className="min-h-screen bg-paper" aria-hidden />;
   }
 
-  // Simulation expirée / absente : proposer d'en relancer une.
+  // Simulation expirée / absente : expliquer pourquoi, puis relancer utilement.
   if (sim === null) {
     return (
       <div className="min-h-screen bg-paper flex flex-col items-center justify-center px-6 text-center">
-        <p className="text-body text-ink-2 max-w-[300px]">
-          {t("dashboard.guest_dashboard.expired_title")}
+        <p className="text-eyebrow uppercase tracking-[0.15em] text-ink-3">
+          {t("dashboard.guest_dashboard.eyebrow")}
         </p>
-        <Button asChild variant="accent" size="pill" className="mt-6">
+        <h1 className="mt-3 text-h2 text-ink max-w-[460px]">
+          {t("dashboard.guest_dashboard.expired_title")}
+        </h1>
+        <p className="mt-4 text-body text-ink-2 max-w-[440px] leading-relaxed">
+          {t("dashboard.guest_dashboard.expired_desc")}
+        </p>
+        <Button asChild variant="accent" size="pill" className="mt-8">
           <Link to="/onboarding" search={{ guest: true }}>
             {t("dashboard.guest_dashboard.expired_cta")}
           </Link>
         </Button>
+        <Link
+          to="/cours"
+          className="mt-4 text-body-sm text-ink-2 underline underline-offset-4 hover:text-ink"
+        >
+          {t("dashboard.guest_dashboard.expired_secondary")}
+        </Link>
       </div>
     );
   }
