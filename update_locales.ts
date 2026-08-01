@@ -570,14 +570,67 @@ const voteEn = {
   },
 };
 
+// ── Seedow Wrapped (le bilan) ────────────────────────────────────────────────
+const wrappedFr = {
+  link: "Voir mon bilan",
+  card_eyebrow: "Mon bilan Seedow",
+  loading: "Un instant…",
+  close: "Fermer",
+  tap_hint: "Touche pour continuer",
+  intro_title: "Ton bilan Seedow",
+  intro_sub: "Ce que ton argent a dit, cette année.",
+  votes_label: "votes exprimés dans le Bloc",
+  refusals_label: "fois où tu as dit non à la direction",
+  refusals_label_short: "refus assumés",
+  bloc_label: "personnes dans le plus grand Bloc que tu as rejoint — {{company}}",
+  empty_title: "Ton bilan t'attend.",
+  empty_desc: "Tu n'as pas encore voté. Rejoins un premier Bloc, et ton bilan prend vie.",
+  empty_cta: "Voir les votes ouverts",
+  final_title: "Voilà ton bilan.",
+  final_sub: "Partage-le : ton argent a une voix, montre-la.",
+  share_cta: "Partager mon bilan",
+  final_vote_cta: "Rejoindre un vote",
+  share: {
+    bloc_line: "Mon plus grand Bloc : {{total}} personnes — {{company}}.",
+    tagline: "Ce n'est pas une fatalité. C'est un choix. Le tien aussi.",
+    text: "Mon bilan Seedow : mon argent a une voix. Et le tien ?",
+  },
+};
+const wrappedEn = {
+  link: "See my recap",
+  card_eyebrow: "My Seedow recap",
+  loading: "One moment…",
+  close: "Close",
+  tap_hint: "Tap to continue",
+  intro_title: "Your Seedow recap",
+  intro_sub: "What your money said this year.",
+  votes_label: "votes cast in the Bloc",
+  refusals_label: "times you said no to management",
+  refusals_label_short: "clear refusals",
+  bloc_label: "people in the biggest Bloc you joined — {{company}}",
+  empty_title: "Your recap is waiting.",
+  empty_desc: "You haven't voted yet. Join a first Bloc and your recap comes to life.",
+  empty_cta: "See open votes",
+  final_title: "Here's your recap.",
+  final_sub: "Share it: your money has a voice — show it.",
+  share_cta: "Share my recap",
+  final_vote_cta: "Join a vote",
+  share: {
+    bloc_line: "My biggest Bloc: {{total}} people — {{company}}.",
+    tagline: "It's not inevitable. It's a choice. Yours too.",
+    text: "My Seedow recap: my money has a voice. What about yours?",
+  },
+};
+
 const mergedFr = deepMerge(fr, {
   landing: { rayon_x: rayonXFr },
   dashboard: dashboardFr,
   asset_detail: assetDetailFr,
   portfolio: portfolioFr,
   growth_comparison: growthComparisonFr,
-  rail_nav: { vote: "Le Vote" },
+  rail_nav: { vote: "Le Vote", wrapped: "Bilan" },
   vote: voteFr,
+  wrapped: wrappedFr,
 });
 const mergedEn = deepMerge(en, {
   landing: { rayon_x: rayonXEn },
@@ -585,8 +638,9 @@ const mergedEn = deepMerge(en, {
   asset_detail: assetDetailEn,
   portfolio: portfolioEn,
   growth_comparison: growthComparisonEn,
-  rail_nav: { vote: "The Vote" },
+  rail_nav: { vote: "The Vote", wrapped: "Recap" },
   vote: voteEn,
+  wrapped: wrappedEn,
 });
 
 writeFileSync("src/i18n/locales/fr.json", JSON.stringify(mergedFr, null, 2) + "\n", "utf-8");

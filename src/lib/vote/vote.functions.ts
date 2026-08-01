@@ -18,6 +18,7 @@ import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { tallyVotes, emptyTally, type BlocTally, type VoteChoice } from "./bloc";
+import { computeWrapped, emptyWrapped, type WrappedStats } from "./wrapped";
 
 export interface Resolution {
   id: string;
@@ -227,4 +228,43 @@ export const castVote = createServerFn({ method: "POST" })
       choice: data.choice,
       bloc: tallies.get(data.resolutionId) ?? emptyTally(),
     };
+  });
+
+/** Bilan « Seedow Wrapped » de l'utilisateur, agrégé à partir de ses vrais votes. */
+export const getWrapped = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<WrappedStats> => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const db = context.supabase as any;
+    const { data: voteRows, error } = await db
+      .from("resolution_votes")
+      .select("resolution_id, choice")
+      .eq("user_id", context.userId);
+    if (error) throw new Error(error.message);
+
+    const votes = ((voteRows ?? []) as { resolution_id: string; choice: VoteChoice }[]).map(
+      (r) => ({ resolutionId: r.resolution_id, choice: r.choice }),
+    );
+    if (votes.length === 0) return emptyWrapped();
+
+    const resIds = Array.from(new Set(votes.map((v) => v.resolutionId)));
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const admin = supabaseAdmin as any;
+    const { data: resRows, error: rErr } = await admin
+      .from("agm_resolutions")
+      .select("id, company")
+      .in("id", resIds);
+    if (rErr) throw new Error(rErr.message);
+    const resolutions = ((resRows ?? []) as { id: string; company: string }[]).map((r) => ({
+      id: r.id,
+      company: r.company,
+    }));
+
+    const tallies = await tallyByResolution(admin, resIds);
+    const blocTotals: Record<string, number> = {};
+    for (const [id, tally] of tallies) blocTotals[id] = tally.total;
+
+    return computeWrapped(votes, resolutions, blocTotals);
   });

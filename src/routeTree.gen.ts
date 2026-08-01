@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WaitlistRouteImport } from './routes/waitlist'
 import { Route as VoteRouteImport } from './routes/vote'
+import { Route as WrappedRouteImport } from './routes/wrapped'
 import { Route as TarifsRouteImport } from './routes/tarifs'
 import { Route as ReglagesRouteImport } from './routes/reglages'
 import { Route as ProfilRouteImport } from './routes/profil'
@@ -57,6 +58,11 @@ const WaitlistRoute = WaitlistRouteImport.update({
 const VoteRoute = VoteRouteImport.update({
   id: '/vote',
   path: '/vote',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WrappedRoute = WrappedRouteImport.update({
+  id: '/wrapped',
+  path: '/wrapped',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TarifsRoute = TarifsRouteImport.update({
@@ -287,6 +293,7 @@ export interface FileRoutesByFullPath {
   '/api/public/esg-preview': typeof ApiPublicEsgPreviewRoute
   '/vote': typeof VoteRouteWithChildren
   '/vote/$resolutionId': typeof VoteResolutionIdRoute
+  '/wrapped': typeof WrappedRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -326,6 +333,7 @@ export interface FileRoutesByTo {
   '/api/public/esg-preview': typeof ApiPublicEsgPreviewRoute
   '/vote': typeof VoteRouteWithChildren
   '/vote/$resolutionId': typeof VoteResolutionIdRoute
+  '/wrapped': typeof WrappedRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -368,6 +376,7 @@ export interface FileRoutesById {
   '/api/public/esg-preview': typeof ApiPublicEsgPreviewRoute
   '/vote': typeof VoteRouteWithChildren
   '/vote/$resolutionId': typeof VoteResolutionIdRoute
+  '/wrapped': typeof WrappedRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -410,6 +419,7 @@ export interface FileRouteTypes {
     | '/api/public/esg-preview'
     | '/vote'
     | '/vote/$resolutionId'
+    | '/wrapped'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -449,6 +459,7 @@ export interface FileRouteTypes {
     | '/api/public/esg-preview'
     | '/vote'
     | '/vote/$resolutionId'
+    | '/wrapped'
   id:
     | '__root__'
     | '/'
@@ -490,6 +501,7 @@ export interface FileRouteTypes {
     | '/api/public/esg-preview'
     | '/vote'
     | '/vote/$resolutionId'
+    | '/wrapped'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -527,6 +539,7 @@ export interface RootRouteChildren {
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   ApiPublicEsgPreviewRoute: typeof ApiPublicEsgPreviewRoute
   VoteRoute: typeof VoteRouteWithChildren
+  WrappedRoute: typeof WrappedRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -543,6 +556,13 @@ declare module '@tanstack/react-router' {
       path: '/vote'
       fullPath: '/vote'
       preLoaderRoute: typeof VoteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/wrapped': {
+      id: '/wrapped'
+      path: '/wrapped'
+      fullPath: '/wrapped'
+      preLoaderRoute: typeof WrappedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/vote/$resolutionId': {
@@ -878,6 +898,7 @@ const rootRouteChildren: RootRouteChildren = {
   TarifsRoute: TarifsRoute,
   WaitlistRoute: WaitlistRoute,
   VoteRoute: VoteRouteWithChildren,
+  WrappedRoute: WrappedRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,

@@ -1737,7 +1737,8 @@
     "certificate": "Impact certificate",
     "aria": "Main navigation",
     "seedow_home": "Seedow — home",
-    "vote": "The Vote"
+    "vote": "The Vote",
+    "wrapped": "Recap"
   },
   "asset_class": {
     "equity_dev": "Developed equities",
@@ -2122,6 +2123,31 @@
       "subline_choice": "people vote “{{choice}}”.",
       "subline_total": "people have already voted.",
       "tagline": "It's not inevitable. It's a choice. Yours too."
+    }
+  },
+  "wrapped": {
+    "link": "See my recap",
+    "card_eyebrow": "My Seedow recap",
+    "loading": "One moment…",
+    "close": "Close",
+    "tap_hint": "Tap to continue",
+    "intro_title": "Your Seedow recap",
+    "intro_sub": "What your money said this year.",
+    "votes_label": "votes cast in the Bloc",
+    "refusals_label": "times you said no to management",
+    "refusals_label_short": "clear refusals",
+    "bloc_label": "people in the biggest Bloc you joined — {{company}}",
+    "empty_title": "Your recap is waiting.",
+    "empty_desc": "You haven't voted yet. Join a first Bloc and your recap comes to life.",
+    "empty_cta": "See open votes",
+    "final_title": "Here's your recap.",
+    "final_sub": "Share it: your money has a voice — show it.",
+    "share_cta": "Share my recap",
+    "final_vote_cta": "Join a vote",
+    "share": {
+      "bloc_line": "My biggest Bloc: {{total}} people — {{company}}.",
+      "tagline": "It's not inevitable. It's a choice. Yours too.",
+      "text": "My Seedow recap: my money has a voice. What about yours?"
     }
   }
 }

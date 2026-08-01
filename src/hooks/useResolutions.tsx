@@ -6,10 +6,12 @@ import {
   listResolutions,
   getMyVotes,
   castVote,
+  getWrapped,
   type ResolutionWithBloc,
   type CastVoteResult,
 } from "@/lib/vote/vote.functions";
 import type { VoteChoice } from "@/lib/vote/bloc";
+import type { WrappedStats } from "@/lib/vote/wrapped";
 
 /** Toutes les résolutions + le décompte agrégé du Bloc (public). */
 export function useResolutions() {
@@ -30,6 +32,17 @@ export function useMyVotes() {
     enabled: !authLoading && !!user,
   });
   return (data ?? {}) as Record<string, VoteChoice>;
+}
+
+/** Bilan « Seedow Wrapped » de l'utilisateur (agrégé depuis ses vrais votes). */
+export function useWrapped() {
+  const { user, loading: authLoading } = useAuth();
+  const { data, isLoading } = useQuery({
+    queryKey: ["wrapped", user?.id],
+    queryFn: () => callAuthed(getWrapped, undefined as never),
+    enabled: !authLoading && !!user,
+  });
+  return { wrapped: (data ?? null) as WrappedStats | null, loading: isLoading };
 }
 
 /** Enregistre / modifie le vote de l'utilisateur, puis rafraîchit le Bloc. */

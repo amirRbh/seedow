@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
@@ -40,6 +40,16 @@ function VotePage() {
           kicker={t("vote.section_kicker")}
           number="01"
         >
+          <div className="mb-6 flex justify-end">
+            <Link
+              to="/wrapped"
+              className="inline-flex items-center gap-1.5 font-mono text-tag uppercase tracking-[0.12em] text-ink-2 transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
+            >
+              {t("wrapped.link")}
+              <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+
           {loading ? (
             <p className="text-body-sm text-ink-3">{t("vote.loading")}</p>
           ) : resolutions.length === 0 ? (
