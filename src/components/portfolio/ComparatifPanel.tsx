@@ -186,6 +186,7 @@ export function ComparatifPanel() {
 
         <div className="mt-6 border-t border-b border-paper-3 divide-y divide-paper-3">
           <CompareRow
+            benchmarkLabel={t(benchmark.labelKey)}
             label={t("comparatif_panel.expected_perf")}
             term="MSCIWorld"
             seedowValue={`${(seedow.expectedReturn * 100).toFixed(1)} %`}
@@ -200,6 +201,7 @@ export function ComparatifPanel() {
             }
           />
           <CompareRow
+            benchmarkLabel={t(benchmark.labelKey)}
             label={t("comparatif_panel.volatility")}
             term="Volatilite"
             seedowValue={`${(seedow.volatility * 100).toFixed(1)} %`}
@@ -208,6 +210,7 @@ export function ComparatifPanel() {
             note={t("comparatif_panel.lower_stable")}
           />
           <CompareRow
+            benchmarkLabel={t(benchmark.labelKey)}
             label={t("comparatif_panel.annual_fees")}
             term="TER"
             seedowValue={`${(seedow.ter * 100).toFixed(2)} %`}
@@ -216,6 +219,7 @@ export function ComparatifPanel() {
             note={t("comparatif_panel.lower_net")}
           />
           <CompareRow
+            benchmarkLabel={t(benchmark.labelKey)}
             label={t("comparatif_panel.impact_score")}
             term="ESG"
             seedowValue={`${seedow.esgScore.toFixed(0)} / 100`}
@@ -224,6 +228,7 @@ export function ComparatifPanel() {
             note={t("comparatif_panel.higher_durable")}
           />
           <CompareRow
+            benchmarkLabel={t(benchmark.labelKey)}
             label={t("comparatif_panel.carbon_intensity")}
             term="CO2"
             seedowValue={`${seedow.carbonIntensityGperEur.toFixed(0)} g/€`}
@@ -232,6 +237,7 @@ export function ComparatifPanel() {
             note={t("comparatif_panel.per_euro")}
           />
           <CompareRow
+            benchmarkLabel={t(benchmark.labelKey)}
             label={t("comparatif_panel.classification")}
             term="SFDR"
             seedowValue={seedow.sfdr}
@@ -305,6 +311,8 @@ export function ComparatifPanel() {
 
 interface RowProps {
   label: string;
+  /** Libellé de la référence comparée (benchmark sélectionné), déjà traduit. */
+  benchmarkLabel: string;
   term: "MSCIWorld" | "Volatilite" | "TER" | "ESG" | "CO2" | "SFDR";
   seedowValue: string;
   msciValue: string;
@@ -313,7 +321,16 @@ interface RowProps {
   bar?: React.ReactNode;
 }
 
-function CompareRow({ label, term, seedowValue, msciValue, seedowWins, note, bar }: RowProps) {
+function CompareRow({
+  label,
+  benchmarkLabel,
+  term,
+  seedowValue,
+  msciValue,
+  seedowWins,
+  note,
+  bar,
+}: RowProps) {
   const { isSimple } = useViewMode();
   // Mode Simple : le libellé de ligne passe en langage clair. Mode Expert :
   // on garde le libellé éditorial d'origine. Le ⓘ ouvre la définition complète.
@@ -349,7 +366,7 @@ function CompareRow({ label, term, seedowValue, msciValue, seedowWins, note, bar
         </div>
         <div>
           <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold mb-1">
-            {t(benchmark.labelKey)}
+            {benchmarkLabel}
           </p>
           <p className="kpi-figure text-xl text-ink-2 tabular-nums">{msciValue}</p>
         </div>
