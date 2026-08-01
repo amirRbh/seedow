@@ -95,7 +95,11 @@ export function ComparatifPanel() {
     : null;
 
   const BenchmarkSelector = (
-    <div className="flex flex-wrap gap-2 mb-6" role="tablist" aria-label={t("comparatif_panel.benchmark_label")}>
+    <div
+      className="flex flex-wrap gap-2 mb-6"
+      role="tablist"
+      aria-label={t("comparatif_panel.benchmark_label")}
+    >
       {BENCHMARK_OPTIONS.map((opt) => (
         <button
           key={opt.id}

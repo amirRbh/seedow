@@ -221,9 +221,7 @@ function Onboarding() {
   // Ne restaure que le brouillon correspondant au même contexte (premier
   // portefeuille vs. portefeuille additionnel) — jamais l'un à la place de l'autre.
   const draft = loadDraft(isAdditive);
-  const [phase, setPhase] = useState<Phase>(
-    isGuestResume ? "account" : (draft?.phase ?? "steps"),
-  );
+  const [phase, setPhase] = useState<Phase>(isGuestResume ? "account" : (draft?.phase ?? "steps"));
   const [stepIndex, setStepIndex] = useState(draft?.stepIndex ?? 0);
   const [answers, setAnswers] = useState<Answers>(draft?.answers ?? {});
   const [portfolioName, setPortfolioName] = useState(draft?.portfolioName ?? "");

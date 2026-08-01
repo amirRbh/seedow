@@ -210,9 +210,7 @@ function Ethi() {
       setMessages((prev) => [...prev, { id: replyId, role: "assistant", content: "" }]);
       setIsLoading(false);
       await revealProgressively(reply, (partial) => {
-        setMessages((prev) =>
-          prev.map((m) => (m.id === replyId ? { ...m, content: partial } : m)),
-        );
+        setMessages((prev) => prev.map((m) => (m.id === replyId ? { ...m, content: partial } : m)));
       });
     } catch (err) {
       console.error("[ethi] send failed", err);
@@ -300,8 +298,6 @@ function Ethi() {
         className="flex-1 overflow-y-auto px-5 py-6 pb-72 flex flex-col justify-end"
       >
         <div className="w-full max-w-lg mx-auto space-y-4">
-
-
           <div className="rounded-2xl border border-paper-3 bg-paper-2 px-4 py-2.5 flex items-start gap-2 text-caption leading-snug text-ink-2">
             <span
               className="inline-block w-1.5 h-1.5 rounded-full bg-gold mt-1.5 flex-shrink-0"

@@ -25,9 +25,7 @@ export function EthiBubble({ role, content, typing }: EthiBubbleProps) {
     >
       <div className={`max-w-[85%] ${isUser ? "ml-auto" : "w-full"}`}>
         {!isUser && (
-          <p className="text-tag text-ink-3 font-semibold mb-1.5 ml-1">
-            {t("ethi.your_advisor")}
-          </p>
+          <p className="text-tag text-ink-3 font-semibold mb-1.5 ml-1">{t("ethi.your_advisor")}</p>
         )}
 
         <div

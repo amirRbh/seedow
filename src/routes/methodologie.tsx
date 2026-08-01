@@ -617,153 +617,153 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
           </p>
         </summary>
 
-      <div id="sources" className="grid gap-6 md:grid-cols-2 mt-6">
-        {/* Bloc 1 — Sources */}
-        <div className="border border-paper-3 p-5 bg-paper-2/30">
+        <div id="sources" className="grid gap-6 md:grid-cols-2 mt-6">
+          {/* Bloc 1 — Sources */}
+          <div className="border border-paper-3 p-5 bg-paper-2/30">
+            <p className="text-tag uppercase tracking-[0.15em] text-ink-3 font-medium mb-3">
+              01 · Sources de données
+            </p>
+            <ul className="divide-y divide-paper-3 text-label">
+              {sources.map((s) => (
+                <li key={s.name} className="py-2 flex items-baseline justify-between gap-3">
+                  <span className="font-value text-ink">{s.name}</span>
+                  <span className="text-ink-3 text-right">{s.scope}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="text-caption text-ink-3 mt-3 leading-relaxed">
+              Le raccordement des données MSCI ESG a commencé : pour les fonds couverts, le score,
+              la date « as of » et l'intensité carbone WACI proviennent des fiches émetteurs
+              (iShares / BlackRock) et sont tracés par actif. Le reste de l'univers reste en
+              notation propriétaire Seedow le temps du raccordement — la source exacte est indiquée
+              sur chaque fiche.
+            </p>
+          </div>
+
+          {/* Bloc 2 — Grille 3 piliers */}
+          <div className="border border-paper-3 p-5 bg-paper-2/30">
+            <p className="text-tag uppercase tracking-[0.15em] text-ink-3 font-medium mb-3">
+              02 · Grille — 3 piliers pondérés
+            </p>
+            <table className="w-full text-label">
+              <thead>
+                <tr className="text-tag uppercase tracking-[0.12em] text-ink-3">
+                  <th className="text-left font-medium pb-2">Pilier</th>
+                  <th className="text-right font-medium pb-2">Défaut</th>
+                  <th className="text-right font-medium pb-2">Vos causes</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-paper-3">
+                {pillars.map((p) => {
+                  const shifted = Math.abs(p.current - p.base) > 0.001;
+                  return (
+                    <tr key={p.key} className="align-baseline">
+                      <td className="py-2 pr-2">
+                        <span className="font-value text-ink">{p.key}</span>
+                        <span className="text-ink-2 ml-2">{p.label}</span>
+                      </td>
+                      <td className="py-2 text-right tabular-nums text-ink-3">
+                        {(p.base * 100).toFixed(0)}%
+                      </td>
+                      <td
+                        className={`py-2 text-right tabular-nums font-value ${shifted ? "text-highlight-1" : "text-ink"}`}
+                      >
+                        {(p.current * 100).toFixed(0)}%
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+            <p className="text-caption text-ink-3 mt-3 leading-relaxed">
+              Climat &amp; biodiversité renforcent E. Humain &amp; égalité renforcent S. Tech &amp;
+              circulaire penchent légèrement vers G. Si un pilier manque sur un actif, on retombe
+              sur son score agrégé pour ce pilier — dégradation douce plutôt qu'exclusion.
+            </p>
+          </div>
+        </div>
+
+        {/* Bloc 3 — Comment on construit */}
+        <div className="mt-6 border border-paper-3 p-5">
           <p className="text-tag uppercase tracking-[0.15em] text-ink-3 font-medium mb-3">
-            01 · Sources de données
+            03 · Comment la grille entre dans le portefeuille
           </p>
-          <ul className="divide-y divide-paper-3 text-label">
-            {sources.map((s) => (
-              <li key={s.name} className="py-2 flex items-baseline justify-between gap-3">
-                <span className="font-value text-ink">{s.name}</span>
-                <span className="text-ink-3 text-right">{s.scope}</span>
-              </li>
-            ))}
+          <ol className="grid md:grid-cols-2 gap-x-8 gap-y-3 text-label text-ink-2 leading-relaxed">
+            <li>
+              <span className="font-value text-ink">Exclusions dures.</span> Fossiles, armes, tabac,
+              jeux, tests animaux, fast-fashion : filtre binaire avant tout calcul. Aucun compromis
+              possible.
+            </li>
+            <li>
+              <span className="font-value text-ink">Best-in-class.</span> Dans chaque classe
+              d'actifs, on ne garde que la moitié la mieux notée (au-dessus de la médiane) sur le
+              score composite pondéré par vos causes. Une classe de 3 actifs ou moins est conservée
+              entière pour ne pas l'assécher.
+            </li>
+            <li>
+              <span className="font-value text-ink">Plancher portefeuille.</span> Score ESG moyen
+              pondéré ≥ <span className="tabular-nums font-value">{MIN_PORTFOLIO_ESG}/100</span>. Si
+              l'optimiseur ne l'atteint pas sous vos contraintes, on lève le plancher et on
+              l'affiche honnêtement.
+            </li>
+            <li>
+              <span className="font-value text-ink">Tilts par conviction.</span> Activer une cause
+              réajuste les poids des piliers E/S/G (voir grille ci-dessus). Son intensité (0–100 %)
+              oriente en plus l'optimiseur vers les actifs exposés à cette cause — un tilt borné,
+              qui n'entre pas dans le rendement attendu affiché.
+            </li>
+          </ol>
+        </div>
+
+        {/* Bloc 4 — Limites */}
+        <div className="mt-6 border border-ink/20 bg-ink/[0.03] p-5">
+          <p className="text-tag uppercase tracking-[0.15em] text-ink font-medium mb-3">
+            04 · Ce que la note ne dit pas
+          </p>
+          <ul className="space-y-2 text-label text-ink-2 leading-relaxed">
+            <li>
+              <span className="font-value text-ink">Les agences ne sont pas d'accord.</span>{" "}
+              Corrélation entre notations ESG ≈ <span className="tabular-nums">0,5</span> (contre{" "}
+              <span className="tabular-nums">0,99</span> pour la notation de crédit — Berg, Kölbel
+              &amp; Rigobon, MIT 2022). Un score n'est pas une vérité.
+            </li>
+            <li>
+              <span className="font-value text-ink">Scope 3 souvent absent.</span> 80–95 % des
+              émissions réelles se cachent chez fournisseurs et clients. Regardez le taux de
+              couverture carbone plus bas — il indique quelle part de votre portefeuille dispose de
+              données réelles.
+            </li>
+            <li>
+              <span className="font-value text-ink">ESG mesure des pratiques, pas l'activité.</span>{" "}
+              Un score élevé signifie « mieux géré que la moyenne du secteur », pas « aligné avec
+              vos valeurs ». Les exclusions sectorielles servent à cela.
+            </li>
           </ul>
-          <p className="text-caption text-ink-3 mt-3 leading-relaxed">
-            Le raccordement des données MSCI ESG a commencé : pour les fonds couverts, le score, la
-            date « as of » et l'intensité carbone WACI proviennent des fiches émetteurs (iShares /
-            BlackRock) et sont tracés par actif. Le reste de l'univers reste en notation
-            propriétaire Seedow le temps du raccordement — la source exacte est indiquée sur chaque
-            fiche.
-          </p>
+          <div className="mt-4 pt-3 border-t border-ink/10 flex flex-wrap gap-x-4 gap-y-1 text-caption">
+            <span className="text-ink-3 uppercase tracking-[0.12em]">Pour aller plus loin :</span>
+            <Link
+              to="/cours/$slug"
+              params={{ slug: "esg-cest-quoi" }}
+              className="text-ink hover:underline"
+            >
+              Qu'est-ce que l'ESG ?
+            </Link>
+            <Link
+              to="/cours/$slug"
+              params={{ slug: "greenwashing" }}
+              className="text-ink hover:underline"
+            >
+              Greenwashing
+            </Link>
+            <Link
+              to="/cours/$slug"
+              params={{ slug: "labels-isr-sfdr" }}
+              className="text-ink hover:underline"
+            >
+              Labels ISR &amp; SFDR
+            </Link>
+          </div>
         </div>
-
-        {/* Bloc 2 — Grille 3 piliers */}
-        <div className="border border-paper-3 p-5 bg-paper-2/30">
-          <p className="text-tag uppercase tracking-[0.15em] text-ink-3 font-medium mb-3">
-            02 · Grille — 3 piliers pondérés
-          </p>
-          <table className="w-full text-label">
-            <thead>
-              <tr className="text-tag uppercase tracking-[0.12em] text-ink-3">
-                <th className="text-left font-medium pb-2">Pilier</th>
-                <th className="text-right font-medium pb-2">Défaut</th>
-                <th className="text-right font-medium pb-2">Vos causes</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-paper-3">
-              {pillars.map((p) => {
-                const shifted = Math.abs(p.current - p.base) > 0.001;
-                return (
-                  <tr key={p.key} className="align-baseline">
-                    <td className="py-2 pr-2">
-                      <span className="font-value text-ink">{p.key}</span>
-                      <span className="text-ink-2 ml-2">{p.label}</span>
-                    </td>
-                    <td className="py-2 text-right tabular-nums text-ink-3">
-                      {(p.base * 100).toFixed(0)}%
-                    </td>
-                    <td
-                      className={`py-2 text-right tabular-nums font-value ${shifted ? "text-highlight-1" : "text-ink"}`}
-                    >
-                      {(p.current * 100).toFixed(0)}%
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-          <p className="text-caption text-ink-3 mt-3 leading-relaxed">
-            Climat &amp; biodiversité renforcent E. Humain &amp; égalité renforcent S. Tech &amp;
-            circulaire penchent légèrement vers G. Si un pilier manque sur un actif, on retombe sur
-            son score agrégé pour ce pilier — dégradation douce plutôt qu'exclusion.
-          </p>
-        </div>
-      </div>
-
-      {/* Bloc 3 — Comment on construit */}
-      <div className="mt-6 border border-paper-3 p-5">
-        <p className="text-tag uppercase tracking-[0.15em] text-ink-3 font-medium mb-3">
-          03 · Comment la grille entre dans le portefeuille
-        </p>
-        <ol className="grid md:grid-cols-2 gap-x-8 gap-y-3 text-label text-ink-2 leading-relaxed">
-          <li>
-            <span className="font-value text-ink">Exclusions dures.</span> Fossiles, armes, tabac,
-            jeux, tests animaux, fast-fashion : filtre binaire avant tout calcul. Aucun compromis
-            possible.
-          </li>
-          <li>
-            <span className="font-value text-ink">Best-in-class.</span> Dans chaque classe d'actifs,
-            on ne garde que la moitié la mieux notée (au-dessus de la médiane) sur le score
-            composite pondéré par vos causes. Une classe de 3 actifs ou moins est conservée entière
-            pour ne pas l'assécher.
-          </li>
-          <li>
-            <span className="font-value text-ink">Plancher portefeuille.</span> Score ESG moyen
-            pondéré ≥ <span className="tabular-nums font-value">{MIN_PORTFOLIO_ESG}/100</span>. Si
-            l'optimiseur ne l'atteint pas sous vos contraintes, on lève le plancher et on l'affiche
-            honnêtement.
-          </li>
-          <li>
-            <span className="font-value text-ink">Tilts par conviction.</span> Activer une cause
-            réajuste les poids des piliers E/S/G (voir grille ci-dessus). Son intensité (0–100 %)
-            oriente en plus l'optimiseur vers les actifs exposés à cette cause — un tilt borné, qui
-            n'entre pas dans le rendement attendu affiché.
-          </li>
-        </ol>
-      </div>
-
-      {/* Bloc 4 — Limites */}
-      <div className="mt-6 border border-ink/20 bg-ink/[0.03] p-5">
-        <p className="text-tag uppercase tracking-[0.15em] text-ink font-medium mb-3">
-          04 · Ce que la note ne dit pas
-        </p>
-        <ul className="space-y-2 text-label text-ink-2 leading-relaxed">
-          <li>
-            <span className="font-value text-ink">Les agences ne sont pas d'accord.</span>{" "}
-            Corrélation entre notations ESG ≈ <span className="tabular-nums">0,5</span> (contre{" "}
-            <span className="tabular-nums">0,99</span> pour la notation de crédit — Berg, Kölbel
-            &amp; Rigobon, MIT 2022). Un score n'est pas une vérité.
-          </li>
-          <li>
-            <span className="font-value text-ink">Scope 3 souvent absent.</span> 80–95 % des
-            émissions réelles se cachent chez fournisseurs et clients. Regardez le taux de
-            couverture carbone plus bas — il indique quelle part de votre portefeuille dispose de
-            données réelles.
-          </li>
-          <li>
-            <span className="font-value text-ink">ESG mesure des pratiques, pas l'activité.</span>{" "}
-            Un score élevé signifie « mieux géré que la moyenne du secteur », pas « aligné avec vos
-            valeurs ». Les exclusions sectorielles servent à cela.
-          </li>
-        </ul>
-        <div className="mt-4 pt-3 border-t border-ink/10 flex flex-wrap gap-x-4 gap-y-1 text-caption">
-          <span className="text-ink-3 uppercase tracking-[0.12em]">Pour aller plus loin :</span>
-          <Link
-            to="/cours/$slug"
-            params={{ slug: "esg-cest-quoi" }}
-            className="text-ink hover:underline"
-          >
-            Qu'est-ce que l'ESG ?
-          </Link>
-          <Link
-            to="/cours/$slug"
-            params={{ slug: "greenwashing" }}
-            className="text-ink hover:underline"
-          >
-            Greenwashing
-          </Link>
-          <Link
-            to="/cours/$slug"
-            params={{ slug: "labels-isr-sfdr" }}
-            className="text-ink hover:underline"
-          >
-            Labels ISR &amp; SFDR
-          </Link>
-        </div>
-      </div>
       </details>
     </section>
   );

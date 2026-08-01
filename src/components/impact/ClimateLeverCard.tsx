@@ -2,10 +2,7 @@ import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { EASE_REVEAL } from "@/lib/motion";
-import {
-  estimateClimateExposureLever,
-  type LeverHolding,
-} from "@/lib/impact/lever";
+import { estimateClimateExposureLever, type LeverHolding } from "@/lib/impact/lever";
 
 /**
  * Levier « exposition climat » — audit .lovable/plan.md §12. Câble la fonction
