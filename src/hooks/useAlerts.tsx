@@ -165,8 +165,9 @@ async function fetchAlerts(
   portfolio: ReturnType<typeof useActivePortfolio>["portfolio"],
   exclusions: string[],
   causes: string[],
+  greenwashingSignals: ReadonlyMap<string, GreenwashingSignalInput>,
 ): Promise<SmartAlert[]> {
-  const candidates = deriveCandidates({ portfolio, exclusions, causes });
+  const candidates = deriveCandidates({ portfolio, exclusions, causes, greenwashingSignals });
 
   if (candidates.length > 0) {
     const payload = candidates.map((c) => ({
@@ -211,7 +212,25 @@ async function fetchAlerts(
 export function useAlerts(): State {
   const { user } = useAuth();
   const { portfolio, loading: pfLoading } = useActivePortfolio();
+  const { assets, loading: universeLoading } = useAssetUniverse();
   const queryClient = useQueryClient();
+
+  // Signaux de greenwashing par actif détenu, dérivés de l'univers ESG déjà
+  // évalué (assessGreenwashingRisk) — aucune nouvelle heuristique ici.
+  const greenwashingSignals = useMemo(() => {
+    const holdingIds = new Set((portfolio?.holdings ?? []).map((h) => h.id));
+    const map = new Map<string, GreenwashingSignalInput>();
+    for (const a of assets) {
+      if (!holdingIds.has(a.id)) continue;
+      if (a.greenwashing_risk === "low") continue;
+      map.set(a.id, {
+        assetId: a.id,
+        risk: a.greenwashing_risk,
+        reasonKey: a.greenwashing_reasons[0] ?? null,
+      });
+    }
+    return map;
+  }, [assets, portfolio]);
 
   // 1) Métadonnées portefeuille — sans portefeuille actif, il n'y a rien à
   // charger (exclusions/causes restent vides), donc la requête reste désactivée
@@ -229,16 +248,15 @@ export function useAlerts(): State {
   // (même queryKey) entre AlertsBell et CommandPalette — auparavant chacun
   // relançait indépendamment ce fetch + upsert à chaque montage.
   const alertsQuery = useQuery({
-    queryKey: ["alerts", user?.id, portfolio?.id, exclusions, causes],
-    queryFn: () => fetchAlerts(user!.id, portfolio, exclusions, causes),
-    enabled: !!user && loadedMeta,
+    queryKey: ["alerts", user?.id, portfolio?.id, exclusions, causes, greenwashingSignals.size],
+    queryFn: () => fetchAlerts(user!.id, portfolio, exclusions, causes, greenwashingSignals),
+    enabled: !!user && loadedMeta && !universeLoading,
   });
   const rows = useMemo(() => alertsQuery.data ?? [], [alertsQuery.data]);
 
-  const sorted = useMemo(
-    () => [...rows].sort((a, b) => SEVERITY_RANK[b.severity] - SEVERITY_RANK[a.severity]),
-    [rows],
-  );
+  // Tri de priorité (§14) : greenwashing sur actifs détenus en tête, puis sévérité,
+  // puis fraîcheur — fonction pure testée (esg-alert.ts).
+  const sorted = useMemo(() => sortAlertsByPriority(rows), [rows]);
 
   const unread = sorted.filter((a) => !a.readAt && a.severity !== "info").length;
 
