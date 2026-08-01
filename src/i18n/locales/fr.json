@@ -84,8 +84,8 @@
       "no_account_note": "Sans compte · 2 minutes · résultat immédiat",
       "trust_certified": "Impact certifié",
       "trust_no_greenwashing": "Zéro greenwashing",
-      "cta_new_account": "Créer mon compte — gratuit",
-      "cta_guest": "Simuler sans compte",
+      "cta_new_account": "Créer mon compte",
+      "cta_guest": "Simuler sans compte · 2 min",
       "trust_line": "Sans carte bancaire. Sans engagement. 30 secondes."
     },
     "problem": {

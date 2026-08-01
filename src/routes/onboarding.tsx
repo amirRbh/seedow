@@ -325,7 +325,7 @@ function Onboarding() {
   };
 
   return (
-    <div className="min-h-screen bg-ink text-paper">
+    <div className="min-h-screen bg-paper text-ink">
       <AnimatePresence mode="wait">
         {phase === "intro" && <Intro key="intro" onStart={() => setPhase("steps")} />}
         {phase === "steps" && (
@@ -426,7 +426,7 @@ function NamePortfolioStep({
       <div className="flex items-center justify-between px-6 pt-6">
         <button
           onClick={onBack}
-          className="w-11 h-11 rounded-full flex items-center justify-center text-paper/50 hover:text-paper transition-colors"
+          className="w-11 h-11 rounded-full flex items-center justify-center text-ink-3 hover:text-ink transition-colors"
           aria-label={t("onboarding.step.back")}
         >
           <svg
@@ -440,13 +440,13 @@ function NamePortfolioStep({
             <path d="M15 6l-6 6 6 6" />
           </svg>
         </button>
-        <span className="text-caption text-paper/40 font-semibold">
+        <span className="text-caption text-ink-3 font-semibold">
           {t("onboarding.naming.title")}
         </span>
       </div>
       <div className="px-6 pt-12 pb-12 max-w-md mx-auto w-full flex-1">
-        <h2 className="font-value text-3xl text-paper">{t("onboarding.naming.question")}</h2>
-        <p className="text-body-sm text-paper/60 mt-2">
+        <h2 className="font-value text-3xl text-ink">{t("onboarding.naming.question")}</h2>
+        <p className="text-body-sm text-ink-2 mt-2">
           <Trans i18nKey="onboarding.naming.description">
             Donne-lui un nom qui te parle — par exemple <em>Climat</em>, <em>Retraite</em>,{" "}
             <em>Tech responsable</em>…
@@ -458,13 +458,13 @@ function NamePortfolioStep({
           onChange={(e) => setName(e.target.value.slice(0, 40))}
           placeholder={t("onboarding.naming.placeholder")}
           autoFocus
-          className="mt-8 w-full px-4 py-4 rounded-2xl border border-paper/15 bg-paper/5 text-paper text-[16px] placeholder-paper/30 focus:border-paper/40 focus:outline-none transition-colors"
+          className="mt-8 w-full px-4 py-4 rounded-2xl border border-paper-3 bg-paper-2 text-ink text-[16px] placeholder-ink-3 focus:border-ink-3 focus:outline-none transition-colors"
         />
-        <p className="mt-2 text-tag text-paper/40 text-right">{name.length}/40</p>
+        <p className="mt-2 text-tag text-ink-3 text-right">{name.length}/40</p>
 
         <button
           onClick={() => onConfirm(name.trim() || t("onboarding.naming.default_name"))}
-          className="mt-8 w-full py-4 rounded-full bg-paper text-ink font-semibold text-sm hover:bg-highlight-5 hover:text-highlight-1 transition-colors"
+          className="mt-8 w-full py-4 rounded-full bg-ink text-paper font-semibold text-sm hover:opacity-90 transition-colors"
         >
           {t("onboarding.naming.validate")}
         </button>
@@ -548,7 +548,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
       <div className="flex items-center justify-between px-6 pt-6">
         <button
           onClick={onBack}
-          className="w-11 h-11 rounded-full flex items-center justify-center text-paper/50 hover:text-paper transition-colors"
+          className="w-11 h-11 rounded-full flex items-center justify-center text-ink-3 hover:text-ink transition-colors"
           aria-label={t("onboarding.step.back")}
         >
           <svg
@@ -562,7 +562,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
             <path d="M15 6l-6 6 6 6" />
           </svg>
         </button>
-        <span className="text-caption text-paper/40 font-semibold">
+        <span className="text-caption text-ink-3 font-semibold">
           {t("onboarding.account.eyebrow")}
         </span>
       </div>
@@ -576,7 +576,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
           <div className="w-9 h-9 rounded-full bg-highlight-2 flex items-center justify-center flex-shrink-0 mt-0.5">
             <svg
               viewBox="0 0 24 24"
-              className="w-4 h-4 text-paper"
+              className="w-4 h-4 text-ink"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
@@ -586,17 +586,17 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
               <path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0 1 1 21 12Z" />
             </svg>
           </div>
-          <div className="flex-1 bg-paper/10 text-paper text-body-sm rounded-2xl rounded-bl-sm px-4 py-3 leading-relaxed">
+          <div className="flex-1 bg-paper-2 text-ink text-body-sm rounded-2xl rounded-bl-sm px-4 py-3 leading-relaxed">
             {t("onboarding.account.ethi_message")}
           </div>
         </motion.div>
 
         {pendingEmail ? (
-          <div className="mt-8 flex items-start gap-3 rounded-2xl border border-paper/15 bg-paper/5 px-4 py-4">
+          <div className="mt-8 flex items-start gap-3 rounded-2xl border border-paper-3 bg-paper-2 px-4 py-4">
             <div className="w-9 h-9 rounded-full bg-highlight-2 flex items-center justify-center flex-shrink-0 mt-0.5">
               <svg
                 viewBox="0 0 24 24"
-                className="w-4 h-4 text-paper"
+                className="w-4 h-4 text-ink"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
@@ -609,15 +609,15 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
               </svg>
             </div>
             <div className="min-w-0">
-              <p className="text-body-sm text-paper leading-relaxed">
+              <p className="text-body-sm text-ink leading-relaxed">
                 {t("onboarding.account.verify_email")}
               </p>
-              <p className="mt-1.5 text-label text-paper/60 break-all">{pendingEmail}</p>
+              <p className="mt-1.5 text-label text-ink-2 break-all">{pendingEmail}</p>
             </div>
           </div>
         ) : (
           <>
-            <h2 className="font-value text-2xl text-paper pt-8">
+            <h2 className="font-value text-2xl text-ink pt-8">
               {waitlistDone !== null
                 ? t("onboarding.account.title_waitlisted")
                 : mode === "login"
@@ -626,7 +626,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
                     ? t("onboarding.account.title_beta_full")
                     : t("onboarding.account.title_signup")}
             </h2>
-            <p className="text-label text-paper/60 mt-1.5">
+            <p className="text-label text-ink-2 mt-1.5">
               {waitlistDone !== null
                 ? t("onboarding.account.desc_waitlisted", { position: waitlistDone })
                 : betaFull
@@ -638,7 +638,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
               <>
                 <button
                   onClick={onGoogle}
-                  className="mt-6 w-full py-2.5 rounded-xl border border-paper/20 hover:border-paper/40 hover:bg-paper/5 transition-colors text-body-sm font-medium text-paper flex items-center justify-center gap-2"
+                  className="mt-6 w-full py-2.5 rounded-xl border border-paper-3 hover:border-ink-3 hover:bg-paper-2 transition-colors text-body-sm font-medium text-ink flex items-center justify-center gap-2"
                 >
                   <svg viewBox="0 0 24 24" className="w-4 h-4">
                     <path
@@ -662,9 +662,9 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
                 </button>
 
                 <div className="my-4 flex items-center gap-3">
-                  <div className="flex-1 h-px bg-paper/15" />
-                  <span className="text-tag uppercase tracking-[0.15em] text-paper/40">ou</span>
-                  <div className="flex-1 h-px bg-paper/15" />
+                  <div className="flex-1 h-px bg-paper-3" />
+                  <span className="text-tag uppercase tracking-[0.15em] text-ink-3">ou</span>
+                  <div className="flex-1 h-px bg-paper-3" />
                 </div>
               </>
             )}
@@ -677,7 +677,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
                     placeholder={t("onboarding.account.firstname_placeholder")}
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
-                    className="w-full px-3.5 py-3 rounded-xl border border-paper/15 bg-paper/5 text-body-sm text-paper placeholder-paper/40 focus:border-paper/40 focus:outline-none transition-colors"
+                    className="w-full px-3.5 py-3 rounded-xl border border-paper-3 bg-paper-2 text-body-sm text-ink placeholder-ink-3 focus:border-ink-3 focus:outline-none transition-colors"
                   />
                 )}
                 <input
@@ -687,7 +687,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   autoComplete="email"
-                  className="w-full px-3.5 py-3 rounded-xl border border-paper/15 bg-paper/5 text-body-sm text-paper placeholder-paper/40 focus:border-paper/40 focus:outline-none transition-colors"
+                  className="w-full px-3.5 py-3 rounded-xl border border-paper-3 bg-paper-2 text-body-sm text-ink placeholder-ink-3 focus:border-ink-3 focus:outline-none transition-colors"
                 />
                 {!betaFull && (
                   <input
@@ -698,7 +698,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
                     required
                     minLength={8}
                     autoComplete={mode === "signup" ? "new-password" : "current-password"}
-                    className="w-full px-3.5 py-3 rounded-xl border border-paper/15 bg-paper/5 text-body-sm text-paper placeholder-paper/40 focus:border-paper/40 focus:outline-none transition-colors"
+                    className="w-full px-3.5 py-3 rounded-xl border border-paper-3 bg-paper-2 text-body-sm text-ink placeholder-ink-3 focus:border-ink-3 focus:outline-none transition-colors"
                   />
                 )}
 
@@ -707,7 +707,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3.5 rounded-full bg-paper text-ink font-semibold text-body-sm hover:bg-highlight-5 hover:text-highlight-1 transition-colors disabled:opacity-40 disabled:cursor-not-allowed mt-2"
+                  className="w-full py-3.5 rounded-full bg-ink text-paper font-semibold text-body-sm hover:opacity-90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed mt-2"
                 >
                   {loading
                     ? t("onboarding.account.waiting")
@@ -721,14 +721,14 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
             )}
 
             {waitlistDone === null && (
-              <p className="mt-5 text-label text-paper/50 text-center">
+              <p className="mt-5 text-label text-ink-3 text-center">
                 {mode === "signup"
                   ? t("onboarding.account.already_account") + " "
                   : t("onboarding.account.no_account") + " "}
                 <button
                   type="button"
                   onClick={() => setMode(mode === "signup" ? "login" : "signup")}
-                  className="text-paper underline-offset-4 hover:underline font-medium"
+                  className="text-ink underline-offset-4 hover:underline font-medium"
                 >
                   {mode === "signup"
                     ? t("onboarding.account.link_login")
@@ -784,7 +784,7 @@ function Intro({ onStart }: { onStart: () => void }) {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
-        className="text-tag uppercase tracking-[0.18em] text-paper/50 font-medium"
+        className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium"
       >
         {t("onboarding.intro.eyebrow")}
       </motion.p>
@@ -792,7 +792,7 @@ function Intro({ onStart }: { onStart: () => void }) {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.8 }}
-        className="font-value text-4xl text-paper text-center mt-3 leading-tight max-w-md"
+        className="font-value text-4xl text-ink text-center mt-3 leading-tight max-w-md"
       >
         {t("onboarding.intro.title")}
       </motion.h1>
@@ -800,7 +800,7 @@ function Intro({ onStart }: { onStart: () => void }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.1 }}
-        className="text-body-sm text-paper/60 text-center mt-5 max-w-sm leading-relaxed"
+        className="text-body-sm text-ink-2 text-center mt-5 max-w-sm leading-relaxed"
       >
         {t("onboarding.intro.description")}
       </motion.p>
@@ -817,11 +817,11 @@ function Intro({ onStart }: { onStart: () => void }) {
           { n: "02", l: t("onboarding.intro.step_02") },
           { n: "03", l: t("onboarding.intro.step_03") },
         ].map((s, i) => (
-          <li key={s.n} className={`border-t pt-2 ${i === 0 ? "border-paper" : "border-paper/15"}`}>
-            <p className="font-value text-tag tabular-nums tracking-widest text-paper/40">{s.n}</p>
+          <li key={s.n} className={`border-t pt-2 ${i === 0 ? "border-paper" : "border-paper-3"}`}>
+            <p className="font-value text-tag tabular-nums tracking-widest text-ink-3">{s.n}</p>
             <p
               className={`text-caption uppercase tracking-[0.16em] mt-1 ${
-                i === 0 ? "text-paper font-semibold" : "text-paper/50 font-medium"
+                i === 0 ? "text-ink font-semibold" : "text-ink-3 font-medium"
               }`}
             >
               {s.l}
@@ -835,7 +835,7 @@ function Intro({ onStart }: { onStart: () => void }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.4 }}
         onClick={onStart}
-        className="mt-12 px-7 py-3 rounded bg-paper text-ink font-medium text-body-sm tracking-wide hover:bg-paper-2 transition-colors flex items-center gap-2"
+        className="mt-12 px-7 py-3 rounded bg-ink text-paper font-medium text-body-sm tracking-wide hover:opacity-90 transition-colors flex items-center gap-2"
       >
         {t("onboarding.intro.start")}
         <svg
@@ -853,7 +853,7 @@ function Intro({ onStart }: { onStart: () => void }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.6 }}
-        className="mt-4 text-caption uppercase tracking-[0.16em] text-paper/40"
+        className="mt-4 text-caption uppercase tracking-[0.16em] text-ink-3"
       >
         Sans compte · 2 min · aucun engagement
       </motion.p>
@@ -876,8 +876,8 @@ function StepExplainer({ stepId }: { stepId: (typeof STEPS)[number]["id"] }) {
   const { t } = useTranslation();
   const slug = EXPLAINER_COURSE[stepId];
   return (
-    <details className="group mt-4 rounded-2xl border border-white/15 bg-white/[0.04] px-4 py-3">
-      <summary className="flex items-center justify-between gap-3 cursor-pointer list-none text-caption font-semibold text-paper/70 hover:text-paper transition-colors">
+    <details className="group mt-4 rounded-2xl border border-paper-3 bg-paper-2 px-4 py-3">
+      <summary className="flex items-center justify-between gap-3 cursor-pointer list-none text-caption font-semibold text-ink-2 hover:text-ink transition-colors">
         <span>{t("onboarding.explainer.summary")}</span>
         <svg
           aria-hidden
@@ -894,7 +894,7 @@ function StepExplainer({ stepId }: { stepId: (typeof STEPS)[number]["id"] }) {
           <path d="m6 9 6 6 6-6" />
         </svg>
       </summary>
-      <p className="mt-3 text-body-sm leading-relaxed text-paper/70">
+      <p className="mt-3 text-body-sm leading-relaxed text-ink-2">
         {t(`onboarding.explainer.${stepId}`)}
       </p>
       <a
@@ -981,7 +981,7 @@ function Step({
       <div className="flex items-center justify-between px-6 pt-6 gap-4">
         <button
           onClick={onBack}
-          className="w-11 h-11 rounded-full flex items-center justify-center text-paper/50 hover:text-paper transition-colors"
+          className="w-11 h-11 rounded-full flex items-center justify-center text-ink-3 hover:text-ink transition-colors"
           aria-label={t("onboarding.step.back")}
         >
           <svg
@@ -1000,12 +1000,12 @@ function Step({
             <div
               key={i}
               className={`h-1 flex-1 rounded-full transition-all ${
-                i < stepIndex ? "bg-highlight-3" : i === stepIndex ? "bg-paper" : "bg-paper/15"
+                i < stepIndex ? "bg-highlight-3" : i === stepIndex ? "bg-ink" : "bg-paper-3"
               }`}
             />
           ))}
         </div>
-        <span className="text-caption text-paper/40 font-semibold min-w-[28px] text-right">
+        <span className="text-caption text-ink-3 font-semibold min-w-[28px] text-right">
           {t("onboarding.step.progress", { current: stepIndex + 1, total: totalSteps })}
         </span>
       </div>
@@ -1020,7 +1020,7 @@ function Step({
           <div className="w-9 h-9 rounded-full bg-highlight-2 flex items-center justify-center flex-shrink-0 mt-0.5">
             <svg
               viewBox="0 0 24 24"
-              className="w-4 h-4 text-paper"
+              className="w-4 h-4 text-ink"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
@@ -1030,7 +1030,7 @@ function Step({
               <path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0 1 1 21 12Z" />
             </svg>
           </div>
-          <div className="flex-1 bg-paper/10 text-paper text-body-sm rounded-2xl rounded-bl-sm px-4 py-3 leading-relaxed">
+          <div className="flex-1 bg-paper-2 text-ink text-body-sm rounded-2xl rounded-bl-sm px-4 py-3 leading-relaxed">
             {t(`onboarding.steps.${step.id}.ethiMessage`)}
           </div>
         </motion.div>
@@ -1039,7 +1039,7 @@ function Step({
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="font-value text-2xl text-paper pt-8"
+          className="font-value text-2xl text-ink pt-8"
         >
           {t(`onboarding.steps.${step.id}.question`)}
         </motion.h2>
@@ -1058,37 +1058,37 @@ function Step({
                 onClick={() => toggle(option.id)}
                 className={`w-full flex items-center gap-3 p-3.5 rounded-2xl border text-left transition-all ${
                   isSel
-                    ? "bg-paper text-ink border-paper"
-                    : "border-white/25 hover:bg-white/10 text-paper"
+                    ? "bg-ink text-paper border-ink"
+                    : "border-paper-3 hover:bg-paper-2 text-ink"
                 }`}
-                style={!isSel ? { backgroundColor: "rgba(255,255,255,0.06)" } : undefined}
+                style={!isSel ? { backgroundColor: "var(--paper-2)" } : undefined}
               >
                 <div
-                  className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0 ${isSel ? "bg-ink/10" : ""}`}
-                  style={!isSel ? { backgroundColor: "rgba(255,255,255,0.12)" } : undefined}
+                  className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0 ${isSel ? "bg-paper/15" : ""}`}
+                  style={!isSel ? { backgroundColor: "var(--paper-3)" } : undefined}
                 >
                   <StepOptionIcon icon={option.icon} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className={`text-sm font-semibold ${isSel ? "text-ink" : "text-paper"}`}>
+                  <p className={`text-sm font-semibold ${isSel ? "text-paper" : "text-ink"}`}>
                     {t(`onboarding.steps.${step.id}.${option.id}`)}
                   </p>
                   {step.id !== "exclusions" && (
-                    <p className={`text-caption mt-0.5 ${isSel ? "text-ink/60" : "text-paper/70"}`}>
+                    <p className={`text-caption mt-0.5 ${isSel ? "text-paper/70" : "text-ink-2"}`}>
                       {t(`onboarding.steps.${step.id}.${option.id}_desc`)}
                     </p>
                   )}
                 </div>
                 <div
                   className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                    isSel ? "bg-ink border-ink" : "border-white/50"
+                    isSel ? "bg-paper border-paper" : "border-paper-3"
                   }`}
                 >
                   {isSel && (
                     <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
                       <path
                         d="M1 4l3 3 5-6"
-                        stroke="white"
+                        stroke="var(--ink)"
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -1104,15 +1104,15 @@ function Step({
             <div className="pt-1">
               <label
                 htmlFor="onboarding-custom-amount"
-                className="block text-caption text-paper/50 mb-2"
+                className="block text-caption text-ink-3 mb-2"
               >
                 {t("onboarding.steps.amount.custom_label")}
               </label>
               <div
-                className="flex items-center gap-2 p-3.5 rounded-2xl border border-white/25"
-                style={{ backgroundColor: "rgba(255,255,255,0.06)" }}
+                className="flex items-center gap-2 p-3.5 rounded-2xl border border-paper-3"
+                style={{ backgroundColor: "var(--paper-2)" }}
               >
-                <span className="text-paper/60 text-lg" aria-hidden="true">
+                <span className="text-ink-2 text-lg" aria-hidden="true">
                   €
                 </span>
                 <input
@@ -1121,7 +1121,7 @@ function Step({
                   value={customAmount}
                   onChange={(e) => onCustomAmount(e.target.value)}
                   placeholder={t("onboarding.steps.amount.custom_placeholder")}
-                  className="flex-1 bg-transparent outline-none text-paper text-[16px] placeholder-paper/30"
+                  className="flex-1 bg-transparent outline-none text-ink text-[16px] placeholder-ink-3"
                 />
               </div>
             </div>
@@ -1129,12 +1129,12 @@ function Step({
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-ink via-ink to-transparent">
+      <div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-paper via-paper to-transparent">
         <div className="max-w-lg mx-auto">
           <button
             disabled={selected.length === 0}
             onClick={() => onComplete(selected)}
-            className="w-full py-4 rounded-full bg-paper text-ink font-semibold text-sm hover:bg-highlight-5 hover:text-highlight-1 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            className="w-full py-4 rounded-full bg-ink text-paper font-semibold text-sm hover:opacity-90 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           >
             {t("onboarding.step.continue")}
           </button>

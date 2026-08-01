@@ -229,8 +229,8 @@ function Ethi() {
   };
 
   return (
-    <div className="min-h-screen bg-ink text-paper flex flex-col">
-      <header className="px-5 pt-6 pb-3 border-b border-paper/5 safe-area-top">
+    <div className="min-h-screen bg-paper text-ink flex flex-col">
+      <header className="px-5 pt-6 pb-3 border-b border-paper-3 safe-area-top">
         <div className="flex items-center justify-between gap-3 max-w-lg mx-auto w-full">
           <div className="flex items-center gap-3 min-w-0">
             <div className="w-10 h-10 rounded-full bg-highlight-2 flex items-center justify-center flex-shrink-0">
@@ -247,7 +247,7 @@ function Ethi() {
               </svg>
             </div>
             <div className="min-w-0">
-              <p className="text-tag uppercase tracking-wider text-paper/40 font-semibold">
+              <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold">
                 {t("ethi.your_advisor")}
               </p>
               <h1 className="font-value text-2xl">Ethi</h1>
@@ -256,7 +256,7 @@ function Ethi() {
           <Link
             to="/reglages"
             aria-label={t("ethi.settings")}
-            className="flex items-center justify-center w-11 h-11 rounded-full border border-paper/15 text-paper/70 hover:text-paper hover:border-paper/40 transition-colors flex-shrink-0"
+            className="flex items-center justify-center w-11 h-11 rounded-full border border-paper-3 text-ink-2 hover:text-ink hover:border-ink-3 transition-colors flex-shrink-0"
           >
             <svg
               viewBox="0 0 24 24"
@@ -277,7 +277,7 @@ function Ethi() {
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-6 pb-44">
         <div className="max-w-lg mx-auto min-h-full flex flex-col justify-end space-y-4">
 
-          <div className="rounded-2xl border border-paper/15 bg-paper/5 px-4 py-2.5 flex items-start gap-2 text-caption leading-snug text-paper/70">
+          <div className="rounded-2xl border border-paper-3 bg-paper-2 px-4 py-2.5 flex items-start gap-2 text-caption leading-snug text-ink-2">
             <span
               className="inline-block w-1.5 h-1.5 rounded-full bg-gold mt-1.5 flex-shrink-0"
               aria-hidden
@@ -320,13 +320,13 @@ function Ethi() {
               e.preventDefault();
               send(input);
             }}
-            className="flex items-center gap-2 bg-paper/10 border border-paper/15 rounded-full px-4 py-2 backdrop-blur-xl"
+            className="flex items-center gap-2 bg-paper-2 border border-paper-3 rounded-full px-4 py-2 backdrop-blur-xl"
           >
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder={t("ethi.input_placeholder")}
-              className="flex-1 bg-transparent outline-none text-sm text-paper placeholder:text-paper/40 py-2"
+              className="flex-1 bg-transparent outline-none text-sm text-ink placeholder:text-ink-3 py-2"
               disabled={isLoading}
             />
             <button

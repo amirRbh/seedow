@@ -151,11 +151,15 @@ function Landing() {
               </Link>
             ) : (
               <>
-                <Link to="/onboarding" className="apple-btn-primary">
-                  {t("landing.hero.cta_new_account")}
-                </Link>
-                <Link to="/onboarding" search={{ guest: true }} className="apple-btn-secondary">
+                <Link
+                  to="/onboarding"
+                  search={{ guest: true }}
+                  className="apple-btn-primary"
+                >
                   {t("landing.hero.cta_guest")}
+                </Link>
+                <Link to="/auth" className="apple-btn-secondary">
+                  {t("landing.hero.cta_new_account")}
                 </Link>
               </>
             )}
@@ -165,28 +169,33 @@ function Landing() {
               {t("landing.hero.trust_line")}
             </p>
           )}
-
-          {/* Badge simulation — cadre attendu : Seedow simule, n'investit pas. */}
-          <div
-            className="mt-8 inline-flex items-center gap-2 px-4 py-2 text-body-sm text-[color:var(--apple-text-2)]"
-            style={{
-              background: "var(--paper-2)",
-              border: "1px solid var(--paper-3)",
-              borderRadius: 14,
-            }}
-          >
-            <span
-              aria-hidden
-              className="inline-block w-2 h-2 rounded-full flex-shrink-0"
-              style={{ background: "var(--ice)" }}
-            />
-            {t("landing.badge_simulation")}
-          </div>
         </div>
       </section>
 
+
       {/* SECTION — quick win : tester un fonds sans compte, la démo qui vend */}
       <EsgQuickCheck />
+
+      {/* Cadre honnête : Seedow simule, n'investit pas — après la démonstration de valeur */}
+      <div className="px-6 pb-4 -mt-6 flex justify-center">
+        <p
+          className="inline-flex items-center gap-2 px-4 py-2 text-body-sm text-[color:var(--apple-text-2)]"
+          style={{
+            background: "var(--paper-2)",
+            border: "1px solid var(--paper-3)",
+            borderRadius: 14,
+          }}
+        >
+          <span
+            aria-hidden
+            className="inline-block w-2 h-2 rounded-full flex-shrink-0"
+            style={{ background: "var(--ice)" }}
+          />
+          {t("landing.badge_simulation")}
+        </p>
+      </div>
+
+
 
       {/* SECTION — problème / stats */}
       <section style={{ background: "var(--apple-surface)" }} className="px-6 py-24 md:py-32">

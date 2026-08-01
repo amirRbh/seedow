@@ -97,7 +97,7 @@ export function MessageFeedback({ messageId }: { messageId: string }) {
         </svg>
       </FeedbackButton>
       {vote !== null && (
-        <span className="ml-1 text-caption text-paper/50">{t("ethi.feedback_thanks")}</span>
+        <span className="ml-1 text-caption text-ink-3">{t("ethi.feedback_thanks")}</span>
       )}
     </div>
   );
@@ -124,7 +124,7 @@ function FeedbackButton({
       className={cn(
         "flex items-center justify-center w-7 h-7 rounded-full transition-colors",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-paper/40",
-        active ? "text-paper" : "text-paper/40 hover:text-paper",
+        active ? "text-ink" : "text-ink-3 hover:text-ink",
       )}
     >
       {children}
