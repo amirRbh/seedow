@@ -5,6 +5,7 @@ import { useViewMode } from "@/hooks/useViewMode";
 import { PortfolioSelector } from "@/components/portfolio/PortfolioSelector";
 import { AlertsBell } from "@/components/alerts/AlertsBell";
 import { LanguageToggle } from "@/components/LanguageToggle";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
 interface TopBarProps {
