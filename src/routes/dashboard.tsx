@@ -11,7 +11,8 @@ import { formatCurrency, formatPercent } from "@/lib/format";
 import { useAuth } from "@/hooks/useAuth";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
-import { NextStepCard } from "@/components/dashboard/NextStepCard";
+import { ActionOfTheDayCard } from "@/components/dashboard/ActionOfTheDayCard";
+import { ExploreSection } from "@/components/dashboard/ExploreSection";
 import { WatchlistCard } from "@/components/dashboard/WatchlistCard";
 import { VoteTeaserCard } from "@/components/vote/VoteTeaserCard";
 import { ReveilTeaserCard } from "@/components/reveil/ReveilTeaserCard";
@@ -24,9 +25,7 @@ import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 import { RealInvestmentInterestCard } from "@/components/beta/RealInvestmentInterestCard";
 import { FeedbackButton } from "@/components/beta/FeedbackButton";
 import { ImpactMoment } from "@/components/impact/ImpactMoment";
-import { LearnIntroCard } from "@/components/dashboard/LearnIntroCard";
 import { GuestBanner } from "@/components/dashboard/GuestBanner";
-import { CompleteProfileBanner } from "@/components/dashboard/CompleteProfileBanner";
 import { UnderstandPortfolioCard } from "@/components/dashboard/UnderstandPortfolioCard";
 import { GuestDashboard } from "@/components/dashboard/GuestDashboard";
 import { clearGuestSimulation } from "@/lib/beta/guest";
@@ -140,11 +139,8 @@ function Dashboard() {
       <div className="max-w-lg mx-auto pb-28">
         <AppHeader eyebrow={greeting} title={userName} showPortfolioSelector />
 
-        {/* Profiling progressif — n'apparaît que si le profil est incomplet */}
-        <CompleteProfileBanner />
-
-        {/* 0. Accueil néophyte — onboarding pédagogique, dismissible */}
-        <LearnIntroCard />
+        {/* 0. L'action du jour — une seule carte prioritaire (audit .lovable/plan.md §11) */}
+        <ActionOfTheDayCard />
 
         {/* 1. Bloc valeur */}
         <motion.section
@@ -317,27 +313,14 @@ function Dashboard() {
           )}
         </motion.section>
 
-        {/* 2b. Comprends ton portefeuille — cours contextuels */}
-        {portfolio && holdings.length > 0 && (
-          <section className="px-5 pt-8">
-            <UnderstandPortfolioCard />
-          </section>
-        )}
-
-        {/* 3. Prochaine étape — une seule carte contextuelle */}
-        <NextStepCard />
-
-        {/* 3-Réveil. Le fil de conscience du jour — la surface de retour quotidien */}
-        <ReveilTeaserCard />
-
-        {/* 3a. Watchlist — boucle suivre → alerte → revenir */}
-        <WatchlistCard />
-
-        {/* 3a-bis. Un vote arrive — porte d'entrée vers Le Vote (Ton Argent Vote) */}
-        <VoteTeaserCard />
-
-        {/* 3b. Capture intention investissement réel */}
-        {portfolio && <RealInvestmentInterestCard />}
+        {/* 3. Modules secondaires — regroupés et repliés par défaut (audit .lovable/plan.md §11) */}
+        <ExploreSection>
+          {portfolio && holdings.length > 0 && <UnderstandPortfolioCard />}
+          <ReveilTeaserCard />
+          <WatchlistCard />
+          <VoteTeaserCard />
+          {portfolio && <RealInvestmentInterestCard />}
+        </ExploreSection>
 
         {/* 4. Lien Voir le détail */}
         <motion.section
