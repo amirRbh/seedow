@@ -26,7 +26,7 @@ export function TopBar({ onOpenCommand }: TopBarProps) {
     <header className="hidden md:flex sticky top-0 z-30 h-14 items-center justify-between bg-paper/95 backdrop-blur border-b border-paper-3 pl-5 pr-4">
       <div className="flex items-center gap-4">
         <Link
-          to="/reveil"
+          to="/dashboard"
           aria-label={t("rail_nav.seedow_home")}
           className="inline-flex items-center outline-none rounded-sm focus-visible:ring-2 focus-visible:ring-highlight-1"
         >

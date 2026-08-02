@@ -4,6 +4,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { cn } from "@/lib/utils";
 
 type IconKey =
+  | "home"
   | "portefeuille"
   | "analyse"
   | "ethi"
@@ -33,18 +34,19 @@ type NavItem = {
 export function RailNav() {
   const { t } = useTranslation();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  // Primaire = le core loop du produit : Voir (Réveil) → Agir (Vote) →
-  // son argent (Portefeuille), plus les deux surfaces de support (Découvrir,
-  // Ethi). Réveil est l'accueil.
+  // Primaire = l'app financière : l'Accueil (Dashboard, son argent) d'abord,
+  // puis le Portefeuille, Découvrir et Le Vote (le différenciateur). Le Réveil
+  // et Ethi n'ont pas besoin d'une entrée primaire : le Réveil vit comme carte
+  // sur l'Accueil, Ethi reste accessible en secondaire (et en bouton flottant
+  // sur mobile).
   const PRIMARY: NavItem[] = [
     {
-      key: "reveil",
-      path: "/reveil",
-      label: t("rail_nav.reveil"),
-      icon: "reveil",
-      shortcut: "g r",
+      key: "dashboard",
+      path: "/dashboard",
+      label: t("rail_nav.home"),
+      icon: "home",
+      shortcut: "g d",
     },
-    { key: "vote", path: "/vote", label: t("rail_nav.vote"), icon: "vote", shortcut: "g v" },
     {
       key: "portfolio",
       path: "/portfolio",
@@ -53,21 +55,22 @@ export function RailNav() {
       shortcut: "g p",
     },
     { key: "discover", path: "/discover", label: t("bottom_nav.explore"), icon: "decouvrir" },
-    { key: "ethi", path: "/ethi", label: t("rail_nav.ethi_assistant"), icon: "ethi" },
+    { key: "vote", path: "/vote", label: t("rail_nav.vote"), icon: "vote", shortcut: "g v" },
   ];
-  // Secondaire = tout ce qui n'est pas dans le loop. Les surfaces héritées du
-  // positionnement « robo-advisor » (Tableau de bord, Objectifs, Comparatif)
-  // sont rétrogradées ici : accessibles, mais plus jamais l'entrée principale.
+  // Secondaire = tout le reste, accessible sans encombrer l'entrée principale :
+  // Ethi, le Réveil (descendu), le profil, et les surfaces héritées (Objectifs,
+  // Comparatif…).
   const SECONDARY: NavItem[] = [
+    { key: "ethi", path: "/ethi", label: t("rail_nav.ethi_assistant"), icon: "ethi" },
+    {
+      key: "reveil",
+      path: "/reveil",
+      label: t("rail_nav.reveil"),
+      icon: "reveil",
+      shortcut: "g r",
+    },
     { key: "profil", path: "/profil", label: t("rail_nav.investor_profile"), icon: "profil" },
     { key: "wrapped", path: "/wrapped", label: t("rail_nav.wrapped"), icon: "wrapped" },
-    {
-      key: "dashboard",
-      path: "/dashboard",
-      label: t("rail_nav.home"),
-      icon: "portefeuille",
-      shortcut: "g d",
-    },
     {
       key: "objectifs",
       path: "/objectifs",
@@ -97,7 +100,7 @@ export function RailNav() {
     >
       {/* Marque compacte */}
       <Link
-        to="/reveil"
+        to="/dashboard"
         aria-label={t("rail_nav.seedow_home")}
         className="flex items-center justify-center w-10 h-10 mb-2 outline-none rounded-sm focus-visible:ring-2 focus-visible:ring-highlight-1"
       >
@@ -165,6 +168,14 @@ function NavIcon({ type }: { type: IconKey }) {
     strokeLinejoin: "round" as const,
   };
   switch (type) {
+    case "home":
+      return (
+        <svg {...common}>
+          <path d="M3 10.5 12 3l9 7.5" />
+          <path d="M5 9.5V21h14V9.5" />
+          <path d="M9.5 21v-6h5v6" />
+        </svg>
+      );
     case "portefeuille":
       return (
         <svg {...common}>
