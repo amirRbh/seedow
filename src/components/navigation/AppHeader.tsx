@@ -44,7 +44,7 @@ export function AppHeader({
     <header className="px-5 pt-6 pb-5">
       <div className="md:hidden flex items-center justify-between border-b border-paper-3 pb-3">
         <Link
-          to="/reveil"
+          to="/dashboard"
           aria-label={t("rail_nav.seedow_home")}
           className="inline-flex items-center outline-none rounded-sm focus-visible:ring-2 focus-visible:ring-highlight-1"
         >
@@ -54,6 +54,17 @@ export function AppHeader({
           <LanguageToggle />
           {!hideViewToggle && <ViewModeToggle />}
           <AlertsBell />
+          <Link
+            to="/profil"
+            aria-label={t("rail_nav.investor_profile")}
+            className={cn(
+              "flex items-center justify-center w-11 h-11 rounded-full border border-paper-3 text-ink-2",
+              "transition-colors duration-150 hover:text-ink hover:border-ink-3",
+              "outline-none focus-visible:ring-2 focus-visible:ring-highlight-1",
+            )}
+          >
+            <ProfileIcon />
+          </Link>
           {!hideSettings && (
             <Link
               to="/reglages"
@@ -135,6 +146,24 @@ function ViewModeToggle() {
         {t("view_mode.expert")}
       </button>
     </div>
+  );
+}
+
+function ProfileIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className="w-[18px] h-[18px]"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.8}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" />
+    </svg>
   );
 }
 
