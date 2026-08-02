@@ -250,6 +250,115 @@ export function ComparatifPanel() {
         cours mensuels ajustés (Yahoo Finance, arrêtés au 02/08/2026) ; TER issu du DIC de
         l&apos;émetteur.
       </p>
+      <p className="mt-2 text-caption text-ink-3 leading-relaxed">
+        {t("comparatif_panel.window_note")}
+      </p>
+
+      {/* À risque comparable — la seule comparaison qui ait un sens financier. */}
+      <div className="mt-10">
+        <div className="gold-rule mb-5" />
+        <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">
+          {t("comparatif_panel.risk_adjusted_title")}
+        </p>
+        <p className="text-label text-ink-2 leading-relaxed">
+          {t("comparatif_panel.risk_adjusted_body", {
+            bench: t(benchmark.labelKey),
+            vol: (seedow.volatility * 100).toFixed(1),
+          })}
+        </p>
+        <div className="mt-5 grid grid-cols-2 gap-4">
+          <KPIFigure
+            size="sm"
+            label={t("comparatif_panel.risk_adjusted_you")}
+            value={eur0(seedow10y)}
+            unit="€"
+            accent
+            hint={`${(seedow.expectedReturn * 100).toFixed(1)} % / an · vol ${(seedow.volatility * 100).toFixed(1)} %`}
+          />
+          <KPIFigure
+            size="sm"
+            label={t("comparatif_panel.risk_adjusted_bench", { bench: t(benchmark.labelKey) })}
+            value={refScaled10y !== null ? eur0(refScaled10y) : "n.d."}
+            unit="€"
+            hint={
+              refScaledReturn !== null
+                ? `${(refScaledReturn * 100).toFixed(1)} % / an · vol ${(seedow.volatility * 100).toFixed(1)} %`
+                : undefined
+            }
+          />
+        </div>
+        <div className="mt-4 border-t border-paper-3 pt-4 flex items-baseline justify-between gap-4">
+          <span className="text-caption uppercase tracking-wider text-ink-3">
+            {t("comparatif_panel.reward_risk")}
+          </span>
+          <span className="font-value text-label text-ink">
+            {rewardRisk.toFixed(2)}
+            <span className="text-ink-3">
+              {" "}
+              · {t(benchmark.labelKey)} {refRewardRisk !== null ? refRewardRisk.toFixed(2) : "n.d."}
+            </span>
+          </span>
+        </div>
+        <p className="mt-2 text-caption text-ink-3 leading-relaxed">
+          {t("comparatif_panel.reward_risk_note")}
+        </p>
+      </div>
+
+      {/* Le prix de l'alignement — nommé en euros, jamais dissimulé. */}
+      {deltaScaled10y !== null && (
+        <div className="mt-10 border border-paper-3 rounded-2xl p-5">
+          <p className="text-tag uppercase tracking-[0.22em] text-ink-3 font-semibold mb-2">
+            {t("comparatif_panel.price_title")}
+          </p>
+          <p className="text-label text-ink-2 leading-relaxed">
+            {t(
+              deltaScaled10y < 0 ? "comparatif_panel.price_cost" : "comparatif_panel.price_gain",
+              {
+                delta: eur0(Math.abs(deltaScaled10y)),
+                bench: t(benchmark.labelKey),
+                capital: eur0(capital),
+              },
+            )}
+          </p>
+        </div>
+      )}
+
+      {/* Scénario baissier — montrer la volatilité avant de la subir. */}
+      <div className="mt-10">
+        <div className="gold-rule mb-5" />
+        <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">
+          {t("comparatif_panel.downside_title")}
+        </p>
+        <p className="text-label text-ink-2 leading-relaxed">
+          {t("comparatif_panel.downside_body", {
+            bench: t(benchmark.labelKey),
+            drop: `−${(seedowDrop * 100).toFixed(0)}`,
+            capital: eur0(capital),
+          })}
+        </p>
+        <div className="mt-5 grid grid-cols-2 gap-4">
+          <KPIFigure
+            size="sm"
+            label={t("comparatif_panel.downside_you")}
+            value={eur0(seedowAfterDrop)}
+            unit="€"
+            accent
+            hint={`−${(seedowDrop * 100).toFixed(0)} %`}
+          />
+          <KPIFigure
+            size="sm"
+            label={t(benchmark.labelKey)}
+            value={eur0(refAfterDrop)}
+            unit="€"
+            hint="−30 %"
+          />
+        </div>
+        <p className="mt-3 text-caption text-ink-3 leading-relaxed">
+          {t("comparatif_panel.downside_note")}
+        </p>
+      </div>
+
+
 
 
       <div className="mt-8">
