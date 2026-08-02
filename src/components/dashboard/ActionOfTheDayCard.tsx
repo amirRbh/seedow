@@ -31,7 +31,9 @@ export function ActionOfTheDayCard() {
       (d) => d.tone === "caution" && d.action?.kind === "asset" && ownedIds.has(d.action.assetId),
     );
     const greenwashingAlert =
-      gw && gw.action?.kind === "asset" ? { assetId: gw.action.assetId, company: gw.company } : null;
+      gw && gw.action?.kind === "asset"
+        ? { assetId: gw.action.assetId, company: gw.company }
+        : null;
 
     const portfolioEmpty = !portfolio || portfolio.holdings.length === 0;
 

@@ -33,29 +33,10 @@ type NavItem = {
 export function RailNav() {
   const { t } = useTranslation();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  // Primaire = le core loop du produit : Voir (Réveil) → Agir (Vote) →
+  // son argent (Portefeuille), plus les deux surfaces de support (Découvrir,
+  // Ethi). Réveil est l'accueil.
   const PRIMARY: NavItem[] = [
-    {
-      key: "dashboard",
-      path: "/dashboard",
-      label: t("rail_nav.home"),
-      icon: "portefeuille",
-      shortcut: "g d",
-    },
-    {
-      key: "portfolio",
-      path: "/portfolio",
-      label: t("nav.portfolio"),
-      icon: "analyse",
-      shortcut: "g p",
-    },
-    {
-      key: "objectifs",
-      path: "/objectifs",
-      label: t("nav.objectives"),
-      icon: "objectifs",
-      shortcut: "g o",
-    },
-    { key: "discover", path: "/discover", label: t("bottom_nav.explore"), icon: "decouvrir" },
     {
       key: "reveil",
       path: "/reveil",
@@ -64,11 +45,36 @@ export function RailNav() {
       shortcut: "g r",
     },
     { key: "vote", path: "/vote", label: t("rail_nav.vote"), icon: "vote", shortcut: "g v" },
+    {
+      key: "portfolio",
+      path: "/portfolio",
+      label: t("nav.portfolio"),
+      icon: "analyse",
+      shortcut: "g p",
+    },
+    { key: "discover", path: "/discover", label: t("bottom_nav.explore"), icon: "decouvrir" },
     { key: "ethi", path: "/ethi", label: t("rail_nav.ethi_assistant"), icon: "ethi" },
   ];
+  // Secondaire = tout ce qui n'est pas dans le loop. Les surfaces héritées du
+  // positionnement « robo-advisor » (Tableau de bord, Objectifs, Comparatif)
+  // sont rétrogradées ici : accessibles, mais plus jamais l'entrée principale.
   const SECONDARY: NavItem[] = [
-    { key: "wrapped", path: "/wrapped", label: t("rail_nav.wrapped"), icon: "wrapped" },
     { key: "profil", path: "/profil", label: t("rail_nav.investor_profile"), icon: "profil" },
+    { key: "wrapped", path: "/wrapped", label: t("rail_nav.wrapped"), icon: "wrapped" },
+    {
+      key: "dashboard",
+      path: "/dashboard",
+      label: t("rail_nav.home"),
+      icon: "portefeuille",
+      shortcut: "g d",
+    },
+    {
+      key: "objectifs",
+      path: "/objectifs",
+      label: t("nav.objectives"),
+      icon: "objectifs",
+      shortcut: "g o",
+    },
     { key: "comparatif", path: "/comparatif", label: t("rail_nav.comparatif"), icon: "comparatif" },
     {
       key: "certificat",
@@ -91,7 +97,7 @@ export function RailNav() {
     >
       {/* Marque compacte */}
       <Link
-        to="/dashboard"
+        to="/reveil"
         aria-label={t("rail_nav.seedow_home")}
         className="flex items-center justify-center w-10 h-10 mb-2 outline-none rounded-sm focus-visible:ring-2 focus-visible:ring-highlight-1"
       >

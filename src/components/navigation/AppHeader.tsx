@@ -44,8 +44,8 @@ export function AppHeader({
     <header className="px-5 pt-6 pb-5">
       <div className="md:hidden flex items-center justify-between border-b border-paper-3 pb-3">
         <Link
-          to="/dashboard"
-          aria-label={t("nav.back_to_portfolio")}
+          to="/reveil"
+          aria-label={t("rail_nav.seedow_home")}
           className="inline-flex items-center outline-none rounded-sm focus-visible:ring-2 focus-visible:ring-highlight-1"
         >
           <span className="font-value text-lg text-ink tracking-tight">seedow</span>

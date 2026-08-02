@@ -144,11 +144,7 @@ function Landing() {
               </Link>
             ) : (
               <>
-                <Link
-                  to="/onboarding"
-                  search={{ guest: true }}
-                  className="apple-btn-primary"
-                >
+                <Link to="/onboarding" search={{ guest: true }} className="apple-btn-primary">
                   {t("landing.hero.cta_guest")}
                 </Link>
                 <Link to="/auth" className="apple-btn-secondary">
@@ -164,7 +160,6 @@ function Landing() {
           )}
         </div>
       </section>
-
 
       {/* SECTION — quick win : tester un fonds sans compte, la démo qui vend */}
       <EsgQuickCheck />
@@ -187,8 +182,6 @@ function Landing() {
           {t("landing.badge_simulation")}
         </p>
       </div>
-
-
 
       {/* SECTION — problème / stats */}
       <section style={{ background: "var(--apple-surface)" }} className="px-6 py-24 md:py-32">
@@ -323,9 +316,21 @@ function Landing() {
 
           <div className="grid md:grid-cols-3 gap-10 mt-16 text-left">
             {[
-              { num: t("landing.how.step1_num"), title: t("landing.how.step1_title"), desc: t("landing.how.step1_desc") },
-              { num: t("landing.how.step2_num"), title: t("landing.how.step2_title"), desc: t("landing.how.step2_desc") },
-              { num: t("landing.how.step3_num"), title: t("landing.how.step3_title"), desc: t("landing.how.step3_desc") },
+              {
+                num: t("landing.how.step1_num"),
+                title: t("landing.how.step1_title"),
+                desc: t("landing.how.step1_desc"),
+              },
+              {
+                num: t("landing.how.step2_num"),
+                title: t("landing.how.step2_title"),
+                desc: t("landing.how.step2_desc"),
+              },
+              {
+                num: t("landing.how.step3_num"),
+                title: t("landing.how.step3_title"),
+                desc: t("landing.how.step3_desc"),
+              },
             ].map((step) => (
               <div key={step.num}>
                 <div
@@ -363,11 +368,7 @@ function Landing() {
                   accent
                   hint={t("comparatif_panel.on_invested", { amount: "10 000" })}
                 />
-                <KPIFigure
-                  size="sm"
-                  label={t("comparatif_panel.impact_score")}
-                  value="74 / 100"
-                />
+                <KPIFigure size="sm" label={t("comparatif_panel.impact_score")} value="74 / 100" />
               </div>
             </div>
           </div>
