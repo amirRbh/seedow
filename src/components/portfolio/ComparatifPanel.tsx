@@ -220,6 +220,12 @@ export function ComparatifPanel() {
       <p className="mt-3 text-caption text-ink-3 leading-relaxed">
         {t("comparatif_panel.projection_disclaimer")}
       </p>
+      <p className="mt-2 text-caption text-ink-3 leading-relaxed">
+        Référence : {ref.name} ({ref.ticker}). Rendement et volatilité annualisés sur 10 ans de
+        cours mensuels ajustés (Yahoo Finance, arrêtés au 02/08/2026) ; TER issu du DIC de
+        l&apos;émetteur.
+      </p>
+
 
       <div className="mt-8">
         <div className="gold-rule mb-5" />
