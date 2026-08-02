@@ -57,11 +57,12 @@ export function RailNav() {
     { key: "discover", path: "/discover", label: t("bottom_nav.explore"), icon: "decouvrir" },
     { key: "vote", path: "/vote", label: t("rail_nav.vote"), icon: "vote", shortcut: "g v" },
   ];
-  // Secondaire = tout le reste, accessible sans encombrer l'entrée principale :
-  // Ethi, le Réveil (descendu), le profil, et les surfaces héritées (Objectifs,
-  // Comparatif…).
+  // Secondaire = 4 portes d'entrée seulement. Les surfaces annexes (Objectifs,
+  // Comparatif, Certificat, Bilan, Méthodologie, Réglages) ne disparaissent pas :
+  // elles sont regroupées dans le hub « Mon compte » et dans « Apprendre ».
   const SECONDARY: NavItem[] = [
     { key: "ethi", path: "/ethi", label: t("rail_nav.ethi_assistant"), icon: "ethi" },
+    { key: "cours", path: "/cours", label: t("rail_nav.learn"), icon: "cours" },
     {
       key: "reveil",
       path: "/reveil",
@@ -69,29 +70,7 @@ export function RailNav() {
       icon: "reveil",
       shortcut: "g r",
     },
-    { key: "profil", path: "/profil", label: t("rail_nav.investor_profile"), icon: "profil" },
-    { key: "wrapped", path: "/wrapped", label: t("rail_nav.wrapped"), icon: "wrapped" },
-    {
-      key: "objectifs",
-      path: "/objectifs",
-      label: t("nav.objectives"),
-      icon: "objectifs",
-      shortcut: "g o",
-    },
-    { key: "comparatif", path: "/comparatif", label: t("rail_nav.comparatif"), icon: "comparatif" },
-    {
-      key: "certificat",
-      path: "/certificat",
-      label: t("rail_nav.certificate"),
-      icon: "certificat",
-    },
-    { key: "cours", path: "/cours", label: t("rail_nav.courses"), icon: "cours" },
-    {
-      key: "methodologie",
-      path: "/methodologie",
-      label: t("nav.methodology"),
-      icon: "methodologie",
-    },
+    { key: "profil", path: "/profil", label: t("rail_nav.account"), icon: "profil" },
   ];
   return (
     <aside
