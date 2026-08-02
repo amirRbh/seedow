@@ -32,7 +32,7 @@ export const Route = createFileRoute("/hooks/recompute-risk-model")({
 
         const { data: assets, error: aErr } = await supabaseAdmin
           .from("assets")
-          .select("id, ticker")
+          .select("id, ticker, asset_class")
           .eq("is_active", true);
         if (aErr) {
           return json({ error: `assets: ${aErr.message}` }, 500);
@@ -61,7 +61,10 @@ export const Route = createFileRoute("/hooks/recompute-risk-model")({
           );
         }
 
-        const { stats, covariance, skipped, diagnostics } = buildRiskModel(pricesByAsset);
+        const groups = new Map<string, string>(
+          targets.map((a) => [a.id, a.asset_class as string]),
+        );
+        const { stats, covariance, skipped, diagnostics } = buildRiskModel(pricesByAsset, groups);
 
         let assetsUpdated = 0;
         for (const [id, s] of stats) {

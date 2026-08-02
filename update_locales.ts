@@ -733,6 +733,54 @@ const reveilEn = {
   teaser: { count: "{{n}} to see", cta: "Open the Morning Read" },
 };
 
+const comparatifFr = {
+  reward_risk: "Rendement / risque",
+  reward_risk_note: "Rendement attendu ÷ volatilité. Plus haut = mieux payé pour le risque pris.",
+  risk_adjusted_title: "À risque comparable",
+  risk_adjusted_body:
+    "Comparer un portefeuille multi-actifs à un indice 100 % actions sans corriger le risque ne veut rien dire : on perd toujours en marché haussier, on gagne toujours en marché baissier. Ci-dessous, {{bench}} est ramené à ta volatilité ({{vol}} %) — le reste du capital n'est pas rémunéré.",
+  risk_adjusted_bench: "{{bench}} ramené à ton risque",
+  risk_adjusted_you: "Ton portefeuille",
+  price_title: "Le prix de l'alignement",
+  price_cost:
+    "À risque comparable, ton portefeuille projette {{delta}} € de MOINS que {{bench}} sur 10 ans, pour {{capital}} € investis. C'est le coût de tes contraintes d'exclusion et d'impact — on ne le cache pas.",
+  price_gain:
+    "À risque comparable, ton portefeuille projette {{delta}} € de PLUS que {{bench}} sur 10 ans, pour {{capital}} € investis.",
+  downside_title: "Si l'année tourne mal",
+  downside_body:
+    "Une baisse de 30 % sur {{bench}} correspondrait, à volatilité proportionnelle, à environ {{drop}} % sur ton portefeuille. Ce qu'il resterait de {{capital}} € :",
+  downside_you: "Ton portefeuille",
+  downside_bench: "{{bench}}",
+  downside_note:
+    "Estimation proportionnelle aux volatilités, pas une prévision. Un portefeuille moins volatil baisse en général moins fort — il ne baisse pas jamais.",
+  window_note:
+    "Rendements attendus estimés sur l'historique de cours réel disponible (fenêtre glissante de 2 ans), avec shrinkage de James-Stein plafonné et ancrage par classe d'actifs. Une fenêtre courte surestime les classes récemment porteuses.",
+};
+
+const comparatifEn = {
+  reward_risk: "Return / risk",
+  reward_risk_note: "Expected return ÷ volatility. Higher = better paid for the risk taken.",
+  risk_adjusted_title: "At comparable risk",
+  risk_adjusted_body:
+    "Comparing a multi-asset portfolio to a 100% equity index without adjusting for risk is meaningless: you always lose in a bull market and always win in a bear one. Below, {{bench}} is scaled down to your volatility ({{vol}}%) — the remaining capital earns nothing.",
+  risk_adjusted_bench: "{{bench}} scaled to your risk",
+  risk_adjusted_you: "Your portfolio",
+  price_title: "The price of alignment",
+  price_cost:
+    "At comparable risk, your portfolio projects {{delta}} € LESS than {{bench}} over 10 years, on {{capital}} € invested. That is the cost of your exclusions and impact constraints — we do not hide it.",
+  price_gain:
+    "At comparable risk, your portfolio projects {{delta}} € MORE than {{bench}} over 10 years, on {{capital}} € invested.",
+  downside_title: "If the year goes badly",
+  downside_body:
+    "A 30% drop on {{bench}} would translate, proportionally to volatility, into roughly {{drop}}% on your portfolio. What would be left of {{capital}} €:",
+  downside_you: "Your portfolio",
+  downside_bench: "{{bench}}",
+  downside_note:
+    "Proportional estimate based on volatilities, not a forecast. A less volatile portfolio usually falls less — it does not never fall.",
+  window_note:
+    "Expected returns estimated on the real price history available (rolling 2-year window), with capped James-Stein shrinkage anchored per asset class. A short window overstates recently strong asset classes.",
+};
+
 const mergedFr = deepMerge(fr, {
   landing: { rayon_x: rayonXFr },
   dashboard: dashboardFr,
@@ -744,6 +792,7 @@ const mergedFr = deepMerge(fr, {
   vote: voteFr,
   wrapped: wrappedFr,
   reveil: reveilFr,
+  comparatif_panel: comparatifFr,
 });
 const mergedEn = deepMerge(en, {
   landing: { rayon_x: rayonXEn },
@@ -756,6 +805,7 @@ const mergedEn = deepMerge(en, {
   vote: voteEn,
   wrapped: wrappedEn,
   reveil: reveilEn,
+  comparatif_panel: comparatifEn,
 });
 
 writeFileSync("src/i18n/locales/fr.json", JSON.stringify(mergedFr, null, 2) + "\n", "utf-8");

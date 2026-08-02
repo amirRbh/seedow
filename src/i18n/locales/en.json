@@ -1668,7 +1668,22 @@
     "benchmark_sp500": "S&P 500",
     "benchmark_cac40": "CAC 40",
     "benchmark_no_data_title": "No real data yet",
-    "benchmark_no_data_body": "Seedow only shows verified figures. This benchmark has no real data loaded yet in our database — we never invent a value instead."
+    "benchmark_no_data_body": "Seedow only shows verified figures. This benchmark has no real data loaded yet in our database — we never invent a value instead.",
+    "reward_risk": "Return / risk",
+    "reward_risk_note": "Expected return ÷ volatility. Higher = better paid for the risk taken.",
+    "risk_adjusted_title": "At comparable risk",
+    "risk_adjusted_body": "Comparing a multi-asset portfolio to a 100% equity index without adjusting for risk is meaningless: you always lose in a bull market and always win in a bear one. Below, {{bench}} is scaled down to your volatility ({{vol}}%) — the remaining capital earns nothing.",
+    "risk_adjusted_bench": "{{bench}} scaled to your risk",
+    "risk_adjusted_you": "Your portfolio",
+    "price_title": "The price of alignment",
+    "price_cost": "At comparable risk, your portfolio projects {{delta}} € LESS than {{bench}} over 10 years, on {{capital}} € invested. That is the cost of your exclusions and impact constraints — we do not hide it.",
+    "price_gain": "At comparable risk, your portfolio projects {{delta}} € MORE than {{bench}} over 10 years, on {{capital}} € invested.",
+    "downside_title": "If the year goes badly",
+    "downside_body": "A 30% drop on {{bench}} would translate, proportionally to volatility, into roughly {{drop}}% on your portfolio. What would be left of {{capital}} €:",
+    "downside_you": "Your portfolio",
+    "downside_bench": "{{bench}}",
+    "downside_note": "Proportional estimate based on volatilities, not a forecast. A less volatile portfolio usually falls less — it does not never fall.",
+    "window_note": "Expected returns estimated on the real price history available (rolling 2-year window), with capped James-Stein shrinkage anchored per asset class. A short window overstates recently strong asset classes."
   },
   "market_freshness": {
     "stale_title": "Market prices a bit old",

@@ -1650,7 +1650,22 @@
     "benchmark_sp500": "S&P 500",
     "benchmark_cac40": "CAC 40",
     "benchmark_no_data_title": "Pas encore de données réelles",
-    "benchmark_no_data_body": "Seedow n'affiche que des chiffres vérifiés. Cette référence n'a pas encore de données réelles chargées en base — aucune valeur n'est inventée à sa place."
+    "benchmark_no_data_body": "Seedow n'affiche que des chiffres vérifiés. Cette référence n'a pas encore de données réelles chargées en base — aucune valeur n'est inventée à sa place.",
+    "reward_risk": "Rendement / risque",
+    "reward_risk_note": "Rendement attendu ÷ volatilité. Plus haut = mieux payé pour le risque pris.",
+    "risk_adjusted_title": "À risque comparable",
+    "risk_adjusted_body": "Comparer un portefeuille multi-actifs à un indice 100 % actions sans corriger le risque ne veut rien dire : on perd toujours en marché haussier, on gagne toujours en marché baissier. Ci-dessous, {{bench}} est ramené à ta volatilité ({{vol}} %) — le reste du capital n'est pas rémunéré.",
+    "risk_adjusted_bench": "{{bench}} ramené à ton risque",
+    "risk_adjusted_you": "Ton portefeuille",
+    "price_title": "Le prix de l'alignement",
+    "price_cost": "À risque comparable, ton portefeuille projette {{delta}} € de MOINS que {{bench}} sur 10 ans, pour {{capital}} € investis. C'est le coût de tes contraintes d'exclusion et d'impact — on ne le cache pas.",
+    "price_gain": "À risque comparable, ton portefeuille projette {{delta}} € de PLUS que {{bench}} sur 10 ans, pour {{capital}} € investis.",
+    "downside_title": "Si l'année tourne mal",
+    "downside_body": "Une baisse de 30 % sur {{bench}} correspondrait, à volatilité proportionnelle, à environ {{drop}} % sur ton portefeuille. Ce qu'il resterait de {{capital}} € :",
+    "downside_you": "Ton portefeuille",
+    "downside_bench": "{{bench}}",
+    "downside_note": "Estimation proportionnelle aux volatilités, pas une prévision. Un portefeuille moins volatil baisse en général moins fort — il ne baisse pas jamais.",
+    "window_note": "Rendements attendus estimés sur l'historique de cours réel disponible (fenêtre glissante de 2 ans), avec shrinkage de James-Stein plafonné et ancrage par classe d'actifs. Une fenêtre courte surestime les classes récemment porteuses."
   },
   "market_freshness": {
     "stale_title": "Prix de marché un peu anciens",

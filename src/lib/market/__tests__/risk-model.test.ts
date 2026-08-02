@@ -7,6 +7,7 @@ import {
   shrinkExpectedReturns,
   ledoitWolfConstantCorrelation,
   RETURN_SHRINKAGE_MIN_ASSETS,
+  MAX_RETURN_SHRINKAGE,
   MIN_OBSERVATIONS,
   type AssetRiskStats,
   type PricePoint,
@@ -147,7 +148,7 @@ describe("shrinkExpectedReturns", () => {
     expect(out.get("a")!.observations).toBe(60);
   });
 
-  it("applies the closed-form James-Stein weight exactly", () => {
+  it("applies the closed-form James-Stein weight, capped", () => {
     const input = new Map<string, AssetRiskStats>([
       ["a", mk(0.0, 0.2, 100)],
       ["b", mk(0.1, 0.2, 100)],
@@ -157,12 +158,68 @@ describe("shrinkExpectedReturns", () => {
     const grand = 0.1;
     const se2 = (252 * 0.2 ** 2) / 100; // identique pour les trois
     const dispersion = mus.reduce((s, m) => s + (m - grand) ** 2, 0);
-    const w = Math.min(1, ((3 - 2) * se2) / dispersion);
+    const w = Math.min(MAX_RETURN_SHRINKAGE, ((3 - 2) * se2) / dispersion);
     const out = shrinkExpectedReturns(input);
     expect(out.get("a")!.expectedReturn).toBeCloseTo(grand + (1 - w) * (0 - grand), 12);
     expect(out.get("c")!.expectedReturn).toBeCloseTo(grand + (1 - w) * (0.2 - grand), 12);
   });
+
+  it("never collapses the cross-sectional dispersion to zero", () => {
+    // Cas réel qui cassait le moteur : bruit d'estimation >> dispersion ⇒ w = 1
+    // sans plafond, donc des μ tous identiques et un Markowitz min-variance.
+    const input = new Map<string, AssetRiskStats>(
+      Array.from({ length: 40 }, (_, i) => [
+        `a${i}`,
+        mk(0.09 + i * 0.0002, 0.45, 60),
+      ]),
+    );
+    const out = shrinkExpectedReturns(input);
+    const values = Array.from(out.values()).map((s) => s.expectedReturn);
+    const distinct = new Set(values.map((v) => v.toFixed(10)));
+    expect(distinct.size).toBeGreaterThan(1);
+    expect(Math.max(...values) - Math.min(...values)).toBeGreaterThan(0);
+  });
+
+  it("shrinks per asset class so equity stays above cash", () => {
+    const input = new Map<string, AssetRiskStats>([
+      ["eq1", mk(0.11, 0.18, 250)],
+      ["eq2", mk(0.13, 0.19, 250)],
+      ["eq3", mk(0.12, 0.2, 250)],
+      ["cash1", mk(0.02, 0.003, 250)],
+      ["cash2", mk(0.025, 0.003, 250)],
+      ["cash3", mk(0.021, 0.003, 250)],
+    ]);
+    const groups = new Map<string, string>([
+      ["eq1", "equity_dev"],
+      ["eq2", "equity_dev"],
+      ["eq3", "equity_dev"],
+      ["cash1", "cash"],
+      ["cash2", "cash"],
+      ["cash3", "cash"],
+    ]);
+    const out = shrinkExpectedReturns(input, groups);
+    const eqMean =
+      (out.get("eq1")!.expectedReturn +
+        out.get("eq2")!.expectedReturn +
+        out.get("eq3")!.expectedReturn) /
+      3;
+    const cashMean =
+      (out.get("cash1")!.expectedReturn +
+        out.get("cash2")!.expectedReturn +
+        out.get("cash3")!.expectedReturn) /
+      3;
+    // La moyenne de chaque classe est préservée…
+    expect(eqMean).toBeCloseTo((0.11 + 0.13 + 0.12) / 3, 10);
+    expect(cashMean).toBeCloseTo((0.02 + 0.025 + 0.021) / 3, 10);
+    // …et la hiérarchie actions > monétaire survit au shrinkage.
+    for (const id of ["eq1", "eq2", "eq3"]) {
+      for (const c of ["cash1", "cash2", "cash3"]) {
+        expect(out.get(id)!.expectedReturn).toBeGreaterThan(out.get(c)!.expectedReturn);
+      }
+    }
+  });
 });
+
 
 describe("ledoitWolfConstantCorrelation", () => {
   it("returns identity correlation and zero shrinkage below the data threshold", () => {
