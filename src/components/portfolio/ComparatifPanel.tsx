@@ -269,8 +269,8 @@ export function ComparatifPanel() {
             label={t("comparatif_panel.impact_score")}
             term="ESG"
             seedowValue={`${seedow.esgScore.toFixed(0)} / 100`}
-            msciValue={`${ref.esgScore} / 100`}
-            seedowWins={seedow.esgScore >= ref.esgScore}
+            msciValue={ref.esgScore != null ? `${ref.esgScore} / 100` : "n.d."}
+            seedowWins={ref.esgScore != null && seedow.esgScore >= ref.esgScore}
             note={t("comparatif_panel.higher_durable")}
           />
           <CompareRow
@@ -278,10 +278,16 @@ export function ComparatifPanel() {
             label={t("comparatif_panel.carbon_intensity")}
             term="CO2"
             seedowValue={`${seedow.carbonIntensityGperEur.toFixed(0)} g/€`}
-            msciValue={`${ref.carbonIntensityGperEur} g/€`}
-            seedowWins={seedow.carbonIntensityGperEur <= ref.carbonIntensityGperEur}
+            msciValue={
+              ref.carbonIntensityGperEur != null ? `${ref.carbonIntensityGperEur} g/€` : "n.d."
+            }
+            seedowWins={
+              ref.carbonIntensityGperEur != null &&
+              seedow.carbonIntensityGperEur <= ref.carbonIntensityGperEur
+            }
             note={t("comparatif_panel.per_euro")}
           />
+
           <CompareRow
             benchmarkLabel={t(benchmark.labelKey)}
             label={t("comparatif_panel.classification")}
