@@ -91,3 +91,45 @@ describe("parseISharesFactSheet", () => {
     expect(p.esgScore).toBeNull();
   });
 });
+
+// Rendu `pdftotext -layout` sur 2 colonnes : la valeur WACI est sur la ligne
+// AU-DESSUS des libellés, et l'ordre des colonnes change d'une fiche à l'autre.
+// Le seul repère fiable est que le pourcentage est la couverture, jamais l'intensité.
+const LAYOUT_VALUE_LEFT = `
+ MSCI ESG Quality Score (0-10)                                     7.07
+ MSCI Weighted Average Carbon Intensity                MSCI Weighted Average Carbon Intensity
+                                          69.03                                        99.66%
+ (Tons CO2E/$M SALES)                                  % Coverage
+All data is from MSCI ESG Fund Ratings as of 04/17/2026, based on holdings as of 03/31/2026.
+MSCI Weighted Average Carbon Intensity (Tons CO2E/$M SALES): Measures a fund's exposure.
+`;
+
+const LAYOUT_VALUE_RIGHT = `
+ MSCI ESG Quality Score (0-10)                                     6.82
+ MSCI Weighted Average Carbon Intensity                MSCI Weighted Average Carbon Intensity
+                                         79.54%                                        757.34
+ % Coverage                                            (Tons CO2E/$M SALES)
+All data is from MSCI ESG Fund Ratings as of 06/19/2026, based on holdings as of 05/31/2026.
+`;
+
+describe("parseISharesFactSheet — mise en page 2 colonnes", () => {
+  it("lit le WACI quand la valeur précède le libellé (colonne gauche)", () => {
+    const p = parseISharesFactSheet(LAYOUT_VALUE_LEFT);
+    expect(p.waci).toBe(69.03);
+    expect(p.qualityScore).toBe(7.07);
+    expect(p.asOf).toBe("2026-04-17");
+  });
+
+  it("ne confond pas le taux de couverture avec l'intensité (colonnes inversées)", () => {
+    const p = parseISharesFactSheet(LAYOUT_VALUE_RIGHT);
+    expect(p.waci).toBe(757.34);
+  });
+
+  it("ignore le glossaire et n'invente pas de valeur", () => {
+    const glossaryOnly = `
+MSCI Weighted Average Carbon Intensity (Tons CO2E/$M SALES): Measures a fund's exposure
+to carbon intensive companies across 100 holdings.
+`;
+    expect(parseISharesFactSheet(glossaryOnly).waci).toBeNull();
+  });
+});
