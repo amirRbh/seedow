@@ -131,9 +131,10 @@ export function ComparatifPanel() {
   const ref10y = ref ? project(ref.expectedReturn) : null;
   const delta10y = ref10y !== null ? seedow10y - ref10y : null;
 
-  const co2EvitedKg = ref
-    ? Math.max(0, ((ref.carbonIntensityGperEur - seedow.carbonIntensityGperEur) * capital) / 1000)
-    : null;
+  const co2EvitedKg =
+    ref && ref.carbonIntensityGperEur != null
+      ? Math.max(0, ((ref.carbonIntensityGperEur - seedow.carbonIntensityGperEur) * capital) / 1000)
+      : null;
 
   const BenchmarkSelector = (
     <div
