@@ -150,30 +150,25 @@ function Portfolio() {
               navigate({
                 to: "/portfolio",
                 search: {
-                  tab: v === "performance" ? undefined : (v as (typeof PORTFOLIO_TABS)[number]),
+                  tab: v === "performance" ? undefined : (v as PortfolioTab),
                 },
                 replace: true,
               })
             }
           >
-            <TabsList className="w-full grid grid-cols-3 gap-1 sm:grid-cols-5 sm:gap-0 h-auto bg-paper-2 p-1">
+            <TabsList className="w-full grid grid-cols-3 h-auto bg-paper-2 p-1">
               <TabsTrigger value="performance" className="text-caption uppercase tracking-[0.12em]">
                 {t("portfolio.tab_perf")}
-              </TabsTrigger>
-              <TabsTrigger value="allocation" className="text-caption uppercase tracking-[0.12em]">
-                {t("portfolio.tab_allocation")}
-              </TabsTrigger>
-              <TabsTrigger value="affiner" className="text-caption uppercase tracking-[0.12em]">
-                {isSimple ? t("portfolio.tab_refine_simple") : t("portfolio.tab_refine")}
               </TabsTrigger>
               <TabsTrigger value="impact" className="text-caption uppercase tracking-[0.12em]">
                 {t("portfolio.tab_impact")}
               </TabsTrigger>
-              <TabsTrigger value="comparatif" className="text-caption uppercase tracking-[0.12em]">
-                {t("portfolio.tab_vs_market")}
+              <TabsTrigger value="affiner" className="text-caption uppercase tracking-[0.12em]">
+                {isSimple ? t("portfolio.tab_refine_simple") : t("portfolio.tab_refine")}
               </TabsTrigger>
             </TabsList>
 
+            {/* Performance = performance + allocation : un seul écran « où en suis-je ». */}
             <TabsContent value="performance" className="pt-5 space-y-5">
               <PortfolioHistoryChart />
               <GrowthComparison
@@ -200,9 +195,6 @@ function Portfolio() {
                   }
                 />
               </div>
-            </TabsContent>
-
-            <TabsContent value="allocation" className="pt-5 space-y-5">
               <AllocationBreakdown
                 holdings={portfolio.holdings}
                 totalAmount={totalInvested}
@@ -211,16 +203,14 @@ function Portfolio() {
               <BadgesCard badges={badges} />
             </TabsContent>
 
+            {/* Impact = impact + comparatif marché (l'un explique l'autre). */}
+            <TabsContent value="impact" className="pt-5 space-y-8">
+              <ImpactExperience />
+              <ComparatifPanel />
+            </TabsContent>
+
             <TabsContent value="affiner" className="pt-5">
               <AllocationRefiner portfolioId={portfolio.id} />
-            </TabsContent>
-
-            <TabsContent value="impact" className="pt-5">
-              <ImpactExperience />
-            </TabsContent>
-
-            <TabsContent value="comparatif" className="pt-5">
-              <ComparatifPanel />
             </TabsContent>
           </Tabs>
         </section>
