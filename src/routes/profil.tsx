@@ -192,7 +192,6 @@ function ProfilPage() {
           </nav>
         </section>
 
-
         {/* Tes valeurs */}
         <section className="px-5 pt-10">
           <div className="gold-rule mb-5" />
@@ -358,7 +357,6 @@ function ProfilPage() {
         </section>
 
         {/* Le comparatif vit désormais dans le hub ci-dessus et dans l'onglet Impact. */}
-
       </div>
 
       <BottomNavigation />
