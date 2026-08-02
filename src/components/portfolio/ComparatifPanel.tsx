@@ -308,17 +308,20 @@ export function ComparatifPanel() {
           {t("comparatif_panel.avoided_per_year")}
         </h2>
         <div className="mt-6 grid grid-cols-2 gap-4 border-t border-paper-3 pt-5">
-          <KPIFigure
-            size="md"
-            label={t("comparatif_panel.co2_avoided")}
-            value={co2EvitedKg!.toLocaleString("fr-FR", {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            })}
-            unit="kg/an"
-            accent
-            hint={t("comparatif_panel.paris_lyon_trips", { count: Math.round(co2EvitedKg! / 120) })}
-          />
+          {co2EvitedKg !== null && (
+            <KPIFigure
+              size="md"
+              label={t("comparatif_panel.co2_avoided")}
+              value={co2EvitedKg.toLocaleString("fr-FR", {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              })}
+              unit="kg/an"
+              accent
+              hint={t("comparatif_panel.paris_lyon_trips", { count: Math.round(co2EvitedKg / 120) })}
+            />
+          )}
+
           <KPIFigure
             size="md"
             label={t("comparatif_panel.saved_fees")}
