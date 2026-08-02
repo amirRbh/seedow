@@ -366,6 +366,27 @@ function ProfilPage() {
   );
 }
 
+function HubLink({ to, label }: { to: string; label: string }) {
+  return (
+    <Link
+      to={to}
+      className="flex items-center justify-between gap-2 rounded-[14px] border border-paper-3 bg-paper-2 px-3.5 py-3 text-sm font-medium text-ink transition-colors hover:border-ink-3"
+    >
+      <span className="truncate">{label}</span>
+      <svg
+        viewBox="0 0 24 24"
+        className="w-4 h-4 shrink-0 text-ink-3"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        aria-hidden="true"
+      >
+        <path d="M9 6l6 6-6 6" />
+      </svg>
+    </Link>
+  );
+}
+
 function Row({ label, value }: { label: React.ReactNode; value: string }) {
   return (
     <div className="flex items-baseline justify-between py-3 gap-4">
