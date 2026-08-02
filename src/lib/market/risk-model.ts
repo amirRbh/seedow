@@ -130,44 +130,88 @@ export function computePairwiseCovariance(
 export const RETURN_SHRINKAGE_MIN_ASSETS = 3;
 
 /**
- * Shrinkage de James-Stein des rendements attendus vers la moyenne transversale.
+ * Plafond d'intensité de shrinkage.
  *
- * μ̂ᵢ = μ̄ + (1 − w)·(μᵢ − μ̄),  avec w = min(1, (N−2)·moy(SEᵢ²) / Σ(μᵢ − μ̄)²).
+ * Sans plafond, w atteint 1 dès que le bruit d'estimation domine la dispersion
+ * (cas systématique avec ~2 ans d'historique et une centaine d'actifs) : TOUS
+ * les rendements attendus deviennent alors strictement égaux, le terme linéaire
+ * μᵀw de l'optimisation devient une constante, et Markowitz dégénère en
+ * minimum-variance pur (portefeuille écrasé sur l'obligataire et le cash).
+ * On borne donc w pour conserver une part irréductible du signal transversal.
+ */
+export const MAX_RETURN_SHRINKAGE = 0.8;
+
+/**
+ * Shrinkage de James-Stein des rendements attendus vers une moyenne de référence.
+ *
+ * μ̂ᵢ = μ̄ + (1 − w)·(μᵢ − μ̄),  avec w = min(MAX_RETURN_SHRINKAGE, (N−2)·moy(SEᵢ²) / Σ(μᵢ − μ̄)²).
  *
  * SEᵢ² = variance d'estimation de la moyenne annualisée = 252·σ²ᵢ/Tᵢ
- * (car Var(252·m) = 252²·σ²_quotidien/T = 252·σ²_annuel/T). Quand le signal
- * (dispersion) est faible devant le bruit, w→1 et tout est ramené vers μ̄.
+ * (car Var(252·m) = 252²·σ²_quotidien/T = 252·σ²_annuel/T).
  *
- * Renvoie une NOUVELLE Map ; la moyenne transversale est préservée (invariant
- * testable). En dessous de RETURN_SHRINKAGE_MIN_ASSETS actifs, renvoie une copie
- * inchangée (le shrinkage n'a pas de sens).
+ * `groups` (optionnel) associe chaque actif à sa classe d'actifs. Le shrinkage
+ * est alors appliqué CLASSE PAR CLASSE, vers la moyenne de la classe : une
+ * obligation verte et un ETF actions monde n'ont aucune raison de converger
+ * vers un même rendement attendu, et l'ancrage par prime de risque de classe
+ * évite d'effacer la hiérarchie actions / obligataire / monétaire.
+ * Une classe comptant moins de RETURN_SHRINKAGE_MIN_ASSETS actifs est
+ * regroupée avec les autres classes trop fines (pool résiduel).
+ *
+ * Renvoie une NOUVELLE Map ; la moyenne de chaque groupe est préservée
+ * (invariant testable). En dessous de RETURN_SHRINKAGE_MIN_ASSETS actifs dans
+ * un groupe non regroupable, les valeurs sont laissées inchangées.
  */
 export function shrinkExpectedReturns(
   stats: Map<string, AssetRiskStats>,
+  groups?: Map<string, string>,
 ): Map<string, AssetRiskStats> {
-  const ids = Array.from(stats.keys());
-  const n = ids.length;
-  if (n < RETURN_SHRINKAGE_MIN_ASSETS) return new Map(stats);
+  const out = new Map<string, AssetRiskStats>(stats);
+  const allIds = Array.from(stats.keys());
+  if (allIds.length < RETURN_SHRINKAGE_MIN_ASSETS) return out;
 
-  const mus = ids.map((id) => stats.get(id)!.expectedReturn);
-  const grand = mean(mus);
+  // Partition en groupes ; les groupes trop fins sont fusionnés dans un pool.
+  const POOL = "__pool__";
+  const byGroup = new Map<string, string[]>();
+  for (const id of allIds) {
+    const g = groups?.get(id) ?? POOL;
+    const arr = byGroup.get(g) ?? [];
+    arr.push(id);
+    byGroup.set(g, arr);
+  }
+  const pool = byGroup.get(POOL) ?? [];
+  for (const [g, ids] of Array.from(byGroup)) {
+    if (g !== POOL && ids.length < RETURN_SHRINKAGE_MIN_ASSETS) {
+      pool.push(...ids);
+      byGroup.delete(g);
+    }
+  }
+  if (pool.length > 0) byGroup.set(POOL, pool);
 
-  const se2 = ids.map((id) => {
-    const s = stats.get(id)!;
-    return s.observations > 0 ? (TRADING_DAYS_PER_YEAR * s.volatility ** 2) / s.observations : 0;
-  });
-  const avgSe2 = mean(se2);
-  const dispersion = mus.reduce((acc, m) => acc + (m - grand) ** 2, 0);
+  for (const ids of byGroup.values()) {
+    const n = ids.length;
+    if (n < RETURN_SHRINKAGE_MIN_ASSETS) continue;
 
-  const w = dispersion > 0 ? Math.min(1, ((n - 2) * avgSe2) / dispersion) : 1;
+    const mus = ids.map((id) => stats.get(id)!.expectedReturn);
+    const grand = mean(mus);
 
-  const out = new Map<string, AssetRiskStats>();
-  ids.forEach((id, i) => {
-    const s = stats.get(id)!;
-    out.set(id, { ...s, expectedReturn: grand + (1 - w) * (mus[i] - grand) });
-  });
+    const se2 = ids.map((id) => {
+      const s = stats.get(id)!;
+      return s.observations > 0 ? (TRADING_DAYS_PER_YEAR * s.volatility ** 2) / s.observations : 0;
+    });
+    const avgSe2 = mean(se2);
+    const dispersion = mus.reduce((acc, m) => acc + (m - grand) ** 2, 0);
+
+    const raw = dispersion > 0 ? ((n - 2) * avgSe2) / dispersion : 1;
+    const w = Math.min(MAX_RETURN_SHRINKAGE, raw);
+
+    ids.forEach((id, i) => {
+      const s = stats.get(id)!;
+      out.set(id, { ...s, expectedReturn: grand + (1 - w) * (mus[i] - grand) });
+    });
+  }
   return out;
 }
+
 
 /** Aligne les rendements des `ids` sur leurs dates communes (intersection). */
 function alignReturns(returnsByAsset: Map<string, DatedReturn[]>, ids: string[]): number[][] {
