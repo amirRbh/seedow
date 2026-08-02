@@ -22,14 +22,54 @@ const MSCI_WORLD = {
   sfdr: "Article 6",
 } as const;
 
-type BenchmarkData = typeof MSCI_WORLD;
+/**
+ * S&P 500 — proxy réel : iShares Core S&P 500 UCITS ETF (CSPX.AS, IE00B5BMR087).
+ * Rendement annualisé et volatilité annualisée calculés sur 10 ans de cours
+ * mensuels ajustés (Yahoo Finance, arrêtés au 02/08/2026). TER officiel 0,07 %.
+ * Aucun score ESG / intensité carbone publié pour cet indice parent → null,
+ * on n'invente pas (contrat de transparence).
+ */
+const SP500 = {
+  name: "ETF S&P 500",
+  ticker: "CSPX",
+  expectedReturn: 0.1429,
+  volatility: 0.1425,
+  ter: 0.0007,
+  esgScore: null,
+  carbonIntensityGperEur: null,
+  sfdr: "Article 6",
+} as const;
 
 /**
- * Références de comparaison disponibles. Seul MSCI World dispose aujourd'hui de
- * données réelles chargées (cf. audit — aucune table `benchmarks` en base pour les
- * autres indices). On liste les autres références demandées par les utilisateurs
- * SANS inventer de chiffre : `data: null` déclenche un état honnête dans l'UI
- * plutôt qu'une valeur fabriquée (contrat de transparence).
+ * CAC 40 — proxy réel : Amundi CAC 40 UCITS ETF (CAC.PA, FR0007052782).
+ * Mêmes conventions de calcul que ci-dessus. TER officiel 0,25 %.
+ */
+const CAC40 = {
+  name: "ETF CAC 40",
+  ticker: "CAC",
+  expectedReturn: 0.0973,
+  volatility: 0.1553,
+  ter: 0.0025,
+  esgScore: null,
+  carbonIntensityGperEur: null,
+  sfdr: "Article 6",
+} as const;
+
+interface BenchmarkData {
+  name: string;
+  ticker: string;
+  expectedReturn: number;
+  volatility: number;
+  ter: number;
+  esgScore: number | null;
+  carbonIntensityGperEur: number | null;
+  sfdr: string;
+}
+
+/**
+ * Références de comparaison disponibles. Chaque référence s'appuie sur un ETF
+ * réel et des séries de cours réelles ; les métriques ESG absentes restent à
+ * `null` et s'affichent comme non disponibles plutôt que fabriquées.
  */
 interface BenchmarkOption {
   id: "msci_world" | "sp500" | "cac40";
@@ -39,9 +79,10 @@ interface BenchmarkOption {
 
 const BENCHMARK_OPTIONS: BenchmarkOption[] = [
   { id: "msci_world", labelKey: "comparatif_panel.benchmark_msci_world", data: MSCI_WORLD },
-  { id: "sp500", labelKey: "comparatif_panel.benchmark_sp500", data: null },
-  { id: "cac40", labelKey: "comparatif_panel.benchmark_cac40", data: null },
+  { id: "sp500", labelKey: "comparatif_panel.benchmark_sp500", data: SP500 },
+  { id: "cac40", labelKey: "comparatif_panel.benchmark_cac40", data: CAC40 },
 ];
+
 
 function PerfMedaillon({ value, max, accent }: { value: number; max: number; accent?: boolean }) {
   const w = Math.max(4, Math.min(100, (Math.abs(value) / max) * 100));
@@ -90,9 +131,10 @@ export function ComparatifPanel() {
   const ref10y = ref ? project(ref.expectedReturn) : null;
   const delta10y = ref10y !== null ? seedow10y - ref10y : null;
 
-  const co2EvitedKg = ref
-    ? Math.max(0, ((ref.carbonIntensityGperEur - seedow.carbonIntensityGperEur) * capital) / 1000)
-    : null;
+  const co2EvitedKg =
+    ref && ref.carbonIntensityGperEur != null
+      ? Math.max(0, ((ref.carbonIntensityGperEur - seedow.carbonIntensityGperEur) * capital) / 1000)
+      : null;
 
   const BenchmarkSelector = (
     <div
@@ -178,6 +220,12 @@ export function ComparatifPanel() {
       <p className="mt-3 text-caption text-ink-3 leading-relaxed">
         {t("comparatif_panel.projection_disclaimer")}
       </p>
+      <p className="mt-2 text-caption text-ink-3 leading-relaxed">
+        Référence : {ref.name} ({ref.ticker}). Rendement et volatilité annualisés sur 10 ans de
+        cours mensuels ajustés (Yahoo Finance, arrêtés au 02/08/2026) ; TER issu du DIC de
+        l&apos;émetteur.
+      </p>
+
 
       <div className="mt-8">
         <div className="gold-rule mb-5" />
@@ -227,8 +275,8 @@ export function ComparatifPanel() {
             label={t("comparatif_panel.impact_score")}
             term="ESG"
             seedowValue={`${seedow.esgScore.toFixed(0)} / 100`}
-            msciValue={`${ref.esgScore} / 100`}
-            seedowWins={seedow.esgScore >= ref.esgScore}
+            msciValue={ref.esgScore != null ? `${ref.esgScore} / 100` : "n.d."}
+            seedowWins={ref.esgScore != null && seedow.esgScore >= ref.esgScore}
             note={t("comparatif_panel.higher_durable")}
           />
           <CompareRow
@@ -236,10 +284,16 @@ export function ComparatifPanel() {
             label={t("comparatif_panel.carbon_intensity")}
             term="CO2"
             seedowValue={`${seedow.carbonIntensityGperEur.toFixed(0)} g/€`}
-            msciValue={`${ref.carbonIntensityGperEur} g/€`}
-            seedowWins={seedow.carbonIntensityGperEur <= ref.carbonIntensityGperEur}
+            msciValue={
+              ref.carbonIntensityGperEur != null ? `${ref.carbonIntensityGperEur} g/€` : "n.d."
+            }
+            seedowWins={
+              ref.carbonIntensityGperEur != null &&
+              seedow.carbonIntensityGperEur <= ref.carbonIntensityGperEur
+            }
             note={t("comparatif_panel.per_euro")}
           />
+
           <CompareRow
             benchmarkLabel={t(benchmark.labelKey)}
             label={t("comparatif_panel.classification")}
@@ -260,17 +314,20 @@ export function ComparatifPanel() {
           {t("comparatif_panel.avoided_per_year")}
         </h2>
         <div className="mt-6 grid grid-cols-2 gap-4 border-t border-paper-3 pt-5">
-          <KPIFigure
-            size="md"
-            label={t("comparatif_panel.co2_avoided")}
-            value={co2EvitedKg!.toLocaleString("fr-FR", {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            })}
-            unit="kg/an"
-            accent
-            hint={t("comparatif_panel.paris_lyon_trips", { count: Math.round(co2EvitedKg! / 120) })}
-          />
+          {co2EvitedKg !== null && (
+            <KPIFigure
+              size="md"
+              label={t("comparatif_panel.co2_avoided")}
+              value={co2EvitedKg.toLocaleString("fr-FR", {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              })}
+              unit="kg/an"
+              accent
+              hint={t("comparatif_panel.paris_lyon_trips", { count: Math.round(co2EvitedKg / 120) })}
+            />
+          )}
+
           <KPIFigure
             size="md"
             label={t("comparatif_panel.saved_fees")}
