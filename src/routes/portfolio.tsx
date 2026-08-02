@@ -27,15 +27,27 @@ import { BADGE_DEFS, computeUnlockedBadgeIds } from "@/lib/portfolio/badges";
 import type { MilestoneBadge } from "@/components/portfolio/MilestoneBadges";
 import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 
-const PORTFOLIO_TABS = ["performance", "allocation", "affiner", "impact", "comparatif"] as const;
+const PORTFOLIO_TABS = ["performance", "impact", "affiner"] as const;
+type PortfolioTab = (typeof PORTFOLIO_TABS)[number];
+
+// Anciens onglets fusionnés : allocation vit désormais sous Performance,
+// comparatif sous Impact. On remappe pour ne casser aucun lien `?tab=`.
+const LEGACY_TAB_MAP: Record<string, PortfolioTab> = {
+  allocation: "performance",
+  comparatif: "impact",
+};
 
 export const Route = createFileRoute("/portfolio")({
   // `?tab=impact` permet d'ouvrir directement un onglet (ex. depuis le dashboard).
-  validateSearch: (s: Record<string, unknown>): { tab?: (typeof PORTFOLIO_TABS)[number] } => ({
-    tab: PORTFOLIO_TABS.includes(s.tab as (typeof PORTFOLIO_TABS)[number])
-      ? (s.tab as (typeof PORTFOLIO_TABS)[number])
-      : undefined,
-  }),
+  validateSearch: (s: Record<string, unknown>): { tab?: PortfolioTab } => {
+    const raw = typeof s.tab === "string" ? s.tab : undefined;
+    const resolved = raw
+      ? PORTFOLIO_TABS.includes(raw as PortfolioTab)
+        ? (raw as PortfolioTab)
+        : LEGACY_TAB_MAP[raw]
+      : undefined;
+    return { tab: resolved };
+  },
   beforeLoad: () => requireAuthedUser("/portfolio"),
   component: Portfolio,
 });
