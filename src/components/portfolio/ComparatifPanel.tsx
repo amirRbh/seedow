@@ -131,10 +131,35 @@ export function ComparatifPanel() {
   const ref10y = ref ? project(ref.expectedReturn) : null;
   const delta10y = ref10y !== null ? seedow10y - ref10y : null;
 
+  // ── Comparaison à risque comparable ────────────────────────────────────────
+  // Un portefeuille multi-actifs à 6 % de vol face à un indice actions à 14 %
+  // n'est pas comparable en l'état. On ramène le benchmark au niveau de risque
+  // du portefeuille : exposition partielle k = vol_portefeuille / vol_benchmark,
+  // le reste du capital n'étant pas rémunéré (hypothèse conservatrice, pas de
+  // taux sans risque inventé). k est borné à 1 (on ne « leverage » pas l'indice).
+  const riskRatio = ref && ref.volatility > 0 ? Math.min(1, seedow.volatility / ref.volatility) : 1;
+  const refScaledReturn = ref ? ref.expectedReturn * riskRatio : null;
+  const refScaled10y = refScaledReturn !== null ? project(refScaledReturn) : null;
+  const deltaScaled10y = refScaled10y !== null ? seedow10y - refScaled10y : null;
+
+  const rewardRisk = seedow.volatility > 0 ? seedow.expectedReturn / seedow.volatility : 0;
+  const refRewardRisk = ref && ref.volatility > 0 ? ref.expectedReturn / ref.volatility : null;
+
+  // ── Scénario baissier ──────────────────────────────────────────────────────
+  // −30 % sur le benchmark, répercuté proportionnellement aux volatilités.
+  const BENCH_DROP = 0.3;
+  const seedowDrop = Math.min(1, BENCH_DROP * riskRatio);
+  const seedowAfterDrop = capital * (1 - seedowDrop);
+  const refAfterDrop = capital * (1 - BENCH_DROP);
+
   const co2EvitedKg =
     ref && ref.carbonIntensityGperEur != null
       ? Math.max(0, ((ref.carbonIntensityGperEur - seedow.carbonIntensityGperEur) * capital) / 1000)
       : null;
+
+  const eur0 = (v: number) =>
+    v.toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+
 
   const BenchmarkSelector = (
     <div
