@@ -1,71 +1,53 @@
-## Audit — état réel constaté (chiffres tirés de la base aujourd'hui)
+## Ce que j'ai vérifié avant d'écrire ce plan
 
-**Univers investissable : 79 actifs actifs**, répartis ainsi :
+- **0 actif sur 112** a une valeur de WACI en base aujourd'hui.
+- Le parseur de fiches produit iShares US existe déjà, est testé, et l'infrastructure d'ingestion gouvernée (source + date obligatoires) existe aussi.
+- **Fiches iShares US : accessibles** (téléchargement OK, format attendu par le parseur).
+- **Fiches iShares UCITS (Europe) : accessibles mais sans section durabilité MSCI.** J'en ai téléchargé et lu une : elle contient l'ISIN, les frais, la classification SFDR — mais aucun WACI, aucun score de qualité MSCI, aucune température implicite.
+- **MSCI en direct : inaccessible** (pages de notation de fonds en erreur).
+- **Amundi, UBS, DWS/Xtrackers : inaccessibles** en lecture automatisée (erreurs 403/404 ou pages vides sans données).
+- Répartition de l'univers : **32 lignes cotées aux États-Unis**, **80 lignes cotées en Europe**.
 
-| Classe | Actifs actifs |
-|---|---|
-| thematic | 33 |
-| equity_dev | 19 |
-| corporate_bond | 6 |
-| equity_em | 5 |
-| green_bond | 5 |
-| reit / sov_bond / commodity | 3 chacun |
-| cash | 2 |
-| **social_bond** | **0** (les 3 existants sont désactivés) |
+Conclusion honnête : on peut remplir une minorité de l'univers avec des données réelles. On ne peut pas remplir les 112. Je ne comblerai aucun trou par estimation.
 
-Régions : 42 « world », 18 us, 12 europe, 5 em, 1 japan, 1 pacific.
+## Objectif
 
-### Ce qui marche déjà (à mettre en avant en beta)
-- 79/79 actifs ont un `yahoo_symbol` et une cotation ; 76/79 ont un historique de prix ; 2 206 paires de covariance calculées → le moteur Markowitz tourne sur des données réelles.
-- Cron d'ingestion marché actif (jours ouvrés 18h), dernier run OK le 31/07 — le trou du 1-2 août est simplement le week-end, pas une panne.
-- 41 portefeuilles déjà générés, moyenne 8,4 lignes par portefeuille : la génération est robuste.
-- Parcours complet en place : simulateur sans compte, Ethi, cours, impact, méthodologie.
+Récupérer tout ce qui est réellement sourçable, et rendre visible ce qui ne l'est pas — au lieu de laisser l'app calculer un impact sur une base vide sans le dire.
 
-### Les 5 trous qui peuvent faire échouer une beta ouverte
+## Étapes
 
-1. **Impact carbone entièrement vide.** 0 actif sur 79 a un `waci_tco2e_per_musd_sales` ou un `carbon_intensity_gco2e_per_eur`. Conséquence directe : le bloc Impact (delta WACI vs ETF Monde, intensité brute) n'a rien à afficher, alors que c'est la promesse centrale du produit. C'est le point n°1, avant même d'ajouter des actifs.
-2. **Classe `social_bond` vide alors que le moteur en exige.** Les bornes de classe imposent un minimum de 5 % en social_bond sur les profils défensif et équilibré. Sans aucun actif éligible, l'optimiseur part en contrainte non satisfaite : **14 portefeuilles sur 41 (34 %) sortent avec `esg_floor_relaxed = true`**. Un tiers des utilisateurs voit un portefeuille dégradé.
-3. **Traçabilité ESG à moitié absente.** 39 actifs sur 79 n'ont aucun `esg_score_source`, les 40 autres portent `seedow-internal-v1`. Aucun n'a de `esg_data_asof`. 61 sur 79 n'ont pas d'ISIN. C'est en contradiction frontale avec la règle « chaque chiffre est sourcé et daté », et c'est exactement ce que le persona sceptique du greenwashing va tester.
-4. **Filtres d'exclusion peu discriminants.** 33 actifs sur 79 ont un tableau `excluded_sectors` vide : cocher « fossiles » ou « armes » ne les écarte jamais, même si l'exposition réelle existe. Le filtre paraît fonctionner sans être fiable.
-5. **Profondeur insuffisante sur les classes non-actions.** Obligations, REIT, matières premières et cash tournent à 2-6 lignes. Le best-in-class (top 50 % ESG par classe) ne s'applique même pas en dessous de 4 actifs → sur ces classes, on garde tout, y compris les moins bien notés.
+### 1. Moisson iShares US (base solide)
+Lancer le script d'ingestion existant sur les 11 fonds iShares cotés aux États-Unis présents dans l'univers. Chaque ligne récupérée porte : WACI, score de qualité MSCI, température implicite, note MSCI, et la date « as of » de la fiche. Rien n'est écrit sans source ni date.
 
-### Priorisation pour la beta ouverte
-Ordre d'impact décroissant : (2) débloquer social_bond → (1) remplir le carbone → (3) sourcer/dater l'ESG → (5) élargir l'univers → (4) fiabiliser les exclusions.
+### 2. Élargir aux autres émetteurs US
+21 autres lignes sont cotées aux États-Unis (KraneShares, Global X, VanEck, First Trust, Vanguard, Invesco, State Street, ALPS, Vert). Leurs fiches produit suivent des formats différents. Je teste l'accès émetteur par émetteur, j'écris un petit parseur par format qui marche, et j'abandonne proprement ceux qui ne publient pas la donnée. Objectif réaliste : quelques lignes de plus, pas les 21.
 
----
+### 3. Tentative ciblée sur l'Europe
+Les fiches marketing UCITS ne portent pas la donnée. Deux pistes restent à tester avant de conclure :
+- les documents « caractéristiques de durabilité » / rapports PAI que certains émetteurs publient séparément de la fiche produit ;
+- les documents réglementaires SFDR annexés au prospectus.
 
-## Plan proposé
+Si aucune de ces pistes n'aboutit sur un format lisible automatiquement, je le dis et je m'arrête là — pas de valeur reconstituée à la main sur 80 lignes.
 
-### Étape 1 — Débloquer les portefeuilles dégradés
-Réactiver ou remplacer les 3 obligations sociales désactivées par des lignes cotées avec symbole Yahoo valide, puis recalculer la covariance. Objectif mesurable : faire tomber le taux de `esg_floor_relaxed` sous 10 % sur des générations de test couvrant les trois profils de risque.
+### 4. Récupérer ce qui EST disponible sur les fiches UCITS
+Même sans WACI, les fiches européennes portent des données vérifiables et actuellement approximées en base : **classification SFDR officielle** et **frais réels (TER)**. Je les extrais et je corrige les valeurs estimées par les valeurs publiées, avec source et date.
 
-### Étape 2 — Étendre l'univers à ~110-120 actifs
-Ajout ciblé sur les classes creuses plutôt qu'un empilement d'actions thématiques :
-- social_bond : 4-5 lignes
-- green_bond : +5 (10 au total)
-- sov_bond : +5 (8 au total)
-- corporate_bond : +6 (12 au total)
-- reit : +4 (7 au total)
-- equity_em : +5 (10 au total)
-- equity_dev : +5 sur régions sous-couvertes (Japon, Pacifique, Canada)
-- commodity : +2
+### 5. Rendre la couverture visible dans l'app
+C'est le point non négociable. Le moteur calcule déjà un taux de couverture carbone, mais l'interface ne le montre pas assez :
+- sur le bloc Impact : afficher explicitement « calculé sur X % du portefeuille » et masquer le chiffre quand la couverture est trop faible pour être honnête, plutôt que d'afficher un nombre trompeur ;
+- sur la fiche d'un fonds : afficher « non publié par l'émetteur » au lieu d'un blanc ;
+- sur la page Méthodologie : lister quels émetteurs publient la donnée et lesquels ne la publient pas.
 
-Chaque ajout passe par une migration avec ticker, ISIN, symbole Yahoo, TER, scores E/S/G, article SFDR, exclusions sectorielles et exposition aux causes — pas de ligne partielle. Vérification que la cotation Yahoo répond avant insertion.
+### 6. Journal de provenance
+Une note datée dans la documentation méthodologie : quelles sources ont été interrogées, lesquelles répondent, lesquelles ne répondent pas, à quelle date. Pour que le prochain passage n'ait pas à refaire cette enquête.
 
-### Étape 3 — Remplir la donnée carbone
-Renseigner `waci_tco2e_per_musd_sales`, sa source et `esg_data_asof` sur les actifs pour lesquels l'émetteur publie la donnée. Là où elle n'existe pas, l'afficher comme « non publiée » dans la fiche plutôt que de la laisser vide silencieusement. Le comparatif vs ACWI (115 tCO2e/M$) devient alors réellement calculable, avec son taux de couverture affiché.
+## Détails techniques
 
-### Étape 4 — Sourcer et dater tout l'ESG
-Compléter `esg_score_source`, `esg_data_asof` et l'ISIN sur les 79 actifs existants. Afficher source + date sur la fiche actif et dans le screener.
+- Ingestion via la server function admin existante (`ingestIssuerEsgData`), qui impose source + date « as of » au niveau du schéma — pas de migration one-off avec des valeurs en dur.
+- Le parseur actuel gère le format US ; les autres formats émetteurs feront l'objet de fonctions séparées, chacune couverte par un test sur un extrait réel.
+- Aucune valeur écrite sans provenance : un champ non trouvé reste `null`.
+- Le côté affichage (étape 5) touche uniquement les composants d'impact et de fiche produit, pas le moteur de calcul.
 
-### Étape 5 — Fiabiliser les exclusions
-Passer en revue les 33 actifs sans exclusion déclarée et renseigner leurs secteurs exclus à partir des documents fournisseur. Ceux dont on ne sait rien sont marqués comme non vérifiés dans la couverture de données, pas comme « propres ».
+## Ce que ce plan ne promet pas
 
-### Détails techniques
-- Tout passe par des migrations SQL (INSERT/UPDATE sur `public.assets`), suivies d'un recalcul de `asset_covariance` via le hook `recompute-risk-model`.
-- La nouvelle classe éventuelle n'est pas nécessaire : l'enum `asset_class` couvre déjà tous les besoins listés.
-- Les bornes de classe dans `src/lib/portfolio/types.ts` seront revérifiées après l'étape 2 pour vérifier qu'aucun minimum ne cible une classe trop mince.
-- Tests : ajouter un test de non-régression qui échoue si une classe référencée avec un `min > 0` dans `getClassBounds` n'a aucun actif actif en base.
-
-### Ce que ce plan ne traite pas
-L'acquisition et l'onboarding (1 seule inscription en liste d'attente, 7 comptes, 0 retour de feedback à ce jour) : la donnée d'usage est trop mince pour en tirer une conclusion produit. À traiter dans un second temps, une fois l'univers solide.
+Il ne promet pas une couverture carbone complète. Au vu de ce que les émetteurs européens publient en accès libre, l'issue probable est une couverture partielle — de l'ordre du quart de l'univers. La valeur livrée est double : les données réelles là où elles existent, et l'honnêteté affichée là où elles n'existent pas.

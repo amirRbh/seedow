@@ -589,7 +589,36 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
     },
   ];
 
+  // Journal de provenance — état réel constaté des sources ESG publiques
+  // (vérifié le 2026-08-02). `available: false` = on n'a PAS la donnée, on le dit.
+  const SOURCE_LEDGER: { source: string; available: boolean; detail: string }[] = [
+    {
+      source: "Fiches iShares US (MSCI ESG Fund Ratings)",
+      available: true,
+      detail:
+        "9 fonds renseignés : intensité carbone WACI, score de qualité MSCI, note AAA–CCC et trajectoire de température, avec la date de publication.",
+    },
+    {
+      source: "Fiches UCITS européennes (iShares UK/NL, Amundi, UBS, Xtrackers)",
+      available: false,
+      detail:
+        "Documents accessibles mais sans section durabilité MSCI : on y lit l'ISIN, les frais et l'article SFDR, jamais l'intensité carbone.",
+    },
+    {
+      source: "Portail MSCI ESG Fund Ratings",
+      available: false,
+      detail:
+        "Consultation automatisée refusée par le fournisseur. Aucune donnée MSCI n'est reprise sans document public à l'appui.",
+    },
+    {
+      source: "Yahoo Finance",
+      available: false,
+      detail: "Fournit les cours, pas l'intensité carbone des fonds.",
+    },
+  ];
+
   // Sources réellement branchées en base (champ `esg_score_source`). On n'affiche
+
   // que ce qui alimente vraiment les scores — pas de nom de fournisseur tiers
   // tant que son flux n'est pas connecté (contrat de transparence Seedow).
   const sources = [
@@ -642,7 +671,35 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
               notation propriétaire Seedow le temps du raccordement — la source exacte est indiquée
               sur chaque fiche.
             </p>
+
+            {/* Journal de provenance : ce qui répond, ce qui ne répond pas. On
+                publie aussi les impasses — un trou annoncé vaut mieux qu'un
+                chiffre inventé (contrat de transparence Seedow). */}
+            <p className="text-tag uppercase tracking-[0.15em] text-ink-3 font-medium mt-5 mb-2">
+              Journal de provenance
+            </p>
+            <ul className="text-caption text-ink-2 leading-relaxed space-y-1.5">
+              {SOURCE_LEDGER.map((entry) => (
+                <li key={entry.source} className="flex gap-2">
+                  <span aria-hidden className="text-ink-3">
+                    {entry.available ? "●" : "○"}
+                  </span>
+                  <span>
+                    <span className="font-value text-ink">{entry.source}</span>
+                    {" — "}
+                    <span className="sr-only">
+                      {entry.available ? "donnée disponible : " : "donnée indisponible : "}
+                    </span>
+                    {entry.detail}
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <p className="text-caption text-ink-3 mt-2">
+              Dernière vérification des sources : 2 août 2026.
+            </p>
           </div>
+
 
           {/* Bloc 2 — Grille 3 piliers */}
           <div className="border border-paper-3 p-5 bg-paper-2/30">
