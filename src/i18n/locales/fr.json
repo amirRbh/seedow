@@ -1799,7 +1799,9 @@
     "seedow_home": "Seedow — accueil",
     "vote": "Le Vote",
     "wrapped": "Bilan",
-    "reveil": "Le Réveil"
+    "reveil": "Le Réveil",
+    "learn": "Apprendre",
+    "account": "Mon compte"
   },
   "asset_class": {
     "equity_dev": "Actions développées",

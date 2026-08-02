@@ -1817,7 +1817,9 @@
     "seedow_home": "Seedow — home",
     "vote": "The Vote",
     "wrapped": "Recap",
-    "reveil": "Morning"
+    "reveil": "Morning",
+    "learn": "Learn",
+    "account": "My account"
   },
   "asset_class": {
     "equity_dev": "Developed equities",
