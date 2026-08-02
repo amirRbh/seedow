@@ -642,7 +642,35 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
               notation propriétaire Seedow le temps du raccordement — la source exacte est indiquée
               sur chaque fiche.
             </p>
+
+            {/* Journal de provenance : ce qui répond, ce qui ne répond pas. On
+                publie aussi les impasses — un trou annoncé vaut mieux qu'un
+                chiffre inventé (contrat de transparence Seedow). */}
+            <p className="text-tag uppercase tracking-[0.15em] text-ink-3 font-medium mt-5 mb-2">
+              Journal de provenance
+            </p>
+            <ul className="text-caption text-ink-2 leading-relaxed space-y-1.5">
+              {SOURCE_LEDGER.map((entry) => (
+                <li key={entry.source} className="flex gap-2">
+                  <span aria-hidden className="text-ink-3">
+                    {entry.available ? "●" : "○"}
+                  </span>
+                  <span>
+                    <span className="font-value text-ink">{entry.source}</span>
+                    {" — "}
+                    <span className="sr-only">
+                      {entry.available ? "donnée disponible : " : "donnée indisponible : "}
+                    </span>
+                    {entry.detail}
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <p className="text-caption text-ink-3 mt-2">
+              Dernière vérification des sources : 2 août 2026.
+            </p>
           </div>
+
 
           {/* Bloc 2 — Grille 3 piliers */}
           <div className="border border-paper-3 p-5 bg-paper-2/30">
