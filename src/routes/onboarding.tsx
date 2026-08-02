@@ -32,6 +32,7 @@ import { writeGuestSimulation, readGuestSimulation, type GuestSimulation } from 
 import { useBetaCapacity } from "@/hooks/useBetaCapacity";
 import { generatePortfolio, simulatePortfolio } from "@/lib/portfolio/server.functions";
 import { MirrorReveal, type MirrorImpact } from "@/components/onboarding/MirrorReveal";
+import { AgencyReveal } from "@/components/onboarding/AgencyReveal";
 import { callAuthed } from "@/lib/authedServerFn";
 import { trackPreference, type PreferenceStep } from "@/lib/preferences/tracking";
 import type { CauseTag, ExclusionTag, PortfolioParams } from "@/lib/portfolio/types";
@@ -107,7 +108,7 @@ function StepOptionIcon({ icon }: { icon: string | LucideIcon }) {
 }
 
 type StepId = (typeof STEPS)[number]["id"];
-type Phase = "steps" | "preview" | "account" | "naming" | "building" | "saving";
+type Phase = "steps" | "agency" | "preview" | "account" | "naming" | "building" | "saving";
 type Answers = Partial<Record<StepId, string[]>>;
 
 // ─────────────────────────────────────────────────────────
@@ -288,9 +289,11 @@ function Onboarding() {
       if (data.session) setPhase("naming");
       else setPhase("account");
     } else {
-      // Premier portefeuille : on montre l'allocation simulée tout de suite,
-      // sans compte — la création de compte n'arrive qu'au moment de sauvegarder.
-      setPhase("preview");
+      // Premier portefeuille : avant l'aperçu d'allocation, le moment « Ta voix »
+      // relie ses convictions à un vrai vote d'AG (jamais en première scène — il
+      // arrive après le questionnaire). La scène s'auto-saute si aucune résolution
+      // n'est ouverte. La création de compte reste repoussée au moment de sauvegarder.
+      setPhase("agency");
     }
   };
 
@@ -336,6 +339,17 @@ function Onboarding() {
                 ? setStepIndex(stepIndex - 1)
                 : navigate({ to: isAdditive ? "/dashboard" : "/" })
             }
+          />
+        )}
+        {phase === "agency" && (
+          <AgencyReveal
+            key="agency"
+            causes={portfolioParams.causes}
+            onContinue={() => setPhase("preview")}
+            onBack={() => {
+              setStepIndex(STEPS.length - 1);
+              setPhase("steps");
+            }}
           />
         )}
         {phase === "preview" && (

@@ -894,6 +894,17 @@
       "step_02": "Your portfolio",
       "step_03": "Your tracking",
       "start": "Start"
+    },
+    "agency": {
+      "eyebrow": "Your voice",
+      "loading": "Reading open votes…",
+      "title": "Your money won't just be a number. It'll be a voice.",
+      "subtitle": "A vote is already waiting — on a company you could own.",
+      "subtitle_matched": "On {{cause}}, a vote is already waiting — on a company you could own.",
+      "source": "Source {{source}} · meeting on {{date}}",
+      "without_seedow": "With a classic ETF or your bank, this vote happens without you.",
+      "signature": "It's not inevitable. It's a choice. Yours too.",
+      "cta": "See my portfolio"
     }
   },
   "reglages": {

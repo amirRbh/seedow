@@ -130,6 +130,19 @@ const onboardingFr = {
     reveal_summary: "{{count}} positions · capital de référence {{amount}}",
     dashboard_cta: "Accéder au tableau de bord",
   },
+  // Moment « Ta voix » — après le questionnaire, avant l'aperçu d'allocation.
+  agency: {
+    eyebrow: "Ta voix",
+    loading: "Lecture des votes ouverts…",
+    title: "Ton argent ne sera plus un chiffre. Ce sera une voix.",
+    subtitle: "Un vote t'attend déjà — sur une entreprise que tu pourrais détenir.",
+    subtitle_matched:
+      "Sur {{cause}}, un vote t'attend déjà — sur une entreprise que tu pourrais détenir.",
+    source: "Source {{source}} · assemblée du {{date}}",
+    without_seedow: "Avec un ETF classique ou ta banque, ce vote se joue sans toi.",
+    signature: "Ce n'est pas une fatalité. C'est un choix. Le tien aussi.",
+    cta: "Voir mon portefeuille",
+  },
   step: {
     back: "Retour",
     progress: "{{current}}/{{total}}",
@@ -244,6 +257,18 @@ const onboardingEn = {
     reveal_title: "Your portfolio",
     reveal_summary: "{{count}} positions · reference capital {{amount}}",
     dashboard_cta: "Go to dashboard",
+  },
+  // "Your voice" moment — after the questionnaire, before the allocation preview.
+  agency: {
+    eyebrow: "Your voice",
+    loading: "Reading open votes…",
+    title: "Your money won't just be a number. It'll be a voice.",
+    subtitle: "A vote is already waiting — on a company you could own.",
+    subtitle_matched: "On {{cause}}, a vote is already waiting — on a company you could own.",
+    source: "Source {{source}} · meeting on {{date}}",
+    without_seedow: "With a classic ETF or your bank, this vote happens without you.",
+    signature: "It's not inevitable. It's a choice. Yours too.",
+    cta: "See my portfolio",
   },
   step: {
     back: "Back",

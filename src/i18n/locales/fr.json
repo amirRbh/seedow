@@ -894,6 +894,17 @@
       "step_02": "Ton portefeuille",
       "step_03": "Ton suivi",
       "start": "Commencer"
+    },
+    "agency": {
+      "eyebrow": "Ta voix",
+      "loading": "Lecture des votes ouverts…",
+      "title": "Ton argent ne sera plus un chiffre. Ce sera une voix.",
+      "subtitle": "Un vote t'attend déjà — sur une entreprise que tu pourrais détenir.",
+      "subtitle_matched": "Sur {{cause}}, un vote t'attend déjà — sur une entreprise que tu pourrais détenir.",
+      "source": "Source {{source}} · assemblée du {{date}}",
+      "without_seedow": "Avec un ETF classique ou ta banque, ce vote se joue sans toi.",
+      "signature": "Ce n'est pas une fatalité. C'est un choix. Le tien aussi.",
+      "cta": "Voir mon portefeuille"
     }
   },
   "reglages": {
