@@ -17,7 +17,10 @@ export function LearnTabs({ active }: { active: "courses" | "methodology" }) {
     >
       <Link
         to="/cours"
-        className={cn(base, active === "courses" ? "bg-ink text-paper" : "text-ink-3 hover:text-ink")}
+        className={cn(
+          base,
+          active === "courses" ? "bg-ink text-paper" : "text-ink-3 hover:text-ink",
+        )}
       >
         {t("rail_nav.courses")}
       </Link>
