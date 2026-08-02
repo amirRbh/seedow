@@ -549,6 +549,8 @@
     "intensity_note": "Carbon intensity (WACI) from issuer disclosures, compared to a standard World ETF (MSCI ACWI). Not a certified regulatory figure."
   },
   "profile": {
+    "hub_eyebrow": "Shortcuts",
+    "hub_title": "Everything else, in one place",
     "meta_title": "My investor profile — Seedow",
     "meta_desc": "Overview of your values, your portfolio and your progress on Seedow.",
     "eyebrow": "Your profile",
@@ -1817,7 +1819,9 @@
     "seedow_home": "Seedow — home",
     "vote": "The Vote",
     "wrapped": "Recap",
-    "reveil": "Morning"
+    "reveil": "Morning",
+    "learn": "Learn",
+    "account": "My account"
   },
   "asset_class": {
     "equity_dev": "Developed equities",

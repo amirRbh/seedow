@@ -27,15 +27,27 @@ import { BADGE_DEFS, computeUnlockedBadgeIds } from "@/lib/portfolio/badges";
 import type { MilestoneBadge } from "@/components/portfolio/MilestoneBadges";
 import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 
-const PORTFOLIO_TABS = ["performance", "allocation", "affiner", "impact", "comparatif"] as const;
+const PORTFOLIO_TABS = ["performance", "impact", "affiner"] as const;
+type PortfolioTab = (typeof PORTFOLIO_TABS)[number];
+
+// Anciens onglets fusionnés : allocation vit désormais sous Performance,
+// comparatif sous Impact. On remappe pour ne casser aucun lien `?tab=`.
+const LEGACY_TAB_MAP: Record<string, PortfolioTab> = {
+  allocation: "performance",
+  comparatif: "impact",
+};
 
 export const Route = createFileRoute("/portfolio")({
   // `?tab=impact` permet d'ouvrir directement un onglet (ex. depuis le dashboard).
-  validateSearch: (s: Record<string, unknown>): { tab?: (typeof PORTFOLIO_TABS)[number] } => ({
-    tab: PORTFOLIO_TABS.includes(s.tab as (typeof PORTFOLIO_TABS)[number])
-      ? (s.tab as (typeof PORTFOLIO_TABS)[number])
-      : undefined,
-  }),
+  validateSearch: (s: Record<string, unknown>): { tab?: PortfolioTab } => {
+    const raw = typeof s.tab === "string" ? s.tab : undefined;
+    const resolved = raw
+      ? PORTFOLIO_TABS.includes(raw as PortfolioTab)
+        ? (raw as PortfolioTab)
+        : LEGACY_TAB_MAP[raw]
+      : undefined;
+    return { tab: resolved };
+  },
   beforeLoad: () => requireAuthedUser("/portfolio"),
   component: Portfolio,
 });
@@ -138,30 +150,25 @@ function Portfolio() {
               navigate({
                 to: "/portfolio",
                 search: {
-                  tab: v === "performance" ? undefined : (v as (typeof PORTFOLIO_TABS)[number]),
+                  tab: v === "performance" ? undefined : (v as PortfolioTab),
                 },
                 replace: true,
               })
             }
           >
-            <TabsList className="w-full grid grid-cols-3 gap-1 sm:grid-cols-5 sm:gap-0 h-auto bg-paper-2 p-1">
+            <TabsList className="w-full grid grid-cols-3 h-auto bg-paper-2 p-1">
               <TabsTrigger value="performance" className="text-caption uppercase tracking-[0.12em]">
                 {t("portfolio.tab_perf")}
-              </TabsTrigger>
-              <TabsTrigger value="allocation" className="text-caption uppercase tracking-[0.12em]">
-                {t("portfolio.tab_allocation")}
-              </TabsTrigger>
-              <TabsTrigger value="affiner" className="text-caption uppercase tracking-[0.12em]">
-                {isSimple ? t("portfolio.tab_refine_simple") : t("portfolio.tab_refine")}
               </TabsTrigger>
               <TabsTrigger value="impact" className="text-caption uppercase tracking-[0.12em]">
                 {t("portfolio.tab_impact")}
               </TabsTrigger>
-              <TabsTrigger value="comparatif" className="text-caption uppercase tracking-[0.12em]">
-                {t("portfolio.tab_vs_market")}
+              <TabsTrigger value="affiner" className="text-caption uppercase tracking-[0.12em]">
+                {isSimple ? t("portfolio.tab_refine_simple") : t("portfolio.tab_refine")}
               </TabsTrigger>
             </TabsList>
 
+            {/* Performance = performance + allocation : un seul écran « où en suis-je ». */}
             <TabsContent value="performance" className="pt-5 space-y-5">
               <PortfolioHistoryChart />
               <GrowthComparison
@@ -188,9 +195,6 @@ function Portfolio() {
                   }
                 />
               </div>
-            </TabsContent>
-
-            <TabsContent value="allocation" className="pt-5 space-y-5">
               <AllocationBreakdown
                 holdings={portfolio.holdings}
                 totalAmount={totalInvested}
@@ -199,16 +203,14 @@ function Portfolio() {
               <BadgesCard badges={badges} />
             </TabsContent>
 
+            {/* Impact = impact + comparatif marché (l'un explique l'autre). */}
+            <TabsContent value="impact" className="pt-5 space-y-8">
+              <ImpactExperience />
+              <ComparatifPanel />
+            </TabsContent>
+
             <TabsContent value="affiner" className="pt-5">
               <AllocationRefiner portfolioId={portfolio.id} />
-            </TabsContent>
-
-            <TabsContent value="impact" className="pt-5">
-              <ImpactExperience />
-            </TabsContent>
-
-            <TabsContent value="comparatif" className="pt-5">
-              <ComparatifPanel />
             </TabsContent>
           </Tabs>
         </section>

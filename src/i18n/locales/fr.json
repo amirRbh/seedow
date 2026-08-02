@@ -549,6 +549,8 @@
     "intensity_note": "Intensité carbone (WACI) issue des divulgations émetteurs, comparée à un ETF Monde classique (MSCI ACWI). Ce n'est pas un chiffre réglementaire certifié."
   },
   "profile": {
+    "hub_eyebrow": "Raccourcis",
+    "hub_title": "Tout le reste, au même endroit",
     "meta_title": "Mon profil d'investisseur — Seedow",
     "meta_desc": "Vue d'ensemble de tes valeurs, ton portefeuille et ta progression sur Seedow.",
     "eyebrow": "Ton profil",
@@ -1799,7 +1801,9 @@
     "seedow_home": "Seedow — accueil",
     "vote": "Le Vote",
     "wrapped": "Bilan",
-    "reveil": "Le Réveil"
+    "reveil": "Le Réveil",
+    "learn": "Apprendre",
+    "account": "Mon compte"
   },
   "asset_class": {
     "equity_dev": "Actions développées",

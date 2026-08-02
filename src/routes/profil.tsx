@@ -175,6 +175,24 @@ function ProfilPage() {
           </div>
         </section>
 
+        {/* Hub — regroupe les surfaces annexes retirées du rail de navigation */}
+        <section className="px-5 pt-10">
+          <div className="gold-rule mb-5" />
+          <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">
+            {t("profile.hub_eyebrow")}
+          </p>
+          <h2 className="font-value text-2xl text-ink leading-tight">{t("profile.hub_title")}</h2>
+          <nav className="mt-5 grid grid-cols-2 gap-2">
+            <HubLink to="/objectifs" label={t("nav.objectives")} />
+            <HubLink to="/comparatif" label={t("rail_nav.comparatif")} />
+            <HubLink to="/certificat" label={t("rail_nav.certificate")} />
+            <HubLink to="/wrapped" label={t("rail_nav.wrapped")} />
+            <HubLink to="/methodologie" label={t("nav.methodology")} />
+            <HubLink to="/reglages" label={t("nav.settings")} />
+          </nav>
+        </section>
+
+
         {/* Tes valeurs */}
         <section className="px-5 pt-10">
           <div className="gold-rule mb-5" />
@@ -339,33 +357,33 @@ function ProfilPage() {
           <DecisionTimeline />
         </section>
 
-        {/* Comparatif teaser */}
-        <section className="px-5 pt-10">
-          <Link to="/comparatif" className="block border-t border-paper-3 pt-5 group">
-            <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-2">
-              {t("profile.comparison_eyebrow")}
-            </p>
-            <div className="flex items-baseline justify-between gap-4">
-              <h3 className="font-value text-xl text-ink leading-tight group-hover:text-highlight-1 transition-colors">
-                {t("profile.comparison_title_pre")} <Glossary term="MSCIWorld">MSCI World</Glossary>
-              </h3>
-              <svg
-                viewBox="0 0 24 24"
-                className="w-5 h-5 text-ink-3 shrink-0"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M9 6l6 6-6 6" />
-              </svg>
-            </div>
-            <p className="text-sm text-ink-3 mt-2">{t("profile.comparison_desc")}</p>
-          </Link>
-        </section>
+        {/* Le comparatif vit désormais dans le hub ci-dessus et dans l'onglet Impact. */}
+
       </div>
 
       <BottomNavigation />
     </motion.div>
+  );
+}
+
+function HubLink({ to, label }: { to: string; label: string }) {
+  return (
+    <Link
+      to={to}
+      className="flex items-center justify-between gap-2 rounded-[14px] border border-paper-3 bg-paper-2 px-3.5 py-3 text-sm font-medium text-ink transition-colors hover:border-ink-3"
+    >
+      <span className="truncate">{label}</span>
+      <svg
+        viewBox="0 0 24 24"
+        className="w-4 h-4 shrink-0 text-ink-3"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        aria-hidden="true"
+      >
+        <path d="M9 6l6 6-6 6" />
+      </svg>
+    </Link>
   );
 }
 

@@ -7,6 +7,7 @@ import { CourseProgressBanner } from "@/components/courses/CourseProgressBanner"
 import { CourseCertificate } from "@/components/courses/CourseCertificate";
 import { useCourseProgress } from "@/hooks/useCourseProgress";
 import { LanguageToggle } from "@/components/LanguageToggle";
+import { LearnTabs } from "@/components/courses/LearnTabs";
 import { getReadingState } from "@/lib/courses/reading";
 import { computeCourseStatuses } from "@/lib/courses/status";
 import { cn } from "@/lib/utils";
@@ -144,6 +145,9 @@ function CoursesIndex() {
       </header>
 
       <main className="max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-24">
+        <div className="mb-8">
+          <LearnTabs active="courses" />
+        </div>
         <section className="max-w-3xl mb-16 md:mb-20">
           <p className="eyebrow mb-5">N° 00 — Apprendre</p>
           <h1 className="font-display text-4xl md:text-6xl leading-[1.02] text-ink mb-6">

@@ -9,6 +9,7 @@ import { simulatePortfolio } from "@/lib/portfolio/server.functions";
 import { reportCaughtError } from "@/lib/monitoring/errorReporter";
 import { EASE_REVEAL } from "@/lib/motion";
 import { LanguageToggle } from "@/components/LanguageToggle";
+import { LearnTabs } from "@/components/courses/LearnTabs";
 import { MetricLabel } from "@/components/ui/MetricLabel";
 import { GlossaryTerm } from "@/components/common/GlossaryTerm";
 import {
@@ -183,6 +184,9 @@ function MethodologyPage() {
             {t("methodologie.back_dashboard")}
           </Link>
           <LanguageToggle />
+        </div>
+        <div className="mt-5">
+          <LearnTabs active="methodology" />
         </div>
         <h1 className="font-value text-4xl mt-4">{t("methodologie.title")}</h1>
         <p className="text-body text-ink-2 mt-3 max-w-2xl leading-relaxed">
