@@ -7,6 +7,7 @@ import {
   shrinkExpectedReturns,
   ledoitWolfConstantCorrelation,
   RETURN_SHRINKAGE_MIN_ASSETS,
+  MAX_RETURN_SHRINKAGE,
   MIN_OBSERVATIONS,
   type AssetRiskStats,
   type PricePoint,
