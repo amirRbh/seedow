@@ -313,13 +313,11 @@ function Dashboard() {
           )}
         </motion.section>
 
-        {/* 3. Modules secondaires — regroupés et repliés par défaut (audit .lovable/plan.md §11) */}
+        {/* 3. Modules secondaires — 3 cartes max, repliés par défaut */}
         <ExploreSection>
-          {portfolio && holdings.length > 0 && <UnderstandPortfolioCard />}
           <ReveilTeaserCard />
-          <WatchlistCard />
           <VoteTeaserCard />
-          {portfolio && <RealInvestmentInterestCard />}
+          <WatchlistCard />
         </ExploreSection>
 
         {/* 4. Lien Voir le détail */}
@@ -348,6 +346,12 @@ function Dashboard() {
             </svg>
           </Link>
         </motion.section>
+
+        {/* 5. Pied de page — pédagogie et bêta, hors du flux principal */}
+        <section className="px-5 pt-6 space-y-0">
+          {portfolio && holdings.length > 0 && <UnderstandPortfolioCard />}
+          {portfolio && <RealInvestmentInterestCard />}
+        </section>
       </div>
 
       <BottomNavigation />
