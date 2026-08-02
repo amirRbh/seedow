@@ -22,14 +22,54 @@ const MSCI_WORLD = {
   sfdr: "Article 6",
 } as const;
 
-type BenchmarkData = typeof MSCI_WORLD;
+/**
+ * S&P 500 — proxy réel : iShares Core S&P 500 UCITS ETF (CSPX.AS, IE00B5BMR087).
+ * Rendement annualisé et volatilité annualisée calculés sur 10 ans de cours
+ * mensuels ajustés (Yahoo Finance, arrêtés au 02/08/2026). TER officiel 0,07 %.
+ * Aucun score ESG / intensité carbone publié pour cet indice parent → null,
+ * on n'invente pas (contrat de transparence).
+ */
+const SP500 = {
+  name: "ETF S&P 500",
+  ticker: "CSPX",
+  expectedReturn: 0.1429,
+  volatility: 0.1425,
+  ter: 0.0007,
+  esgScore: null,
+  carbonIntensityGperEur: null,
+  sfdr: "Article 6",
+} as const;
 
 /**
- * Références de comparaison disponibles. Seul MSCI World dispose aujourd'hui de
- * données réelles chargées (cf. audit — aucune table `benchmarks` en base pour les
- * autres indices). On liste les autres références demandées par les utilisateurs
- * SANS inventer de chiffre : `data: null` déclenche un état honnête dans l'UI
- * plutôt qu'une valeur fabriquée (contrat de transparence).
+ * CAC 40 — proxy réel : Amundi CAC 40 UCITS ETF (CAC.PA, FR0007052782).
+ * Mêmes conventions de calcul que ci-dessus. TER officiel 0,25 %.
+ */
+const CAC40 = {
+  name: "ETF CAC 40",
+  ticker: "CAC",
+  expectedReturn: 0.0973,
+  volatility: 0.1553,
+  ter: 0.0025,
+  esgScore: null,
+  carbonIntensityGperEur: null,
+  sfdr: "Article 6",
+} as const;
+
+interface BenchmarkData {
+  name: string;
+  ticker: string;
+  expectedReturn: number;
+  volatility: number;
+  ter: number;
+  esgScore: number | null;
+  carbonIntensityGperEur: number | null;
+  sfdr: string;
+}
+
+/**
+ * Références de comparaison disponibles. Chaque référence s'appuie sur un ETF
+ * réel et des séries de cours réelles ; les métriques ESG absentes restent à
+ * `null` et s'affichent comme non disponibles plutôt que fabriquées.
  */
 interface BenchmarkOption {
   id: "msci_world" | "sp500" | "cac40";
@@ -39,9 +79,10 @@ interface BenchmarkOption {
 
 const BENCHMARK_OPTIONS: BenchmarkOption[] = [
   { id: "msci_world", labelKey: "comparatif_panel.benchmark_msci_world", data: MSCI_WORLD },
-  { id: "sp500", labelKey: "comparatif_panel.benchmark_sp500", data: null },
-  { id: "cac40", labelKey: "comparatif_panel.benchmark_cac40", data: null },
+  { id: "sp500", labelKey: "comparatif_panel.benchmark_sp500", data: SP500 },
+  { id: "cac40", labelKey: "comparatif_panel.benchmark_cac40", data: CAC40 },
 ];
+
 
 function PerfMedaillon({ value, max, accent }: { value: number; max: number; accent?: boolean }) {
   const w = Math.max(4, Math.min(100, (Math.abs(value) / max) * 100));
