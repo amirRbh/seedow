@@ -589,7 +589,36 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
     },
   ];
 
+  // Journal de provenance — état réel constaté des sources ESG publiques
+  // (vérifié le 2026-08-02). `available: false` = on n'a PAS la donnée, on le dit.
+  const SOURCE_LEDGER: { source: string; available: boolean; detail: string }[] = [
+    {
+      source: "Fiches iShares US (MSCI ESG Fund Ratings)",
+      available: true,
+      detail:
+        "9 fonds renseignés : intensité carbone WACI, score de qualité MSCI, note AAA–CCC et trajectoire de température, avec la date de publication.",
+    },
+    {
+      source: "Fiches UCITS européennes (iShares UK/NL, Amundi, UBS, Xtrackers)",
+      available: false,
+      detail:
+        "Documents accessibles mais sans section durabilité MSCI : on y lit l'ISIN, les frais et l'article SFDR, jamais l'intensité carbone.",
+    },
+    {
+      source: "Portail MSCI ESG Fund Ratings",
+      available: false,
+      detail:
+        "Consultation automatisée refusée par le fournisseur. Aucune donnée MSCI n'est reprise sans document public à l'appui.",
+    },
+    {
+      source: "Yahoo Finance",
+      available: false,
+      detail: "Fournit les cours, pas l'intensité carbone des fonds.",
+    },
+  ];
+
   // Sources réellement branchées en base (champ `esg_score_source`). On n'affiche
+
   // que ce qui alimente vraiment les scores — pas de nom de fournisseur tiers
   // tant que son flux n'est pas connecté (contrat de transparence Seedow).
   const sources = [
