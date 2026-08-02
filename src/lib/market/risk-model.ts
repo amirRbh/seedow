@@ -362,7 +362,11 @@ export interface RiskModelResultV2 extends RiskModelResult {
  * plein-historique. Un actif sans historique suffisant est absent de `stats` et
  * de `covariance` (diagonale incluse) et listé dans `skipped`.
  */
-export function buildRiskModel(pricesByAsset: Map<string, PricePoint[]>): RiskModelResultV2 {
+export function buildRiskModel(
+  pricesByAsset: Map<string, PricePoint[]>,
+  /** assetId -> classe d'actifs, pour un shrinkage des rendements par classe. */
+  groups?: Map<string, string>,
+): RiskModelResultV2 {
   const rawStats = new Map<string, AssetRiskStats>();
   const skipped: string[] = [];
   const returnsByAsset = new Map<string, DatedReturn[]>();
@@ -374,8 +378,8 @@ export function buildRiskModel(pricesByAsset: Map<string, PricePoint[]>): RiskMo
     else skipped.push(id);
   }
 
-  // 1. Shrinkage des rendements attendus.
-  const stats = shrinkExpectedReturns(rawStats);
+  // 1. Shrinkage des rendements attendus (par classe d'actifs si fournie).
+  const stats = shrinkExpectedReturns(rawStats, groups);
   const ids = Array.from(stats.keys());
 
   // 2. Covariance.
