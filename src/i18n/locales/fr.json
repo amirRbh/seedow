@@ -1665,7 +1665,15 @@
     "downside_you": "Ton portefeuille",
     "downside_bench": "{{bench}}",
     "downside_note": "Estimation proportionnelle aux volatilités, pas une prévision. Un portefeuille moins volatil baisse en général moins fort — il ne baisse pas jamais.",
-    "window_note": "Rendements attendus estimés sur l'historique de cours réel disponible (fenêtre glissante de 2 ans), avec shrinkage de James-Stein plafonné et ancrage par classe d'actifs. Une fenêtre courte surestime les classes récemment porteuses."
+    "window_note": "Rendements attendus estimés sur l'historique de cours réel disponible (fenêtre glissante de 2 ans), avec shrinkage de James-Stein plafonné et ancrage par classe d'actifs. Une fenêtre courte surestime les classes récemment porteuses.",
+    "reward_risk_headline_hint": "{{bench}} : {{value}} · plus haut = mieux payé pour le risque",
+    "benchmark_nature_note": "Le rendement de la référence est un rendement réalisé passé (10 ans de cours), pas une promesse : c'est ce que l'indice a fait — dont une décennie exceptionnelle pour les actions américaines — pas ce qu'il fera. Le capital simulé de ton portefeuille, lui, est une projection à rendement attendu constant. On ne compare donc pas deux choses de même nature en euros bruts — regarde le rendement / risque et le « À risque comparable » ci-dessous.",
+    "benchmark_concentrated_note": "{{bench}} est un indice actions concentré sur un seul marché, plus volatil et plus exposé à une poignée de très grandes valeurs. Comparer sans corriger le risque n'a pas de sens.",
+    "perf_hist_note": "Toi : rendement attendu. Référence : rendement réalisé sur 10 ans.",
+    "carbon_real_note": "Donnée réelle émetteurs · couverture {{coverage}} % du portefeuille",
+    "carbon_estimated_note": "Estimation à partir du score d'impact, en attendant la donnée carbone réelle sur tous les actifs",
+    "carbon_real_short": "carbone réel · couverture {{coverage}} %",
+    "carbon_estimated_short": "estimation"
   },
   "market_freshness": {
     "stale_title": "Prix de marché un peu anciens",

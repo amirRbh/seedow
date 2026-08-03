@@ -755,6 +755,17 @@ const comparatifFr = {
     "Estimation proportionnelle aux volatilités, pas une prévision. Un portefeuille moins volatil baisse en général moins fort — il ne baisse pas jamais.",
   window_note:
     "Rendements attendus estimés sur l'historique de cours réel disponible (fenêtre glissante de 2 ans), avec shrinkage de James-Stein plafonné et ancrage par classe d'actifs. Une fenêtre courte surestime les classes récemment porteuses.",
+  reward_risk_headline_hint: "{{bench}} : {{value}} · plus haut = mieux payé pour le risque",
+  benchmark_nature_note:
+    "Le rendement de la référence est un rendement réalisé passé (10 ans de cours), pas une promesse : c'est ce que l'indice a fait — dont une décennie exceptionnelle pour les actions américaines — pas ce qu'il fera. Le capital simulé de ton portefeuille, lui, est une projection à rendement attendu constant. On ne compare donc pas deux choses de même nature en euros bruts — regarde le rendement / risque et le « À risque comparable » ci-dessous.",
+  benchmark_concentrated_note:
+    "{{bench}} est un indice actions concentré sur un seul marché, plus volatil et plus exposé à une poignée de très grandes valeurs. Comparer sans corriger le risque n'a pas de sens.",
+  perf_hist_note: "Toi : rendement attendu. Référence : rendement réalisé sur 10 ans.",
+  carbon_real_note: "Donnée réelle émetteurs · couverture {{coverage}} % du portefeuille",
+  carbon_estimated_note:
+    "Estimation à partir du score d'impact, en attendant la donnée carbone réelle sur tous les actifs",
+  carbon_real_short: "carbone réel · couverture {{coverage}} %",
+  carbon_estimated_short: "estimation",
 };
 
 const comparatifEn = {
@@ -779,6 +790,16 @@ const comparatifEn = {
     "Proportional estimate based on volatilities, not a forecast. A less volatile portfolio usually falls less — it does not never fall.",
   window_note:
     "Expected returns estimated on the real price history available (rolling 2-year window), with capped James-Stein shrinkage anchored per asset class. A short window overstates recently strong asset classes.",
+  reward_risk_headline_hint: "{{bench}}: {{value}} · higher = better paid for the risk",
+  benchmark_nature_note:
+    "The benchmark return is a past realised return (10 years of prices), not a promise: it is what the index did — including an exceptional decade for US equities — not what it will do. Your portfolio's simulated capital is a projection at a constant expected return. So these are not two figures of the same nature in raw euros — look at return / risk and 'At comparable risk' below.",
+  benchmark_concentrated_note:
+    "{{bench}} is an equity index concentrated on a single market, more volatile and more exposed to a handful of very large stocks. Comparing without adjusting for risk is meaningless.",
+  perf_hist_note: "You: expected return. Benchmark: realised 10-year return.",
+  carbon_real_note: "Real issuer data · {{coverage}}% of the portfolio covered",
+  carbon_estimated_note: "Estimated from the impact score, pending real carbon data on every asset",
+  carbon_real_short: "real carbon · {{coverage}}% covered",
+  carbon_estimated_short: "estimate",
 };
 
 const mergedFr = deepMerge(fr, {
