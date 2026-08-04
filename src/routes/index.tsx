@@ -467,7 +467,12 @@ function Landing() {
                 </Link>
               ) : (
                 <div className="flex flex-col items-center gap-3 mt-8">
-                  <Link to="/onboarding" className="apple-btn-primary">
+                  <Link
+                    to="/onboarding"
+                    search={{ guest: true }}
+                    onClick={onCta("start_section", "preview")}
+                    className="apple-btn-primary"
+                  >
                     {t("landing.start.space_cta_new")}
                   </Link>
                   <Link
