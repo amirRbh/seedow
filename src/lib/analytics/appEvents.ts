@@ -15,6 +15,10 @@ import { getSessionId } from "@/lib/preferences/tracking";
  * dans `decision_events` (trigger DB) — pas dupliquée ici.
  */
 export type AppEventName =
+  | "landing_viewed"
+  | "landing_cta_clicked"
+  | "preview_started"
+  | "account_created"
   | "search_performed"
   | "asset_viewed"
   | "watchlist_added"
@@ -32,15 +36,18 @@ export async function trackAppEvent(
 ): Promise<void> {
   try {
     const { data } = await supabase.auth.getSession();
-    const userId = data.session?.user?.id;
-    if (!userId) return; // pré-auth : rien à mesurer
+    const userId = data.session?.user?.id ?? null;
+    const sessionId = getSessionId();
+    // Pré-auth : la ligne est rattachée à la session anonyme, puis réconciliée
+    // au compte à l'inscription (`claim_session_events`).
+    if (!userId && !sessionId) return;
 
     // La table n'est pas encore dans les types générés par Lovable Cloud
     // (régénérés au prochain sync après application de la migration).
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { error } = await (supabase as any).from("app_events").insert({
       user_id: userId,
-      session_id: getSessionId(),
+      session_id: sessionId,
       name,
       payload,
     });
