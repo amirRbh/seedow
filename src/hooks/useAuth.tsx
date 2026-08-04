@@ -9,6 +9,7 @@ import {
 } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { claimSessionEvents } from "@/lib/preferences/tracking";
 
 interface AuthState {
   session: Session | null;
