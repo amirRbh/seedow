@@ -513,11 +513,20 @@ function Landing() {
             ) : (
               <>
                 <div className="flex flex-wrap items-center justify-center gap-4">
-                  <Link to="/onboarding" className="apple-btn-primary">
-                    {t("landing.hero.cta_new_account")}
-                  </Link>
-                  <Link to="/onboarding" className="apple-btn-secondary">
+                  <Link
+                    to="/onboarding"
+                    search={{ guest: true }}
+                    onClick={onCta("final", "preview")}
+                    className="apple-btn-primary"
+                  >
                     {t("landing.hero.cta_guest")}
+                  </Link>
+                  <Link
+                    to="/auth"
+                    onClick={onCta("final", "signup")}
+                    className="apple-btn-secondary"
+                  >
+                    {t("landing.hero.cta_new_account")}
                   </Link>
                 </div>
                 <p className="text-body-sm text-[color:var(--apple-text-2)]">
