@@ -576,13 +576,3 @@ function ChatBubble({ side, children }: { side: "user" | "ethi"; children: React
   );
 }
 
-/* ---------- Content ---------- */
-
-const ALLOCATION: { label: string; weight: number; color: string }[] = [
-  { label: "ETF Monde", weight: 32, color: "var(--ink)" },
-  { label: "Clean Energy", weight: 22, color: "var(--mint)" },
-  { label: "Green Bonds", weight: 18, color: "var(--ice)" },
-  { label: "REIT ESG", weight: 12, color: "var(--volt)" },
-  { label: "Corp Bonds", weight: 10, color: "var(--ink-2)" },
-  { label: "Cash", weight: 6, color: "var(--paper-3)" },
-];
