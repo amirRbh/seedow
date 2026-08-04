@@ -102,6 +102,7 @@ function AuthPage() {
           },
         });
         if (err) throw err;
+        void trackAppEvent("account_created", { method: "password" });
       } else {
         const { error: err } = await supabase.auth.signInWithPassword({ email, password });
         if (err) throw err;
