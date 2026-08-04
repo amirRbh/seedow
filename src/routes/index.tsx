@@ -112,11 +112,17 @@ function Landing() {
                 <Link
                   to="/auth"
                   search={{ redirect: "/dashboard", mode: "login" }}
+                  onClick={onCta("nav", "login")}
                   className="opacity-90 hover:opacity-100"
                 >
                   {t("landing.nav.login")}
                 </Link>
-                <Link to="/onboarding" className="apple-btn-primary apple-btn-primary--sm">
+                <Link
+                  to="/onboarding"
+                  search={{ guest: true }}
+                  onClick={onCta("nav", "preview")}
+                  className="apple-btn-primary apple-btn-primary--sm"
+                >
                   {t("landing.nav.simulate_cta")}
                 </Link>
               </>
