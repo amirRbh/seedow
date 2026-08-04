@@ -35,6 +35,7 @@ import { MirrorReveal, type MirrorImpact } from "@/components/onboarding/MirrorR
 import { AgencyReveal } from "@/components/onboarding/AgencyReveal";
 import { callAuthed } from "@/lib/authedServerFn";
 import { trackPreference, type PreferenceStep } from "@/lib/preferences/tracking";
+import { trackAppEvent } from "@/lib/analytics/appEvents";
 import type { CauseTag, ExclusionTag, PortfolioParams } from "@/lib/portfolio/types";
 
 export const Route = createFileRoute("/onboarding")({
@@ -239,6 +240,13 @@ function Onboarding() {
       setPhase("steps");
     }
     // Au montage uniquement : la reprise ne dépend que de l'URL.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Entrée dans l'aperçu : mesuré même sans compte (session anonyme).
+  useEffect(() => {
+    void trackAppEvent("preview_started", { guest: isGuest, additive: isAdditive });
+    // Au montage uniquement.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

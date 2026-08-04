@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { EsgQuickCheck } from "@/components/landing/EsgQuickCheck";
 import { LandingCourses } from "@/components/landing/LandingCourses";
 import { KPIFigure } from "@/components/ui/KPIFigure";
+import { trackAppEvent } from "@/lib/analytics/appEvents";
 
 const SITE_URL = "https://seedow.life";
 
@@ -43,6 +44,15 @@ function Landing() {
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => setIsAuthed(!!session));
     return () => sub.subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    void trackAppEvent("landing_viewed");
+  }, []);
+
+  const onCta = (placement: string, destination: "preview" | "signup" | "login") => () => {
+    void trackAppEvent("landing_cta_clicked", { placement, destination });
+  };
+
 
   const STATS: { figure: string; text: string; src: string; color?: string; grad?: boolean }[] = [
     {
@@ -102,11 +112,17 @@ function Landing() {
                 <Link
                   to="/auth"
                   search={{ redirect: "/dashboard", mode: "login" }}
+                  onClick={onCta("nav", "login")}
                   className="opacity-90 hover:opacity-100"
                 >
                   {t("landing.nav.login")}
                 </Link>
-                <Link to="/onboarding" className="apple-btn-primary apple-btn-primary--sm">
+                <Link
+                  to="/onboarding"
+                  search={{ guest: true }}
+                  onClick={onCta("nav", "preview")}
+                  className="apple-btn-primary apple-btn-primary--sm"
+                >
                   {t("landing.nav.simulate_cta")}
                 </Link>
               </>
@@ -144,10 +160,19 @@ function Landing() {
               </Link>
             ) : (
               <>
-                <Link to="/onboarding" search={{ guest: true }} className="apple-btn-primary">
+                <Link
+                  to="/onboarding"
+                  search={{ guest: true }}
+                  onClick={onCta("hero", "preview")}
+                  className="apple-btn-primary"
+                >
                   {t("landing.hero.cta_guest")}
                 </Link>
-                <Link to="/auth" className="apple-btn-secondary">
+                <Link
+                  to="/auth"
+                  onClick={onCta("hero", "signup")}
+                  className="apple-btn-secondary"
+                >
                   {t("landing.hero.cta_new_account")}
                 </Link>
               </>
@@ -442,7 +467,12 @@ function Landing() {
                 </Link>
               ) : (
                 <div className="flex flex-col items-center gap-3 mt-8">
-                  <Link to="/onboarding" className="apple-btn-primary">
+                  <Link
+                    to="/onboarding"
+                    search={{ guest: true }}
+                    onClick={onCta("start_section", "preview")}
+                    className="apple-btn-primary"
+                  >
                     {t("landing.start.space_cta_new")}
                   </Link>
                   <Link
@@ -483,11 +513,20 @@ function Landing() {
             ) : (
               <>
                 <div className="flex flex-wrap items-center justify-center gap-4">
-                  <Link to="/onboarding" className="apple-btn-primary">
-                    {t("landing.hero.cta_new_account")}
-                  </Link>
-                  <Link to="/onboarding" className="apple-btn-secondary">
+                  <Link
+                    to="/onboarding"
+                    search={{ guest: true }}
+                    onClick={onCta("final", "preview")}
+                    className="apple-btn-primary"
+                  >
                     {t("landing.hero.cta_guest")}
+                  </Link>
+                  <Link
+                    to="/auth"
+                    onClick={onCta("final", "signup")}
+                    className="apple-btn-secondary"
+                  >
+                    {t("landing.hero.cta_new_account")}
                   </Link>
                 </div>
                 <p className="text-body-sm text-[color:var(--apple-text-2)]">

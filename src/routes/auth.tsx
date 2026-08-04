@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { useBetaCapacity } from "@/hooks/useBetaCapacity";
 import { joinWaitlist } from "@/lib/beta/beta.functions";
+import { trackAppEvent } from "@/lib/analytics/appEvents";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { Button } from "@/components/ui/button";
 
@@ -102,6 +103,7 @@ function AuthPage() {
           },
         });
         if (err) throw err;
+        void trackAppEvent("account_created", { method: "password" });
       } else {
         const { error: err } = await supabase.auth.signInWithPassword({ email, password });
         if (err) throw err;

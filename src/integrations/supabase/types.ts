@@ -87,7 +87,7 @@ export type Database = {
           occurred_at: string
           payload: Json
           session_id: string | null
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           id?: string
@@ -95,7 +95,7 @@ export type Database = {
           occurred_at?: string
           payload?: Json
           session_id?: string | null
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           id?: string
@@ -103,7 +103,7 @@ export type Database = {
           occurred_at?: string
           payload?: Json
           session_id?: string | null
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -831,7 +831,7 @@ export type Database = {
           portfolio_id: string | null
           session_id: string | null
           step: string
-          user_id: string
+          user_id: string | null
           variant: string | null
         }
         Insert: {
@@ -842,7 +842,7 @@ export type Database = {
           portfolio_id?: string | null
           session_id?: string | null
           step: string
-          user_id: string
+          user_id?: string | null
           variant?: string | null
         }
         Update: {
@@ -853,7 +853,7 @@ export type Database = {
           portfolio_id?: string | null
           session_id?: string | null
           step?: string
-          user_id?: string
+          user_id?: string | null
           variant?: string | null
         }
         Relationships: []
@@ -1177,6 +1177,19 @@ export type Database = {
         }
         Relationships: []
       }
+      funnel_daily: {
+        Row: {
+          account_created: number | null
+          allocation_accepted: number | null
+          allocation_seen: number | null
+          day: string | null
+          landing_cta_clicked: number | null
+          landing_viewed: number | null
+          preview_started: number | null
+          step_completed: number | null
+        }
+        Relationships: []
+      }
       portfolio_holdings_valued: {
         Row: {
           asset_class: Database["public"]["Enums"]["asset_class"] | null
@@ -1205,6 +1218,7 @@ export type Database = {
         Args: { p_key: string; p_limit: number; p_window_seconds: number }
         Returns: boolean
       }
+      claim_session_events: { Args: { p_session_id: string }; Returns: number }
       get_latest_asset_prices: {
         Args: { p_asset_ids: string[] }
         Returns: {

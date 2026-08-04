@@ -129,13 +129,33 @@ async function getUserId(): Promise<string | null> {
   return data.session?.user?.id ?? null;
 }
 
+/**
+ * Rattache au compte fraîchement connecté les évènements laissés pendant la
+ * visite anonyme (même session). Best-effort, jamais bloquant.
+ */
+export async function claimSessionEvents(): Promise<void> {
+  try {
+    const sessionId = getSessionId();
+    if (!sessionId) return;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabase as any).rpc("claim_session_events", {
+      p_session_id: sessionId,
+    });
+    if (error) console.warn("[claimSessionEvents]", error.message);
+  } catch (e) {
+    console.warn("[claimSessionEvents] fatal", e);
+  }
+}
+
 export async function trackPreference(args: TrackPreferenceArgs): Promise<void> {
   try {
     const userId = await getUserId();
-    if (!userId) return; // pré-auth : on jette silencieusement
+    const sessionId = getSessionId();
+    // Pré-auth : on garde la trace via la session anonyme (RLS `anon` dédiée).
+    if (!userId && !sessionId) return;
     const { error } = await supabase.from("preference_events").insert({
       user_id: userId,
-      session_id: getSessionId(),
+      session_id: sessionId,
       portfolio_id: args.portfolioId ?? null,
       step: args.step,
       payload: args.payload ?? {},
