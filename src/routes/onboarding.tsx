@@ -35,6 +35,7 @@ import { MirrorReveal, type MirrorImpact } from "@/components/onboarding/MirrorR
 import { AgencyReveal } from "@/components/onboarding/AgencyReveal";
 import { callAuthed } from "@/lib/authedServerFn";
 import { trackPreference, type PreferenceStep } from "@/lib/preferences/tracking";
+import { trackAppEvent } from "@/lib/analytics/appEvents";
 import type { CauseTag, ExclusionTag, PortfolioParams } from "@/lib/portfolio/types";
 
 export const Route = createFileRoute("/onboarding")({
