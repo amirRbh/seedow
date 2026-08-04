@@ -30,9 +30,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // CRITICAL: subscribe BEFORE getSession to avoid race
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, newSession) => {
+    const { data: sub } = supabase.auth.onAuthStateChange((event, newSession) => {
       setSession(newSession);
       setLoading(false);
+      if (event === "SIGNED_IN" && newSession) {
+        // Rattache les évènements laissés avant la création du compte.
+        void claimSessionEvents();
+      }
     });
 
     supabase.auth.getSession().then(({ data }) => {
