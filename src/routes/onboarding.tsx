@@ -242,6 +242,13 @@ function Onboarding() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Entrée dans l'aperçu : mesuré même sans compte (session anonyme).
+  useEffect(() => {
+    void trackAppEvent("preview_started", { guest: isGuest, additive: isAdditive });
+    // Au montage uniquement.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const portfolioParams = useMemo(() => answersToParams(answers), [answers]);
 
   useEffect(() => {
