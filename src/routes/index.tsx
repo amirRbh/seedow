@@ -243,90 +243,6 @@ function Landing() {
         </div>
       </section>
 
-      {/* SECTION — voir ton impact */}
-      <section className="px-6 py-24 md:py-32">
-        <div className="max-w-[980px] mx-auto text-center">
-          <p className="apple-eyebrow" style={{ color: "var(--mint)" }}>
-            {t("landing.impact.eyebrow")}
-          </p>
-          <h2 className="apple-title mx-auto max-w-[720px] mt-3">{t("landing.impact.title")}</h2>
-          <p className="apple-subtitle mx-auto max-w-[560px] mt-5">
-            {t("landing.impact.subtitle")}
-          </p>
-
-          {/* Aperçu allocation — carte produit */}
-          <div
-            className="mt-16 mx-auto max-w-[820px] apple-card apple-lift text-left"
-            style={{
-              background: "var(--apple-bg)",
-              border: "1px solid var(--paper-3)",
-              padding: "28px 28px 34px",
-            }}
-          >
-            <div className="flex items-center justify-between mb-7">
-              <span className="text-body-sm font-semibold text-[color:var(--apple-text)]">
-                {t("landing.impact.card_label")}
-              </span>
-              <span className="inline-flex items-center gap-2 font-mono text-caption text-[color:var(--mint)]">
-                <span aria-hidden className="apple-live" />
-                {t("landing.impact.card_live")}
-              </span>
-            </div>
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-3 items-end">
-              {ALLOCATION.map((a, i) => (
-                <div key={i} className="flex flex-col items-center gap-2">
-                  <div
-                    className="w-full rounded-2xl"
-                    style={{
-                      height: `${40 + a.weight * 1.6}px`,
-                      background: a.color,
-                      animationDelay: `${0.1 + i * 0.08}s`,
-                    }}
-                  />
-                  <div className="text-caption text-[color:var(--apple-text-2)]">{a.label}</div>
-                  <div className="text-body-sm font-semibold text-[color:var(--apple-text)] tabular-nums">
-                    {a.weight}%
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION — Ethi (dark, style Apple) */}
-      <section
-        className="px-6 py-24 md:py-32"
-        style={{ background: "var(--apple-dark)", color: "#ffffff" }}
-      >
-        <div className="max-w-[980px] mx-auto text-center">
-          <p className="apple-eyebrow" style={{ color: "var(--volt)" }}>
-            {t("landing.ethi.eyebrow")}
-          </p>
-          <h2 className="apple-title mx-auto max-w-[760px] mt-3" style={{ color: "#ffffff" }}>
-            {t("landing.ethi.title_line1")}
-            <br />
-            {t("landing.ethi.title_line2")}
-          </h2>
-          <p className="apple-subtitle mx-auto max-w-[600px] mt-5" style={{ color: "#a1a1a6" }}>
-            {t("landing.ethi.subtitle")}
-          </p>
-
-          {/* Chat mockup */}
-          <p
-            className="mt-14 text-body-sm font-mono"
-            style={{ color: "#a1a1a6", letterSpacing: "0.02em" }}
-          >
-            {t("landing.ethi.example_label")}
-          </p>
-          <div className="mt-4 mx-auto max-w-[560px] flex flex-col gap-3 text-left">
-            <ChatBubble side="user">{t("landing.ethi.chat_q1")}</ChatBubble>
-            <ChatBubble side="ethi">{t("landing.ethi.chat_a1")}</ChatBubble>
-            <ChatBubble side="user">{t("landing.ethi.chat_q2")}</ChatBubble>
-            <ChatBubble side="ethi">{t("landing.ethi.chat_a2")}</ChatBubble>
-          </div>
-        </div>
-      </section>
 
       {/* SECTION — comment ça marche (preuve produit, sobre) */}
       <section className="px-6 py-24 md:py-32">
@@ -418,6 +334,41 @@ function Landing() {
 
       {/* SECTION — apprendre d'abord, sans compte (rétention) */}
       <LandingCourses />
+
+      {/* SECTION — Ethi (dark, style Apple) */}
+      <section
+        className="px-6 py-24 md:py-32"
+        style={{ background: "var(--apple-dark)", color: "#ffffff" }}
+      >
+        <div className="max-w-[980px] mx-auto text-center">
+          <p className="apple-eyebrow" style={{ color: "var(--volt)" }}>
+            {t("landing.ethi.eyebrow")}
+          </p>
+          <h2 className="apple-title mx-auto max-w-[760px] mt-3" style={{ color: "#ffffff" }}>
+            {t("landing.ethi.title_line1")}
+            <br />
+            {t("landing.ethi.title_line2")}
+          </h2>
+          <p className="apple-subtitle mx-auto max-w-[600px] mt-5" style={{ color: "#a1a1a6" }}>
+            {t("landing.ethi.subtitle")}
+          </p>
+
+          {/* Chat mockup */}
+          <p
+            className="mt-14 text-body-sm font-mono"
+            style={{ color: "#a1a1a6", letterSpacing: "0.02em" }}
+          >
+            {t("landing.ethi.example_label")}
+          </p>
+          <div className="mt-4 mx-auto max-w-[560px] flex flex-col gap-3 text-left">
+            <ChatBubble side="user">{t("landing.ethi.chat_q1")}</ChatBubble>
+            <ChatBubble side="ethi">{t("landing.ethi.chat_a1")}</ChatBubble>
+            <ChatBubble side="user">{t("landing.ethi.chat_q2")}</ChatBubble>
+            <ChatBubble side="ethi">{t("landing.ethi.chat_a2")}</ChatBubble>
+          </div>
+        </div>
+      </section>
+
 
       {/* SECTION — deux façons de commencer */}
       <section style={{ background: "var(--apple-surface)" }} className="px-6 py-24 md:py-32">
@@ -625,13 +576,3 @@ function ChatBubble({ side, children }: { side: "user" | "ethi"; children: React
   );
 }
 
-/* ---------- Content ---------- */
-
-const ALLOCATION: { label: string; weight: number; color: string }[] = [
-  { label: "ETF Monde", weight: 32, color: "var(--ink)" },
-  { label: "Clean Energy", weight: 22, color: "var(--mint)" },
-  { label: "Green Bonds", weight: 18, color: "var(--ice)" },
-  { label: "REIT ESG", weight: 12, color: "var(--volt)" },
-  { label: "Corp Bonds", weight: 10, color: "var(--ink-2)" },
-  { label: "Cash", weight: 6, color: "var(--paper-3)" },
-];
