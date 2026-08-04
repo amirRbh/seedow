@@ -45,6 +45,15 @@ function Landing() {
     return () => sub.subscription.unsubscribe();
   }, []);
 
+  useEffect(() => {
+    void trackAppEvent("landing_viewed");
+  }, []);
+
+  const onCta = (placement: string, destination: "preview" | "signup" | "login") => () => {
+    void trackAppEvent("landing_cta_clicked", { placement, destination });
+  };
+
+
   const STATS: { figure: string; text: string; src: string; color?: string; grad?: boolean }[] = [
     {
       figure: "0%",
