@@ -1683,7 +1683,15 @@
     "downside_you": "Your portfolio",
     "downside_bench": "{{bench}}",
     "downside_note": "Proportional estimate based on volatilities, not a forecast. A less volatile portfolio usually falls less — it does not never fall.",
-    "window_note": "Expected returns estimated on the real price history available (rolling 2-year window), with capped James-Stein shrinkage anchored per asset class. A short window overstates recently strong asset classes."
+    "window_note": "Expected returns estimated on the real price history available (rolling 2-year window), with capped James-Stein shrinkage anchored per asset class. A short window overstates recently strong asset classes.",
+    "reward_risk_headline_hint": "{{bench}}: {{value}} · higher = better paid for the risk",
+    "benchmark_nature_note": "The benchmark return is a past realised return (10 years of prices), not a promise: it is what the index did — including an exceptional decade for US equities — not what it will do. Your portfolio's simulated capital is a projection at a constant expected return. So these are not two figures of the same nature in raw euros — look at return / risk and 'At comparable risk' below.",
+    "benchmark_concentrated_note": "{{bench}} is an equity index concentrated on a single market, more volatile and more exposed to a handful of very large stocks. Comparing without adjusting for risk is meaningless.",
+    "perf_hist_note": "You: expected return. Benchmark: realised 10-year return.",
+    "carbon_real_note": "Real issuer data · {{coverage}}% of the portfolio covered",
+    "carbon_estimated_note": "Estimated from the impact score, pending real carbon data on every asset",
+    "carbon_real_short": "real carbon · {{coverage}}% covered",
+    "carbon_estimated_short": "estimate"
   },
   "market_freshness": {
     "stale_title": "Market prices a bit old",

@@ -83,7 +83,6 @@ const BENCHMARK_OPTIONS: BenchmarkOption[] = [
   { id: "cac40", labelKey: "comparatif_panel.benchmark_cac40", data: CAC40 },
 ];
 
-
 function PerfMedaillon({ value, max, accent }: { value: number; max: number; accent?: boolean }) {
   const w = Math.max(4, Math.min(100, (Math.abs(value) / max) * 100));
   return (
@@ -113,23 +112,33 @@ export function ComparatifPanel() {
   const ref = benchmark.data;
 
   const metrics = portfolio.metrics;
+
+  // Empreinte carbone : on privilégie la donnée réelle (intensité carbone agrégée
+  // sur les émetteurs, avec sa couverture) et on ne retombe sur l'estimation
+  // heuristique que si aucune donnée réelle n'est disponible — auquel cas on
+  // l'affiche comme estimée (§1.2 : pas de chiffre fabriqué déguisé en fait).
+  const realCarbon = metrics?.carbon_intensity_gco2e_per_eur ?? null;
+  const carbonCoverage = metrics?.carbon_intensity_coverage ?? 0;
+  const carbonIsReal = realCarbon != null && carbonCoverage > 0;
+  const seedowCarbon = carbonIsReal
+    ? realCarbon
+    : metrics?.co2_avoided_tons
+      ? Math.max(0, MSCI_WORLD.carbonIntensityGperEur - metrics.co2_avoided_tons * 100)
+      : MSCI_WORLD.carbonIntensityGperEur;
+
   const seedow = {
     name: portfolio.name,
     expectedReturn: metrics?.expected_return ?? 0.06,
     volatility: metrics?.volatility ?? 0.12,
     ter: metrics?.ter ?? 0.0025,
     esgScore: metrics?.esg_score ?? 0,
-    carbonIntensityGperEur: metrics?.co2_avoided_tons
-      ? Math.max(0, MSCI_WORLD.carbonIntensityGperEur - metrics.co2_avoided_tons * 100)
-      : MSCI_WORLD.carbonIntensityGperEur,
+    carbonIntensityGperEur: seedowCarbon,
     sfdr: "Article 8 / 9",
   };
 
   const capital = valuation.totalInvested || portfolio.initial_amount || 10_000;
   const project = (r: number) => capital * Math.pow(1 + r, 10);
   const seedow10y = project(seedow.expectedReturn);
-  const ref10y = ref ? project(ref.expectedReturn) : null;
-  const delta10y = ref10y !== null ? seedow10y - ref10y : null;
 
   // ── Comparaison à risque comparable ────────────────────────────────────────
   // Un portefeuille multi-actifs à 6 % de vol face à un indice actions à 14 %
@@ -159,7 +168,6 @@ export function ComparatifPanel() {
 
   const eur0 = (v: number) =>
     v.toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-
 
   const BenchmarkSelector = (
     <div
@@ -213,7 +221,24 @@ export function ComparatifPanel() {
         {t("comparatif_panel.benchmark_label")}
       </p>
       {BenchmarkSelector}
+      {/* Titre honnête : le rendement / risque ne peut pas être faussé par un
+          écart de niveau de risque, contrairement à un écart en euros bruts
+          entre un rendement attendu (Seedow) et un rendement réalisé (indice). */}
       <div className="grid grid-cols-2 gap-4">
+        <KPIFigure
+          size="sm"
+          label={t("comparatif_panel.reward_risk")}
+          value={rewardRisk.toFixed(2)}
+          accent={refRewardRisk === null || rewardRisk >= refRewardRisk}
+          hint={
+            refRewardRisk !== null
+              ? t("comparatif_panel.reward_risk_headline_hint", {
+                  bench: t(benchmark.labelKey),
+                  value: refRewardRisk.toFixed(2),
+                })
+              : undefined
+          }
+        />
         <KPIFigure
           size="sm"
           label={t("comparatif_panel.simulated_10y")}
@@ -222,7 +247,6 @@ export function ComparatifPanel() {
             maximumFractionDigits: 0,
           })}
           unit="€"
-          accent
           hint={t("comparatif_panel.on_invested", {
             amount: capital.toLocaleString("fr-FR", {
               minimumFractionDigits: 0,
@@ -230,21 +254,18 @@ export function ComparatifPanel() {
             }),
           })}
         />
-        <KPIFigure
-          size="sm"
-          label={t("comparatif_panel.gap_msci")}
-          value={`${delta10y! >= 0 ? "+" : ""}${delta10y!.toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`}
-          unit="€"
-          hint={
-            delta10y! >= 0
-              ? t("comparatif_panel.above_benchmark")
-              : t("comparatif_panel.below_benchmark")
-          }
-        />
       </div>
       <p className="mt-3 text-caption text-ink-3 leading-relaxed">
         {t("comparatif_panel.projection_disclaimer")}
       </p>
+      <p className="mt-2 text-caption text-ink-3 leading-relaxed">
+        {t("comparatif_panel.benchmark_nature_note")}
+      </p>
+      {benchmark.id !== "msci_world" && (
+        <p className="mt-2 text-caption text-ink-3 leading-relaxed">
+          {t("comparatif_panel.benchmark_concentrated_note", { bench: t(benchmark.labelKey) })}
+        </p>
+      )}
       <p className="mt-2 text-caption text-ink-3 leading-relaxed">
         Référence : {ref.name} ({ref.ticker}). Rendement et volatilité annualisés sur 10 ans de
         cours mensuels ajustés (Yahoo Finance, arrêtés au 02/08/2026) ; TER issu du DIC de
@@ -311,14 +332,11 @@ export function ComparatifPanel() {
             {t("comparatif_panel.price_title")}
           </p>
           <p className="text-label text-ink-2 leading-relaxed">
-            {t(
-              deltaScaled10y < 0 ? "comparatif_panel.price_cost" : "comparatif_panel.price_gain",
-              {
-                delta: eur0(Math.abs(deltaScaled10y)),
-                bench: t(benchmark.labelKey),
-                capital: eur0(capital),
-              },
-            )}
+            {t(deltaScaled10y < 0 ? "comparatif_panel.price_cost" : "comparatif_panel.price_gain", {
+              delta: eur0(Math.abs(deltaScaled10y)),
+              bench: t(benchmark.labelKey),
+              capital: eur0(capital),
+            })}
           </p>
         </div>
       )}
@@ -358,9 +376,6 @@ export function ComparatifPanel() {
         </p>
       </div>
 
-
-
-
       <div className="mt-8">
         <div className="gold-rule mb-5" />
         <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">
@@ -378,6 +393,7 @@ export function ComparatifPanel() {
             seedowValue={`${(seedow.expectedReturn * 100).toFixed(1)} %`}
             msciValue={`${(ref.expectedReturn * 100).toFixed(1)} %`}
             seedowWins={seedow.expectedReturn >= ref.expectedReturn}
+            note={t("comparatif_panel.perf_hist_note")}
             bar={
               <PerfMedaillon
                 value={seedow.expectedReturn}
@@ -425,7 +441,13 @@ export function ComparatifPanel() {
               ref.carbonIntensityGperEur != null &&
               seedow.carbonIntensityGperEur <= ref.carbonIntensityGperEur
             }
-            note={t("comparatif_panel.per_euro")}
+            note={
+              carbonIsReal
+                ? t("comparatif_panel.carbon_real_note", {
+                    coverage: Math.round(carbonCoverage * 100),
+                  })
+                : t("comparatif_panel.carbon_estimated_note")
+            }
           />
 
           <CompareRow
@@ -458,7 +480,15 @@ export function ComparatifPanel() {
               })}
               unit="kg/an"
               accent
-              hint={t("comparatif_panel.paris_lyon_trips", { count: Math.round(co2EvitedKg / 120) })}
+              hint={`${t("comparatif_panel.paris_lyon_trips", {
+                count: Math.round(co2EvitedKg / 120),
+              })} · ${
+                carbonIsReal
+                  ? t("comparatif_panel.carbon_real_short", {
+                      coverage: Math.round(carbonCoverage * 100),
+                    })
+                  : t("comparatif_panel.carbon_estimated_short")
+              }`}
             />
           )}
 
