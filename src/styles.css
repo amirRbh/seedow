@@ -1150,19 +1150,21 @@
 .apple-landing .rv-hero {
   position: relative;
   overflow: hidden;
-  background: var(--apple-dark);
-  color: #ffffff;
+  background: var(--apple-surface);
+  color: var(--apple-text);
+  border-bottom: 1px solid var(--paper-3);
   border-bottom-left-radius: 40px;
   border-bottom-right-radius: 40px;
 }
 .apple-landing .rv-hero .apple-title,
 .apple-landing .rv-hero h1,
 .apple-landing .rv-hero h2 {
-  color: #ffffff;
+  color: var(--apple-text);
 }
 .apple-landing .rv-hero .apple-subtitle {
-  color: #b8b8bf;
+  color: var(--apple-text-2);
 }
+
 .apple-landing .rv-hero-glow {
   position: absolute;
   inset: -20% -10% auto -10%;
