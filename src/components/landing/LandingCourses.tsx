@@ -3,6 +3,9 @@ import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { COURSES } from "@/content/courses";
 import { getReadingState } from "@/lib/courses/reading";
+import { CoursePreviewDialog } from "@/components/landing/CoursePreviewDialog";
+import type { Course } from "@/content/courses";
+import { trackAppEvent } from "@/lib/analytics/appEvents";
 
 /**
  * Section « Apprends d'abord » de la landing : les cours en accès libre comme
@@ -23,6 +26,7 @@ export function LandingCourses() {
   }, []);
 
   const starters = COURSES.slice(0, 3);
+  const [previewed, setPreviewed] = useState<Course | null>(null);
 
   return (
     <section style={{ background: "var(--apple-surface)" }} className="px-6 py-24 md:py-32">
@@ -59,11 +63,14 @@ export function LandingCourses() {
         ) : (
           <div className="grid sm:grid-cols-3 gap-4">
             {starters.map((c) => (
-              <Link
+              <button
                 key={c.slug}
-                to="/cours/$slug"
-                params={{ slug: c.slug }}
-                className="apple-card p-6 flex flex-col gap-3 hover:opacity-95 transition-opacity"
+                type="button"
+                onClick={() => {
+                  setPreviewed(c);
+                  void trackAppEvent("course_preview_opened", { slug: c.slug });
+                }}
+                className="apple-card p-6 flex flex-col gap-3 text-left hover:opacity-95 transition-opacity"
                 style={{ background: "var(--apple-bg)", border: "1px solid #d2d2d7" }}
               >
                 <span className="text-caption font-mono tabular-nums text-[color:var(--apple-text-2)]">
@@ -76,9 +83,9 @@ export function LandingCourses() {
                   {c.description}
                 </span>
                 <span className="apple-link text-body-sm mt-1">
-                  {t("landing.learn.read_cta")} <span aria-hidden>›</span>
+                  {t("landing.learn.preview_cta")} <span aria-hidden>›</span>
                 </span>
-              </Link>
+              </button>
             ))}
           </div>
         )}
@@ -89,6 +96,13 @@ export function LandingCourses() {
           </Link>
         </div>
       </div>
+
+      <CoursePreviewDialog
+        course={previewed}
+        onOpenChange={(open) => {
+          if (!open) setPreviewed(null);
+        }}
+      />
     </section>
   );
 }
