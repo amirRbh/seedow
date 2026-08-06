@@ -38,6 +38,10 @@ export const Route = createFileRoute("/")({
 function Landing() {
   const { t } = useTranslation();
   const [isAuthed, setIsAuthed] = useState<boolean | null>(null);
+  const { capacity } = useBetaCapacity();
+  const betaLeft = capacity && capacity.status === "open" ? capacity.slotsLeft : null;
+
+
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setIsAuthed(!!data.session));
