@@ -7,7 +7,6 @@ import { LandingCourses } from "@/components/landing/LandingCourses";
 import { LandingTour } from "@/components/landing/LandingTour";
 import { KPIFigure } from "@/components/ui/KPIFigure";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
-import { useBetaCapacity } from "@/hooks/useBetaCapacity";
 
 const SITE_URL = "https://seedow.life";
 
