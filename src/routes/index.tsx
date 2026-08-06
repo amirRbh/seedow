@@ -143,9 +143,9 @@ function Landing() {
               style={{
                 fontSize: 12,
                 letterSpacing: "0.06em",
-                color: "#e6e6ea",
-                background: "rgba(255,255,255,0.08)",
-                border: "1px solid rgba(255,255,255,0.16)",
+                color: "var(--apple-text-2)",
+                background: "var(--apple-bg)",
+                border: "1px solid var(--paper-3)",
               }}
             >
               <span aria-hidden className="apple-live" />
@@ -162,7 +162,7 @@ function Landing() {
 
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 mt-9">
               {isAuthed ? (
-                <Link to="/dashboard" className="apple-btn-primary btn-on-ink">
+                <Link to="/dashboard" className="apple-btn-primary">
                   {t("landing.rv.hero.cta_authed")}
                 </Link>
               ) : (
@@ -181,9 +181,9 @@ function Landing() {
                     onClick={onCta("hero", "signup")}
                     className="apple-btn-secondary"
                     style={{
-                      background: "rgba(255,255,255,0.10)",
-                      color: "#ffffff",
-                      border: "1px solid rgba(255,255,255,0.22)",
+                      background: "var(--apple-bg)",
+                      color: "var(--apple-text)",
+                      border: "1px solid var(--paper-3)",
                     }}
                   >
                     {t("landing.rv.hero.cta_secondary")}
@@ -192,7 +192,7 @@ function Landing() {
               )}
             </div>
 
-            <p className="mt-5 text-body-sm" style={{ color: "#a1a1a6" }}>
+            <p className="mt-5 text-body-sm" style={{ color: "var(--apple-text-2)" }}>
               {t("landing.rv.hero.note")}
             </p>
           </div>
@@ -309,9 +309,9 @@ function Landing() {
           />
         </Reveal>
 
-        {/* 3 · Le constat (alert, fond ink) */}
+        {/* 3 · Le constat (solar, fond ink) */}
         <Reveal>
-          <section className="accent-alert rv-card rv-card--ink text-center">
+          <section className="accent-solar rv-card rv-card--ink text-center">
             <p className="rv-card-eyebrow justify-center">
               <span aria-hidden className="rv-card-dot" />
               {t("landing.rv.cards.problem.eyebrow")}
@@ -426,7 +426,7 @@ function Landing() {
 
             <div className="mt-10 flex flex-col items-center gap-4">
               {isAuthed ? (
-                <Link to="/dashboard" className="apple-btn-primary btn-on-ink">
+                <Link to="/dashboard" className="apple-btn-primary">
                   {t("landing.rv.hero.cta_authed")}
                 </Link>
               ) : (
