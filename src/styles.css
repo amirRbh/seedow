@@ -72,6 +72,10 @@
   --color-alert: var(--alert);
   --color-volt: var(--volt);
   --color-solar-ink: var(--solar-ink);
+  --color-mint-ink: var(--mint-ink);
+  --color-ice-ink: var(--ice-ink);
+  --color-volt-ink: var(--volt-ink);
+  --color-alert-ink: var(--alert-ink);
   --color-section-accent: var(--section-accent);
   --color-section-accent-ink: var(--section-accent-ink);
 
@@ -160,19 +164,24 @@
        volt  = pédagogie, cours, méthode, modèle économique
        alert = problème, greenwashing, mauvais score (rare, donc fort)
        solar = nuance, transparence méthodologique, marché, équipe
-     Contraste sur fond blanc : mint 4.78 · ice 4.70 · volt 5.39 · alert 4.70
-     (tous AA pour du texte). Solar = 3.64 → aplats/filets/badges uniquement,
-     utiliser --solar-ink dès qu'il doit porter du texte. */
+     Les hex de marque restent intacts (aplats, filets, graphiques). Dès qu'un
+     accent porte du TEXTE (badge, label, KPI sur fond papier ou teinté), on
+     utilise la variante `--*-ink`, assombrie pour tenir AA (≥4.5:1) même sur
+     --paper-2 et sur les fonds teintés. Vérifié par src/lib/a11y. */
   --mint: #1d8348;
   --ice: #0071e3;
   --volt: #6e56cf;
   --alert: #e11d48;
   --solar: #b7791f;
   --solar-ink: #8a5a13; /* variante texte-safe de solar (~5.2:1 sur blanc) */
+  --mint-ink: #19703d;
+  --ice-ink: #0064c8;
+  --volt-ink: #6349c4;
+  --alert-ink: #c81640;
 
   /* Accent de section — surchargé par .accent-* ; défaut = marque */
   --section-accent: var(--mint);
-  --section-accent-ink: var(--mint);
+  --section-accent-ink: var(--mint-ink);
 
   /* Aliases legacy */
   --rust: #e11d48;
@@ -187,13 +196,13 @@
   /* Fonds/bordures "tinted" — remplacent ~15 oklch(...) ad-hoc dispersés
      dans les composants (bannières, badges, tons "loss/withdrawal/gold-tier"). */
   --alert-tint: oklch(0.95 0.03 45);
-  --alert-tint-border: oklch(0.88 0.07 45);
+  --alert-tint-border: oklch(0.84 0.1 45);
   --solar-tint: oklch(0.95 0.05 85);
-  --solar-tint-border: oklch(0.88 0.08 85);
+  --solar-tint-border: oklch(0.84 0.11 85);
   --bloom-tint: oklch(0.96 0.04 310);
-  --bloom-tint-border: oklch(0.88 0.07 310);
+  --bloom-tint-border: oklch(0.84 0.1 310);
   --sky-tint: oklch(0.96 0.03 230);
-  --sky-tint-border: oklch(0.88 0.06 230);
+  --sky-tint-border: oklch(0.84 0.09 230);
 
   /* shadcn mapping */
   --background: var(--paper);
@@ -248,6 +257,12 @@
   --alert: #ff5c7a;
   --solar: #d9a648;
   --solar-ink: #e0b158;
+  /* Variantes texte : en sombre il faut éclaircir (et non assombrir) pour
+     tenir AA sur --paper / --paper-2 et sur les fonds teintés. */
+  --mint-ink: #57c98a;
+  --ice-ink: #6fb8ff;
+  --volt-ink: #b3a2f2;
+  --alert-ink: #ff8298;
   --alert-tint: oklch(0.28 0.05 45);
   --alert-tint-border: oklch(0.4 0.08 45);
   --solar-tint: oklch(0.28 0.06 85);
@@ -452,35 +467,35 @@
     color: var(--color-ink-2);
   }
   .eyebrow--accent {
-    color: var(--color-mint);
+    color: var(--color-mint-ink);
   }
   .eyebrow--ice {
-    color: var(--color-ice);
+    color: var(--color-ice-ink);
   }
   .eyebrow--volt {
-    color: var(--color-volt);
+    color: var(--color-volt-ink);
   }
   .eyebrow--solar {
     color: var(--color-solar-ink);
   }
   .eyebrow--alert {
-    color: var(--color-alert);
+    color: var(--color-alert-ink);
   }
 
   /* Accent de section — un seul accent par section, en plus du mint de marque.
      Les composants lisent var(--section-accent) au lieu de coder une couleur.
-     --section-accent-ink = variante texte-safe (identique sauf pour solar). */
+     --section-accent-ink = variante texte-safe (AA sur papier et sur tint). */
   .accent-mint {
     --section-accent: var(--mint);
-    --section-accent-ink: var(--mint);
+    --section-accent-ink: var(--mint-ink);
   }
   .accent-ice {
     --section-accent: var(--ice);
-    --section-accent-ink: var(--ice);
+    --section-accent-ink: var(--ice-ink);
   }
   .accent-volt {
     --section-accent: var(--volt);
-    --section-accent-ink: var(--volt);
+    --section-accent-ink: var(--volt-ink);
   }
   .accent-solar {
     --section-accent: var(--solar);
@@ -488,7 +503,7 @@
   }
   .accent-alert {
     --section-accent: var(--alert);
-    --section-accent-ink: var(--alert);
+    --section-accent-ink: var(--alert-ink);
   }
 
   /* Filet — séparateur signature, trait plein flat */
@@ -613,9 +628,16 @@
     background-color: var(--color-ink);
     color: var(--color-paper);
     border-radius: 16px;
+    /* Sur fond encre, les variantes texte doivent être éclaircies : on les
+       redéfinit localement pour que tout `--*-ink` reste lisible. */
+    --mint-ink: #57c98a;
+    --ice-ink: #6fb8ff;
+    --volt-ink: #b3a2f2;
+    --alert-ink: #ff8298;
+    --solar-ink: #e0b158;
   }
   .ink-section .eyebrow {
-    color: var(--color-mint);
+    color: var(--color-mint-ink);
   }
   .ink-section h1,
   .ink-section h2,
@@ -810,7 +832,7 @@
   background: #e8e8ed;
 }
 .apple-link {
-  color: var(--ice);
+  color: var(--ice-ink);
   font-weight: 400;
   font-size: 17px;
   letter-spacing: -0.01em;
@@ -1057,7 +1079,7 @@
 /* Ancien nom conservé pour compat (utilisé dans plusieurs sections landing) :
    c'est désormais une couleur de signal UNIE (--mint), plus un dégradé. */
 .apple-grad {
-  color: var(--mint);
+  color: var(--mint-ink);
 }
 
 .apple-landing .apple-badge {

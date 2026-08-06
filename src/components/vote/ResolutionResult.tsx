@@ -32,7 +32,7 @@ export function ResolutionResult({ resolution, bloc }: Props) {
           {t("vote.result.official")}
         </p>
         {resolution.outcomePct != null ? (
-          <p className="mt-3 font-mono text-[clamp(3rem,12vw,4.5rem)] font-bold leading-none tracking-tight text-mint tabular-nums">
+          <p className="mt-3 font-mono text-[clamp(3rem,12vw,4.5rem)] font-bold leading-none tracking-tight text-mint-ink tabular-nums">
             {pctFmt.format(resolution.outcomePct)}&nbsp;%
           </p>
         ) : (

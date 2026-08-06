@@ -799,7 +799,7 @@ function StepExplainer({ stepId }: { stepId: (typeof STEPS)[number]["id"] }) {
         href={`/cours/${slug}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-2 inline-flex items-center gap-1 text-caption font-semibold text-mint hover:opacity-80 transition-opacity"
+        className="mt-2 inline-flex items-center gap-1 text-caption font-semibold text-mint-ink hover:opacity-80 transition-opacity"
       >
         {t("onboarding.explainer.link")} <span aria-hidden>↗</span>
       </a>

@@ -83,7 +83,7 @@ export function ClimateLeverCard({
                 initial={{ opacity: 0.4 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3, ease: EASE_REVEAL }}
-                className="font-value text-lg text-mint"
+                className="font-value text-lg text-mint-ink"
               >
                 {fmtWaci(result.estimatedWaci)}
               </motion.span>

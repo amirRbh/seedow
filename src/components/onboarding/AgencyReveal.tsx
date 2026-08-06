@@ -103,7 +103,7 @@ export function AgencyReveal({
         </button>
         <span className="inline-flex items-center gap-2">
           <span aria-hidden="true" className="apple-live" />
-          <span className="font-mono text-tag uppercase tracking-[0.14em] text-mint">
+          <span className="font-mono text-tag uppercase tracking-[0.14em] text-mint-ink">
             {t("onboarding.agency.eyebrow")}
           </span>
         </span>
@@ -143,7 +143,7 @@ export function AgencyReveal({
               {resolution.ticker ? ` · ${resolution.ticker}` : ""}
             </span>
             {days != null && (
-              <span className="inline-flex items-center gap-1.5 font-mono text-tag uppercase tracking-[0.08em] text-mint">
+              <span className="inline-flex items-center gap-1.5 font-mono text-tag uppercase tracking-[0.08em] text-mint-ink">
                 <span aria-hidden="true" className="apple-live" />
                 {days === 0 ? t("vote.status.last_day") : t("vote.status.days_left", { n: days })}
               </span>

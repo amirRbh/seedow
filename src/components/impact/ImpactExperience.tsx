@@ -373,7 +373,7 @@ function VsWorldBars({
   return (
     <div className="space-y-5">
       <p className="text-body-lg leading-snug text-ink">
-        <span className={`font-semibold ${cleaner ? "text-mint" : "text-solar"}`}>{pct}%</span>{" "}
+        <span className={`font-semibold ${cleaner ? "text-mint-ink" : "text-solar-ink"}`}>{pct}%</span>{" "}
         {t(cleaner ? "impact_xp.vs_world.cleaner" : "impact_xp.vs_world.dirtier")}
       </p>
       <div className="space-y-3">
@@ -533,9 +533,9 @@ function ConfidenceBadge({ coverage }: { coverage: number }) {
   const pct = Math.round(Math.max(0, Math.min(1, coverage)) * 100);
   const tone =
     tier === "high"
-      ? "bg-mint/12 text-mint"
+      ? "bg-mint/12 text-mint-ink"
       : tier === "partial"
-        ? "bg-solar-tint text-solar"
+        ? "bg-solar-tint text-solar-ink"
         : "bg-paper-2 text-ink-3";
   return (
     <span
@@ -704,7 +704,7 @@ function SectionHeading({ n, title, subtitle }: { n: string; title: string; subt
   return (
     <div className="px-1">
       <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-ink-3">
-        <span className="text-mint">N° {n}</span> · {title}
+        <span className="text-mint-ink">N° {n}</span> · {title}
       </p>
       {subtitle && <p className="mt-1 text-body-sm leading-snug text-ink-2">{subtitle}</p>}
     </div>

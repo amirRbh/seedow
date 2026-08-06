@@ -5,9 +5,9 @@ import { EASE_REVEAL } from "@/lib/motion";
 import type { ReveilDispatch, ReveilTone } from "@/lib/reveil/reveil";
 
 const TONE_STYLE: Record<ReveilTone, { chip: string; icon: string }> = {
-  action: { chip: "bg-sky-tint text-ice", icon: "→" },
-  caution: { chip: "bg-solar-tint text-solar", icon: "△" },
-  bright: { chip: "bg-mint/10 text-mint", icon: "↑" },
+  action: { chip: "bg-sky-tint text-ice-ink", icon: "→" },
+  caution: { chip: "bg-solar-tint text-solar-ink", icon: "△" },
+  bright: { chip: "bg-mint/10 text-mint-ink", icon: "↑" },
 };
 
 interface Props {
