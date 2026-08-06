@@ -131,60 +131,63 @@ function Landing() {
         </div>
       </nav>
 
-      {/* HERO — DA « synthèse » : auras de marque + dégradé mint→ice */}
-      <section className="relative overflow-hidden px-6 pt-20 pb-24 md:pt-24 md:pb-28">
+      {/* HERO — promesse explicite + preuve produit immédiate */}
+      <section className="relative overflow-hidden px-6 pt-16 pb-20 md:pt-20 md:pb-24">
         <div aria-hidden className="apple-aura apple-aura--mint" />
         <div aria-hidden className="apple-aura apple-aura--ice" />
 
-        <div className="relative z-10 max-w-6xl mx-auto flex flex-col items-center text-center">
-          {/* Badge marque avec point live */}
-          <span className="apple-badge">
-            <span aria-hidden className="apple-live" />
-            {t("landing.hero.trust_certified")} · {t("landing.hero.trust_no_greenwashing")}
-          </span>
+        <div className="relative z-10 max-w-[1100px] mx-auto grid lg:grid-cols-[1.05fr_1fr] gap-14 lg:gap-16 items-center">
+          <div className="text-center lg:text-left flex flex-col items-center lg:items-start">
+            <span className="apple-badge">
+              <span aria-hidden className="apple-live" />
+              {t("landing.hero2.eyebrow")}
+            </span>
 
-          <h1 className="apple-title apple-title-lg mx-auto max-w-[900px] mt-7">
-            {t("landing.hero.title_line1")}
-            <br />
-            {t("landing.hero.title_line2_pre")}
-            <span className="apple-grad">{t("landing.hero.title_accent")}</span>
-            {t("landing.hero.title_line2_post")}
-          </h1>
+            <h1 className="apple-title apple-title-lg mt-6 max-w-[620px]">
+              {t("landing.hero2.title_line1")}
+              <br />
+              <span className="apple-grad">{t("landing.hero2.title_accent")}</span>
+            </h1>
 
-          <p className="apple-subtitle mx-auto max-w-[620px] mt-6">{t("landing.hero.subtitle")}</p>
+            <p className="apple-subtitle mt-6 max-w-[520px]">{t("landing.hero2.subtitle")}</p>
 
-          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 mt-10">
-            {isAuthed ? (
-              <Link to="/dashboard" className="apple-btn-primary">
-                {t("landing.hero.cta_authed")}
-              </Link>
-            ) : (
-              <>
-                <Link
-                  to="/onboarding"
-                  search={{ guest: true }}
-                  onClick={onCta("hero", "preview")}
-                  className="apple-btn-primary"
-                >
-                  {t("landing.hero.cta_guest")}
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 mt-9">
+              {isAuthed ? (
+                <Link to="/dashboard" className="apple-btn-primary">
+                  {t("landing.hero.cta_authed")}
                 </Link>
-                <Link
-                  to="/auth"
-                  onClick={onCta("hero", "signup")}
-                  className="apple-btn-secondary"
-                >
-                  {t("landing.hero.cta_new_account")}
-                </Link>
-              </>
+              ) : (
+                <>
+                  <Link
+                    to="/onboarding"
+                    search={{ guest: true }}
+                    onClick={onCta("hero", "preview")}
+                    className="apple-btn-primary"
+                  >
+                    {t("landing.hero.cta_guest")}
+                  </Link>
+                  <Link
+                    to="/auth"
+                    onClick={onCta("hero", "signup")}
+                    className="apple-btn-secondary"
+                  >
+                    {t("landing.hero.cta_new_account")}
+                  </Link>
+                </>
+              )}
+            </div>
+            {!isAuthed && (
+              <p className="mt-4 text-body-sm text-[color:var(--apple-text-2)]">
+                {t("landing.hero.trust_line")}
+                {betaLeft !== null ? ` · ${t("landing.hero2.beta_slots", { count: betaLeft })}` : ""}
+              </p>
             )}
           </div>
-          {!isAuthed && (
-            <p className="mt-4 text-body-sm text-[color:var(--apple-text-2)]">
-              {t("landing.hero.trust_line")}
-            </p>
-          )}
+
+          <HeroPreview t={t} />
         </div>
       </section>
+
 
       {/* SECTION — quick win : tester un fonds sans compte, la démo qui vend */}
       <EsgQuickCheck />
