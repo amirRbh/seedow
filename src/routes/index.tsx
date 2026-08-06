@@ -6,6 +6,8 @@ import { EsgQuickCheck } from "@/components/landing/EsgQuickCheck";
 import { LandingCourses } from "@/components/landing/LandingCourses";
 import { KPIFigure } from "@/components/ui/KPIFigure";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
+import { useBetaCapacity } from "@/hooks/useBetaCapacity";
+
 
 const SITE_URL = "https://seedow.life";
 
