@@ -272,6 +272,46 @@
       "cta_simulate": "Simulate free · 2 min",
       "cta_read": "Read the full course",
       "note": "Courses are free to read, no account needed. So is the simulation."
+    },
+    "tour": {
+      "eyebrow": "In 3 steps",
+      "title": "Understand, see, compare.",
+      "subtitle": "A 30-second tour so you know exactly what you get before starting the preview.",
+      "cta": "Start the preview · no account",
+      "cta_note": "No sign-up, no card.",
+      "understand": {
+        "tab": "I understand",
+        "tagline": "Your convictions, turned into criteria.",
+        "title": "You choose what your money should not fund.",
+        "desc": "Climate, biodiversity, human rights: each conviction becomes a concrete filter on the asset universe. No vague “green” checkbox — criteria you can actually read.",
+        "note": "Criteria and weightings are detailed in the methodology.",
+        "visual_label": "Your convictions",
+        "conviction_1": "Fossil fuel exit",
+        "conviction_2": "Biodiversity",
+        "conviction_3": "Human rights"
+      },
+      "see": {
+        "tab": "I see",
+        "tagline": "A portfolio in numbers, not a promise.",
+        "title": "You see the allocation and its real footprint.",
+        "desc": "ESG score, carbon intensity, breakdown by asset class: the numbers show up right away, each with its source and date.",
+        "note": "Real market data, refreshed hourly.",
+        "visual_label": "Your preview",
+        "kpi_esg": "ESG score",
+        "kpi_carbon": "Carbon intensity vs index",
+        "visual_note": "Breakdown by asset class."
+      },
+      "compare": {
+        "tab": "I compare",
+        "tagline": "Against a classic ETF.",
+        "title": "You compare it with what you already know.",
+        "desc": "Same amount, same horizon, against a classic world ETF: you see the cost — or the gain — of alignment, unvarnished.",
+        "note": "Simulation based on historical data. Past performance does not predict future results.",
+        "visual_label": "10-year simulation",
+        "row_seedow": "Seedow portfolio",
+        "row_etf": "Classic world ETF",
+        "visual_note": "On €10,000 invested, at comparable risk."
+      }
     }
   },
   "auth": {

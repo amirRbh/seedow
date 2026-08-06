@@ -272,6 +272,46 @@
       "cta_simulate": "Simuler sans compte · 2 min",
       "cta_read": "Lire le cours complet",
       "note": "Cours en accès libre, sans compte. La simulation aussi."
+    },
+    "tour": {
+      "eyebrow": "En 3 étapes",
+      "title": "Comprendre, voir, comparer.",
+      "subtitle": "Une visite de 30 secondes pour savoir exactement ce que tu obtiens avant de lancer l'aperçu.",
+      "cta": "Lancer l'aperçu · sans compte",
+      "cta_note": "Aucune inscription, aucune carte bancaire.",
+      "understand": {
+        "tab": "Je comprends",
+        "tagline": "Tes convictions, traduites en critères.",
+        "title": "Tu choisis ce que ton argent ne doit pas financer.",
+        "desc": "Climat, biodiversité, droits humains : chaque conviction devient un filtre concret appliqué à l'univers d'actifs. Pas de case « engagé » vague — des critères que tu peux lire.",
+        "note": "Les critères et leurs pondérations sont détaillés dans la méthodologie.",
+        "visual_label": "Tes convictions",
+        "conviction_1": "Sortie des énergies fossiles",
+        "conviction_2": "Biodiversité",
+        "conviction_3": "Droits humains"
+      },
+      "see": {
+        "tab": "Je vois",
+        "tagline": "Un portefeuille chiffré, pas une promesse.",
+        "title": "Tu vois l'allocation et son empreinte réelle.",
+        "desc": "Score ESG, intensité carbone, répartition par classe d'actif : les chiffres apparaissent immédiatement, avec la source et la date de chaque donnée.",
+        "note": "Données de marché réelles, mises à jour chaque heure.",
+        "visual_label": "Ton aperçu",
+        "kpi_esg": "Score ESG",
+        "kpi_carbon": "Intensité carbone vs indice",
+        "visual_note": "Répartition par classe d'actif."
+      },
+      "compare": {
+        "tab": "Je compare",
+        "tagline": "Face à un ETF classique.",
+        "title": "Tu compares avec ce que tu connais déjà.",
+        "desc": "Le même montant, sur le même horizon, comparé à un ETF monde classique : tu vois le coût — ou le gain — de l'alignement, sans habillage.",
+        "note": "Simulation à partir de données historiques. Les performances passées ne préjugent pas des performances futures.",
+        "visual_label": "Simulation 10 ans",
+        "row_seedow": "Portefeuille Seedow",
+        "row_etf": "ETF monde classique",
+        "visual_note": "Sur 10 000 € investis, à risque comparable."
+      }
     }
   },
   "auth": {

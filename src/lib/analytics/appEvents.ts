@@ -17,6 +17,7 @@ import { getSessionId } from "@/lib/preferences/tracking";
 export type AppEventName =
   | "landing_viewed"
   | "landing_cta_clicked"
+  | "landing_tour_step_viewed"
   | "preview_started"
   | "account_created"
   | "search_performed"
