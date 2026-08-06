@@ -24,10 +24,10 @@ export function LandingTour() {
   };
 
   return (
-    <section className="px-6 py-20 md:py-28">
+    <section className="accent-ice px-6 py-20 md:py-28">
       <div className="max-w-[980px] mx-auto">
         <div className="text-center">
-          <p className="apple-eyebrow" style={{ color: "var(--mint)" }}>
+          <p className="apple-eyebrow" style={{ color: "var(--section-accent)" }}>
             {t("landing.tour.eyebrow")}
           </p>
           <h2 className="apple-title mx-auto max-w-[720px] mt-3">{t("landing.tour.title")}</h2>
@@ -149,7 +149,7 @@ function TourVisual({
               className="flex items-center justify-between px-4 py-3 text-body-sm"
               style={{
                 background: "var(--apple-bg)",
-                border: `1px solid ${i === 0 ? "var(--mint)" : "var(--paper-3)"}`,
+                border: `1px solid ${i === 0 ? "var(--section-accent)" : "var(--paper-3)"}`,
                 borderRadius: 100,
                 color: "var(--apple-text)",
               }}
@@ -157,7 +157,7 @@ function TourVisual({
               {t(`landing.tour.understand.conviction_${i + 1}`)}
               <span
                 className="font-mono text-caption"
-                style={{ color: i === 0 ? "var(--mint)" : "var(--apple-text-2)" }}
+                style={{ color: i === 0 ? "var(--section-accent)" : "var(--apple-text-2)" }}
               >
                 {i === 0 ? "ON" : "OFF"}
               </span>
@@ -182,8 +182,8 @@ function TourVisual({
           <KPIFigure size="sm" label={t("landing.tour.see.kpi_carbon")} value="-38 %" />
         </div>
         <div className="mt-4 flex h-2 overflow-hidden" style={{ borderRadius: 100 }}>
-          <span style={{ background: "var(--mint)", width: "46%" }} />
-          <span style={{ background: "var(--ice)", width: "31%" }} />
+          <span style={{ background: "var(--section-accent)", width: "46%" }} />
+          <span style={{ background: "var(--volt)", width: "31%" }} />
           <span style={{ background: "var(--paper-3)", width: "23%" }} />
         </div>
         <p className="mt-3 text-caption text-[color:var(--apple-text-2)]">
@@ -215,7 +215,7 @@ function TourVisual({
               className="mt-2 h-2"
               style={{
                 width: row.width,
-                background: row.mint ? "var(--mint)" : "var(--paper-3)",
+                background: row.mint ? "var(--section-accent)" : "var(--paper-3)",
                 borderRadius: 100,
               }}
             />

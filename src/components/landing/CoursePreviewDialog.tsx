@@ -69,7 +69,7 @@ export function CoursePreviewDialog({
                       <span
                         aria-hidden
                         className="mt-[7px] inline-block w-[6px] h-[6px] rounded-full flex-shrink-0"
-                        style={{ background: "var(--mint)" }}
+                        style={{ background: "var(--volt)" }}
                       />
                       {item}
                     </li>
