@@ -250,7 +250,7 @@ function Landing() {
                 {t("landing.rv.cards.simulate.cta")}
               </Link>
             }
-            visual={<LandingTour />}
+            visual={<LandingTour embedded />}
             stacked
           />
         </Reveal>
@@ -359,7 +359,7 @@ function Landing() {
             eyebrow={t("landing.rv.cards.courses.eyebrow")}
             title={t("landing.rv.cards.courses.title")}
             desc={t("landing.rv.cards.courses.desc")}
-            visual={<LandingCourses />}
+            visual={<LandingCourses embedded />}
             stacked
           />
         </Reveal>
@@ -407,7 +407,7 @@ function Landing() {
                 {t("landing.rv.cards.method.cta")} <span aria-hidden>›</span>
               </Link>
             }
-            visual={<EsgQuickCheck />}
+            visual={<EsgQuickCheck embedded />}
             stacked
           />
         </Reveal>
