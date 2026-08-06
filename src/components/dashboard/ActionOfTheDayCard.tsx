@@ -78,7 +78,7 @@ export function ActionOfTheDayCard() {
           to="/discover"
           className="block rounded-2xl border border-solar/40 bg-solar-tint p-4 transition-colors hover:border-solar/70"
         >
-          <p className="font-mono text-tag uppercase tracking-[0.14em] text-solar">
+          <p className="font-mono text-tag uppercase tracking-[0.14em] text-solar-ink">
             {t("dashboard.action_of_day.greenwashing.eyebrow")}
           </p>
           <p className="mt-2 text-body-sm text-ink leading-snug">

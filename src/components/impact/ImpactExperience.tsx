@@ -373,7 +373,7 @@ function VsWorldBars({
   return (
     <div className="space-y-5">
       <p className="text-body-lg leading-snug text-ink">
-        <span className={`font-semibold ${cleaner ? "text-mint-ink" : "text-solar"}`}>{pct}%</span>{" "}
+        <span className={`font-semibold ${cleaner ? "text-mint-ink" : "text-solar-ink"}`}>{pct}%</span>{" "}
         {t(cleaner ? "impact_xp.vs_world.cleaner" : "impact_xp.vs_world.dirtier")}
       </p>
       <div className="space-y-3">
@@ -535,7 +535,7 @@ function ConfidenceBadge({ coverage }: { coverage: number }) {
     tier === "high"
       ? "bg-mint/12 text-mint-ink"
       : tier === "partial"
-        ? "bg-solar-tint text-solar"
+        ? "bg-solar-tint text-solar-ink"
         : "bg-paper-2 text-ink-3";
   return (
     <span
