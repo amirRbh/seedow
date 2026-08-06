@@ -45,7 +45,7 @@ export function LandingTour({ embedded = false }: { embedded?: boolean } = {}) {
         <div
           role="tablist"
           aria-label={t("landing.tour.title")}
-          className="mt-12 grid md:grid-cols-3 gap-3"
+          className={embedded ? "grid md:grid-cols-3 gap-3" : "mt-12 grid md:grid-cols-3 gap-3"}
         >
           {STEP_KEYS.map((key, i) => {
             const isActive = key === active;

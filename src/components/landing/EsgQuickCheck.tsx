@@ -17,7 +17,7 @@ import type { EsgPreviewAsset } from "@/routes/api.public.esg-preview";
  * Les données ne sont chargées qu'au premier focus/frappe : la landing reste
  * légère pour les visiteurs qui ne testent pas le widget.
  */
-export function EsgQuickCheck() {
+export function EsgQuickCheck({ embedded = false }: { embedded?: boolean } = {}) {
   const { t } = useTranslation();
   const [query, setQuery] = useState("");
   const [assets, setAssets] = useState<EsgPreviewAsset[] | null>(null);
@@ -62,17 +62,19 @@ export function EsgQuickCheck() {
   const showEmpty = status === "ready" && query.trim().length >= 2 && results.length === 0;
 
   return (
-    <section className="px-6 py-24 md:py-32">
-      <div className="max-w-[760px] mx-auto">
-        <div className="text-center">
-          <p className="apple-eyebrow" style={{ color: "var(--ice)" }}>
-            {t("landing.quick_check.eyebrow")}
-          </p>
-          <h2 className="apple-title mx-auto mt-3">{t("landing.quick_check.title")}</h2>
-          <p className="apple-subtitle mx-auto max-w-[520px] mt-5">
-            {t("landing.quick_check.subtitle")}
-          </p>
-        </div>
+    <section className={embedded ? "" : "px-6 py-24 md:py-32"}>
+      <div className={embedded ? "" : "max-w-[760px] mx-auto"}>
+        {!embedded && (
+          <div className="text-center">
+            <p className="apple-eyebrow" style={{ color: "var(--ice)" }}>
+              {t("landing.quick_check.eyebrow")}
+            </p>
+            <h2 className="apple-title mx-auto mt-3">{t("landing.quick_check.title")}</h2>
+            <p className="apple-subtitle mx-auto max-w-[520px] mt-5">
+              {t("landing.quick_check.subtitle")}
+            </p>
+          </div>
+        )}
 
         {selected ? (
           <RayonXReveal asset={selected} onReset={() => setSelected(null)} />
