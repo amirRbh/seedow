@@ -417,7 +417,9 @@ function Landing() {
       <section className="px-6 pt-10 pb-20">
         <Reveal>
           <div className="max-w-[1100px] mx-auto rv-card rv-card--ink text-center py-20 md:py-28">
-            <h2 className="rv-section-title mx-auto max-w-[760px]">{t("landing.rv.final.title")}</h2>
+            <h2 className="rv-section-title mx-auto max-w-[620px] text-balance">
+              {t("landing.rv.final.title")}
+            </h2>
             <p className="apple-subtitle mx-auto max-w-[520px] mt-5">
               {isAuthed ? t("landing.rv.final.subtitle_authed") : t("landing.rv.final.subtitle_new")}
             </p>
