@@ -196,13 +196,13 @@
   /* Fonds/bordures "tinted" — remplacent ~15 oklch(...) ad-hoc dispersés
      dans les composants (bannières, badges, tons "loss/withdrawal/gold-tier"). */
   --alert-tint: oklch(0.95 0.03 45);
-  --alert-tint-border: oklch(0.88 0.07 45);
+  --alert-tint-border: oklch(0.84 0.1 45);
   --solar-tint: oklch(0.95 0.05 85);
-  --solar-tint-border: oklch(0.88 0.08 85);
+  --solar-tint-border: oklch(0.84 0.11 85);
   --bloom-tint: oklch(0.96 0.04 310);
-  --bloom-tint-border: oklch(0.88 0.07 310);
+  --bloom-tint-border: oklch(0.84 0.1 310);
   --sky-tint: oklch(0.96 0.03 230);
-  --sky-tint-border: oklch(0.88 0.06 230);
+  --sky-tint-border: oklch(0.84 0.09 230);
 
   /* shadcn mapping */
   --background: var(--paper);
