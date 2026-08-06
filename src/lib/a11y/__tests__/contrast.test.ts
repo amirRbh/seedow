@@ -99,9 +99,14 @@ describe('contraste des tokens de couleur', () => {
         expect(Number(ratio.toFixed(2))).toBeGreaterThanOrEqual(4.5);
       });
 
-      it.each(NON_TEXT_PAIRS)('%s sur %s ≥ 3:1 (non-texte)', (fg, bg) => {
+      it.each(NON_TEXT_PAIRS)('%s sur %s ≥ 3:1 (aplat)', (fg, bg) => {
         const ratio = contrastRatio(resolveToken(tokens, fg), resolveToken(tokens, bg));
         expect(Number(ratio.toFixed(2))).toBeGreaterThanOrEqual(3);
+      });
+
+      it.each(SEPARATOR_PAIRS)('%s sur %s perceptible (≥ 1.3:1)', (fg, bg) => {
+        const ratio = contrastRatio(resolveToken(tokens, fg), resolveToken(tokens, bg));
+        expect(Number(ratio.toFixed(2))).toBeGreaterThanOrEqual(1.3);
       });
     });
   }
