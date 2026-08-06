@@ -1141,3 +1141,161 @@
     transform: none !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   Landing « showcase » — codes fintech premium (hero sombre plein
+   écran, cartes produit géantes très arrondies, bandeau de preuve,
+   apparition au scroll). Scopé .apple-landing, tokens uniquement.
+═══════════════════════════════════════════════════════════════ */
+.apple-landing .rv-hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--apple-dark);
+  color: #ffffff;
+  border-bottom-left-radius: 40px;
+  border-bottom-right-radius: 40px;
+}
+.apple-landing .rv-hero .apple-title,
+.apple-landing .rv-hero h1,
+.apple-landing .rv-hero h2 {
+  color: #ffffff;
+}
+.apple-landing .rv-hero .apple-subtitle {
+  color: #b8b8bf;
+}
+.apple-landing .rv-hero-glow {
+  position: absolute;
+  inset: -20% -10% auto -10%;
+  height: 720px;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(40px);
+  background: radial-gradient(
+    50% 50% at 50% 40%,
+    color-mix(in srgb, var(--mint) 26%, transparent),
+    transparent 70%
+  );
+}
+.apple-landing .rv-hero-glow--ice {
+  inset: 30% -25% auto auto;
+  width: 620px;
+  height: 620px;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--ice) 22%, transparent),
+    transparent 70%
+  );
+}
+
+.apple-landing .rv-proof {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px 12px;
+}
+.apple-landing .rv-proof-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--apple-text-2);
+  background: var(--apple-surface);
+  border: 1px solid var(--paper-3);
+  border-radius: 100px;
+  padding: 8px 14px;
+  white-space: nowrap;
+}
+.apple-landing .rv-proof-item b {
+  color: var(--apple-text);
+  font-weight: 600;
+}
+
+.apple-landing .rv-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 32px;
+  background: var(--apple-surface);
+  border: 1px solid var(--paper-3);
+  padding: clamp(26px, 4vw, 56px);
+  transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.apple-landing .rv-card:hover {
+  transform: translateY(-4px);
+}
+.apple-landing .rv-card--ink {
+  background: var(--apple-dark);
+  border-color: transparent;
+  color: #ffffff;
+}
+.apple-landing .rv-card--ink .apple-title,
+.apple-landing .rv-card--ink h2,
+.apple-landing .rv-card--ink h3 {
+  color: #ffffff;
+}
+.apple-landing .rv-card--ink .apple-subtitle {
+  color: #b8b8bf;
+}
+.apple-landing .rv-card--plain {
+  background: var(--apple-bg);
+}
+.apple-landing .rv-card-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--section-accent-ink);
+}
+.apple-landing .rv-card--ink .rv-card-eyebrow {
+  color: var(--section-accent);
+}
+.apple-landing .rv-card-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--section-accent);
+  flex: none;
+}
+.apple-landing .rv-card-title {
+  font-weight: 700;
+  font-size: clamp(30px, 3.8vw, 46px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: inherit;
+}
+.apple-landing .rv-section-title {
+  font-weight: 700;
+  font-size: clamp(34px, 5vw, 62px);
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+}
+
+.apple-landing .rv-reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.6s cubic-bezier(0.32, 0.72, 0, 1),
+    transform 0.6s cubic-bezier(0.32, 0.72, 0, 1);
+  will-change: opacity, transform;
+}
+.apple-landing .rv-reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .apple-landing .rv-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .apple-landing .rv-card:hover {
+    transform: none !important;
+  }
+}

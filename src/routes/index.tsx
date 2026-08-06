@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useEffect, useRef, useState } from "react";
+import { Trans, useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { EsgQuickCheck } from "@/components/landing/EsgQuickCheck";
 import { LandingCourses } from "@/components/landing/LandingCourses";
@@ -8,7 +8,6 @@ import { LandingTour } from "@/components/landing/LandingTour";
 import { KPIFigure } from "@/components/ui/KPIFigure";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
 import { useBetaCapacity } from "@/hooks/useBetaCapacity";
-
 
 const SITE_URL = "https://seedow.life";
 
@@ -44,8 +43,6 @@ function Landing() {
   const { capacity } = useBetaCapacity();
   const betaLeft = capacity && capacity.status === "open" ? capacity.slotsLeft : null;
 
-
-
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setIsAuthed(!!data.session));
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => setIsAuthed(!!session));
@@ -60,23 +57,19 @@ function Landing() {
     void trackAppEvent("landing_cta_clicked", { placement, destination });
   };
 
-
-  const STATS: { figure: string; text: string; src: string; color?: string; grad?: boolean }[] = [
+  const STATS: { figure: string; text: string; src: string }[] = [
     {
       figure: "0%",
-      color: "var(--alert)",
       text: t("landing.stats.visibility"),
       src: t("landing.stats.visibility_src"),
     },
     {
       figure: "∞",
-      color: "var(--alert)",
       text: t("landing.stats.jargon"),
       src: t("landing.stats.jargon_src"),
     },
     {
       figure: "1",
-      grad: true,
       text: t("landing.stats.only_app"),
       src: t("landing.stats.only_app_src"),
     },
@@ -89,7 +82,7 @@ function Landing() {
         className="sticky top-0 z-50 backdrop-blur-xl"
         style={{ background: "rgba(255,255,255,0.72)", borderBottom: "1px solid #d2d2d7" }}
       >
-        <div className="max-w-[1024px] mx-auto px-6 h-12 flex items-center justify-between">
+        <div className="max-w-[1100px] mx-auto px-6 h-12 flex items-center justify-between">
           <Link
             to="/"
             className="inline-flex items-center gap-2 text-[22px] font-bold text-[color:var(--apple-text)]"
@@ -138,33 +131,39 @@ function Landing() {
         </div>
       </nav>
 
-      {/* HERO — promesse explicite + preuve produit immédiate */}
-      <section className="relative overflow-hidden px-6 pt-16 pb-20 md:pt-20 md:pb-24">
-        <div aria-hidden className="apple-aura apple-aura--mint" />
-        <div aria-hidden className="apple-aura apple-aura--ice" />
+      {/* HERO — sombre, plein écran, un seul message */}
+      <section className="rv-hero px-6 pt-20 pb-24 md:pt-28 md:pb-32">
+        <div aria-hidden className="rv-hero-glow" />
+        <div aria-hidden className="rv-hero-glow rv-hero-glow--ice" />
 
-        <div className="relative z-10 max-w-[1100px] mx-auto grid lg:grid-cols-[1.05fr_1fr] gap-14 lg:gap-16 items-center">
+        <div className="relative z-10 max-w-[1100px] mx-auto grid lg:grid-cols-[1.05fr_0.95fr] gap-14 lg:gap-16 items-center">
           <div className="text-center lg:text-left flex flex-col items-center lg:items-start">
-            <span className="apple-badge">
+            <span
+              className="inline-flex items-center gap-2 rounded-full px-4 py-2 font-mono"
+              style={{
+                fontSize: 12,
+                letterSpacing: "0.06em",
+                color: "#e6e6ea",
+                background: "rgba(255,255,255,0.08)",
+                border: "1px solid rgba(255,255,255,0.16)",
+              }}
+            >
               <span aria-hidden className="apple-live" />
-              {t("landing.hero2.eyebrow")}
+              {t("landing.rv.hero.eyebrow")}
             </span>
 
-            <h1
-              className="apple-title mt-6 max-w-[620px]"
-              style={{ fontSize: "clamp(38px, 4.4vw, 60px)" }}
-            >
-              {t("landing.hero2.title_line1")}
+            <h1 className="rv-section-title mt-7 max-w-[620px]">
+              {t("landing.rv.hero.title_line1")}
               <br />
-              <span className="apple-grad">{t("landing.hero2.title_accent")}</span>
+              <span style={{ color: "var(--mint)" }}>{t("landing.rv.hero.title_accent")}</span>
             </h1>
 
-            <p className="apple-subtitle mt-6 max-w-[520px]">{t("landing.hero2.subtitle")}</p>
+            <p className="apple-subtitle mt-6 max-w-[540px]">{t("landing.rv.hero.subtitle")}</p>
 
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 mt-9">
               {isAuthed ? (
-                <Link to="/dashboard" className="apple-btn-primary">
-                  {t("landing.hero.cta_authed")}
+                <Link to="/dashboard" className="apple-btn-primary btn-on-ink">
+                  {t("landing.rv.hero.cta_authed")}
                 </Link>
               ) : (
                 <>
@@ -173,344 +172,289 @@ function Landing() {
                     search={{ guest: true }}
                     onClick={onCta("hero", "preview")}
                     className="apple-btn-primary"
+                    style={{ background: "var(--mint)", color: "#ffffff" }}
                   >
-                    {t("landing.hero.cta_guest")}
+                    {t("landing.rv.hero.cta_primary")}
                   </Link>
                   <Link
                     to="/auth"
                     onClick={onCta("hero", "signup")}
                     className="apple-btn-secondary"
+                    style={{
+                      background: "rgba(255,255,255,0.10)",
+                      color: "#ffffff",
+                      border: "1px solid rgba(255,255,255,0.22)",
+                    }}
                   >
-                    {t("landing.hero.cta_new_account")}
+                    {t("landing.rv.hero.cta_secondary")}
                   </Link>
                 </>
               )}
             </div>
-            {!isAuthed && (
-              <p className="mt-4 text-body-sm text-[color:var(--apple-text-2)]">
-                {t("landing.hero.trust_line")}
-                {betaLeft !== null ? ` · ${t("landing.hero2.beta_slots", { count: betaLeft })}` : ""}
-              </p>
-            )}
+
+            <p className="mt-5 text-body-sm" style={{ color: "#a1a1a6" }}>
+              {t("landing.rv.hero.note")}
+            </p>
           </div>
 
           <HeroPreview t={t} />
         </div>
       </section>
 
-
-      {/* SECTION — mini-visite guidée : je comprends → je vois → je compare */}
-      <LandingTour />
-
-      {/* SECTION — quick win : tester un fonds sans compte, la démo qui vend */}
-      <EsgQuickCheck />
-
-      {/* Cadre honnête : Seedow simule, n'investit pas — après la démonstration de valeur */}
-      <div className="px-6 pb-4 -mt-6 flex justify-center">
-        <p
-          className="inline-flex items-center gap-2 px-4 py-2 text-body-sm text-[color:var(--apple-text-2)]"
-          style={{
-            background: "var(--paper-2)",
-            border: "1px solid var(--paper-3)",
-            borderRadius: 14,
-          }}
-        >
-          <span
-            aria-hidden
-            className="inline-block w-2 h-2 rounded-full flex-shrink-0"
-            style={{ background: "var(--ice)" }}
-          />
-          {t("landing.badge_simulation")}
-        </p>
-      </div>
-
-      {/* SECTION — problème / stats · accent alert (problème, rare donc fort) */}
-      <section
-        style={{ background: "var(--apple-surface)" }}
-        className="accent-alert px-6 py-24 md:py-32"
-      >
-        <div className="max-w-[980px] mx-auto text-center">
-          <h2 className="apple-title mx-auto max-w-[720px]">
-            {t("landing.problem.title_line1")}
-            <br />
-            {t("landing.problem.title_line2")}
-          </h2>
-          <p className="apple-subtitle mx-auto max-w-[560px] mt-5">
-            {t("landing.problem.subtitle")}
-          </p>
-          <div className="grid md:grid-cols-3 gap-12 md:gap-8 mt-20">
-            {STATS.map((s, i) => (
-              <div key={i} style={{ animationDelay: `${0.15 + i * 0.12}s` }}>
-                <div
-                  className={s.grad ? "apple-grad font-bold" : "font-bold"}
-                  style={{
-                    fontSize: "clamp(72px, 10vw, 120px)",
-                    lineHeight: 0.9,
-                    letterSpacing: "-0.05em",
-                    color: s.grad ? undefined : s.color,
-                  }}
-                >
-                  {s.figure}
-                </div>
-                <p className="mt-4 text-body-lg leading-[1.45] text-[color:var(--apple-text-2)] max-w-[240px] mx-auto">
-                  {s.text}
-                </p>
-                <p className="apple-stat-src">{s.src}</p>
-              </div>
-            ))}
+      {/* BANDEAU PREUVE — chiffres réels et sourcés */}
+      <section className="px-6 py-10 md:py-12">
+        <Reveal>
+          <div className="max-w-[1100px] mx-auto rv-proof">
+            <span className="rv-proof-item">
+              <Trans i18nKey="landing.rv.proof.funds" components={{ b: <b /> }} />
+            </span>
+            <span className="rv-proof-item">
+              <Trans i18nKey="landing.rv.proof.sources" components={{ b: <b /> }} />
+            </span>
+            <span className="rv-proof-item">
+              <Trans i18nKey="landing.rv.proof.no_advice" components={{ b: <b /> }} />
+            </span>
+            <span className="rv-proof-item">
+              <Trans i18nKey="landing.rv.proof.free" components={{ b: <b /> }} />
+            </span>
+            {betaLeft !== null && (
+              <span className="rv-proof-item">
+                <span aria-hidden className="apple-live" />
+                <Trans
+                  i18nKey="landing.rv.proof.beta"
+                  count={betaLeft}
+                  components={{ b: <b /> }}
+                />
+              </span>
+            )}
           </div>
-        </div>
+        </Reveal>
       </section>
 
+      {/* CARTES PRODUIT — enchaînement narratif façon fintech */}
+      <div className="px-6 pb-6 flex flex-col gap-6 max-w-[1100px] mx-auto">
+        {/* 1 · Simulateur (ice) */}
+        <Reveal>
+          <ShowcaseCard
+            accent="accent-ice"
+            eyebrow={t("landing.rv.cards.simulate.eyebrow")}
+            title={t("landing.rv.cards.simulate.title")}
+            desc={t("landing.rv.cards.simulate.desc")}
+            action={
+              <Link
+                to="/onboarding"
+                search={{ guest: true }}
+                onClick={onCta("card_simulate", "preview")}
+                className="apple-btn-primary mt-8"
+              >
+                {t("landing.rv.cards.simulate.cta")}
+              </Link>
+            }
+            visual={<LandingTour embedded />}
+            stacked
+          />
+        </Reveal>
 
-      {/* SECTION — comment ça marche · accent solar (transparence méthodologique) */}
-      <section className="accent-solar px-6 py-24 md:py-32">
-        <div className="max-w-[980px] mx-auto">
-          <div className="text-center">
-            <p className="apple-eyebrow" style={{ color: "var(--section-accent-ink)" }}>
-              {t("landing.how.eyebrow")}
-            </p>
-            <h2 className="apple-title mx-auto max-w-[720px] mt-3">{t("landing.how.title")}</h2>
-            <p className="apple-subtitle mx-auto max-w-[560px] mt-5">{t("landing.how.subtitle")}</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-10 mt-16 text-left">
-            {[
-              {
-                num: t("landing.how.step1_num"),
-                title: t("landing.how.step1_title"),
-                desc: t("landing.how.step1_desc"),
-              },
-              {
-                num: t("landing.how.step2_num"),
-                title: t("landing.how.step2_title"),
-                desc: t("landing.how.step2_desc"),
-              },
-              {
-                num: t("landing.how.step3_num"),
-                title: t("landing.how.step3_title"),
-                desc: t("landing.how.step3_desc"),
-              },
-            ].map((step) => (
-              <div key={step.num}>
-                <div
-                  className="font-mono text-body-sm"
-                  style={{ color: "var(--section-accent-ink)", letterSpacing: "0.04em" }}
-                >
-                  {step.num}
+        {/* 2 · Impact (mint) */}
+        <Reveal>
+          <ShowcaseCard
+            accent="accent-mint"
+            eyebrow={t("landing.rv.cards.impact.eyebrow")}
+            title={t("landing.rv.cards.impact.title")}
+            desc={t("landing.rv.cards.impact.desc")}
+            action={
+              <Link to="/methodologie" className="apple-link mt-7">
+                {t("landing.rv.cards.impact.cta")} <span aria-hidden>›</span>
+              </Link>
+            }
+            visual={
+              <div
+                className="apple-card w-full"
+                style={{ border: "1px solid var(--paper-3)", padding: "22px" }}
+                aria-hidden
+              >
+                <div className="grid grid-cols-2 gap-5">
+                  <KPIFigure
+                    size="sm"
+                    label={t("comparatif_panel.impact_score")}
+                    value="74 / 100"
+                    tone="mint"
+                  />
+                  <KPIFigure
+                    size="sm"
+                    label={t("landing.hero2.preview.kpi_carbon")}
+                    value="−58 %"
+                    tone="mint"
+                  />
+                  <KPIFigure
+                    size="sm"
+                    label={t("comparatif_panel.simulated_10y")}
+                    value="24 180"
+                    unit="€"
+                    tone="ice"
+                    hint={t("comparatif_panel.on_invested", { amount: "10 000" })}
+                  />
+                  <KPIFigure
+                    size="sm"
+                    label={t("landing.hero2.preview.kpi_esg")}
+                    value="AA"
+                    tone="mint"
+                  />
                 </div>
-                <h3 className="mt-3 text-body-lg font-semibold text-[color:var(--apple-text)]">
-                  {step.title}
-                </h3>
-                <p className="mt-2 text-body-sm leading-[1.5] text-[color:var(--apple-text-2)]">
-                  {step.desc}
+                <p className="mt-5 text-caption leading-[1.45] text-[color:var(--apple-text-2)]">
+                  {t("landing.hero2.preview.note")}
                 </p>
               </div>
-            ))}
-          </div>
+            }
+          />
+        </Reveal>
 
-          {/* Preuve produit — aperçu statique d'un composant réel de l'app, pas une image inventée */}
-          <div className="mt-16">
-            <p className="text-caption uppercase tracking-[0.18em] text-[color:var(--apple-text-2)] text-center mb-4">
-              {t("landing.how.preview_label")}
+        {/* 3 · Le constat (alert, fond ink) */}
+        <Reveal>
+          <section className="accent-alert rv-card rv-card--ink text-center">
+            <p className="rv-card-eyebrow justify-center">
+              <span aria-hidden className="rv-card-dot" />
+              {t("landing.rv.cards.problem.eyebrow")}
             </p>
-            <div
-              className="mx-auto max-w-[560px] apple-card"
-              style={{ border: "1px solid var(--paper-3)", padding: "20px 20px 26px" }}
-              aria-hidden
-            >
-              <div className="grid grid-cols-2 gap-4">
-                <KPIFigure
-                  size="sm"
-                  label={t("comparatif_panel.simulated_10y")}
-                  value="24 180"
-                  unit="€"
-                  tone="ice"
-                  hint={t("comparatif_panel.on_invested", { amount: "10 000" })}
-                />
-                <KPIFigure
-                  size="sm"
-                  label={t("comparatif_panel.impact_score")}
-                  value="74 / 100"
-                  tone="mint"
-                />
+            <h2 className="rv-card-title mt-4 mx-auto max-w-[720px]">
+              {t("landing.rv.cards.problem.title")}
+            </h2>
+            <p className="apple-subtitle mx-auto max-w-[560px] mt-5">
+              {t("landing.rv.cards.problem.desc")}
+            </p>
+
+            <div className="grid md:grid-cols-3 gap-12 md:gap-8 mt-14">
+              {STATS.map((s) => (
+                <div key={s.figure}>
+                  <div
+                    className="font-bold"
+                    style={{
+                      fontSize: "clamp(60px, 8vw, 104px)",
+                      lineHeight: 0.9,
+                      letterSpacing: "-0.05em",
+                      color: "var(--section-accent)",
+                    }}
+                  >
+                    {s.figure}
+                  </div>
+                  <p
+                    className="mt-4 text-body-lg leading-[1.45] max-w-[240px] mx-auto"
+                    style={{ color: "#b8b8bf" }}
+                  >
+                    {s.text}
+                  </p>
+                  <p className="apple-stat-src" style={{ color: "#8e8e94" }}>
+                    {s.src}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+        </Reveal>
+
+        {/* 4 · Cours (volt) */}
+        <Reveal>
+          <ShowcaseCard
+            accent="accent-volt"
+            eyebrow={t("landing.rv.cards.courses.eyebrow")}
+            title={t("landing.rv.cards.courses.title")}
+            desc={t("landing.rv.cards.courses.desc")}
+            visual={<LandingCourses embedded />}
+            stacked
+          />
+        </Reveal>
+
+        {/* 5 · Ethi (ice, fond ink) */}
+        <Reveal>
+          <section className="accent-ice rv-card rv-card--ink">
+            <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+              <div>
+                <p className="rv-card-eyebrow">
+                  <span aria-hidden className="rv-card-dot" />
+                  {t("landing.rv.cards.ethi.eyebrow")}
+                </p>
+                <h2 className="rv-card-title mt-4">{t("landing.rv.cards.ethi.title")}</h2>
+                <p className="apple-subtitle mt-5 max-w-[480px]">
+                  {t("landing.rv.cards.ethi.desc")}
+                </p>
+                <p
+                  className="mt-7 text-body-sm font-mono"
+                  style={{ color: "#a1a1a6", letterSpacing: "0.02em" }}
+                >
+                  {t("landing.ethi.example_label")}
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <ChatBubble side="user">{t("landing.ethi.chat_q1")}</ChatBubble>
+                <ChatBubble side="ethi">{t("landing.ethi.chat_a1")}</ChatBubble>
+                <ChatBubble side="user">{t("landing.ethi.chat_q2")}</ChatBubble>
+                <ChatBubble side="ethi">{t("landing.ethi.chat_a2")}</ChatBubble>
               </div>
             </div>
-          </div>
+          </section>
+        </Reveal>
 
-          {/* Méthodologie ouverte */}
-          <div
-            className="mt-16 mx-auto max-w-[720px] text-center apple-card apple-lift"
-            style={{ border: "1px solid var(--paper-3)", padding: "32px 28px" }}
-          >
-            <h3 className="text-body-lg font-semibold text-[color:var(--apple-text)]">
-              {t("landing.how.methodology_title")}
-            </h3>
-            <p className="mt-3 text-body-sm leading-[1.5] text-[color:var(--apple-text-2)] max-w-[520px] mx-auto">
-              {t("landing.how.methodology_desc")}
-            </p>
-            <Link to="/methodologie" className="apple-link mt-5 inline-flex">
-              {t("landing.how.methodology_cta")} <span aria-hidden>›</span>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION — apprendre d'abord, sans compte (rétention) */}
-      <LandingCourses />
-
-      {/* SECTION — Ethi (dark, style Apple) */}
-      <section
-        className="px-6 py-24 md:py-32"
-        style={{ background: "var(--apple-dark)", color: "#ffffff" }}
-      >
-        <div className="max-w-[980px] mx-auto text-center">
-          <p className="apple-eyebrow" style={{ color: "var(--ice)" }}>
-            {t("landing.ethi.eyebrow")}
-          </p>
-          <h2 className="apple-title mx-auto max-w-[760px] mt-3" style={{ color: "#ffffff" }}>
-            {t("landing.ethi.title_line1")}
-            <br />
-            {t("landing.ethi.title_line2")}
-          </h2>
-          <p className="apple-subtitle mx-auto max-w-[600px] mt-5" style={{ color: "#a1a1a6" }}>
-            {t("landing.ethi.subtitle")}
-          </p>
-
-          {/* Chat mockup */}
-          <p
-            className="mt-14 text-body-sm font-mono"
-            style={{ color: "#a1a1a6", letterSpacing: "0.02em" }}
-          >
-            {t("landing.ethi.example_label")}
-          </p>
-          <div className="mt-4 mx-auto max-w-[560px] flex flex-col gap-3 text-left">
-            <ChatBubble side="user">{t("landing.ethi.chat_q1")}</ChatBubble>
-            <ChatBubble side="ethi">{t("landing.ethi.chat_a1")}</ChatBubble>
-            <ChatBubble side="user">{t("landing.ethi.chat_q2")}</ChatBubble>
-            <ChatBubble side="ethi">{t("landing.ethi.chat_a2")}</ChatBubble>
-          </div>
-        </div>
-      </section>
-
-
-      {/* SECTION — deux façons de commencer */}
-      <section style={{ background: "var(--apple-surface)" }} className="px-6 py-24 md:py-32">
-        <div className="max-w-[980px] mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="apple-title mx-auto max-w-[720px]">{t("landing.start.title")}</h2>
-            <p className="apple-subtitle mx-auto max-w-[560px] mt-5">
-              {t("landing.start.subtitle")}
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            <article
-              className="apple-card apple-lift p-10 md:p-12 text-center flex flex-col items-center"
-              style={{ border: "1px solid var(--paper-3)" }}
-            >
-              <p className="apple-eyebrow" style={{ color: "var(--volt)" }}>
-                {t("landing.start.courses_eyebrow")}
-              </p>
-              <h3 className="apple-title mt-2" style={{ fontSize: "clamp(28px, 3.5vw, 40px)" }}>
-                {t("landing.start.courses_title")}
-              </h3>
-              <p className="apple-subtitle mt-4 max-w-[380px]">{t("landing.start.courses_desc")}</p>
-              <Link to="/cours" className="apple-link mt-8">
-                {t("landing.start.courses_cta")} <span aria-hidden>›</span>
+        {/* 6 · Méthode ouverte + test ESG sans compte (solar) */}
+        <Reveal>
+          <ShowcaseCard
+            accent="accent-solar"
+            eyebrow={t("landing.rv.cards.method.eyebrow")}
+            title={t("landing.rv.cards.method.title")}
+            desc={t("landing.rv.cards.method.desc")}
+            action={
+              <Link to="/methodologie" className="apple-link mt-7">
+                {t("landing.rv.cards.method.cta")} <span aria-hidden>›</span>
               </Link>
-            </article>
-
-            <article
-              className="apple-card apple-lift p-10 md:p-12 text-center flex flex-col items-center"
-              style={{ border: "1px solid var(--paper-3)" }}
-            >
-              <p className="apple-eyebrow" style={{ color: "var(--mint)" }}>
-                {t("landing.start.space_eyebrow")}
-              </p>
-              <h3 className="apple-title mt-2" style={{ fontSize: "clamp(28px, 3.5vw, 40px)" }}>
-                {t("landing.start.space_title")}
-              </h3>
-              <p className="apple-subtitle mt-4 max-w-[380px]">
-                {isAuthed
-                  ? t("landing.start.space_desc_authed")
-                  : t("landing.start.space_desc_new")}
-              </p>
-              {isAuthed ? (
-                <Link to="/dashboard" className="apple-btn-primary mt-8">
-                  {t("landing.start.space_cta_authed")}
-                </Link>
-              ) : (
-                <div className="flex flex-col items-center gap-3 mt-8">
-                  <Link
-                    to="/onboarding"
-                    search={{ guest: true }}
-                    onClick={onCta("start_section", "preview")}
-                    className="apple-btn-primary"
-                  >
-                    {t("landing.start.space_cta_new")}
-                  </Link>
-                  <Link
-                    to="/auth"
-                    search={{ redirect: "/dashboard", mode: "login" }}
-                    className="apple-link text-body"
-                  >
-                    {t("landing.start.already_registered")} <span aria-hidden>›</span>
-                  </Link>
-                </div>
-              )}
-            </article>
-          </div>
-        </div>
-      </section>
+            }
+            visual={<EsgQuickCheck embedded />}
+            stacked
+          />
+        </Reveal>
+      </div>
 
       {/* CTA FINAL */}
-      <section id="cta" className="relative overflow-hidden px-6 py-28 md:py-36 text-center">
-        <div
-          aria-hidden
-          className="apple-aura apple-aura--mint"
-          style={{ top: "auto", bottom: -260 }}
-        />
-        <div className="relative z-10">
-          <h2 className="apple-title apple-title-lg mx-auto max-w-[760px]">
-            {t("landing.final.title_line1")}
-            <br />
-            <span className="apple-grad">{t("landing.final.title_accent")}</span>
-          </h2>
-          <p className="apple-subtitle mx-auto max-w-[520px] mt-6">
-            {isAuthed ? t("landing.final.subtitle_authed") : t("landing.final.subtitle_new")}
-          </p>
-          <div className="mt-10 flex flex-col items-center gap-4">
-            {isAuthed ? (
-              <Link to="/dashboard" className="apple-btn-primary">
-                {t("landing.hero.cta_authed")}
-              </Link>
-            ) : (
-              <>
-                <div className="flex flex-wrap items-center justify-center gap-4">
+      <section className="px-6 pt-10 pb-20">
+        <Reveal>
+          <div className="max-w-[1100px] mx-auto rv-card rv-card--ink text-center py-20 md:py-28">
+            <h2 className="rv-section-title mx-auto max-w-[620px] text-balance">
+              {t("landing.rv.final.title")}
+            </h2>
+            <p className="apple-subtitle mx-auto max-w-[520px] mt-5">
+              {isAuthed ? t("landing.rv.final.subtitle_authed") : t("landing.rv.final.subtitle_new")}
+            </p>
+
+            <div className="mt-10 flex flex-col items-center gap-4">
+              {isAuthed ? (
+                <Link to="/dashboard" className="apple-btn-primary btn-on-ink">
+                  {t("landing.rv.hero.cta_authed")}
+                </Link>
+              ) : (
+                <>
                   <Link
                     to="/onboarding"
                     search={{ guest: true }}
                     onClick={onCta("final", "preview")}
                     className="apple-btn-primary"
+                    style={{ background: "var(--mint)", color: "#ffffff" }}
                   >
-                    {t("landing.hero.cta_guest")}
+                    {t("landing.rv.hero.cta_primary")}
                   </Link>
-                  <Link
-                    to="/auth"
-                    onClick={onCta("final", "signup")}
-                    className="apple-btn-secondary"
-                  >
-                    {t("landing.hero.cta_new_account")}
-                  </Link>
-                </div>
-                <p className="text-body-sm text-[color:var(--apple-text-2)]">
-                  {t("landing.hero.trust_line")}
-                </p>
-              </>
-            )}
+                  <p className="text-body-sm" style={{ color: "#a1a1a6" }}>
+                    {t("landing.hero.trust_line")}
+                  </p>
+                </>
+              )}
+            </div>
+
+            <p
+              className="mt-10 mx-auto max-w-[560px] text-caption leading-[1.5]"
+              style={{ color: "#8e8e94" }}
+            >
+              {t("landing.badge_simulation")}
+            </p>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {/* FOOTER */}
@@ -518,7 +462,7 @@ function Landing() {
         className="px-6 py-10 text-label text-[color:var(--apple-text-2)]"
         style={{ background: "var(--apple-surface)", borderTop: "1px solid #d2d2d7" }}
       >
-        <div className="max-w-[1024px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="max-w-[1100px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <span
               className="inline-flex items-center gap-1.5 text-body-lg font-bold text-[color:var(--apple-text)]"
@@ -581,6 +525,72 @@ function Landing() {
 
 /* ---------- Sub-components ---------- */
 
+/** Apparition au scroll — sobre (fade + 14px), neutralisée si reduced-motion. */
+function Reveal({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === "undefined") {
+      setVisible(true);
+      return;
+    }
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setVisible(true);
+          obs.disconnect();
+        }
+      },
+      { rootMargin: "0px 0px -12% 0px" },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} className={visible ? "rv-reveal is-in" : "rv-reveal"}>
+      {children}
+    </div>
+  );
+}
+
+function ShowcaseCard({
+  accent,
+  eyebrow,
+  title,
+  desc,
+  action,
+  visual,
+  stacked = false,
+}: {
+  accent: string;
+  eyebrow: string;
+  title: string;
+  desc: string;
+  action?: React.ReactNode;
+  visual: React.ReactNode;
+  stacked?: boolean;
+}) {
+  return (
+    <section className={`${accent} rv-card`}>
+      <div className={stacked ? "" : "grid lg:grid-cols-2 gap-10 lg:gap-14 items-center"}>
+        <div className={stacked ? "max-w-[680px]" : ""}>
+          <p className="rv-card-eyebrow">
+            <span aria-hidden className="rv-card-dot" />
+            {eyebrow}
+          </p>
+          <h2 className="rv-card-title mt-4">{title}</h2>
+          <p className="apple-subtitle mt-5 max-w-[520px]">{desc}</p>
+          {action}
+        </div>
+        <div className={stacked ? "mt-10" : ""}>{visual}</div>
+      </div>
+    </section>
+  );
+}
+
 function HeroPreview({ t }: { t: (key: string, opts?: Record<string, unknown>) => string }) {
   const convictions = [
     { label: t("landing.hero2.preview.conv_climate"), weight: 42, color: "var(--mint)" },
@@ -634,7 +644,12 @@ function HeroPreview({ t }: { t: (key: string, opts?: Record<string, unknown>) =
         className="mt-6 pt-5 grid grid-cols-2 gap-4"
         style={{ borderTop: "1px solid var(--paper-3)" }}
       >
-        <KPIFigure size="sm" label={t("landing.hero2.preview.kpi_esg")} value="74 / 100" tone="mint" />
+        <KPIFigure
+          size="sm"
+          label={t("landing.hero2.preview.kpi_esg")}
+          value="74 / 100"
+          tone="mint"
+        />
         <KPIFigure
           size="sm"
           label={t("landing.hero2.preview.kpi_carbon")}
@@ -651,7 +666,6 @@ function HeroPreview({ t }: { t: (key: string, opts?: Record<string, unknown>) =
 }
 
 function ChatBubble({ side, children }: { side: "user" | "ethi"; children: React.ReactNode }) {
-
   const isUser = side === "user";
   return (
     <div className={isUser ? "self-end" : "self-start"} style={{ maxWidth: "85%" }}>
@@ -669,4 +683,3 @@ function ChatBubble({ side, children }: { side: "user" | "ethi"; children: React
     </div>
   );
 }
-

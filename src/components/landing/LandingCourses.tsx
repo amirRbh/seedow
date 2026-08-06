@@ -13,7 +13,7 @@ import { trackAppEvent } from "@/lib/analytics/appEvents";
  * où tu t'es arrêté » (état de lecture en localStorage) — le vrai levier de
  * rétention. Scope `.apple-landing` pour rester cohérent avec la page.
  */
-export function LandingCourses() {
+export function LandingCourses({ embedded = false }: { embedded?: boolean } = {}) {
   const { t } = useTranslation();
   const [resume, setResume] = useState<{ slug: string; title: string } | null>(null);
 
@@ -30,17 +30,21 @@ export function LandingCourses() {
 
   return (
     <section
-      className="accent-volt px-6 py-24 md:py-32"
-      style={{ background: "var(--apple-surface)" }}
+      className={embedded ? "accent-volt" : "accent-volt px-6 py-24 md:py-32"}
+      style={embedded ? undefined : { background: "var(--apple-surface)" }}
     >
-      <div className="max-w-[980px] mx-auto">
-        <div className="text-center mb-14">
-          <p className="apple-eyebrow" style={{ color: "var(--volt)" }}>
-            {t("landing.learn.eyebrow")}
-          </p>
-          <h2 className="apple-title mx-auto max-w-[720px] mt-3">{t("landing.learn.title")}</h2>
-          <p className="apple-subtitle mx-auto max-w-[560px] mt-5">{t("landing.learn.subtitle")}</p>
-        </div>
+      <div className={embedded ? "" : "max-w-[980px] mx-auto"}>
+        {!embedded && (
+          <div className="text-center mb-14">
+            <p className="apple-eyebrow" style={{ color: "var(--volt)" }}>
+              {t("landing.learn.eyebrow")}
+            </p>
+            <h2 className="apple-title mx-auto max-w-[720px] mt-3">{t("landing.learn.title")}</h2>
+            <p className="apple-subtitle mx-auto max-w-[560px] mt-5">
+              {t("landing.learn.subtitle")}
+            </p>
+          </div>
+        )}
 
         {resume ? (
           <div

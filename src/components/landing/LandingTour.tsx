@@ -14,7 +14,9 @@ import { trackAppEvent } from "@/lib/analytics/appEvents";
 const STEP_KEYS = ["understand", "see", "compare"] as const;
 type StepKey = (typeof STEP_KEYS)[number];
 
-export function LandingTour() {
+/** `embedded` : rendu sans en-tête ni padding de section, pour être posé
+ *  à l'intérieur d'une carte showcase qui porte déjà titre et accent. */
+export function LandingTour({ embedded = false }: { embedded?: boolean } = {}) {
   const { t } = useTranslation();
   const [active, setActive] = useState<StepKey>("understand");
 
@@ -24,21 +26,26 @@ export function LandingTour() {
   };
 
   return (
-    <section className="accent-ice px-6 py-20 md:py-28">
-      <div className="max-w-[980px] mx-auto">
-        <div className="text-center">
-          <p className="apple-eyebrow" style={{ color: "var(--section-accent)" }}>
-            {t("landing.tour.eyebrow")}
-          </p>
-          <h2 className="apple-title mx-auto max-w-[720px] mt-3">{t("landing.tour.title")}</h2>
-          <p className="apple-subtitle mx-auto max-w-[560px] mt-5">{t("landing.tour.subtitle")}</p>
-        </div>
+    <section className={embedded ? "accent-ice" : "accent-ice px-6 py-20 md:py-28"}>
+      <div className={embedded ? "" : "max-w-[980px] mx-auto"}>
+        {!embedded && (
+          <div className="text-center">
+            <p className="apple-eyebrow" style={{ color: "var(--section-accent)" }}>
+              {t("landing.tour.eyebrow")}
+            </p>
+            <h2 className="apple-title mx-auto max-w-[720px] mt-3">{t("landing.tour.title")}</h2>
+            <p className="apple-subtitle mx-auto max-w-[560px] mt-5">
+              {t("landing.tour.subtitle")}
+            </p>
+          </div>
+        )}
+
 
         {/* Sélecteur d'étapes — chaque étape est un état, pas une navigation */}
         <div
           role="tablist"
           aria-label={t("landing.tour.title")}
-          className="mt-12 grid md:grid-cols-3 gap-3"
+          className={embedded ? "grid md:grid-cols-3 gap-3" : "mt-12 grid md:grid-cols-3 gap-3"}
         >
           {STEP_KEYS.map((key, i) => {
             const isActive = key === active;
