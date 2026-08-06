@@ -628,9 +628,16 @@
     background-color: var(--color-ink);
     color: var(--color-paper);
     border-radius: 16px;
+    /* Sur fond encre, les variantes texte doivent être éclaircies : on les
+       redéfinit localement pour que tout `--*-ink` reste lisible. */
+    --mint-ink: #57c98a;
+    --ice-ink: #6fb8ff;
+    --volt-ink: #b3a2f2;
+    --alert-ink: #ff8298;
+    --solar-ink: #e0b158;
   }
   .ink-section .eyebrow {
-    color: var(--color-mint);
+    color: var(--color-mint-ink);
   }
   .ink-section h1,
   .ink-section h2,
