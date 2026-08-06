@@ -222,7 +222,7 @@ export function ComparatifPanel() {
             maximumFractionDigits: 0,
           })}
           unit="€"
-          accent
+          tone="ice"
           hint={t("comparatif_panel.on_invested", {
             amount: capital.toLocaleString("fr-FR", {
               minimumFractionDigits: 0,
@@ -272,7 +272,7 @@ export function ComparatifPanel() {
             label={t("comparatif_panel.risk_adjusted_you")}
             value={eur0(seedow10y)}
             unit="€"
-            accent
+            tone="ice"
             hint={`${(seedow.expectedReturn * 100).toFixed(1)} % / an · vol ${(seedow.volatility * 100).toFixed(1)} %`}
           />
           <KPIFigure
@@ -342,7 +342,7 @@ export function ComparatifPanel() {
             label={t("comparatif_panel.downside_you")}
             value={eur0(seedowAfterDrop)}
             unit="€"
-            accent
+            tone="ice"
             hint={`−${(seedowDrop * 100).toFixed(0)} %`}
           />
           <KPIFigure
@@ -457,7 +457,7 @@ export function ComparatifPanel() {
                 maximumFractionDigits: 0,
               })}
               unit="kg/an"
-              accent
+              tone="mint"
               hint={t("comparatif_panel.paris_lyon_trips", { count: Math.round(co2EvitedKg / 120) })}
             />
           )}

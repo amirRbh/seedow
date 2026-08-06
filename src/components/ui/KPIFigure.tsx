@@ -9,6 +9,8 @@ interface Props {
   size?: "sm" | "md" | "lg" | "xl";
   align?: "left" | "center";
   accent?: boolean;
+  /** Accent sémantique du libellé (planche de marque). `accent` = raccourci mint. */
+  tone?: "mint" | "ice" | "volt" | "solar" | "alert";
   /** Si true et `value` est numérique, anime le compteur au mount. */
   animate?: boolean;
   className?: string;
@@ -33,9 +35,12 @@ export function KPIFigure({
   size = "md",
   align = "left",
   accent = false,
+  tone,
   animate = false,
   className,
 }: Props) {
+  const toneVar =
+    tone === "solar" ? "var(--solar-ink)" : tone ? `var(--${tone})` : undefined;
   const numeric = typeof value === "number" ? value : Number(value);
   const canAnimate = animate && Number.isFinite(numeric) && typeof value !== "string";
 
@@ -44,8 +49,9 @@ export function KPIFigure({
       <p
         className={cn(
           "text-body-sm font-semibold tracking-[-0.01em] mb-3",
-          accent ? "text-gold" : "text-ink-2",
+          !tone && (accent ? "text-gold" : "text-ink-2"),
         )}
+        style={toneVar ? { color: toneVar } : undefined}
       >
         {label}
       </p>

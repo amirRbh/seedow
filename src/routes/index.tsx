@@ -325,10 +325,15 @@ function Landing() {
                   label={t("comparatif_panel.simulated_10y")}
                   value="24 180"
                   unit="€"
-                  accent
+                  tone="ice"
                   hint={t("comparatif_panel.on_invested", { amount: "10 000" })}
                 />
-                <KPIFigure size="sm" label={t("comparatif_panel.impact_score")} value="74 / 100" />
+                <KPIFigure
+                  size="sm"
+                  label={t("comparatif_panel.impact_score")}
+                  value="74 / 100"
+                  tone="mint"
+                />
               </div>
             </div>
           </div>
@@ -578,9 +583,9 @@ function Landing() {
 
 function HeroPreview({ t }: { t: (key: string, opts?: Record<string, unknown>) => string }) {
   const convictions = [
-    { label: t("landing.hero2.preview.conv_climate"), weight: 42 },
-    { label: t("landing.hero2.preview.conv_biodiversity"), weight: 33 },
-    { label: t("landing.hero2.preview.conv_social"), weight: 25 },
+    { label: t("landing.hero2.preview.conv_climate"), weight: 42, color: "var(--mint)" },
+    { label: t("landing.hero2.preview.conv_biodiversity"), weight: 33, color: "var(--ice)" },
+    { label: t("landing.hero2.preview.conv_social"), weight: 25, color: "var(--volt)" },
   ];
 
   return (
@@ -602,7 +607,14 @@ function HeroPreview({ t }: { t: (key: string, opts?: Record<string, unknown>) =
         {convictions.map((c) => (
           <div key={c.label}>
             <div className="flex items-baseline justify-between text-body-sm text-[color:var(--apple-text)]">
-              <span>{c.label}</span>
+              <span className="inline-flex items-center gap-2">
+                <span
+                  aria-hidden
+                  className="inline-block w-[7px] h-[7px] rounded-full"
+                  style={{ background: c.color }}
+                />
+                {c.label}
+              </span>
               <span className="font-mono text-[color:var(--apple-text-2)]">{c.weight}%</span>
             </div>
             <div
@@ -611,7 +623,7 @@ function HeroPreview({ t }: { t: (key: string, opts?: Record<string, unknown>) =
             >
               <div
                 className="h-full rounded-full"
-                style={{ width: `${c.weight}%`, background: "var(--mint)" }}
+                style={{ width: `${c.weight}%`, background: c.color }}
               />
             </div>
           </div>
@@ -622,8 +634,13 @@ function HeroPreview({ t }: { t: (key: string, opts?: Record<string, unknown>) =
         className="mt-6 pt-5 grid grid-cols-2 gap-4"
         style={{ borderTop: "1px solid var(--paper-3)" }}
       >
-        <KPIFigure size="sm" label={t("landing.hero2.preview.kpi_esg")} value="74 / 100" accent />
-        <KPIFigure size="sm" label={t("landing.hero2.preview.kpi_carbon")} value="−58 %" />
+        <KPIFigure size="sm" label={t("landing.hero2.preview.kpi_esg")} value="74 / 100" tone="mint" />
+        <KPIFigure
+          size="sm"
+          label={t("landing.hero2.preview.kpi_carbon")}
+          value="−58 %"
+          tone="ice"
+        />
       </div>
 
       <p className="mt-4 text-caption leading-[1.45] text-[color:var(--apple-text-2)]">
