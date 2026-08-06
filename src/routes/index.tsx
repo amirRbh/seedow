@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { EsgQuickCheck } from "@/components/landing/EsgQuickCheck";
 import { LandingCourses } from "@/components/landing/LandingCourses";
+import { LandingTour } from "@/components/landing/LandingTour";
 import { KPIFigure } from "@/components/ui/KPIFigure";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
 import { useBetaCapacity } from "@/hooks/useBetaCapacity";
@@ -197,6 +198,9 @@ function Landing() {
         </div>
       </section>
 
+
+      {/* SECTION — mini-visite guidée : je comprends → je vois → je compare */}
+      <LandingTour />
 
       {/* SECTION — quick win : tester un fonds sans compte, la démo qui vend */}
       <EsgQuickCheck />
