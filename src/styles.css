@@ -164,19 +164,24 @@
        volt  = pédagogie, cours, méthode, modèle économique
        alert = problème, greenwashing, mauvais score (rare, donc fort)
        solar = nuance, transparence méthodologique, marché, équipe
-     Contraste sur fond blanc : mint 4.78 · ice 4.70 · volt 5.39 · alert 4.70
-     (tous AA pour du texte). Solar = 3.64 → aplats/filets/badges uniquement,
-     utiliser --solar-ink dès qu'il doit porter du texte. */
+     Les hex de marque restent intacts (aplats, filets, graphiques). Dès qu'un
+     accent porte du TEXTE (badge, label, KPI sur fond papier ou teinté), on
+     utilise la variante `--*-ink`, assombrie pour tenir AA (≥4.5:1) même sur
+     --paper-2 et sur les fonds teintés. Vérifié par src/lib/a11y. */
   --mint: #1d8348;
   --ice: #0071e3;
   --volt: #6e56cf;
   --alert: #e11d48;
   --solar: #b7791f;
   --solar-ink: #8a5a13; /* variante texte-safe de solar (~5.2:1 sur blanc) */
+  --mint-ink: #19703d;
+  --ice-ink: #0064c8;
+  --volt-ink: #6349c4;
+  --alert-ink: #c81640;
 
   /* Accent de section — surchargé par .accent-* ; défaut = marque */
   --section-accent: var(--mint);
-  --section-accent-ink: var(--mint);
+  --section-accent-ink: var(--mint-ink);
 
   /* Aliases legacy */
   --rust: #e11d48;
