@@ -24,15 +24,17 @@ const CLASS_LABELS: Record<string, string> = {
   cash: "Réserve sécurisée",
 };
 
+// Palette catégorielle : une classe d'actif = une teinte distincte de la planche
+// de marque (données catégorielles = seul cas où l'on mélange les accents).
 const CLASS_COLOR: Record<string, string> = {
-  equity_dev: "var(--highlight-1)",
-  equity_em: "var(--highlight-2)",
-  thematic: "var(--bloom)",
-  green_bond: "var(--highlight-3)",
+  equity_dev: "var(--mint)",
+  equity_em: "var(--ice)",
+  thematic: "var(--volt)",
+  green_bond: "var(--highlight-2)",
   social_bond: "var(--sky)",
   sov_bond: "var(--ink-2)",
-  reit: "var(--gold)",
-  commodity: "var(--peach)",
+  reit: "var(--solar)",
+  commodity: "var(--alert)",
   cash: "var(--paper-3)",
 };
 
