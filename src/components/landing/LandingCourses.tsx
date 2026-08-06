@@ -29,10 +29,10 @@ export function LandingCourses() {
   const [previewed, setPreviewed] = useState<Course | null>(null);
 
   return (
-    <section style={{ background: "var(--apple-surface)" }} className="px-6 py-24 md:py-32">
+    <section className="accent-volt" style={{ background: "var(--apple-surface)" }} className="px-6 py-24 md:py-32">
       <div className="max-w-[980px] mx-auto">
         <div className="text-center mb-14">
-          <p className="apple-eyebrow" style={{ color: "var(--ice)" }}>
+          <p className="apple-eyebrow" style={{ color: "var(--volt)" }}>
             {t("landing.learn.eyebrow")}
           </p>
           <h2 className="apple-title mx-auto max-w-[720px] mt-3">{t("landing.learn.title")}</h2>

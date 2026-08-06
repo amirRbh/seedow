@@ -64,13 +64,13 @@ function Landing() {
   const STATS: { figure: string; text: string; src: string; color?: string; grad?: boolean }[] = [
     {
       figure: "0%",
-      color: "var(--apple-text)",
+      color: "var(--alert)",
       text: t("landing.stats.visibility"),
       src: t("landing.stats.visibility_src"),
     },
     {
       figure: "∞",
-      color: "var(--apple-text)",
+      color: "var(--alert)",
       text: t("landing.stats.jargon"),
       src: t("landing.stats.jargon_src"),
     },
@@ -224,8 +224,11 @@ function Landing() {
         </p>
       </div>
 
-      {/* SECTION — problème / stats */}
-      <section style={{ background: "var(--apple-surface)" }} className="px-6 py-24 md:py-32">
+      {/* SECTION — problème / stats · accent alert (problème, rare donc fort) */}
+      <section
+        style={{ background: "var(--apple-surface)" }}
+        className="accent-alert px-6 py-24 md:py-32"
+      >
         <div className="max-w-[980px] mx-auto text-center">
           <h2 className="apple-title mx-auto max-w-[720px]">
             {t("landing.problem.title_line1")}
@@ -260,11 +263,11 @@ function Landing() {
       </section>
 
 
-      {/* SECTION — comment ça marche (preuve produit, sobre) */}
-      <section className="px-6 py-24 md:py-32">
+      {/* SECTION — comment ça marche · accent solar (transparence méthodologique) */}
+      <section className="accent-solar px-6 py-24 md:py-32">
         <div className="max-w-[980px] mx-auto">
           <div className="text-center">
-            <p className="apple-eyebrow" style={{ color: "var(--mint)" }}>
+            <p className="apple-eyebrow" style={{ color: "var(--section-accent-ink)" }}>
               {t("landing.how.eyebrow")}
             </p>
             <h2 className="apple-title mx-auto max-w-[720px] mt-3">{t("landing.how.title")}</h2>
@@ -292,7 +295,7 @@ function Landing() {
               <div key={step.num}>
                 <div
                   className="font-mono text-body-sm"
-                  style={{ color: "var(--apple-text-2)", letterSpacing: "0.04em" }}
+                  style={{ color: "var(--section-accent-ink)", letterSpacing: "0.04em" }}
                 >
                   {step.num}
                 </div>
@@ -357,7 +360,7 @@ function Landing() {
         style={{ background: "var(--apple-dark)", color: "#ffffff" }}
       >
         <div className="max-w-[980px] mx-auto text-center">
-          <p className="apple-eyebrow" style={{ color: "var(--volt)" }}>
+          <p className="apple-eyebrow" style={{ color: "var(--ice)" }}>
             {t("landing.ethi.eyebrow")}
           </p>
           <h2 className="apple-title mx-auto max-w-[760px] mt-3" style={{ color: "#ffffff" }}>
@@ -401,7 +404,7 @@ function Landing() {
               className="apple-card apple-lift p-10 md:p-12 text-center flex flex-col items-center"
               style={{ border: "1px solid var(--paper-3)" }}
             >
-              <p className="apple-eyebrow" style={{ color: "var(--ice)" }}>
+              <p className="apple-eyebrow" style={{ color: "var(--volt)" }}>
                 {t("landing.start.courses_eyebrow")}
               </p>
               <h3 className="apple-title mt-2" style={{ fontSize: "clamp(28px, 3.5vw, 40px)" }}>

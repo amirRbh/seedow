@@ -65,7 +65,7 @@ export function EsgQuickCheck() {
     <section className="px-6 py-24 md:py-32">
       <div className="max-w-[760px] mx-auto">
         <div className="text-center">
-          <p className="apple-eyebrow" style={{ color: "var(--mint)" }}>
+          <p className="apple-eyebrow" style={{ color: "var(--ice)" }}>
             {t("landing.quick_check.eyebrow")}
           </p>
           <h2 className="apple-title mx-auto mt-3">{t("landing.quick_check.title")}</h2>
@@ -396,7 +396,7 @@ function RayonXReveal({ asset, onReset }: { asset: EsgPreviewAsset; onReset: () 
         </div>
 
         <div>
-          <p className="text-body-sm font-semibold mb-3" style={{ color: "var(--solar)" }}>
+          <p className="text-body-sm font-semibold mb-3" style={{ color: "var(--solar-ink)" }}>
             ⚠ {t("landing.rayon_x.not_excluded")}
           </p>
           {notExcluded.length > 0 ? (
@@ -407,7 +407,7 @@ function RayonXReveal({ asset, onReset }: { asset: EsgPreviewAsset; onReset: () 
                   className="text-caption font-medium px-2.5 py-1 rounded-full"
                   style={{
                     background: "color-mix(in srgb, var(--solar) 10%, transparent)",
-                    color: "var(--solar)",
+                    color: "var(--solar-ink)",
                   }}
                 >
                   {t(`landing.rayon_x.sectors_labels.${s}`, { defaultValue: s })}
@@ -459,7 +459,7 @@ function RayonXReveal({ asset, onReset }: { asset: EsgPreviewAsset; onReset: () 
         className="mt-8 rounded-[16px] p-6 md:p-7"
         style={{ background: "var(--apple-dark)", color: "#ffffff" }}
       >
-        <p className="apple-eyebrow" style={{ color: "var(--mint)" }}>
+        <p className="apple-eyebrow" style={{ color: "var(--ice)" }}>
           {t("landing.rayon_x.bridge_eyebrow")}
         </p>
         <p
