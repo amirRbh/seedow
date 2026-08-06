@@ -566,7 +566,65 @@ function Landing() {
 
 /* ---------- Sub-components ---------- */
 
+function HeroPreview({ t }: { t: (key: string, opts?: Record<string, unknown>) => string }) {
+  const convictions = [
+    { label: t("landing.hero2.preview.conv_climate"), weight: 42 },
+    { label: t("landing.hero2.preview.conv_biodiversity"), weight: 33 },
+    { label: t("landing.hero2.preview.conv_social"), weight: 25 },
+  ];
+
+  return (
+    <div
+      className="apple-card w-full"
+      style={{ border: "1px solid var(--paper-3)", padding: "22px 22px 26px" }}
+      aria-hidden
+    >
+      <div className="flex items-center justify-between">
+        <p className="text-caption font-mono uppercase tracking-[0.16em] text-[color:var(--apple-text-2)]">
+          {t("landing.hero2.preview.label")}
+        </p>
+        <span className="text-caption font-mono text-[color:var(--apple-text-2)]">
+          {t("landing.hero2.preview.source")}
+        </span>
+      </div>
+
+      <div className="mt-5 flex flex-col gap-3">
+        {convictions.map((c) => (
+          <div key={c.label}>
+            <div className="flex items-baseline justify-between text-body-sm text-[color:var(--apple-text)]">
+              <span>{c.label}</span>
+              <span className="font-mono text-[color:var(--apple-text-2)]">{c.weight}%</span>
+            </div>
+            <div
+              className="mt-1.5 h-[6px] rounded-full overflow-hidden"
+              style={{ background: "var(--paper-3)" }}
+            >
+              <div
+                className="h-full rounded-full"
+                style={{ width: `${c.weight}%`, background: "var(--mint)" }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div
+        className="mt-6 pt-5 grid grid-cols-2 gap-4"
+        style={{ borderTop: "1px solid var(--paper-3)" }}
+      >
+        <KPIFigure size="sm" label={t("landing.hero2.preview.kpi_esg")} value="74 / 100" accent />
+        <KPIFigure size="sm" label={t("landing.hero2.preview.kpi_carbon")} value="−58 %" />
+      </div>
+
+      <p className="mt-4 text-caption leading-[1.45] text-[color:var(--apple-text-2)]">
+        {t("landing.hero2.preview.note")}
+      </p>
+    </div>
+  );
+}
+
 function ChatBubble({ side, children }: { side: "user" | "ethi"; children: React.ReactNode }) {
+
   const isUser = side === "user";
   return (
     <div className={isUser ? "self-end" : "self-start"} style={{ maxWidth: "85%" }}>
