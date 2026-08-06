@@ -257,6 +257,12 @@
   --alert: #ff5c7a;
   --solar: #d9a648;
   --solar-ink: #e0b158;
+  /* Variantes texte : en sombre il faut éclaircir (et non assombrir) pour
+     tenir AA sur --paper / --paper-2 et sur les fonds teintés. */
+  --mint-ink: #57c98a;
+  --ice-ink: #6fb8ff;
+  --volt-ink: #b3a2f2;
+  --alert-ink: #ff8298;
   --alert-tint: oklch(0.28 0.05 45);
   --alert-tint-border: oklch(0.4 0.08 45);
   --solar-tint: oklch(0.28 0.06 85);
