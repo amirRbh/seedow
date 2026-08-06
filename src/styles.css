@@ -467,35 +467,35 @@
     color: var(--color-ink-2);
   }
   .eyebrow--accent {
-    color: var(--color-mint);
+    color: var(--color-mint-ink);
   }
   .eyebrow--ice {
-    color: var(--color-ice);
+    color: var(--color-ice-ink);
   }
   .eyebrow--volt {
-    color: var(--color-volt);
+    color: var(--color-volt-ink);
   }
   .eyebrow--solar {
     color: var(--color-solar-ink);
   }
   .eyebrow--alert {
-    color: var(--color-alert);
+    color: var(--color-alert-ink);
   }
 
   /* Accent de section — un seul accent par section, en plus du mint de marque.
      Les composants lisent var(--section-accent) au lieu de coder une couleur.
-     --section-accent-ink = variante texte-safe (identique sauf pour solar). */
+     --section-accent-ink = variante texte-safe (AA sur papier et sur tint). */
   .accent-mint {
     --section-accent: var(--mint);
-    --section-accent-ink: var(--mint);
+    --section-accent-ink: var(--mint-ink);
   }
   .accent-ice {
     --section-accent: var(--ice);
-    --section-accent-ink: var(--ice);
+    --section-accent-ink: var(--ice-ink);
   }
   .accent-volt {
     --section-accent: var(--volt);
-    --section-accent-ink: var(--volt);
+    --section-accent-ink: var(--volt-ink);
   }
   .accent-solar {
     --section-accent: var(--solar);
@@ -503,7 +503,7 @@
   }
   .accent-alert {
     --section-accent: var(--alert);
-    --section-accent-ink: var(--alert);
+    --section-accent-ink: var(--alert-ink);
   }
 
   /* Filet — séparateur signature, trait plein flat */
