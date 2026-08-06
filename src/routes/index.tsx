@@ -214,16 +214,6 @@ function Landing() {
             <span className="rv-proof-item">
               <Trans i18nKey="landing.rv.proof.free" components={{ b: <b /> }} />
             </span>
-            {betaLeft !== null && (
-              <span className="rv-proof-item">
-                <span aria-hidden className="apple-live" />
-                <Trans
-                  i18nKey="landing.rv.proof.beta"
-                  count={betaLeft}
-                  components={{ b: <b /> }}
-                />
-              </span>
-            )}
           </div>
         </Reveal>
       </section>
