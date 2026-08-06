@@ -30,13 +30,13 @@ export function UnderstandPortfolioCard({ cause }: { cause?: string | null }) {
               params={{ slug: course.slug }}
               className="group flex items-center gap-3 py-3"
             >
-              <span className="flex-1 text-body-sm font-medium text-ink group-hover:text-mint transition-colors">
+              <span className="flex-1 text-body-sm font-medium text-ink group-hover:text-mint-ink transition-colors">
                 {course.title}
               </span>
               <span className="font-mono text-caption text-ink-3 tabular-nums flex-shrink-0">
                 {course.readingMinutes} min
               </span>
-              <span aria-hidden className="text-ink-3 group-hover:text-mint transition-colors">
+              <span aria-hidden className="text-ink-3 group-hover:text-mint-ink transition-colors">
                 ›
               </span>
             </Link>

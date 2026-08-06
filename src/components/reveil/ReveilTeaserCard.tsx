@@ -29,7 +29,7 @@ export function ReveilTeaserCard() {
         <div className="flex items-center justify-between gap-3">
           <span className="inline-flex items-center gap-2">
             <span aria-hidden className="apple-live" />
-            <span className="font-mono text-tag uppercase tracking-[0.14em] text-mint">
+            <span className="font-mono text-tag uppercase tracking-[0.14em] text-mint-ink">
               {t("reveil.eyebrow")}
             </span>
           </span>

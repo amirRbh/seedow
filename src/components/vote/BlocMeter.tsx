@@ -34,7 +34,7 @@ export function BlocMeter({ bloc, myChoice, onShare }: Props) {
     >
       <div className="flex items-center gap-2">
         <span aria-hidden="true" className="apple-live" />
-        <span className="text-tag font-mono uppercase tracking-[0.14em] text-mint">
+        <span className="text-tag font-mono uppercase tracking-[0.14em] text-mint-ink">
           {t("vote.bloc.live")}
         </span>
       </div>

@@ -42,7 +42,7 @@ export function CourseProgressBanner({ completedCount, total, resumeSlug, resume
       </div>
 
       {allDone ? (
-        <p className="mt-3 text-body-sm text-mint font-medium">
+        <p className="mt-3 text-body-sm text-mint-ink font-medium">
           Bravo — tu as terminé tous les cours. 🌱
         </p>
       ) : (

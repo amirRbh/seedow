@@ -17,7 +17,7 @@ interface LeFilProps {
 }
 
 const TONE_STYLE: Record<DispatchTone, { chip: string; icon: string }> = {
-  growth: { chip: "bg-mint/10 text-mint", icon: "↑" },
+  growth: { chip: "bg-mint/10 text-mint-ink", icon: "↑" },
   identity: { chip: "bg-paper-2 text-ink", icon: "●" },
   neutral: { chip: "bg-paper-2 text-ink-2", icon: "○" },
   caution: { chip: "bg-solar-tint text-solar", icon: "△" },

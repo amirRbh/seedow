@@ -39,7 +39,7 @@ export function CourseCertificate({
       >
         <div className="flex items-center justify-between">
           <span className="font-display font-bold text-lg tracking-tight uppercase text-ink">
-            seedow<span className="text-mint">.</span>
+            seedow<span className="text-mint-ink">.</span>
           </span>
           <span className="font-mono text-caption uppercase tracking-[0.18em] text-ink-3">
             Certificat de progression
@@ -76,7 +76,7 @@ export function CourseCertificate({
           <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-mint/12 px-3 py-1.5">
             <svg
               viewBox="0 0 24 24"
-              className="w-3.5 h-3.5 text-mint"
+              className="w-3.5 h-3.5 text-mint-ink"
               fill="none"
               stroke="currentColor"
               strokeWidth={3}
@@ -86,7 +86,7 @@ export function CourseCertificate({
             >
               <path d="M20 6 9 17l-5-5" />
             </svg>
-            <span className="text-tag font-semibold uppercase tracking-[0.16em] text-mint">
+            <span className="text-tag font-semibold uppercase tracking-[0.16em] text-mint-ink">
               Parcours complété
             </span>
           </div>

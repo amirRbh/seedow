@@ -154,7 +154,7 @@ function WrappedPage() {
               >
                 {current?.kind === "intro" && (
                   <>
-                    <p className="font-mono text-tag uppercase tracking-[0.2em] text-mint">
+                    <p className="font-mono text-tag uppercase tracking-[0.2em] text-mint-ink">
                       {t("wrapped.card_eyebrow")}
                     </p>
                     <h1 className="mt-4 font-value text-4xl leading-tight text-paper">
@@ -187,7 +187,7 @@ function WrappedPage() {
 
                 {current?.kind === "final" && (
                   <>
-                    <p className="font-mono text-tag uppercase tracking-[0.2em] text-mint">
+                    <p className="font-mono text-tag uppercase tracking-[0.2em] text-mint-ink">
                       {t("wrapped.card_eyebrow")}
                     </p>
                     <h2 className="mt-4 font-value text-3xl leading-tight text-paper">

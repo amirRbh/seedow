@@ -10,7 +10,7 @@ import type { PortfolioImpactView } from "@/lib/impact/portfolioImpact";
  */
 
 const TONE: Record<SignalTone, { chip: string; icon: "up" | "down" | "dot"; labelKey: string }> = {
-  positive: { chip: "bg-mint/12 text-mint", icon: "up", labelKey: "impact_signal.tone.positive" },
+  positive: { chip: "bg-mint/12 text-mint-ink", icon: "up", labelKey: "impact_signal.tone.positive" },
   caution: {
     chip: "bg-solar-tint text-solar",
     icon: "down",
