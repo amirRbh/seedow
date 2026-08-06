@@ -39,8 +39,9 @@ export function KPIFigure({
   animate = false,
   className,
 }: Props) {
-  const toneVar =
-    tone === "solar" ? "var(--solar-ink)" : tone ? `var(--${tone})` : undefined;
+  // Variantes texte-safe (contraste AA vérifié dans src/lib/a11y), qui se
+  // réajustent automatiquement en thème sombre et sur .ink-section.
+  const toneVar = tone ? `var(--${tone}-ink)` : undefined;
   const numeric = typeof value === "number" ? value : Number(value);
   const canAnimate = animate && Number.isFinite(numeric) && typeof value !== "string";
 
