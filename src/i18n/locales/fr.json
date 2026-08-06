@@ -312,6 +312,66 @@
         "row_etf": "ETF monde classique",
         "visual_note": "Sur 10 000 € investis, à risque comparable."
       }
+    },
+    "rv": {
+      "hero": {
+        "eyebrow": "Bêta ouverte · 112 fonds analysés",
+        "title_line1": "Ton argent,",
+        "title_accent": "à découvert.",
+        "subtitle": "Vois ce que ton épargne finance vraiment, simule un portefeuille aligné sur tes convictions, et compare-le aux indices classiques. En 2 minutes, sans compte.",
+        "cta_primary": "Simuler mon portefeuille",
+        "cta_secondary": "Créer mon compte",
+        "cta_authed": "Accéder à mon espace",
+        "note": "Simulation pédagogique. Seedow n'investit pas à ta place et ne vend aucun produit."
+      },
+      "proof": {
+        "funds": "<b>112</b> fonds analysés",
+        "sources": "Données <b>MSCI ESG</b> · <b>SFDR</b> · <b>Yahoo Finance</b>",
+        "no_advice": "<b>0</b> conseil financier",
+        "free": "Cours <b>gratuits</b>, sans compte",
+        "beta_one": "<b>{{count}}</b> place bêta restante",
+        "beta_other": "<b>{{count}}</b> places bêta restantes"
+      },
+      "cards": {
+        "simulate": {
+          "eyebrow": "Simulateur",
+          "title": "Tes convictions, traduites en portefeuille.",
+          "desc": "Tu choisis ce que tu veux financer et ce que tu refuses. Seedow construit l'allocation correspondante et l'explique ligne par ligne.",
+          "cta": "Essayer sans compte"
+        },
+        "impact": {
+          "eyebrow": "Impact",
+          "title": "Ton impact, chiffré.",
+          "desc": "Score ESG, intensité carbone comparée à l'indice mondial, exposition aux énergies fossiles. Des chiffres sourcés, pas des promesses.",
+          "cta": "Voir la méthode"
+        },
+        "problem": {
+          "eyebrow": "Le constat",
+          "title": "Ton épargne finance des choses que tu n'as jamais choisies.",
+          "desc": "La plupart des contrats te laissent dans le flou. Seedow rend visible ce qui ne l'était pas."
+        },
+        "courses": {
+          "eyebrow": "Apprendre",
+          "title": "Comprendre avant d'investir.",
+          "desc": "Douze modules gratuits, expliqués simplement, avec une version approfondie pour ceux qui veulent aller plus loin."
+        },
+        "ethi": {
+          "eyebrow": "Ethi",
+          "title": "Une IA qui explique, jamais qui vend.",
+          "desc": "Pose n'importe quelle question sur ton portefeuille. Ethi t'explique le mécanisme et cite ses sources — sans jamais te recommander d'acheter."
+        },
+        "method": {
+          "eyebrow": "Méthode",
+          "title": "Tout est ouvert, y compris nos limites.",
+          "desc": "Sources, pondérations, biais connus : notre grille de notation ESG est publiée en entier. Teste un fonds tout de suite, sans compte.",
+          "cta": "Lire la méthodologie"
+        }
+      },
+      "final": {
+        "title": "Prêt à voir où va ton argent ?",
+        "subtitle_new": "Deux minutes, sans compte, sans carte bancaire.",
+        "subtitle_authed": "Ton espace t'attend."
+      }
     }
   },
   "auth": {

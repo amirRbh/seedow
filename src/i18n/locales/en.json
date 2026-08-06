@@ -312,6 +312,66 @@
         "row_etf": "Classic world ETF",
         "visual_note": "On €10,000 invested, at comparable risk."
       }
+    },
+    "rv": {
+      "hero": {
+        "eyebrow": "Open beta · 112 funds analysed",
+        "title_line1": "Your money,",
+        "title_accent": "uncovered.",
+        "subtitle": "See what your savings actually fund, simulate a portfolio aligned with your convictions, and compare it to standard indices. Two minutes, no account.",
+        "cta_primary": "Simulate my portfolio",
+        "cta_secondary": "Create my account",
+        "cta_authed": "Go to my space",
+        "note": "Educational simulation. Seedow does not invest for you and sells no product."
+      },
+      "proof": {
+        "funds": "<b>112</b> funds analysed",
+        "sources": "<b>MSCI ESG</b> · <b>SFDR</b> · <b>Yahoo Finance</b> data",
+        "no_advice": "<b>0</b> financial advice",
+        "free": "<b>Free</b> courses, no account",
+        "beta_one": "<b>{{count}}</b> beta seat left",
+        "beta_other": "<b>{{count}}</b> beta seats left"
+      },
+      "cards": {
+        "simulate": {
+          "eyebrow": "Simulator",
+          "title": "Your convictions, turned into a portfolio.",
+          "desc": "You pick what you want to fund and what you refuse. Seedow builds the matching allocation and explains it line by line.",
+          "cta": "Try without an account"
+        },
+        "impact": {
+          "eyebrow": "Impact",
+          "title": "Your impact, in numbers.",
+          "desc": "ESG score, carbon intensity against the world index, fossil fuel exposure. Sourced figures, not promises.",
+          "cta": "See the method"
+        },
+        "problem": {
+          "eyebrow": "The problem",
+          "title": "Your savings fund things you never chose.",
+          "desc": "Most contracts keep you in the dark. Seedow makes the invisible visible."
+        },
+        "courses": {
+          "eyebrow": "Learn",
+          "title": "Understand before investing.",
+          "desc": "Twelve free modules, plainly explained, with a deeper version for those who want to go further."
+        },
+        "ethi": {
+          "eyebrow": "Ethi",
+          "title": "An AI that explains, never sells.",
+          "desc": "Ask anything about your portfolio. Ethi explains the mechanism and cites its sources — never a buy recommendation."
+        },
+        "method": {
+          "eyebrow": "Method",
+          "title": "Everything is open, including our limits.",
+          "desc": "Sources, weightings, known biases: our ESG grid is published in full. Test a fund right now, no account needed.",
+          "cta": "Read the methodology"
+        }
+      },
+      "final": {
+        "title": "Ready to see where your money goes?",
+        "subtitle_new": "Two minutes, no account, no card.",
+        "subtitle_authed": "Your space is waiting."
+      }
     }
   },
   "auth": {
