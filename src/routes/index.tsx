@@ -7,7 +7,6 @@ import { LandingCourses } from "@/components/landing/LandingCourses";
 import { LandingTour } from "@/components/landing/LandingTour";
 import { KPIFigure } from "@/components/ui/KPIFigure";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
-import { useBetaCapacity } from "@/hooks/useBetaCapacity";
 
 const SITE_URL = "https://seedow.life";
 
@@ -40,8 +39,6 @@ export const Route = createFileRoute("/")({
 function Landing() {
   const { t } = useTranslation();
   const [isAuthed, setIsAuthed] = useState<boolean | null>(null);
-  const { capacity } = useBetaCapacity();
-  const betaLeft = capacity && capacity.status === "open" ? capacity.slotsLeft : null;
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setIsAuthed(!!data.session));
@@ -217,16 +214,6 @@ function Landing() {
             <span className="rv-proof-item">
               <Trans i18nKey="landing.rv.proof.free" components={{ b: <b /> }} />
             </span>
-            {betaLeft !== null && (
-              <span className="rv-proof-item">
-                <span aria-hidden className="apple-live" />
-                <Trans
-                  i18nKey="landing.rv.proof.beta"
-                  count={betaLeft}
-                  components={{ b: <b /> }}
-                />
-              </span>
-            )}
           </div>
         </Reveal>
       </section>
