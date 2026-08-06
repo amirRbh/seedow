@@ -458,6 +458,36 @@
   .eyebrow--volt {
     color: var(--color-volt);
   }
+  .eyebrow--solar {
+    color: var(--color-solar-ink);
+  }
+  .eyebrow--alert {
+    color: var(--color-alert);
+  }
+
+  /* Accent de section — un seul accent par section, en plus du mint de marque.
+     Les composants lisent var(--section-accent) au lieu de coder une couleur.
+     --section-accent-ink = variante texte-safe (identique sauf pour solar). */
+  .accent-mint {
+    --section-accent: var(--mint);
+    --section-accent-ink: var(--mint);
+  }
+  .accent-ice {
+    --section-accent: var(--ice);
+    --section-accent-ink: var(--ice);
+  }
+  .accent-volt {
+    --section-accent: var(--volt);
+    --section-accent-ink: var(--volt);
+  }
+  .accent-solar {
+    --section-accent: var(--solar);
+    --section-accent-ink: var(--solar-ink);
+  }
+  .accent-alert {
+    --section-accent: var(--alert);
+    --section-accent-ink: var(--alert);
+  }
 
   /* Filet — séparateur signature, trait plein flat */
   .gold-rule {
