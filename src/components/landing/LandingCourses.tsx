@@ -29,7 +29,10 @@ export function LandingCourses() {
   const [previewed, setPreviewed] = useState<Course | null>(null);
 
   return (
-    <section className="accent-volt" style={{ background: "var(--apple-surface)" }} className="px-6 py-24 md:py-32">
+    <section
+      className="accent-volt px-6 py-24 md:py-32"
+      style={{ background: "var(--apple-surface)" }}
+    >
       <div className="max-w-[980px] mx-auto">
         <div className="text-center mb-14">
           <p className="apple-eyebrow" style={{ color: "var(--volt)" }}>
