@@ -71,6 +71,8 @@
   --color-solar: var(--solar);
   --color-alert: var(--alert);
   --color-volt: var(--volt);
+  --color-solar-ink: var(--solar-ink);
+  --color-section-accent: var(--section-accent);
 
   --color-alert-tint: var(--alert-tint);
   --color-alert-tint-border: var(--alert-tint-border);
