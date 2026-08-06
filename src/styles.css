@@ -239,6 +239,13 @@
   --gold: oklch(0.72 0.16 145);
   --gold-soft: oklch(0.64 0.14 148);
   --glacier: oklch(0.65 0.08 210);
+  /* Accents éclaircis pour rester lisibles sur fond sombre */
+  --mint: #2fa564;
+  --ice: #3b9dff;
+  --volt: #9b86ec;
+  --alert: #ff5c7a;
+  --solar: #d9a busy;
+  --solar-ink: #e0b158;
   --alert-tint: oklch(0.28 0.05 45);
   --alert-tint-border: oklch(0.4 0.08 45);
   --solar-tint: oklch(0.28 0.06 85);
