@@ -174,7 +174,8 @@
       "resume_prefix": "Pick up where you left off",
       "resume_cta": "Continue",
       "read_cta": "Read",
-      "see_all": "See all {{count}} courses"
+      "see_all": "See all {{count}} courses",
+      "preview_cta": "See preview"
     },
     "rayon_x": {
       "another": "Analyze another fund",
@@ -264,6 +265,13 @@
         "kpi_carbon": "Carbon intensity vs ACWI",
         "note": "Illustrative example built with the same method as the real simulation. A simulation, not investment advice."
       }
+    },
+    "course_preview": {
+      "label": "Course preview",
+      "takeaways": "What you'll take away",
+      "cta_simulate": "Simulate free · 2 min",
+      "cta_read": "Read the full course",
+      "note": "Courses are free to read, no account needed. So is the simulation."
     }
   },
   "auth": {

@@ -174,7 +174,8 @@
       "resume_prefix": "Reprends où tu t’es arrêté",
       "resume_cta": "Continuer",
       "read_cta": "Lire",
-      "see_all": "Voir les {{count}} cours"
+      "see_all": "Voir les {{count}} cours",
+      "preview_cta": "Voir l'aperçu"
     },
     "rayon_x": {
       "another": "Analyser un autre fonds",
@@ -264,6 +265,13 @@
         "kpi_carbon": "Intensité carbone vs ACWI",
         "note": "Exemple illustratif construit avec la même méthode que la simulation réelle. Simulation, pas un conseil en investissement."
       }
+    },
+    "course_preview": {
+      "label": "Aperçu du cours",
+      "takeaways": "Ce que tu retiendras",
+      "cta_simulate": "Simuler sans compte · 2 min",
+      "cta_read": "Lire le cours complet",
+      "note": "Cours en accès libre, sans compte. La simulation aussi."
     }
   },
   "auth": {
