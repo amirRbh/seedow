@@ -52,31 +52,39 @@ const TEXT_PAIRS: Array<[string, string]> = [
   ['--ink', '--paper-2'],
   ['--ink-2', '--paper'],
   ['--ink-2', '--paper-2'],
-  ['--mint', '--paper'],
-  ['--mint', '--paper-2'],
-  ['--ice', '--paper'],
-  ['--ice', '--paper-2'],
-  ['--volt', '--paper'],
-  ['--volt', '--paper-2'],
-  ['--alert', '--paper'],
-  ['--alert', '--paper-2'],
+  ['--mint-ink', '--paper'],
+  ['--mint-ink', '--paper-2'],
+  ['--ice-ink', '--paper'],
+  ['--ice-ink', '--paper-2'],
+  ['--volt-ink', '--paper'],
+  ['--volt-ink', '--paper-2'],
+  ['--alert-ink', '--paper'],
+  ['--alert-ink', '--paper-2'],
   ['--solar-ink', '--paper'],
   ['--solar-ink', '--paper-2'],
   // Badges/bannières teintés : le texte de rôle doit rester lisible sur son tint.
-  ['--alert', '--alert-tint'],
+  ['--alert-ink', '--alert-tint'],
   ['--solar-ink', '--solar-tint'],
-  ['--volt', '--bloom-tint'],
-  ['--ice', '--sky-tint'],
+  ['--volt-ink', '--bloom-tint'],
+  ['--ice-ink', '--sky-tint'],
   // Texte sur aplats pleins (boutons, pills).
   ['--paper', '--ink'],
   ['--primary-foreground', '--primary'],
   ['--destructive-foreground', '--destructive'],
 ];
 
-/** Non-texte (bordures, filets, aplats décoratifs) : AA large / UI = 3:1. */
+/** Aplats de marque (grands titres, graphiques, filets) : 3:1 suffit. */
 const NON_TEXT_PAIRS: Array<[string, string]> = [
-  ['--paper-3', '--paper'],
+  ['--mint', '--paper'],
+  ['--ice', '--paper'],
+  ['--volt', '--paper'],
+  ['--alert', '--paper'],
   ['--solar', '--paper'],
+];
+
+/** Séparateurs décoratifs : juste perceptibles (pas une exigence WCAG). */
+const SEPARATOR_PAIRS: Array<[string, string]> = [
+  ['--paper-3', '--paper'],
   ['--alert-tint-border', '--alert-tint'],
   ['--solar-tint-border', '--solar-tint'],
   ['--bloom-tint-border', '--bloom-tint'],
