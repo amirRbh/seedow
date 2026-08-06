@@ -246,6 +246,24 @@
       "methodology_desc": "Every weighting, every exclusion, every known limit of our model is publicly documented — including what it can't do yet.",
       "methodology_cta": "Read the full methodology",
       "preview_label": "Preview — real excerpt from the app"
+    },
+    "hero2": {
+      "eyebrow": "MSCI ESG data · 112 funds analysed",
+      "title_line1": "Your convictions,",
+      "title_accent": "turned into a portfolio.",
+      "subtitle": "Pick what you want to fund — and what you refuse to. Seedow builds the matching allocation, with ESG and performance figures to back it.",
+      "beta_slots_one": "{{count}} beta seat left",
+      "beta_slots_other": "{{count}} beta seats left",
+      "preview": {
+        "label": "Simulator preview",
+        "source": "MSCI ESG",
+        "conv_climate": "Climate",
+        "conv_biodiversity": "Biodiversity",
+        "conv_social": "Human rights",
+        "kpi_esg": "Portfolio ESG score",
+        "kpi_carbon": "Carbon intensity vs ACWI",
+        "note": "Illustrative example built with the same method as the real simulation. A simulation, not investment advice."
+      }
     }
   },
   "auth": {

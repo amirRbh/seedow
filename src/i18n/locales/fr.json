@@ -246,6 +246,24 @@
       "methodology_desc": "Chaque pondération, chaque exclusion, chaque limite connue de notre modèle est documentée publiquement — y compris ce qu'il ne sait pas encore faire.",
       "methodology_cta": "Lire la méthodologie complète",
       "preview_label": "Aperçu — extrait réel de l'app"
+    },
+    "hero2": {
+      "eyebrow": "Données MSCI ESG · 112 fonds analysés",
+      "title_line1": "Vos convictions,",
+      "title_accent": "traduites en portefeuille.",
+      "subtitle": "Choisissez ce que vous voulez financer — et ce que vous refusez. Seedow construit l'allocation correspondante, chiffres ESG et performance à l'appui.",
+      "beta_slots_one": "{{count}} place bêta restante",
+      "beta_slots_other": "{{count}} places bêta restantes",
+      "preview": {
+        "label": "Aperçu du simulateur",
+        "source": "MSCI ESG",
+        "conv_climate": "Climat",
+        "conv_biodiversity": "Biodiversité",
+        "conv_social": "Droits humains",
+        "kpi_esg": "Score ESG du portefeuille",
+        "kpi_carbon": "Intensité carbone vs ACWI",
+        "note": "Exemple illustratif construit avec la même méthode que la simulation réelle. Simulation, pas un conseil en investissement."
+      }
     }
   },
   "auth": {

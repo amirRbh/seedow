@@ -6,6 +6,8 @@ import { EsgQuickCheck } from "@/components/landing/EsgQuickCheck";
 import { LandingCourses } from "@/components/landing/LandingCourses";
 import { KPIFigure } from "@/components/ui/KPIFigure";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
+import { useBetaCapacity } from "@/hooks/useBetaCapacity";
+
 
 const SITE_URL = "https://seedow.life";
 
@@ -38,6 +40,10 @@ export const Route = createFileRoute("/")({
 function Landing() {
   const { t } = useTranslation();
   const [isAuthed, setIsAuthed] = useState<boolean | null>(null);
+  const { capacity } = useBetaCapacity();
+  const betaLeft = capacity && capacity.status === "open" ? capacity.slotsLeft : null;
+
+
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setIsAuthed(!!data.session));
@@ -131,60 +137,66 @@ function Landing() {
         </div>
       </nav>
 
-      {/* HERO — DA « synthèse » : auras de marque + dégradé mint→ice */}
-      <section className="relative overflow-hidden px-6 pt-20 pb-24 md:pt-24 md:pb-28">
+      {/* HERO — promesse explicite + preuve produit immédiate */}
+      <section className="relative overflow-hidden px-6 pt-16 pb-20 md:pt-20 md:pb-24">
         <div aria-hidden className="apple-aura apple-aura--mint" />
         <div aria-hidden className="apple-aura apple-aura--ice" />
 
-        <div className="relative z-10 max-w-6xl mx-auto flex flex-col items-center text-center">
-          {/* Badge marque avec point live */}
-          <span className="apple-badge">
-            <span aria-hidden className="apple-live" />
-            {t("landing.hero.trust_certified")} · {t("landing.hero.trust_no_greenwashing")}
-          </span>
+        <div className="relative z-10 max-w-[1100px] mx-auto grid lg:grid-cols-[1.05fr_1fr] gap-14 lg:gap-16 items-center">
+          <div className="text-center lg:text-left flex flex-col items-center lg:items-start">
+            <span className="apple-badge">
+              <span aria-hidden className="apple-live" />
+              {t("landing.hero2.eyebrow")}
+            </span>
 
-          <h1 className="apple-title apple-title-lg mx-auto max-w-[900px] mt-7">
-            {t("landing.hero.title_line1")}
-            <br />
-            {t("landing.hero.title_line2_pre")}
-            <span className="apple-grad">{t("landing.hero.title_accent")}</span>
-            {t("landing.hero.title_line2_post")}
-          </h1>
+            <h1
+              className="apple-title mt-6 max-w-[620px]"
+              style={{ fontSize: "clamp(38px, 4.4vw, 60px)" }}
+            >
+              {t("landing.hero2.title_line1")}
+              <br />
+              <span className="apple-grad">{t("landing.hero2.title_accent")}</span>
+            </h1>
 
-          <p className="apple-subtitle mx-auto max-w-[620px] mt-6">{t("landing.hero.subtitle")}</p>
+            <p className="apple-subtitle mt-6 max-w-[520px]">{t("landing.hero2.subtitle")}</p>
 
-          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 mt-10">
-            {isAuthed ? (
-              <Link to="/dashboard" className="apple-btn-primary">
-                {t("landing.hero.cta_authed")}
-              </Link>
-            ) : (
-              <>
-                <Link
-                  to="/onboarding"
-                  search={{ guest: true }}
-                  onClick={onCta("hero", "preview")}
-                  className="apple-btn-primary"
-                >
-                  {t("landing.hero.cta_guest")}
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 mt-9">
+              {isAuthed ? (
+                <Link to="/dashboard" className="apple-btn-primary">
+                  {t("landing.hero.cta_authed")}
                 </Link>
-                <Link
-                  to="/auth"
-                  onClick={onCta("hero", "signup")}
-                  className="apple-btn-secondary"
-                >
-                  {t("landing.hero.cta_new_account")}
-                </Link>
-              </>
+              ) : (
+                <>
+                  <Link
+                    to="/onboarding"
+                    search={{ guest: true }}
+                    onClick={onCta("hero", "preview")}
+                    className="apple-btn-primary"
+                  >
+                    {t("landing.hero.cta_guest")}
+                  </Link>
+                  <Link
+                    to="/auth"
+                    onClick={onCta("hero", "signup")}
+                    className="apple-btn-secondary"
+                  >
+                    {t("landing.hero.cta_new_account")}
+                  </Link>
+                </>
+              )}
+            </div>
+            {!isAuthed && (
+              <p className="mt-4 text-body-sm text-[color:var(--apple-text-2)]">
+                {t("landing.hero.trust_line")}
+                {betaLeft !== null ? ` · ${t("landing.hero2.beta_slots", { count: betaLeft })}` : ""}
+              </p>
             )}
           </div>
-          {!isAuthed && (
-            <p className="mt-4 text-body-sm text-[color:var(--apple-text-2)]">
-              {t("landing.hero.trust_line")}
-            </p>
-          )}
+
+          <HeroPreview t={t} />
         </div>
       </section>
+
 
       {/* SECTION — quick win : tester un fonds sans compte, la démo qui vend */}
       <EsgQuickCheck />
@@ -557,7 +569,65 @@ function Landing() {
 
 /* ---------- Sub-components ---------- */
 
+function HeroPreview({ t }: { t: (key: string, opts?: Record<string, unknown>) => string }) {
+  const convictions = [
+    { label: t("landing.hero2.preview.conv_climate"), weight: 42 },
+    { label: t("landing.hero2.preview.conv_biodiversity"), weight: 33 },
+    { label: t("landing.hero2.preview.conv_social"), weight: 25 },
+  ];
+
+  return (
+    <div
+      className="apple-card w-full"
+      style={{ border: "1px solid var(--paper-3)", padding: "22px 22px 26px" }}
+      aria-hidden
+    >
+      <div className="flex items-center justify-between">
+        <p className="text-caption font-mono uppercase tracking-[0.16em] text-[color:var(--apple-text-2)]">
+          {t("landing.hero2.preview.label")}
+        </p>
+        <span className="text-caption font-mono text-[color:var(--apple-text-2)]">
+          {t("landing.hero2.preview.source")}
+        </span>
+      </div>
+
+      <div className="mt-5 flex flex-col gap-3">
+        {convictions.map((c) => (
+          <div key={c.label}>
+            <div className="flex items-baseline justify-between text-body-sm text-[color:var(--apple-text)]">
+              <span>{c.label}</span>
+              <span className="font-mono text-[color:var(--apple-text-2)]">{c.weight}%</span>
+            </div>
+            <div
+              className="mt-1.5 h-[6px] rounded-full overflow-hidden"
+              style={{ background: "var(--paper-3)" }}
+            >
+              <div
+                className="h-full rounded-full"
+                style={{ width: `${c.weight}%`, background: "var(--mint)" }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div
+        className="mt-6 pt-5 grid grid-cols-2 gap-4"
+        style={{ borderTop: "1px solid var(--paper-3)" }}
+      >
+        <KPIFigure size="sm" label={t("landing.hero2.preview.kpi_esg")} value="74 / 100" accent />
+        <KPIFigure size="sm" label={t("landing.hero2.preview.kpi_carbon")} value="−58 %" />
+      </div>
+
+      <p className="mt-4 text-caption leading-[1.45] text-[color:var(--apple-text-2)]">
+        {t("landing.hero2.preview.note")}
+      </p>
+    </div>
+  );
+}
+
 function ChatBubble({ side, children }: { side: "user" | "ethi"; children: React.ReactNode }) {
+
   const isUser = side === "user";
   return (
     <div className={isUser ? "self-end" : "self-start"} style={{ maxWidth: "85%" }}>
