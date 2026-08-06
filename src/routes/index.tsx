@@ -149,7 +149,10 @@ function Landing() {
               {t("landing.hero2.eyebrow")}
             </span>
 
-            <h1 className="apple-title apple-title-lg mt-6 max-w-[620px]">
+            <h1
+              className="apple-title mt-6 max-w-[620px]"
+              style={{ fontSize: "clamp(38px, 4.4vw, 60px)" }}
+            >
               {t("landing.hero2.title_line1")}
               <br />
               <span className="apple-grad">{t("landing.hero2.title_accent")}</span>
