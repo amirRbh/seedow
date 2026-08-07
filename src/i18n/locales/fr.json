@@ -2525,7 +2525,7 @@
     "fees_suffix": "/ an",
     "help_cta": "Que veulent dire ces mots ?",
     "help": {
-      "impact": "Impact : à quel point vos investissements soutiennent des entreprises plus responsables (sur 100).",
+      "impact": "Impact : la responsabilité environnementale, sociale et de gouvernance de vos investissements, notée sur 100. C'est une moyenne de notes ESG — un repère, pas une garantie d'impact positif.",
       "risk": "Risque : à quel point la valeur peut monter ou descendre au fil du temps.",
       "fees": "Frais : ce que vos investissements coûtent chaque année.",
       "diversification": "Diversification : répartir votre argent pour ne pas dépendre d'un seul investissement."
@@ -2561,7 +2561,10 @@
       "generic": "Contribue à équilibrer votre portefeuille."
     },
     "see_details": "Voir les détails",
-    "simulation_note": "Simulation à but pédagogique — Seedow vous informe, vous gardez le contrôle. Aucune transaction réelle."
+    "simulation_note": "Simulation à but pédagogique — Seedow vous informe, vous gardez le contrôle. Aucune transaction réelle.",
+    "impact_sublabel": "Responsabilité E·S·G",
+    "impact_basis": "Calculé à partir des notes ESG de chaque investissement.",
+    "impact_sources_link": "Voir le détail et les sources"
   },
   "portfolio_customizer": {
     "eyebrow": "Personnaliser",
@@ -2620,5 +2623,9 @@
     "glance_impact": "Impact {{score}}/100",
     "glance_riskfees_note": "Risque et frais précis calculés à l'enregistrement.",
     "simulation_note": "Simulation à but pédagogique — aucune transaction réelle. Vous décidez."
+  },
+  "data_provenance": {
+    "coverage_label": "Que signifie la couverture ?",
+    "coverage_tooltip": "La part de votre portefeuille pour laquelle nous disposons d'une donnée réelle mesurée. Le reste n'est pas encore mesuré — il n'est pas estimé pour autant."
   }
 }
