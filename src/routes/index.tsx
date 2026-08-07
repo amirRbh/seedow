@@ -408,7 +408,9 @@ function Landing() {
               {t("landing.rv.final.title")}
             </h2>
             <p className="apple-subtitle mx-auto max-w-[520px] mt-5">
-              {isAuthed ? t("landing.rv.final.subtitle_authed") : t("landing.rv.final.subtitle_new")}
+              {isAuthed
+                ? t("landing.rv.final.subtitle_authed")
+                : t("landing.rv.final.subtitle_new")}
             </p>
 
             <div className="mt-10 flex flex-col items-center gap-4">

@@ -781,6 +781,202 @@ const comparatifEn = {
     "Expected returns estimated on the real price history available (rolling 2-year window), with capped James-Stein shrinkage anchored per asset class. A short window overstates recently strong asset classes.",
 };
 
+// ─────────────────────────────────────────────────────────
+// Copilote d'investissement — écran des 3 choix + coup d'œil lisible
+// ─────────────────────────────────────────────────────────
+const postSimForkFr = {
+  title: "Votre portefeuille est prêt 🎉",
+  subtitle:
+    "Seedow vous propose une première version basée sur vos réponses. À vous de choisir la suite.",
+  recommended: "Recommandé",
+  guided_title: "Laissez Seedow vous guider",
+  guided_desc: "Nous gardons la proposition construite pour vous.",
+  customize_title: "Personnaliser",
+  customize_desc: "Partez de notre proposition et ajustez-la à votre main.",
+  blank_title: "Commencer de zéro",
+  blank_desc: "Composez votre portefeuille vous-même, pas à pas.",
+  simulation_note: "Une proposition, pas une recommandation d'achat. Vous décidez.",
+};
+
+const postSimForkEn = {
+  title: "Your portfolio is ready 🎉",
+  subtitle:
+    "Seedow suggests a first version based on your answers. It's up to you what comes next.",
+  recommended: "Recommended",
+  guided_title: "Let Seedow guide you",
+  guided_desc: "We keep the proposal built for you.",
+  customize_title: "Customize",
+  customize_desc: "Start from our proposal and adjust it your way.",
+  blank_title: "Start from scratch",
+  blank_desc: "Build your portfolio yourself, step by step.",
+  simulation_note: "A proposal, not a buy recommendation. You decide.",
+};
+
+const portfolioGlanceFr = {
+  eyebrow: "En un coup d'œil",
+  title: "Votre portefeuille",
+  chip: {
+    impact: "Impact",
+    risk: "Risque",
+    fees: "Frais",
+    diversification: "Diversification",
+  },
+  risk: { prudent: "Prudent", modere: "Modéré", dynamique: "Dynamique" },
+  div: { limitee: "Limitée", correcte: "Correcte", bonne: "Bonne" },
+  fees_suffix: "/ an",
+  help_cta: "Que veulent dire ces mots ?",
+  help: {
+    impact:
+      "Impact : à quel point vos investissements soutiennent des entreprises plus responsables (sur 100).",
+    risk: "Risque : à quel point la valeur peut monter ou descendre au fil du temps.",
+    fees: "Frais : ce que vos investissements coûtent chaque année.",
+    diversification:
+      "Diversification : répartir votre argent pour ne pas dépendre d'un seul investissement.",
+  },
+  money_title: "Où va votre argent ?",
+  bucket: { actions: "Actions", obligations: "Obligations", autres: "Autres" },
+  why_title: "Pourquoi cette proposition ?",
+  why: {
+    horizon_long: "Vous prévoyez d'investir sur le long terme (environ {{years}} ans).",
+    horizon_medium: "Vous prévoyez d'investir sur plusieurs années (environ {{years}} ans).",
+    horizon_short: "Vous prévoyez d'investir sur une courte durée (environ {{years}} ans).",
+    risk_prudent:
+      "Vous préférez limiter les fluctuations, quitte à viser une croissance plus douce.",
+    risk_modere: "Vous acceptez des fluctuations modérées pour viser une croissance régulière.",
+    risk_dynamique:
+      "Vous acceptez des fluctuations plus fortes pour viser une croissance plus élevée.",
+    causes:
+      "La sélection privilégie des investissements cohérents avec les valeurs que vous avez choisies.",
+    exclusions: "Les secteurs que vous refusez de financer ont été entièrement exclus.",
+  },
+  role: {
+    equity_dev:
+      "Réunit de grandes entreprises de plusieurs pays — le socle de nombreux portefeuilles.",
+    equity_em: "Ouvre votre portefeuille à des économies en croissance.",
+    thematic: "Cible directement les causes qui vous tiennent à cœur.",
+    green_bond: "Prête de l'argent à des projets écologiques — plus stable que les actions.",
+    social_bond: "Finance des projets à utilité sociale — plutôt stable.",
+    sov_bond: "Prête à des États — amortit les fluctuations du portefeuille.",
+    corporate_bond: "Prête à des entreprises — apporte un revenu plus régulier.",
+    reit: "Diversifie votre portefeuille via l'immobilier.",
+    commodity: "Diversifie en dehors des actions et des obligations.",
+    cash: "Met une part de votre argent de côté, en sécurité.",
+    generic: "Contribue à équilibrer votre portefeuille.",
+  },
+  see_details: "Voir les détails",
+  simulation_note:
+    "Simulation à but pédagogique — Seedow vous informe, vous gardez le contrôle. Aucune transaction réelle.",
+};
+
+const portfolioGlanceEn = {
+  eyebrow: "At a glance",
+  title: "Your portfolio",
+  chip: {
+    impact: "Impact",
+    risk: "Risk",
+    fees: "Fees",
+    diversification: "Diversification",
+  },
+  risk: { prudent: "Cautious", modere: "Moderate", dynamique: "Dynamic" },
+  div: { limitee: "Limited", correcte: "Fair", bonne: "Good" },
+  fees_suffix: "/ year",
+  help_cta: "What do these words mean?",
+  help: {
+    impact: "Impact: how much your investments support more responsible companies (out of 100).",
+    risk: "Risk: how much the value can go up or down over time.",
+    fees: "Fees: what your investments cost each year.",
+    diversification:
+      "Diversification: spreading your money so you don't depend on a single investment.",
+  },
+  money_title: "Where does your money go?",
+  bucket: { actions: "Stocks", obligations: "Bonds", autres: "Other" },
+  why_title: "Why this proposal?",
+  why: {
+    horizon_long: "You plan to invest for the long term (around {{years}} years).",
+    horizon_medium: "You plan to invest over several years (around {{years}} years).",
+    horizon_short: "You plan to invest for a short time (around {{years}} years).",
+    risk_prudent: "You'd rather limit ups and downs, even if growth is gentler.",
+    risk_modere: "You accept moderate ups and downs to aim for steady growth.",
+    risk_dynamique: "You accept larger ups and downs to aim for higher growth.",
+    causes: "The selection favours investments aligned with the values you chose.",
+    exclusions: "The sectors you refuse to fund have been fully excluded.",
+  },
+  role: {
+    equity_dev: "Bundles large companies from many countries — the backbone of many portfolios.",
+    equity_em: "Opens your portfolio to fast-growing economies.",
+    thematic: "Directly targets the causes you care about.",
+    green_bond: "Lends money to green projects — steadier than stocks.",
+    social_bond: "Funds projects with social value — fairly steady.",
+    sov_bond: "Lends to governments — cushions the portfolio's swings.",
+    corporate_bond: "Lends to companies — brings a more regular income.",
+    reit: "Diversifies your portfolio through real estate.",
+    commodity: "Diversifies outside stocks and bonds.",
+    cash: "Keeps part of your money aside, safely.",
+    generic: "Helps balance your portfolio.",
+  },
+  see_details: "See details",
+  simulation_note:
+    "Educational simulation — Seedow informs you, you stay in control. No real transaction.",
+};
+
+const portfolioCustomizerFr = {
+  eyebrow: "Personnaliser",
+  title: "Ajustez votre portefeuille",
+  desc: "Retirez une ligne ou changez son poids. Seedow vous explique ce que ça change.",
+  consequence: {
+    more_concentrated:
+      "Votre portefeuille est plus concentré — une plus grande partie de votre argent dépend de moins d'investissements.",
+    less_concentrated:
+      "Votre portefeuille est mieux réparti — votre argent dépend de davantage d'investissements.",
+    diversification_up: "Votre diversification s'améliore.",
+    diversification_down: "Votre diversification diminue.",
+    impact_up: "Votre impact augmente (environ +{{pts}} points sur 100).",
+    impact_down: "Votre impact baisse (environ −{{pts}} points sur 100).",
+  },
+  remove: "Retirer cette ligne",
+  weight_of: "Poids de {{name}}",
+  total: "Total réparti",
+  normalize_note:
+    "Pas besoin d'arriver pile à 100 % : Seedow répartit automatiquement à l'enregistrement.",
+  add: "Ajouter un investissement",
+  reset: "Annuler",
+  save: "Enregistrer mes choix",
+  saving: "Enregistrement…",
+  saved: "Portefeuille mis à jour",
+  saved_desc: "Vos ajustements ont été enregistrés.",
+  save_error: "Impossible d'enregistrer",
+  simulation_note:
+    "Simulation à but pédagogique — Seedow vous explique, vous décidez. Aucune transaction réelle.",
+};
+
+const portfolioCustomizerEn = {
+  eyebrow: "Customize",
+  title: "Adjust your portfolio",
+  desc: "Remove a line or change its weight. Seedow explains what changes.",
+  consequence: {
+    more_concentrated:
+      "Your portfolio is more concentrated — more of your money depends on fewer investments.",
+    less_concentrated:
+      "Your portfolio is better spread out — your money depends on more investments.",
+    diversification_up: "Your diversification improves.",
+    diversification_down: "Your diversification decreases.",
+    impact_up: "Your impact goes up (about +{{pts}} points out of 100).",
+    impact_down: "Your impact goes down (about −{{pts}} points out of 100).",
+  },
+  remove: "Remove this line",
+  weight_of: "Weight of {{name}}",
+  total: "Total allocated",
+  normalize_note: "No need to land exactly on 100% — Seedow rebalances automatically on save.",
+  add: "Add an investment",
+  reset: "Undo",
+  save: "Save my choices",
+  saving: "Saving…",
+  saved: "Portfolio updated",
+  saved_desc: "Your adjustments have been saved.",
+  save_error: "Couldn't save",
+  simulation_note: "Educational simulation — Seedow explains, you decide. No real transaction.",
+};
+
 const mergedFr = deepMerge(fr, {
   landing: { rayon_x: rayonXFr },
   dashboard: dashboardFr,
@@ -793,6 +989,9 @@ const mergedFr = deepMerge(fr, {
   wrapped: wrappedFr,
   reveil: reveilFr,
   comparatif_panel: comparatifFr,
+  post_sim_fork: postSimForkFr,
+  portfolio_glance: portfolioGlanceFr,
+  portfolio_customizer: portfolioCustomizerFr,
 });
 const mergedEn = deepMerge(en, {
   landing: { rayon_x: rayonXEn },
@@ -806,6 +1005,9 @@ const mergedEn = deepMerge(en, {
   wrapped: wrappedEn,
   reveil: reveilEn,
   comparatif_panel: comparatifEn,
+  post_sim_fork: postSimForkEn,
+  portfolio_glance: portfolioGlanceEn,
+  portfolio_customizer: portfolioCustomizerEn,
 });
 
 writeFileSync("src/i18n/locales/fr.json", JSON.stringify(mergedFr, null, 2) + "\n", "utf-8");

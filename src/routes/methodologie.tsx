@@ -700,7 +700,6 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
             </p>
           </div>
 
-
           {/* Bloc 2 — Grille 3 piliers */}
           <div className="border border-paper-3 p-5 bg-paper-2/30">
             <p className="text-tag uppercase tracking-[0.15em] text-ink-3 font-medium mb-3">

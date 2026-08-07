@@ -83,7 +83,6 @@ const BENCHMARK_OPTIONS: BenchmarkOption[] = [
   { id: "cac40", labelKey: "comparatif_panel.benchmark_cac40", data: CAC40 },
 ];
 
-
 function PerfMedaillon({ value, max, accent }: { value: number; max: number; accent?: boolean }) {
   const w = Math.max(4, Math.min(100, (Math.abs(value) / max) * 100));
   return (
@@ -159,7 +158,6 @@ export function ComparatifPanel() {
 
   const eur0 = (v: number) =>
     v.toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-
 
   const BenchmarkSelector = (
     <div
@@ -311,14 +309,11 @@ export function ComparatifPanel() {
             {t("comparatif_panel.price_title")}
           </p>
           <p className="text-label text-ink-2 leading-relaxed">
-            {t(
-              deltaScaled10y < 0 ? "comparatif_panel.price_cost" : "comparatif_panel.price_gain",
-              {
-                delta: eur0(Math.abs(deltaScaled10y)),
-                bench: t(benchmark.labelKey),
-                capital: eur0(capital),
-              },
-            )}
+            {t(deltaScaled10y < 0 ? "comparatif_panel.price_cost" : "comparatif_panel.price_gain", {
+              delta: eur0(Math.abs(deltaScaled10y)),
+              bench: t(benchmark.labelKey),
+              capital: eur0(capital),
+            })}
           </p>
         </div>
       )}
@@ -357,9 +352,6 @@ export function ComparatifPanel() {
           {t("comparatif_panel.downside_note")}
         </p>
       </div>
-
-
-
 
       <div className="mt-8">
         <div className="gold-rule mb-5" />
@@ -458,7 +450,9 @@ export function ComparatifPanel() {
               })}
               unit="kg/an"
               tone="mint"
-              hint={t("comparatif_panel.paris_lyon_trips", { count: Math.round(co2EvitedKg / 120) })}
+              hint={t("comparatif_panel.paris_lyon_trips", {
+                count: Math.round(co2EvitedKg / 120),
+              })}
             />
           )}
 

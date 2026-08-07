@@ -192,7 +192,6 @@
   --peach: #b7791f;
   --glacier: #0071e3;
 
-
   /* Fonds/bordures "tinted" — remplacent ~15 oklch(...) ad-hoc dispersés
      dans les composants (bannières, badges, tons "loss/withdrawal/gold-tier"). */
   --alert-tint: oklch(0.95 0.03 45);

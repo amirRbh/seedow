@@ -25,6 +25,9 @@ function makePortfolio(overrides: Partial<ActivePortfolio> = {}): ActivePortfoli
     holdings: [makeHolding()],
     metrics: null,
     exclusions: [],
+    causes: [],
+    risk_target: 0.09,
+    horizon_years: 10,
     ...overrides,
   };
 }

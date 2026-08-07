@@ -33,6 +33,7 @@ import { useBetaCapacity } from "@/hooks/useBetaCapacity";
 import { generatePortfolio, simulatePortfolio } from "@/lib/portfolio/server.functions";
 import { MirrorReveal, type MirrorImpact } from "@/components/onboarding/MirrorReveal";
 import { AgencyReveal } from "@/components/onboarding/AgencyReveal";
+import { PostSimulationFork } from "@/components/onboarding/PostSimulationFork";
 import { callAuthed } from "@/lib/authedServerFn";
 import { trackPreference, type PreferenceStep } from "@/lib/preferences/tracking";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
@@ -1095,6 +1096,7 @@ function PreviewScene({
 }) {
   const { t } = useTranslation();
   const { lang } = useLang();
+  const navigate = useNavigate();
   const simulate = useServerFn(simulatePortfolio);
   const [phase, setPhase] = useState<"loading" | "reveal" | "error">("loading");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -1106,6 +1108,31 @@ function PreviewScene({
     universeSize: number;
   } | null>(null);
   const [attempt, setAttempt] = useState(0);
+
+  // Accepte la proposition simulée et la sauvegarde. `intent === "customize"`
+  // pose un drapeau que /portfolio consomme pour ouvrir l'ajustement d'emblée.
+  const acceptAndSave = (intent?: "customize") => {
+    void trackPreference({
+      step: "allocation_accepted",
+      payload: { position_count: selected.length },
+    });
+    if (intent === "customize") {
+      try {
+        localStorage.setItem("seedow_post_save_intent", "customize");
+      } catch {
+        /* stockage indisponible : on sauvegarde quand même, sans le raccourci */
+      }
+    }
+    const holdings = selected
+      .map((a) => ({
+        ticker: a.ticker,
+        name: a.name,
+        allocationPct: (weights[a.id] ?? 0) * 100,
+      }))
+      .filter((h) => h.allocationPct > 0.5)
+      .sort((a, b) => b.allocationPct - a.allocationPct);
+    onSave(holdings);
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -1272,39 +1299,13 @@ function PreviewScene({
                   </motion.li>
                 ))}
             </ul>
-            <button
-              onClick={() => {
-                void trackPreference({
-                  step: "allocation_accepted",
-                  payload: { position_count: selected.length },
-                });
-                const holdings = selected
-                  .map((a) => ({
-                    ticker: a.ticker,
-                    name: a.name,
-                    allocationPct: (weights[a.id] ?? 0) * 100,
-                  }))
-                  .filter((h) => h.allocationPct > 0.5)
-                  .sort((a, b) => b.allocationPct - a.allocationPct);
-                onSave(holdings);
-              }}
-              className="mt-8 w-full h-14 rounded-full bg-ink text-paper font-semibold text-body-sm hover:bg-highlight-2 transition-colors flex items-center justify-center gap-2"
-            >
-              {t("onboarding.building.save_cta")}
-              <svg
-                viewBox="0 0 24 24"
-                className="w-3.5 h-3.5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              >
-                <path d="M5 12h14M13 5l7 7-7 7" />
-              </svg>
-            </button>
-            <p className="mt-3 text-center text-caption text-ink-3">
-              {t("onboarding.building.save_hint")}
-            </p>
+            <div className="mt-8">
+              <PostSimulationFork
+                onGuided={() => acceptAndSave()}
+                onCustomize={() => acceptAndSave("customize")}
+                onBlank={() => navigate({ to: "/discover" })}
+              />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

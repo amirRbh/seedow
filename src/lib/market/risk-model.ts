@@ -212,7 +212,6 @@ export function shrinkExpectedReturns(
   return out;
 }
 
-
 /** Aligne les rendements des `ids` sur leurs dates communes (intersection). */
 function alignReturns(returnsByAsset: Map<string, DatedReturn[]>, ids: string[]): number[][] {
   const maps = ids.map(

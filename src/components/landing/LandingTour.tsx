@@ -40,7 +40,6 @@ export function LandingTour({ embedded = false }: { embedded?: boolean } = {}) {
           </div>
         )}
 
-
         {/* Sélecteur d'étapes — chaque étape est un état, pas une navigation */}
         <div
           role="tablist"
@@ -144,7 +143,11 @@ function TourVisual({
     return (
       <div
         className="p-5"
-        style={{ background: "var(--apple-surface)", border: "1px solid var(--paper-3)", borderRadius: 14 }}
+        style={{
+          background: "var(--apple-surface)",
+          border: "1px solid var(--paper-3)",
+          borderRadius: 14,
+        }}
       >
         <p className="font-mono text-caption uppercase tracking-[0.16em] text-[color:var(--apple-text-2)]">
           {t("landing.tour.understand.visual_label")}
@@ -179,7 +182,11 @@ function TourVisual({
     return (
       <div
         className="p-5"
-        style={{ background: "var(--apple-surface)", border: "1px solid var(--paper-3)", borderRadius: 14 }}
+        style={{
+          background: "var(--apple-surface)",
+          border: "1px solid var(--paper-3)",
+          borderRadius: 14,
+        }}
       >
         <p className="font-mono text-caption uppercase tracking-[0.16em] text-[color:var(--apple-text-2)]">
           {t("landing.tour.see.visual_label")}
@@ -203,15 +210,29 @@ function TourVisual({
   return (
     <div
       className="p-5"
-      style={{ background: "var(--apple-surface)", border: "1px solid var(--paper-3)", borderRadius: 14 }}
+      style={{
+        background: "var(--apple-surface)",
+        border: "1px solid var(--paper-3)",
+        borderRadius: 14,
+      }}
     >
       <p className="font-mono text-caption uppercase tracking-[0.16em] text-[color:var(--apple-text-2)]">
         {t("landing.tour.compare.visual_label")}
       </p>
       <div className="mt-4 flex flex-col gap-3">
         {[
-          { label: t("landing.tour.compare.row_seedow"), value: "24 180 €", width: "100%", mint: true },
-          { label: t("landing.tour.compare.row_etf"), value: "23 940 €", width: "94%", mint: false },
+          {
+            label: t("landing.tour.compare.row_seedow"),
+            value: "24 180 €",
+            width: "100%",
+            mint: true,
+          },
+          {
+            label: t("landing.tour.compare.row_etf"),
+            value: "23 940 €",
+            width: "94%",
+            mint: false,
+          },
         ].map((row) => (
           <div key={row.label}>
             <div className="flex items-baseline justify-between text-body-sm text-[color:var(--apple-text)]">

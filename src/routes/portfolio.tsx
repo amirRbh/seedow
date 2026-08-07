@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
@@ -14,6 +15,8 @@ import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { ShareToggle } from "@/components/community/ShareToggle";
 import { ComparatifPanel } from "@/components/portfolio/ComparatifPanel";
 import { AllocationRefiner } from "@/components/portfolio/AllocationRefiner";
+import { PortfolioAtAGlance } from "@/components/portfolio/PortfolioAtAGlance";
+import { PortfolioCustomizer } from "@/components/portfolio/PortfolioCustomizer";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyPortfolioState } from "@/components/portfolio/EmptyPortfolioState";
@@ -61,6 +64,28 @@ function Portfolio() {
   const navigate = useNavigate();
   const { portfolio, loading } = useActivePortfolio();
   const valuation = usePortfolioValuation();
+  const detailsRef = useRef<HTMLElement | null>(null);
+
+  // Intention « Personnaliser » posée par l'écran des 3 choix (post-simulation) :
+  // on ouvre directement l'onglet d'ajustement, puis on consomme le drapeau.
+  useEffect(() => {
+    let intent: string | null = null;
+    try {
+      intent = localStorage.getItem("seedow_post_save_intent");
+    } catch {
+      intent = null;
+    }
+    if (intent === "customize") {
+      try {
+        localStorage.removeItem("seedow_post_save_intent");
+      } catch {
+        /* ignore */
+      }
+      navigate({ to: "/portfolio", search: { tab: "affiner" }, replace: true });
+    }
+    // Au montage uniquement.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (loading) {
     return (
@@ -144,6 +169,22 @@ function Portfolio() {
         <ValuationConsistencyBanner consistency={valuation.consistency} />
 
         <section className="px-5 pt-4">
+          <PortfolioAtAGlance
+            metrics={portfolio.metrics}
+            holdings={portfolio.holdings}
+            rationale={{
+              causes: portfolio.causes,
+              exclusions: portfolio.exclusions,
+              horizon_years: portfolio.horizon_years,
+              risk_target: portfolio.risk_target,
+            }}
+            onSeeDetails={() =>
+              detailsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+            }
+          />
+        </section>
+
+        <section ref={detailsRef} className="px-5 pt-6 scroll-mt-4">
           <Tabs
             value={tab ?? "performance"}
             onValueChange={(v) =>
@@ -210,7 +251,15 @@ function Portfolio() {
             </TabsContent>
 
             <TabsContent value="affiner" className="pt-5">
-              <AllocationRefiner portfolioId={portfolio.id} />
+              {isSimple ? (
+                <PortfolioCustomizer
+                  portfolioId={portfolio.id}
+                  holdings={portfolio.holdings}
+                  onSaved={() => valuation.refresh()}
+                />
+              ) : (
+                <AllocationRefiner portfolioId={portfolio.id} />
+              )}
             </TabsContent>
           </Tabs>
         </section>

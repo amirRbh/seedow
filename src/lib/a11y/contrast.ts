@@ -45,9 +45,9 @@ export function parseColor(input: string): Rgb | null {
     const full =
       h.length === 3
         ? h
-            .split('')
+            .split("")
             .map((c) => c + c)
-            .join('')
+            .join("")
         : h;
     return {
       r: parseInt(full.slice(0, 2), 16) / 255,
@@ -58,19 +58,22 @@ export function parseColor(input: string): Rgb | null {
 
   const rgb = value.match(/^rgba?\(([^)]+)\)$/);
   if (rgb) {
-    const parts = rgb[1].split(/[\s,/]+/).filter(Boolean).slice(0, 3);
+    const parts = rgb[1]
+      .split(/[\s,/]+/)
+      .filter(Boolean)
+      .slice(0, 3);
     if (parts.length < 3) return null;
     const [r, g, b] = parts.map((p) =>
-      p.endsWith('%') ? parseFloat(p) / 100 : parseFloat(p) / 255,
+      p.endsWith("%") ? parseFloat(p) / 100 : parseFloat(p) / 255,
     );
     return { r: clamp01(r), g: clamp01(g), b: clamp01(b) };
   }
 
   const oklch = value.match(/^oklch\(([^)]+)\)$/);
   if (oklch) {
-    const parts = oklch[1].split('/')[0].trim().split(/\s+/);
+    const parts = oklch[1].split("/")[0].trim().split(/\s+/);
     if (parts.length < 3) return null;
-    const L = parts[0].endsWith('%') ? parseFloat(parts[0]) / 100 : parseFloat(parts[0]);
+    const L = parts[0].endsWith("%") ? parseFloat(parts[0]) / 100 : parseFloat(parts[0]);
     const C = parseFloat(parts[1]);
     const H = parseFloat(parts[2]);
     if ([L, C, H].some((n) => Number.isNaN(n))) return null;
@@ -97,18 +100,18 @@ export function contrastRatio(foreground: string, background: string): number {
   return (hi + 0.05) / (lo + 0.05);
 }
 
-export type ContrastLevel = 'AA' | 'AA-large' | 'AAA';
+export type ContrastLevel = "AA" | "AA-large" | "AAA";
 
 const THRESHOLDS: Record<ContrastLevel, number> = {
   AA: 4.5,
-  'AA-large': 3,
+  "AA-large": 3,
   AAA: 7,
 };
 
 export function meetsContrast(
   foreground: string,
   background: string,
-  level: ContrastLevel = 'AA',
+  level: ContrastLevel = "AA",
 ): boolean {
   return contrastRatio(foreground, background) >= THRESHOLDS[level] - 0.005;
 }
