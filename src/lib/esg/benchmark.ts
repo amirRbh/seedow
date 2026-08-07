@@ -45,12 +45,7 @@ export const PARIS_ALIGNED_EQUITY_WACI_SOURCE = "MSCI World Climate Paris Aligne
 export const PARIS_ALIGNED_EQUITY_WACI_ASOF = "2026-06-30";
 
 const EQUITY_CLASSES: AssetClass[] = ["equity_dev", "equity_em", "thematic"];
-const BOND_CLASSES: AssetClass[] = [
-  "green_bond",
-  "social_bond",
-  "sov_bond",
-  "corporate_bond",
-];
+const BOND_CLASSES: AssetClass[] = ["green_bond", "social_bond", "sov_bond", "corporate_bond"];
 const REAL_ASSET_CLASSES: AssetClass[] = ["reit", "commodity"];
 
 function isEquity(c: AssetClass): boolean {
@@ -143,7 +138,9 @@ export function computeCompositeBenchmarkWaci(
     sources.push(`${ACWI_WACI_SOURCE} (${ACWI_WACI_TCO2E_PER_MUSD})`);
   }
   if (bond + (1 - realEquityShare) * realWeight > 0) {
-    sources.push(`${GLOBAL_AGGREGATE_BOND_WACI_SOURCE} (${GLOBAL_AGGREGATE_BOND_WACI_TCO2E_PER_MUSD})`);
+    sources.push(
+      `${GLOBAL_AGGREGATE_BOND_WACI_SOURCE} (${GLOBAL_AGGREGATE_BOND_WACI_TCO2E_PER_MUSD})`,
+    );
   }
 
   return {

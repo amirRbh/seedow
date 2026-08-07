@@ -1303,7 +1303,7 @@ function PreviewScene({
               <PostSimulationFork
                 onGuided={() => acceptAndSave()}
                 onCustomize={() => acceptAndSave("customize")}
-                onBlank={() => navigate({ to: "/discover" })}
+                onBlank={() => navigate({ to: "/construire" })}
               />
             </div>
           </motion.div>

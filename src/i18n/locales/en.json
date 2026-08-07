@@ -1419,7 +1419,8 @@
     "title": "Compose your first portfolio.",
     "desc": "Four questions to define your convictions. Ethi then structures an allocation aligned with your criteria.",
     "start": "Start",
-    "explore": "Explore assets"
+    "explore": "Explore assets",
+    "build_own": "Build my portfolio myself"
   },
   "impact_ribbon": {
     "real_impact": "Real impact",
@@ -2604,5 +2605,38 @@
     "saved_desc": "Your adjustments have been saved.",
     "save_error": "Couldn't save",
     "simulation_note": "Educational simulation — Seedow explains, you decide. No real transaction."
+  },
+  "asset_picker": {
+    "title": "Add an investment",
+    "desc": "Search and add what speaks to you. You can adjust afterwards.",
+    "search_placeholder": "Search an investment…",
+    "loading": "Loading…",
+    "empty": "No result. Try another word.",
+    "impact_short": "Impact {{score}}/100"
+  },
+  "blank_builder": {
+    "eyebrow": "Blank page",
+    "title": "Build my portfolio",
+    "empty_title": "Let's build your first portfolio",
+    "empty_desc": "You can start simply: add a first investment, we'll guide you.",
+    "add": "Add an investment",
+    "discover": "Not sure what to pick? Explore",
+    "remove": "Remove",
+    "weight_of": "Weight of {{name}}",
+    "total": "Total",
+    "normalize_note": "No need to land exactly on 100% — Seedow rebalances automatically when you save.",
+    "save": "Save my portfolio",
+    "saving": "Saving…",
+    "saved": "Portfolio saved",
+    "saved_desc": "Your portfolio is ready. You stay in control at any time.",
+    "save_error": "Couldn't save",
+    "glance_positions": "You've added {{count}} investment(s).",
+    "glance_div_limitee": "Your money still depends on very few holdings.",
+    "glance_div_correcte": "The spread is starting to look fair.",
+    "glance_div_bonne": "Good spread across your investments.",
+    "glance_concentrated": "Careful: one holding carries a large share of your money.",
+    "glance_impact": "Impact {{score}}/100",
+    "glance_riskfees_note": "Exact risk and fees are computed when you save.",
+    "simulation_note": "Educational simulation — no real transaction. You decide."
   }
 }

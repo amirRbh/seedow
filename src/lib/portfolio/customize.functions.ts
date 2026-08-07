@@ -15,7 +15,7 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { computeMetrics } from "./metrics";
-import { causeToPillarWeights, type Asset, type CauseTag } from "./types";
+import { causeToPillarWeights, type Asset, type CauseTag, type PortfolioMetrics } from "./types";
 import { loadUniverse } from "./universe.server";
 
 const InputSchema = z.object({
@@ -23,6 +23,47 @@ const InputSchema = z.object({
   /** { asset_id: poids (0..1) } — au moins une ligne strictement positive. */
   weights: z.record(z.string().uuid(), z.number().min(0).max(1)),
 });
+
+const CreateInputSchema = z.object({
+  /** { asset_id: poids (0..1) } — au moins une ligne strictement positive. */
+  weights: z.record(z.string().uuid(), z.number().min(0).max(1)),
+  /** Nom du portefeuille construit à la main. */
+  name: z.string().min(1).max(80).optional(),
+});
+
+/**
+ * Normalise des poids bruts et recalcule les métriques RÉELLES pour ces poids
+ * (pas de réoptimisation), avec la pondération de piliers ESG fournie. Partagé
+ * par la sauvegarde (Personnaliser) et la création (Page blanche).
+ */
+function normalizeAndMeasure(
+  rawWeights: Record<string, number>,
+  byId: Map<string, Asset>,
+  covariance: Map<string, number>,
+  causes: CauseTag[],
+): { weights: Record<string, number>; metrics: PortfolioMetrics; pool: Asset[] } {
+  const kept: { id: string; weight: number }[] = [];
+  let total = 0;
+  for (const id in rawWeights) {
+    const w = rawWeights[id];
+    if (w > 0 && byId.has(id)) {
+      kept.push({ id, weight: w });
+      total += w;
+    }
+  }
+  if (kept.length === 0 || total <= 0) {
+    throw new Error("Votre portefeuille doit contenir au moins un investissement.");
+  }
+  const weights: Record<string, number> = {};
+  for (const k of kept) weights[k.id] = k.weight / total;
+
+  const pool = kept.map((k) => byId.get(k.id)!);
+  const cov = buildCovariance(pool, covariance);
+  const expectedReturns = pool.map((a) => a.expected_return);
+  const pillarWeights = causeToPillarWeights(causes);
+  const metrics = computeMetrics(pool, weights, cov, expectedReturns, pillarWeights);
+  return { weights, metrics, pool };
+}
 
 /**
  * Construit la sous-matrice de covariance pour un sous-ensemble d'actifs, avec
@@ -102,4 +143,82 @@ export const saveCustomPortfolio = createServerFn({ method: "POST" })
     }
 
     return { portfolio_id: data.portfolio_id, weights, metrics };
+  });
+
+/**
+ * Parcours « Page blanche » — crée un NOUVEAU portefeuille actif à partir de
+ * lignes choisies entièrement à la main. Comme Personnaliser, on ne réoptimise
+ * pas : on mesure honnêtement les poids de l'utilisateur. Mode « replace » :
+ * on désactive les portefeuilles actifs existants (le trigger DB borne à 3
+ * actifs), puis on insère celui-ci comme actif et `is_custom`.
+ */
+export const createCustomPortfolio = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) => CreateInputSchema.parse(input))
+  .handler(async ({ data, context }) => {
+    const { userId, supabase: userClient } = context;
+
+    const universe = await loadUniverse(userClient as typeof supabaseAdmin);
+    const byId = new Map(universe.assets.map((a) => [a.id, a]));
+    // Page blanche : aucune cause déclarée → pondération de piliers ESG par défaut.
+    const { weights, metrics } = normalizeAndMeasure(data.weights, byId, universe.covariance, []);
+
+    // 1) Désactive les portefeuilles actifs existants (mode replace).
+    const { error: deactivateErr } = await userClient
+      .from("portfolios")
+      .update({ is_active: false })
+      .eq("user_id", userId)
+      .eq("is_active", true)
+      .select("id");
+    if (deactivateErr) {
+      console.error("[createCustomPortfolio] deactivate error:", deactivateErr);
+      throw new Error(
+        "Impossible de désactiver le portefeuille précédent. Réessaie dans un instant.",
+      );
+    }
+
+    // 2) Insère le nouveau portefeuille custom comme actif.
+    const { data: inserted, error } = await userClient
+      .from("portfolios")
+      .insert({
+        user_id: userId,
+        name: data.name ?? "Mon portefeuille",
+        causes: [],
+        cause_intensity: {},
+        exclusions: [],
+        risk_target: 0.09,
+        horizon_years: 10,
+        initial_amount: 100,
+        weights,
+        metrics: metrics as unknown as Record<string, unknown>,
+        methodology_version: "custom-v1",
+        is_custom: true,
+        is_active: true,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any)
+      .select()
+      .single();
+
+    if (error) {
+      console.error("[createCustomPortfolio] insert error:", error);
+      // Course rare avec la contrainte « un seul actif » : on retombe sur l'actif existant.
+      if (error.code === "23505") {
+        const { data: existing } = await userClient
+          .from("portfolios")
+          .select("id")
+          .eq("user_id", userId)
+          .eq("is_active", true)
+          .order("generated_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        if (existing) {
+          await userClient.from("profiles").update({ onboarding_completed: true }).eq("id", userId);
+          return { portfolio_id: existing.id, weights, metrics };
+        }
+      }
+      throw new Error("Impossible d'enregistrer votre portefeuille. Réessaie dans un instant.");
+    }
+
+    await userClient.from("profiles").update({ onboarding_completed: true }).eq("id", userId);
+    return { portfolio_id: inserted.id, weights, metrics };
   });

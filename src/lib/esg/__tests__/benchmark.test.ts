@@ -25,7 +25,8 @@ describe("computeCompositeBenchmarkWaci", () => {
       { weight: 0.6, assetClass: "equity_dev" },
       { weight: 0.4, assetClass: "green_bond" },
     ]);
-    const expected = ACWI_WACI_TCO2E_PER_MUSD * 0.6 + GLOBAL_AGGREGATE_BOND_WACI_TCO2E_PER_MUSD * 0.4;
+    const expected =
+      ACWI_WACI_TCO2E_PER_MUSD * 0.6 + GLOBAL_AGGREGATE_BOND_WACI_TCO2E_PER_MUSD * 0.4;
     expect(b.waci).toBeCloseTo(expected, 5);
     expect(b.breakdown.equity).toBeCloseTo(0.6, 5);
     expect(b.breakdown.bond).toBeCloseTo(0.4, 5);

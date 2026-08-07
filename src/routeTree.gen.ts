@@ -24,6 +24,7 @@ import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as EthiRouteImport } from './routes/ethi'
 import { Route as DiscoverRouteImport } from './routes/discover'
+import { Route as ConstruireRouteImport } from './routes/construire'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CoursRouteImport } from './routes/cours'
 import { Route as ConfidentialiteRouteImport } from './routes/confidentialite'
@@ -124,6 +125,11 @@ const EthiRoute = EthiRouteImport.update({
 const DiscoverRoute = DiscoverRouteImport.update({
   id: '/discover',
   path: '/discover',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConstruireRoute = ConstruireRouteImport.update({
+  id: '/construire',
+  path: '/construire',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -270,6 +276,7 @@ export interface FileRoutesByFullPath {
   '/comparatif': typeof ComparatifRoute
   '/comprendre': typeof ComprendreRoute
   '/confidentialite': typeof ConfidentialiteRoute
+  '/construire': typeof ConstruireRoute
   '/cours': typeof CoursRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/discover': typeof DiscoverRoute
@@ -312,6 +319,7 @@ export interface FileRoutesByTo {
   '/comparatif': typeof ComparatifRoute
   '/comprendre': typeof ComprendreRoute
   '/confidentialite': typeof ConfidentialiteRoute
+  '/construire': typeof ConstruireRoute
   '/dashboard': typeof DashboardRoute
   '/discover': typeof DiscoverRoute
   '/ethi': typeof EthiRoute
@@ -355,6 +363,7 @@ export interface FileRoutesById {
   '/comparatif': typeof ComparatifRoute
   '/comprendre': typeof ComprendreRoute
   '/confidentialite': typeof ConfidentialiteRoute
+  '/construire': typeof ConstruireRoute
   '/cours': typeof CoursRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/discover': typeof DiscoverRoute
@@ -399,6 +408,7 @@ export interface FileRouteTypes {
     | '/comparatif'
     | '/comprendre'
     | '/confidentialite'
+    | '/construire'
     | '/cours'
     | '/dashboard'
     | '/discover'
@@ -441,6 +451,7 @@ export interface FileRouteTypes {
     | '/comparatif'
     | '/comprendre'
     | '/confidentialite'
+    | '/construire'
     | '/dashboard'
     | '/discover'
     | '/ethi'
@@ -483,6 +494,7 @@ export interface FileRouteTypes {
     | '/comparatif'
     | '/comprendre'
     | '/confidentialite'
+    | '/construire'
     | '/cours'
     | '/dashboard'
     | '/discover'
@@ -527,6 +539,7 @@ export interface RootRouteChildren {
   ComparatifRoute: typeof ComparatifRoute
   ComprendreRoute: typeof ComprendreRoute
   ConfidentialiteRoute: typeof ConfidentialiteRoute
+  ConstruireRoute: typeof ConstruireRoute
   CoursRoute: typeof CoursRouteWithChildren
   DashboardRoute: typeof DashboardRoute
   DiscoverRoute: typeof DiscoverRoute
@@ -660,6 +673,13 @@ declare module '@tanstack/react-router' {
       path: '/discover'
       fullPath: '/discover'
       preLoaderRoute: typeof DiscoverRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/construire': {
+      id: '/construire'
+      path: '/construire'
+      fullPath: '/construire'
+      preLoaderRoute: typeof ConstruireRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -903,6 +923,7 @@ const rootRouteChildren: RootRouteChildren = {
   ComparatifRoute: ComparatifRoute,
   ComprendreRoute: ComprendreRoute,
   ConfidentialiteRoute: ConfidentialiteRoute,
+  ConstruireRoute: ConstruireRoute,
   CoursRoute: CoursRouteWithChildren,
   DashboardRoute: DashboardRoute,
   DiscoverRoute: DiscoverRoute,
