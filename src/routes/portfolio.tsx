@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
@@ -209,9 +209,9 @@ function Portfolio() {
               </TabsTrigger>
             </TabsList>
 
-            {/* Performance = performance + allocation : un seul écran « où en suis-je ». */}
+            {/* Performance — la réponse « où j'en suis » d'abord (valeur + gain),
+                puis le détail (tendance, allocation), le secondaire replié. */}
             <TabsContent value="performance" className="pt-5 space-y-5">
-              <PortfolioHistoryChart />
               <GrowthComparison
                 currentValue={totalValue}
                 invested={totalInvested}
@@ -221,7 +221,9 @@ function Portfolio() {
                 onRefresh={() => valuation.refresh()}
                 refreshing={valuation.loading}
               />
-              <div className="flex flex-wrap gap-2">
+              {/* Action principale unique ; le versement mensuel reste accessible
+                  en lien discret (moins de charge visuelle). */}
+              <div className="space-y-2">
                 <InvestDialog label={t("portfolio.invest")} defaultAmount={200} />
                 <InvestDialog
                   label={t("portfolio.monthly_deposit")}
@@ -229,25 +231,31 @@ function Portfolio() {
                   trigger={
                     <button
                       type="button"
-                      className="inline-flex items-center gap-1.5 h-10 px-5 rounded-full border border-paper-3 bg-paper text-ink text-label font-semibold uppercase tracking-[0.14em] hover:bg-paper-2 transition-colors"
+                      className="block text-caption text-ink-3 hover:text-ink border-b border-dotted border-ink-3/60 transition-colors"
                     >
                       {t("portfolio.monthly_deposit")}
                     </button>
                   }
                 />
               </div>
+              <PortfolioHistoryChart />
               <AllocationBreakdown
                 holdings={portfolio.holdings}
                 totalAmount={totalInvested}
                 valuedHoldings={valuation.holdings}
               />
-              <BadgesCard badges={badges} />
+              <DetailDisclosure summary={t("portfolio.badges_disclosure")}>
+                <BadgesCard badges={badges} />
+              </DetailDisclosure>
             </TabsContent>
 
-            {/* Impact = impact + comparatif marché (l'un explique l'autre). */}
+            {/* Impact — le récit d'impact ; le comparatif détaillé (redondant avec
+                « Vs le monde » du récit) est replié pour ne pas alourdir. */}
             <TabsContent value="impact" className="pt-5 space-y-8">
               <ImpactExperience />
-              <ComparatifPanel />
+              <DetailDisclosure summary={t("portfolio.comparatif_disclosure")}>
+                <ComparatifPanel />
+              </DetailDisclosure>
             </TabsContent>
 
             <TabsContent value="affiner" className="pt-5">
@@ -271,5 +279,31 @@ function Portfolio() {
       </div>
       <BottomNavigation />
     </motion.div>
+  );
+}
+
+/**
+ * Repli « détail » réutilisable — progressive disclosure (mission §8) : le module
+ * secondaire reste accessible mais ne s'impose pas par défaut. Style aligné sur
+ * les autres replis du produit (bordure douce, chevron qui pivote).
+ */
+function DetailDisclosure({ summary, children }: { summary: string; children: ReactNode }) {
+  return (
+    <details className="group rounded-2xl border border-paper-3 bg-paper-2/40 open:bg-paper-2/20">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 [&::-webkit-details-marker]:hidden">
+        <span className="text-body-sm font-semibold text-ink">{summary}</span>
+        <svg
+          viewBox="0 0 24 24"
+          className="h-4 w-4 flex-none text-ink-3 transition-transform duration-300 group-open:rotate-180"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          aria-hidden
+        >
+          <path d="M6 9l6 6 6-6" />
+        </svg>
+      </summary>
+      <div className="border-t border-paper-3 p-4">{children}</div>
+    </details>
   );
 }

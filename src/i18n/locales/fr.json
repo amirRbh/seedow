@@ -538,7 +538,9 @@
       "plain_reading_down": "En clair : tu as déposé {{invested}}. Aujourd'hui, ton portefeuille vaut {{value}} — soit {{gain}} de moins que tes dépôts.",
       "plain_reading_flat": "En clair : tu as déposé {{invested}}, et c'est exactement la valeur de ton portefeuille aujourd'hui."
     },
-    "tab_refine_simple": "Ajuster"
+    "tab_refine_simple": "Ajuster",
+    "badges_disclosure": "Vos jalons",
+    "comparatif_disclosure": "Comparer à un ETF classique"
   },
   "objectives": {
     "meta_title": "Objectifs — seedow",
