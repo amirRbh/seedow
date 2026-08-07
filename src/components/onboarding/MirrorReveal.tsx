@@ -1,7 +1,14 @@
 import { motion } from "framer-motion";
+import { Info } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useLang } from "@/hooks/useLang";
 import { EASE_REVEAL } from "@/lib/motion";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 /**
  * MirrorReveal — « le miroir » : le moment fondateur de l'onboarding.
