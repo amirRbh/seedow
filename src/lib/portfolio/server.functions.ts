@@ -196,7 +196,7 @@ export async function persistPortfolio(
   // 2) Insérer le nouveau portefeuille comme actif
   const { data: inserted, error } = await userClient
     .from("portfolios")
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     .insert({
       user_id: userId,
       name: data.name ?? "Mon portefeuille",
