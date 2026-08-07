@@ -73,12 +73,24 @@ export const simulatePortfolio = createServerFn({ method: "POST" })
     }
     const msciQuality = qualityWeight > 0 ? qualityNum / qualityWeight : null;
 
-    // WACI de référence d'un ETF actions monde « classique » = indice PARENT
-    // MSCI ACWI. Constante VÉRIFIÉE, sourcée et datée, centralisée dans
-    // lib/esg/benchmark (source unique, réutilisée côté client).
-    const { ACWI_WACI_TCO2E_PER_MUSD } = await import("@/lib/esg/benchmark");
-    const BENCHMARK_ACWI_WACI = ACWI_WACI_TCO2E_PER_MUSD;
-    const vsBenchmark = relativeIntensityVsBenchmark(portfolioWaci.waci, BENCHMARK_ACWI_WACI);
+    // Référentiel WACI composite : adapté à la composition réelle du portefeuille
+    // (actions vs obligations) pour ne pas comparer des pommes et des oranges.
+    const {
+      computeCompositeBenchmarkWaci,
+      ESG_WORLD_EQUITY_WACI_TCO2E_PER_MUSD,
+      PARIS_ALIGNED_EQUITY_WACI_TCO2E_PER_MUSD,
+    } = await import("@/lib/esg/benchmark");
+    const benchmark = computeCompositeBenchmarkWaci(
+      result.selected_assets.map((a) => ({
+        weight: result.weights[a.id] ?? 0,
+        assetClass: a.asset_class,
+      })),
+    );
+    const vsBenchmark = relativeIntensityVsBenchmark(portfolioWaci.waci, benchmark.waci);
+
+    // Repères ESG pour le positionnement pédagogique (fixes, actions monde).
+    const esgBenchmarkWaci = ESG_WORLD_EQUITY_WACI_TCO2E_PER_MUSD;
+    const parisBenchmarkWaci = PARIS_ALIGNED_EQUITY_WACI_TCO2E_PER_MUSD;
 
     return {
       weights: result.weights,
@@ -101,10 +113,20 @@ export const simulatePortfolio = createServerFn({ method: "POST" })
         waci: portfolioWaci.waci,
         /** Part du portefeuille disposant d'un WACI réel (0..1). */
         waci_coverage: portfolioWaci.coverage,
-        /** Écart relatif d'intensité vs ETF monde classique (null tant que benchmark non sourcé). */
+        /** Écart relatif d'intensité vs référentiel Seedow composite (null tant que benchmark non sourcé). */
         vs_benchmark_delta_pct: vsBenchmark?.deltaPct ?? null,
-        /** WACI de référence utilisé pour la comparaison (tCO₂e/M$ CA), sourcé MSCI ACWI. null si non défini. */
-        benchmark_waci: BENCHMARK_ACWI_WACI,
+        /** WACI de référence utilisé pour la comparaison (tCO₂e/M$ CA), composite actions/obligations. */
+        benchmark_waci: benchmark.waci,
+        /** Sources du référentiel composite. */
+        benchmark_sources: benchmark.sources,
+        /** Date des références. */
+        benchmark_as_of: benchmark.asOf,
+        /** Répartition actions/obligations/réels/cash du benchmark composite. */
+        benchmark_breakdown: benchmark.breakdown,
+        /** Repères ESG : MSCI World ESG Leaders (~85). */
+        esg_benchmark_waci: esgBenchmarkWaci,
+        /** Repères ESG : MSCI World Climate Paris Aligned (~55). */
+        paris_aligned_benchmark_waci: parisBenchmarkWaci,
       },
       excluded_count: result.excluded_count,
       universe_size: universe.assets.length,

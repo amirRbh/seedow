@@ -20,6 +20,7 @@ export const course: Course = {
       paragraphs: [
         "Mesure : tonnes de CO2 émises par million d'euros de chiffre d'affaires des entreprises détenues, pondérées par leur poids dans le portefeuille. Unité : tCO2 / M€ CA.",
         "Lecture : MSCI World classique ≈ 130-150 tCO2/M€. MSCI World ESG Leaders ≈ 80-90. Paris-Aligned Benchmark ≈ 50-60. Greenfin pur < 30.",
+        "Comparaison honnête : comparer un portefeuille 100% obligations vertes au MSCI World (100% actions) n'a pas de sens. Un référentiel composite mélange l'intensité d'un indice actions (MSCI ACWI) et celle d'un indice obligataire (Bloomberg Global Aggregate) au prorata de l'allocation réelle. C'est le seul moyen de dire « tu fais mieux ou moins bien » sans truquer le résultat.",
         "Limite majeure : l'intensité est calculée par CA, ce qui favorise les entreprises de services au détriment des industries lourdes — y compris celles qui contribuent à la transition (cimentiers décarbonés, mines de cuivre nécessaire aux renouvelables).",
       ],
       callout:

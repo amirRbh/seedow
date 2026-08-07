@@ -52,10 +52,21 @@ function firstMatch(text: string, re: RegExp): string | null {
   return m ? m[1] : null;
 }
 
+/** WACI au-delà duquel on considère la valeur comme une erreur de parsing.
+ *  Même les indices les plus carbonés (EM, matières premières) restent
+ *  typiquement < 200 tCO₂e/M$ CA. Une green bond à 757 est donc impossible. */
+const WACI_SANITY_MAX = 300;
+
 function toNumber(s: string | null): number | null {
   if (s == null) return null;
   const n = Number(s.replace(/,/g, ""));
   return Number.isFinite(n) ? n : null;
+}
+
+export function clampWaci(value: number | null): number | null {
+  if (value == null || !Number.isFinite(value)) return null;
+  if (value < 0 || value >= WACI_SANITY_MAX) return null;
+  return value;
 }
 
 /**
@@ -97,8 +108,8 @@ export function parseISharesFactSheet(text: string): ParsedFundEsg {
   );
   const quality = toNumber(firstMatch(text, /MSCI ESG Quality Score\s*\(0-10\)\s+([\d.]+)/i));
   const waci =
-    toNumber(firstMatch(text, /\(Tons CO2E\/\$M SALES\)\s+([\d.,]+)/i)) ??
-    extractWaciFromLayout(text);
+    clampWaci(toNumber(firstMatch(text, /\(Tons CO2E\/\$M SALES\)\s+([\d.,]+)/i))) ??
+    clampWaci(extractWaciFromLayout(text));
   const itrRaw = firstMatch(text, /Implied Temperature Rise\s*\(0-3\.0\+\s*°C\)\s+([^\n]+)/i);
 
   const asOf = usDateToIso(
