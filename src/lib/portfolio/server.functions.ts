@@ -52,13 +52,20 @@ export const simulatePortfolio = createServerFn({ method: "POST" })
 
     // Résumé d'impact réel : couverture par des données MSCI réelles + intensité
     // carbone WACI pondérée (sur la part couverte). Rien n'est extrapolé.
-    const { computePortfolioWaci, relativeIntensityVsBenchmark } = await import("@/lib/esg/carbon");
+    const { computePortfolioWaci, relativeIntensityVsBenchmark, WACI_MIN_COVERAGE_FOR_VERDICT } =
+      await import("@/lib/esg/carbon");
     const portfolioWaci = computePortfolioWaci(
       result.selected_assets.map((a) => ({
         weight: result.weights[a.id] ?? 0,
         waci: a.waci_tco2e_per_musd_sales ?? null,
       })),
     );
+    // Actifs réellement couverts par un WACI — ils seuls portent le WACI du
+    // portefeuille ; la référence doit être bâtie sur CE mix (like-for-like).
+    const coveredAssets = result.selected_assets.filter((a) => {
+      const w = a.waci_tco2e_per_musd_sales;
+      return w != null && Number.isFinite(w) && w >= 0;
+    });
     let msciWeight = 0;
     let qualityNum = 0;
     let qualityWeight = 0;
@@ -81,12 +88,17 @@ export const simulatePortfolio = createServerFn({ method: "POST" })
       PARIS_ALIGNED_EQUITY_WACI_TCO2E_PER_MUSD,
     } = await import("@/lib/esg/benchmark");
     const benchmark = computeCompositeBenchmarkWaci(
-      result.selected_assets.map((a) => ({
+      coveredAssets.map((a) => ({
         weight: result.weights[a.id] ?? 0,
         assetClass: a.asset_class,
       })),
     );
-    const vsBenchmark = relativeIntensityVsBenchmark(portfolioWaci.waci, benchmark.waci);
+    // Verdict « plus/moins propre » seulement si la couverture est représentative ;
+    // sinon on renvoie null → l'UI affiche « mesure en cours » (comparaison honnête).
+    const vsBenchmark =
+      portfolioWaci.coverage >= WACI_MIN_COVERAGE_FOR_VERDICT
+        ? relativeIntensityVsBenchmark(portfolioWaci.waci, benchmark.waci)
+        : null;
 
     // Repères ESG pour le positionnement pédagogique (fixes, actions monde).
     const esgBenchmarkWaci = ESG_WORLD_EQUITY_WACI_TCO2E_PER_MUSD;

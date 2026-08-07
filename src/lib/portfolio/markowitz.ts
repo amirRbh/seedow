@@ -275,3 +275,33 @@ export function applyConvictionAdjustment(
 
 /** @deprecated Renamed to applyConvictionAdjustment. Kept for back-compat. */
 export const applyBlackLittermanViews = applyConvictionAdjustment;
+
+/**
+ * Préférence carbone appliquée à l'objectif d'optimisation (v1.2).
+ *
+ * Objectif produit : que le portefeuille construit soit RÉELLEMENT moins
+ * intensif en carbone que la référence — pas seulement présenté comme tel
+ * (contrat de transparence, CLAUDE.md §1.3). On incline l'objectif du QP vers
+ * les actifs plus propres que la référence et à l'écart des plus sales.
+ *
+ * Comme la conviction (`applyConvictionAdjustment`), c'est un *tilt de
+ * préférence* borné, PAS une prétention de sur-rendement : le rendement attendu
+ * REPORTÉ à l'utilisateur reste calculé sur les μ non tiltés (voir engine.ts,
+ * `μFinal`). Le tilt ne change que les poids.
+ *
+ * Formule : pour un actif de WACI `w` et une référence `refWaci`, le boost vaut
+ * `LAMBDA · clamp((refWaci − w) / refWaci, −1, +1)` — positif (favorisé) si plus
+ * propre que la référence, négatif (défavorisé) si plus sale. Un actif SANS WACI
+ * réel n'est ni favorisé ni pénalisé (0) : on n'invente pas de donnée.
+ * Borne : ±1,5 % (même ordre que la conviction).
+ */
+export function applyCarbonPreference(assets: Asset[], mu: number[], refWaci: number): number[] {
+  if (!Number.isFinite(refWaci) || refWaci <= 0) return mu;
+  const LAMBDA = 0.015;
+  return mu.map((r, i) => {
+    const w = assets[i].waci_tco2e_per_musd_sales;
+    if (w == null || !Number.isFinite(w) || w < 0) return r; // WACI inconnu → neutre
+    const rel = Math.max(-1, Math.min(1, (refWaci - w) / refWaci)); // >0 = plus propre
+    return r + LAMBDA * rel;
+  });
+}

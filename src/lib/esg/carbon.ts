@@ -20,6 +20,14 @@
 export const PCAF_DATA_QUALITY_BEST = 1;
 export const PCAF_DATA_QUALITY_WORST = 5;
 
+/**
+ * Couverture WACI minimale pour OSER un verdict « plus/moins propre que la
+ * référence ». En dessous, le chiffre ne porte que sur une petite fraction du
+ * portefeuille et n'est pas représentatif : on affiche « mesure en cours »
+ * plutôt qu'un écart trompeur (décision produit — comparaison honnête).
+ */
+export const WACI_MIN_COVERAGE_FOR_VERDICT = 0.5;
+
 export interface AssetCarbonInput {
   /** Poids de l'actif dans le portefeuille (0..1). */
   weight: number;

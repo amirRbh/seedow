@@ -107,3 +107,39 @@ describe("buildPortfolioImpact", () => {
     expect(view.intensity).toBeNull();
   });
 });
+
+describe("buildPortfolioImpact — verdict carbone gaté par la couverture", () => {
+  it("masque l'écart au benchmark quand la couverture WACI est faible (< 50 %)", () => {
+    const view = buildPortfolioImpact(
+      {
+        carbon_intensity_gco2e_per_eur: null,
+        carbon_intensity_coverage: 0,
+        esg_score: 75,
+        waci_tco2e_per_musd_sales: 90,
+        waci_coverage: 0.3,
+      },
+      1000,
+    );
+    // Le WACI est exposé, mais AUCUN verdict n'est asséné sous le seuil.
+    expect(view.intensity).not.toBeNull();
+    expect(view.intensity?.waci).toBe(90);
+    expect(view.intensity?.coverage).toBe(0.3);
+    expect(view.intensity?.vsBenchmarkDeltaPct).toBeNull();
+    expect(view.intensity?.cleaner).toBe(false);
+  });
+
+  it("donne un verdict dès que la couverture est représentative (≥ 50 %)", () => {
+    const view = buildPortfolioImpact(
+      {
+        carbon_intensity_gco2e_per_eur: null,
+        carbon_intensity_coverage: 0,
+        esg_score: 75,
+        waci_tco2e_per_musd_sales: 90, // < 115 → plus propre
+        waci_coverage: 0.8,
+      },
+      1000,
+    );
+    expect(view.intensity?.vsBenchmarkDeltaPct).not.toBeNull();
+    expect(view.intensity?.cleaner).toBe(true);
+  });
+});

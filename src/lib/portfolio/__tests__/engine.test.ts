@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildPortfolio } from "../engine";
+import { buildPortfolio, applyCarbonBestInClass } from "../engine";
 import { MAX_SINGLE_WEIGHT, MIN_PORTFOLIO_ESG } from "../types";
 import { balancedUniverse, defaultParams, diagonalCovMap, makeAsset } from "./fixtures";
 
@@ -163,5 +163,78 @@ describe("buildPortfolio", () => {
     });
     // 1 removed by exclusion, ≤3 per class so no best-in-class drop → excluded_count = 1
     expect(result.excluded_count).toBe(1);
+  });
+});
+
+describe("buildPortfolio — carbon awareness (v1.2)", () => {
+  it("stamps the v1.2 methodology version", () => {
+    const universe = balancedUniverse();
+    const result = buildPortfolio({
+      universe,
+      covariance: diagonalCovMap(universe),
+      params: defaultParams(),
+    });
+    expect(result.methodology_version).toBe("v1.2");
+  });
+
+  it("under-weights a carbon-dirty asset vs an otherwise-identical clean peer", () => {
+    // Deux equity_dev identiques sauf le WACI ; assez d'autres classes pour que
+    // le QP équilibré soit faisable.
+    const clean = makeAsset({
+      id: "eq-clean",
+      asset_class: "equity_dev",
+      waci_tco2e_per_musd_sales: 20,
+    });
+    const dirty = makeAsset({
+      id: "eq-dirty",
+      asset_class: "equity_dev",
+      waci_tco2e_per_musd_sales: 300,
+    });
+    const universe = [
+      clean,
+      dirty,
+      makeAsset({ id: "th", asset_class: "thematic" }),
+      makeAsset({ id: "gb", asset_class: "green_bond" }),
+      makeAsset({ id: "cb", asset_class: "corporate_bond" }),
+      makeAsset({ id: "sv", asset_class: "sov_bond" }),
+    ];
+    const result = buildPortfolio({
+      universe,
+      covariance: diagonalCovMap(universe),
+      params: defaultParams(),
+    });
+    const wClean = result.weights["eq-clean"] ?? 0;
+    const wDirty = result.weights["eq-dirty"] ?? 0;
+    expect(wClean).toBeGreaterThan(wDirty);
+  });
+
+  it("applyCarbonBestInClass drops the dirtiest measured third of a large class", () => {
+    // 6 equity_dev mesurés → on écarte floor(6/3)=2 pires WACI (e4, e5).
+    const equities = [
+      makeAsset({ id: "e0", asset_class: "equity_dev", waci_tco2e_per_musd_sales: 10 }),
+      makeAsset({ id: "e1", asset_class: "equity_dev", waci_tco2e_per_musd_sales: 20 }),
+      makeAsset({ id: "e2", asset_class: "equity_dev", waci_tco2e_per_musd_sales: 30 }),
+      makeAsset({ id: "e3", asset_class: "equity_dev", waci_tco2e_per_musd_sales: 40 }),
+      makeAsset({ id: "e4", asset_class: "equity_dev", waci_tco2e_per_musd_sales: 900 }),
+      makeAsset({ id: "e5", asset_class: "equity_dev", waci_tco2e_per_musd_sales: 950 }),
+    ];
+    const kept = new Set(applyCarbonBestInClass(equities).map((a) => a.id));
+    expect(kept.has("e4")).toBe(false);
+    expect(kept.has("e5")).toBe(false);
+    expect(kept.has("e0")).toBe(true);
+  });
+
+  it("applyCarbonBestInClass keeps everything when ≤3 measured, and never judges unmeasured", () => {
+    const mixed = [
+      makeAsset({ id: "m0", asset_class: "green_bond", waci_tco2e_per_musd_sales: 500 }),
+      makeAsset({ id: "m1", asset_class: "green_bond", waci_tco2e_per_musd_sales: 10 }),
+      // sans WACI → jamais écarté (pas de chiffre inventé), même en classe fournie
+      makeAsset({ id: "u0", asset_class: "green_bond", waci_tco2e_per_musd_sales: null }),
+      makeAsset({ id: "u1", asset_class: "green_bond", waci_tco2e_per_musd_sales: null }),
+      makeAsset({ id: "u2", asset_class: "green_bond", waci_tco2e_per_musd_sales: null }),
+    ];
+    const kept = new Set(applyCarbonBestInClass(mixed).map((a) => a.id));
+    // 2 mesurés (≤3) → aucun écarté ; unmeasured toujours conservés.
+    expect(kept.size).toBe(5);
   });
 });
