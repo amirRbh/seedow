@@ -824,10 +824,13 @@ const portfolioGlanceFr = {
   risk: { prudent: "Prudent", modere: "Modéré", dynamique: "Dynamique" },
   div: { limitee: "Limitée", correcte: "Correcte", bonne: "Bonne" },
   fees_suffix: "/ an",
+  impact_sublabel: "Responsabilité E·S·G",
+  impact_basis: "Calculé à partir des notes ESG de chaque investissement.",
+  impact_sources_link: "Voir le détail et les sources",
   help_cta: "Que veulent dire ces mots ?",
   help: {
     impact:
-      "Impact : à quel point vos investissements soutiennent des entreprises plus responsables (sur 100).",
+      "Impact : la responsabilité environnementale, sociale et de gouvernance de vos investissements, notée sur 100. C'est une moyenne de notes ESG — un repère, pas une garantie d'impact positif.",
     risk: "Risque : à quel point la valeur peut monter ou descendre au fil du temps.",
     fees: "Frais : ce que vos investissements coûtent chaque année.",
     diversification:
@@ -880,9 +883,13 @@ const portfolioGlanceEn = {
   risk: { prudent: "Cautious", modere: "Moderate", dynamique: "Dynamic" },
   div: { limitee: "Limited", correcte: "Fair", bonne: "Good" },
   fees_suffix: "/ year",
+  impact_sublabel: "E·S·G responsibility",
+  impact_basis: "Computed from the ESG ratings of each investment.",
+  impact_sources_link: "See details and sources",
   help_cta: "What do these words mean?",
   help: {
-    impact: "Impact: how much your investments support more responsible companies (out of 100).",
+    impact:
+      "Impact: the environmental, social and governance responsibility of your investments, scored out of 100. It's an average of ESG ratings — a guide, not a guarantee of positive impact.",
     risk: "Risk: how much the value can go up or down over time.",
     fees: "Fees: what your investments cost each year.",
     diversification:
@@ -1053,9 +1060,21 @@ const blankBuilderEn = {
   simulation_note: "Educational simulation — no real transaction. You decide.",
 };
 
+const dataProvenanceFr = {
+  coverage_label: "Que signifie la couverture ?",
+  coverage_tooltip:
+    "La part de votre portefeuille pour laquelle nous disposons d'une donnée réelle mesurée. Le reste n'est pas encore mesuré — il n'est pas estimé pour autant.",
+};
+const dataProvenanceEn = {
+  coverage_label: "What does coverage mean?",
+  coverage_tooltip:
+    "The share of your portfolio for which we have a real, measured data point. The rest isn't measured yet — and it isn't estimated either.",
+};
+
 const mergedFr = deepMerge(fr, {
   landing: { rayon_x: rayonXFr },
   empty_portfolio: { build_own: "Construire mon portefeuille moi-même" },
+  data_provenance: dataProvenanceFr,
   asset_picker: assetPickerFr,
   blank_builder: blankBuilderFr,
   dashboard: dashboardFr,
@@ -1075,6 +1094,7 @@ const mergedFr = deepMerge(fr, {
 const mergedEn = deepMerge(en, {
   landing: { rayon_x: rayonXEn },
   empty_portfolio: { build_own: "Build my portfolio myself" },
+  data_provenance: dataProvenanceEn,
   asset_picker: assetPickerEn,
   blank_builder: blankBuilderEn,
   dashboard: dashboardEn,

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { Link } from "@tanstack/react-router";
 import { Leaf, Gauge, Coins, Network } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useLang } from "@/hooks/useLang";
@@ -9,6 +10,7 @@ import type { ActiveHolding, ActivePortfolioMetrics } from "@/hooks/useActivePor
 import type { AssetClass, CauseTag, ExclusionTag } from "@/lib/portfolio/types";
 import { portfolioGlance } from "@/lib/portfolio/plain-language";
 import { assetBucket, explainPortfolio, type MoneyBucket } from "@/lib/portfolio/rationale";
+import { DataProvenance } from "@/components/impact/DataProvenance";
 
 interface RationaleInput {
   causes: CauseTag[];
@@ -80,6 +82,7 @@ export function PortfolioAtAGlance({ metrics, holdings, rationale, onSeeDetails 
           icon={<Leaf className="w-4 h-4" strokeWidth={1.8} aria-hidden />}
           label={t("portfolio_glance.chip.impact")}
           value={glance.impact ? `${glance.impact.score}/100` : "—"}
+          sublabel={t("portfolio_glance.impact_sublabel")}
           accent="mint"
         />
         <GlanceChip
@@ -107,6 +110,27 @@ export function PortfolioAtAGlance({ metrics, holdings, rationale, onSeeDetails 
           accent={glance.diversification?.band === "limitee" ? "solar" : undefined}
         />
       </div>
+
+      {/* Provenance du score d'impact — sourcé sur le support principal (§1.2).
+          Pas de « couverture » ici : le score porte sur 100 % des lignes (notes
+          ESG par actif) ; la couverture carbone, elle, vit avec les chiffres
+          carbone dans l'onglet Impact. Le caveat « repère, pas garantie » est
+          dans l'explication dépliable ci-dessous. */}
+      {glance.impact && (
+        <DataProvenance
+          className="mt-3"
+          basis={t("portfolio_glance.impact_basis")}
+          link={
+            <Link
+              to="/portfolio"
+              search={{ tab: "impact" }}
+              className="text-mint-ink underline-offset-2 hover:underline"
+            >
+              {t("portfolio_glance.impact_sources_link")}
+            </Link>
+          }
+        />
+      )}
 
       {/* Que veulent dire ces mots ? — progressive disclosure niveau 1 */}
       <button
@@ -229,12 +253,14 @@ function GlanceChip({
   icon,
   label,
   value,
+  sublabel,
   accent,
   scale,
 }: {
   icon: React.ReactNode;
   label: string;
   value: string;
+  sublabel?: string;
   accent?: Accent;
   scale?: number; // 1..3 pour l'échelle de risque
 }) {
@@ -247,6 +273,7 @@ function GlanceChip({
         <span className="text-tag uppercase tracking-[0.14em] font-semibold">{label}</span>
       </div>
       <p className={`mt-1.5 font-value text-lg leading-none ${valueColor}`}>{value}</p>
+      {sublabel && <p className="mt-1 text-tag text-ink-3 leading-tight">{sublabel}</p>}
       {typeof scale === "number" && (
         <div className="mt-2 flex gap-1" aria-hidden>
           {[1, 2, 3].map((n) => (
