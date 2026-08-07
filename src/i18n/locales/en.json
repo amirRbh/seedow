@@ -538,7 +538,9 @@
       "plain_reading_down": "In short: you deposited {{invested}}. Today your portfolio is worth {{value}} — that's {{gain}} less than your deposits.",
       "plain_reading_flat": "In short: you deposited {{invested}}, which is exactly your portfolio's value today."
     },
-    "tab_refine_simple": "Adjust"
+    "tab_refine_simple": "Adjust",
+    "badges_disclosure": "Your milestones",
+    "comparatif_disclosure": "Compare to a classic ETF"
   },
   "objectives": {
     "meta_title": "Goals — seedow",
