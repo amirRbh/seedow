@@ -920,6 +920,65 @@ const portfolioGlanceEn = {
     "Educational simulation — Seedow informs you, you stay in control. No real transaction.",
 };
 
+const portfolioCustomizerFr = {
+  eyebrow: "Personnaliser",
+  title: "Ajustez votre portefeuille",
+  desc: "Retirez une ligne ou changez son poids. Seedow vous explique ce que ça change.",
+  consequence: {
+    more_concentrated:
+      "Votre portefeuille est plus concentré — une plus grande partie de votre argent dépend de moins d'investissements.",
+    less_concentrated:
+      "Votre portefeuille est mieux réparti — votre argent dépend de davantage d'investissements.",
+    diversification_up: "Votre diversification s'améliore.",
+    diversification_down: "Votre diversification diminue.",
+    impact_up: "Votre impact augmente (environ +{{pts}} points sur 100).",
+    impact_down: "Votre impact baisse (environ −{{pts}} points sur 100).",
+  },
+  remove: "Retirer cette ligne",
+  weight_of: "Poids de {{name}}",
+  total: "Total réparti",
+  normalize_note:
+    "Pas besoin d'arriver pile à 100 % : Seedow répartit automatiquement à l'enregistrement.",
+  add: "Ajouter un investissement",
+  reset: "Annuler",
+  save: "Enregistrer mes choix",
+  saving: "Enregistrement…",
+  saved: "Portefeuille mis à jour",
+  saved_desc: "Vos ajustements ont été enregistrés.",
+  save_error: "Impossible d'enregistrer",
+  simulation_note:
+    "Simulation à but pédagogique — Seedow vous explique, vous décidez. Aucune transaction réelle.",
+};
+
+const portfolioCustomizerEn = {
+  eyebrow: "Customize",
+  title: "Adjust your portfolio",
+  desc: "Remove a line or change its weight. Seedow explains what changes.",
+  consequence: {
+    more_concentrated:
+      "Your portfolio is more concentrated — more of your money depends on fewer investments.",
+    less_concentrated:
+      "Your portfolio is better spread out — your money depends on more investments.",
+    diversification_up: "Your diversification improves.",
+    diversification_down: "Your diversification decreases.",
+    impact_up: "Your impact goes up (about +{{pts}} points out of 100).",
+    impact_down: "Your impact goes down (about −{{pts}} points out of 100).",
+  },
+  remove: "Remove this line",
+  weight_of: "Weight of {{name}}",
+  total: "Total allocated",
+  normalize_note:
+    "No need to land exactly on 100% — Seedow rebalances automatically on save.",
+  add: "Add an investment",
+  reset: "Undo",
+  save: "Save my choices",
+  saving: "Saving…",
+  saved: "Portfolio updated",
+  saved_desc: "Your adjustments have been saved.",
+  save_error: "Couldn't save",
+  simulation_note: "Educational simulation — Seedow explains, you decide. No real transaction.",
+};
+
 const mergedFr = deepMerge(fr, {
   landing: { rayon_x: rayonXFr },
   dashboard: dashboardFr,
@@ -934,6 +993,7 @@ const mergedFr = deepMerge(fr, {
   comparatif_panel: comparatifFr,
   post_sim_fork: postSimForkFr,
   portfolio_glance: portfolioGlanceFr,
+  portfolio_customizer: portfolioCustomizerFr,
 });
 const mergedEn = deepMerge(en, {
   landing: { rayon_x: rayonXEn },
@@ -949,6 +1009,7 @@ const mergedEn = deepMerge(en, {
   comparatif_panel: comparatifEn,
   post_sim_fork: postSimForkEn,
   portfolio_glance: portfolioGlanceEn,
+  portfolio_customizer: portfolioCustomizerEn,
 });
 
 writeFileSync("src/i18n/locales/fr.json", JSON.stringify(mergedFr, null, 2) + "\n", "utf-8");

@@ -2554,5 +2554,30 @@
     },
     "see_details": "Voir les détails",
     "simulation_note": "Simulation à but pédagogique — Seedow vous informe, vous gardez le contrôle. Aucune transaction réelle."
+  },
+  "portfolio_customizer": {
+    "eyebrow": "Personnaliser",
+    "title": "Ajustez votre portefeuille",
+    "desc": "Retirez une ligne ou changez son poids. Seedow vous explique ce que ça change.",
+    "consequence": {
+      "more_concentrated": "Votre portefeuille est plus concentré — une plus grande partie de votre argent dépend de moins d'investissements.",
+      "less_concentrated": "Votre portefeuille est mieux réparti — votre argent dépend de davantage d'investissements.",
+      "diversification_up": "Votre diversification s'améliore.",
+      "diversification_down": "Votre diversification diminue.",
+      "impact_up": "Votre impact augmente (environ +{{pts}} points sur 100).",
+      "impact_down": "Votre impact baisse (environ −{{pts}} points sur 100)."
+    },
+    "remove": "Retirer cette ligne",
+    "weight_of": "Poids de {{name}}",
+    "total": "Total réparti",
+    "normalize_note": "Pas besoin d'arriver pile à 100 % : Seedow répartit automatiquement à l'enregistrement.",
+    "add": "Ajouter un investissement",
+    "reset": "Annuler",
+    "save": "Enregistrer mes choix",
+    "saving": "Enregistrement…",
+    "saved": "Portefeuille mis à jour",
+    "saved_desc": "Vos ajustements ont été enregistrés.",
+    "save_error": "Impossible d'enregistrer",
+    "simulation_note": "Simulation à but pédagogique — Seedow vous explique, vous décidez. Aucune transaction réelle."
   }
 }

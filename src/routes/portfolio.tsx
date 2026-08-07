@@ -16,6 +16,7 @@ import { ShareToggle } from "@/components/community/ShareToggle";
 import { ComparatifPanel } from "@/components/portfolio/ComparatifPanel";
 import { AllocationRefiner } from "@/components/portfolio/AllocationRefiner";
 import { PortfolioAtAGlance } from "@/components/portfolio/PortfolioAtAGlance";
+import { PortfolioCustomizer } from "@/components/portfolio/PortfolioCustomizer";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyPortfolioState } from "@/components/portfolio/EmptyPortfolioState";
@@ -250,7 +251,15 @@ function Portfolio() {
             </TabsContent>
 
             <TabsContent value="affiner" className="pt-5">
-              <AllocationRefiner portfolioId={portfolio.id} />
+              {isSimple ? (
+                <PortfolioCustomizer
+                  portfolioId={portfolio.id}
+                  holdings={portfolio.holdings}
+                  onSaved={() => valuation.refresh()}
+                />
+              ) : (
+                <AllocationRefiner portfolioId={portfolio.id} />
+              )}
             </TabsContent>
           </Tabs>
         </section>
