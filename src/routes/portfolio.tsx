@@ -7,7 +7,6 @@ import { AppHeader } from "@/components/navigation/AppHeader";
 import { GrowthComparison } from "@/components/roots/GrowthComparison";
 import { BadgesCard } from "@/components/portfolio/MilestoneBadges";
 import { AllocationBreakdown } from "@/components/portfolio/AllocationBreakdown";
-import { PortfolioHistoryChart } from "@/components/portfolio/PortfolioHistoryChart";
 import { MarketFreshnessBanner } from "@/components/portfolio/MarketFreshnessBanner";
 import { ValuationConsistencyBanner } from "@/components/portfolio/ValuationConsistencyBanner";
 import { ImpactExperience } from "@/components/impact/ImpactExperience";
@@ -60,7 +59,7 @@ function Portfolio() {
   const { lang } = useLang();
   const { user } = useAuth();
   const { tab } = Route.useSearch();
-  const { isSimple } = useViewMode();
+  const { isSimple, isExpert } = useViewMode();
   const navigate = useNavigate();
   const { portfolio, loading } = useActivePortfolio();
   const valuation = usePortfolioValuation();
@@ -238,7 +237,6 @@ function Portfolio() {
                   }
                 />
               </div>
-              <PortfolioHistoryChart />
               <AllocationBreakdown
                 holdings={portfolio.holdings}
                 totalAmount={totalInvested}
@@ -258,15 +256,18 @@ function Portfolio() {
               </DetailDisclosure>
             </TabsContent>
 
-            <TabsContent value="affiner" className="pt-5">
-              {isSimple ? (
-                <PortfolioCustomizer
-                  portfolioId={portfolio.id}
-                  holdings={portfolio.holdings}
-                  onSaved={() => valuation.refresh()}
-                />
-              ) : (
-                <AllocationRefiner portfolioId={portfolio.id} />
+            {/* Ajuster — le même éditeur clair pour tous ; les arbitrages avancés
+                (jargon) restent accessibles, repliés, en mode expert. */}
+            <TabsContent value="affiner" className="pt-5 space-y-5">
+              <PortfolioCustomizer
+                portfolioId={portfolio.id}
+                holdings={portfolio.holdings}
+                onSaved={() => valuation.refresh()}
+              />
+              {isExpert && (
+                <DetailDisclosure summary={t("portfolio.refiner_disclosure")}>
+                  <AllocationRefiner portfolioId={portfolio.id} />
+                </DetailDisclosure>
               )}
             </TabsContent>
           </Tabs>

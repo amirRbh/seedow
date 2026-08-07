@@ -540,7 +540,8 @@
     },
     "tab_refine_simple": "Adjust",
     "badges_disclosure": "Your milestones",
-    "comparatif_disclosure": "Compare to a classic ETF"
+    "comparatif_disclosure": "Compare to a classic ETF",
+    "refiner_disclosure": "Advanced trade-offs"
   },
   "objectives": {
     "meta_title": "Goals — seedow",
