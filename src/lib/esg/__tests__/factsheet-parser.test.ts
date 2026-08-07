@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseISharesFactSheet, usDateToIso, normalizeItr } from "../factsheet-parser";
+import { parseISharesFactSheet, usDateToIso, normalizeItr, clampWaci } from "../factsheet-parser";
 
 // Extraits réels des fiches iShares (section Sustainability Characteristics),
 // tels que rendus par extraction texte — libellés parfois coupés sur 2 lignes.
@@ -50,6 +50,20 @@ describe("normalizeItr", () => {
   });
   it("handles a single value", () => {
     expect(normalizeItr("> 3.0° C")).toBe(">3.0°C");
+  });
+});
+
+describe("clampWaci", () => {
+  it("keeps normal values", () => {
+    expect(clampWaci(69.03)).toBe(69.03);
+    expect(clampWaci(150)).toBe(150);
+  });
+  it("rejects extreme outliers above the sanity ceiling", () => {
+    expect(clampWaci(757.34)).toBeNull();
+    expect(clampWaci(300)).toBeNull();
+  });
+  it("passes through null", () => {
+    expect(clampWaci(null)).toBeNull();
   });
 });
 
@@ -120,9 +134,9 @@ describe("parseISharesFactSheet — mise en page 2 colonnes", () => {
     expect(p.asOf).toBe("2026-04-17");
   });
 
-  it("ne confond pas le taux de couverture avec l'intensité (colonnes inversées)", () => {
+  it("rejette les valeurs aberrantes issues d'une confusion colonnes ou de données brutes", () => {
     const p = parseISharesFactSheet(LAYOUT_VALUE_RIGHT);
-    expect(p.waci).toBe(757.34);
+    expect(p.waci).toBeNull();
   });
 
   it("ignore le glossaire et n'invente pas de valeur", () => {
