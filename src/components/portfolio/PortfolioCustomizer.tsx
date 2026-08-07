@@ -1,8 +1,17 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { Plus, RotateCcw, Trash2, TrendingDown, TrendingUp, Minus } from "lucide-react";
+import {
+  Plus,
+  RotateCcw,
+  Trash2,
+  TrendingDown,
+  TrendingUp,
+  Minus,
+  Leaf,
+  Network,
+} from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { useLang } from "@/hooks/useLang";
 import { formatPercent } from "@/lib/format";
@@ -11,9 +20,11 @@ import { saveCustomPortfolio } from "@/lib/portfolio/customize.functions";
 import {
   describeConsequences,
   liteSnapshot,
+  CONCENTRATION_ALERT,
   type ChangeDir,
   type WeightedLine,
 } from "@/lib/portfolio/consequences";
+import { diversificationBand, impactScore } from "@/lib/portfolio/plain-language";
 import { AssetPickerSheet, type PickedAsset } from "./AssetPickerSheet";
 
 interface Props {
@@ -33,8 +44,9 @@ interface Line {
 
 /**
  * Éditeur d'allocation « débutant » (mission Seedow §3 — Personnaliser).
- * On part de la proposition et on peut retirer / repondérer chaque ligne ;
- * Seedow explique la conséquence en langage clair, puis l'utilisateur décide.
+ * On part de la proposition et on ajuste chaque part au doigt ; Seedow montre en
+ * permanence l'état (impact, diversification, concentration) et, dès qu'on change
+ * quelque chose, la conséquence en langage clair. L'utilisateur garde la main.
  */
 export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
   const { t } = useTranslation();
@@ -60,23 +72,25 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
   const current = liteSnapshot(lines.map(toWeighted));
   const consequences = describeConsequences(baseline, current);
 
-  const activeLines = lines.filter((l) => l.pct > 0);
-  const totalPct = activeLines.reduce((s, l) => s + l.pct, 0);
+  // État courant traduit en langage clair — toujours affiché (le copilote parle
+  // même avant toute modification).
+  const impact = impactScore(current.impact).score;
+  const divBand = diversificationBand(current.diversification).band;
+  const concentrated = current.maxWeight > CONCENTRATION_ALERT;
+
+  const totalPct = lines.reduce((s, l) => s + l.pct, 0);
   const dirty = JSON.stringify(lines) !== JSON.stringify(initial);
-  const canSave = dirty && activeLines.length >= 1 && !saving;
+  const canSave = dirty && lines.length >= 1 && !saving;
 
   const setWeight = (id: string, pct: number) =>
     setLines((ls) => ls.map((l) => (l.id === id ? { ...l, pct } : l)));
-  const removeLine = (id: string) =>
-    setLines((ls) => ls.map((l) => (l.id === id ? { ...l, pct: 0 } : l)));
+  // Retirer = enlever la ligne (pas de ligne « fantôme » à 0 %). Pour la
+  // remettre, on repasse par « Ajouter ».
+  const removeLine = (id: string) => setLines((ls) => ls.filter((l) => l.id !== id));
   const reset = () => setLines(initial);
-  // Ajout d'une ligne via le sélecteur : réactive une ligne retirée, sinon
-  // ajoute au poids de départ modeste (10 %) — le total se renormalise à la sauvegarde.
   const addAsset = (a: PickedAsset) =>
     setLines((ls) => {
-      if (ls.some((l) => l.id === a.id)) {
-        return ls.map((l) => (l.id === a.id ? { ...l, pct: l.pct > 0 ? l.pct : 10 } : l));
-      }
+      if (ls.some((l) => l.id === a.id)) return ls;
       return [...ls, { id: a.id, ticker: a.ticker, name: a.name, esgScore: a.esgScore, pct: 10 }];
     });
 
@@ -84,9 +98,9 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
     setSaving(true);
     try {
       // Normalisation en 0..1 (le serveur renormalise aussi, ceinture + bretelles).
-      const total = activeLines.reduce((s, l) => s + l.pct, 0);
+      const total = lines.reduce((s, l) => s + l.pct, 0);
       const weights: Record<string, number> = {};
-      for (const l of activeLines) weights[l.id] = l.pct / total;
+      for (const l of lines) if (l.pct > 0) weights[l.id] = l.pct / total;
       await save({ data: { portfolio_id: portfolioId, weights } });
       toast.success(t("portfolio_customizer.saved"), {
         description: t("portfolio_customizer.saved_desc"),
@@ -103,70 +117,94 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
 
   return (
     <div className="space-y-5">
-      <header className="space-y-1.5">
-        <p className="text-tag font-semibold uppercase tracking-[0.18em] text-ink-3">
-          {t("portfolio_customizer.eyebrow")}
-        </p>
+      <div className="space-y-1">
         <h2 className="text-lg font-semibold text-ink leading-tight">
           {t("portfolio_customizer.title")}
         </h2>
         <p className="text-label text-ink-2 leading-relaxed">{t("portfolio_customizer.desc")}</p>
-      </header>
+      </div>
 
-      {/* Conséquences en langage clair — le cœur du copilote */}
-      {consequences.length > 0 && (
-        <ul className="rounded-2xl border border-paper-3 bg-paper-2 p-4 space-y-2">
-          {consequences.map((c) => (
-            <li
-              key={c.key}
-              className="flex items-start gap-2 text-body-sm text-ink leading-relaxed"
-            >
-              <ConsequenceIcon dir={c.dir} />
-              <span>{t(c.key, c.vars)}</span>
-            </li>
-          ))}
-        </ul>
-      )}
+      {/* Coup d'œil vivant — l'état courant, toujours visible */}
+      <div className="rounded-2xl border border-paper-3 bg-paper-2 p-4">
+        <div className="grid grid-cols-2 gap-3">
+          <GlanceStat
+            icon={<Leaf className="w-4 h-4" strokeWidth={1.8} aria-hidden />}
+            label={t("portfolio_glance.chip.impact")}
+            value={`${impact}/100`}
+            mint
+          />
+          <GlanceStat
+            icon={<Network className="w-4 h-4" strokeWidth={1.8} aria-hidden />}
+            label={t("portfolio_glance.chip.diversification")}
+            value={t(`portfolio_glance.div.${divBand}`)}
+          />
+        </div>
+        {concentrated && (
+          <p className="mt-3 text-body-sm text-solar-ink leading-relaxed">
+            {t("blank_builder.glance_concentrated")}
+          </p>
+        )}
+        {/* Conséquences de la modification en cours */}
+        {consequences.length > 0 && (
+          <ul className="mt-3 space-y-2 border-t border-paper-3 pt-3">
+            {consequences.map((c) => (
+              <li
+                key={c.key}
+                className="flex items-start gap-2 text-body-sm text-ink leading-relaxed"
+              >
+                <ConsequenceIcon dir={c.dir} />
+                <span>{t(c.key, c.vars)}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
       {/* Lignes éditables */}
       <ul className="space-y-4">
-        {lines.map((l) => {
-          const removed = l.pct <= 0;
-          return (
-            <li key={l.id} className={removed ? "opacity-45" : ""}>
-              <div className="flex items-baseline justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="text-body-sm font-semibold text-ink truncate">{l.name}</p>
-                  <p className="text-tag text-ink-3 truncate">{l.ticker}</p>
-                </div>
-                <div className="flex items-center gap-3 flex-shrink-0">
-                  <span className="font-value text-sm text-ink tabular-nums w-12 text-right">
-                    {formatPercent(l.pct / 100, lang, 0)}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => removeLine(l.id)}
-                    disabled={removed}
-                    aria-label={t("portfolio_customizer.remove")}
-                    className="text-ink-3 hover:text-rust transition-colors disabled:opacity-30"
-                  >
-                    <Trash2 className="w-4 h-4" strokeWidth={1.8} />
-                  </button>
-                </div>
+        {lines.map((l) => (
+          <li key={l.id}>
+            <div className="flex items-baseline justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-body-sm font-semibold text-ink truncate">{l.name}</p>
+                <p className="text-tag text-ink-3 truncate">{l.ticker}</p>
               </div>
-              <Slider
-                className="mt-2.5"
-                value={[l.pct]}
-                min={0}
-                max={100}
-                step={1}
-                onValueChange={(v) => setWeight(l.id, v[0])}
-                aria-label={t("portfolio_customizer.weight_of", { name: l.name })}
-              />
-            </li>
-          );
-        })}
+              <div className="flex items-center gap-3 flex-shrink-0">
+                <span className="font-value text-sm text-ink tabular-nums w-12 text-right">
+                  {formatPercent(l.pct / 100, lang, 0)}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => removeLine(l.id)}
+                  aria-label={t("portfolio_customizer.remove")}
+                  className="text-ink-3 hover:text-rust transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" strokeWidth={1.8} aria-hidden />
+                </button>
+              </div>
+            </div>
+            <Slider
+              className="mt-2.5"
+              value={[l.pct]}
+              min={0}
+              max={100}
+              step={1}
+              onValueChange={(v) => setWeight(l.id, v[0])}
+              aria-label={t("portfolio_customizer.weight_of", { name: l.name })}
+            />
+          </li>
+        ))}
       </ul>
+
+      {/* Ajouter — via le sélecteur d'actifs partagé */}
+      <button
+        type="button"
+        onClick={() => setPickerOpen(true)}
+        className="w-full h-11 rounded-full border border-dashed border-paper-3 text-ink-2 text-body-sm font-semibold hover:bg-paper-2 transition-colors flex items-center justify-center gap-2"
+      >
+        <Plus className="w-4 h-4" strokeWidth={2} aria-hidden />
+        {t("portfolio_customizer.add")}
+      </button>
 
       {/* Total + normalisation */}
       <div className="flex items-center justify-between text-caption text-ink-2 border-t border-paper-3 pt-3">
@@ -181,32 +219,24 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
         </p>
       )}
 
-      {/* Ajouter — via le sélecteur d'actifs partagé (recherche dans l'univers réel) */}
-      <button
-        type="button"
-        onClick={() => setPickerOpen(true)}
-        className="w-full h-11 rounded-full border border-dashed border-paper-3 text-ink-2 text-body-sm font-semibold hover:bg-paper-2 transition-colors flex items-center justify-center gap-2"
-      >
-        <Plus className="w-4 h-4" strokeWidth={2} />
-        {t("portfolio_customizer.add")}
-      </button>
-
-      {/* Actions */}
+      {/* Actions — enregistrer en primaire, réinitialiser seulement si modifié */}
       <div className="flex items-center gap-2">
-        <button
-          type="button"
-          onClick={reset}
-          disabled={!dirty || saving}
-          className="h-11 px-4 rounded-full border border-paper-3 text-ink text-body-sm font-semibold hover:bg-paper-2 transition-colors disabled:opacity-40 flex items-center gap-1.5"
-        >
-          <RotateCcw className="w-4 h-4" strokeWidth={1.8} />
-          {t("portfolio_customizer.reset")}
-        </button>
+        {dirty && (
+          <button
+            type="button"
+            onClick={reset}
+            disabled={saving}
+            className="h-12 px-4 rounded-full border border-paper-3 text-ink text-body-sm font-semibold hover:bg-paper-2 transition-colors disabled:opacity-40 flex items-center gap-1.5"
+          >
+            <RotateCcw className="w-4 h-4" strokeWidth={1.8} aria-hidden />
+            {t("portfolio_customizer.reset")}
+          </button>
+        )}
         <button
           type="button"
           onClick={onSave}
           disabled={!canSave}
-          className="flex-1 h-11 rounded-full bg-ink text-paper text-body-sm font-semibold hover:bg-highlight-2 transition-colors disabled:opacity-40"
+          className="flex-1 h-12 rounded-full bg-ink text-paper text-body-sm font-semibold hover:opacity-90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {saving ? t("portfolio_customizer.saving") : t("portfolio_customizer.save")}
         </button>
@@ -219,7 +249,7 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
       <AssetPickerSheet
         open={pickerOpen}
         onOpenChange={setPickerOpen}
-        excludeIds={lines.filter((l) => l.pct > 0).map((l) => l.id)}
+        excludeIds={lines.map((l) => l.id)}
         onPick={addAsset}
       />
     </div>
@@ -228,6 +258,32 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
 
 function toWeighted(l: Line): WeightedLine {
   return { id: l.id, esgScore: l.esgScore, weight: l.pct / 100 };
+}
+
+function GlanceStat({
+  icon,
+  label,
+  value,
+  mint = false,
+}: {
+  icon: ReactNode;
+  label: string;
+  value: string;
+  mint?: boolean;
+}) {
+  return (
+    <div className="rounded-xl border border-paper-3 bg-paper px-3.5 py-3">
+      <div className="flex items-center gap-1.5 text-ink-3">
+        {icon}
+        <span className="text-tag uppercase tracking-[0.14em] font-semibold">{label}</span>
+      </div>
+      <p
+        className={`mt-1.5 font-value text-lg leading-none ${mint ? "text-mint-ink" : "text-ink"}`}
+      >
+        {value}
+      </p>
+    </div>
+  );
 }
 
 function ConsequenceIcon({ dir }: { dir: ChangeDir }) {

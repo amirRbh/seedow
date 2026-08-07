@@ -426,6 +426,7 @@ const portfolioFr = {
   tab_refine_simple: "Ajuster",
   badges_disclosure: "Vos jalons",
   comparatif_disclosure: "Comparer à un ETF classique",
+  refiner_disclosure: "Arbitrages avancés",
   history_chart: {
     plain_reading_up:
       "En clair : tu as déposé {{invested}}. Aujourd'hui, ton portefeuille vaut {{value}} — soit {{gain}} de plus que tes dépôts.",
@@ -439,6 +440,7 @@ const portfolioEn = {
   tab_refine_simple: "Adjust",
   badges_disclosure: "Your milestones",
   comparatif_disclosure: "Compare to a classic ETF",
+  refiner_disclosure: "Advanced trade-offs",
   history_chart: {
     plain_reading_up:
       "In short: you deposited {{invested}}. Today your portfolio is worth {{value}} — that's {{gain}} more than your deposits.",

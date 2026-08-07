@@ -540,7 +540,8 @@
     },
     "tab_refine_simple": "Ajuster",
     "badges_disclosure": "Vos jalons",
-    "comparatif_disclosure": "Comparer à un ETF classique"
+    "comparatif_disclosure": "Comparer à un ETF classique",
+    "refiner_disclosure": "Arbitrages avancés"
   },
   "objectives": {
     "meta_title": "Objectifs — seedow",
