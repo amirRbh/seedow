@@ -1,9 +1,10 @@
 import type { Asset, ExclusionTag, PortfolioParams, PortfolioResult } from "./types";
 import { MIN_PORTFOLIO_ESG, causeToPillarWeights } from "./types";
-import { optimizeMarkowitz, applyConvictionAdjustment } from "./markowitz";
+import { optimizeMarkowitz, applyConvictionAdjustment, applyCarbonPreference } from "./markowitz";
 import { computeMetrics } from "./metrics";
+import { ACWI_WACI_TCO2E_PER_MUSD } from "@/lib/esg/benchmark";
 
-const METHODOLOGY_VERSION = "v1.1";
+const METHODOLOGY_VERSION = "v1.2";
 
 /**
  * Stage 1 — Hard exclusions filter.
@@ -37,6 +38,41 @@ function applyBestInClass(assets: Asset[]): Asset[] {
     const sorted = [...arr].sort((a, b) => a.esg_score - b.esg_score);
     const medianIndex = Math.floor(sorted.length * 0.5); // top 50%
     kept.push(...sorted.slice(medianIndex));
+  }
+  return kept;
+}
+
+/**
+ * Stage 2b — Best-in-class carbone (v1.2).
+ * Au sein de chaque classe, on écarte le tiers le plus intensif en carbone parmi
+ * les actifs qui ONT un WACI réel. On ne juge jamais un actif sans donnée (il est
+ * conservé — pas de chiffre inventé), et on ne prune pas une classe qui compte
+ * ≤ 3 actifs mesurés (pour ne pas assécher une classe fine).
+ */
+export function applyCarbonBestInClass(assets: Asset[]): Asset[] {
+  const byClass = new Map<string, Asset[]>();
+  for (const a of assets) {
+    const arr = byClass.get(a.asset_class) ?? [];
+    arr.push(a);
+    byClass.set(a.asset_class, arr);
+  }
+
+  const kept: Asset[] = [];
+  for (const [, arr] of byClass) {
+    const measured = arr.filter((a) => {
+      const w = a.waci_tco2e_per_musd_sales;
+      return w != null && Number.isFinite(w) && w >= 0;
+    });
+    const unmeasured = arr.filter((a) => !measured.includes(a));
+    if (measured.length <= 3) {
+      kept.push(...arr);
+      continue;
+    }
+    const sorted = [...measured].sort(
+      (a, b) => (a.waci_tco2e_per_musd_sales as number) - (b.waci_tco2e_per_musd_sales as number),
+    );
+    const drop = Math.floor(measured.length / 3); // écarte le tiers le plus sale
+    kept.push(...sorted.slice(0, measured.length - drop), ...unmeasured);
   }
   return kept;
 }
@@ -91,8 +127,10 @@ export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
 
   // Stage 1
   let pool = applyExclusions(universe, params.exclusions);
-  // Stage 2
+  // Stage 2 — best-in-class ESG (score)
   pool = applyBestInClass(pool);
+  // Stage 2b — best-in-class carbone (écarte le tiers le plus intensif là où mesurable)
+  pool = applyCarbonBestInClass(pool);
 
   if (pool.length === 0) {
     return {
@@ -123,7 +161,16 @@ export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
   const baseReturns = pool.map((a) => a.expected_return);
 
   // Stage 3 — conviction adjustment (was misnamed "Black-Litterman")
-  const μ = applyConvictionAdjustment(pool, baseReturns, params.causes, params.cause_intensity);
+  const μConviction = applyConvictionAdjustment(
+    pool,
+    baseReturns,
+    params.causes,
+    params.cause_intensity,
+  );
+  // Stage 3b — préférence carbone (v1.2) : incline vers les actifs plus propres
+  // que la référence, à l'écart des plus sales, pour que le portefeuille soit
+  // RÉELLEMENT moins intensif — pas seulement présenté comme tel.
+  const μ = applyCarbonPreference(pool, μConviction, ACWI_WACI_TCO2E_PER_MUSD);
 
   // Stage 4 — optimise
   const riskAversion = Math.max(2, 0.6 / Math.max(params.risk_target, 0.02));

@@ -3,6 +3,7 @@ import {
   optimizeMarkowitz,
   applyConvictionAdjustment,
   applyBlackLittermanViews,
+  applyCarbonPreference,
 } from "../markowitz";
 import { MAX_SINGLE_WEIGHT } from "../types";
 import { defaultParams, diagonalCovariance, makeAsset } from "./fixtures";
@@ -123,5 +124,36 @@ describe("applyConvictionAdjustment", () => {
 
   it("re-exports the legacy name applyBlackLittermanViews", () => {
     expect(applyBlackLittermanViews).toBe(applyConvictionAdjustment);
+  });
+});
+
+describe("applyCarbonPreference", () => {
+  const REF = 115;
+
+  it("leaves μ unchanged for assets without a real WACI", () => {
+    const a = makeAsset({ id: "a", waci_tco2e_per_musd_sales: null });
+    expect(applyCarbonPreference([a], [0.05], REF)).toEqual([0.05]);
+  });
+
+  it("boosts an asset cleaner than the reference", () => {
+    // WACI = 0 → rel = +1 → boost +0.015
+    const a = makeAsset({ id: "a", waci_tco2e_per_musd_sales: 0 });
+    expect(applyCarbonPreference([a], [0.05], REF)[0]).toBeCloseTo(0.065, 12);
+  });
+
+  it("penalises an asset dirtier than the reference", () => {
+    // WACI = 2×ref → rel = clamp(-1) → boost -0.015
+    const a = makeAsset({ id: "a", waci_tco2e_per_musd_sales: 230 });
+    expect(applyCarbonPreference([a], [0.05], REF)[0]).toBeCloseTo(0.035, 12);
+  });
+
+  it("is neutral for an asset exactly at the reference", () => {
+    const a = makeAsset({ id: "a", waci_tco2e_per_musd_sales: REF });
+    expect(applyCarbonPreference([a], [0.05], REF)[0]).toBeCloseTo(0.05, 12);
+  });
+
+  it("returns μ untouched when the reference is invalid", () => {
+    const a = makeAsset({ id: "a", waci_tco2e_per_musd_sales: 50 });
+    expect(applyCarbonPreference([a], [0.05], 0)).toEqual([0.05]);
   });
 });

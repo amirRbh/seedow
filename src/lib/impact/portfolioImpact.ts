@@ -17,6 +17,7 @@
 import {
   financedEmissionsKgPerYear,
   relativeIntensityVsBenchmark,
+  WACI_MIN_COVERAGE_FOR_VERDICT,
   type PortfolioCarbon,
 } from "@/lib/esg/carbon";
 import { presentImpact, type ImpactPresentation } from "@/lib/impact/equivalences";
@@ -119,9 +120,16 @@ export function buildPortfolioImpact(
   const waciCoverage = Number.isFinite(metrics.waci_coverage ?? NaN)
     ? Math.max(0, Math.min(1, metrics.waci_coverage as number))
     : 0;
+  // Verdict carbone : uniquement si la couverture est suffisante pour être
+  // représentative. En dessous, on expose le WACI mais sans écart chiffré
+  // (vsBenchmarkDeltaPct = null → l'UI affiche « mesure en cours »), pour ne pas
+  // comparer une petite fraction du portefeuille à un indice plein.
   let intensity: PortfolioIntensityView | null = null;
   if (rawWaci != null && Number.isFinite(rawWaci) && rawWaci >= 0 && waciCoverage > 0) {
-    const cmp = relativeIntensityVsBenchmark(rawWaci, ACWI_WACI_TCO2E_PER_MUSD);
+    const verdictAllowed = waciCoverage >= WACI_MIN_COVERAGE_FOR_VERDICT;
+    const cmp = verdictAllowed
+      ? relativeIntensityVsBenchmark(rawWaci, ACWI_WACI_TCO2E_PER_MUSD)
+      : null;
     intensity = {
       waci: rawWaci,
       coverage: waciCoverage,
