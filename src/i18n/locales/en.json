@@ -1602,6 +1602,8 @@
   "mirror": {
     "eyebrow": "The mirror",
     "title": "Here's what you change.",
+    "info_label": "Understand the Seedow reference",
+    "info_body": "Seedow compares your portfolio to a composite benchmark: an equity/bond mix matched to your allocation, not a pure equity index. WACI measures tonnes of CO₂ emitted per million dollars of revenue by the companies held. Lower is less carbon-intensive — but partial data is a snapshot, not an absolute verdict.",
     "classic_label": "Seedow reference",
     "yours_label": "Your portfolio",
     "waci_unit": "tCO₂e/$M revenue",
