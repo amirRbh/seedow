@@ -48,6 +48,12 @@ export interface ActivePortfolio {
   metrics: ActivePortfolioMetrics | null;
   /** Secteurs exclus par l'utilisateur, retirés en amont de la construction. */
   exclusions: ExclusionTag[];
+  /** Causes choisies à l'onboarding — alimentent le « Pourquoi cette proposition ? ». */
+  causes: CauseTag[];
+  /** Cible de volatilité annuelle (fraction) déclarée par l'utilisateur. */
+  risk_target: number;
+  /** Horizon d'investissement en années. */
+  horizon_years: number;
 }
 
 interface State {
@@ -63,7 +69,9 @@ async function fetchActivePortfolio(
 ): Promise<ActivePortfolio | null> {
   let query = supabase
     .from("portfolios")
-    .select("id, name, initial_amount, generated_at, weights, metrics, exclusions")
+    .select(
+      "id, name, initial_amount, generated_at, weights, metrics, exclusions, causes, risk_target, horizon_years",
+    )
     .eq("user_id", userId)
     .eq("is_active", true);
 
@@ -110,6 +118,9 @@ async function fetchActivePortfolio(
     holdings,
     metrics: (pf.metrics ?? null) as ActivePortfolioMetrics | null,
     exclusions: (pf.exclusions ?? []) as ExclusionTag[],
+    causes: (pf.causes ?? []) as CauseTag[],
+    risk_target: Number(pf.risk_target ?? 0),
+    horizon_years: Number(pf.horizon_years ?? 0),
   };
 }
 

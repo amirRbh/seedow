@@ -2482,5 +2482,77 @@
     "progress_title": "Ta progression",
     "progress_count": "{{done}} / {{total}} cours terminés",
     "progress_all_done": "Bravo — tu as terminé tous les cours. 🌱"
+  },
+  "post_sim_fork": {
+    "title": "Votre portefeuille est prêt 🎉",
+    "subtitle": "Seedow vous propose une première version basée sur vos réponses. À vous de choisir la suite.",
+    "recommended": "Recommandé",
+    "guided_title": "Laissez Seedow vous guider",
+    "guided_desc": "Nous gardons la proposition construite pour vous.",
+    "customize_title": "Personnaliser",
+    "customize_desc": "Partez de notre proposition et ajustez-la à votre main.",
+    "blank_title": "Commencer de zéro",
+    "blank_desc": "Composez votre portefeuille vous-même, pas à pas.",
+    "simulation_note": "Une proposition, pas une recommandation d'achat. Vous décidez."
+  },
+  "portfolio_glance": {
+    "eyebrow": "En un coup d'œil",
+    "title": "Votre portefeuille",
+    "chip": {
+      "impact": "Impact",
+      "risk": "Risque",
+      "fees": "Frais",
+      "diversification": "Diversification"
+    },
+    "risk": {
+      "prudent": "Prudent",
+      "modere": "Modéré",
+      "dynamique": "Dynamique"
+    },
+    "div": {
+      "limitee": "Limitée",
+      "correcte": "Correcte",
+      "bonne": "Bonne"
+    },
+    "fees_suffix": "/ an",
+    "help_cta": "Que veulent dire ces mots ?",
+    "help": {
+      "impact": "Impact : à quel point vos investissements soutiennent des entreprises plus responsables (sur 100).",
+      "risk": "Risque : à quel point la valeur peut monter ou descendre au fil du temps.",
+      "fees": "Frais : ce que vos investissements coûtent chaque année.",
+      "diversification": "Diversification : répartir votre argent pour ne pas dépendre d'un seul investissement."
+    },
+    "money_title": "Où va votre argent ?",
+    "bucket": {
+      "actions": "Actions",
+      "obligations": "Obligations",
+      "autres": "Autres"
+    },
+    "why_title": "Pourquoi cette proposition ?",
+    "why": {
+      "horizon_long": "Vous prévoyez d'investir sur le long terme (environ {{years}} ans).",
+      "horizon_medium": "Vous prévoyez d'investir sur plusieurs années (environ {{years}} ans).",
+      "horizon_short": "Vous prévoyez d'investir sur une courte durée (environ {{years}} ans).",
+      "risk_prudent": "Vous préférez limiter les fluctuations, quitte à viser une croissance plus douce.",
+      "risk_modere": "Vous acceptez des fluctuations modérées pour viser une croissance régulière.",
+      "risk_dynamique": "Vous acceptez des fluctuations plus fortes pour viser une croissance plus élevée.",
+      "causes": "La sélection privilégie des investissements cohérents avec les valeurs que vous avez choisies.",
+      "exclusions": "Les secteurs que vous refusez de financer ont été entièrement exclus."
+    },
+    "role": {
+      "equity_dev": "Réunit de grandes entreprises de plusieurs pays — le socle de nombreux portefeuilles.",
+      "equity_em": "Ouvre votre portefeuille à des économies en croissance.",
+      "thematic": "Cible directement les causes qui vous tiennent à cœur.",
+      "green_bond": "Prête de l'argent à des projets écologiques — plus stable que les actions.",
+      "social_bond": "Finance des projets à utilité sociale — plutôt stable.",
+      "sov_bond": "Prête à des États — amortit les fluctuations du portefeuille.",
+      "corporate_bond": "Prête à des entreprises — apporte un revenu plus régulier.",
+      "reit": "Diversifie votre portefeuille via l'immobilier.",
+      "commodity": "Diversifie en dehors des actions et des obligations.",
+      "cash": "Met une part de votre argent de côté, en sécurité.",
+      "generic": "Contribue à équilibrer votre portefeuille."
+    },
+    "see_details": "Voir les détails",
+    "simulation_note": "Simulation à but pédagogique — Seedow vous informe, vous gardez le contrôle. Aucune transaction réelle."
   }
 }

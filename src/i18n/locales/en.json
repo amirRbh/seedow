@@ -2500,5 +2500,77 @@
     "progress_title": "Your progress",
     "progress_count": "{{done}} / {{total}} courses completed",
     "progress_all_done": "Well done — you've completed all the courses. 🌱"
+  },
+  "post_sim_fork": {
+    "title": "Your portfolio is ready 🎉",
+    "subtitle": "Seedow suggests a first version based on your answers. It's up to you what comes next.",
+    "recommended": "Recommended",
+    "guided_title": "Let Seedow guide you",
+    "guided_desc": "We keep the proposal built for you.",
+    "customize_title": "Customize",
+    "customize_desc": "Start from our proposal and adjust it your way.",
+    "blank_title": "Start from scratch",
+    "blank_desc": "Build your portfolio yourself, step by step.",
+    "simulation_note": "A proposal, not a buy recommendation. You decide."
+  },
+  "portfolio_glance": {
+    "eyebrow": "At a glance",
+    "title": "Your portfolio",
+    "chip": {
+      "impact": "Impact",
+      "risk": "Risk",
+      "fees": "Fees",
+      "diversification": "Diversification"
+    },
+    "risk": {
+      "prudent": "Cautious",
+      "modere": "Moderate",
+      "dynamique": "Dynamic"
+    },
+    "div": {
+      "limitee": "Limited",
+      "correcte": "Fair",
+      "bonne": "Good"
+    },
+    "fees_suffix": "/ year",
+    "help_cta": "What do these words mean?",
+    "help": {
+      "impact": "Impact: how much your investments support more responsible companies (out of 100).",
+      "risk": "Risk: how much the value can go up or down over time.",
+      "fees": "Fees: what your investments cost each year.",
+      "diversification": "Diversification: spreading your money so you don't depend on a single investment."
+    },
+    "money_title": "Where does your money go?",
+    "bucket": {
+      "actions": "Stocks",
+      "obligations": "Bonds",
+      "autres": "Other"
+    },
+    "why_title": "Why this proposal?",
+    "why": {
+      "horizon_long": "You plan to invest for the long term (around {{years}} years).",
+      "horizon_medium": "You plan to invest over several years (around {{years}} years).",
+      "horizon_short": "You plan to invest for a short time (around {{years}} years).",
+      "risk_prudent": "You'd rather limit ups and downs, even if growth is gentler.",
+      "risk_modere": "You accept moderate ups and downs to aim for steady growth.",
+      "risk_dynamique": "You accept larger ups and downs to aim for higher growth.",
+      "causes": "The selection favours investments aligned with the values you chose.",
+      "exclusions": "The sectors you refuse to fund have been fully excluded."
+    },
+    "role": {
+      "equity_dev": "Bundles large companies from many countries — the backbone of many portfolios.",
+      "equity_em": "Opens your portfolio to fast-growing economies.",
+      "thematic": "Directly targets the causes you care about.",
+      "green_bond": "Lends money to green projects — steadier than stocks.",
+      "social_bond": "Funds projects with social value — fairly steady.",
+      "sov_bond": "Lends to governments — cushions the portfolio's swings.",
+      "corporate_bond": "Lends to companies — brings a more regular income.",
+      "reit": "Diversifies your portfolio through real estate.",
+      "commodity": "Diversifies outside stocks and bonds.",
+      "cash": "Keeps part of your money aside, safely.",
+      "generic": "Helps balance your portfolio."
+    },
+    "see_details": "See details",
+    "simulation_note": "Educational simulation — Seedow informs you, you stay in control. No real transaction."
   }
 }
