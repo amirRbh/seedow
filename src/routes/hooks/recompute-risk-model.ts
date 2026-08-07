@@ -61,9 +61,7 @@ export const Route = createFileRoute("/hooks/recompute-risk-model")({
           );
         }
 
-        const groups = new Map<string, string>(
-          targets.map((a) => [a.id, a.asset_class as string]),
-        );
+        const groups = new Map<string, string>(targets.map((a) => [a.id, a.asset_class as string]));
         const { stats, covariance, skipped, diagnostics } = buildRiskModel(pricesByAsset, groups);
 
         let assetsUpdated = 0;

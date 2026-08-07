@@ -168,10 +168,7 @@ describe("shrinkExpectedReturns", () => {
     // Cas réel qui cassait le moteur : bruit d'estimation >> dispersion ⇒ w = 1
     // sans plafond, donc des μ tous identiques et un Markowitz min-variance.
     const input = new Map<string, AssetRiskStats>(
-      Array.from({ length: 40 }, (_, i) => [
-        `a${i}`,
-        mk(0.09 + i * 0.0002, 0.45, 60),
-      ]),
+      Array.from({ length: 40 }, (_, i) => [`a${i}`, mk(0.09 + i * 0.0002, 0.45, 60)]),
     );
     const out = shrinkExpectedReturns(input);
     const values = Array.from(out.values()).map((s) => s.expectedReturn);
@@ -219,7 +216,6 @@ describe("shrinkExpectedReturns", () => {
     }
   });
 });
-
 
 describe("ledoitWolfConstantCorrelation", () => {
   it("returns identity correlation and zero shrinkage below the data threshold", () => {
