@@ -56,10 +56,7 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
   );
   const [lines, setLines] = useState<Line[]>(initial);
 
-  const baseline = useMemo(
-    () => liteSnapshot(initial.map(toWeighted)),
-    [initial],
-  );
+  const baseline = useMemo(() => liteSnapshot(initial.map(toWeighted)), [initial]);
   const current = liteSnapshot(lines.map(toWeighted));
   const consequences = describeConsequences(baseline, current);
 
@@ -111,7 +108,10 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
       {consequences.length > 0 && (
         <ul className="rounded-2xl border border-paper-3 bg-paper-2 p-4 space-y-2">
           {consequences.map((c) => (
-            <li key={c.key} className="flex items-start gap-2 text-body-sm text-ink leading-relaxed">
+            <li
+              key={c.key}
+              className="flex items-start gap-2 text-body-sm text-ink leading-relaxed"
+            >
               <ConsequenceIcon dir={c.dir} />
               <span>{t(c.key, c.vars)}</span>
             </li>
@@ -167,7 +167,9 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
         </span>
       </div>
       {Math.abs(totalPct - 100) > 0.5 && (
-        <p className="text-tag text-ink-3 leading-relaxed">{t("portfolio_customizer.normalize_note")}</p>
+        <p className="text-tag text-ink-3 leading-relaxed">
+          {t("portfolio_customizer.normalize_note")}
+        </p>
       )}
 
       {/* Ajouter — via Découvrir (source d'actifs existante) */}
@@ -214,8 +216,22 @@ function toWeighted(l: Line): WeightedLine {
 
 function ConsequenceIcon({ dir }: { dir: ChangeDir }) {
   if (dir === "up")
-    return <TrendingUp className="w-4 h-4 text-mint-ink flex-shrink-0 mt-0.5" strokeWidth={1.8} aria-hidden />;
+    return (
+      <TrendingUp
+        className="w-4 h-4 text-mint-ink flex-shrink-0 mt-0.5"
+        strokeWidth={1.8}
+        aria-hidden
+      />
+    );
   if (dir === "down")
-    return <TrendingDown className="w-4 h-4 text-solar-ink flex-shrink-0 mt-0.5" strokeWidth={1.8} aria-hidden />;
-  return <Minus className="w-4 h-4 text-ink-3 flex-shrink-0 mt-0.5" strokeWidth={1.8} aria-hidden />;
+    return (
+      <TrendingDown
+        className="w-4 h-4 text-solar-ink flex-shrink-0 mt-0.5"
+        strokeWidth={1.8}
+        aria-hidden
+      />
+    );
+  return (
+    <Minus className="w-4 h-4 text-ink-3 flex-shrink-0 mt-0.5" strokeWidth={1.8} aria-hidden />
+  );
 }

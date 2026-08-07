@@ -842,8 +842,7 @@ const portfolioGlanceFr = {
     horizon_short: "Vous prévoyez d'investir sur une courte durée (environ {{years}} ans).",
     risk_prudent:
       "Vous préférez limiter les fluctuations, quitte à viser une croissance plus douce.",
-    risk_modere:
-      "Vous acceptez des fluctuations modérées pour viser une croissance régulière.",
+    risk_modere: "Vous acceptez des fluctuations modérées pour viser une croissance régulière.",
     risk_dynamique:
       "Vous acceptez des fluctuations plus fortes pour viser une croissance plus élevée.",
     causes:
@@ -851,7 +850,8 @@ const portfolioGlanceFr = {
     exclusions: "Les secteurs que vous refusez de financer ont été entièrement exclus.",
   },
   role: {
-    equity_dev: "Réunit de grandes entreprises de plusieurs pays — le socle de nombreux portefeuilles.",
+    equity_dev:
+      "Réunit de grandes entreprises de plusieurs pays — le socle de nombreux portefeuilles.",
     equity_em: "Ouvre votre portefeuille à des économies en croissance.",
     thematic: "Cible directement les causes qui vous tiennent à cœur.",
     green_bond: "Prête de l'argent à des projets écologiques — plus stable que les actions.",
@@ -882,8 +882,7 @@ const portfolioGlanceEn = {
   fees_suffix: "/ year",
   help_cta: "What do these words mean?",
   help: {
-    impact:
-      "Impact: how much your investments support more responsible companies (out of 100).",
+    impact: "Impact: how much your investments support more responsible companies (out of 100).",
     risk: "Risk: how much the value can go up or down over time.",
     fees: "Fees: what your investments cost each year.",
     diversification:
@@ -967,8 +966,7 @@ const portfolioCustomizerEn = {
   remove: "Remove this line",
   weight_of: "Weight of {{name}}",
   total: "Total allocated",
-  normalize_note:
-    "No need to land exactly on 100% — Seedow rebalances automatically on save.",
+  normalize_note: "No need to land exactly on 100% — Seedow rebalances automatically on save.",
   add: "Add an investment",
   reset: "Undo",
   save: "Save my choices",

@@ -101,7 +101,9 @@ export function PortfolioAtAGlance({ metrics, holdings, rationale, onSeeDetails 
         <GlanceChip
           icon={<Network className="w-4 h-4" strokeWidth={1.8} aria-hidden />}
           label={t("portfolio_glance.chip.diversification")}
-          value={glance.diversification ? t(`portfolio_glance.div.${glance.diversification.band}`) : "—"}
+          value={
+            glance.diversification ? t(`portfolio_glance.div.${glance.diversification.band}`) : "—"
+          }
           accent={glance.diversification?.band === "limitee" ? "solar" : undefined}
         />
       </div>

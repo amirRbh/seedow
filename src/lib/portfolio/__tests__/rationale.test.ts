@@ -41,17 +41,15 @@ describe("explainHolding", () => {
     expect(r.matchedCause).toBe("climat");
   });
   it("does not match a cause below the exposure threshold", () => {
-    const r = explainHolding(
-      { asset_class: "thematic", causeExposure: { climat: 0.05 } },
-      ["climat"],
-    );
+    const r = explainHolding({ asset_class: "thematic", causeExposure: { climat: 0.05 } }, [
+      "climat",
+    ]);
     expect(r.matchedCause).toBeNull();
   });
   it("ignores exposure to causes the user did not choose", () => {
-    const r = explainHolding(
-      { asset_class: "thematic", causeExposure: { biodiversite: 0.9 } },
-      ["climat"],
-    );
+    const r = explainHolding({ asset_class: "thematic", causeExposure: { biodiversite: 0.9 } }, [
+      "climat",
+    ]);
     expect(r.matchedCause).toBeNull();
   });
 });

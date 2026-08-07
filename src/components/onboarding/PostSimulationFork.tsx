@@ -27,7 +27,9 @@ export function PostSimulationFork({ onGuided, onCustomize, onBlank }: Props) {
     >
       <div className="text-center">
         <p className="font-value text-2xl text-ink">{t("post_sim_fork.title")}</p>
-        <p className="text-caption text-ink-2 mt-2 leading-relaxed">{t("post_sim_fork.subtitle")}</p>
+        <p className="text-caption text-ink-2 mt-2 leading-relaxed">
+          {t("post_sim_fork.subtitle")}
+        </p>
       </div>
 
       <div className="mt-6 space-y-3">
@@ -107,7 +109,9 @@ function ForkCard({
             </span>
           )}
         </div>
-        <p className={`text-caption mt-1 leading-relaxed ${recommended ? "text-paper/75" : "text-ink-2"}`}>
+        <p
+          className={`text-caption mt-1 leading-relaxed ${recommended ? "text-paper/75" : "text-ink-2"}`}
+        >
           {desc}
         </p>
       </div>

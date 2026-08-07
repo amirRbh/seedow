@@ -90,9 +90,7 @@ describe("describeConsequences", () => {
   it("reports an impact drop when replacing a high-impact line with a low one", () => {
     const before = liteSnapshot([{ id: "a", esgScore: 90, weight: 1 }]);
     const after = liteSnapshot([{ id: "b", esgScore: 50, weight: 1 }]);
-    const impact = describeConsequences(before, after).find((c) =>
-      c.key.endsWith("impact_down"),
-    );
+    const impact = describeConsequences(before, after).find((c) => c.key.endsWith("impact_down"));
     expect(impact).toBeDefined();
     expect(impact?.vars?.pts).toBe(40);
   });
