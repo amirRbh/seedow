@@ -1,7 +1,14 @@
 import { motion } from "framer-motion";
+import { Info } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useLang } from "@/hooks/useLang";
 import { EASE_REVEAL } from "@/lib/motion";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 /**
  * MirrorReveal — « le miroir » : le moment fondateur de l'onboarding.
@@ -79,10 +86,34 @@ export function MirrorReveal({ impact, excludedCount, universeSize, exclusionsCo
       transition={{ duration: 0.5, ease: EASE_REVEAL }}
       className="mb-8 rounded-2xl border border-paper-3 bg-paper-2 p-5 md:p-6"
     >
-      <p className="text-tag uppercase tracking-[0.2em] text-mint font-semibold">
-        {t("mirror.eyebrow")}
-      </p>
-      <h3 className="font-value text-2xl text-ink mt-1">{t("mirror.title")}</h3>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-tag uppercase tracking-[0.2em] text-mint font-semibold">
+            {t("mirror.eyebrow")}
+          </p>
+          <h3 className="font-value text-2xl text-ink mt-1">{t("mirror.title")}</h3>
+        </div>
+        <TooltipProvider delayDuration={150}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                className="mt-0.5 inline-flex items-center justify-center rounded-full p-1.5 text-ink-3 hover:text-ink hover:bg-paper-3/50 transition-colors"
+                aria-label={t("mirror.info_label")}
+              >
+                <Info className="w-4 h-4" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent
+              side="bottom"
+              align="end"
+              className="max-w-xs bg-ink text-paper text-xs leading-relaxed px-3 py-2"
+            >
+              {t("mirror.info_body")}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
 
       {/* Confrontation intensité carbone */}
       <div className="mt-5 grid grid-cols-2 gap-3">

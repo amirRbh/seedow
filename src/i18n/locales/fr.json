@@ -1584,6 +1584,8 @@
   "mirror": {
     "eyebrow": "Le miroir",
     "title": "Voilà ce que tu changes.",
+    "info_label": "Comprendre la référence Seedow",
+    "info_body": "Seedow compare ton portefeuille à un référentiel composite : un mix actions/obligations adapté à ton allocation, pas un indice actions seul. Le WACI mesure les tonnes de CO₂ émises par million de dollars de chiffre d'affaires des entreprises détenues. Moins c'est bas, moins le portefeuille est carboné — mais une donnée partielle reste une photographie, pas un verdict absolu.",
     "classic_label": "Référence Seedow",
     "yours_label": "Ton portefeuille",
     "waci_unit": "tCO₂e/M$ de CA",
