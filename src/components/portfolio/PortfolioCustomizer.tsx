@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -15,6 +14,7 @@ import {
   type ChangeDir,
   type WeightedLine,
 } from "@/lib/portfolio/consequences";
+import { AssetPickerSheet, type PickedAsset } from "./AssetPickerSheet";
 
 interface Props {
   portfolioId: string;
@@ -39,9 +39,9 @@ interface Line {
 export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
   const { t } = useTranslation();
   const { lang } = useLang();
-  const navigate = useNavigate();
   const save = useServerFn(saveCustomPortfolio);
   const [saving, setSaving] = useState(false);
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   const initial: Line[] = useMemo(
     () =>
@@ -70,6 +70,15 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
   const removeLine = (id: string) =>
     setLines((ls) => ls.map((l) => (l.id === id ? { ...l, pct: 0 } : l)));
   const reset = () => setLines(initial);
+  // Ajout d'une ligne via le sélecteur : réactive une ligne retirée, sinon
+  // ajoute au poids de départ modeste (10 %) — le total se renormalise à la sauvegarde.
+  const addAsset = (a: PickedAsset) =>
+    setLines((ls) => {
+      if (ls.some((l) => l.id === a.id)) {
+        return ls.map((l) => (l.id === a.id ? { ...l, pct: l.pct > 0 ? l.pct : 10 } : l));
+      }
+      return [...ls, { id: a.id, ticker: a.ticker, name: a.name, esgScore: a.esgScore, pct: 10 }];
+    });
 
   const onSave = async () => {
     setSaving(true);
@@ -172,10 +181,10 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
         </p>
       )}
 
-      {/* Ajouter — via Découvrir (source d'actifs existante) */}
+      {/* Ajouter — via le sélecteur d'actifs partagé (recherche dans l'univers réel) */}
       <button
         type="button"
-        onClick={() => navigate({ to: "/discover" })}
+        onClick={() => setPickerOpen(true)}
         className="w-full h-11 rounded-full border border-dashed border-paper-3 text-ink-2 text-body-sm font-semibold hover:bg-paper-2 transition-colors flex items-center justify-center gap-2"
       >
         <Plus className="w-4 h-4" strokeWidth={2} />
@@ -206,6 +215,13 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
       <p className="text-tag text-ink-3 leading-relaxed text-center">
         {t("portfolio_customizer.simulation_note")}
       </p>
+
+      <AssetPickerSheet
+        open={pickerOpen}
+        onOpenChange={setPickerOpen}
+        excludeIds={lines.filter((l) => l.pct > 0).map((l) => l.id)}
+        onPick={addAsset}
+      />
     </div>
   );
 }

@@ -977,8 +977,87 @@ const portfolioCustomizerEn = {
   simulation_note: "Educational simulation — Seedow explains, you decide. No real transaction.",
 };
 
+// ─────────────────────────────────────────────────────────
+// Parcours « Page blanche » — sélecteur d'actifs + builder vide
+// ─────────────────────────────────────────────────────────
+const assetPickerFr = {
+  title: "Ajouter un investissement",
+  desc: "Cherchez et ajoutez ce qui vous parle. Vous pourrez ajuster ensuite.",
+  search_placeholder: "Rechercher un investissement…",
+  loading: "Chargement…",
+  empty: "Aucun résultat. Essayez un autre mot.",
+  impact_short: "Impact {{score}}/100",
+};
+
+const assetPickerEn = {
+  title: "Add an investment",
+  desc: "Search and add what speaks to you. You can adjust afterwards.",
+  search_placeholder: "Search an investment…",
+  loading: "Loading…",
+  empty: "No result. Try another word.",
+  impact_short: "Impact {{score}}/100",
+};
+
+const blankBuilderFr = {
+  eyebrow: "Page blanche",
+  title: "Construire mon portefeuille",
+  empty_title: "Construisons votre premier portefeuille",
+  empty_desc:
+    "Vous pouvez commencer simplement : ajoutez un premier investissement, on vous accompagne.",
+  add: "Ajouter un investissement",
+  discover: "Vous ne savez pas quoi choisir ? Découvrir",
+  remove: "Retirer",
+  weight_of: "Poids de {{name}}",
+  total: "Total",
+  normalize_note:
+    "Pas besoin d'arriver pile à 100 % : Seedow répartit automatiquement à l'enregistrement.",
+  save: "Enregistrer mon portefeuille",
+  saving: "Enregistrement…",
+  saved: "Portefeuille enregistré",
+  saved_desc: "Votre portefeuille est prêt. Vous gardez la main à tout moment.",
+  save_error: "Impossible d'enregistrer",
+  glance_positions: "Vous avez ajouté {{count}} investissement(s).",
+  glance_div_limitee: "Votre argent dépend encore de peu de lignes.",
+  glance_div_correcte: "La répartition commence à être correcte.",
+  glance_div_bonne: "Bonne répartition entre vos investissements.",
+  glance_concentrated: "Attention : une ligne pèse une grande partie de votre argent.",
+  glance_impact: "Impact {{score}}/100",
+  glance_riskfees_note: "Risque et frais précis calculés à l'enregistrement.",
+  simulation_note: "Simulation à but pédagogique — aucune transaction réelle. Vous décidez.",
+};
+
+const blankBuilderEn = {
+  eyebrow: "Blank page",
+  title: "Build my portfolio",
+  empty_title: "Let's build your first portfolio",
+  empty_desc: "You can start simply: add a first investment, we'll guide you.",
+  add: "Add an investment",
+  discover: "Not sure what to pick? Explore",
+  remove: "Remove",
+  weight_of: "Weight of {{name}}",
+  total: "Total",
+  normalize_note:
+    "No need to land exactly on 100% — Seedow rebalances automatically when you save.",
+  save: "Save my portfolio",
+  saving: "Saving…",
+  saved: "Portfolio saved",
+  saved_desc: "Your portfolio is ready. You stay in control at any time.",
+  save_error: "Couldn't save",
+  glance_positions: "You've added {{count}} investment(s).",
+  glance_div_limitee: "Your money still depends on very few holdings.",
+  glance_div_correcte: "The spread is starting to look fair.",
+  glance_div_bonne: "Good spread across your investments.",
+  glance_concentrated: "Careful: one holding carries a large share of your money.",
+  glance_impact: "Impact {{score}}/100",
+  glance_riskfees_note: "Exact risk and fees are computed when you save.",
+  simulation_note: "Educational simulation — no real transaction. You decide.",
+};
+
 const mergedFr = deepMerge(fr, {
   landing: { rayon_x: rayonXFr },
+  empty_portfolio: { build_own: "Construire mon portefeuille moi-même" },
+  asset_picker: assetPickerFr,
+  blank_builder: blankBuilderFr,
   dashboard: dashboardFr,
   asset_detail: assetDetailFr,
   portfolio: portfolioFr,
@@ -995,6 +1074,9 @@ const mergedFr = deepMerge(fr, {
 });
 const mergedEn = deepMerge(en, {
   landing: { rayon_x: rayonXEn },
+  empty_portfolio: { build_own: "Build my portfolio myself" },
+  asset_picker: assetPickerEn,
+  blank_builder: blankBuilderEn,
   dashboard: dashboardEn,
   asset_detail: assetDetailEn,
   portfolio: portfolioEn,

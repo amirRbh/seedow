@@ -60,6 +60,14 @@ export function EmptyPortfolioState({ userName }: { userName: string }) {
           {t("empty_portfolio.explore")}
         </Link>
       </div>
+
+      <Link
+        to="/construire"
+        className="mt-6 inline-flex items-center gap-1.5 text-body-sm text-ink-2 hover:text-ink transition-colors underline-offset-4 hover:underline"
+      >
+        {t("empty_portfolio.build_own")}
+        <span aria-hidden>→</span>
+      </Link>
     </div>
   );
 }

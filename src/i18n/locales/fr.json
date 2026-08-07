@@ -1401,7 +1401,8 @@
     "title": "Composez votre premier portefeuille.",
     "desc": "Quatre questions pour définir vos convictions. Ethi structure ensuite une allocation alignée sur vos critères.",
     "start": "Démarrer",
-    "explore": "Explorer les actifs"
+    "explore": "Explorer les actifs",
+    "build_own": "Construire mon portefeuille moi-même"
   },
   "impact_ribbon": {
     "real_impact": "Impact réel",
@@ -2579,5 +2580,38 @@
     "saved_desc": "Vos ajustements ont été enregistrés.",
     "save_error": "Impossible d'enregistrer",
     "simulation_note": "Simulation à but pédagogique — Seedow vous explique, vous décidez. Aucune transaction réelle."
+  },
+  "asset_picker": {
+    "title": "Ajouter un investissement",
+    "desc": "Cherchez et ajoutez ce qui vous parle. Vous pourrez ajuster ensuite.",
+    "search_placeholder": "Rechercher un investissement…",
+    "loading": "Chargement…",
+    "empty": "Aucun résultat. Essayez un autre mot.",
+    "impact_short": "Impact {{score}}/100"
+  },
+  "blank_builder": {
+    "eyebrow": "Page blanche",
+    "title": "Construire mon portefeuille",
+    "empty_title": "Construisons votre premier portefeuille",
+    "empty_desc": "Vous pouvez commencer simplement : ajoutez un premier investissement, on vous accompagne.",
+    "add": "Ajouter un investissement",
+    "discover": "Vous ne savez pas quoi choisir ? Découvrir",
+    "remove": "Retirer",
+    "weight_of": "Poids de {{name}}",
+    "total": "Total",
+    "normalize_note": "Pas besoin d'arriver pile à 100 % : Seedow répartit automatiquement à l'enregistrement.",
+    "save": "Enregistrer mon portefeuille",
+    "saving": "Enregistrement…",
+    "saved": "Portefeuille enregistré",
+    "saved_desc": "Votre portefeuille est prêt. Vous gardez la main à tout moment.",
+    "save_error": "Impossible d'enregistrer",
+    "glance_positions": "Vous avez ajouté {{count}} investissement(s).",
+    "glance_div_limitee": "Votre argent dépend encore de peu de lignes.",
+    "glance_div_correcte": "La répartition commence à être correcte.",
+    "glance_div_bonne": "Bonne répartition entre vos investissements.",
+    "glance_concentrated": "Attention : une ligne pèse une grande partie de votre argent.",
+    "glance_impact": "Impact {{score}}/100",
+    "glance_riskfees_note": "Risque et frais précis calculés à l'enregistrement.",
+    "simulation_note": "Simulation à but pédagogique — aucune transaction réelle. Vous décidez."
   }
 }
