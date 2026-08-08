@@ -10,6 +10,7 @@ import { formatPercent } from "@/lib/format";
 import { createCustomPortfolio } from "@/lib/portfolio/customize.functions";
 import { liteSnapshot, CONCENTRATION_ALERT } from "@/lib/portfolio/consequences";
 import { diversificationBand, impactScore } from "@/lib/portfolio/plain-language";
+import { setShare, removeShare, addBalanced, totalPct } from "@/lib/portfolio/allocation";
 import { AssetPickerSheet, type PickedAsset } from "./AssetPickerSheet";
 
 interface Line {
@@ -38,25 +39,16 @@ export function BlankCanvasBuilder() {
   const [saving, setSaving] = useState(false);
 
   const active = lines.filter((l) => l.pct > 0);
-  const totalPct = active.reduce((s, l) => s + l.pct, 0);
 
-  // Ajout : on répartit à parts égales — le réflexe le plus lisible pour un
-  // débutant (« chaque investissement compte autant »), ajustable ensuite.
-  const addAsset = (a: PickedAsset) => {
-    setLines((prev) => {
-      if (prev.some((l) => l.id === a.id)) return prev;
-      const next = [
-        ...prev,
-        { id: a.id, ticker: a.ticker, name: a.name, esgScore: a.esgScore, pct: 0 },
-      ];
-      const even = Math.round((100 / next.length) * 10) / 10;
-      return next.map((l) => ({ ...l, pct: even }));
-    });
-  };
-
-  const setWeight = (id: string, pct: number) =>
-    setLines((ls) => ls.map((l) => (l.id === id ? { ...l, pct } : l)));
-  const removeLine = (id: string) => setLines((ls) => ls.filter((l) => l.id !== id));
+  // Parts d'un tout (moteur pur `allocation.ts`) : ajouter donne une part
+  // équitable, bouger une ligne rééquilibre les autres, retirer renormalise —
+  // le total reste 100 % et le % affiché EST la part réelle.
+  const addAsset = (a: PickedAsset) =>
+    setLines((ls) =>
+      addBalanced(ls, { id: a.id, ticker: a.ticker, name: a.name, esgScore: a.esgScore, pct: 0 }),
+    );
+  const setWeight = (id: string, pct: number) => setLines((ls) => setShare(ls, id, pct));
+  const removeLine = (id: string) => setLines((ls) => removeShare(ls, id));
 
   const snapshot = liteSnapshot(
     active.map((l) => ({ id: l.id, esgScore: l.esgScore, weight: l.pct })),
@@ -167,14 +159,9 @@ export function BlankCanvasBuilder() {
           <div className="flex items-center justify-between text-caption text-ink-2 border-t border-paper-3 pt-3">
             <span>{t("blank_builder.total")}</span>
             <span className="tabular-nums font-semibold text-ink">
-              {formatPercent(totalPct / 100, lang, 0)}
+              {formatPercent(totalPct(lines) / 100, lang, 0)}
             </span>
           </div>
-          {Math.abs(totalPct - 100) > 0.5 && (
-            <p className="text-tag text-ink-3 leading-relaxed">
-              {t("blank_builder.normalize_note")}
-            </p>
-          )}
 
           <button
             type="button"

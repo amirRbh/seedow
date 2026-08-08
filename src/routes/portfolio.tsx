@@ -61,7 +61,7 @@ function Portfolio() {
   const { tab } = Route.useSearch();
   const { isSimple, isExpert } = useViewMode();
   const navigate = useNavigate();
-  const { portfolio, loading } = useActivePortfolio();
+  const { portfolio, loading, refresh: refreshPortfolio } = useActivePortfolio();
   const valuation = usePortfolioValuation();
   const detailsRef = useRef<HTMLElement | null>(null);
 
@@ -262,7 +262,10 @@ function Portfolio() {
               <PortfolioCustomizer
                 portfolioId={portfolio.id}
                 holdings={portfolio.holdings}
-                onSaved={() => valuation.refresh()}
+                onSaved={() => {
+                  refreshPortfolio();
+                  valuation.refresh();
+                }}
               />
               {isExpert && (
                 <DetailDisclosure summary={t("portfolio.refiner_disclosure")}>
