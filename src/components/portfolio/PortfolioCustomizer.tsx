@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -25,6 +25,7 @@ import {
   type WeightedLine,
 } from "@/lib/portfolio/consequences";
 import { diversificationBand, impactScore } from "@/lib/portfolio/plain-language";
+import { setShare, removeShare, addBalanced, totalPct } from "@/lib/portfolio/allocation";
 import { AssetPickerSheet, type PickedAsset } from "./AssetPickerSheet";
 
 interface Props {
@@ -68,6 +69,18 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
   );
   const [lines, setLines] = useState<Line[]>(initial);
 
+  // Resynchronise l'éditeur quand l'allocation RÉELLE change (ex. après un
+  // enregistrement), mais pas sur un simple rafraîchissement de cours : on se
+  // base sur une signature des parts, pas sur l'identité du tableau.
+  const holdingsSig = useMemo(
+    () => holdings.map((h) => `${h.id}:${Math.round(h.allocationPct * 10)}`).join("|"),
+    [holdings],
+  );
+  useEffect(() => {
+    setLines(initial);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [holdingsSig]);
+
   const baseline = useMemo(() => liteSnapshot(initial.map(toWeighted)), [initial]);
   const current = liteSnapshot(lines.map(toWeighted));
   const consequences = describeConsequences(baseline, current);
@@ -78,27 +91,27 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
   const divBand = diversificationBand(current.diversification).band;
   const concentrated = current.maxWeight > CONCENTRATION_ALERT;
 
-  const totalPct = lines.reduce((s, l) => s + l.pct, 0);
   const dirty = JSON.stringify(lines) !== JSON.stringify(initial);
   const canSave = dirty && lines.length >= 1 && !saving;
 
-  const setWeight = (id: string, pct: number) =>
-    setLines((ls) => ls.map((l) => (l.id === id ? { ...l, pct } : l)));
-  // Retirer = enlever la ligne (pas de ligne « fantôme » à 0 %). Pour la
-  // remettre, on repasse par « Ajouter ».
-  const removeLine = (id: string) => setLines((ls) => ls.filter((l) => l.id !== id));
+  // Parts d'un tout : bouger une ligne rééquilibre les autres, le total reste
+  // 100 % et le % affiché EST la part réelle (moteur pur `allocation.ts`).
+  const setWeight = (id: string, pct: number) => setLines((ls) => setShare(ls, id, pct));
+  // Retirer = enlever la ligne et renormaliser le reste. Pour la remettre, on
+  // repasse par « Ajouter ».
+  const removeLine = (id: string) => setLines((ls) => removeShare(ls, id));
   const reset = () => setLines(initial);
   const addAsset = (a: PickedAsset) =>
-    setLines((ls) => {
-      if (ls.some((l) => l.id === a.id)) return ls;
-      return [...ls, { id: a.id, ticker: a.ticker, name: a.name, esgScore: a.esgScore, pct: 10 }];
-    });
+    setLines((ls) =>
+      addBalanced(ls, { id: a.id, ticker: a.ticker, name: a.name, esgScore: a.esgScore, pct: 0 }),
+    );
 
   const onSave = async () => {
     setSaving(true);
     try {
-      // Normalisation en 0..1 (le serveur renormalise aussi, ceinture + bretelles).
-      const total = lines.reduce((s, l) => s + l.pct, 0);
+      // Le total vaut déjà 100 ; on renormalise en 0..1 (ceinture + bretelles,
+      // le serveur renormalise aussi).
+      const total = lines.reduce((s, l) => s + l.pct, 0) || 1;
       const weights: Record<string, number> = {};
       for (const l of lines) if (l.pct > 0) weights[l.id] = l.pct / total;
       await save({ data: { portfolio_id: portfolioId, weights } });
@@ -206,18 +219,13 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
         {t("portfolio_customizer.add")}
       </button>
 
-      {/* Total + normalisation */}
+      {/* Total — toujours 100 % (parts d'un tout) */}
       <div className="flex items-center justify-between text-caption text-ink-2 border-t border-paper-3 pt-3">
         <span>{t("portfolio_customizer.total")}</span>
         <span className="tabular-nums font-semibold text-ink">
-          {formatPercent(totalPct / 100, lang, 0)}
+          {formatPercent(totalPct(lines) / 100, lang, 0)}
         </span>
       </div>
-      {Math.abs(totalPct - 100) > 0.5 && (
-        <p className="text-tag text-ink-3 leading-relaxed">
-          {t("portfolio_customizer.normalize_note")}
-        </p>
-      )}
 
       {/* Actions — enregistrer en primaire, réinitialiser seulement si modifié */}
       <div className="flex items-center gap-2">
