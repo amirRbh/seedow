@@ -10,7 +10,7 @@ import {
   TrendingUp,
   Minus,
   Leaf,
-  Network,
+  Sparkles,
 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { useLang } from "@/hooks/useLang";
@@ -24,8 +24,7 @@ import {
   type ChangeDir,
   type WeightedLine,
 } from "@/lib/portfolio/consequences";
-import { diversificationBand, impactScore } from "@/lib/portfolio/plain-language";
-import { setShare, removeShare, addBalanced, totalPct } from "@/lib/portfolio/allocation";
+import { impactScore } from "@/lib/portfolio/plain-language";
 import { AssetPickerSheet, type PickedAsset } from "./AssetPickerSheet";
 
 interface Props {
@@ -39,15 +38,20 @@ interface Line {
   ticker: string;
   name: string;
   esgScore: number;
-  /** Poids courant en points de pourcentage (0..100). */
+  /** Poids courant en points de pourcentage (0..100), édité librement. */
   pct: number;
 }
 
+const clampPct = (v: number): number => Math.max(0, Math.min(100, Number.isFinite(v) ? v : 0));
+
 /**
- * Éditeur d'allocation « débutant » (mission Seedow §3 — Personnaliser).
- * On part de la proposition et on ajuste chaque part au doigt ; Seedow montre en
- * permanence l'état (impact, diversification, concentration) et, dès qu'on change
- * quelque chose, la conséquence en langage clair. L'utilisateur garde la main.
+ * Éditeur d'allocation « carte blanche » (mission Seedow §3 — Personnaliser).
+ *
+ * L'utilisateur ajuste chaque ligne LIBREMENT et indépendamment — Seedow ne
+ * rééquilibre pas à sa place et ne le rappelle pas à l'ordre sur un « 100 % ».
+ * Le guidage se limite à ce qui compte pour lui : son impact, et le potentiel
+ * qu'il vise selon qu'il concentre ou répartit. Les parts sont normalisées
+ * silencieusement à l'enregistrement (le serveur mesure les vraies métriques).
  */
 export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
   const { t } = useTranslation();
@@ -85,35 +89,42 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
   const current = liteSnapshot(lines.map(toWeighted));
   const consequences = describeConsequences(baseline, current);
 
-  // État courant traduit en langage clair — toujours affiché (le copilote parle
-  // même avant toute modification).
+  // État courant en langage clair — le copilote parle même avant toute édition.
   const impact = impactScore(current.impact).score;
-  const divBand = diversificationBand(current.diversification).band;
   const concentrated = current.maxWeight > CONCENTRATION_ALERT;
 
+  const activeCount = lines.filter((l) => l.pct > 0).length;
   const dirty = JSON.stringify(lines) !== JSON.stringify(initial);
-  const canSave = dirty && lines.length >= 1 && !saving;
+  const canSave = dirty && activeCount >= 1 && !saving;
 
-  // Parts d'un tout : bouger une ligne rééquilibre les autres, le total reste
-  // 100 % et le % affiché EST la part réelle (moteur pur `allocation.ts`).
-  const setWeight = (id: string, pct: number) => setLines((ls) => setShare(ls, id, pct));
-  // Retirer = enlever la ligne et renormaliser le reste. Pour la remettre, on
-  // repasse par « Ajouter ».
-  const removeLine = (id: string) => setLines((ls) => removeShare(ls, id));
+  // Curseurs INDÉPENDANTS : bouger une ligne ne touche pas les autres. On ne
+  // réoptimise pas, on ne force pas un total — Seedow répartit à l'enregistrement.
+  const setWeight = (id: string, pct: number) =>
+    setLines((ls) => ls.map((l) => (l.id === id ? { ...l, pct: clampPct(pct) } : l)));
+  const removeLine = (id: string) => setLines((ls) => ls.filter((l) => l.id !== id));
   const reset = () => setLines(initial);
   const addAsset = (a: PickedAsset) =>
     setLines((ls) =>
-      addBalanced(ls, { id: a.id, ticker: a.ticker, name: a.name, esgScore: a.esgScore, pct: 0 }),
+      ls.some((l) => l.id === a.id)
+        ? ls
+        : [...ls, { id: a.id, ticker: a.ticker, name: a.name, esgScore: a.esgScore, pct: 10 }],
     );
 
   const onSave = async () => {
+    // Normalisation robuste : on ne garde que les lignes positives, on ramène la
+    // somme à 1, on borne chaque poids à ≤ 1 et on arrondit — l'enregistrement ne
+    // peut jamais être bloqué par un total « imparfait ».
+    const active = lines.filter((l) => l.pct > 0);
+    const total = active.reduce((s, l) => s + l.pct, 0);
+    if (active.length === 0 || total <= 0) {
+      toast.error(t("portfolio_customizer.need_one"));
+      return;
+    }
+    const weights: Record<string, number> = {};
+    for (const l of active) weights[l.id] = Math.min(1, Math.round((l.pct / total) * 1e6) / 1e6);
+
     setSaving(true);
     try {
-      // Le total vaut déjà 100 ; on renormalise en 0..1 (ceinture + bretelles,
-      // le serveur renormalise aussi).
-      const total = lines.reduce((s, l) => s + l.pct, 0) || 1;
-      const weights: Record<string, number> = {};
-      for (const l of lines) if (l.pct > 0) weights[l.id] = l.pct / total;
       await save({ data: { portfolio_id: portfolioId, weights } });
       toast.success(t("portfolio_customizer.saved"), {
         description: t("portfolio_customizer.saved_desc"),
@@ -137,7 +148,7 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
         <p className="text-label text-ink-2 leading-relaxed">{t("portfolio_customizer.desc")}</p>
       </div>
 
-      {/* Coup d'œil vivant — l'état courant, toujours visible */}
+      {/* Coup d'œil copilote — impact + potentiel visé, jamais de rappel « 100 % » */}
       <div className="rounded-2xl border border-paper-3 bg-paper-2 p-4">
         <div className="grid grid-cols-2 gap-3">
           <GlanceStat
@@ -147,17 +158,24 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
             mint
           />
           <GlanceStat
-            icon={<Network className="w-4 h-4" strokeWidth={1.8} aria-hidden />}
-            label={t("portfolio_glance.chip.diversification")}
-            value={t(`portfolio_glance.div.${divBand}`)}
+            icon={<Sparkles className="w-4 h-4" strokeWidth={1.8} aria-hidden />}
+            label={t("portfolio_customizer.potential_label")}
+            value={t(
+              concentrated
+                ? "portfolio_customizer.potential_concentrated"
+                : "portfolio_customizer.potential_balanced",
+            )}
           />
         </div>
-        {concentrated && (
-          <p className="mt-3 text-body-sm text-solar-ink leading-relaxed">
-            {t("blank_builder.glance_concentrated")}
-          </p>
-        )}
-        {/* Conséquences de la modification en cours */}
+        {/* Ce que le potentiel implique, en une phrase — impact & bénéfice visé */}
+        <p className="mt-3 text-body-sm text-ink-2 leading-relaxed">
+          {t(
+            concentrated
+              ? "portfolio_customizer.benefit_concentrated"
+              : "portfolio_customizer.benefit_balanced",
+          )}
+        </p>
+        {/* Conséquences de la modification en cours (impact, concentration…) */}
         {consequences.length > 0 && (
           <ul className="mt-3 space-y-2 border-t border-paper-3 pt-3">
             {consequences.map((c) => (
@@ -173,7 +191,7 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
         )}
       </div>
 
-      {/* Lignes éditables */}
+      {/* Lignes éditables — chaque curseur est indépendant */}
       <ul className="space-y-4">
         {lines.map((l) => (
           <li key={l.id}>
@@ -218,14 +236,6 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
         <Plus className="w-4 h-4" strokeWidth={2} aria-hidden />
         {t("portfolio_customizer.add")}
       </button>
-
-      {/* Total — toujours 100 % (parts d'un tout) */}
-      <div className="flex items-center justify-between text-caption text-ink-2 border-t border-paper-3 pt-3">
-        <span>{t("portfolio_customizer.total")}</span>
-        <span className="tabular-nums font-semibold text-ink">
-          {formatPercent(totalPct(lines) / 100, lang, 0)}
-        </span>
-      </div>
 
       {/* Actions — enregistrer en primaire, réinitialiser seulement si modifié */}
       <div className="flex items-center gap-2">
