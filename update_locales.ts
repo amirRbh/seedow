@@ -935,7 +935,15 @@ const portfolioGlanceEn = {
 const portfolioCustomizerFr = {
   eyebrow: "Personnaliser",
   title: "Ajustez votre portefeuille",
-  desc: "Retirez une ligne ou changez son poids. Seedow vous explique ce que ça change.",
+  desc: "Réglez chaque ligne librement. Seedow vous montre votre impact et le potentiel que vous visez — vous gardez la main, il ne réoptimise rien à votre place.",
+  potential_label: "Potentiel visé",
+  potential_concentrated: "Plus offensif",
+  potential_balanced: "Plus régulier",
+  benefit_concentrated:
+    "En misant plus sur quelques lignes, vous visez un potentiel de gain plus élevé — le risque monte aussi.",
+  benefit_balanced:
+    "En répartissant sur plusieurs lignes, vous visez un parcours plus régulier — un potentiel plus posé, un risque plus doux.",
+  need_one: "Gardez au moins un investissement pour enregistrer.",
   consequence: {
     more_concentrated:
       "Votre portefeuille est plus concentré — une plus grande partie de votre argent dépend de moins d'investissements.",
@@ -965,7 +973,14 @@ const portfolioCustomizerFr = {
 const portfolioCustomizerEn = {
   eyebrow: "Customize",
   title: "Adjust your portfolio",
-  desc: "Remove a line or change its weight. Seedow explains what changes.",
+  desc: "Set each line freely. Seedow shows your impact and the potential you're aiming for — you stay in control, it re-optimizes nothing on your behalf.",
+  potential_label: "Potential aimed for",
+  potential_concentrated: "More aggressive",
+  potential_balanced: "Steadier",
+  benefit_concentrated: "Betting more on a few lines aims for higher upside — risk goes up too.",
+  benefit_balanced:
+    "Spreading across several lines aims for a steadier ride — calmer upside, gentler risk.",
+  need_one: "Keep at least one investment to save.",
   consequence: {
     more_concentrated:
       "Your portfolio is more concentrated — more of your money depends on fewer investments.",
@@ -1029,6 +1044,7 @@ const blankBuilderFr = {
   saved: "Portefeuille enregistré",
   saved_desc: "Votre portefeuille est prêt. Vous gardez la main à tout moment.",
   save_error: "Impossible d'enregistrer",
+  need_one: "Ajoutez au moins un investissement pour enregistrer.",
   glance_positions: "Vous avez ajouté {{count}} investissement(s).",
   glance_div_limitee: "Votre argent dépend encore de peu de lignes.",
   glance_div_correcte: "La répartition commence à être correcte.",
@@ -1056,6 +1072,7 @@ const blankBuilderEn = {
   saved: "Portfolio saved",
   saved_desc: "Your portfolio is ready. You stay in control at any time.",
   save_error: "Couldn't save",
+  need_one: "Add at least one investment to save.",
   glance_positions: "You've added {{count}} investment(s).",
   glance_div_limitee: "Your money still depends on very few holdings.",
   glance_div_correcte: "The spread is starting to look fair.",

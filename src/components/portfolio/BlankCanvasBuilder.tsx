@@ -10,7 +10,6 @@ import { formatPercent } from "@/lib/format";
 import { createCustomPortfolio } from "@/lib/portfolio/customize.functions";
 import { liteSnapshot, CONCENTRATION_ALERT } from "@/lib/portfolio/consequences";
 import { diversificationBand, impactScore } from "@/lib/portfolio/plain-language";
-import { setShare, removeShare, addBalanced, totalPct } from "@/lib/portfolio/allocation";
 import { AssetPickerSheet, type PickedAsset } from "./AssetPickerSheet";
 
 interface Line {
@@ -18,16 +17,19 @@ interface Line {
   ticker: string;
   name: string;
   esgScore: number;
-  /** Poids en points de pourcentage (0..100). */
+  /** Poids en points de pourcentage (0..100), édité librement. */
   pct: number;
 }
 
+const clampPct = (v: number): number => Math.max(0, Math.min(100, Number.isFinite(v) ? v : 0));
+
 /**
  * Parcours « Page blanche » (mission Seedow §4) — on démarre vide et on compose
- * soi-même, sans jamais jeter le débutant dans un tableau financier. Seedow
- * accompagne (diversification, concentration, impact en langage clair) mais
- * l'utilisateur garde la main. Risque et frais exacts sont calculés à
- * l'enregistrement (ils dépendent de la covariance et du TER par actif).
+ * soi-même, sans jamais jeter le débutant dans un tableau financier. Curseurs
+ * INDÉPENDANTS : Seedow ne rééquilibre pas à la place de l'utilisateur et ne le
+ * rappelle pas à l'ordre sur un « 100 % » — il accompagne (diversification,
+ * concentration, impact en langage clair). Risque et frais exacts sont calculés
+ * à l'enregistrement ; les parts sont normalisées à ce moment-là.
  */
 export function BlankCanvasBuilder() {
   const { t } = useTranslation();
@@ -40,15 +42,17 @@ export function BlankCanvasBuilder() {
 
   const active = lines.filter((l) => l.pct > 0);
 
-  // Parts d'un tout (moteur pur `allocation.ts`) : ajouter donne une part
-  // équitable, bouger une ligne rééquilibre les autres, retirer renormalise —
-  // le total reste 100 % et le % affiché EST la part réelle.
+  // Curseurs indépendants : ajouter pose une part de départ, bouger une ligne
+  // ne touche pas les autres, retirer enlève simplement la ligne.
   const addAsset = (a: PickedAsset) =>
     setLines((ls) =>
-      addBalanced(ls, { id: a.id, ticker: a.ticker, name: a.name, esgScore: a.esgScore, pct: 0 }),
+      ls.some((l) => l.id === a.id)
+        ? ls
+        : [...ls, { id: a.id, ticker: a.ticker, name: a.name, esgScore: a.esgScore, pct: 10 }],
     );
-  const setWeight = (id: string, pct: number) => setLines((ls) => setShare(ls, id, pct));
-  const removeLine = (id: string) => setLines((ls) => removeShare(ls, id));
+  const setWeight = (id: string, pct: number) =>
+    setLines((ls) => ls.map((l) => (l.id === id ? { ...l, pct: clampPct(pct) } : l)));
+  const removeLine = (id: string) => setLines((ls) => ls.filter((l) => l.id !== id));
 
   const snapshot = liteSnapshot(
     active.map((l) => ({ id: l.id, esgScore: l.esgScore, weight: l.pct })),
@@ -58,11 +62,18 @@ export function BlankCanvasBuilder() {
   const impact = impactScore(snapshot.impact).score;
 
   const onSave = async () => {
+    // Normalisation robuste : lignes positives uniquement, somme ramenée à 1,
+    // chaque poids borné à ≤ 1 et arrondi — l'enregistrement n'est jamais bloqué.
+    const total = active.reduce((s, l) => s + l.pct, 0);
+    if (active.length === 0 || total <= 0) {
+      toast.error(t("blank_builder.need_one"));
+      return;
+    }
+    const weights: Record<string, number> = {};
+    for (const l of active) weights[l.id] = Math.min(1, Math.round((l.pct / total) * 1e6) / 1e6);
+
     setSaving(true);
     try {
-      const total = active.reduce((s, l) => s + l.pct, 0);
-      const weights: Record<string, number> = {};
-      for (const l of active) weights[l.id] = l.pct / total;
       await create({ data: { weights } });
       toast.success(t("blank_builder.saved"), { description: t("blank_builder.saved_desc") });
       await navigate({ to: "/dashboard" });
@@ -103,7 +114,7 @@ export function BlankCanvasBuilder() {
         </div>
       ) : (
         <>
-          {/* Coup d'œil copilote — accompagne sans décider */}
+          {/* Coup d'œil copilote — accompagne sans décider ni rappeler un « 100 % » */}
           <div className="rounded-2xl border border-paper-3 bg-paper-2 p-4 space-y-1.5">
             <p className="text-body-sm text-ink leading-relaxed">
               {t("blank_builder.glance_positions", { count: active.length })}{" "}
@@ -120,7 +131,7 @@ export function BlankCanvasBuilder() {
             </p>
           </div>
 
-          {/* Lignes éditables */}
+          {/* Lignes éditables — chaque curseur est indépendant */}
           <ul className="space-y-4">
             {lines.map((l) => (
               <li key={l.id}>
@@ -155,13 +166,6 @@ export function BlankCanvasBuilder() {
               </li>
             ))}
           </ul>
-
-          <div className="flex items-center justify-between text-caption text-ink-2 border-t border-paper-3 pt-3">
-            <span>{t("blank_builder.total")}</span>
-            <span className="tabular-nums font-semibold text-ink">
-              {formatPercent(totalPct(lines) / 100, lang, 0)}
-            </span>
-          </div>
 
           <button
             type="button"

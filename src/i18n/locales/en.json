@@ -2590,7 +2590,7 @@
   "portfolio_customizer": {
     "eyebrow": "Customize",
     "title": "Adjust your portfolio",
-    "desc": "Remove a line or change its weight. Seedow explains what changes.",
+    "desc": "Set each line freely. Seedow shows your impact and the potential you're aiming for — you stay in control, it re-optimizes nothing on your behalf.",
     "consequence": {
       "more_concentrated": "Your portfolio is more concentrated — more of your money depends on fewer investments.",
       "less_concentrated": "Your portfolio is better spread out — your money depends on more investments.",
@@ -2610,7 +2610,13 @@
     "saved": "Portfolio updated",
     "saved_desc": "Your adjustments have been saved.",
     "save_error": "Couldn't save",
-    "simulation_note": "Educational simulation — Seedow explains, you decide. No real transaction."
+    "simulation_note": "Educational simulation — Seedow explains, you decide. No real transaction.",
+    "potential_label": "Potential aimed for",
+    "potential_concentrated": "More aggressive",
+    "potential_balanced": "Steadier",
+    "benefit_concentrated": "Betting more on a few lines aims for higher upside — risk goes up too.",
+    "benefit_balanced": "Spreading across several lines aims for a steadier ride — calmer upside, gentler risk.",
+    "need_one": "Keep at least one investment to save."
   },
   "asset_picker": {
     "title": "Add an investment",
@@ -2643,7 +2649,8 @@
     "glance_concentrated": "Careful: one holding carries a large share of your money.",
     "glance_impact": "Impact {{score}}/100",
     "glance_riskfees_note": "Exact risk and fees are computed when you save.",
-    "simulation_note": "Educational simulation — no real transaction. You decide."
+    "simulation_note": "Educational simulation — no real transaction. You decide.",
+    "need_one": "Add at least one investment to save."
   },
   "data_provenance": {
     "coverage_label": "What does coverage mean?",

@@ -2572,7 +2572,7 @@
   "portfolio_customizer": {
     "eyebrow": "Personnaliser",
     "title": "Ajustez votre portefeuille",
-    "desc": "Retirez une ligne ou changez son poids. Seedow vous explique ce que ça change.",
+    "desc": "Réglez chaque ligne librement. Seedow vous montre votre impact et le potentiel que vous visez — vous gardez la main, il ne réoptimise rien à votre place.",
     "consequence": {
       "more_concentrated": "Votre portefeuille est plus concentré — une plus grande partie de votre argent dépend de moins d'investissements.",
       "less_concentrated": "Votre portefeuille est mieux réparti — votre argent dépend de davantage d'investissements.",
@@ -2592,7 +2592,13 @@
     "saved": "Portefeuille mis à jour",
     "saved_desc": "Vos ajustements ont été enregistrés.",
     "save_error": "Impossible d'enregistrer",
-    "simulation_note": "Simulation à but pédagogique — Seedow vous explique, vous décidez. Aucune transaction réelle."
+    "simulation_note": "Simulation à but pédagogique — Seedow vous explique, vous décidez. Aucune transaction réelle.",
+    "potential_label": "Potentiel visé",
+    "potential_concentrated": "Plus offensif",
+    "potential_balanced": "Plus régulier",
+    "benefit_concentrated": "En misant plus sur quelques lignes, vous visez un potentiel de gain plus élevé — le risque monte aussi.",
+    "benefit_balanced": "En répartissant sur plusieurs lignes, vous visez un parcours plus régulier — un potentiel plus posé, un risque plus doux.",
+    "need_one": "Gardez au moins un investissement pour enregistrer."
   },
   "asset_picker": {
     "title": "Ajouter un investissement",
@@ -2625,7 +2631,8 @@
     "glance_concentrated": "Attention : une ligne pèse une grande partie de votre argent.",
     "glance_impact": "Impact {{score}}/100",
     "glance_riskfees_note": "Risque et frais précis calculés à l'enregistrement.",
-    "simulation_note": "Simulation à but pédagogique — aucune transaction réelle. Vous décidez."
+    "simulation_note": "Simulation à but pédagogique — aucune transaction réelle. Vous décidez.",
+    "need_one": "Ajoutez au moins un investissement pour enregistrer."
   },
   "data_provenance": {
     "coverage_label": "Que signifie la couverture ?",
