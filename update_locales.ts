@@ -1235,7 +1235,9 @@ const mergedEn = deepMerge(en, {
   blank_builder: blankBuilderEn,
   dashboard: dashboardEn,
   asset_detail: assetDetailEn,
-  portfolio: portfolioEn,
+  portfolio: deepMerge(portfolioEn, portfolioDisclaimerEn),
+  simulation_ack: simulationAckEn,
+
   growth_comparison: growthComparisonEn,
   rail_nav: { vote: "The Vote", wrapped: "Recap", reveil: "Morning" },
   bottom_nav: { reveil: "Morning", vote: "The Vote", profile: "Profile" },
