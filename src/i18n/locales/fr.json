@@ -541,7 +541,8 @@
     "tab_refine_simple": "Ajuster",
     "badges_disclosure": "Vos jalons",
     "comparatif_disclosure": "Comparer à un ETF classique",
-    "refiner_disclosure": "Arbitrages avancés"
+    "refiner_disclosure": "Arbitrages avancés",
+    "affiner_disclaimer": "Simulation pédagogique sur un portefeuille virtuel. Les écarts affichés sont la conséquence chiffrée de tes propres choix : Seedow ne formule aucune recommandation personnalisée, n'exécute aucune transaction et n'est ni PSI ni CIF."
   },
   "objectives": {
     "meta_title": "Objectifs — seedow",
@@ -1671,7 +1672,7 @@
     "empty": "Aucun arbitrage notable détecté sur ce portefeuille.",
     "eyebrow": "Phase préférence",
     "title": "Affine ton allocation",
-    "desc": "Chaque contrainte que tu poses a un coût mesurable. Garde-la si elle compte plus que le rendement qu'elle te coûte, lève-la sinon. Tes choix nourrissent notre modèle.",
+    "desc": "Voici ce que chaque contrainte coûte ou rapporte dans la simulation. À toi de décider ce qui compte pour toi.",
     "expected_return": "Rendement attendu",
     "volatility": "Volatilité",
     "esg_score": "Score ESG",
@@ -1681,12 +1682,12 @@
     "neutral": "impact neutre",
     "show_before_after": "Voir avant / après",
     "hide_before_after": "Masquer avant / après",
-    "keep": "Garder",
-    "lift": "Lever",
-    "accepted": "Conservé. Arbitrage accepté.",
-    "to_lift": "Marqué à lever. On t'aidera à recalculer.",
+    "keep": "Conserver cette contrainte",
+    "lift": "Simuler sans cette contrainte",
+    "accepted": "Contrainte conservée dans la simulation.",
+    "to_lift": "Contrainte levée dans la simulation.",
     "before_current": "Avant — actuel",
-    "after_label": "Après — {{label}}",
+    "after_label": "Sans la contrainte — {{label}}",
     "by_class": "Répartition par classe",
     "top_before": "Top positions — avant",
     "top_after": "Top positions — après",
@@ -1696,7 +1697,8 @@
     "cost_euros": "≈ {{euros}} €",
     "cost_neutral": "≈ 0 €",
     "cost_lost_per_1000": "de moins par an pour 1 000 € investis",
-    "cost_gained_per_1000": "de plus par an pour 1 000 € investis"
+    "cost_gained_per_1000": "de plus par an pour 1 000 € investis",
+    "optimizer_note": "Résultat mécanique de l'optimiseur sous les contraintes posées — ni une recommandation, ni une incitation à investir."
   },
   "holding_detail": {
     "price_evolution": "Évolution du prix",
@@ -2666,5 +2668,12 @@
   "data_provenance": {
     "coverage_label": "Que signifie la couverture ?",
     "coverage_tooltip": "La part de votre portefeuille pour laquelle nous disposons d'une donnée réelle mesurée. Le reste n'est pas encore mesuré — il n'est pas estimé pour autant."
+  },
+  "simulation_ack": {
+    "title": "Avant d'enregistrer",
+    "body": "Seedow est un outil de simulation pédagogique. Le portefeuille est virtuel, aucune transaction n'est exécutée, et Seedow n'est ni prestataire de services d'investissement ni conseiller en investissements financiers.",
+    "checkbox": "Je comprends qu'il s'agit d'une simulation et que Seedow ne me recommande aucun investissement.",
+    "cancel": "Annuler",
+    "confirm": "Je comprends, enregistrer"
   }
 }
