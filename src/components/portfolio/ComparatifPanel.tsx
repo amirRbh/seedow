@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { Leaf, TrendingUp, Gauge, Coins } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { KPIFigure } from "@/components/ui/KPIFigure";
 import { Glossary, GLOSSARY } from "@/components/ui/Glossary";
@@ -211,6 +212,11 @@ export function ComparatifPanel() {
         {t("comparatif_panel.benchmark_label")}
       </p>
       {BenchmarkSelector}
+
+      {/* Verdict scannable (analyse UX §08) : comprendre la différence AVANT de
+          lire le détail. Mot + icône, jamais couleur seule (a11y §4). */}
+      <VerdictSummary items={buildVerdicts(seedow, ref, t)} vs={t(benchmark.labelKey)} />
+
       <div className="grid grid-cols-2 gap-4">
         <KPIFigure
           size="sm"
@@ -494,6 +500,109 @@ export function ComparatifPanel() {
           </svg>
         </Link>
       </div>
+    </div>
+  );
+}
+
+// ── Verdict « en un coup d'œil » ─────────────────────────────────────────────
+type VerdictTone = "good" | "neutral" | "caution";
+interface VerdictItem {
+  key: string;
+  icon: React.ReactNode;
+  label: string;
+  word: string;
+  tone: VerdictTone;
+}
+
+/** Classe un écart en trois états, avec zone morte « similaire » (eps). */
+function classify(delta: number, eps: number): "better" | "similar" | "worse" {
+  if (Math.abs(delta) <= eps) return "similar";
+  return delta > 0 ? "better" : "worse";
+}
+
+const STATE_TONE: Record<"better" | "similar" | "worse", VerdictTone> = {
+  better: "good",
+  similar: "neutral",
+  worse: "caution",
+};
+
+/**
+ * Dérive les 4 verdicts (Impact / Performance / Risque / Frais) des mêmes chiffres
+ * que le détail — aucune donnée nouvelle. Impact & performance : plus haut = mieux ;
+ * risque & frais : plus bas = mieux (on passe donc `ref − seedow`).
+ */
+function buildVerdicts(
+  seedow: { esgScore: number; expectedReturn: number; volatility: number; ter: number },
+  ref: BenchmarkData,
+  t: (key: string, options?: Record<string, unknown>) => string,
+): VerdictItem[] {
+  const icon = "h-4 w-4";
+  // Pour risque & frais, « better » (écart favorable) = « plus bas ».
+  const LH = { better: "lower", similar: "similar", worse: "higher" } as const;
+  const impact = ref.esgScore == null ? "better" : classify(seedow.esgScore - ref.esgScore, 3);
+  const perf = classify(seedow.expectedReturn - ref.expectedReturn, 0.01);
+  const risk = classify(ref.volatility - seedow.volatility, 0.01);
+  const fees = classify(ref.ter - seedow.ter, 0.0005);
+  return [
+    {
+      key: "impact",
+      icon: <Leaf className={icon} strokeWidth={1.8} aria-hidden />,
+      label: t("comparatif_panel.verdict.impact"),
+      word: t(`comparatif_panel.verdict.impact_${impact}`),
+      tone: STATE_TONE[impact],
+    },
+    {
+      key: "performance",
+      icon: <TrendingUp className={icon} strokeWidth={1.8} aria-hidden />,
+      label: t("comparatif_panel.verdict.performance"),
+      word: t(`comparatif_panel.verdict.perf_${perf}`),
+      tone: STATE_TONE[perf],
+    },
+    {
+      key: "risk",
+      icon: <Gauge className={icon} strokeWidth={1.8} aria-hidden />,
+      label: t("comparatif_panel.verdict.risk"),
+      word: t(`comparatif_panel.verdict.risk_${LH[risk]}`),
+      tone: STATE_TONE[risk],
+    },
+    {
+      key: "fees",
+      icon: <Coins className={icon} strokeWidth={1.8} aria-hidden />,
+      label: t("comparatif_panel.verdict.fees"),
+      word: t(`comparatif_panel.verdict.fees_${LH[fees]}`),
+      tone: STATE_TONE[fees],
+    },
+  ];
+}
+
+function VerdictSummary({ items, vs }: { items: VerdictItem[]; vs: string }) {
+  const { t } = useTranslation();
+  const toneClass: Record<VerdictTone, string> = {
+    good: "text-mint-ink",
+    neutral: "text-ink-2",
+    caution: "text-solar-ink",
+  };
+  return (
+    <div className="mb-6 rounded-2xl border border-paper-3 bg-paper-2 p-4">
+      <div className="mb-3 flex items-baseline justify-between gap-2">
+        <p className="text-tag uppercase tracking-[0.16em] text-ink-3 font-semibold">
+          {t("comparatif_panel.verdict.title")}
+        </p>
+        <p className="font-mono text-tag uppercase tracking-[0.1em] text-ink-3">
+          {t("comparatif_panel.verdict.vs", { bench: vs })}
+        </p>
+      </div>
+      <ul className="grid grid-cols-2 gap-2.5">
+        {items.map((it) => (
+          <li key={it.key} className="flex items-center gap-2">
+            <span className={toneClass[it.tone]}>{it.icon}</span>
+            <span className="text-caption text-ink-2">{it.label}</span>
+            <span className={cn("ml-auto text-body-sm font-semibold", toneClass[it.tone])}>
+              {it.word}
+            </span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
