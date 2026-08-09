@@ -1180,7 +1180,7 @@ const mergedFr = deepMerge(fr, {
   comparatif_panel: comparatifFr,
   post_sim_fork: postSimForkFr,
   portfolio_glance: portfolioGlanceFr,
-  portfolio_customizer: portfolioCustomizerFr,
+  portfolio_customizer: deepMerge(portfolioCustomizerFr, customizerV2Fr),
 });
 const mergedEn = deepMerge(en, {
   landing: { rayon_x: rayonXEn },
