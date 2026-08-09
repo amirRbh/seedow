@@ -124,8 +124,29 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
   const { t } = useTranslation();
   const { lang } = useLang();
   const save = useServerFn(saveCustomPortfolio);
+  const fetchAck = useServerFn(getSimulationAck);
+  const sendAck = useServerFn(acknowledgeSimulation);
   const [saving, setSaving] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
+  // Acquittement « simulation, pas de recommandation » — demandé une seule fois.
+  const [ackNeeded, setAckNeeded] = useState<boolean | null>(null);
+  const [ackOpen, setAckOpen] = useState(false);
+  const [ackChecked, setAckChecked] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    void fetchAck({})
+      .then((r) => {
+        if (!cancelled) setAckNeeded(!r.acknowledgedAt);
+      })
+      .catch(() => {
+        if (!cancelled) setAckNeeded(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const initial: Line[] = useMemo(
     () =>
