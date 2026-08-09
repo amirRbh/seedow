@@ -18,6 +18,19 @@ import { formatPercent } from "@/lib/format";
 import type { ActiveHolding } from "@/hooks/useActivePortfolio";
 import { saveCustomPortfolio } from "@/lib/portfolio/customize.functions";
 import {
+  acknowledgeSimulation,
+  getSimulationAck,
+} from "@/lib/portfolio/disclaimer.functions";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
   describeConsequences,
   liteSnapshot,
   type ChangeDir,
