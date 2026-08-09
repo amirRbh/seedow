@@ -835,7 +835,6 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
         d'investissement personnalisées — Seedow n'est ni PSI ni CIF.
       </p>
     </section>
-
   );
 }
 

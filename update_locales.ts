@@ -1203,7 +1203,6 @@ const portfolioDisclaimerEn = {
     "Educational simulation on a virtual portfolio. The figures shown are the measured consequence of your own choices: Seedow makes no personalised recommendation, executes no transaction, and is neither an investment services provider nor a financial investment adviser.",
 };
 
-
 const mergedFr = deepMerge(fr, {
   allocation_refiner: refinerPlainFr,
   landing: { rayon_x: rayonXFr },

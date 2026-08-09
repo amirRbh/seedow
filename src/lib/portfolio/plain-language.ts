@@ -134,7 +134,8 @@ export interface WeightDescription {
 
 export function describeWeight(weight: number): WeightDescription {
   const w = Number.isFinite(weight) ? Math.min(1, Math.max(0, weight)) : 0;
-  const band: WeightBand = w >= 0.4 ? "dominante" : w >= 0.2 ? "importante" : w >= 0.08 ? "moyenne" : "petite";
+  const band: WeightBand =
+    w >= 0.4 ? "dominante" : w >= 0.2 ? "importante" : w >= 0.08 ? "moyenne" : "petite";
   const oneInN = w >= 0.005 ? Math.round(1 / w) : null;
   return { band, weight: w, oneInN };
 }
