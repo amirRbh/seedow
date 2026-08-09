@@ -1692,7 +1692,11 @@
     "top_after": "Top positions — après",
     "removed_note": "Rouge = positions qui disparaîtraient.",
     "added_note": "Vert = nouvelles positions introduites.",
-    "simulation_unavailable": "Simulation indisponible."
+    "simulation_unavailable": "Simulation indisponible.",
+    "cost_euros": "≈ {{euros}} €",
+    "cost_neutral": "≈ 0 €",
+    "cost_lost_per_1000": "de moins par an pour 1 000 € investis",
+    "cost_gained_per_1000": "de plus par an pour 1 000 € investis"
   },
   "holding_detail": {
     "price_evolution": "Évolution du prix",
@@ -2579,7 +2583,9 @@
       "diversification_up": "Votre diversification s'améliore.",
       "diversification_down": "Votre diversification diminue.",
       "impact_up": "Votre impact augmente (environ +{{pts}} points sur 100).",
-      "impact_down": "Votre impact baisse (environ −{{pts}} points sur 100)."
+      "impact_down": "Votre impact baisse (environ −{{pts}} points sur 100).",
+      "risk_up": "Votre portefeuille devient un peu plus sensible aux variations de marché.",
+      "risk_down": "Votre portefeuille devient un peu moins sensible aux variations de marché."
     },
     "remove": "Retirer cette ligne",
     "weight_of": "Poids de {{name}}",
@@ -2598,7 +2604,30 @@
     "potential_balanced": "Plus régulier",
     "benefit_concentrated": "En misant plus sur quelques lignes, vous visez un potentiel de gain plus élevé — le risque monte aussi.",
     "benefit_balanced": "En répartissant sur plusieurs lignes, vous visez un parcours plus régulier — un potentiel plus posé, un risque plus doux.",
-    "need_one": "Gardez au moins un investissement pour enregistrer."
+    "need_one": "Gardez au moins un investissement pour enregistrer.",
+    "desc_v2": "Renforcez ou réduisez chaque ligne par petits pas. Seedow rééquilibre le reste et vous dit, en français, ce que ça change.",
+    "spread_label": "Répartition",
+    "risk_label": "Risque ressenti",
+    "risk_hint": "Estimé sur la répartition",
+    "positions_one": "{{count}} ligne",
+    "positions_other": "{{count}} lignes",
+    "what_changes": "Ce que ça change",
+    "increase": "Renforcer",
+    "decrease": "Réduire",
+    "increase_of": "Renforcer {{name}}",
+    "decrease_of": "Réduire {{name}}",
+    "one_in": "environ 1 € sur {{n}}",
+    "share": {
+      "petite": "Petite part",
+      "moyenne": "Part moyenne",
+      "importante": "Part importante",
+      "dominante": "Part dominante"
+    },
+    "impact_level": {
+      "modere": "Modéré",
+      "solide": "Solide",
+      "fort": "Fort"
+    }
   },
   "asset_picker": {
     "title": "Ajouter un investissement",
