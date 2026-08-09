@@ -16,6 +16,10 @@ import { ComparatifPanel } from "@/components/portfolio/ComparatifPanel";
 import { AllocationRefiner } from "@/components/portfolio/AllocationRefiner";
 import { PortfolioAtAGlance } from "@/components/portfolio/PortfolioAtAGlance";
 import { PortfolioCustomizer } from "@/components/portfolio/PortfolioCustomizer";
+import { ExploreSection } from "@/components/dashboard/ExploreSection";
+import { WatchlistCard } from "@/components/dashboard/WatchlistCard";
+import { VoteTeaserCard } from "@/components/vote/VoteTeaserCard";
+import { ReveilTeaserCard } from "@/components/reveil/ReveilTeaserCard";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyPortfolioState } from "@/components/portfolio/EmptyPortfolioState";
@@ -251,9 +255,15 @@ function Portfolio() {
                 « Vs le monde » du récit) est replié pour ne pas alourdir. */}
             <TabsContent value="impact" className="pt-5 space-y-8">
               <ImpactExperience />
-              <DetailDisclosure summary={t("portfolio.comparatif_disclosure")}>
+              {/* Comparatif promu (analyse UX §05 — P1) : le « moment aha » vs un
+                  fonds classique n'est plus replié. Source unique : /comparatif
+                  redirige ici. */}
+              <div className="space-y-3">
+                <h3 className="font-value text-lg text-ink">
+                  {t("portfolio.comparatif_promoted")}
+                </h3>
                 <ComparatifPanel />
-              </DetailDisclosure>
+              </div>
             </TabsContent>
 
             {/* Ajuster — le même éditeur clair pour tous ; les arbitrages avancés
@@ -264,8 +274,12 @@ function Portfolio() {
               <p className="rounded-2xl border border-paper-3 bg-paper-2 p-3 text-caption text-ink-2 leading-relaxed">
                 {t("portfolio.affiner_disclaimer")}
               </p>
+              {/* Compromis explicite (analyse UX §08 — P3) : rend visible l'arbitrage
+                  impact / rendement / risque, sans prescrire de décision. */}
+              <p className="border-l-2 border-mint pl-3 text-body-sm text-ink-2 leading-relaxed">
+                {t("portfolio.compromis")}
+              </p>
               <PortfolioCustomizer
-
                 portfolioId={portfolio.id}
                 holdings={portfolio.holdings}
                 onSaved={() => {
@@ -280,6 +294,16 @@ function Portfolio() {
               )}
             </TabsContent>
           </Tabs>
+        </section>
+
+        {/* Réveil, Vote, Watchlist — conséquences de détenir (analyse UX §04/§05).
+            Rapatriés du dashboard vers leur vrai foyer : le portefeuille. */}
+        <section className="px-5 pt-8">
+          <ExploreSection>
+            <ReveilTeaserCard />
+            <VoteTeaserCard />
+            <WatchlistCard />
+          </ExploreSection>
         </section>
 
         {/* Partage anonyme — ligne discrète en pied */}

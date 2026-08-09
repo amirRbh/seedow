@@ -17,7 +17,12 @@
     "confirm": "Confirmer",
     "retry": "Réessayer",
     "years": "ans",
-    "months": "mois"
+    "months": "mois",
+    "simulation": {
+      "badge": "Simulation",
+      "tagline": "Argent fictif — ton argent réel n'est jamais engagé ici.",
+      "short": "Argent fictif, aucun versement réel."
+    }
   },
   "root": {
     "not_found_title": "Page introuvable",
@@ -436,7 +441,8 @@
     "aria": "Navigation principale",
     "reveil": "Réveil",
     "vote": "Le Vote",
-    "profile": "Profil"
+    "profile": "Profil",
+    "learn": "Apprendre"
   },
   "dashboard": {
     "greeting_morning": "Belle matinée",
@@ -499,6 +505,10 @@
     },
     "explore": {
       "title": "Explorer"
+    },
+    "view_mode_hint": {
+      "title": "Astuce",
+      "desc": "Tu vois l'essentiel. Passe en vue détaillée quand tu veux — bouton Simple / Expert en haut."
     }
   },
   "portfolio": {
@@ -542,7 +552,9 @@
     "badges_disclosure": "Vos jalons",
     "comparatif_disclosure": "Comparer à un ETF classique",
     "refiner_disclosure": "Arbitrages avancés",
-    "affiner_disclaimer": "Simulation pédagogique sur un portefeuille virtuel. Les écarts affichés sont la conséquence chiffrée de tes propres choix : Seedow ne formule aucune recommandation personnalisée, n'exécute aucune transaction et n'est ni PSI ni CIF."
+    "affiner_disclaimer": "Simulation pédagogique sur un portefeuille virtuel. Les écarts affichés sont la conséquence chiffrée de tes propres choix : Seedow ne formule aucune recommandation personnalisée, n'exécute aucune transaction et n'est ni PSI ni CIF.",
+    "comparatif_promoted": "Comparer à un fonds classique",
+    "compromis": "Ce réglage privilégie l'impact. Il peut coûter un peu de rendement ou ajouter du risque — c'est ton arbitrage, pas une recommandation."
   },
   "objectives": {
     "meta_title": "Objectifs — seedow",
@@ -630,6 +642,14 @@
       "price_asc": "Prix ↑",
       "price_desc": "Prix ↓",
       "name_asc": "A → Z"
+    },
+    "intents": {
+      "eyebrow": "Je cherche…",
+      "climate": "🌱 Fort impact",
+      "low_fees": "💰 Frais bas",
+      "low_risk": "⚖️ Peu risqué",
+      "europe": "🇪🇺 Europe",
+      "advanced": "Filtres avancés"
     }
   },
   "ethi": {
@@ -936,7 +956,8 @@
         "100_desc": "Un vrai démarrage",
         "500_desc": "Un démarrage ambitieux",
         "custom_label": "Un autre montant",
-        "custom_placeholder": "ex. 2 000"
+        "custom_placeholder": "ex. 2 000",
+        "sim_hint": "C'est une simulation — choisis un montant pour voir, tu pourras le changer à tout moment. Aucun versement réel."
       }
     },
     "header": {

@@ -52,6 +52,47 @@ export const REGION_OPTIONS = [
   "Autre",
 ];
 
+/**
+ * Découverte par intentions (analyse UX §04 — P0) : un débutant pense en
+ * intentions (« fort impact », « frais bas »), pas en TER/ESG bruts. Chaque
+ * intention n'est qu'un raccourci vers les filtres existants — aucune donnée
+ * nouvelle. Les libellés vivent en i18n (`discover.intents.*`).
+ */
+export interface IntentPreset {
+  id: "climate" | "low_fees" | "low_risk" | "europe";
+  patch: Partial<ScreenerFilters>;
+}
+
+export const INTENT_PRESETS: IntentPreset[] = [
+  { id: "climate", patch: { minEsg: 7 } },
+  { id: "low_fees", patch: { maxTer: 0.3 } },
+  { id: "low_risk", patch: { maxRisk: 3 } },
+  { id: "europe", patch: { regions: ["Europe"] } },
+];
+
+/** Une intention est active si tous les champs de son `patch` sont déjà posés. */
+export function isIntentActive(f: ScreenerFilters, patch: Partial<ScreenerFilters>): boolean {
+  return (Object.entries(patch) as [keyof ScreenerFilters, unknown][]).every(([key, value]) => {
+    const current = f[key];
+    if (Array.isArray(value)) {
+      return value.every((v) => Array.isArray(current) && (current as unknown[]).includes(v));
+    }
+    return current === value;
+  });
+}
+
+/** Applique une intention, ou la retire (remet ses champs à leur défaut). */
+export function toggleIntent(f: ScreenerFilters, patch: Partial<ScreenerFilters>): ScreenerFilters {
+  if (isIntentActive(f, patch)) {
+    const reset: Partial<ScreenerFilters> = {};
+    for (const key of Object.keys(patch) as (keyof ScreenerFilters)[]) {
+      (reset as Record<string, unknown>)[key] = DEFAULT_FILTERS[key];
+    }
+    return { ...f, ...reset };
+  }
+  return { ...f, ...patch };
+}
+
 export function uniqueCategories(assets: DiscoverAsset[]): string[] {
   return Array.from(new Set(assets.map((a) => a.category))).sort();
 }

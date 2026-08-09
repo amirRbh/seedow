@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
+import { toast } from "sonner";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
@@ -12,10 +13,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 import { ActionOfTheDayCard } from "@/components/dashboard/ActionOfTheDayCard";
-import { ExploreSection } from "@/components/dashboard/ExploreSection";
-import { WatchlistCard } from "@/components/dashboard/WatchlistCard";
-import { VoteTeaserCard } from "@/components/vote/VoteTeaserCard";
-import { ReveilTeaserCard } from "@/components/reveil/ReveilTeaserCard";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -28,6 +25,7 @@ import { ImpactMoment } from "@/components/impact/ImpactMoment";
 import { GuestBanner } from "@/components/dashboard/GuestBanner";
 import { UnderstandPortfolioCard } from "@/components/dashboard/UnderstandPortfolioCard";
 import { GuestDashboard } from "@/components/dashboard/GuestDashboard";
+import { SimulationBadge } from "@/components/common/SimulationBadge";
 import { clearGuestSimulation } from "@/lib/beta/guest";
 
 export const Route = createFileRoute("/dashboard")({
@@ -85,6 +83,23 @@ function Dashboard() {
 
   useEffect(() => {
     setGreeting(t(getGreetingKey(new Date().getHours())));
+  }, [t]);
+
+  // Découvrabilité du mode Simple/Expert (analyse UX §09 — P3) : un seul indice,
+  // au premier passage, pour signaler la vue détaillée sans l'imposer.
+  useEffect(() => {
+    try {
+      if (localStorage.getItem("seedow_view_mode_hint_seen")) return;
+      localStorage.setItem("seedow_view_mode_hint_seen", "1");
+    } catch {
+      return;
+    }
+    const id = setTimeout(() => {
+      toast(t("dashboard.view_mode_hint.title"), {
+        description: t("dashboard.view_mode_hint.desc"),
+      });
+    }, 1200);
+    return () => clearTimeout(id);
   }, [t]);
 
   useEffect(() => {
@@ -246,9 +261,7 @@ function Dashboard() {
           {portfolio && (
             <div className="mt-5">
               <InvestDialog label={t("dashboard.invest_demo")} defaultAmount={200} />
-              <p className="text-tag text-ink-3 mt-2 uppercase tracking-wider">
-                {t("dashboard.demo_mode_capital")}
-              </p>
+              <SimulationBadge className="mt-2" />
             </div>
           )}
         </motion.section>
@@ -312,13 +325,6 @@ function Dashboard() {
             />
           )}
         </motion.section>
-
-        {/* 3. Modules secondaires — 3 cartes max, repliés par défaut */}
-        <ExploreSection>
-          <ReveilTeaserCard />
-          <VoteTeaserCard />
-          <WatchlistCard />
-        </ExploreSection>
 
         {/* 4. Lien Voir le détail */}
         <motion.section

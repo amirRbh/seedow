@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { EthiFab } from "./EthiFab";
 import { cn } from "@/lib/utils";
 
-type IconKey = "home" | "analyse" | "decouvrir" | "vote";
+type IconKey = "home" | "analyse" | "decouvrir" | "cours";
 
 type NavItem = {
   key: string;
@@ -12,15 +12,16 @@ type NavItem = {
   icon: IconKey;
 };
 
-// Barre volontairement resserrée à 4 entrées, ancrée sur l'identité financière :
-// l'Accueil (Dashboard) d'abord — son argent —, puis le Portefeuille, Découvrir
-// et Le Vote (le différenciateur). Le Réveil vit comme carte sur l'Accueil et
-// Ethi comme bouton flottant : ni l'un ni l'autre n'a besoin d'un onglet dédié.
+// Quatre piliers stables (analyse UX §04 — P0) : Accueil (son argent) → Explorer
+// (trouver) → Mon portefeuille (ce qu'on détient et son impact) → Apprendre.
+// Ces quatre couvrent toute l'app. Vote et Réveil, concepts de niveau 3, vivent
+// désormais comme sections/teasers du portefeuille — plus dans la nav primaire.
+// Ethi reste un bouton flottant transversal.
 const NAV_ITEMS: NavItem[] = [
   { key: "dashboard", path: "/dashboard", labelKey: "bottom_nav.home", icon: "home" },
-  { key: "portfolio", path: "/portfolio", labelKey: "bottom_nav.portfolio", icon: "analyse" },
   { key: "discover", path: "/discover", labelKey: "bottom_nav.explore", icon: "decouvrir" },
-  { key: "vote", path: "/vote", labelKey: "bottom_nav.vote", icon: "vote" },
+  { key: "portfolio", path: "/portfolio", labelKey: "bottom_nav.portfolio", icon: "analyse" },
+  { key: "cours", path: "/cours", labelKey: "bottom_nav.learn", icon: "cours" },
 ];
 
 /**
@@ -95,12 +96,12 @@ function NavIcon({ type }: { type: IconKey }) {
           <path d="M9.5 21v-6h5v6" />
         </svg>
       );
-    case "vote":
+    case "cours":
       return (
         <svg {...common}>
-          <path d="M5 21h14" />
-          <path d="M6 21v-6l6-3 6 3v6" />
-          <path d="m9 12 3 3 3-3" />
+          <path d="M4 5a2 2 0 0 1 2-2h11v16H6a2 2 0 0 0-2 2V5Z" />
+          <path d="M8 7h6" />
+          <path d="M8 11h6" />
         </svg>
       );
     case "analyse":
