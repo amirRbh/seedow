@@ -34,6 +34,7 @@ import { generatePortfolio, simulatePortfolio } from "@/lib/portfolio/server.fun
 import { MirrorReveal, type MirrorImpact } from "@/components/onboarding/MirrorReveal";
 import { AgencyReveal } from "@/components/onboarding/AgencyReveal";
 import { PostSimulationFork } from "@/components/onboarding/PostSimulationFork";
+import { SimulationBadge } from "@/components/common/SimulationBadge";
 import { callAuthed } from "@/lib/authedServerFn";
 import { trackPreference, type PreferenceStep } from "@/lib/preferences/tracking";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
@@ -1037,6 +1038,11 @@ function Step({
 
           {isAmount && (
             <div className="pt-1">
+              {/* Recadrage « curseur de jeu » (analyse UX §10 — P2) : dédramatise
+                  le montant, réaffirme le statut simulation avant toute somme. */}
+              <p className="mb-3 text-caption text-ink-2 leading-relaxed">
+                {t("onboarding.steps.amount.sim_hint")}
+              </p>
               <label
                 htmlFor="onboarding-custom-amount"
                 className="block text-caption text-ink-3 mb-2"
@@ -1242,11 +1248,7 @@ function PreviewScene({
             animate={{ opacity: 1, y: 0 }}
             className="w-full max-w-md"
           >
-            <div className="mb-5 rounded-md border border-paper-3 bg-paper-2 px-3 py-2 text-center">
-              <p className="text-caption uppercase tracking-[0.16em] text-ink-3 font-medium">
-                Aperçu · pas encore sauvegardé
-              </p>
-            </div>
+            <SimulationBadge center withTagline className="mb-5" />
             {mirror && (
               <MirrorReveal
                 impact={mirror.impact}

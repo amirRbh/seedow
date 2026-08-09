@@ -8,9 +8,12 @@ import { AssetRow } from "./AssetRow";
 import { AssetDetailSheet } from "./AssetDetailSheet";
 import {
   DEFAULT_FILTERS,
+  INTENT_PRESETS,
   REGION_OPTIONS,
   activeFilterCount,
   applyFilters,
+  isIntentActive,
+  toggleIntent,
   uniqueCategories,
   type ScreenerFilters,
   type SortKey,
@@ -140,6 +143,33 @@ export function AssetScreener() {
         </div>
       </div>
 
+      {/* Découverte par intentions — le langage du débutant, avant les filtres bruts */}
+      <div className="px-5">
+        <p className="text-tag uppercase tracking-[0.16em] text-ink-3 font-semibold mb-2">
+          {t("discover.intents.eyebrow")}
+        </p>
+        <div className="flex flex-wrap gap-1.5">
+          {INTENT_PRESETS.map((preset) => {
+            const active = isIntentActive(filters, preset.patch);
+            return (
+              <button
+                key={preset.id}
+                type="button"
+                aria-pressed={active}
+                onClick={() => setFilters((f) => toggleIntent(f, preset.patch))}
+                className={`px-3 py-1.5 rounded-full text-caption font-semibold transition-colors border ${
+                  active
+                    ? "bg-ink text-paper border-ink"
+                    : "bg-paper-2 text-ink border-paper-3 hover:border-ink/40"
+                }`}
+              >
+                {t(`discover.intents.${preset.id}`)}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Filter toolbar */}
       <div className="px-5 flex items-center gap-2 flex-wrap">
         <button
@@ -161,7 +191,7 @@ export function AssetScreener() {
           >
             <path d="M3 6h18M6 12h12M10 18h4" />
           </svg>
-          {t("discover.filters_btn")}
+          {t("discover.intents.advanced")}
           {activeCount > 0 && (
             <span className="bg-gold text-ink text-tag font-bold rounded-full px-1.5 leading-none py-0.5 ml-0.5">
               {activeCount}

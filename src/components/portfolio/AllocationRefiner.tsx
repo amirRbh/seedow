@@ -190,7 +190,6 @@ export function AllocationRefiner({ portfolioId }: Props) {
                         : t("allocation_refiner.neutral")}
                   </p>
                 </div>
-
               </div>
 
               <div className="flex flex-wrap gap-x-4 gap-y-1 text-caption text-ink-3">

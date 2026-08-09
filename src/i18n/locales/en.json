@@ -17,7 +17,12 @@
     "confirm": "Confirm",
     "retry": "Retry",
     "years": "years",
-    "months": "months"
+    "months": "months",
+    "simulation": {
+      "badge": "Simulation",
+      "tagline": "Play money — your real money is never at stake here.",
+      "short": "Play money, no real deposit."
+    }
   },
   "root": {
     "not_found_title": "Page not found",
@@ -436,7 +441,8 @@
     "aria": "Main navigation",
     "reveil": "Morning",
     "vote": "The Vote",
-    "profile": "Profile"
+    "profile": "Profile",
+    "learn": "Learn"
   },
   "dashboard": {
     "greeting_morning": "Good morning",
@@ -499,6 +505,10 @@
     },
     "explore": {
       "title": "Explore"
+    },
+    "view_mode_hint": {
+      "title": "Tip",
+      "desc": "You're seeing the essentials. Switch to the detailed view anytime — Simple / Expert toggle up top."
     }
   },
   "portfolio": {
@@ -542,7 +552,9 @@
     "badges_disclosure": "Your milestones",
     "comparatif_disclosure": "Compare to a classic ETF",
     "refiner_disclosure": "Advanced trade-offs",
-    "affiner_disclaimer": "Educational simulation on a virtual portfolio. The figures shown are the measured consequence of your own choices: Seedow makes no personalised recommendation, executes no transaction, and is neither an investment services provider nor a financial investment adviser."
+    "affiner_disclaimer": "Educational simulation on a virtual portfolio. The figures shown are the measured consequence of your own choices: Seedow makes no personalised recommendation, executes no transaction, and is neither an investment services provider nor a financial investment adviser.",
+    "comparatif_promoted": "Compare to a classic fund",
+    "compromis": "This setting favours impact. It may cost a little return or add risk — that's your trade-off, not a recommendation."
   },
   "objectives": {
     "meta_title": "Goals — seedow",
@@ -630,6 +642,14 @@
       "price_asc": "Price ↑",
       "price_desc": "Price ↓",
       "name_asc": "A → Z"
+    },
+    "intents": {
+      "eyebrow": "I'm looking for…",
+      "climate": "🌱 High impact",
+      "low_fees": "💰 Low fees",
+      "low_risk": "⚖️ Lower risk",
+      "europe": "🇪🇺 Europe",
+      "advanced": "Advanced filters"
     }
   },
   "ethi": {
@@ -936,7 +956,8 @@
         "100_desc": "A real start",
         "500_desc": "An ambitious start",
         "custom_label": "A different amount",
-        "custom_placeholder": "e.g. 2,000"
+        "custom_placeholder": "e.g. 2,000",
+        "sim_hint": "This is a simulation — pick an amount to see it, you can change it anytime. No real deposit."
       }
     },
     "header": {

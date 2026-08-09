@@ -260,13 +260,16 @@ function Landing() {
                 style={{ border: "1px solid var(--paper-3)", padding: "22px" }}
                 aria-hidden
               >
-                <div className="grid grid-cols-2 gap-5">
-                  <KPIFigure
-                    size="sm"
-                    label={t("comparatif_panel.impact_score")}
-                    value="74 / 100"
-                    tone="mint"
-                  />
+                {/* Un seul chiffre d'impact héros (analyse UX §08 — P1) : le score
+                    d'impact domine, le CO₂ évité est sa preuve concrète, la
+                    projection 10 ans reste un axe distinct (rendement). La note
+                    ESG « AA » redondante est retirée. */}
+                <KPIFigure
+                  label={t("comparatif_panel.impact_score")}
+                  value="74 / 100"
+                  tone="mint"
+                />
+                <div className="mt-4 grid grid-cols-2 gap-5">
                   <KPIFigure
                     size="sm"
                     label={t("landing.hero2.preview.kpi_carbon")}
@@ -280,12 +283,6 @@ function Landing() {
                     unit="€"
                     tone="ice"
                     hint={t("comparatif_panel.on_invested", { amount: "10 000" })}
-                  />
-                  <KPIFigure
-                    size="sm"
-                    label={t("landing.hero2.preview.kpi_esg")}
-                    value="AA"
-                    tone="mint"
                   />
                 </div>
                 <p className="mt-5 text-caption leading-[1.45] text-[color:var(--apple-text-2)]">

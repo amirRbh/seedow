@@ -103,12 +103,11 @@ function CguPage() {
             réglementation applicable, ne sont pas présentés comme adaptés à ta situation
             patrimoniale, financière ou fiscale, et ne tiennent compte ni de tes revenus, ni de ton
             patrimoine, ni de tes engagements. Seedow n'est ni prestataire de services
-            d'investissement (PSI), ni conseiller en investissements financiers (CIF), et
-            n'exécute aucun ordre. Pour une recommandation adaptée à ta situation, il convient de
-            consulter un professionnel habilité.
+            d'investissement (PSI), ni conseiller en investissements financiers (CIF), et n'exécute
+            aucun ordre. Pour une recommandation adaptée à ta situation, il convient de consulter un
+            professionnel habilité.
           </p>
         </section>
-
 
         <section>
           <h2 className="font-value text-xl text-ink">5. Absence de garantie de performance</h2>

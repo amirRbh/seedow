@@ -55,14 +55,14 @@ export function RailNav() {
       shortcut: "g p",
     },
     { key: "discover", path: "/discover", label: t("bottom_nav.explore"), icon: "decouvrir" },
-    { key: "vote", path: "/vote", label: t("rail_nav.vote"), icon: "vote", shortcut: "g v" },
+    { key: "cours", path: "/cours", label: t("rail_nav.learn"), icon: "cours", shortcut: "g c" },
   ];
   // Secondaire = 4 portes d'entrée seulement. Les surfaces annexes (Objectifs,
   // Comparatif, Certificat, Bilan, Méthodologie, Réglages) ne disparaissent pas :
   // elles sont regroupées dans le hub « Mon compte » et dans « Apprendre ».
   const SECONDARY: NavItem[] = [
     { key: "ethi", path: "/ethi", label: t("rail_nav.ethi_assistant"), icon: "ethi" },
-    { key: "cours", path: "/cours", label: t("rail_nav.learn"), icon: "cours" },
+    { key: "vote", path: "/vote", label: t("rail_nav.vote"), icon: "vote", shortcut: "g v" },
     {
       key: "reveil",
       path: "/reveil",

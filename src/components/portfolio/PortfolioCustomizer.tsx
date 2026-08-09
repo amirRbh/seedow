@@ -17,10 +17,7 @@ import { useLang } from "@/hooks/useLang";
 import { formatPercent } from "@/lib/format";
 import type { ActiveHolding } from "@/hooks/useActivePortfolio";
 import { saveCustomPortfolio } from "@/lib/portfolio/customize.functions";
-import {
-  acknowledgeSimulation,
-  getSimulationAck,
-} from "@/lib/portfolio/disclaimer.functions";
+import { acknowledgeSimulation, getSimulationAck } from "@/lib/portfolio/disclaimer.functions";
 import {
   Dialog,
   DialogContent,
@@ -262,7 +259,6 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
         <p className="text-label text-ink-2 leading-relaxed">{t("portfolio_customizer.desc_v2")}</p>
       </div>
 
-
       {/* Où j'en suis — trois repères en mots, le chiffre en second plan */}
       <div className="grid grid-cols-3 gap-2">
         <GlanceStat
@@ -317,7 +313,9 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
                   <p className="text-body-sm font-semibold text-ink truncate">{l.name}</p>
                   <p className="text-tag text-ink-3 truncate">
                     {t(`portfolio_customizer.share.${desc.band}`)}
-                    {desc.oneInN ? ` · ${t("portfolio_customizer.one_in", { n: desc.oneInN })}` : ""}
+                    {desc.oneInN
+                      ? ` · ${t("portfolio_customizer.one_in", { n: desc.oneInN })}`
+                      : ""}
                     {" · "}
                     {formatPercent(l.pct / 100, lang, 0)}
                   </p>
@@ -444,7 +442,6 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
     </div>
   );
 }
