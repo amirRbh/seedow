@@ -554,7 +554,16 @@
     "refiner_disclosure": "Advanced trade-offs",
     "affiner_disclaimer": "Educational simulation on a virtual portfolio. The figures shown are the measured consequence of your own choices: Seedow makes no personalised recommendation, executes no transaction, and is neither an investment services provider nor a financial investment adviser.",
     "comparatif_promoted": "Compare to a classic fund",
-    "compromis": "This setting favours impact. It may cost a little return or add risk — that's your trade-off, not a recommendation."
+    "compromis": "This setting favours impact. It may cost a little return or add risk — that's your trade-off, not a recommendation.",
+    "goals": {
+      "title": "My goals",
+      "empty": "Give your savings a target — retirement, a home, studies…",
+      "empty_cta": "Create a goal",
+      "count_one": "{{count}} goal tracked",
+      "count_other": "{{count}} goals tracked",
+      "next": "Next: {{name}}",
+      "see_all": "View my goals"
+    }
   },
   "objectives": {
     "meta_title": "Goals — seedow",
