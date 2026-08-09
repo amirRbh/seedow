@@ -408,6 +408,43 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
         excludeIds={lines.map((l) => l.id)}
         onPick={addAsset}
       />
+
+      {/* Reconnaissance unique du cadre : simulation, pas de recommandation. */}
+      <Dialog open={ackOpen} onOpenChange={setAckOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t("simulation_ack.title")}</DialogTitle>
+            <DialogDescription>{t("simulation_ack.body")}</DialogDescription>
+          </DialogHeader>
+          <label className="flex items-start gap-3 text-body-sm text-ink leading-relaxed cursor-pointer">
+            <input
+              type="checkbox"
+              checked={ackChecked}
+              onChange={(e) => setAckChecked(e.target.checked)}
+              className="mt-0.5 w-4 h-4 shrink-0 accent-ink"
+            />
+            <span>{t("simulation_ack.checkbox")}</span>
+          </label>
+          <DialogFooter>
+            <button
+              type="button"
+              onClick={() => setAckOpen(false)}
+              className="h-11 px-4 rounded-full border border-paper-3 text-ink text-body-sm font-semibold hover:bg-paper-2 transition-colors"
+            >
+              {t("simulation_ack.cancel")}
+            </button>
+            <button
+              type="button"
+              onClick={() => void confirmAck()}
+              disabled={!ackChecked}
+              className="h-11 px-5 rounded-full bg-ink text-paper text-body-sm font-semibold hover:opacity-90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              {t("simulation_ack.confirm")}
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
     </div>
   );
 }
