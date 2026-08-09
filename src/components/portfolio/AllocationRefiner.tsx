@@ -172,20 +172,21 @@ export function AllocationRefiner({ portfolioId }: Props) {
                     )}
                     style={{ fontVariantNumeric: "tabular-nums" }}
                   >
-                    {row.costBps > 0
-                      ? `−${row.costBps} bps`
-                      : row.costBps < 0
-                        ? `+${Math.abs(row.costBps)} bps`
-                        : "0 bps"}
+                    {row.costBps === 0
+                      ? t("allocation_refiner.cost_neutral")
+                      : t("allocation_refiner.cost_euros", {
+                          euros: (Math.abs(row.costBps) / 10).toFixed(2),
+                        })}
                   </p>
                   <p className="text-tag uppercase tracking-[0.14em] text-ink-3 mt-0.5">
                     {row.costBps > 0
-                      ? "rendement annuel perdu"
+                      ? t("allocation_refiner.cost_lost_per_1000")
                       : row.costBps < 0
-                        ? "rendement annuel gagné"
-                        : "impact neutre"}
+                        ? t("allocation_refiner.cost_gained_per_1000")
+                        : t("allocation_refiner.neutral")}
                   </p>
                 </div>
+
               </div>
 
               <div className="flex flex-wrap gap-x-4 gap-y-1 text-caption text-ink-3">

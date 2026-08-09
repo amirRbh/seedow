@@ -10,9 +10,9 @@ import {
   TrendingUp,
   Minus,
   Leaf,
-  Sparkles,
+  Scale,
+  Activity,
 } from "lucide-react";
-import { Slider } from "@/components/ui/slider";
 import { useLang } from "@/hooks/useLang";
 import { formatPercent } from "@/lib/format";
 import type { ActiveHolding } from "@/hooks/useActivePortfolio";
@@ -20,11 +20,15 @@ import { saveCustomPortfolio } from "@/lib/portfolio/customize.functions";
 import {
   describeConsequences,
   liteSnapshot,
-  CONCENTRATION_ALERT,
   type ChangeDir,
   type WeightedLine,
 } from "@/lib/portfolio/consequences";
-import { impactScore } from "@/lib/portfolio/plain-language";
+import {
+  describeWeight,
+  diversificationBand,
+  impactScore,
+  perceivedRisk,
+} from "@/lib/portfolio/plain-language";
 import { AssetPickerSheet, type PickedAsset } from "./AssetPickerSheet";
 
 interface Props {
@@ -38,20 +42,70 @@ interface Line {
   ticker: string;
   name: string;
   esgScore: number;
-  /** Poids courant en points de pourcentage (0..100), édité librement. */
+  /** Poids courant en points de pourcentage (0..100). Le total vaut toujours 100. */
   pct: number;
 }
+
+/** Un clic = un pas compréhensible, jamais un réglage au dixième près. */
+const STEP = 5;
+/** Part attribuée à une ligne qu'on vient d'ajouter. */
+const NEW_LINE_PCT = 10;
 
 const clampPct = (v: number): number => Math.max(0, Math.min(100, Number.isFinite(v) ? v : 0));
 
 /**
- * Éditeur d'allocation « carte blanche » (mission Seedow §3 — Personnaliser).
+ * Réécrit les poids pour que le total fasse TOUJOURS 100 : la ligne ciblée
+ * prend `targetPct`, le reste est redistribué proportionnellement aux poids
+ * actuels des autres lignes (à parts égales si elles sont toutes à zéro).
+ * L'utilisateur ne peut donc jamais produire une allocation invalide.
+ */
+function rebalance(lines: Line[], id: string, targetPct: number): Line[] {
+  const target = clampPct(targetPct);
+  const others = lines.filter((l) => l.id !== id);
+  if (others.length === 0) return lines.map((l) => ({ ...l, pct: 100 }));
+
+  const rest = 100 - target;
+  const othersTotal = others.reduce((s, l) => s + l.pct, 0);
+  return lines.map((l) => {
+    if (l.id === id) return { ...l, pct: round1(target) };
+    const share = othersTotal > 0 ? l.pct / othersTotal : 1 / others.length;
+    return { ...l, pct: round1(rest * share) };
+  });
+}
+
+/** Retire une ligne et redistribue sa part proportionnellement aux autres. */
+function removeAndRebalance(lines: Line[], id: string): Line[] {
+  const kept = lines.filter((l) => l.id !== id);
+  if (kept.length === 0) return kept;
+  const total = kept.reduce((s, l) => s + l.pct, 0);
+  return kept.map((l) => ({
+    ...l,
+    pct: round1(total > 0 ? (l.pct / total) * 100 : 100 / kept.length),
+  }));
+}
+
+/** Ajoute une ligne à ~10 % et ramène l'ensemble à 100 %. */
+function addAndRebalance(lines: Line[], line: Line): Line[] {
+  if (lines.length === 0) return [{ ...line, pct: 100 }];
+  const rest = 100 - NEW_LINE_PCT;
+  const total = lines.reduce((s, l) => s + l.pct, 0);
+  const scaled = lines.map((l) => ({
+    ...l,
+    pct: round1(total > 0 ? (l.pct / total) * rest : rest / lines.length),
+  }));
+  return [...scaled, { ...line, pct: NEW_LINE_PCT }];
+}
+
+const round1 = (v: number): number => Math.round(v * 10) / 10;
+
+/**
+ * Éditeur d'allocation « langage clair » (mission Seedow §3 — Personnaliser).
  *
- * L'utilisateur ajuste chaque ligne LIBREMENT et indépendamment — Seedow ne
- * rééquilibre pas à sa place et ne le rappelle pas à l'ordre sur un « 100 % ».
- * Le guidage se limite à ce qui compte pour lui : son impact, et le potentiel
- * qu'il vise selon qu'il concentre ou répartit. Les parts sont normalisées
- * silencieusement à l'enregistrement (le serveur mesure les vraies métriques).
+ * Pas de curseur à 0,1 % près ni de total à faire tomber juste : l'utilisateur
+ * renforce ou réduit une ligne par paliers, Seedow rééquilibre le reste et lui
+ * dit, en français, ce que ça change. Les pourcentages restent lisibles mais
+ * secondaires — les vraies métriques (risque, frais) sont recalculées côté
+ * serveur à l'enregistrement.
  */
 export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
   const { t } = useTranslation();
@@ -67,15 +121,14 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
         ticker: h.ticker,
         name: h.name,
         esgScore: h.esgScore,
-        pct: Math.round(h.allocationPct * 10) / 10,
+        pct: round1(h.allocationPct),
       })),
     [holdings],
   );
   const [lines, setLines] = useState<Line[]>(initial);
 
   // Resynchronise l'éditeur quand l'allocation RÉELLE change (ex. après un
-  // enregistrement), mais pas sur un simple rafraîchissement de cours : on se
-  // base sur une signature des parts, pas sur l'identité du tableau.
+  // enregistrement), mais pas sur un simple rafraîchissement de cours.
   const holdingsSig = useMemo(
     () => holdings.map((h) => `${h.id}:${Math.round(h.allocationPct * 10)}`).join("|"),
     [holdings],
@@ -90,30 +143,35 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
   const consequences = describeConsequences(baseline, current);
 
   // État courant en langage clair — le copilote parle même avant toute édition.
-  const impact = impactScore(current.impact).score;
-  const concentrated = current.maxWeight > CONCENTRATION_ALERT;
+  const impact = impactScore(current.impact);
+  const spread = diversificationBand(current.diversification);
+  const risk = perceivedRisk(current.diversification);
 
-  const activeCount = lines.filter((l) => l.pct > 0).length;
   const dirty = JSON.stringify(lines) !== JSON.stringify(initial);
-  const canSave = dirty && activeCount >= 1 && !saving;
+  const canSave = dirty && lines.length >= 1 && !saving;
 
-  // Curseurs INDÉPENDANTS : bouger une ligne ne touche pas les autres. On ne
-  // réoptimise pas, on ne force pas un total — Seedow répartit à l'enregistrement.
-  const setWeight = (id: string, pct: number) =>
-    setLines((ls) => ls.map((l) => (l.id === id ? { ...l, pct: clampPct(pct) } : l)));
-  const removeLine = (id: string) => setLines((ls) => ls.filter((l) => l.id !== id));
+  const bump = (id: string, delta: number) =>
+    setLines((ls) => {
+      const line = ls.find((l) => l.id === id);
+      if (!line) return ls;
+      return rebalance(ls, id, line.pct + delta);
+    });
+  const removeLine = (id: string) => setLines((ls) => removeAndRebalance(ls, id));
   const reset = () => setLines(initial);
   const addAsset = (a: PickedAsset) =>
     setLines((ls) =>
       ls.some((l) => l.id === a.id)
         ? ls
-        : [...ls, { id: a.id, ticker: a.ticker, name: a.name, esgScore: a.esgScore, pct: 10 }],
+        : addAndRebalance(ls, {
+            id: a.id,
+            ticker: a.ticker,
+            name: a.name,
+            esgScore: a.esgScore,
+            pct: NEW_LINE_PCT,
+          }),
     );
 
   const onSave = async () => {
-    // Normalisation robuste : on ne garde que les lignes positives, on ramène la
-    // somme à 1, on borne chaque poids à ≤ 1 et on arrondit — l'enregistrement ne
-    // peut jamais être bloqué par un total « imparfait ».
     const active = lines.filter((l) => l.pct > 0);
     const total = active.reduce((s, l) => s + l.pct, 0);
     if (active.length === 0 || total <= 0) {
@@ -145,39 +203,39 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
         <h2 className="text-lg font-semibold text-ink leading-tight">
           {t("portfolio_customizer.title")}
         </h2>
-        <p className="text-label text-ink-2 leading-relaxed">{t("portfolio_customizer.desc")}</p>
+        <p className="text-label text-ink-2 leading-relaxed">{t("portfolio_customizer.desc_v2")}</p>
       </div>
 
-      {/* Coup d'œil copilote — impact + potentiel visé, jamais de rappel « 100 % » */}
-      <div className="rounded-2xl border border-paper-3 bg-paper-2 p-4">
-        <div className="grid grid-cols-2 gap-3">
-          <GlanceStat
-            icon={<Leaf className="w-4 h-4" strokeWidth={1.8} aria-hidden />}
-            label={t("portfolio_glance.chip.impact")}
-            value={`${impact}/100`}
-            mint
-          />
-          <GlanceStat
-            icon={<Sparkles className="w-4 h-4" strokeWidth={1.8} aria-hidden />}
-            label={t("portfolio_customizer.potential_label")}
-            value={t(
-              concentrated
-                ? "portfolio_customizer.potential_concentrated"
-                : "portfolio_customizer.potential_balanced",
-            )}
-          />
-        </div>
-        {/* Ce que le potentiel implique, en une phrase — impact & bénéfice visé */}
-        <p className="mt-3 text-body-sm text-ink-2 leading-relaxed">
-          {t(
-            concentrated
-              ? "portfolio_customizer.benefit_concentrated"
-              : "portfolio_customizer.benefit_balanced",
-          )}
-        </p>
-        {/* Conséquences de la modification en cours (impact, concentration…) */}
-        {consequences.length > 0 && (
-          <ul className="mt-3 space-y-2 border-t border-paper-3 pt-3">
+      {/* Où j'en suis — trois repères en mots, le chiffre en second plan */}
+      <div className="grid grid-cols-3 gap-2">
+        <GlanceStat
+          icon={<Leaf className="w-4 h-4" strokeWidth={1.8} aria-hidden />}
+          label={t("portfolio_glance.chip.impact")}
+          value={t(`portfolio_customizer.impact_level.${impact.level}`)}
+          hint={`${impact.score}/100`}
+          mint
+        />
+        <GlanceStat
+          icon={<Scale className="w-4 h-4" strokeWidth={1.8} aria-hidden />}
+          label={t("portfolio_customizer.spread_label")}
+          value={t(`portfolio_glance.div.${spread.band}`)}
+          hint={t("portfolio_customizer.positions", { count: current.positions })}
+        />
+        <GlanceStat
+          icon={<Activity className="w-4 h-4" strokeWidth={1.8} aria-hidden />}
+          label={t("portfolio_customizer.risk_label")}
+          value={t(`portfolio_glance.risk.${risk}`)}
+          hint={t("portfolio_customizer.risk_hint")}
+        />
+      </div>
+
+      {/* Ce que ça change — uniquement après une modification */}
+      {consequences.length > 0 && (
+        <div className="rounded-2xl border border-paper-3 bg-paper-2 p-4">
+          <p className="text-tag uppercase tracking-[0.14em] font-semibold text-ink-3">
+            {t("portfolio_customizer.what_changes")}
+          </p>
+          <ul className="mt-2.5 space-y-2">
             {consequences.map((c) => (
               <li
                 key={c.key}
@@ -188,43 +246,66 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
               </li>
             ))}
           </ul>
-        )}
-      </div>
+        </div>
+      )}
 
-      {/* Lignes éditables — chaque curseur est indépendant */}
-      <ul className="space-y-4">
-        {lines.map((l) => (
-          <li key={l.id}>
-            <div className="flex items-baseline justify-between gap-3">
-              <div className="min-w-0">
-                <p className="text-body-sm font-semibold text-ink truncate">{l.name}</p>
-                <p className="text-tag text-ink-3 truncate">{l.ticker}</p>
-              </div>
-              <div className="flex items-center gap-3 flex-shrink-0">
-                <span className="font-value text-sm text-ink tabular-nums w-12 text-right">
-                  {formatPercent(l.pct / 100, lang, 0)}
-                </span>
+      {/* Une carte par ligne : réduire / renforcer par paliers */}
+      <ul className="space-y-3">
+        {lines.map((l) => {
+          const desc = describeWeight(l.pct / 100);
+          return (
+            <li key={l.id} className="rounded-2xl border border-paper-3 bg-paper p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="text-body-sm font-semibold text-ink truncate">{l.name}</p>
+                  <p className="text-tag text-ink-3 truncate">
+                    {t(`portfolio_customizer.share.${desc.band}`)}
+                    {desc.oneInN ? ` · ${t("portfolio_customizer.one_in", { n: desc.oneInN })}` : ""}
+                    {" · "}
+                    {formatPercent(l.pct / 100, lang, 0)}
+                  </p>
+                </div>
                 <button
                   type="button"
                   onClick={() => removeLine(l.id)}
                   aria-label={t("portfolio_customizer.remove")}
-                  className="text-ink-3 hover:text-rust transition-colors"
+                  className="text-ink-3 hover:text-rust transition-colors flex-shrink-0"
                 >
                   <Trash2 className="w-4 h-4" strokeWidth={1.8} aria-hidden />
                 </button>
               </div>
-            </div>
-            <Slider
-              className="mt-2.5"
-              value={[l.pct]}
-              min={0}
-              max={100}
-              step={1}
-              onValueChange={(v) => setWeight(l.id, v[0])}
-              aria-label={t("portfolio_customizer.weight_of", { name: l.name })}
-            />
-          </li>
-        ))}
+
+              {/* Barre de poids relative — un repère visuel, pas une cible */}
+              <div
+                className="mt-3 h-2 rounded-full bg-paper-2 overflow-hidden"
+                role="img"
+                aria-label={t("portfolio_customizer.weight_of", { name: l.name })}
+              >
+                <div
+                  className="h-full rounded-full bg-mint transition-all duration-200"
+                  style={{ width: `${l.pct}%` }}
+                />
+              </div>
+
+              <div className="mt-3 flex items-center gap-2">
+                <StepButton
+                  onClick={() => bump(l.id, -STEP)}
+                  disabled={l.pct <= 0}
+                  label={t("portfolio_customizer.decrease")}
+                  ariaLabel={t("portfolio_customizer.decrease_of", { name: l.name })}
+                  icon={<Minus className="w-4 h-4" strokeWidth={2} aria-hidden />}
+                />
+                <StepButton
+                  onClick={() => bump(l.id, STEP)}
+                  disabled={l.pct >= 100 || lines.length === 1}
+                  label={t("portfolio_customizer.increase")}
+                  ariaLabel={t("portfolio_customizer.increase_of", { name: l.name })}
+                  icon={<Plus className="w-4 h-4" strokeWidth={2} aria-hidden />}
+                />
+              </div>
+            </li>
+          );
+        })}
       </ul>
 
       {/* Ajouter — via le sélecteur d'actifs partagé */}
@@ -278,28 +359,58 @@ function toWeighted(l: Line): WeightedLine {
   return { id: l.id, esgScore: l.esgScore, weight: l.pct / 100 };
 }
 
+function StepButton({
+  onClick,
+  disabled,
+  label,
+  ariaLabel,
+  icon,
+}: {
+  onClick: () => void;
+  disabled: boolean;
+  label: string;
+  ariaLabel: string;
+  icon: ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={ariaLabel}
+      className="flex-1 h-10 rounded-full border border-paper-3 bg-paper-2 text-ink text-body-sm font-semibold hover:bg-paper-3/60 transition-colors disabled:opacity-35 disabled:cursor-not-allowed flex items-center justify-center gap-1.5"
+    >
+      {icon}
+      {label}
+    </button>
+  );
+}
+
 function GlanceStat({
   icon,
   label,
   value,
+  hint,
   mint = false,
 }: {
   icon: ReactNode;
   label: string;
   value: string;
+  hint?: string;
   mint?: boolean;
 }) {
   return (
-    <div className="rounded-xl border border-paper-3 bg-paper px-3.5 py-3">
+    <div className="rounded-xl border border-paper-3 bg-paper px-3 py-3">
       <div className="flex items-center gap-1.5 text-ink-3">
         {icon}
-        <span className="text-tag uppercase tracking-[0.14em] font-semibold">{label}</span>
+        <span className="text-tag uppercase tracking-[0.14em] font-semibold truncate">{label}</span>
       </div>
       <p
-        className={`mt-1.5 font-value text-lg leading-none ${mint ? "text-mint-ink" : "text-ink"}`}
+        className={`mt-1.5 text-body-sm font-semibold leading-tight ${mint ? "text-mint-ink" : "text-ink"}`}
       >
         {value}
       </p>
+      {hint && <p className="mt-0.5 text-tag text-ink-3 tabular-nums">{hint}</p>}
     </div>
   );
 }

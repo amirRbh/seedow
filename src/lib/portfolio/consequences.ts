@@ -10,7 +10,7 @@
  * une valeur de risque côté client.
  */
 
-import { diversificationBand } from "./plain-language";
+import { diversificationBand, perceivedRisk } from "./plain-language";
 
 export interface WeightedLine {
   id: string;
@@ -109,6 +109,21 @@ export function describeConsequences(before: LiteSnapshot, after: LiteSnapshot):
         ? "portfolio_customizer.consequence.diversification_up"
         : "portfolio_customizer.consequence.diversification_down",
       dir: improved ? "up" : "down",
+    });
+  }
+
+  // Risque RESSENTI — dérivé de la concentration seule, jamais présenté comme
+  // une volatilité chiffrée (la mesure serveur reste la référence).
+  const riskBefore = perceivedRisk(before.diversification);
+  const riskAfter = perceivedRisk(after.diversification);
+  if (riskBefore !== riskAfter) {
+    const order = { prudent: 0, modere: 1, dynamique: 2 } as const;
+    const up = order[riskAfter] > order[riskBefore];
+    out.push({
+      key: up
+        ? "portfolio_customizer.consequence.risk_up"
+        : "portfolio_customizer.consequence.risk_down",
+      dir: up ? "down" : "up",
     });
   }
 

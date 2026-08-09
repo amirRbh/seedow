@@ -1094,7 +1094,75 @@ const dataProvenanceEn = {
     "The share of your portfolio for which we have a real, measured data point. The rest isn't measured yet — and it isn't estimated either.",
 };
 
+/** Onglet « Affiner » v2 — langage clair, paliers, zéro pourcentage à viser. */
+const customizerV2Fr = {
+  desc_v2:
+    "Renforcez ou réduisez chaque ligne par petits pas. Seedow rééquilibre le reste et vous dit, en français, ce que ça change.",
+  spread_label: "Répartition",
+  risk_label: "Risque ressenti",
+  risk_hint: "Estimé sur la répartition",
+  positions_one: "{{count}} ligne",
+  positions_other: "{{count}} lignes",
+  what_changes: "Ce que ça change",
+  increase: "Renforcer",
+  decrease: "Réduire",
+  increase_of: "Renforcer {{name}}",
+  decrease_of: "Réduire {{name}}",
+  one_in: "environ 1 € sur {{n}}",
+  share: {
+    petite: "Petite part",
+    moyenne: "Part moyenne",
+    importante: "Part importante",
+    dominante: "Part dominante",
+  },
+  impact_level: { modere: "Modéré", solide: "Solide", fort: "Fort" },
+  consequence: {
+    risk_up: "Votre portefeuille devient un peu plus sensible aux variations de marché.",
+    risk_down: "Votre portefeuille devient un peu moins sensible aux variations de marché.",
+  },
+};
+const customizerV2En = {
+  desc_v2:
+    "Boost or trim each holding in small steps. Seedow rebalances the rest and tells you, in plain words, what changes.",
+  spread_label: "Spread",
+  risk_label: "Perceived risk",
+  risk_hint: "Estimated from spread",
+  positions_one: "{{count}} holding",
+  positions_other: "{{count}} holdings",
+  what_changes: "What this changes",
+  increase: "Boost",
+  decrease: "Trim",
+  increase_of: "Boost {{name}}",
+  decrease_of: "Trim {{name}}",
+  one_in: "about 1 € in {{n}}",
+  share: {
+    petite: "Small share",
+    moyenne: "Medium share",
+    importante: "Large share",
+    dominante: "Dominant share",
+  },
+  impact_level: { modere: "Moderate", solide: "Solid", fort: "Strong" },
+  consequence: {
+    risk_up: "Your portfolio becomes a bit more sensitive to market swings.",
+    risk_down: "Your portfolio becomes a bit less sensitive to market swings.",
+  },
+};
+
+const refinerPlainFr = {
+  cost_euros: "≈ {{euros}} €",
+  cost_neutral: "≈ 0 €",
+  cost_lost_per_1000: "de moins par an pour 1 000 € investis",
+  cost_gained_per_1000: "de plus par an pour 1 000 € investis",
+};
+const refinerPlainEn = {
+  cost_euros: "≈ €{{euros}}",
+  cost_neutral: "≈ €0",
+  cost_lost_per_1000: "less per year per €1,000 invested",
+  cost_gained_per_1000: "more per year per €1,000 invested",
+};
+
 const mergedFr = deepMerge(fr, {
+  allocation_refiner: refinerPlainFr,
   landing: { rayon_x: rayonXFr },
   empty_portfolio: { build_own: "Construire mon portefeuille moi-même" },
   data_provenance: dataProvenanceFr,
@@ -1112,7 +1180,7 @@ const mergedFr = deepMerge(fr, {
   comparatif_panel: comparatifFr,
   post_sim_fork: postSimForkFr,
   portfolio_glance: portfolioGlanceFr,
-  portfolio_customizer: portfolioCustomizerFr,
+  portfolio_customizer: deepMerge(portfolioCustomizerFr, customizerV2Fr),
 });
 const mergedEn = deepMerge(en, {
   landing: { rayon_x: rayonXEn },
@@ -1132,7 +1200,8 @@ const mergedEn = deepMerge(en, {
   comparatif_panel: comparatifEn,
   post_sim_fork: postSimForkEn,
   portfolio_glance: portfolioGlanceEn,
-  portfolio_customizer: portfolioCustomizerEn,
+  portfolio_customizer: deepMerge(portfolioCustomizerEn, customizerV2En),
+  allocation_refiner: refinerPlainEn,
 });
 
 writeFileSync("src/i18n/locales/fr.json", JSON.stringify(mergedFr, null, 2) + "\n", "utf-8");

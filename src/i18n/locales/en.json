@@ -1710,7 +1710,11 @@
     "top_after": "Top positions — after",
     "removed_note": "Red = positions that would disappear.",
     "added_note": "Green = new positions added.",
-    "simulation_unavailable": "Simulation unavailable."
+    "simulation_unavailable": "Simulation unavailable.",
+    "cost_euros": "≈ €{{euros}}",
+    "cost_neutral": "≈ €0",
+    "cost_lost_per_1000": "less per year per €1,000 invested",
+    "cost_gained_per_1000": "more per year per €1,000 invested"
   },
   "holding_detail": {
     "price_evolution": "Price evolution",
@@ -2597,7 +2601,9 @@
       "diversification_up": "Your diversification improves.",
       "diversification_down": "Your diversification decreases.",
       "impact_up": "Your impact goes up (about +{{pts}} points out of 100).",
-      "impact_down": "Your impact goes down (about −{{pts}} points out of 100)."
+      "impact_down": "Your impact goes down (about −{{pts}} points out of 100).",
+      "risk_up": "Your portfolio becomes a bit more sensitive to market swings.",
+      "risk_down": "Your portfolio becomes a bit less sensitive to market swings."
     },
     "remove": "Remove this line",
     "weight_of": "Weight of {{name}}",
@@ -2616,7 +2622,30 @@
     "potential_balanced": "Steadier",
     "benefit_concentrated": "Betting more on a few lines aims for higher upside — risk goes up too.",
     "benefit_balanced": "Spreading across several lines aims for a steadier ride — calmer upside, gentler risk.",
-    "need_one": "Keep at least one investment to save."
+    "need_one": "Keep at least one investment to save.",
+    "desc_v2": "Boost or trim each holding in small steps. Seedow rebalances the rest and tells you, in plain words, what changes.",
+    "spread_label": "Spread",
+    "risk_label": "Perceived risk",
+    "risk_hint": "Estimated from spread",
+    "positions_one": "{{count}} holding",
+    "positions_other": "{{count}} holdings",
+    "what_changes": "What this changes",
+    "increase": "Boost",
+    "decrease": "Trim",
+    "increase_of": "Boost {{name}}",
+    "decrease_of": "Trim {{name}}",
+    "one_in": "about 1 € in {{n}}",
+    "share": {
+      "petite": "Small share",
+      "moyenne": "Medium share",
+      "importante": "Large share",
+      "dominante": "Dominant share"
+    },
+    "impact_level": {
+      "modere": "Moderate",
+      "solide": "Solid",
+      "fort": "Strong"
+    }
   },
   "asset_picker": {
     "title": "Add an investment",
