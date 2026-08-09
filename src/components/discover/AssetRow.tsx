@@ -71,7 +71,7 @@ export function AssetRow({ asset, index, onOpen }: Props) {
               ⚠
             </span>
           )}
-          ESG {asset.overall_esg_score.toFixed(1)}
+          {t("discover.row.impact")} {asset.overall_esg_score.toFixed(1)}/10
         </p>
       </div>
 

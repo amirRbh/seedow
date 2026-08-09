@@ -631,26 +631,27 @@
     "row": {
       "risk": "Risk",
       "ter": "Fees",
+      "impact": "Impact",
       "price_unavailable": "Price unavailable"
     },
     "filters": {
       "category": "Category",
       "region": "Dominant region",
-      "risk": "Max risk (SRRI)",
-      "risk_hint": "Includes all assets with risk ≤ {{value}}/7.",
-      "ter": "Max ongoing fees",
-      "ter_hint": "Annual TER ≤ {{value}} %.",
-      "esg": "Minimum ESG score",
-      "esg_hint": "Overall score ≥ {{value}}/10."
+      "risk": "Max risk",
+      "risk_hint": "Includes all assets with risk ≤ {{value}}/7 (SRRI scale).",
+      "ter": "Max annual fees",
+      "ter_hint": "Annual fees ≤ {{value}} % (TER).",
+      "esg": "Minimum impact",
+      "esg_hint": "Overall impact score ≥ {{value}}/10."
     },
     "sort": {
       "label": "Sort",
       "default": "Relevance",
-      "esg_desc": "ESG ↓",
-      "ter_asc": "Fees ↑",
-      "price_asc": "Price ↑",
-      "price_desc": "Price ↓",
-      "name_asc": "A → Z"
+      "esg_desc": "Best impact first",
+      "ter_asc": "Lowest fees first",
+      "price_asc": "Price low to high",
+      "price_desc": "Price high to low",
+      "name_asc": "Name (A → Z)"
     },
     "intents": {
       "eyebrow": "I'm looking for…",
