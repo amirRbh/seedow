@@ -1200,7 +1200,8 @@ const mergedEn = deepMerge(en, {
   comparatif_panel: comparatifEn,
   post_sim_fork: postSimForkEn,
   portfolio_glance: portfolioGlanceEn,
-  portfolio_customizer: portfolioCustomizerEn,
+  portfolio_customizer: deepMerge(portfolioCustomizerEn, customizerV2En),
+  allocation_refiner: refinerPlainEn,
 });
 
 writeFileSync("src/i18n/locales/fr.json", JSON.stringify(mergedFr, null, 2) + "\n", "utf-8");
