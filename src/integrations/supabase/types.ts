@@ -867,6 +867,7 @@ export type Database = {
           id: string
           onboarding_completed: boolean
           public_handle: string | null
+          simulation_ack_at: string | null
           theme: string | null
           updated_at: string
           view_mode: string | null
@@ -879,6 +880,7 @@ export type Database = {
           id: string
           onboarding_completed?: boolean
           public_handle?: string | null
+          simulation_ack_at?: string | null
           theme?: string | null
           updated_at?: string
           view_mode?: string | null
@@ -891,6 +893,7 @@ export type Database = {
           id?: string
           onboarding_completed?: boolean
           public_handle?: string | null
+          simulation_ack_at?: string | null
           theme?: string | null
           updated_at?: string
           view_mode?: string | null
