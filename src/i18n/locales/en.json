@@ -1857,7 +1857,28 @@
     "downside_you": "Your portfolio",
     "downside_bench": "{{bench}}",
     "downside_note": "Proportional estimate based on volatilities, not a forecast. A less volatile portfolio usually falls less — it does not never fall.",
-    "window_note": "Expected returns estimated on the real price history available (rolling 2-year window), with capped James-Stein shrinkage anchored per asset class. A short window overstates recently strong asset classes."
+    "window_note": "Expected returns estimated on the real price history available (rolling 2-year window), with capped James-Stein shrinkage anchored per asset class. A short window overstates recently strong asset classes.",
+    "verdict": {
+      "title": "At a glance",
+      "vs": "vs {{bench}}",
+      "impact": "Impact",
+      "performance": "Performance",
+      "risk": "Risk",
+      "fees": "Fees",
+      "impact_better": "better",
+      "impact_similar": "similar",
+      "impact_worse": "lower",
+      "perf_better": "higher",
+      "perf_similar": "similar",
+      "perf_worse": "lower",
+      "risk_lower": "lower",
+      "risk_similar": "comparable",
+      "risk_higher": "higher",
+      "fees_lower": "lower",
+      "fees_similar": "comparable",
+      "fees_higher": "higher",
+      "na": "n/a"
+    }
   },
   "market_freshness": {
     "stale_title": "Market prices a bit old",

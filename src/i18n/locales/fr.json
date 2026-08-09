@@ -1839,7 +1839,28 @@
     "downside_you": "Ton portefeuille",
     "downside_bench": "{{bench}}",
     "downside_note": "Estimation proportionnelle aux volatilités, pas une prévision. Un portefeuille moins volatil baisse en général moins fort — il ne baisse pas jamais.",
-    "window_note": "Rendements attendus estimés sur l'historique de cours réel disponible (fenêtre glissante de 2 ans), avec shrinkage de James-Stein plafonné et ancrage par classe d'actifs. Une fenêtre courte surestime les classes récemment porteuses."
+    "window_note": "Rendements attendus estimés sur l'historique de cours réel disponible (fenêtre glissante de 2 ans), avec shrinkage de James-Stein plafonné et ancrage par classe d'actifs. Une fenêtre courte surestime les classes récemment porteuses.",
+    "verdict": {
+      "title": "En un coup d'œil",
+      "vs": "vs {{bench}}",
+      "impact": "Impact",
+      "performance": "Performance",
+      "risk": "Risque",
+      "fees": "Frais",
+      "impact_better": "meilleur",
+      "impact_similar": "similaire",
+      "impact_worse": "plus faible",
+      "perf_better": "supérieure",
+      "perf_similar": "similaire",
+      "perf_worse": "inférieure",
+      "risk_lower": "plus faible",
+      "risk_similar": "comparable",
+      "risk_higher": "plus élevé",
+      "fees_lower": "inférieurs",
+      "fees_similar": "comparables",
+      "fees_higher": "supérieurs",
+      "na": "n.d."
+    }
   },
   "market_freshness": {
     "stale_title": "Prix de marché un peu anciens",
