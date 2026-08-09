@@ -16,6 +16,7 @@ import { ComparatifPanel } from "@/components/portfolio/ComparatifPanel";
 import { AllocationRefiner } from "@/components/portfolio/AllocationRefiner";
 import { PortfolioAtAGlance } from "@/components/portfolio/PortfolioAtAGlance";
 import { PortfolioCustomizer } from "@/components/portfolio/PortfolioCustomizer";
+import { ObjectivesTeaser } from "@/components/portfolio/ObjectivesTeaser";
 import { ExploreSection } from "@/components/dashboard/ExploreSection";
 import { WatchlistCard } from "@/components/dashboard/WatchlistCard";
 import { VoteTeaserCard } from "@/components/vote/VoteTeaserCard";
@@ -294,6 +295,11 @@ function Portfolio() {
               )}
             </TabsContent>
           </Tabs>
+        </section>
+
+        {/* Objectifs adossés à ce portefeuille (analyse UX §06) : leur foyer. */}
+        <section className="px-5 pt-8">
+          <ObjectivesTeaser />
         </section>
 
         {/* Réveil, Vote, Watchlist — conséquences de détenir (analyse UX §04/§05).

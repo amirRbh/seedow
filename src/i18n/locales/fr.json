@@ -554,7 +554,16 @@
     "refiner_disclosure": "Arbitrages avancés",
     "affiner_disclaimer": "Simulation pédagogique sur un portefeuille virtuel. Les écarts affichés sont la conséquence chiffrée de tes propres choix : Seedow ne formule aucune recommandation personnalisée, n'exécute aucune transaction et n'est ni PSI ni CIF.",
     "comparatif_promoted": "Comparer à un fonds classique",
-    "compromis": "Ce réglage privilégie l'impact. Il peut coûter un peu de rendement ou ajouter du risque — c'est ton arbitrage, pas une recommandation."
+    "compromis": "Ce réglage privilégie l'impact. Il peut coûter un peu de rendement ou ajouter du risque — c'est ton arbitrage, pas une recommandation.",
+    "goals": {
+      "title": "Mes objectifs",
+      "empty": "Donne un cap à ton épargne — retraite, achat, études…",
+      "empty_cta": "Créer un objectif",
+      "count_one": "{{count}} objectif suivi",
+      "count_other": "{{count}} objectifs suivis",
+      "next": "Prochain : {{name}}",
+      "see_all": "Voir mes objectifs"
+    }
   },
   "objectives": {
     "meta_title": "Objectifs — seedow",
