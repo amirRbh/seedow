@@ -114,6 +114,42 @@ export interface PortfolioGlance {
   impact: ImpactAssessment | null;
 }
 
+/**
+ * Lecture « part d'une ligne » en langage débutant (onglet Affiner).
+ *
+ * Traduit un poids (0..1) en une bande qualitative + un équivalent concret
+ * « environ 1 € sur N », le repère le plus parlant pour quelqu'un qui n'a
+ * jamais manipulé de pourcentages. `oneInN` est null en dessous de 0,5 % :
+ * annoncer « 1 € sur 300 » n'aide personne.
+ */
+export type WeightBand = "petite" | "moyenne" | "importante" | "dominante";
+
+export interface WeightDescription {
+  band: WeightBand;
+  /** Poids réel utilisé (0..1). */
+  weight: number;
+  /** Dénominateur de l'équivalent « 1 € sur N », ou null si trop petit. */
+  oneInN: number | null;
+}
+
+export function describeWeight(weight: number): WeightDescription {
+  const w = Number.isFinite(weight) ? Math.min(1, Math.max(0, weight)) : 0;
+  const band: WeightBand = w >= 0.4 ? "dominante" : w >= 0.2 ? "importante" : w >= 0.08 ? "moyenne" : "petite";
+  const oneInN = w >= 0.005 ? Math.round(1 / w) : null;
+  return { band, weight: w, oneInN };
+}
+
+/**
+ * Risque « ressenti » dérivé UNIQUEMENT de la concentration (1 − HHI) — utile
+ * pendant l'édition, où la volatilité réelle n'est pas encore recalculée. Ce
+ * n'est jamais présenté comme une volatilité : la mesure serveur reste la
+ * seule source de vérité chiffrée.
+ */
+export function perceivedRisk(diversification: number): RiskLevel {
+  const d = Number.isFinite(diversification) ? Math.min(1, Math.max(0, diversification)) : 0;
+  return d >= 0.8 ? "prudent" : d >= 0.6 ? "modere" : "dynamique";
+}
+
 export function portfolioGlance(metrics: GlanceMetrics | null | undefined): PortfolioGlance {
   if (!metrics) return { risk: null, diversification: null, fees: null, impact: null };
   return {
