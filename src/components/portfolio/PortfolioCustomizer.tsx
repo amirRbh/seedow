@@ -205,7 +205,7 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
           }),
     );
 
-  const onSave = async () => {
+  const persist = async () => {
     const active = lines.filter((l) => l.pct > 0);
     const total = active.reduce((s, l) => s + l.pct, 0);
     if (active.length === 0 || total <= 0) {
@@ -231,6 +231,28 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
     }
   };
 
+  // Première sauvegarde : on fait reconnaître explicitement le cadre (simulation,
+  // aucune recommandation personnalisée) avant d'enregistrer quoi que ce soit.
+  const onSave = () => {
+    if (ackNeeded) {
+      setAckChecked(false);
+      setAckOpen(true);
+      return;
+    }
+    void persist();
+  };
+
+  const confirmAck = async () => {
+    setAckOpen(false);
+    try {
+      await sendAck({});
+      setAckNeeded(false);
+    } catch {
+      /* non bloquant : on n'empêche pas l'utilisateur d'enregistrer ses choix */
+    }
+    void persist();
+  };
+
   return (
     <div className="space-y-5">
       <div className="space-y-1">
@@ -239,6 +261,7 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
         </h2>
         <p className="text-label text-ink-2 leading-relaxed">{t("portfolio_customizer.desc_v2")}</p>
       </div>
+
 
       {/* Où j'en suis — trois repères en mots, le chiffre en second plan */}
       <div className="grid grid-cols-3 gap-2">
