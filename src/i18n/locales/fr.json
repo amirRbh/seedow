@@ -631,26 +631,27 @@
     "row": {
       "risk": "Risque",
       "ter": "Frais",
+      "impact": "Impact",
       "price_unavailable": "Cours indisponible"
     },
     "filters": {
       "category": "Catégorie",
       "region": "Région dominante",
-      "risk": "Risque maximum (SRRI)",
-      "risk_hint": "Inclut tous les actifs de risque ≤ {{value}}/7.",
-      "ter": "Frais courants max",
-      "ter_hint": "TER annuel ≤ {{value}} %.",
-      "esg": "Score ESG minimum",
-      "esg_hint": "Score global ≥ {{value}}/10."
+      "risk": "Risque maximum",
+      "risk_hint": "Inclut tous les actifs de risque ≤ {{value}}/7 (échelle SRRI).",
+      "ter": "Frais annuels max",
+      "ter_hint": "Frais annuels ≤ {{value}} % (TER).",
+      "esg": "Impact minimum",
+      "esg_hint": "Score d'impact global ≥ {{value}}/10."
     },
     "sort": {
-      "label": "Tri",
+      "label": "Trier",
       "default": "Pertinence",
-      "esg_desc": "ESG ↓",
-      "ter_asc": "Frais ↑",
-      "price_asc": "Prix ↑",
-      "price_desc": "Prix ↓",
-      "name_asc": "A → Z"
+      "esg_desc": "Meilleur impact d'abord",
+      "ter_asc": "Frais les plus bas",
+      "price_asc": "Prix croissant",
+      "price_desc": "Prix décroissant",
+      "name_asc": "Nom (A → Z)"
     },
     "intents": {
       "eyebrow": "Je cherche…",
