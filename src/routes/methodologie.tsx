@@ -825,7 +825,17 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
           </div>
         </div>
       </details>
+
+      {/* Cadre : méthode publique et identique pour tous — pas de conseil personnalisé. */}
+      <p className="mt-8 text-body-sm text-ink-2 leading-relaxed border-t border-paper-3 pt-6">
+        Cette méthode est publique et appliquée à l'identique pour tout le monde. L'optimiseur ne
+        tient compte que des préférences que tu déclares dans l'application : il n'est adapté ni à
+        ta situation patrimoniale, ni à tes revenus, ni à ta fiscalité. Les portefeuilles affichés
+        sont des simulations sur des données de marché réelles, pas des recommandations
+        d'investissement personnalisées — Seedow n'est ni PSI ni CIF.
+      </p>
     </section>
+
   );
 }
 

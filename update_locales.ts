@@ -1153,13 +1153,56 @@ const refinerPlainFr = {
   cost_neutral: "≈ 0 €",
   cost_lost_per_1000: "de moins par an pour 1 000 € investis",
   cost_gained_per_1000: "de plus par an pour 1 000 € investis",
+  // Libellés neutres : on décrit une simulation, on ne conseille aucune action.
+  desc: "Voici ce que chaque contrainte coûte ou rapporte dans la simulation. À toi de décider ce qui compte pour toi.",
+  keep: "Conserver cette contrainte",
+  lift: "Simuler sans cette contrainte",
+  accepted: "Contrainte conservée dans la simulation.",
+  to_lift: "Contrainte levée dans la simulation.",
+  after_label: "Sans la contrainte — {{label}}",
+  optimizer_note:
+    "Résultat mécanique de l'optimiseur sous les contraintes posées — ni une recommandation, ni une incitation à investir.",
 };
 const refinerPlainEn = {
   cost_euros: "≈ €{{euros}}",
   cost_neutral: "≈ €0",
   cost_lost_per_1000: "less per year per €1,000 invested",
   cost_gained_per_1000: "more per year per €1,000 invested",
+  desc: "Here is what each constraint costs or adds in the simulation. You decide what matters to you.",
+  keep: "Keep this constraint",
+  lift: "Simulate without this constraint",
+  accepted: "Constraint kept in the simulation.",
+  to_lift: "Constraint lifted in the simulation.",
+  after_label: "Without the constraint — {{label}}",
+  optimizer_note:
+    "Mechanical output of the optimiser under the constraints you set — not a recommendation, nor an invitation to invest.",
 };
+
+const simulationAckFr = {
+  title: "Avant d'enregistrer",
+  body: "Seedow est un outil de simulation pédagogique. Le portefeuille est virtuel, aucune transaction n'est exécutée, et Seedow n'est ni prestataire de services d'investissement ni conseiller en investissements financiers.",
+  checkbox:
+    "Je comprends qu'il s'agit d'une simulation et que Seedow ne me recommande aucun investissement.",
+  cancel: "Annuler",
+  confirm: "Je comprends, enregistrer",
+};
+const simulationAckEn = {
+  title: "Before you save",
+  body: "Seedow is an educational simulation tool. The portfolio is virtual, no transaction is executed, and Seedow is neither an investment services provider nor a financial investment adviser.",
+  checkbox: "I understand this is a simulation and that Seedow recommends no investment to me.",
+  cancel: "Cancel",
+  confirm: "I understand, save",
+};
+
+const portfolioDisclaimerFr = {
+  affiner_disclaimer:
+    "Simulation pédagogique sur un portefeuille virtuel. Les écarts affichés sont la conséquence chiffrée de tes propres choix : Seedow ne formule aucune recommandation personnalisée, n'exécute aucune transaction et n'est ni PSI ni CIF.",
+};
+const portfolioDisclaimerEn = {
+  affiner_disclaimer:
+    "Educational simulation on a virtual portfolio. The figures shown are the measured consequence of your own choices: Seedow makes no personalised recommendation, executes no transaction, and is neither an investment services provider nor a financial investment adviser.",
+};
+
 
 const mergedFr = deepMerge(fr, {
   allocation_refiner: refinerPlainFr,
@@ -1170,7 +1213,9 @@ const mergedFr = deepMerge(fr, {
   blank_builder: blankBuilderFr,
   dashboard: dashboardFr,
   asset_detail: assetDetailFr,
-  portfolio: portfolioFr,
+  portfolio: deepMerge(portfolioFr, portfolioDisclaimerFr),
+  simulation_ack: simulationAckFr,
+
   growth_comparison: growthComparisonFr,
   rail_nav: { vote: "Le Vote", wrapped: "Bilan", reveil: "Le Réveil" },
   bottom_nav: { reveil: "Réveil", vote: "Le Vote", profile: "Profil" },
@@ -1190,7 +1235,9 @@ const mergedEn = deepMerge(en, {
   blank_builder: blankBuilderEn,
   dashboard: dashboardEn,
   asset_detail: assetDetailEn,
-  portfolio: portfolioEn,
+  portfolio: deepMerge(portfolioEn, portfolioDisclaimerEn),
+  simulation_ack: simulationAckEn,
+
   growth_comparison: growthComparisonEn,
   rail_nav: { vote: "The Vote", wrapped: "Recap", reveil: "Morning" },
   bottom_nav: { reveil: "Morning", vote: "The Vote", profile: "Profile" },

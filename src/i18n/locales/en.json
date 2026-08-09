@@ -541,7 +541,8 @@
     "tab_refine_simple": "Adjust",
     "badges_disclosure": "Your milestones",
     "comparatif_disclosure": "Compare to a classic ETF",
-    "refiner_disclosure": "Advanced trade-offs"
+    "refiner_disclosure": "Advanced trade-offs",
+    "affiner_disclaimer": "Educational simulation on a virtual portfolio. The figures shown are the measured consequence of your own choices: Seedow makes no personalised recommendation, executes no transaction, and is neither an investment services provider nor a financial investment adviser."
   },
   "objectives": {
     "meta_title": "Goals — seedow",
@@ -1689,7 +1690,7 @@
     "empty": "No notable trade-off detected for this portfolio.",
     "eyebrow": "Preference phase",
     "title": "Refine your allocation",
-    "desc": "Every constraint you set has a measurable cost. Keep it if it matters more than the return it costs you, lift it otherwise. Your choices feed our model.",
+    "desc": "Here is what each constraint costs or adds in the simulation. You decide what matters to you.",
     "expected_return": "Expected return",
     "volatility": "Volatility",
     "esg_score": "ESG score",
@@ -1699,12 +1700,12 @@
     "neutral": "neutral impact",
     "show_before_after": "View before / after",
     "hide_before_after": "Hide before / after",
-    "keep": "Keep",
-    "lift": "Lift",
-    "accepted": "Kept. Trade-off accepted.",
-    "to_lift": "Marked to lift. We'll help you recalculate.",
+    "keep": "Keep this constraint",
+    "lift": "Simulate without this constraint",
+    "accepted": "Constraint kept in the simulation.",
+    "to_lift": "Constraint lifted in the simulation.",
     "before_current": "Before — current",
-    "after_label": "After — {{label}}",
+    "after_label": "Without the constraint — {{label}}",
     "by_class": "By asset class",
     "top_before": "Top positions — before",
     "top_after": "Top positions — after",
@@ -1714,7 +1715,8 @@
     "cost_euros": "≈ €{{euros}}",
     "cost_neutral": "≈ €0",
     "cost_lost_per_1000": "less per year per €1,000 invested",
-    "cost_gained_per_1000": "more per year per €1,000 invested"
+    "cost_gained_per_1000": "more per year per €1,000 invested",
+    "optimizer_note": "Mechanical output of the optimiser under the constraints you set — not a recommendation, nor an invitation to invest."
   },
   "holding_detail": {
     "price_evolution": "Price evolution",
@@ -2684,5 +2686,12 @@
   "data_provenance": {
     "coverage_label": "What does coverage mean?",
     "coverage_tooltip": "The share of your portfolio for which we have a real, measured data point. The rest isn't measured yet — and it isn't estimated either."
+  },
+  "simulation_ack": {
+    "title": "Before you save",
+    "body": "Seedow is an educational simulation tool. The portfolio is virtual, no transaction is executed, and Seedow is neither an investment services provider nor a financial investment adviser.",
+    "checkbox": "I understand this is a simulation and that Seedow recommends no investment to me.",
+    "cancel": "Cancel",
+    "confirm": "I understand, save"
   }
 }

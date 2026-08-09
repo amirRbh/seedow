@@ -87,6 +87,30 @@ function CguPage() {
         </section>
 
         <section>
+          <h2 className="font-value text-xl text-ink">
+            4 bis. Outils de simulation et d'ajustement d'allocation
+          </h2>
+          <p className="mt-2">
+            L'application met à disposition des outils permettant d'ajuster une allocation simulée
+            (renforcer ou réduire une ligne, lever ou conserver une contrainte) et d'en mesurer les
+            conséquences chiffrées. Les résultats affichés, y compris lorsqu'ils désignent des
+            actifs identifiés, sont la sortie mécanique d'un modèle d'optimisation appliqué de
+            manière identique à tous les utilisateurs, à partir des seules préférences déclarées
+            dans l'application.
+          </p>
+          <p className="mt-2">
+            Ils ne constituent pas une recommandation personnalisée d'investissement au sens de la
+            réglementation applicable, ne sont pas présentés comme adaptés à ta situation
+            patrimoniale, financière ou fiscale, et ne tiennent compte ni de tes revenus, ni de ton
+            patrimoine, ni de tes engagements. Seedow n'est ni prestataire de services
+            d'investissement (PSI), ni conseiller en investissements financiers (CIF), et
+            n'exécute aucun ordre. Pour une recommandation adaptée à ta situation, il convient de
+            consulter un professionnel habilité.
+          </p>
+        </section>
+
+
+        <section>
           <h2 className="font-value text-xl text-ink">5. Absence de garantie de performance</h2>
           <p className="mt-2">
             Les performances, projections et simulations affichées dans l'application sont fondées

@@ -18,6 +18,19 @@ import { formatPercent } from "@/lib/format";
 import type { ActiveHolding } from "@/hooks/useActivePortfolio";
 import { saveCustomPortfolio } from "@/lib/portfolio/customize.functions";
 import {
+  acknowledgeSimulation,
+  getSimulationAck,
+} from "@/lib/portfolio/disclaimer.functions";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+import {
   describeConsequences,
   liteSnapshot,
   type ChangeDir,
@@ -111,8 +124,29 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
   const { t } = useTranslation();
   const { lang } = useLang();
   const save = useServerFn(saveCustomPortfolio);
+  const fetchAck = useServerFn(getSimulationAck);
+  const sendAck = useServerFn(acknowledgeSimulation);
   const [saving, setSaving] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
+  // Acquittement « simulation, pas de recommandation » — demandé une seule fois.
+  const [ackNeeded, setAckNeeded] = useState<boolean | null>(null);
+  const [ackOpen, setAckOpen] = useState(false);
+  const [ackChecked, setAckChecked] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    void fetchAck({})
+      .then((r) => {
+        if (!cancelled) setAckNeeded(!r.acknowledgedAt);
+      })
+      .catch(() => {
+        if (!cancelled) setAckNeeded(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const initial: Line[] = useMemo(
     () =>
@@ -171,7 +205,7 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
           }),
     );
 
-  const onSave = async () => {
+  const persist = async () => {
     const active = lines.filter((l) => l.pct > 0);
     const total = active.reduce((s, l) => s + l.pct, 0);
     if (active.length === 0 || total <= 0) {
@@ -197,6 +231,28 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
     }
   };
 
+  // Première sauvegarde : on fait reconnaître explicitement le cadre (simulation,
+  // aucune recommandation personnalisée) avant d'enregistrer quoi que ce soit.
+  const onSave = () => {
+    if (ackNeeded) {
+      setAckChecked(false);
+      setAckOpen(true);
+      return;
+    }
+    void persist();
+  };
+
+  const confirmAck = async () => {
+    setAckOpen(false);
+    try {
+      await sendAck({});
+      setAckNeeded(false);
+    } catch {
+      /* non bloquant : on n'empêche pas l'utilisateur d'enregistrer ses choix */
+    }
+    void persist();
+  };
+
   return (
     <div className="space-y-5">
       <div className="space-y-1">
@@ -205,6 +261,7 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
         </h2>
         <p className="text-label text-ink-2 leading-relaxed">{t("portfolio_customizer.desc_v2")}</p>
       </div>
+
 
       {/* Où j'en suis — trois repères en mots, le chiffre en second plan */}
       <div className="grid grid-cols-3 gap-2">
@@ -351,6 +408,43 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
         excludeIds={lines.map((l) => l.id)}
         onPick={addAsset}
       />
+
+      {/* Reconnaissance unique du cadre : simulation, pas de recommandation. */}
+      <Dialog open={ackOpen} onOpenChange={setAckOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t("simulation_ack.title")}</DialogTitle>
+            <DialogDescription>{t("simulation_ack.body")}</DialogDescription>
+          </DialogHeader>
+          <label className="flex items-start gap-3 text-body-sm text-ink leading-relaxed cursor-pointer">
+            <input
+              type="checkbox"
+              checked={ackChecked}
+              onChange={(e) => setAckChecked(e.target.checked)}
+              className="mt-0.5 w-4 h-4 shrink-0 accent-ink"
+            />
+            <span>{t("simulation_ack.checkbox")}</span>
+          </label>
+          <DialogFooter>
+            <button
+              type="button"
+              onClick={() => setAckOpen(false)}
+              className="h-11 px-4 rounded-full border border-paper-3 text-ink text-body-sm font-semibold hover:bg-paper-2 transition-colors"
+            >
+              {t("simulation_ack.cancel")}
+            </button>
+            <button
+              type="button"
+              onClick={() => void confirmAck()}
+              disabled={!ackChecked}
+              className="h-11 px-5 rounded-full bg-ink text-paper text-body-sm font-semibold hover:opacity-90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              {t("simulation_ack.confirm")}
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
     </div>
   );
 }
