@@ -112,6 +112,21 @@ export function describeConsequences(before: LiteSnapshot, after: LiteSnapshot):
     });
   }
 
+  // Risque RESSENTI — dérivé de la concentration seule, jamais présenté comme
+  // une volatilité chiffrée (la mesure serveur reste la référence).
+  const riskBefore = perceivedRisk(before.diversification);
+  const riskAfter = perceivedRisk(after.diversification);
+  if (riskBefore !== riskAfter) {
+    const order = { prudent: 0, modere: 1, dynamique: 2 } as const;
+    const up = order[riskAfter] > order[riskBefore];
+    out.push({
+      key: up
+        ? "portfolio_customizer.consequence.risk_up"
+        : "portfolio_customizer.consequence.risk_down",
+      dir: up ? "down" : "up",
+    });
+  }
+
   // Impact — variation notable de l'impact moyen pondéré.
   const dImpact = after.impact - before.impact;
   if (dImpact > IMPACT_EPSILON) {
