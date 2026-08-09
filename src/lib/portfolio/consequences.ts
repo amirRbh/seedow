@@ -10,7 +10,7 @@
  * une valeur de risque côté client.
  */
 
-import { diversificationBand } from "./plain-language";
+import { diversificationBand, perceivedRisk } from "./plain-language";
 
 export interface WeightedLine {
   id: string;
