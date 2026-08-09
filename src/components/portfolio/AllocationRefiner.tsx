@@ -126,6 +126,10 @@ export function AllocationRefiner({ portfolioId }: Props) {
           {t("allocation_refiner.title")}
         </h2>
         <p className="text-label text-ink-2 leading-relaxed">{t("allocation_refiner.desc")}</p>
+        {/* Cadre : ce que produit l'optimiseur n'est pas une recommandation. */}
+        <p className="text-caption text-ink-3 leading-relaxed">
+          {t("allocation_refiner.optimizer_note")}
+        </p>
       </header>
 
       <div className="grid grid-cols-3 gap-3 border-y border-paper-3 py-3">
