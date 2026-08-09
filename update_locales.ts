@@ -1162,7 +1162,6 @@ const refinerPlainEn = {
 };
 
 const mergedFr = deepMerge(fr, {
-  portfolio_customizer: customizerV2Fr,
   allocation_refiner: refinerPlainFr,
   landing: { rayon_x: rayonXFr },
   empty_portfolio: { build_own: "Construire mon portefeuille moi-même" },
