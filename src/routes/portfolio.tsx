@@ -259,7 +259,13 @@ function Portfolio() {
             {/* Ajuster — le même éditeur clair pour tous ; les arbitrages avancés
                 (jargon) restent accessibles, repliés, en mode expert. */}
             <TabsContent value="affiner" className="pt-5 space-y-5">
+              {/* Cadre réglementaire visible en tête d'onglet (mission §1.1) :
+                  simulation pédagogique, aucune recommandation personnalisée. */}
+              <p className="rounded-2xl border border-paper-3 bg-paper-2 p-3 text-caption text-ink-2 leading-relaxed">
+                {t("portfolio.affiner_disclaimer")}
+              </p>
               <PortfolioCustomizer
+
                 portfolioId={portfolio.id}
                 holdings={portfolio.holdings}
                 onSaved={() => {
