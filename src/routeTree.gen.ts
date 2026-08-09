@@ -24,9 +24,9 @@ import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as EthiRouteImport } from './routes/ethi'
 import { Route as DiscoverRouteImport } from './routes/discover'
-import { Route as ConstruireRouteImport } from './routes/construire'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CoursRouteImport } from './routes/cours'
+import { Route as ConstruireRouteImport } from './routes/construire'
 import { Route as ConfidentialiteRouteImport } from './routes/confidentialite'
 import { Route as ComprendreRouteImport } from './routes/comprendre'
 import { Route as ComparatifRouteImport } from './routes/comparatif'
@@ -127,11 +127,6 @@ const DiscoverRoute = DiscoverRouteImport.update({
   path: '/discover',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ConstruireRoute = ConstruireRouteImport.update({
-  id: '/construire',
-  path: '/construire',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -140,6 +135,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const CoursRoute = CoursRouteImport.update({
   id: '/cours',
   path: '/cours',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConstruireRoute = ConstruireRouteImport.update({
+  id: '/construire',
+  path: '/construire',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConfidentialiteRoute = ConfidentialiteRouteImport.update({
@@ -675,13 +675,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DiscoverRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/construire': {
-      id: '/construire'
-      path: '/construire'
-      fullPath: '/construire'
-      preLoaderRoute: typeof ConstruireRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -694,6 +687,13 @@ declare module '@tanstack/react-router' {
       path: '/cours'
       fullPath: '/cours'
       preLoaderRoute: typeof CoursRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/construire': {
+      id: '/construire'
+      path: '/construire'
+      fullPath: '/construire'
+      preLoaderRoute: typeof ConstruireRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/confidentialite': {
