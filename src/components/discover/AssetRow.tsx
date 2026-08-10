@@ -4,6 +4,7 @@ import { useLang } from "@/hooks/useLang";
 import { formatCurrency } from "@/lib/format";
 import type { DiscoverAsset } from "@/lib/discover/types";
 import { dominantRegion } from "@/lib/discover/filters";
+import { ImpactBadge } from "./ImpactBadge";
 
 interface Props {
   asset: DiscoverAsset;
@@ -43,8 +44,7 @@ export function AssetRow({ asset, index, onOpen }: Props) {
             <>
               <span className="text-tag text-ink-3">·</span>
               <span className="text-tag uppercase tracking-wider text-ink-3">
-                {t("discover.row.risk")} {asset.risk_level}/7 ·{" "}
-                {t(`asset_detail.risk_labels.${asset.risk_level}`)}
+                {t("discover.row.risk")} {t(`asset_detail.risk_labels.${asset.risk_level}`)}
               </span>
             </>
           )}
@@ -65,14 +65,14 @@ export function AssetRow({ asset, index, onOpen }: Props) {
             ? formatCurrency(asset.current_price, lang)
             : t("discover.row.price_unavailable")}
         </p>
-        <p className="text-tag uppercase tracking-wider text-gold font-semibold mt-1">
+        <div className="flex items-center justify-end gap-1 mt-1.5">
           {asset.greenwashing_risk === "high" && (
-            <span className="text-rust mr-1" title={t("transparency.gw_row_flag")} aria-hidden>
+            <span className="text-rust" title={t("transparency.gw_row_flag")} aria-hidden>
               ⚠
             </span>
           )}
-          {t("discover.row.impact")} {asset.overall_esg_score.toFixed(1)}/10
-        </p>
+          <ImpactBadge score={asset.overall_esg_score} />
+        </div>
       </div>
 
       <svg

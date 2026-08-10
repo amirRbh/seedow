@@ -634,6 +634,12 @@
       "impact": "Impact",
       "price_unavailable": "Price unavailable"
     },
+    "impact_rating": {
+      "limite": "limited",
+      "correct": "fair",
+      "solide": "solid",
+      "fort": "strong"
+    },
     "filters": {
       "category": "Category",
       "region": "Dominant region",
@@ -1017,6 +1023,7 @@
       "reveal_eyebrow": "Target allocation",
       "reveal_title": "Your portfolio",
       "reveal_summary": "{{count}} positions · reference capital {{amount}}",
+      "line_share": "≈ {{amount}} of {{total}}",
       "dashboard_cta": "Go to dashboard",
       "save_cta": "Save my portfolio",
       "save_hint": "Create a free account to save it — no strings attached, 10 seconds."
@@ -1047,6 +1054,7 @@
       "reveal_eyebrow": "Target allocation",
       "reveal_title": "Your portfolio",
       "reveal_summary": "{{count}} positions · reference capital {{amount}}",
+      "line_share": "≈ {{amount}} of {{total}}",
       "dashboard_cta": "Go to dashboard"
     },
     "intro": {
