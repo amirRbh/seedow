@@ -13,6 +13,7 @@ import {
   GreenwashingBadge,
   SourceLink,
 } from "@/components/discover/TransparencyBadges";
+import { ImpactBadge } from "@/components/discover/ImpactBadge";
 import { useWatchlist } from "@/hooks/useWatchlist";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
 import { relativeIntensityVsBenchmark } from "@/lib/esg/carbon";
@@ -124,9 +125,15 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
 
           {/* Impact dynamique */}
           <section>
-            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold mb-3">
+            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold mb-2">
               {t("asset_detail.impact_overview")}
             </p>
+
+            {/* Verdict lisible en une seconde (principe Yuka) AVANT le détail
+                carbone dense — progressive disclosure : l'essentiel d'abord. */}
+            <div className="mb-3">
+              <ImpactBadge score={asset.overall_esg_score} />
+            </div>
 
             {/* Montant + slider */}
             <div className="bg-paper-2 rounded-xl p-4 border border-paper-3 mb-3">
