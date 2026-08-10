@@ -7,6 +7,7 @@ import { useWatchlist } from "@/hooks/useWatchlist";
 import { useAssetUniverse } from "@/hooks/useAssetUniverse";
 import { AssetDetailSheet } from "@/components/discover/AssetDetailSheet";
 import { GreenwashingBadge } from "@/components/discover/TransparencyBadges";
+import { ImpactBadge } from "@/components/discover/ImpactBadge";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { DiscoverAsset } from "@/lib/discover/types";
 
@@ -81,9 +82,10 @@ export function WatchlistCard() {
                 <p className="text-body-sm font-semibold text-ink truncate leading-tight">
                   {asset.name}
                 </p>
-                <p className="text-tag uppercase tracking-wider text-ink-3 mt-0.5">
-                  {asset.ticker} · ESG {asset.overall_esg_score.toFixed(1)}
+                <p className="text-tag font-mono uppercase tracking-wider text-ink-3 mt-0.5">
+                  {asset.ticker}
                 </p>
+                <ImpactBadge score={asset.overall_esg_score} className="mt-1" />
               </div>
               {asset.greenwashing_risk !== "low" && (
                 <GreenwashingBadge
