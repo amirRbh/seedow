@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Info } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -53,6 +54,9 @@ export function MirrorReveal({ impact, excludedCount, universeSize, exclusionsCo
   const { t } = useTranslation();
   const { lang } = useLang();
   const numLocale = lang === "en" ? "en-US" : "fr-FR";
+  // Échelle experte (repères Paris/ESG) repliée par défaut : un débutant voit
+  // d'abord le verdict et les deux chiffres sourcés ; le détail reste à un tap.
+  const [scaleOpen, setScaleOpen] = useState(false);
 
   const delta = impact.vs_benchmark_delta_pct;
   const hasComparison = delta != null && impact.waci != null && impact.benchmark_waci != null;
@@ -167,9 +171,34 @@ export function MirrorReveal({ impact, excludedCount, universeSize, exclusionsCo
         <p className="mt-4 text-caption text-ink-3">{t("mirror.intensity_pending")}</p>
       )}
 
-      {/* Barre de positionnement pédagogique */}
+      {/* Détail expert replié par défaut : le verdict et les deux chiffres
+          sourcés restent visibles ci-dessus ; la barre de positionnement
+          (repères Paris/ESG) est à un tap, sur le même écran (§1.2 préservé). */}
       {hasComparison && (
-        <div className="mt-5">
+        <button
+          type="button"
+          onClick={() => setScaleOpen((o) => !o)}
+          aria-expanded={scaleOpen}
+          className="mt-4 inline-flex items-center gap-1 text-tag text-ink-3 hover:text-ink-2 border-b border-dotted border-ink-3/60 transition-colors"
+        >
+          {t("mirror.scale_toggle")}
+          <svg
+            viewBox="0 0 16 16"
+            className={`w-3 h-3 transition-transform ${scaleOpen ? "rotate-180" : ""}`}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            aria-hidden="true"
+          >
+            <path d="M4 6l4 4 4-4" />
+          </svg>
+        </button>
+      )}
+
+      {/* Barre de positionnement pédagogique */}
+      {hasComparison && scaleOpen && (
+        <div className="mt-4">
           <div className="flex justify-between text-tag text-ink-3 mb-1.5">
             <span>{t("mirror.scale_cleaner")}</span>
             <span>{t("mirror.scale_intenser")}</span>
