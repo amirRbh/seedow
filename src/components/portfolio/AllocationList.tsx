@@ -110,16 +110,18 @@ export function AllocationList({
               className="w-2 h-2 rounded-full flex-shrink-0"
               style={{ backgroundColor: colorFor(holding.category) }}
             />
-            <span className="font-value text-label text-ink tracking-tight w-14 flex-shrink-0">
-              {holding.ticker}
-            </span>
-            <span className="text-caption text-ink-3 truncate flex-1 inline-flex items-center gap-1.5 min-w-0">
+            {/* Nom lisible d'abord (le débutant ne connaît pas les tickers) ;
+                le code technique devient une métadonnée mono. */}
+            <span className="text-label font-medium text-ink truncate flex-1 inline-flex items-center gap-1.5 min-w-0">
               <span className="truncate">{holding.name}</span>
               <ESGAlertBadge
                 assetName={holding.name}
                 esgScore={holding.esgScore}
                 previousEsgScore={holding.previousEsgScore}
               />
+            </span>
+            <span className="font-mono text-tag uppercase tracking-wider text-ink-3 flex-shrink-0">
+              {holding.ticker}
             </span>
             <span className="text-label font-medium tabular-nums text-ink w-12 text-right flex-shrink-0">
               {formatPercent(holding.allocationPct / 100, lang, 1)}
