@@ -4,6 +4,7 @@ import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import type { ActiveHolding } from "@/hooks/useActivePortfolio";
 import type { ValuedHolding } from "@/hooks/usePortfolioValuation";
 import { HoldingDetailSheet } from "./HoldingDetailSheet";
+import { PortfolioImpactBadge } from "./PortfolioImpactBadge";
 import { EASE_REVEAL } from "@/lib/motion";
 
 interface Props {
@@ -206,14 +207,14 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
                     </div>
                   </div>
                   <div className="flex items-center justify-between gap-2 mt-0.5">
-                    <p className="text-tag text-ink-3 truncate">
-                      {CLASS_LABELS[h.category] ?? h.category}
-                      {h.region && ` · ${h.region}`}
-                      {" · ESG "}
-                      <span className="text-highlight-1 font-semibold">
-                        {h.esgScore.toFixed(0)}
-                      </span>
-                    </p>
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <p className="text-tag text-ink-3 truncate">
+                        {CLASS_LABELS[h.category] ?? h.category}
+                        {h.region && ` · ${h.region}`}
+                      </p>
+                      <span className="text-tag text-ink-3 flex-shrink-0">·</span>
+                      <PortfolioImpactBadge esgScore={h.esgScore} className="flex-shrink-0" />
+                    </div>
                     <p className="text-tag text-ink-3 flex-shrink-0">
                       {amount.toLocaleString("fr-FR", {
                         style: "currency",

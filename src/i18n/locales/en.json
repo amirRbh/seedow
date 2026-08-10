@@ -1658,6 +1658,7 @@
     "exclusions_line": "{{sectors}} sectors you refuse, screened out. {{excluded}} holdings filtered from {{universe}} in the investable universe.",
     "benchmark_source": "Ref.: Seedow WACI = {{value}} tCO₂e/$M revenue ({{sources}}, {{date}}). Equity/bond mix aligned with your allocation.",
     "reveal_hint": "Real figures computed on your selection. Nothing is extrapolated.",
+    "scale_toggle": "How to read the scale",
     "scale_cleaner": "Less intensive",
     "scale_intenser": "More intensive",
     "esg_label": "World ESG ETF",

@@ -1640,6 +1640,7 @@
     "exclusions_line": "{{sectors}} secteurs que tu refuses, écartés. {{excluded}} lignes filtrées sur {{universe}} de l'univers investissable.",
     "benchmark_source": "Réf. : WACI Seedow = {{value}} tCO₂e/M$ de CA ({{sources}}, {{date}}). Mix actions/obligations adapté à ton allocation.",
     "reveal_hint": "Chiffres réels calculés sur ta sélection. Rien n'est extrapolé.",
+    "scale_toggle": "Comment lire l'échelle",
     "scale_cleaner": "Moins intensif",
     "scale_intenser": "Plus intensif",
     "esg_label": "ETF Monde ESG",
