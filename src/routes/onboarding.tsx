@@ -1283,9 +1283,11 @@ function PreviewScene({
                     transition={{ delay: i * 0.08, duration: 0.3 }}
                     className="py-3"
                   >
+                    {/* Nom lisible d'abord (le débutant ne connaît pas les
+                        tickers) ; le code technique devient une métadonnée. */}
                     <div className="flex items-baseline justify-between mb-1.5 gap-3">
-                      <span className="font-value text-body-sm text-ink truncate">{a.ticker}</span>
-                      <span className="text-label text-ink tabular-nums font-medium">
+                      <span className="font-value text-body-sm text-ink truncate">{a.name}</span>
+                      <span className="text-label text-ink tabular-nums font-medium flex-shrink-0">
                         {formatPercent(a.w / 100, lang, 1)}
                       </span>
                     </div>
@@ -1297,7 +1299,19 @@ function PreviewScene({
                         className="absolute inset-y-0 left-0 bg-ink"
                       />
                     </div>
-                    <p className="text-tag text-ink-3 mt-1 truncate">{a.name}</p>
+                    {/* Traduit le % abstrait en argent concret « sur ton montant »
+                        (principe Finary/YNAB) — rend la répartition tangible. */}
+                    <div className="flex items-baseline justify-between gap-3 mt-1">
+                      <span className="text-tag font-mono uppercase tracking-wider text-ink-3 truncate">
+                        {a.ticker}
+                      </span>
+                      <span className="text-tag text-ink-3 tabular-nums flex-shrink-0">
+                        {t("onboarding.building.line_share", {
+                          amount: formatCurrency((params.initial_amount * a.w) / 100, lang),
+                          total: formatCurrency(params.initial_amount, lang),
+                        })}
+                      </span>
+                    </div>
                   </motion.li>
                 ))}
             </ul>
@@ -1565,9 +1579,11 @@ function BuildingScene({
                     transition={{ delay: i * 0.08, duration: 0.3 }}
                     className="py-3"
                   >
+                    {/* Nom lisible d'abord (le débutant ne connaît pas les
+                        tickers) ; le code technique devient une métadonnée. */}
                     <div className="flex items-baseline justify-between mb-1.5 gap-3">
-                      <span className="font-value text-body-sm text-ink truncate">{a.ticker}</span>
-                      <span className="text-label text-ink tabular-nums font-medium">
+                      <span className="font-value text-body-sm text-ink truncate">{a.name}</span>
+                      <span className="text-label text-ink tabular-nums font-medium flex-shrink-0">
                         {formatPercent(a.w / 100, lang, 1)}
                       </span>
                     </div>
@@ -1579,7 +1595,19 @@ function BuildingScene({
                         className="absolute inset-y-0 left-0 bg-ink"
                       />
                     </div>
-                    <p className="text-tag text-ink-3 mt-1 truncate">{a.name}</p>
+                    {/* Traduit le % abstrait en argent concret « sur ton montant »
+                        (principe Finary/YNAB) — rend la répartition tangible. */}
+                    <div className="flex items-baseline justify-between gap-3 mt-1">
+                      <span className="text-tag font-mono uppercase tracking-wider text-ink-3 truncate">
+                        {a.ticker}
+                      </span>
+                      <span className="text-tag text-ink-3 tabular-nums flex-shrink-0">
+                        {t("onboarding.building.line_share", {
+                          amount: formatCurrency((initialAmount * a.w) / 100, lang),
+                          total: formatCurrency(initialAmount, lang),
+                        })}
+                      </span>
+                    </div>
                   </motion.li>
                 ))}
             </ul>
