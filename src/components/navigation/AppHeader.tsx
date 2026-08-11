@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
-import { useViewMode } from "@/hooks/useViewMode";
 import { PortfolioSelector } from "@/components/portfolio/PortfolioSelector";
 import { AlertsBell } from "@/components/alerts/AlertsBell";
 import { LanguageToggle } from "@/components/LanguageToggle";
@@ -17,7 +16,10 @@ interface AppHeaderProps {
   sectionNumber?: string;
   /** Masque le bouton réglages (sur la page réglages elle-même). */
   hideSettings?: boolean;
-  /** Masque le toggle Simple/Expert. */
+  /**
+   * Conservé pour compatibilité d'appel : le toggle Simple/Expert a quitté le
+   * header (allègement mobile façon Trade Republic) et vit dans Réglages.
+   */
   hideViewToggle?: boolean;
   /** Affiche le sélecteur de portefeuille. */
   showPortfolioSelector?: boolean;
@@ -36,7 +38,6 @@ export function AppHeader({
   subtitle,
   sectionNumber,
   hideSettings = false,
-  hideViewToggle = false,
   showPortfolioSelector = false,
 }: AppHeaderProps) {
   const { t } = useTranslation();
@@ -52,7 +53,6 @@ export function AppHeader({
         </Link>
         <div className="flex items-center gap-2">
           <LanguageToggle />
-          {!hideViewToggle && <ViewModeToggle />}
           <AlertsBell />
           <Link
             to="/profil"
@@ -109,43 +109,6 @@ export function AppHeader({
         </div>
       )}
     </header>
-  );
-}
-
-function ViewModeToggle() {
-  const { t } = useTranslation();
-  const { mode, setMode } = useViewMode();
-  return (
-    <div
-      role="group"
-      aria-label={t("view_mode.label")}
-      className="inline-flex items-center h-7 rounded-full border border-paper-3 bg-paper overflow-hidden"
-    >
-      <button
-        type="button"
-        onClick={() => setMode("simple")}
-        aria-pressed={mode === "simple"}
-        className={cn(
-          "px-2.5 h-7 text-tag font-semibold uppercase tracking-[0.16em] transition-colors duration-150",
-          "outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 focus-visible:ring-inset",
-          mode === "simple" ? "bg-ink text-paper" : "text-ink-3 hover:text-ink",
-        )}
-      >
-        {t("view_mode.simple")}
-      </button>
-      <button
-        type="button"
-        onClick={() => setMode("expert")}
-        aria-pressed={mode === "expert"}
-        className={cn(
-          "px-2.5 h-7 text-tag font-semibold uppercase tracking-[0.16em] transition-colors duration-150 border-l border-paper-3",
-          "outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 focus-visible:ring-inset",
-          mode === "expert" ? "bg-ink text-paper" : "text-ink-3 hover:text-ink",
-        )}
-      >
-        {t("view_mode.expert")}
-      </button>
-    </div>
   );
 }
 
