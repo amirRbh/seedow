@@ -138,7 +138,7 @@ export function AssetScreener() {
             value={filters.search}
             onChange={(e) => update("search", e.target.value)}
             placeholder={t("discover.search_placeholder")}
-            className="w-full bg-card border border-paper-3 rounded-full pl-9 pr-4 py-2.5 text-body-sm text-ink placeholder:text-ink-3 outline-none focus:border-ink/40 transition-colors"
+            className="w-full bg-card border border-paper-3 rounded-full pl-9 pr-4 py-3 text-body-sm text-ink placeholder:text-ink-3 outline-none focus:border-ink/40 transition-colors"
           />
         </div>
       </div>
@@ -157,7 +157,7 @@ export function AssetScreener() {
                 type="button"
                 aria-pressed={active}
                 onClick={() => setFilters((f) => toggleIntent(f, preset.patch))}
-                className={`px-3 py-1.5 rounded-full text-caption font-semibold transition-colors border ${
+                className={`px-3.5 py-2 rounded-full text-caption font-semibold transition-colors border ${
                   active
                     ? "bg-ink text-paper border-ink"
                     : "bg-paper-2 text-ink border-paper-3 hover:border-ink/40"
@@ -199,30 +199,6 @@ export function AssetScreener() {
           )}
         </button>
 
-        <div className="relative">
-          <select
-            value={filters.sort}
-            onChange={(e) => update("sort", e.target.value as SortKey)}
-            className="appearance-none bg-card border border-paper-3 rounded-full pl-3 pr-7 py-1.5 text-caption uppercase tracking-[0.12em] font-semibold text-ink hover:border-ink/40 transition-colors cursor-pointer"
-          >
-            {sortOptions.map((o) => (
-              <option key={o.value} value={o.value}>
-                {t("discover.sort.label")} : {o.label}
-              </option>
-            ))}
-          </select>
-          <svg
-            viewBox="0 0 24 24"
-            className="w-3 h-3 text-ink-3 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-          >
-            <path d="M6 9l6 6 6-6" />
-          </svg>
-        </div>
-
         <div className="ml-auto flex items-center gap-2">
           <span className="text-caption text-ink-3 font-semibold">
             {t("discover.results_count", { count: results.length })}
@@ -250,6 +226,19 @@ export function AssetScreener() {
             className="px-5 overflow-hidden"
           >
             <div className="paper-card p-4 space-y-5">
+              {/* Tri — déplacé ici pour dégager la barre toujours visible (épure mobile) */}
+              <FilterGroup label={t("discover.sort.label")}>
+                {sortOptions.map((o) => (
+                  <Chip
+                    key={o.value}
+                    active={filters.sort === o.value}
+                    onClick={() => update("sort", o.value)}
+                  >
+                    {o.label}
+                  </Chip>
+                ))}
+              </FilterGroup>
+
               {/* Categories */}
               <FilterGroup label={t("discover.filters.category")}>
                 {categories.map((c) => (
