@@ -4,7 +4,6 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { useTranslation } from "react-i18next";
 import { useLang } from "@/hooks/useLang";
 import { formatCurrency, formatPercent } from "@/lib/format";
-import { Slider } from "@/components/ui/slider";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { Glossary, useTermLabel } from "@/components/ui/Glossary";
 import { RelatedCourse } from "@/components/courses/RelatedCourse";
@@ -40,7 +39,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
     7: { label: t("asset_detail.risk_labels.7"), tone: "text-bloom" },
   };
 
-  const [monthly, setMonthly] = useState(100);
+  const [detailsOpen, setDetailsOpen] = useState(false);
   const { isWatched, toggle } = useWatchlist();
   // Libellé SFDR adapté au niveau de détail (jargon en Expert, clair en Simple).
   const sfdrLabel = useTermLabel("SFDR");
@@ -133,44 +132,6 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                 carbone dense — progressive disclosure : l'essentiel d'abord. */}
             <div className="mb-3">
               <ImpactBadge score={asset.overall_esg_score} />
-            </div>
-
-            {/* Montant + slider */}
-            <div className="bg-paper-2 rounded-xl p-4 border border-paper-3 mb-3">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-caption text-ink-3 font-medium">
-                  {t("asset_detail.monthly_deposit")}
-                </span>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="number"
-                    min={10}
-                    max={500}
-                    step={10}
-                    value={monthly}
-                    onChange={(e) => {
-                      const v = Math.min(500, Math.max(10, Number(e.target.value) || 0));
-                      setMonthly(v);
-                    }}
-                    className="w-20 h-8 text-right font-value text-body-lg text-ink bg-paper border border-paper-3 rounded-lg px-2 focus:outline-none focus:ring-1 focus:ring-ink-2"
-                  />
-                  <span className="text-label text-ink-3 font-medium">
-                    {t("asset_detail.per_month")}
-                  </span>
-                </div>
-              </div>
-              <Slider
-                min={10}
-                max={500}
-                step={10}
-                value={[monthly]}
-                onValueChange={(val) => setMonthly(val[0])}
-                className="[&_[data-orientation=horizontal]]:bg-paper-3 [&_[data-radix-slider-range]]:bg-highlight-1 [&_[data-radix-slider-thumb]]:border-highlight-2 [&_[data-radix-slider-thumb]]:bg-paper"
-              />
-              <div className="flex justify-between mt-2">
-                <span className="text-tag text-ink-3 font-medium">10 €</span>
-                <span className="text-tag text-ink-3 font-medium">500 €</span>
-              </div>
             </div>
 
             {/* Intensité carbone RÉELLE (WACI MSCI) — mesurée, comparée à l'ETF Monde.
@@ -325,26 +286,71 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
             </div>
           </section>
 
-          {/* {t("asset_detail.identity_card")} */}
+          {/* Coût — promu et expliqué (analyse UX §14 « combien ça coûte » + §21).
+              Pour un débutant, « frais 0,20 % » ne veut rien dire : on le traduit
+              en euros concrets sur 1 000 € et on donne le sens de lecture. */}
           <section>
             <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold mb-2">
-              {t("asset_detail_sheet.id_card")}
+              {t("asset_detail.cost.title")}
             </p>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-0 text-label">
-              {asset.issuer && (
-                <IdRow label={t("asset_detail_sheet.issuer")} value={asset.issuer} />
-              )}
-              {asset.currency && (
-                <IdRow label={t("asset_detail_sheet.currency")} value={asset.currency} />
-              )}
-              <IdRow
-                label={t("asset_detail_sheet.fees")}
-                value={formatPercent(asset.ter_pct / 100, lang)}
-              />
-              {asset.sfdr_article && (
-                <IdRow label={sfdrLabel} value={`Article ${asset.sfdr_article}`} />
-              )}
+            <div className="paper-card p-3.5">
+              <div className="flex items-baseline justify-between">
+                <span className="font-value text-2xl leading-none text-ink">
+                  {formatPercent(asset.ter_pct / 100, lang)}
+                  <span className="text-tag text-ink-3 ml-1 font-sans">
+                    {t("asset_detail.cost.per_year")}
+                  </span>
+                </span>
+                <span className="text-caption text-ink-2 font-medium text-right">
+                  {t("asset_detail.cost.on_1000", {
+                    amount: formatCurrency((asset.ter_pct / 100) * 1000, lang),
+                  })}
+                </span>
+              </div>
+              <p className="text-caption text-ink-3 leading-snug mt-2.5 pt-2.5 border-t border-dashed border-paper-3">
+                {t("asset_detail.cost.hint")}
+              </p>
             </div>
+          </section>
+
+          {/* Détails experts — repliés par défaut (§09 : ne jamais noyer). */}
+          <section>
+            <button
+              type="button"
+              onClick={() => setDetailsOpen((o) => !o)}
+              aria-expanded={detailsOpen}
+              className="w-full flex items-center justify-between text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold hover:text-ink-2 transition-colors"
+            >
+              {t("asset_detail_sheet.id_card")}
+              <svg
+                viewBox="0 0 16 16"
+                className={`w-3.5 h-3.5 transition-transform ${detailsOpen ? "rotate-180" : ""}`}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                aria-hidden="true"
+              >
+                <path d="M4 6l4 4 4-4" />
+              </svg>
+            </button>
+            {detailsOpen && (
+              <div className="grid grid-cols-2 gap-x-4 gap-y-0 text-label mt-3">
+                {asset.issuer && (
+                  <IdRow label={t("asset_detail_sheet.issuer")} value={asset.issuer} />
+                )}
+                {asset.currency && (
+                  <IdRow label={t("asset_detail_sheet.currency")} value={asset.currency} />
+                )}
+                <IdRow
+                  label={t("asset_detail_sheet.fees")}
+                  value={formatPercent(asset.ter_pct / 100, lang)}
+                />
+                {asset.sfdr_article && (
+                  <IdRow label={sfdrLabel} value={`Article ${asset.sfdr_article}`} />
+                )}
+              </div>
+            )}
           </section>
         </div>
 
@@ -378,7 +384,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
           </button>
           <InvestDialog
             label={t("asset_detail.invest_in", { ticker: asset.ticker })}
-            defaultAmount={monthly}
+            defaultAmount={100}
             trigger={
               <button
                 type="button"
@@ -453,32 +459,6 @@ function IdRow({ label, value }: { label: string; value: string }) {
     <div className="flex items-baseline justify-between gap-2 border-b border-dashed border-paper-3 py-1.5">
       <span className="text-ink-3 font-medium">{label}</span>
       <span className="text-ink font-semibold text-right truncate">{value}</span>
-    </div>
-  );
-}
-
-function StatTile({
-  value,
-  unit,
-  label,
-  tone,
-}: {
-  value: string;
-  unit?: string;
-  label: string;
-  tone?: "highlight" | "default";
-}) {
-  return (
-    <div className="bg-paper-2 rounded-xl p-3 text-center border border-paper-3">
-      <p
-        className={`font-value text-xl leading-none ${tone === "highlight" ? "text-highlight-1" : "text-ink"}`}
-      >
-        {value}
-        {unit && <span className="text-caption text-ink-3 ml-0.5 font-sans">{unit}</span>}
-      </p>
-      <p className="text-tag mt-1.5 text-ink-3 font-medium leading-tight uppercase tracking-wider">
-        {label}
-      </p>
     </div>
   );
 }
