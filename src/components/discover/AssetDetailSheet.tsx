@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Star } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useTranslation } from "react-i18next";
@@ -150,6 +150,9 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
               <ImpactBadge score={asset.overall_esg_score} />
             </div>
 
+            {/* Détail carbone + piliers ESG — replié : le verdict (badge) au-dessus
+                suffit au premier coup d'œil, le détail dense se déplie à la demande. */}
+            <Disclosure title={t("asset_detail.carbon_detail")}>
             {/* Intensité carbone RÉELLE (WACI MSCI) — mesurée, comparée à l'ETF Monde.
                 Jamais d'estimation dérivée du score ESG. */}
             {waci != null ? (
@@ -200,13 +203,17 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
             <div className="mt-2.5">
               <SourceLink />
             </div>
+            </Disclosure>
           </section>
 
-          {/* Transparence — on assume publiquement les limites de nos données */}
+          {/* Transparence — repliée par défaut (refonte mobile §8/§13), mais ouverte
+              d'office dès qu'un risque de greenwashing existe : on n'enterre pas une
+              alerte. */}
           <section>
-            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold mb-2">
-              {t("transparency.section_title")}
-            </p>
+            <Disclosure
+              title={t("transparency.section_title")}
+              defaultOpen={asset.greenwashing_risk !== "low"}
+            >
             <div className="paper-card p-3.5 space-y-3">
               <div className="flex flex-wrap gap-1.5">
                 <DataCoverageBadge coverage={asset.data_coverage} />
@@ -238,13 +245,13 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                 />
               )}
             </div>
+            </Disclosure>
           </section>
 
-          {/* Risques */}
+          {/* Risques — repliés : le débutant lit d'abord l'essentiel, ouvre le
+              détail (niveau SRI, risques, exclusions) s'il veut creuser. */}
           <section>
-            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold mb-2">
-              {t("asset_detail.risks_title")}
-            </p>
+            <Disclosure title={t("asset_detail.risks_title")}>
             <div className="paper-card p-3.5">
               <div className="flex items-center justify-between pb-3 border-b border-dashed border-paper-3">
                 <Glossary
@@ -300,6 +307,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                 </div>
               )}
             </div>
+            </Disclosure>
           </section>
 
           {/* Coût — promu et expliqué (analyse UX §14 « combien ça coûte » + §21).
@@ -422,6 +430,44 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
         </div>
       </SheetContent>
     </Sheet>
+  );
+}
+
+/**
+ * Section repliable native (`<details>`) — refonte mobile §8/§13 : la fiche
+ * s'ouvre sur l'essentiel (résumé, verdict, coût), et les blocs denses (détail
+ * carbone, transparence, risques) se déplient à la demande, au lieu d'empiler
+ * trois écrans de scroll. Aucun state React : `<details>` est accessible nativement.
+ */
+function Disclosure({
+  title,
+  defaultOpen = false,
+  children,
+}: {
+  title: string;
+  defaultOpen?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <details className="group" open={defaultOpen || undefined}>
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 py-0.5 [&::-webkit-details-marker]:hidden">
+        <span className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold">
+          {title}
+        </span>
+        <svg
+          viewBox="0 0 16 16"
+          className="w-3.5 h-3.5 flex-none text-ink-3 transition-transform duration-200 group-open:rotate-180"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+          aria-hidden
+        >
+          <path d="M4 6l4 4 4-4" />
+        </svg>
+      </summary>
+      <div className="mt-2.5">{children}</div>
+    </details>
   );
 }
 

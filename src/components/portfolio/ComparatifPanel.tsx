@@ -97,6 +97,39 @@ function PerfMedaillon({ value, max, accent }: { value: number; max: number; acc
 }
 
 /**
+ * Section repliable du comparatif (refonte mobile §8/§14) : le verdict scannable
+ * en tête suffit à comprendre la différence ; le détail chiffré (à risque
+ * comparable, scénario baissier, tableau complet) se déplie à la demande au lieu
+ * d'empiler plusieurs écrans de scroll. `<details>` natif = accessible, sans state.
+ */
+function ComparatifSection({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <details className="group mt-10">
+      <summary className="list-none cursor-pointer [&::-webkit-details-marker]:hidden">
+        <div className="gold-rule mb-5" />
+        <div className="flex items-center justify-between gap-3">
+          <span className="text-tag uppercase tracking-[0.22em] text-gold font-semibold">
+            {title}
+          </span>
+          <svg
+            viewBox="0 0 16 16"
+            className="w-4 h-4 flex-none text-ink-3 transition-transform duration-200 group-open:rotate-180"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            aria-hidden
+          >
+            <path d="M4 6l4 4 4-4" />
+          </svg>
+        </div>
+      </summary>
+      <div className="mt-4">{children}</div>
+    </details>
+  );
+}
+
+/**
  * Panneau Comparatif — utilisable standalone (/comparatif) ou en onglet (/portfolio).
  */
 export function ComparatifPanel() {
@@ -258,12 +291,9 @@ export function ComparatifPanel() {
         {t("comparatif_panel.window_note")}
       </p>
 
-      {/* À risque comparable — la seule comparaison qui ait un sens financier. */}
-      <div className="mt-10">
-        <div className="gold-rule mb-5" />
-        <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">
-          {t("comparatif_panel.risk_adjusted_title")}
-        </p>
+      {/* À risque comparable — repliée (refonte mobile §8/§14) : le verdict en tête
+          donne l'essentiel ; ce détail chiffré se déplie à la demande. */}
+      <ComparatifSection title={t("comparatif_panel.risk_adjusted_title")}>
         <p className="text-label text-ink-2 leading-relaxed">
           {t("comparatif_panel.risk_adjusted_body", {
             bench: t(benchmark.labelKey),
@@ -306,9 +336,9 @@ export function ComparatifPanel() {
         <p className="mt-2 text-caption text-ink-3 leading-relaxed">
           {t("comparatif_panel.reward_risk_note")}
         </p>
-      </div>
+      </ComparatifSection>
 
-      {/* Le prix de l'alignement — nommé en euros, jamais dissimulé. */}
+      {/* Le prix de l'alignement — nommé en euros, jamais dissimulé (reste visible). */}
       {deltaScaled10y !== null && (
         <div className="mt-10 border border-paper-3 rounded-2xl p-5">
           <p className="text-tag uppercase tracking-[0.22em] text-ink-3 font-semibold mb-2">
@@ -324,12 +354,8 @@ export function ComparatifPanel() {
         </div>
       )}
 
-      {/* Scénario baissier — montrer la volatilité avant de la subir. */}
-      <div className="mt-10">
-        <div className="gold-rule mb-5" />
-        <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">
-          {t("comparatif_panel.downside_title")}
-        </p>
+      {/* Scénario baissier — replié : on montre la volatilité à qui veut la voir. */}
+      <ComparatifSection title={t("comparatif_panel.downside_title")}>
         <p className="text-label text-ink-2 leading-relaxed">
           {t("comparatif_panel.downside_body", {
             bench: t(benchmark.labelKey),
@@ -357,13 +383,11 @@ export function ComparatifPanel() {
         <p className="mt-3 text-caption text-ink-3 leading-relaxed">
           {t("comparatif_panel.downside_note")}
         </p>
-      </div>
+      </ComparatifSection>
 
-      <div className="mt-8">
-        <div className="gold-rule mb-5" />
-        <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">
-          {t("comparatif_panel.face_to_face")}
-        </p>
+      {/* Face à face — le tableau chiffré (niveau 3) replié derrière le verdict
+          scannable du haut (refonte mobile §14 : pas un mur de tableau). */}
+      <ComparatifSection title={t("comparatif_panel.face_to_face")}>
         <h2 className="font-value text-2xl text-ink leading-tight">
           {t("comparatif_panel.no_filter")}
         </h2>
@@ -435,7 +459,7 @@ export function ComparatifPanel() {
             seedowWins={seedow.sfdr.includes("8") || seedow.sfdr.includes("9")}
           />
         </div>
-      </div>
+      </ComparatifSection>
 
       <div className="mt-10">
         <div className="gold-rule mb-5" />
