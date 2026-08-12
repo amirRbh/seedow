@@ -154,10 +154,8 @@ function Dashboard() {
       <div className="max-w-lg mx-auto pb-28">
         <AppHeader eyebrow={greeting} title={userName} showPortfolioSelector />
 
-        {/* 0. L'action du jour — une seule carte prioritaire (audit .lovable/plan.md §11) */}
-        <ActionOfTheDayCard />
-
-        {/* 1. Bloc valeur */}
+        {/* 1. Bloc valeur — le solde d'abord (ordre TR : solde → portefeuille →
+            action → impact). La priorité mobile, c'est « combien j'ai ». */}
         <motion.section
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -266,10 +264,7 @@ function Dashboard() {
           )}
         </motion.section>
 
-        {/* 1b. Impact — porte d'entrée émotionnelle, juste après la valeur */}
-        {portfolio && holdings.length > 0 && <ImpactMoment />}
-
-        {/* 2. Aperçu portefeuille */}
+        {/* 2. Aperçu portefeuille — ce qu'on détient, juste sous le solde */}
         <motion.section
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -326,7 +321,13 @@ function Dashboard() {
           )}
         </motion.section>
 
-        {/* 4. Lien Voir le détail */}
+        {/* 3. Action du jour — après le portefeuille, une fois le contexte posé */}
+        <ActionOfTheDayCard />
+
+        {/* 4. Impact — porte d'entrée émotionnelle */}
+        {portfolio && holdings.length > 0 && <ImpactMoment />}
+
+        {/* 5. Lien Voir le détail */}
         <motion.section
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
