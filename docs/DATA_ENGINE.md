@@ -72,21 +72,23 @@ Migration : `supabase/migrations/20260812130000_data_engine_foundation.sql`
 
 ### Code (`src/lib/data-engine/`)
 
-| Module                      | Rôle                                                                           | Testé |
-| --------------------------- | ------------------------------------------------------------------------------ | ----- |
-| `isin.ts`                   | validation Luhn ISO 6166, normalisation, pays (§16/§21)                        | ✅    |
-| `validation.ts`             | plausibilité TER/poids/somme/date → statut de validation (§11)                 | ✅    |
-| `completeness.ts`           | Fund Completeness Score interne 0-100 + ventilation (§8)                       | ✅    |
-| `search.ts`                 | parse requête, alias, matcher ISIN/ticker/nom/indice (§16)                     | ✅    |
-| `sources/registry.ts`       | `SOURCE_REGISTRY` typé + arbitrage de priorité (§4/§23)                        | ✅    |
-| `connectors/types.ts`       | contrat du pipeline (Connector/Observation/Confidence, §5)                     | —     |
-| `connectors/ishares.ts`     | connecteur iShares : factsheet → observations sourcées (§5/§10)                | ✅    |
-| `engine.ts`                 | runner d'ingestion + filtres de publication (§5/§17/§20)                       | ✅    |
-| `persist.ts`                | observations → `data_observations` + colonnes canoniques `assets` (§3/§11/§24) | ✅    |
-| `persist.supabase.ts`       | adaptateur Supabase de l'`ObservationWriter` (I/O server-only)                 | —     |
-| `fund-request.ts`           | normalisation d'une demande « Demander l'analyse » (ISIN/texte, §27)           | ✅    |
-| `fund-request.functions.ts` | server fns : enregistrer une demande + lister (admin) (§27/§25)                | —     |
-| `quality.ts`                | calculs du dashboard data-quality : santé, ISIN invalides, doublons (§20/§21)  | ✅    |
+| Module                      | Rôle                                                                            | Testé |
+| --------------------------- | ------------------------------------------------------------------------------- | ----- |
+| `isin.ts`                   | validation Luhn ISO 6166, normalisation, pays (§16/§21)                         | ✅    |
+| `validation.ts`             | plausibilité TER/poids/somme/date → statut de validation (§11)                  | ✅    |
+| `completeness.ts`           | Fund Completeness Score interne 0-100 + ventilation (§8)                        | ✅    |
+| `search.ts`                 | parse requête, alias, matcher ISIN/ticker/nom/indice (§16)                      | ✅    |
+| `sources/registry.ts`       | `SOURCE_REGISTRY` typé + arbitrage de priorité (§4/§23)                         | ✅    |
+| `connectors/types.ts`       | contrat du pipeline (Connector/Observation/Confidence, §5)                      | —     |
+| `connectors/ishares.ts`     | connecteur iShares : factsheet → observations sourcées (§5/§10)                 | ✅    |
+| `engine.ts`                 | runner d'ingestion + filtres de publication (§5/§17/§20)                        | ✅    |
+| `persist.ts`                | observations → `data_observations` + colonnes canoniques `assets` (§3/§11/§24)  | ✅    |
+| `persist.supabase.ts`       | adaptateur Supabase de l'`ObservationWriter` (I/O server-only)                  | —     |
+| `fund-request.ts`           | normalisation d'une demande « Demander l'analyse » (ISIN/texte, §27)            | ✅    |
+| `fund-request.functions.ts` | server fns : enregistrer une demande + lister (admin) (§27/§25)                 | —     |
+| `quality.ts`                | calculs du dashboard data-quality : santé, ISIN invalides, doublons (§20/§21)   | ✅    |
+| `holdings.ts`               | parse CSV composition iShares → `fund_holdings` datés/sourcés/validés (§11/§13) | ✅    |
+| `holdings.supabase.ts`      | adaptateur Supabase de l'`HoldingWriter` (upsert historisé, server-only)        | —     |
 
 ---
 
