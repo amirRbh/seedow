@@ -1,0 +1,101 @@
+import { Link } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
+import { useLang } from "@/hooks/useLang";
+import { formatPercent } from "@/lib/format";
+import { portfolioGlance, type GlanceMetrics, type RiskLevel } from "@/lib/portfolio/plain-language";
+
+/**
+ * Coup d'œil « glanceable » de l'Accueil (refonte mobile §5/§24) : les trois
+ * lectures que l'utilisateur doit saisir en moins de 5 secondes, sans scroller —
+ * Performance, Impact, Risque. Chaque tuile est tactile et mène directement au
+ * détail concerné (drill-down §13), au lieu d'empiler le détail sous le pli.
+ */
+export function HomeGlance({
+  metrics,
+  returnPct,
+}: {
+  metrics: GlanceMetrics | null | undefined;
+  returnPct: number;
+}) {
+  const { t } = useTranslation();
+  const { lang } = useLang();
+  const glance = portfolioGlance(metrics);
+
+  const perfPositive = returnPct >= 0;
+  const perfValue = `${perfPositive ? "+" : ""}${formatPercent(returnPct / 100, lang, 1)}`;
+
+  return (
+    <div className="grid grid-cols-3 gap-2.5">
+      <GlanceTile
+        to="/portfolio"
+        label={t("home_glance.performance")}
+        value={perfValue}
+        tone={perfPositive ? "mint" : "alert"}
+      />
+      <GlanceTile
+        to="/portfolio"
+        search={{ tab: "impact" }}
+        label={t("home_glance.impact")}
+        value={glance.impact ? `${glance.impact.score}` : "—"}
+        suffix={glance.impact ? "/100" : undefined}
+        tone="mint"
+      />
+      <GlanceTile
+        to="/portfolio"
+        search={{ tab: "impact" }}
+        label={t("home_glance.risk")}
+        value={glance.risk ? t(`portfolio_glance.risk.${glance.risk.level}`) : "—"}
+        scale={glance.risk ? riskDots(glance.risk.level) : undefined}
+      />
+    </div>
+  );
+}
+
+function GlanceTile({
+  to,
+  search,
+  label,
+  value,
+  suffix,
+  tone,
+  scale,
+}: {
+  to: string;
+  search?: Record<string, unknown>;
+  label: string;
+  value: string;
+  suffix?: string;
+  tone?: "mint" | "alert";
+  scale?: number; // 1..3
+}) {
+  const valueColor = tone === "mint" ? "text-mint-ink" : tone === "alert" ? "text-rust" : "text-ink";
+  return (
+    <Link
+      to={to}
+      search={search}
+      className="flex flex-col justify-between rounded-2xl border border-paper-3 bg-paper-2 px-3 py-3 min-h-[76px] transition-colors hover:bg-paper-3/50 outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
+    >
+      <span className="text-tag uppercase tracking-[0.12em] font-semibold text-ink-3 leading-none">
+        {label}
+      </span>
+      <span className={`mt-2 font-value text-lg leading-none ${valueColor}`}>
+        {value}
+        {suffix && <span className="text-tag text-ink-3 font-sans ml-0.5">{suffix}</span>}
+      </span>
+      {typeof scale === "number" && (
+        <span className="mt-1.5 flex gap-1" aria-hidden>
+          {[1, 2, 3].map((n) => (
+            <span
+              key={n}
+              className={`h-1 flex-1 rounded-full ${n <= scale ? "bg-ink" : "bg-paper-3"}`}
+            />
+          ))}
+        </span>
+      )}
+    </Link>
+  );
+}
+
+function riskDots(level: RiskLevel): number {
+  return level === "prudent" ? 1 : level === "modere" ? 2 : 3;
+}
