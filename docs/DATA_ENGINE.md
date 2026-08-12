@@ -86,6 +86,7 @@ Migration : `supabase/migrations/20260812130000_data_engine_foundation.sql`
 | `persist.supabase.ts`       | adaptateur Supabase de l'`ObservationWriter` (I/O server-only)                 | —     |
 | `fund-request.ts`           | normalisation d'une demande « Demander l'analyse » (ISIN/texte, §27)           | ✅    |
 | `fund-request.functions.ts` | server fns : enregistrer une demande + lister (admin) (§27/§25)                | —     |
+| `quality.ts`                | calculs du dashboard data-quality : santé, ISIN invalides, doublons (§20/§21)  | ✅    |
 
 ---
 
@@ -141,7 +142,9 @@ l'architecture.
    sur l'état « aucun résultat » de la recherche.
 10. Job planifié d'ingestion (quotidien : nouveautés ; hebdo : holdings ; mensuel :
     factsheets) via le pattern `hooks/` + `pg_cron` existant (§19).
-11. Admin/data-quality dashboard (`ingestion_jobs`, complétude, ISIN invalides, doublons) (§20/§21/§25).
+11. 🟡 Data-quality dashboard : **couche de calcul** livrée (`quality.ts` —
+    santé, à-mettre-à-jour, ISIN invalides, doublons, santé des sources).
+    **Reste** : la lecture en base (server fn admin) et l'UI back-office (§25).
 12. Test sur 20 ETF réels puis vérification manuelle contre sources officielles (§7-8), montée à 100 (§9).
 
 **Règle absolue (§ final)** : 500 ETF à 95 % de données fiables et sourcées
