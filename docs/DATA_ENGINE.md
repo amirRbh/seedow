@@ -72,14 +72,21 @@ Migration : `supabase/migrations/20260812130000_data_engine_foundation.sql`
 
 ### Code (`src/lib/data-engine/`)
 
-| Module                | Rôle                                                           | Testé |
-| --------------------- | -------------------------------------------------------------- | ----- |
-| `isin.ts`             | validation Luhn ISO 6166, normalisation, pays (§16/§21)        | ✅    |
-| `validation.ts`       | plausibilité TER/poids/somme/date → statut de validation (§11) | ✅    |
-| `completeness.ts`     | Fund Completeness Score interne 0-100 + ventilation (§8)       | ✅    |
-| `search.ts`           | parse requête, alias, matcher ISIN/ticker/nom/indice (§16)     | ✅    |
-| `sources/registry.ts` | `SOURCE_REGISTRY` typé + arbitrage de priorité (§4/§23)        | ✅    |
-| `connectors/types.ts` | contrat du pipeline (Connector/Observation/Confidence, §5)     | —     |
+| Module                      | Rôle                                                                           | Testé |
+| --------------------------- | ------------------------------------------------------------------------------ | ----- |
+| `isin.ts`                   | validation Luhn ISO 6166, normalisation, pays (§16/§21)                        | ✅    |
+| `validation.ts`             | plausibilité TER/poids/somme/date → statut de validation (§11)                 | ✅    |
+| `completeness.ts`           | Fund Completeness Score interne 0-100 + ventilation (§8)                       | ✅    |
+| `search.ts`                 | parse requête, alias, matcher ISIN/ticker/nom/indice (§16)                     | ✅    |
+| `sources/registry.ts`       | `SOURCE_REGISTRY` typé + arbitrage de priorité (§4/§23)                        | ✅    |
+| `connectors/types.ts`       | contrat du pipeline (Connector/Observation/Confidence, §5)                     | —     |
+| `connectors/ishares.ts`     | connecteur iShares : factsheet → observations sourcées (§5/§10)                | ✅    |
+| `engine.ts`                 | runner d'ingestion + filtres de publication (§5/§17/§20)                       | ✅    |
+| `persist.ts`                | observations → `data_observations` + colonnes canoniques `assets` (§3/§11/§24) | ✅    |
+| `persist.supabase.ts`       | adaptateur Supabase de l'`ObservationWriter` (I/O server-only)                 | —     |
+| `fund-request.ts`           | normalisation d'une demande « Demander l'analyse » (ISIN/texte, §27)           | ✅    |
+| `fund-request.functions.ts` | server fns : enregistrer une demande + lister (admin) (§27/§25)                | —     |
+| `quality.ts`                | calculs du dashboard data-quality : santé, ISIN invalides, doublons (§20/§21)  | ✅    |
 
 ---
 
@@ -120,15 +127,28 @@ l'architecture.
 5. ✅ Contrat de connecteur (pipeline modulaire, une source = un connecteur).
 6. ✅ Tests automatisés des briques pures.
 
-**Suite (non fait ici — à valider) :**
+**Suite :**
 
-7. Connecteurs concrets `iSharesConnector` / `AmundiConnector` (réutilisent le
-   parser factsheet existant) → écrivent `data_observations` + `fund_holdings`.
+7. ✅ Chemin d'ingestion complet et testé de bout en bout : `iSharesConnector`
+   (réutilise le parser factsheet), runner `engine.ts`, puis persistance
+   `persist.ts` (→ `data_observations` + colonnes canoniques `assets`, avec
+   provenance ; valeurs rejetées jamais écrites). Exécutable via le script local
+   `scripts/ingest-fund-data.ts` (`bun run ingest:fund-data [--sql]`) :
+   télécharge les fiches iShares US, les passe par le connecteur, et **émet le
+   SQL** (INSERT `data_observations` + UPDATE `assets`) — écriture gouvernée,
+   comme `ingest:esg`. **Reste** : câbler `persistObservations` sur un client
+   service_role pour l'écriture directe, le connecteur `AmundiConnector`, et
+   l'écriture des `fund_holdings` (le parser ESG actuel ne fournit pas la
+   composition).
 8. Backfill ISIN sur les ~82 assets existants depuis les documents officiels.
-9. Server function + UI « Demander l'analyse » (`fund_requests`) sur recherche vide (§27).
+9. ✅ Server functions « Demander l'analyse » (`requestFundAnalysis` +
+   `listFundRequests` admin) → `fund_requests`. **Reste** : le branchement UI
+   sur l'état « aucun résultat » de la recherche.
 10. Job planifié d'ingestion (quotidien : nouveautés ; hebdo : holdings ; mensuel :
     factsheets) via le pattern `hooks/` + `pg_cron` existant (§19).
-11. Admin/data-quality dashboard (`ingestion_jobs`, complétude, ISIN invalides, doublons) (§20/§21/§25).
+11. 🟡 Data-quality dashboard : **couche de calcul** livrée (`quality.ts` —
+    santé, à-mettre-à-jour, ISIN invalides, doublons, santé des sources).
+    **Reste** : la lecture en base (server fn admin) et l'UI back-office (§25).
 12. Test sur 20 ETF réels puis vérification manuelle contre sources officielles (§7-8), montée à 100 (§9).
 
 **Règle absolue (§ final)** : 500 ETF à 95 % de données fiables et sourcées
