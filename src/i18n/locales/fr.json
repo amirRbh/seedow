@@ -1491,11 +1491,21 @@
   },
   "empty_portfolio": {
     "welcome": "Bienvenue, {{name}}",
-    "title": "Composez votre premier portefeuille.",
+    "title": "Ton portefeuille commence ici.",
+    "choose_desc": "Dis-nous simplement où tu en es — on t'emmène à la bonne étape.",
     "desc": "Quatre questions pour définir vos convictions. Ethi structure ensuite une allocation alignée sur vos critères.",
+    "beginner_eyebrow": "Je débute",
+    "beginner_title": "Construisons une simulation",
+    "beginner_desc": "Quatre questions, deux minutes, zéro argent réel. Tu vois à quoi ressemblerait ton portefeuille avant de décider quoi que ce soit.",
+    "beginner_cta": "Créer ma simulation",
+    "existing_eyebrow": "J'investis déjà",
+    "existing_title": "Ajoute tes investissements",
+    "existing_desc": "Compose ce que tu détiens déjà, ligne par ligne, pour en voir l'impact, les frais et le risque — sans rien connecter.",
+    "existing_cta": "Analyser mes placements",
     "start": "Démarrer",
-    "explore": "Explorer les actifs",
-    "build_own": "Construire mon portefeuille moi-même"
+    "explore": "Explorer les placements d'abord",
+    "build_own": "Construire mon portefeuille moi-même",
+    "bank_soon": "La connexion automatique de tes comptes arrivera plus tard. On commence par le plus simple."
   },
   "impact_ribbon": {
     "real_impact": "Impact réel",

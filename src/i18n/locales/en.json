@@ -1509,11 +1509,21 @@
   },
   "empty_portfolio": {
     "welcome": "Welcome, {{name}}",
-    "title": "Compose your first portfolio.",
+    "title": "Your portfolio starts here.",
+    "choose_desc": "Just tell us where you're at — we'll take you to the right step.",
     "desc": "Four questions to define your convictions. Ethi then structures an allocation aligned with your criteria.",
+    "beginner_eyebrow": "I'm just starting",
+    "beginner_title": "Let's build a simulation",
+    "beginner_desc": "Four questions, two minutes, zero real money. See what your portfolio would look like before deciding anything.",
+    "beginner_cta": "Create my simulation",
+    "existing_eyebrow": "I already invest",
+    "existing_title": "Add your investments",
+    "existing_desc": "Enter what you already hold, line by line, to see its impact, fees and risk — without connecting anything.",
+    "existing_cta": "Analyse my holdings",
     "start": "Start",
-    "explore": "Explore assets",
-    "build_own": "Build my portfolio myself"
+    "explore": "Explore investments first",
+    "build_own": "Build my portfolio myself",
+    "bank_soon": "Automatically connecting your accounts will come later. We start with the simplest path."
   },
   "impact_ribbon": {
     "real_impact": "Real impact",
