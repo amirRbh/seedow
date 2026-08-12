@@ -1415,6 +1415,35 @@
   "asset_detail": {
     "per_share": "/ share",
     "summary": "Summary",
+    "plain": {
+      "label": "In plain words",
+      "kinds": {
+        "equity": {
+          "title": "Stock fund (ETF)",
+          "desc": "a basket bundling hundreds of companies. You don't pick one: you invest in the whole set at once, which spreads the risk."
+        },
+        "thematic": {
+          "title": "Thematic fund",
+          "desc": "a basket of companies grouped around one theme (e.g. renewable energy). More focused, so more concentrated and more sensitive to that theme's ups and downs."
+        },
+        "bond": {
+          "title": "Bond",
+          "desc": "you lend money to a government or company, which pays you interest and repays you at maturity. Usually steadier than a stock."
+        },
+        "reit": {
+          "title": "Listed real estate",
+          "desc": "a fund that owns real estate (offices, housing). You earn a share of the rents without buying a property yourself."
+        },
+        "commodity": {
+          "title": "Commodity",
+          "desc": "tracks the price of a resource (gold, for instance). No dividend: the value depends only on how the price moves."
+        },
+        "cash": {
+          "title": "Cash",
+          "desc": "a very stable holding, close to a savings account. Low return, but almost no risk."
+        }
+      }
+    },
     "impact_overview": "What your money funds",
     "cost": {
       "title": "What it costs",

@@ -1397,6 +1397,35 @@
   "asset_detail": {
     "per_share": "/ part",
     "summary": "Résumé",
+    "plain": {
+      "label": "En clair",
+      "kinds": {
+        "equity": {
+          "title": "Fonds d'actions (ETF)",
+          "desc": "un panier qui regroupe des centaines d'entreprises. Tu n'en choisis pas une seule : tu investis dans l'ensemble d'un coup, ce qui répartit le risque."
+        },
+        "thematic": {
+          "title": "Fonds thématique",
+          "desc": "un panier d'entreprises réunies autour d'un même thème (ex. énergies renouvelables). Plus ciblé, donc plus concentré et plus sensible aux hauts et bas de ce thème."
+        },
+        "bond": {
+          "title": "Obligation",
+          "desc": "tu prêtes de l'argent à un État ou une entreprise, qui te verse des intérêts puis te rembourse à l'échéance. En général plus stable qu'une action."
+        },
+        "reit": {
+          "title": "Immobilier coté",
+          "desc": "un fonds qui détient de l'immobilier (bureaux, logements). Tu touches une part des loyers sans avoir à acheter un bien toi-même."
+        },
+        "commodity": {
+          "title": "Matière première",
+          "desc": "suit le prix d'une ressource (l'or, par exemple). Pas de dividende : la valeur dépend seulement de l'évolution du cours."
+        },
+        "cash": {
+          "title": "Liquidités",
+          "desc": "un placement très stable, proche d'un compte d'épargne. Rendement faible, mais risque quasi nul."
+        }
+      }
+    },
     "impact_overview": "Ce que ton argent finance",
     "cost": {
       "title": "Combien ça coûte",
