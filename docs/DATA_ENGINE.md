@@ -72,16 +72,18 @@ Migration : `supabase/migrations/20260812130000_data_engine_foundation.sql`
 
 ### Code (`src/lib/data-engine/`)
 
-| Module                  | Rôle                                                            | Testé |
-| ----------------------- | --------------------------------------------------------------- | ----- |
-| `isin.ts`               | validation Luhn ISO 6166, normalisation, pays (§16/§21)         | ✅    |
-| `validation.ts`         | plausibilité TER/poids/somme/date → statut de validation (§11)  | ✅    |
-| `completeness.ts`       | Fund Completeness Score interne 0-100 + ventilation (§8)        | ✅    |
-| `search.ts`             | parse requête, alias, matcher ISIN/ticker/nom/indice (§16)      | ✅    |
-| `sources/registry.ts`   | `SOURCE_REGISTRY` typé + arbitrage de priorité (§4/§23)         | ✅    |
-| `connectors/types.ts`   | contrat du pipeline (Connector/Observation/Confidence, §5)      | —     |
-| `connectors/ishares.ts` | connecteur iShares : factsheet → observations sourcées (§5/§10) | ✅    |
-| `engine.ts`             | runner d'ingestion + filtres de publication (§5/§17/§20)        | ✅    |
+| Module                  | Rôle                                                                           | Testé |
+| ----------------------- | ------------------------------------------------------------------------------ | ----- |
+| `isin.ts`               | validation Luhn ISO 6166, normalisation, pays (§16/§21)                        | ✅    |
+| `validation.ts`         | plausibilité TER/poids/somme/date → statut de validation (§11)                 | ✅    |
+| `completeness.ts`       | Fund Completeness Score interne 0-100 + ventilation (§8)                       | ✅    |
+| `search.ts`             | parse requête, alias, matcher ISIN/ticker/nom/indice (§16)                     | ✅    |
+| `sources/registry.ts`   | `SOURCE_REGISTRY` typé + arbitrage de priorité (§4/§23)                        | ✅    |
+| `connectors/types.ts`   | contrat du pipeline (Connector/Observation/Confidence, §5)                     | —     |
+| `connectors/ishares.ts` | connecteur iShares : factsheet → observations sourcées (§5/§10)                | ✅    |
+| `engine.ts`             | runner d'ingestion + filtres de publication (§5/§17/§20)                       | ✅    |
+| `persist.ts`            | observations → `data_observations` + colonnes canoniques `assets` (§3/§11/§24) | ✅    |
+| `persist.supabase.ts`   | adaptateur Supabase de l'`ObservationWriter` (I/O server-only)                 | —     |
 
 ---
 
@@ -125,10 +127,12 @@ l'architecture.
 **Suite :**
 
 7. ✅ `iSharesConnector` (réutilise le parser factsheet) + runner `engine.ts`
-   → produisent des `Observation[]` sourcées et validées. **Reste** : le
-   downloader réseau (télécharge le PDF officiel + `pdftotext`), le connecteur
-   `AmundiConnector`, et la server function de persistance vers
-   `data_observations` / `fund_holdings`.
+   - persistance `persist.ts` (→ `data_observations` + colonnes canoniques
+     `assets`, avec provenance, valeurs rejetées jamais écrites). Chemin
+     d'ingestion complet et testé de bout en bout. **Reste** : le downloader
+     réseau (PDF officiel + `pdftotext`), le connecteur `AmundiConnector`, et
+     l'écriture des `fund_holdings` (le parser ESG actuel ne fournit pas la
+     composition).
 8. Backfill ISIN sur les ~82 assets existants depuis les documents officiels.
 9. Server function + UI « Demander l'analyse » (`fund_requests`) sur recherche vide (§27).
 10. Job planifié d'ingestion (quotidien : nouveautés ; hebdo : holdings ; mensuel :
