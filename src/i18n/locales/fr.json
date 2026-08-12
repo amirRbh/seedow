@@ -459,6 +459,11 @@
     "profile": "Profil",
     "learn": "Apprendre"
   },
+  "home_glance": {
+    "performance": "Performance",
+    "impact": "Impact",
+    "risk": "Risque"
+  },
   "dashboard": {
     "greeting_morning": "Belle matinée",
     "greeting_afternoon": "Bel après-midi",

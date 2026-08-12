@@ -13,6 +13,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 import { ActionOfTheDayCard } from "@/components/dashboard/ActionOfTheDayCard";
+import { HomeGlance } from "@/components/dashboard/HomeGlance";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -256,8 +257,17 @@ function Dashboard() {
             </div>
           )}
 
-          {portfolio && (
+          {/* Coup d'œil « glanceable » (refonte mobile §5) : Performance · Impact ·
+              Risque, compris en < 5 s, chaque tuile menant au détail. Placé juste
+              sous le solde pour tenir au-dessus du pli. */}
+          {portfolio && holdings.length > 0 && (
             <div className="mt-5">
+              <HomeGlance metrics={portfolio.metrics} returnPct={returnPct} />
+            </div>
+          )}
+
+          {portfolio && (
+            <div className="mt-4">
               <InvestDialog label={t("dashboard.invest_demo")} defaultAmount={200} />
               <SimulationBadge className="mt-2" />
             </div>
