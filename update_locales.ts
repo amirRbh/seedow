@@ -1203,9 +1203,45 @@ const portfolioDisclaimerEn = {
     "Educational simulation on a virtual portfolio. The figures shown are the measured consequence of your own choices: Seedow makes no personalised recommendation, executes no transaction, and is neither an investment services provider nor a financial investment adviser.",
 };
 
+// ── Landing : sélecteur de parcours « Que veux-tu faire ? » (mobile-first) ──
+const landingPathsFr = {
+  paths: {
+    heading: "Que veux-tu faire ?",
+    beginner_eyebrow: "Je débute",
+    beginner_title: "Je n'ai jamais investi",
+    beginner_desc: "On part de zéro, sans jargon. En 2 minutes tu vois par où commencer.",
+    beginner_cta: "Commencer",
+    learn_eyebrow: "Je veux comprendre",
+    learn_title: "ETF, fonds, actions… c'est quoi ?",
+    learn_desc: "Comprends ce qu'il y a derrière ces mots, sans jargon, à ton rythme.",
+    learn_cta: "Comprendre",
+    investor_eyebrow: "J'investis déjà",
+    investor_title: "Comprendre mon portefeuille",
+    investor_desc: "Ajoute tes investissements et vois vraiment ce que ton argent finance.",
+    investor_cta: "Voir mon portefeuille",
+  },
+};
+const landingPathsEn = {
+  paths: {
+    heading: "What would you like to do?",
+    beginner_eyebrow: "I'm starting out",
+    beginner_title: "I've never invested",
+    beginner_desc: "Start from scratch, no jargon. In 2 minutes you'll see where to begin.",
+    beginner_cta: "Get started",
+    learn_eyebrow: "I want to understand",
+    learn_title: "ETFs, funds, stocks… what are they?",
+    learn_desc: "Understand what's behind these words, no jargon, at your own pace.",
+    learn_cta: "Understand",
+    investor_eyebrow: "I already invest",
+    investor_title: "Understand my portfolio",
+    investor_desc: "Add your investments and truly see what your money funds.",
+    investor_cta: "See my portfolio",
+  },
+};
+
 const mergedFr = deepMerge(fr, {
   allocation_refiner: refinerPlainFr,
-  landing: { rayon_x: rayonXFr },
+  landing: { rayon_x: rayonXFr, ...landingPathsFr },
   empty_portfolio: { build_own: "Construire mon portefeuille moi-même" },
   data_provenance: dataProvenanceFr,
   asset_picker: assetPickerFr,
@@ -1227,7 +1263,7 @@ const mergedFr = deepMerge(fr, {
   portfolio_customizer: deepMerge(portfolioCustomizerFr, customizerV2Fr),
 });
 const mergedEn = deepMerge(en, {
-  landing: { rayon_x: rayonXEn },
+  landing: { rayon_x: rayonXEn, ...landingPathsEn },
   empty_portfolio: { build_own: "Build my portfolio myself" },
   data_provenance: dataProvenanceEn,
   asset_picker: assetPickerEn,
