@@ -28,6 +28,9 @@ export function AssetScreener() {
   const [filters, setFilters] = useState<ScreenerFilters>(DEFAULT_FILTERS);
   const [panelOpen, setPanelOpen] = useState(false);
   const [detail, setDetail] = useState<DiscoverAsset | null>(null);
+  // Vue par défaut (refonte mobile §15) : on ne déverse pas tout l'univers d'un
+  // coup. On montre « les mieux notés », puis « Voir tout » déplie la liste.
+  const [showAll, setShowAll] = useState(false);
   const {
     assets,
     loading,
@@ -76,9 +79,22 @@ export function AssetScreener() {
   // fois plutôt que tout le résultat filtré d'un coup.
   const PAGE_SIZE = 30;
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-  useEffect(() => setVisibleCount(PAGE_SIZE), [filters]);
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+    setShowAll(false);
+  }, [filters]);
   const visibleResults = results.slice(0, visibleCount);
   const sentinelRef = useRef<HTMLDivElement>(null);
+
+  // « Les mieux notés » : top 5 par score d'impact, montrés seuls tant que
+  // l'utilisateur n'a ni cherché, ni filtré, ni demandé « Voir tout ».
+  const TOP_N = 5;
+  const topRated = useMemo(
+    () => [...results].sort((a, b) => b.overall_esg_score - a.overall_esg_score).slice(0, TOP_N),
+    [results],
+  );
+  const curatedView =
+    activeCount === 0 && searchTerm.length === 0 && !showAll && results.length > TOP_N;
 
   useEffect(() => {
     const node = sentinelRef.current;
@@ -358,6 +374,22 @@ export function AssetScreener() {
               {t("discover.reset")}
             </button>
           </div>
+        ) : curatedView ? (
+          <>
+            <p className="text-tag uppercase tracking-[0.16em] text-ink-3 font-semibold pt-1">
+              {t("discover.top_rated")}
+            </p>
+            {topRated.map((asset, i) => (
+              <AssetRow key={asset.id} asset={asset} index={i} onOpen={() => setDetail(asset)} />
+            ))}
+            <button
+              type="button"
+              onClick={() => setShowAll(true)}
+              className="w-full h-11 rounded-full border border-paper-3 bg-paper text-ink text-body-sm font-semibold hover:bg-paper-2 transition-colors"
+            >
+              {t("discover.see_all", { count: results.length })}
+            </button>
+          </>
         ) : (
           <>
             {visibleResults.map((asset, i) => (

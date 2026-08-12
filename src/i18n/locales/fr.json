@@ -464,6 +464,9 @@
     "impact": "Impact",
     "risk": "Risque"
   },
+  "why_ethi": {
+    "label": "Pourquoi ?"
+  },
   "dashboard": {
     "greeting_morning": "Belle matinée",
     "greeting_afternoon": "Bel après-midi",
@@ -632,6 +635,8 @@
     "invest": "Investir",
     "invest_in": "Investir dans {{ticker}}",
     "search_placeholder": "Rechercher un ticker, un nom, un émetteur…",
+    "top_rated": "Les mieux notés",
+    "see_all": "Voir tout ({{count}})",
     "filters_btn": "Filtres",
     "results_count_one": "{{count}} actif",
     "results_count_other": "{{count}} actifs",
@@ -1433,6 +1438,8 @@
     },
     "impact_overview": "Ce que ton argent finance",
     "carbon_detail": "Détail carbone & piliers ESG",
+    "why_score_label": "Pourquoi ce score ?",
+    "why_score_q": "Pourquoi Seedow attribue-t-il ce score d'impact à {{name}} ? Explique-moi simplement ce qui le compose.",
     "cost": {
       "title": "Combien ça coûte",
       "per_year": "/ an",

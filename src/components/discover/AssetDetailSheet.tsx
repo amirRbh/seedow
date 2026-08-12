@@ -7,6 +7,7 @@ import { formatCurrency, formatPercent } from "@/lib/format";
 import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { Glossary, useTermLabel } from "@/components/ui/Glossary";
 import { RelatedCourse } from "@/components/courses/RelatedCourse";
+import { WhyEthi } from "@/components/ethi/WhyEthi";
 import {
   DataCoverageBadge,
   GreenwashingBadge,
@@ -148,6 +149,14 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                 carbone dense — progressive disclosure : l'essentiel d'abord. */}
             <div className="mb-3">
               <ImpactBadge score={asset.overall_esg_score} />
+            </div>
+
+            {/* « Pourquoi ce score ? » — réponse Ethi en un clic (§11/§24). */}
+            <div className="mb-3">
+              <WhyEthi
+                label={t("asset_detail.why_score_label")}
+                question={t("asset_detail.why_score_q", { name: asset.name })}
+              />
             </div>
 
             {/* Détail carbone + piliers ESG — replié : le verdict (badge) au-dessus
