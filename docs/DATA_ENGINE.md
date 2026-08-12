@@ -132,8 +132,12 @@ l'architecture.
 7. ✅ Chemin d'ingestion complet et testé de bout en bout : `iSharesConnector`
    (réutilise le parser factsheet), runner `engine.ts`, puis persistance
    `persist.ts` (→ `data_observations` + colonnes canoniques `assets`, avec
-   provenance ; valeurs rejetées jamais écrites). **Reste** : le downloader
-   réseau (PDF officiel + `pdftotext`), le connecteur `AmundiConnector`, et
+   provenance ; valeurs rejetées jamais écrites). Exécutable via le script local
+   `scripts/ingest-fund-data.ts` (`bun run ingest:fund-data [--sql]`) :
+   télécharge les fiches iShares US, les passe par le connecteur, et **émet le
+   SQL** (INSERT `data_observations` + UPDATE `assets`) — écriture gouvernée,
+   comme `ingest:esg`. **Reste** : câbler `persistObservations` sur un client
+   service_role pour l'écriture directe, le connecteur `AmundiConnector`, et
    l'écriture des `fund_holdings` (le parser ESG actuel ne fournit pas la
    composition).
 8. Backfill ISIN sur les ~82 assets existants depuis les documents officiels.
