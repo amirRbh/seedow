@@ -126,13 +126,13 @@ l'architecture.
 
 **Suite :**
 
-7. ✅ `iSharesConnector` (réutilise le parser factsheet) + runner `engine.ts`
-   - persistance `persist.ts` (→ `data_observations` + colonnes canoniques
-     `assets`, avec provenance, valeurs rejetées jamais écrites). Chemin
-     d'ingestion complet et testé de bout en bout. **Reste** : le downloader
-     réseau (PDF officiel + `pdftotext`), le connecteur `AmundiConnector`, et
-     l'écriture des `fund_holdings` (le parser ESG actuel ne fournit pas la
-     composition).
+7. ✅ Chemin d'ingestion complet et testé de bout en bout : `iSharesConnector`
+   (réutilise le parser factsheet), runner `engine.ts`, puis persistance
+   `persist.ts` (→ `data_observations` + colonnes canoniques `assets`, avec
+   provenance ; valeurs rejetées jamais écrites). **Reste** : le downloader
+   réseau (PDF officiel + `pdftotext`), le connecteur `AmundiConnector`, et
+   l'écriture des `fund_holdings` (le parser ESG actuel ne fournit pas la
+   composition).
 8. Backfill ISIN sur les ~82 assets existants depuis les documents officiels.
 9. Server function + UI « Demander l'analyse » (`fund_requests`) sur recherche vide (§27).
 10. Job planifié d'ingestion (quotidien : nouveautés ; hebdo : holdings ; mensuel :
