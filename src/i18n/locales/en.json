@@ -637,6 +637,7 @@
     "search_placeholder": "Search ticker, name, issuer…",
     "top_rated": "Top rated",
     "see_all": "See all ({{count}})",
+    "themes_eyebrow": "Themes",
     "filters_btn": "Filters",
     "results_count_one": "{{count}} asset",
     "results_count_other": "{{count}} assets",
@@ -1890,6 +1891,8 @@
     "ter_hint": "TER: percentage deducted each year by funds. Lower is better."
   },
   "comparatif_panel": {
+    "why_gap": "Why this gap?",
+    "why_gap_q": "Why does my Seedow portfolio differ from the {{bench}} on impact and performance? Explain it simply.",
     "simulated_10y": "Simulated capital at 10 years",
     "on_invested": "On {{amount}} € invested",
     "gap_msci": "Gap vs MSCI World",

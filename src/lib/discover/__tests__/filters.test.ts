@@ -2,6 +2,8 @@ import { describe, it, expect } from "vitest";
 import {
   DEFAULT_FILTERS,
   INTENT_PRESETS,
+  THEME_OPTIONS,
+  activeFilterCount,
   isIntentActive,
   toggleIntent,
   type ScreenerFilters,
@@ -44,5 +46,23 @@ describe("découverte par intentions", () => {
     const withClimate: ScreenerFilters = toggleIntent(DEFAULT_FILTERS, preset("climate").patch);
     expect(isIntentActive(withClimate, preset("climate").patch)).toBe(true);
     expect(isIntentActive(withClimate, preset("low_risk").patch)).toBe(false);
+  });
+});
+
+describe("thématiques de découverte", () => {
+  it("expose les six causes (alignées sur cause_tag)", () => {
+    expect([...THEME_OPTIONS]).toEqual([
+      "climat",
+      "biodiversite",
+      "humain",
+      "egalite",
+      "tech",
+      "circulaire",
+    ]);
+  });
+
+  it("une thématique sélectionnée compte comme un filtre actif", () => {
+    expect(activeFilterCount(DEFAULT_FILTERS)).toBe(0);
+    expect(activeFilterCount({ ...DEFAULT_FILTERS, themes: ["climat"] })).toBe(1);
   });
 });

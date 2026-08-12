@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Leaf, TrendingUp, Gauge, Coins } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { KPIFigure } from "@/components/ui/KPIFigure";
+import { WhyEthi } from "@/components/ethi/WhyEthi";
 import { Glossary, GLOSSARY } from "@/components/ui/Glossary";
 import { useViewMode } from "@/hooks/useViewMode";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
@@ -249,6 +250,14 @@ export function ComparatifPanel() {
       {/* Verdict scannable (analyse UX §08) : comprendre la différence AVANT de
           lire le détail. Mot + icône, jamais couleur seule (a11y §4). */}
       <VerdictSummary items={buildVerdicts(seedow, ref, t)} vs={t(benchmark.labelKey)} />
+
+      {/* « Pourquoi cet écart ? » — réponse Ethi en un clic (§11/§24). */}
+      <div className="-mt-3 mb-6">
+        <WhyEthi
+          label={t("comparatif_panel.why_gap")}
+          question={t("comparatif_panel.why_gap_q", { bench: t(benchmark.labelKey) })}
+        />
+      </div>
 
       <div className="grid grid-cols-2 gap-4">
         <KPIFigure

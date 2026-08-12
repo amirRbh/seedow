@@ -637,6 +637,7 @@
     "search_placeholder": "Rechercher un ticker, un nom, un émetteur…",
     "top_rated": "Les mieux notés",
     "see_all": "Voir tout ({{count}})",
+    "themes_eyebrow": "Thématiques",
     "filters_btn": "Filtres",
     "results_count_one": "{{count}} actif",
     "results_count_other": "{{count}} actifs",
@@ -1872,6 +1873,8 @@
     "ter_hint": "TER : pourcentage prélevé chaque année par les fonds. Plus c'est bas, mieux c'est."
   },
   "comparatif_panel": {
+    "why_gap": "Pourquoi cet écart ?",
+    "why_gap_q": "Pourquoi mon portefeuille Seedow diffère-t-il du {{bench}} sur l'impact et la performance ? Explique-moi simplement.",
     "simulated_10y": "Capital simulé à 10 ans",
     "on_invested": "Sur {{amount}} € investis",
     "gap_msci": "Écart vs MSCI World",

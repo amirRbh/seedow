@@ -10,6 +10,7 @@ import {
   DEFAULT_FILTERS,
   INTENT_PRESETS,
   REGION_OPTIONS,
+  THEME_OPTIONS,
   activeFilterCount,
   applyFilters,
   isIntentActive,
@@ -114,7 +115,7 @@ export function AssetScreener() {
   const update = <K extends keyof ScreenerFilters>(key: K, value: ScreenerFilters[K]) =>
     setFilters((f) => ({ ...f, [key]: value }));
 
-  const toggleInArray = (key: "categories" | "regions", value: string) => {
+  const toggleInArray = (key: "categories" | "regions" | "themes", value: string) => {
     setFilters((f) => {
       const arr = f[key];
       return {
@@ -156,6 +157,35 @@ export function AssetScreener() {
             placeholder={t("discover.search_placeholder")}
             className="w-full bg-card border border-paper-3 rounded-full pl-9 pr-4 py-3 text-body-sm text-ink placeholder:text-ink-3 outline-none focus:border-ink/40 transition-colors"
           />
+        </div>
+      </div>
+
+      {/* Thématiques (refonte mobile §15) — « pour quoi veux-tu investir ? ».
+          Le premier langage du débutant, avant même les intentions financières.
+          Filtre par cause réellement portée par l'actif (multi-sélection). */}
+      <div className="px-5">
+        <p className="text-tag uppercase tracking-[0.16em] text-ink-3 font-semibold mb-2">
+          {t("discover.themes_eyebrow")}
+        </p>
+        <div className="flex flex-wrap gap-1.5">
+          {THEME_OPTIONS.map((theme) => {
+            const active = filters.themes.includes(theme);
+            return (
+              <button
+                key={theme}
+                type="button"
+                aria-pressed={active}
+                onClick={() => toggleInArray("themes", theme)}
+                className={`px-3.5 py-2 rounded-full text-caption font-semibold transition-colors border ${
+                  active
+                    ? "bg-mint text-paper border-mint"
+                    : "bg-paper-2 text-ink border-paper-3 hover:border-mint/50"
+                }`}
+              >
+                {t(`onboarding.steps.values.${theme}`)}
+              </button>
+            );
+          })}
         </div>
       </div>
 
