@@ -377,6 +377,21 @@
         "subtitle_new": "Deux minutes, sans compte, sans carte bancaire.",
         "subtitle_authed": "Ton espace t'attend."
       }
+    },
+    "paths": {
+      "heading": "Que veux-tu faire ?",
+      "beginner_eyebrow": "Je débute",
+      "beginner_title": "Je n'ai jamais investi",
+      "beginner_desc": "On part de zéro, sans jargon. En 2 minutes tu vois par où commencer.",
+      "beginner_cta": "Commencer",
+      "learn_eyebrow": "Je veux comprendre",
+      "learn_title": "ETF, fonds, actions… c'est quoi ?",
+      "learn_desc": "Comprends ce qu'il y a derrière ces mots, sans jargon, à ton rythme.",
+      "learn_cta": "Comprendre",
+      "investor_eyebrow": "J'investis déjà",
+      "investor_title": "Comprendre mon portefeuille",
+      "investor_desc": "Ajoute tes investissements et vois vraiment ce que ton argent finance.",
+      "investor_cta": "Voir mon portefeuille"
     }
   },
   "auth": {

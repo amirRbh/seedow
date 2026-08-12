@@ -198,6 +198,48 @@ function Landing() {
         </div>
       </section>
 
+      {/* SÉLECTEUR DE PARCOURS — « Que veux-tu faire ? » (mobile-first, §3) */}
+      {isAuthed ? null : (
+        <section className="px-6 pt-4 pb-8 md:pt-8">
+          <Reveal>
+            <div className="max-w-[1100px] mx-auto">
+              <h2 className="rv-card-title text-center mb-8">{t("landing.paths.heading")}</h2>
+              <div className="grid gap-4 md:grid-cols-3">
+                <PathCard
+                  accent="var(--mint)"
+                  eyebrow={t("landing.paths.beginner_eyebrow")}
+                  title={t("landing.paths.beginner_title")}
+                  desc={t("landing.paths.beginner_desc")}
+                  cta={t("landing.paths.beginner_cta")}
+                  to="/onboarding"
+                  search={{ guest: true }}
+                  onClick={onCta("path_beginner", "preview")}
+                />
+                <PathCard
+                  accent="var(--ice)"
+                  eyebrow={t("landing.paths.learn_eyebrow")}
+                  title={t("landing.paths.learn_title")}
+                  desc={t("landing.paths.learn_desc")}
+                  cta={t("landing.paths.learn_cta")}
+                  to="/comprendre"
+                  onClick={onCta("path_learn", "preview")}
+                />
+                <PathCard
+                  accent="var(--volt)"
+                  eyebrow={t("landing.paths.investor_eyebrow")}
+                  title={t("landing.paths.investor_title")}
+                  desc={t("landing.paths.investor_desc")}
+                  cta={t("landing.paths.investor_cta")}
+                  to="/auth"
+                  search={{ redirect: "/portfolio", mode: "login" }}
+                  onClick={onCta("path_investor", "login")}
+                />
+              </div>
+            </div>
+          </Reveal>
+        </section>
+      )}
+
       {/* BANDEAU PREUVE — chiffres réels et sourcés */}
       <section className="px-6 py-10 md:py-12">
         <Reveal>
@@ -539,6 +581,68 @@ function Reveal({ children }: { children: React.ReactNode }) {
     <div ref={ref} className={visible ? "rv-reveal is-in" : "rv-reveal"}>
       {children}
     </div>
+  );
+}
+
+/**
+ * Carte de parcours — grande zone tactile (toute la carte est un lien), pensée
+ * pouce sur mobile. Réponds à « quelle est la prochaine chose que je peux faire ? »
+ */
+function PathCard({
+  accent,
+  eyebrow,
+  title,
+  desc,
+  cta,
+  to,
+  search,
+  onClick,
+}: {
+  accent: string;
+  eyebrow: string;
+  title: string;
+  desc: string;
+  cta: string;
+  to: string;
+  search?: Record<string, unknown>;
+  onClick?: () => void;
+}) {
+  return (
+    <Link
+      to={to}
+      search={search}
+      onClick={onClick}
+      className="apple-card group flex flex-col p-6 min-h-[168px] transition-transform duration-200 hover:-translate-y-0.5 outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--mint)]"
+      style={{ border: "1px solid var(--paper-3)" }}
+    >
+      <span
+        className="font-mono text-caption uppercase tracking-[0.14em] inline-flex items-center gap-2"
+        style={{ color: accent }}
+      >
+        <span
+          aria-hidden
+          className="inline-block w-[7px] h-[7px] rounded-full"
+          style={{ background: accent }}
+        />
+        {eyebrow}
+      </span>
+      <h3
+        className="mt-3 text-body-lg font-semibold text-[color:var(--apple-text)]"
+        style={{ letterSpacing: "-0.01em" }}
+      >
+        {title}
+      </h3>
+      <p className="mt-2 text-body-sm leading-[1.45] text-[color:var(--apple-text-2)]">{desc}</p>
+      <span
+        className="mt-auto pt-4 text-body-sm font-semibold inline-flex items-center gap-1"
+        style={{ color: accent }}
+      >
+        {cta}
+        <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-0.5">
+          ›
+        </span>
+      </span>
+    </Link>
   );
 }
 

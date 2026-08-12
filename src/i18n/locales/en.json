@@ -377,6 +377,21 @@
         "subtitle_new": "Two minutes, no account, no card.",
         "subtitle_authed": "Your space is waiting."
       }
+    },
+    "paths": {
+      "heading": "What would you like to do?",
+      "beginner_eyebrow": "I'm starting out",
+      "beginner_title": "I've never invested",
+      "beginner_desc": "Start from scratch, no jargon. In 2 minutes you'll see where to begin.",
+      "beginner_cta": "Get started",
+      "learn_eyebrow": "I want to understand",
+      "learn_title": "ETFs, funds, stocks… what are they?",
+      "learn_desc": "Understand what's behind these words, no jargon, at your own pace.",
+      "learn_cta": "Understand",
+      "investor_eyebrow": "I already invest",
+      "investor_title": "Understand my portfolio",
+      "investor_desc": "Add your investments and truly see what your money funds.",
+      "investor_cta": "See my portfolio"
     }
   },
   "auth": {
