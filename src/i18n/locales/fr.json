@@ -1397,7 +1397,13 @@
   "asset_detail": {
     "per_share": "/ part",
     "summary": "Résumé",
-    "impact_overview": "Aperçu de l'impact · versement mensuel sur 1 an",
+    "impact_overview": "Ce que ton argent finance",
+    "cost": {
+      "title": "Combien ça coûte",
+      "per_year": "/ an",
+      "on_1000": "≈ {{amount}} par an pour 1 000 € investis",
+      "hint": "Ces frais sont prélevés automatiquement, chaque année, sur ce que tu détiens. Plus ils sont bas, plus il te reste. En dessous de 0,30 %/an, c'est considéré comme peu cher."
+    },
     "monthly_deposit": "Versement mensuel",
     "per_month": "€/mois",
     "co2_avoided": "CO₂ évité",

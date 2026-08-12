@@ -1415,7 +1415,13 @@
   "asset_detail": {
     "per_share": "/ share",
     "summary": "Summary",
-    "impact_overview": "Impact overview · monthly deposit over 1 year",
+    "impact_overview": "What your money funds",
+    "cost": {
+      "title": "What it costs",
+      "per_year": "/ year",
+      "on_1000": "≈ {{amount}} per year for every €1,000 invested",
+      "hint": "These fees are taken automatically, every year, from what you hold. The lower they are, the more you keep. Below 0.30%/year is considered cheap."
+    },
     "monthly_deposit": "Monthly deposit",
     "per_month": "€/month",
     "co2_avoided": "CO₂ avoided",
