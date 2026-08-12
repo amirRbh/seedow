@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
@@ -14,7 +14,6 @@ import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { ShareToggle } from "@/components/community/ShareToggle";
 import { ComparatifPanel } from "@/components/portfolio/ComparatifPanel";
 import { AllocationRefiner } from "@/components/portfolio/AllocationRefiner";
-import { PortfolioAtAGlance } from "@/components/portfolio/PortfolioAtAGlance";
 import { PortfolioCustomizer } from "@/components/portfolio/PortfolioCustomizer";
 import { ObjectivesTeaser } from "@/components/portfolio/ObjectivesTeaser";
 import { ExploreSection } from "@/components/dashboard/ExploreSection";
@@ -68,7 +67,6 @@ function Portfolio() {
   const navigate = useNavigate();
   const { portfolio, loading, refresh: refreshPortfolio } = useActivePortfolio();
   const valuation = usePortfolioValuation();
-  const detailsRef = useRef<HTMLElement | null>(null);
 
   // Intention « Personnaliser » posée par l'écran des 3 choix (post-simulation) :
   // on ouvre directement l'onglet d'ajustement, puis on consomme le drapeau.
@@ -172,23 +170,7 @@ function Portfolio() {
         />
         <ValuationConsistencyBanner consistency={valuation.consistency} />
 
-        <section className="px-5 pt-4">
-          <PortfolioAtAGlance
-            metrics={portfolio.metrics}
-            holdings={portfolio.holdings}
-            rationale={{
-              causes: portfolio.causes,
-              exclusions: portfolio.exclusions,
-              horizon_years: portfolio.horizon_years,
-              risk_target: portfolio.risk_target,
-            }}
-            onSeeDetails={() =>
-              detailsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
-            }
-          />
-        </section>
-
-        <section ref={detailsRef} className="px-5 pt-6 scroll-mt-4">
+        <section className="px-5 pt-6">
           <Tabs
             value={tab ?? "performance"}
             onValueChange={(v) =>
