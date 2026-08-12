@@ -100,6 +100,22 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
         </div>
 
         <div className="px-5 py-5 space-y-6">
+          {/* « En clair » — pédagogie contextuelle (analyse UX §08/§14 étapes 1-2).
+              Un débutant ne sait pas si « equity_dev » ou « green_bond » est une
+              entreprise, un panier, un prêt ou de l'immobilier. On le lui dit en
+              une phrase, AVANT le résumé de l'émetteur, sans jargon. */}
+          <section className="rounded-xl bg-highlight-5/60 border border-highlight-4 p-3.5">
+            <p className="text-tag uppercase tracking-[0.18em] text-highlight-1 font-semibold mb-1.5">
+              {t("asset_detail.plain.label")}
+            </p>
+            <p className="text-body-sm text-ink-2 leading-relaxed">
+              <span className="font-semibold text-ink">
+                {t(`asset_detail.plain.kinds.${assetKind(asset.asset_class)}.title`)} ·{" "}
+              </span>
+              {t(`asset_detail.plain.kinds.${assetKind(asset.asset_class)}.desc`)}
+            </p>
+          </section>
+
           {/* {t("asset_detail.summary")} */}
           <section>
             <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold mb-2">
@@ -410,6 +426,21 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
 }
 
 const BOND_CLASSES = new Set(["green_bond", "social_bond", "sov_bond", "corporate_bond"]);
+
+/**
+ * Regroupe les classes d'actifs techniques en familles compréhensibles par un
+ * débutant, pour l'explainer « En clair ». On garde 6 familles seulement — au-delà,
+ * on noierait (cf. §09). Chaque famille a une clé i18n dédiée (plain.kinds.*).
+ */
+type AssetKind = "equity" | "thematic" | "bond" | "reit" | "commodity" | "cash";
+function assetKind(assetClass: string): AssetKind {
+  if (assetClass === "thematic") return "thematic";
+  if (BOND_CLASSES.has(assetClass)) return "bond";
+  if (assetClass === "reit") return "reit";
+  if (assetClass === "commodity") return "commodity";
+  if (assetClass === "cash") return "cash";
+  return "equity"; // equity_dev, equity_em, défaut
+}
 
 function buildRisks(
   asset: DiscoverAsset,
