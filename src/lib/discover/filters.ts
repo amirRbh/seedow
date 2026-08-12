@@ -4,6 +4,7 @@ export type SortKey = "default" | "esg_desc" | "ter_asc" | "price_asc" | "price_
 
 export interface ScreenerFilters {
   search: string;
+  themes: string[]; // empty = all — causes (cause_tag) portées par l'actif
   categories: string[]; // empty = all
   regions: string[]; // empty = all
   maxRisk: number; // 7 = no cap
@@ -14,6 +15,7 @@ export interface ScreenerFilters {
 
 export const DEFAULT_FILTERS: ScreenerFilters = {
   search: "",
+  themes: [],
   categories: [],
   regions: [],
   maxRisk: 7,
@@ -21,6 +23,22 @@ export const DEFAULT_FILTERS: ScreenerFilters = {
   minEsg: 0,
   sort: "default",
 };
+
+/**
+ * Thématiques de découverte (§15) — le langage d'un débutant qui veut « investir
+ * pour le climat ». Ce sont les vraies causes (`cause_tag`) portées par les actifs
+ * (`DiscoverAsset.themes`), pas des libellés décoratifs : une thématique qui ne
+ * matcherait aucun actif n'a pas sa place ici. Libellés en i18n
+ * (`onboarding.steps.values.*`, déjà traduits).
+ */
+export const THEME_OPTIONS = [
+  "climat",
+  "biodiversite",
+  "humain",
+  "egalite",
+  "tech",
+  "circulaire",
+] as const;
 
 const REGION_LABEL: Record<string, string> = {
   world: "Monde",
@@ -104,6 +122,7 @@ export function applyFilters(assets: DiscoverAsset[], f: ScreenerFilters): Disco
       const hay = `${a.ticker} ${a.name} ${a.issuer ?? ""}`.toLowerCase();
       if (!hay.includes(q)) return false;
     }
+    if (f.themes.length > 0 && !f.themes.some((th) => a.themes.includes(th))) return false;
     if (f.categories.length > 0 && !f.categories.includes(a.category)) return false;
     if (f.regions.length > 0 && !f.regions.includes(dominantRegion(a))) return false;
     if (a.risk_level > f.maxRisk) return false;
@@ -135,6 +154,7 @@ export function applyFilters(assets: DiscoverAsset[], f: ScreenerFilters): Disco
 export function activeFilterCount(f: ScreenerFilters): number {
   let n = 0;
   if (f.search.trim()) n++;
+  if (f.themes.length > 0) n++;
   if (f.categories.length > 0) n++;
   if (f.regions.length > 0) n++;
   if (f.maxRisk < 7) n++;
