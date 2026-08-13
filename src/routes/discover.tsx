@@ -6,15 +6,23 @@ import { AppHeader } from "@/components/navigation/AppHeader";
 import { AssetScreener } from "@/components/discover/AssetScreener";
 import { CommunityPanel } from "@/components/community/CommunityPanel";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { THEME_OPTIONS } from "@/lib/discover/filters";
 import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 
 export const Route = createFileRoute("/discover")({
+  // `?theme=climat` pré-filtre l'explorer sur une conviction (deep-link depuis
+  // Le Fil). On ne retient que les thèmes connus, sinon on ignore.
+  validateSearch: (s: Record<string, unknown>): { theme?: string } => {
+    const raw = typeof s.theme === "string" ? s.theme : undefined;
+    return { theme: raw && (THEME_OPTIONS as readonly string[]).includes(raw) ? raw : undefined };
+  },
   beforeLoad: () => requireAuthedUser("/discover"),
   component: Discover,
 });
 
 function Discover() {
   const { t } = useTranslation();
+  const { theme } = Route.useSearch();
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
@@ -35,7 +43,7 @@ function Discover() {
               <CommunityPanel />
             </TabsContent>
             <TabsContent value="explorer" className="pt-2 -mx-5">
-              <AssetScreener />
+              <AssetScreener initialThemes={theme ? [theme] : undefined} />
             </TabsContent>
           </Tabs>
         </div>
