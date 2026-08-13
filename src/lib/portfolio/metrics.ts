@@ -13,7 +13,6 @@ export function computeMetrics(
   let portfolioReturn = 0;
   let portfolioTER = 0;
   let portfolioESG = 0;
-  let portfolioCO2 = 0;
   // Real carbon footprint — weighted average of per-asset intensity, only over
   // assets that actually have a value. Coverage = share of weight with real data.
   let carbonNumerator = 0;
@@ -32,10 +31,6 @@ export function computeMetrics(
     // Composite ESG: pillar-weighted, with per-pillar fallback to global esg_score
     const composite = compositeEsgScore(a, pillarWeights);
     portfolioESG += w * composite;
-    // CO2 heuristic — kept until per-asset carbon_intensity is available in DB.
-    // Documented as an indicative estimate, not a regulatory figure.
-    const esgDelta = Math.max(0, composite - 50);
-    portfolioCO2 += w * esgDelta * 0.04;
     // Real carbon intensity, when available
     if (a.carbon_intensity_gco2e_per_eur != null) {
       carbonNumerator += w * a.carbon_intensity_gco2e_per_eur;
@@ -101,7 +96,6 @@ export function computeMetrics(
     sharpe,
     esg_score: portfolioESG,
     ter: portfolioTER,
-    co2_avoided_tons: portfolioCO2,
     carbon_intensity_gco2e_per_eur: realCarbon,
     carbon_intensity_coverage: carbonCoverage,
     waci_tco2e_per_musd_sales: waci,

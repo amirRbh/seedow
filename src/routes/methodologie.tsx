@@ -456,15 +456,6 @@ function MethodologyPage() {
                 sub={t("methodologie.metric_fees_hint")}
               />
               <MetricRow
-                label={t("methodologie.metric_co2")}
-                id="metric-co2"
-                tip={t("methodologie.tips.co2")}
-                value={
-                  result ? `${formatNumber(result.metrics.co2_avoided_tons, lang)} t / 10k€` : "—"
-                }
-                sub={t("methodologie.metric_co2_hint")}
-              />
-              <MetricRow
                 label={t("methodologie.metric_carbon_intensity")}
                 id="metric-carbon-intensity"
                 tip={t("methodologie.tips.carbon_intensity")}

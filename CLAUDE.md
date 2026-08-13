@@ -105,7 +105,7 @@ src/
 
 ### Style
 
-- Tailwind CSS v4, tokens `oklch` définis dans `src/styles.css` — ne pas coder de couleurs en dur (`#1D8348`) dans les composants, passer par les tokens.
+- Tailwind CSS v4, design tokens hex définis dans `src/styles.css` (variables CSS `--paper`, `--ink`, `--mint`… mappées en `--color-*` pour Tailwind) — ne pas coder de couleurs en dur (`#146a4a`) dans les composants, passer par les tokens.
 - shadcn/ui pour les primitives d'interface. On ne réécrit pas un composant shadcn depuis zéro si une variante existe déjà.
 
 ---
@@ -128,8 +128,8 @@ Direction artistique extraite des supports de contenu (`seedow_carousel_duel.htm
 | `--paper-2` | `#F5F5F7` | Fond secondaire / page                                                                                     |
 | `--paper-3` | `#D2D2D7` | Bordures, séparateurs                                                                                      |
 | `--ink`     | `#1D1D1F` | Texte principal, fonds sombres                                                                             |
-| `--ink-2`   | `#86868B` | Texte secondaire, métadonnées                                                                              |
-| `--mint`    | `#1D8348` | **Positif** — bonne nouvelle, chiffre favorable, CTA de marque                                             |
+| `--ink-2`   | `#64646a` | Texte secondaire, métadonnées (assombri vs `#86868B` d'origine pour passer WCAG AA, ~5.9:1 sur `--paper`)   |
+| `--mint`    | `#146a4a` | **Positif** — bonne nouvelle, chiffre favorable, CTA de marque (assombri vs `#1D8348` pour le contraste AA) |
 | `--ice`     | `#0071E3` | Information neutre / lien                                                                                  |
 | `--volt`    | `#6E56CF` | Accent secondaire (usage rare, à ne pas banaliser)                                                         |
 | `--alert`   | `#E11D48` | **Négatif** — chiffre défavorable, alerte, danger réel (pas de sur-usage : perd son sens si trop fréquent) |
@@ -170,7 +170,7 @@ Ethi est l'assistant conversationnel du produit (Lovable AI Gateway, Gemini/GPT-
 
 - **Framework** : TanStack Start v1 (React 19, SSR/Edge), routing fichier dans `src/routes/`.
 - **Build** : Vite 7.
-- **Styling** : Tailwind CSS v4, tokens `oklch` dans `src/styles.css`.
+- **Styling** : Tailwind CSS v4, design tokens hex (variables CSS) dans `src/styles.css`.
 - **UI** : shadcn/ui.
 - **Backend** : Lovable Cloud = Supabase managé (Postgres + RLS + Edge Functions + Auth + Storage).
 - **IA** : Lovable AI Gateway (Gemini / GPT-5) — moteur d'Ethi.

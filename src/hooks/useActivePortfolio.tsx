@@ -27,7 +27,6 @@ export interface ActivePortfolioMetrics {
   sharpe: number;
   esg_score: number;
   ter: number;
-  co2_avoided_tons: number;
   // Empreinte carbone réelle (données émetteurs) — présente sur les portefeuilles
   // générés depuis l'ajout de la méthodo carbone ; null/absente sur les plus anciens.
   carbon_intensity_gco2e_per_eur: number | null;

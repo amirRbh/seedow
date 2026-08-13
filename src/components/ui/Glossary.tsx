@@ -54,9 +54,9 @@ export const GLOSSARY = {
     body: "Indice de référence regroupant ~1 500 grandes entreprises des pays développés. Sert de mètre étalon pour comparer la performance d'un portefeuille actions monde.",
   },
   CO2: {
-    title: "CO₂ évité",
-    simple: "CO₂ évité",
-    body: "Estimation des émissions évitées par ton portefeuille par rapport à un indice monde classique, à capital égal. Basée sur l'intensité carbone des actifs (gCO₂e par euro investi).",
+    title: "Intensité carbone",
+    simple: "Empreinte carbone",
+    body: "Émissions de CO₂ des entreprises de ton portefeuille rapportées à leur activité (WACI, tCO₂e par M$ de chiffre d'affaires), comparées à un indice monde. On affiche cet écart uniquement quand assez d'actifs disposent d'une donnée réelle ; sinon « en cours de mesure ». On ne calcule jamais un « CO₂ évité » attribué à un particulier.",
   },
   Allocation: {
     title: "Allocation",

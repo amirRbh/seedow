@@ -62,7 +62,7 @@ export function ShareToggle() {
           expectedReturn: portfolio.metrics?.expected_return ?? null,
           volatility: portfolio.metrics?.volatility ?? null,
           esgScore: portfolio.metrics?.esg_score ?? null,
-          carbonIntensity: portfolio.metrics?.co2_avoided_tons ?? null,
+          carbonIntensity: portfolio.metrics?.waci_tco2e_per_musd_sales ?? null,
         });
         toast.success(t("share_toggle.shared", { handle: ph }));
       }

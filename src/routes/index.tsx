@@ -101,7 +101,7 @@ function Landing() {
               {t("landing.nav.methodology")}
             </Link>
             {isAuthed ? (
-              <Link to="/dashboard" className="apple-btn-primary apple-btn-primary--sm">
+              <Link to="/le-fil" className="apple-btn-primary apple-btn-primary--sm">
                 {t("landing.nav.my_space")}
               </Link>
             ) : (

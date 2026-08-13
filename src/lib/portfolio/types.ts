@@ -119,7 +119,6 @@ export interface PortfolioMetrics {
   sharpe: number;
   esg_score: number;
   ter: number;
-  co2_avoided_tons: number; // heuristic estimate (per 10k€ invested)
   // Real carbon footprint when per-asset intensity data is available.
   // null if no asset in the selection has a carbon_intensity_gco2e_per_eur value.
   carbon_intensity_gco2e_per_eur: number | null; // weighted, gCO2e per € per year

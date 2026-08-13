@@ -141,7 +141,6 @@ export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
         sharpe: 0,
         esg_score: 0,
         ter: 0,
-        co2_avoided_tons: 0,
         carbon_intensity_gco2e_per_eur: null,
         carbon_intensity_coverage: 0,
         waci_tco2e_per_musd_sales: null,

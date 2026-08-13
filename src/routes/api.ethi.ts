@@ -25,7 +25,6 @@ const CtxMetricsSchema = z
     sharpe: num,
     esgScore: num,
     terPct: num,
-    co2AvoidedTons: num,
   })
   .partial()
   .nullable();
