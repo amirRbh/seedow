@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useLang } from "@/hooks/useLang";
 import { useActivePortfolio, type ActiveHolding } from "@/hooks/useActivePortfolio";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
+import { AnimatedFigure } from "@/components/ui/AnimatedFigure";
 import { formatCurrency, formatPercent } from "@/lib/format";
 import { buildPortfolioImpact } from "@/lib/impact/portfolioImpact";
 import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
@@ -126,7 +127,11 @@ function LeFil() {
                 {t("le_fil.money")}
               </p>
               <h2 className="font-value text-figure-hero text-ink mt-1 leading-none">
-                {formatCurrency(totalValue, lang)}
+                <AnimatedFigure
+                  value={totalValue}
+                  from={0}
+                  format={(v) => formatCurrency(v, lang)}
+                />
               </h2>
               <p
                 className={`font-mono text-sm mt-1 ${isGrowing ? "text-mint-ink" : "text-alert-ink"}`}
@@ -451,7 +456,13 @@ function ImpactRing({ score }: { score: number | null }) {
       }}
     >
       <div className="absolute w-11 h-11 rounded-full bg-card" />
-      <span className="relative font-mono text-base font-bold text-ink">{score ?? "—"}</span>
+      <span className="relative font-mono text-base font-bold text-ink">
+        {score === null ? (
+          "—"
+        ) : (
+          <AnimatedFigure value={score} from={0} format={(v) => String(Math.round(v))} />
+        )}
+      </span>
     </div>
   );
 }
