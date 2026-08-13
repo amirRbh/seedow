@@ -91,7 +91,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         gPrefix.current = null;
         if (key === "d") {
           e.preventDefault();
-          navigate({ to: "/dashboard" });
+          navigate({ to: "/le-fil" });
           return;
         }
         if (key === "p") {

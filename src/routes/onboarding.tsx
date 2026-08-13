@@ -399,7 +399,7 @@ function Onboarding() {
             onEnter={async () => {
               clearDraft();
               await router.invalidate();
-              navigate({ to: "/dashboard" });
+              navigate({ to: "/le-fil" });
             }}
             answers={answers}
             mode={isAdditive ? "create" : "replace"}
@@ -413,7 +413,7 @@ function Onboarding() {
             onEnter={async () => {
               clearDraft();
               await router.invalidate();
-              navigate({ to: "/dashboard" });
+              navigate({ to: "/le-fil" });
             }}
           />
         )}

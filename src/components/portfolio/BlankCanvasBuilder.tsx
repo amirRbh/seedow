@@ -76,7 +76,7 @@ export function BlankCanvasBuilder() {
     try {
       await create({ data: { weights } });
       toast.success(t("blank_builder.saved"), { description: t("blank_builder.saved_desc") });
-      await navigate({ to: "/dashboard" });
+      await navigate({ to: "/le-fil" });
     } catch (err) {
       toast.error(t("blank_builder.save_error"), {
         description: err instanceof Error ? err.message : undefined,
