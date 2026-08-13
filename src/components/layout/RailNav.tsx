@@ -42,7 +42,7 @@ export function RailNav() {
   const PRIMARY: NavItem[] = [
     {
       key: "dashboard",
-      path: "/dashboard",
+      path: "/le-fil",
       label: t("rail_nav.home"),
       icon: "home",
       shortcut: "g d",

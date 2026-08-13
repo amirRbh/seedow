@@ -108,7 +108,7 @@ function Landing() {
               <>
                 <Link
                   to="/auth"
-                  search={{ redirect: "/dashboard", mode: "login" }}
+                  search={{ redirect: "/le-fil", mode: "login" }}
                   onClick={onCta("nav", "login")}
                   className="opacity-90 hover:opacity-100"
                 >
@@ -526,7 +526,7 @@ function Landing() {
             ) : (
               <Link
                 to="/auth"
-                search={{ redirect: "/dashboard", mode: "login" }}
+                search={{ redirect: "/le-fil", mode: "login" }}
                 className="hover:text-[color:var(--apple-text)]"
               >
                 {t("landing.footer.login")}

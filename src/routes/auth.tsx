@@ -26,7 +26,7 @@ export const Route = createFileRoute("/auth")({
     if (typeof window === "undefined") return;
     const { data } = await supabase.auth.getSession();
     if (data.session) {
-      throw redirect({ to: search.redirect ?? "/dashboard" });
+      throw redirect({ to: search.redirect ?? "/le-fil" });
     }
   },
   component: AuthPage,
@@ -48,7 +48,7 @@ function AuthPage() {
   const [magic, setMagic] = useState(false);
   const [magicSent, setMagicSent] = useState(false);
 
-  const safeRedirect = search.redirect ?? "/dashboard";
+  const safeRedirect = search.redirect ?? "/le-fil";
   const betaFull = mode === "signup" && capacity?.full === true;
 
   useEffect(() => {
@@ -108,7 +108,7 @@ function AuthPage() {
         const { error: err } = await supabase.auth.signInWithPassword({ email, password });
         if (err) throw err;
       }
-      navigate({ to: search.redirect ?? "/dashboard" });
+      navigate({ to: search.redirect ?? "/le-fil" });
     } catch (err) {
       setError(err instanceof Error ? err.message : t("auth.auth_error"));
     } finally {

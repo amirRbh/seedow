@@ -18,7 +18,7 @@ type NavItem = {
 // désormais comme sections/teasers du portefeuille — plus dans la nav primaire.
 // Ethi reste un bouton flottant transversal.
 const NAV_ITEMS: NavItem[] = [
-  { key: "dashboard", path: "/dashboard", labelKey: "bottom_nav.home", icon: "home" },
+  { key: "dashboard", path: "/le-fil", labelKey: "bottom_nav.home", icon: "home" },
   { key: "discover", path: "/discover", labelKey: "bottom_nav.explore", icon: "decouvrir" },
   { key: "portfolio", path: "/portfolio", labelKey: "bottom_nav.portfolio", icon: "analyse" },
   { key: "cours", path: "/cours", labelKey: "bottom_nav.learn", icon: "cours" },
