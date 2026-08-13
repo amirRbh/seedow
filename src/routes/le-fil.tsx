@@ -153,7 +153,11 @@ function LeFil() {
                   Définis tes convictions pour composer ton portefeuille.
                 </p>
               )}
-              <Link to="/discover" className="mt-3 inline-block font-mono text-xs text-mint-ink">
+              <Link
+                to="/discover"
+                search={{ theme: portfolio?.causes?.[0] }}
+                className="mt-3 inline-block font-mono text-xs text-mint-ink"
+              >
                 Explorer d'autres actifs alignés →
               </Link>
             </Node>

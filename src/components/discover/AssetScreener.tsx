@@ -24,9 +24,13 @@ import { triggerMarketRefresh } from "@/lib/market/refresh.functions";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
 import type { DiscoverAsset } from "@/lib/discover/types";
 
-export function AssetScreener() {
+export function AssetScreener({ initialThemes }: { initialThemes?: string[] } = {}) {
   const { t } = useTranslation();
-  const [filters, setFilters] = useState<ScreenerFilters>(DEFAULT_FILTERS);
+  const [filters, setFilters] = useState<ScreenerFilters>(() =>
+    initialThemes && initialThemes.length > 0
+      ? { ...DEFAULT_FILTERS, themes: initialThemes }
+      : DEFAULT_FILTERS,
+  );
   const [panelOpen, setPanelOpen] = useState(false);
   const [detail, setDetail] = useState<DiscoverAsset | null>(null);
   // Vue par défaut (refonte mobile §15) : on ne déverse pas tout l'univers d'un
