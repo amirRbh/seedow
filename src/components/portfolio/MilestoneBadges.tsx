@@ -19,7 +19,7 @@ export function BadgesCard({ badges }: { badges: MilestoneBadge[] }) {
     <div className="paper-card p-5">
       <div className="flex items-baseline justify-between mb-4">
         <div>
-          <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold">
+          <p className="text-tag uppercase tracking-wider text-ink-3 font-mono">
             {t("milestone_badges.milestones")}
           </p>
           <h3 className="font-value text-2xl text-ink mt-0.5">

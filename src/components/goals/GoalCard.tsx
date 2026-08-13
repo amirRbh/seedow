@@ -78,7 +78,7 @@ export function GoalCard({ goal, onEdit }: { goal: FinancialGoal; onEdit: () => 
         <Progress value={pct} className="mt-2 h-1.5 bg-paper-3 [&>div]:bg-gold" />
         <div className="mt-2 flex items-center justify-between text-caption">
           <span className="text-ink-3 tabular-nums">{pct.toFixed(1)} %</span>
-          <span className={`uppercase tracking-[0.18em] font-semibold ${status.tone}`}>
+          <span className={`uppercase tracking-[0.18em] font-mono ${status.tone}`}>
             {status.label}
           </span>
         </div>
@@ -94,7 +94,7 @@ export function GoalCard({ goal, onEdit }: { goal: FinancialGoal; onEdit: () => 
         <Link
           to="/objectifs/$goalId"
           params={{ goalId: goal.id }}
-          className="text-ink hover:text-gold uppercase tracking-[0.18em] font-semibold"
+          className="text-ink hover:text-gold uppercase tracking-[0.18em] font-mono"
         >
           {t("goal.simulate")}
         </Link>

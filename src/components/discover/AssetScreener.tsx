@@ -168,7 +168,7 @@ export function AssetScreener({ initialThemes }: { initialThemes?: string[] } = 
           Le premier langage du débutant, avant même les intentions financières.
           Filtre par cause réellement portée par l'actif (multi-sélection). */}
       <div className="px-5">
-        <p className="text-tag uppercase tracking-[0.16em] text-ink-3 font-semibold mb-2">
+        <p className="text-tag uppercase tracking-[0.16em] text-ink-3 font-mono mb-2">
           {t("discover.themes_eyebrow")}
         </p>
         <div className="flex flex-wrap gap-1.5">
@@ -195,7 +195,7 @@ export function AssetScreener({ initialThemes }: { initialThemes?: string[] } = 
 
       {/* Découverte par intentions — le langage du débutant, avant les filtres bruts */}
       <div className="px-5">
-        <p className="text-tag uppercase tracking-[0.16em] text-ink-3 font-semibold mb-2">
+        <p className="text-tag uppercase tracking-[0.16em] text-ink-3 font-mono mb-2">
           {t("discover.intents.eyebrow")}
         </p>
         <div className="flex flex-wrap gap-1.5">
@@ -225,7 +225,7 @@ export function AssetScreener({ initialThemes }: { initialThemes?: string[] } = 
         <button
           type="button"
           onClick={() => setPanelOpen((o) => !o)}
-          className={`flex items-center gap-1.5 text-caption uppercase tracking-[0.12em] font-semibold px-3 py-1.5 rounded-full border transition-colors ${
+          className={`flex items-center gap-1.5 text-caption uppercase tracking-[0.12em] font-mono px-3 py-1.5 rounded-full border transition-colors ${
             panelOpen || activeCount > 0
               ? "bg-ink text-paper border-ink"
               : "bg-card text-ink border-paper-3 hover:border-ink/40"
@@ -257,7 +257,7 @@ export function AssetScreener({ initialThemes }: { initialThemes?: string[] } = 
             <button
               type="button"
               onClick={() => setFilters(DEFAULT_FILTERS)}
-              className="text-caption uppercase tracking-[0.12em] font-semibold text-rust hover:text-ink transition-colors"
+              className="text-caption uppercase tracking-[0.12em] font-mono text-rust hover:text-ink transition-colors"
             >
               {t("discover.reset")}
             </button>
@@ -403,14 +403,14 @@ export function AssetScreener({ initialThemes }: { initialThemes?: string[] } = 
             <button
               type="button"
               onClick={() => setFilters(DEFAULT_FILTERS)}
-              className="mt-4 text-caption uppercase tracking-[0.14em] font-semibold text-ink underline underline-offset-4 decoration-gold"
+              className="mt-4 text-caption uppercase tracking-[0.14em] font-mono text-ink underline underline-offset-4 decoration-gold"
             >
               {t("discover.reset")}
             </button>
           </div>
         ) : curatedView ? (
           <>
-            <p className="text-tag uppercase tracking-[0.16em] text-ink-3 font-semibold pt-1">
+            <p className="text-tag uppercase tracking-[0.16em] text-ink-3 font-mono pt-1">
               {t("discover.top_rated")}
             </p>
             {topRated.map((asset, i) => (
@@ -446,7 +446,7 @@ export function AssetScreener({ initialThemes }: { initialThemes?: string[] } = 
 function FilterGroup({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <p className="text-tag uppercase tracking-[0.18em] text-gold font-semibold mb-2">{label}</p>
+      <p className="text-tag uppercase tracking-[0.18em] text-gold font-mono mb-2">{label}</p>
       <div className="flex flex-wrap gap-1.5">{children}</div>
     </div>
   );
@@ -498,7 +498,7 @@ function SliderGroup({
   return (
     <div>
       <div className="flex items-center justify-between mb-2">
-        <p className="text-tag uppercase tracking-[0.18em] text-gold font-semibold">{label}</p>
+        <p className="text-tag uppercase tracking-[0.18em] text-gold font-mono">{label}</p>
         <span className="font-value text-sm text-ink">
           {step < 1 ? value.toFixed(2).replace(".", ",") : value}
           {suffix}

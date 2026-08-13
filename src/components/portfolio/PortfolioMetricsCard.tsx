@@ -123,7 +123,7 @@ export function PortfolioMetricsCard({ metrics }: Props) {
               transition={{ duration: DURATION.base, ease: EASE_REVEAL, delay: i * 0.05 }}
               className={`rounded-xl p-3 border ${c.bg} ${c.border} relative overflow-visible`}
             >
-              <div className="text-tag uppercase tracking-wider text-ink-3 font-semibold leading-tight">
+              <div className="text-tag uppercase tracking-wider text-ink-3 font-mono leading-tight">
                 <MetricLabel label={it.label} hint={it.hint} />
               </div>
               <p className={`font-value text-2xl mt-2 leading-none ${c.text}`}>{it.value}</p>

@@ -178,7 +178,7 @@ function ProfilPage() {
         {/* Hub — regroupe les surfaces annexes retirées du rail de navigation */}
         <section className="px-5 pt-10">
           <div className="gold-rule mb-5" />
-          <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">
+          <p className="text-tag uppercase tracking-[0.22em] text-gold font-mono mb-3">
             {t("profile.hub_eyebrow")}
           </p>
           <h2 className="font-value text-2xl text-ink leading-tight">{t("profile.hub_title")}</h2>
@@ -195,7 +195,7 @@ function ProfilPage() {
         {/* Tes valeurs */}
         <section className="px-5 pt-10">
           <div className="gold-rule mb-5" />
-          <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">
+          <p className="text-tag uppercase tracking-[0.22em] text-gold font-mono mb-3">
             {t("profile.values_eyebrow")}
           </p>
           <h2 className="font-value text-2xl text-ink leading-tight">
@@ -203,7 +203,7 @@ function ProfilPage() {
           </h2>
 
           <div className="mt-5">
-            <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold mb-2">
+            <p className="text-caption uppercase tracking-wider text-ink-3 font-mono mb-2">
               {t("profile.causes_supported")}
             </p>
             {meta && meta.causes.length > 0 ? (
@@ -223,7 +223,7 @@ function ProfilPage() {
           </div>
 
           <div className="mt-5">
-            <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold mb-2">
+            <p className="text-caption uppercase tracking-wider text-ink-3 font-mono mb-2">
               {t("profile.exclusions")}
             </p>
             {meta && meta.exclusions.length > 0 ? (
@@ -263,7 +263,7 @@ function ProfilPage() {
         {/* Ton portefeuille */}
         <section className="px-5 pt-10">
           <div className="gold-rule mb-5" />
-          <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">
+          <p className="text-tag uppercase tracking-[0.22em] text-gold font-mono mb-3">
             {t("profile.portfolio_eyebrow")}
           </p>
           <h2 className="font-value text-2xl text-ink leading-tight">
@@ -308,7 +308,7 @@ function ProfilPage() {
         {/* Ta progression */}
         <section className="px-5 pt-10">
           <div className="gold-rule mb-5" />
-          <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">
+          <p className="text-tag uppercase tracking-[0.22em] text-gold font-mono mb-3">
             {t("profile.progress_eyebrow")}
           </p>
           <h2 className="font-value text-2xl text-ink leading-tight">
@@ -346,7 +346,7 @@ function ProfilPage() {
         {/* Historique des décisions */}
         <section className="px-5 pt-10">
           <div className="gold-rule mb-5" />
-          <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">
+          <p className="text-tag uppercase tracking-[0.22em] text-gold font-mono mb-3">
             {t("profile.decisions_eyebrow")}
           </p>
           <h2 className="font-value text-2xl text-ink leading-tight">

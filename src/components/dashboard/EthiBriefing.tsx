@@ -68,7 +68,7 @@ export function EthiBriefing() {
           <Link
             to="/ethi"
             search={{} as never}
-            className="text-tag uppercase tracking-[0.18em] font-semibold text-ink-3 hover:text-ink transition-colors"
+            className="text-tag uppercase tracking-[0.18em] font-mono text-ink-3 hover:text-ink transition-colors"
           >
             {t("ethi_briefing.talk_to_ethi")}
           </Link>
@@ -82,7 +82,7 @@ export function EthiBriefing() {
 
         {briefing.signals.length > 0 && (
           <div className="mt-5">
-            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold mb-3">
+            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono mb-3">
               {t("ethi_briefing.signals", {
                 count: briefing.signals.length,
                 defaultValue: `${briefing.signals.length} signals`,

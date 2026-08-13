@@ -74,7 +74,7 @@ export function HoldingDetailSheet({ open, onClose, holding, valued }: Props) {
 
         {/* Performance bloc */}
         <div className="mt-5 paper-card p-4">
-          <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold mb-2">
+          <p className="text-tag uppercase tracking-wider text-ink-3 font-mono mb-2">
             Évolution du prix
           </p>
           {hasQuote ? (
@@ -114,9 +114,7 @@ export function HoldingDetailSheet({ open, onClose, holding, valued }: Props) {
 
         {/* Position bloc */}
         <div className="mt-3 paper-card p-4">
-          <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold mb-2">
-            Ta position
-          </p>
+          <p className="text-tag uppercase tracking-wider text-ink-3 font-mono mb-2">Ta position</p>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <p className="text-tag uppercase tracking-wider text-ink-3">Allocation</p>
@@ -191,7 +189,7 @@ function FundRejectionCard({ holding }: { holding: ActiveHolding }) {
       <div className="mt-3 text-center">
         <button
           onClick={() => setOpen(true)}
-          className="text-caption uppercase tracking-[0.18em] text-ink-3 hover:text-ink font-semibold transition-colors"
+          className="text-caption uppercase tracking-[0.18em] text-ink-3 hover:text-ink font-mono transition-colors"
         >
           Pas assez vert pour moi ?
         </button>
@@ -201,7 +199,7 @@ function FundRejectionCard({ holding }: { holding: ActiveHolding }) {
 
   return (
     <div className="mt-3 paper-card p-4 border border-paper-3">
-      <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold mb-2">
+      <p className="text-tag uppercase tracking-wider text-ink-3 font-mono mb-2">
         Pourquoi ce fonds ne te convient pas
       </p>
       <p className="text-caption text-ink-3 mb-3">

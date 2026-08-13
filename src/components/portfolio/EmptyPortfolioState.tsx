@@ -127,7 +127,7 @@ function IntentCard({
       search={search}
       className="group flex flex-col rounded-2xl border border-paper-3 bg-paper-2/40 p-5 min-h-[132px] transition-all duration-200 hover:-translate-y-0.5 hover:border-ink/30 outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
     >
-      <span className="inline-flex items-center gap-2 text-tag uppercase tracking-[0.16em] font-semibold text-ink-3">
+      <span className="inline-flex items-center gap-2 text-tag uppercase tracking-[0.16em] font-mono text-ink-3">
         <span aria-hidden className={`inline-block h-1.5 w-1.5 rounded-full ${a.dot}`} />
         {eyebrow}
       </span>

@@ -51,7 +51,7 @@ export function RealInvestmentInterestCard() {
   return (
     <section className="px-5 pt-6">
       <div className="rounded-2xl border border-paper-3 bg-paper-2 p-5">
-        <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold">
+        <p className="text-tag uppercase tracking-[0.22em] text-gold font-mono">
           {t("real_invest_interest.eyebrow")}
         </p>
         <h3 className="font-display text-lg text-ink mt-2 leading-snug">
@@ -93,7 +93,7 @@ export function RealInvestmentInterestCard() {
                 </DialogHeader>
                 <div className="space-y-5 py-2">
                   <div>
-                    <label className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold">
+                    <label className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono">
                       {t("real_invest_interest.envisaged_amount")}
                     </label>
                     <div className="flex items-center gap-3 mt-2">
@@ -113,7 +113,7 @@ export function RealInvestmentInterestCard() {
                   </div>
 
                   <div>
-                    <label className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold">
+                    <label className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono">
                       {t("real_invest_interest.frequency")}
                     </label>
                     <div className="grid grid-cols-2 gap-2 mt-2">
@@ -140,7 +140,7 @@ export function RealInvestmentInterestCard() {
                   </div>
 
                   <div>
-                    <label className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold">
+                    <label className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono">
                       {t("real_invest_interest.contact_email")}
                     </label>
                     <input

@@ -94,7 +94,7 @@ export function FeedbackButton() {
               </DialogHeader>
               <div className="space-y-5 py-2">
                 <div>
-                  <label className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold">
+                  <label className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono">
                     {t("beta.feedback_nps_label")}
                   </label>
                   <div className="grid grid-cols-11 gap-1 mt-2">
@@ -116,7 +116,7 @@ export function FeedbackButton() {
                 </div>
 
                 <div>
-                  <label className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold">
+                  <label className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono">
                     {t("beta.feedback_blocker")}
                   </label>
                   <textarea
@@ -129,7 +129,7 @@ export function FeedbackButton() {
                 </div>
 
                 <div>
-                  <label className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold">
+                  <label className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono">
                     {t("beta.feedback_wish")}
                   </label>
                   <textarea

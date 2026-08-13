@@ -122,7 +122,7 @@ function CertificatPage() {
             <p className="eyebrow mt-3">{t("certificate.subtitle")}</p>
           </div>
           <div className="text-right">
-            <p className="text-tag uppercase tracking-[0.22em] text-ink-3 font-semibold">
+            <p className="text-tag uppercase tracking-[0.22em] text-ink-3 font-mono">
               {t("certificate.reference")}
             </p>
             <p className="font-display text-sm text-ink mt-1 tabular-nums">{certNo}</p>

@@ -266,7 +266,7 @@ function Ethi() {
               </svg>
             </div>
             <div className="min-w-0">
-              <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold">
+              <p className="text-tag uppercase tracking-wider text-ink-3 font-mono">
                 {t("ethi.your_advisor")}
               </p>
               <h1 className="font-value text-2xl">Ethi</h1>

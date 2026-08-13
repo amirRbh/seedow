@@ -24,7 +24,7 @@ export function ObjectivesTeaser() {
     <div className="rounded-2xl border border-paper-3 bg-paper-2 p-4">
       <div className="flex items-center gap-2 text-ink-3">
         <Target className="h-4 w-4" strokeWidth={1.8} aria-hidden />
-        <span className="text-tag uppercase tracking-[0.14em] font-semibold">
+        <span className="text-tag uppercase tracking-[0.14em] font-mono">
           {t("portfolio.goals.title")}
         </span>
       </div>

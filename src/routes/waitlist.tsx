@@ -57,7 +57,7 @@ function WaitlistPage() {
           </Link>
           <LanguageToggle />
         </div>
-        <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold mb-3">
+        <p className="text-tag uppercase tracking-[0.22em] text-gold font-mono mb-3">
           {t("waitlist.eyebrow")}
         </p>
         <h1 className="font-display text-3xl text-ink leading-tight">{t("waitlist.title")}</h1>
@@ -65,7 +65,7 @@ function WaitlistPage() {
 
         {position !== null ? (
           <div className="mt-8 p-6 border border-paper-3 rounded-2xl bg-paper-2">
-            <p className="text-tag uppercase tracking-[0.22em] text-ink-3 font-semibold">
+            <p className="text-tag uppercase tracking-[0.22em] text-ink-3 font-mono">
               {t("waitlist.registered")}
             </p>
             <p className="font-value text-4xl text-ink mt-2">#{position}</p>

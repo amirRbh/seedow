@@ -43,7 +43,7 @@ export function SimulationForm({ onSubmit, onCancel }: Props) {
       onSubmit={submit}
       className="bg-paper-2 border border-paper-3 rounded-2xl p-3 space-y-3 backdrop-blur-xl"
     >
-      <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold">
+      <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono">
         {t("ethi.sim.title")}
       </p>
       <div className="grid grid-cols-3 gap-2">
