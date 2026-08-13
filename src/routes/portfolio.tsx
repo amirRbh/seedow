@@ -28,7 +28,8 @@ import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { useAuth } from "@/hooks/useAuth";
 import { useLang } from "@/hooks/useLang";
-import { formatCurrency } from "@/lib/format";
+import { formatCurrency, formatPercent } from "@/lib/format";
+import { AnimatedFigure } from "@/components/ui/AnimatedFigure";
 import { BADGE_DEFS, computeUnlockedBadgeIds } from "@/lib/portfolio/badges";
 import type { MilestoneBadge } from "@/components/portfolio/MilestoneBadges";
 import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
@@ -151,7 +152,9 @@ function Portfolio() {
     portfolio.holdings.length > 1 ? "portfolio.lines_other" : "portfolio.lines_one",
     { count: portfolio.holdings.length },
   );
-  const subtitle = `${linesLabel} · ${formatCurrency(totalValue, lang)}`;
+  // La valeur totale est portée par le nœud « Mon argent » ci-dessous ;
+  // le sous-titre garde seulement le nombre de lignes (pas de doublon).
+  const subtitle = linesLabel;
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
@@ -169,6 +172,26 @@ function Portfolio() {
           onRefreshed={() => valuation.refresh()}
         />
         <ValuationConsistencyBanner consistency={valuation.consistency} />
+
+        {/* Nœud « Mon argent » — persistant au-dessus des onglets (DA « Le Fil ») :
+            le solde reste visible quel que soit l'onglet, avec le comptage animé. */}
+        <section className="px-5 pt-6">
+          <div className="rounded-[14px] border border-paper-3 bg-card p-4 shadow-sm">
+            <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
+              {t("le_fil.money")}
+            </p>
+            <h2 className="font-value text-figure-hero text-ink mt-1 leading-none">
+              <AnimatedFigure value={totalValue} from={0} format={(v) => formatCurrency(v, lang)} />
+            </h2>
+            <p
+              className={`font-mono text-sm mt-1 ${gain >= 0 ? "text-mint-ink" : "text-alert-ink"}`}
+            >
+              {gain >= 0 ? "+" : ""}
+              {formatPercent(returnPct, lang)} · {gain >= 0 ? "+" : ""}
+              {formatCurrency(gain, lang)}
+            </p>
+          </div>
+        </section>
 
         <section className="px-5 pt-6">
           <Tabs
