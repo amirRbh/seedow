@@ -8,7 +8,12 @@ import { useLang } from "@/hooks/useLang";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { formatCurrency, formatPercent } from "@/lib/format";
+import { buildPortfolioImpact } from "@/lib/impact/portfolioImpact";
 import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
+
+// Référence de comparaison : ETF MSCI World (IWDA / EUNL). Rendement et
+// volatilité annualisés (mêmes conventions que le comparatif détaillé).
+const MSCI_WORLD = { expectedReturn: 0.072, volatility: 0.155 } as const;
 
 export const Route = createFileRoute("/le-fil")({
   beforeLoad: () => requireAuthedUser("/le-fil"),
@@ -67,6 +72,19 @@ function LeFil() {
     () => [...holdings].sort((a, b) => (b.allocationPct ?? 0) - (a.allocationPct ?? 0)).slice(0, 4),
     [holdings],
   );
+
+  // Impact carbone réel via le moteur d'impact honnête : n'expose un écart
+  // chiffré que si la couverture des données émetteurs est suffisante (sinon
+  // `cleaner` reste faux / delta null). Aucun chiffre fabriqué.
+  const impact = useMemo(() => {
+    const m = portfolio?.metrics;
+    if (!m) return null;
+    return buildPortfolioImpact(m, totalInvested || totalValue);
+  }, [portfolio, totalInvested, totalValue]);
+  const carbonDelta = impact?.intensity?.cleaner ? impact.intensity.vsBenchmarkDeltaPct : null;
+
+  const expectedReturn = portfolio?.metrics?.expected_return ?? null;
+  const volatility = portfolio?.metrics?.volatility ?? null;
 
   const userName = user?.user_metadata?.name || user?.email?.split("@")[0] || "";
 
@@ -187,6 +205,16 @@ function LeFil() {
                   {impactScore !== null ? (
                     <>
                       Score d'impact pondéré.
+                      {carbonDelta != null && (
+                        <>
+                          {" "}
+                          Intensité carbone{" "}
+                          <span className="text-mint-ink font-medium">
+                            −{formatPercent(carbonDelta, lang, 0)}
+                          </span>{" "}
+                          vs indice Monde.
+                        </>
+                      )}
                       <br />
                       <Link to="/certificat" className="text-mint-ink font-medium">
                         Voir ce que ton argent finance →
@@ -197,10 +225,50 @@ function LeFil() {
                   )}
                 </div>
               </div>
+              {carbonDelta != null && (
+                <p className="mt-2 font-mono text-tag text-ink-3">
+                  Source : WACI émetteurs (MSCI) vs indice ACWI · part couverte du portefeuille.
+                </p>
+              )}
             </Node>
 
-            {/* NŒUD 5 — LE MONDE RÉEL */}
-            <Node index={5} active={false} {...reveal(5)}>
+            {/* NŒUD 5 — COMPARAISON */}
+            <Node index={5} active {...reveal(5)}>
+              <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
+                Mon Fil vs indice Monde
+              </p>
+              {expectedReturn != null && volatility != null ? (
+                <div className="mt-3 flex flex-col gap-3">
+                  <CompareRow
+                    label="Rendement attendu / an"
+                    mine={expectedReturn}
+                    benchmark={MSCI_WORLD.expectedReturn}
+                    lang={lang}
+                    higherIsBetter
+                  />
+                  <CompareRow
+                    label="Risque (volatilité)"
+                    mine={volatility}
+                    benchmark={MSCI_WORLD.volatility}
+                    lang={lang}
+                    higherIsBetter={false}
+                  />
+                  <Link to="/comparatif" className="font-mono text-xs text-mint-ink">
+                    Comparatif détaillé →
+                  </Link>
+                  <p className="font-mono text-tag text-ink-3">
+                    Rendements attendus, pas garantis. Performance passée ≠ future.
+                  </p>
+                </div>
+              ) : (
+                <p className="text-sm text-ink-3 mt-2">
+                  La comparaison s'affiche dès que ton portefeuille a des métriques.
+                </p>
+              )}
+            </Node>
+
+            {/* NŒUD 6 — LE MONDE RÉEL */}
+            <Node index={6} active={false} {...reveal(6)}>
               <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
                 Le monde réel
               </p>
@@ -217,7 +285,7 @@ function LeFil() {
           </div>
 
           {/* Ethi — actions contextuelles, jamais un chat vide */}
-          <motion.div {...reveal(6)} className="mt-5">
+          <motion.div {...reveal(7)} className="mt-5">
             <p className="text-caption uppercase tracking-wider text-ink-3 font-mono mb-2">
               Demander à Ethi
             </p>
@@ -272,6 +340,61 @@ function Node({
       />
       <div className="rounded-[14px] border border-paper-3 bg-card p-4 shadow-sm">{children}</div>
     </motion.div>
+  );
+}
+
+/**
+ * Ligne de comparaison honnête : deux barres (mon Fil vs indice), la couleur
+ * mint signalant simplement quel côté est le plus favorable pour cette métrique.
+ */
+function CompareRow({
+  label,
+  mine,
+  benchmark,
+  lang,
+  higherIsBetter,
+}: {
+  label: string;
+  mine: number;
+  benchmark: number;
+  lang: Parameters<typeof formatPercent>[1];
+  higherIsBetter: boolean;
+}) {
+  const max = Math.max(mine, benchmark) || 1;
+  const better = higherIsBetter ? mine >= benchmark : mine <= benchmark;
+  return (
+    <div className="flex flex-col gap-1.5">
+      <p className="font-mono text-tag uppercase tracking-wide text-ink-3">{label}</p>
+      <div className="flex items-center gap-2">
+        <span className="w-14 shrink-0 font-mono text-tag text-ink-2">Mon Fil</span>
+        <div className="h-2 flex-1 overflow-hidden rounded-full bg-paper-3">
+          <span
+            className="block h-full rounded-full"
+            style={{
+              width: `${(mine / max) * 100}%`,
+              background: better ? "var(--color-mint)" : "var(--ink-3)",
+            }}
+          />
+        </div>
+        <span
+          className={`w-12 shrink-0 text-right font-mono text-tag tabular-nums ${better ? "text-mint-ink" : "text-ink-2"}`}
+        >
+          {formatPercent(mine, lang, 1)}
+        </span>
+      </div>
+      <div className="flex items-center gap-2">
+        <span className="w-14 shrink-0 font-mono text-tag text-ink-2">MSCI</span>
+        <div className="h-2 flex-1 overflow-hidden rounded-full bg-paper-3">
+          <span
+            className="block h-full rounded-full bg-ink-3"
+            style={{ width: `${(benchmark / max) * 100}%` }}
+          />
+        </div>
+        <span className="w-12 shrink-0 text-right font-mono text-tag text-ink-2 tabular-nums">
+          {formatPercent(benchmark, lang, 1)}
+        </span>
+      </div>
+    </div>
   );
 }
 
