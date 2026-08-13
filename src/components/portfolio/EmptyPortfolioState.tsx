@@ -133,12 +133,11 @@ function IntentCard({
       </span>
       <h2 className="mt-2.5 font-value text-lg text-ink leading-tight">{title}</h2>
       <p className="mt-1.5 text-body-sm text-ink-2 leading-relaxed">{desc}</p>
-      <span className={`mt-auto pt-4 inline-flex items-center gap-1 text-body-sm font-semibold ${a.cta}`}>
+      <span
+        className={`mt-auto pt-4 inline-flex items-center gap-1 text-body-sm font-semibold ${a.cta}`}
+      >
         {cta}
-        <span
-          aria-hidden
-          className="transition-transform duration-200 group-hover:translate-x-0.5"
-        >
+        <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-0.5">
           ›
         </span>
       </span>

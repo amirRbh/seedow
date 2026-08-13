@@ -2,7 +2,11 @@ import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { useLang } from "@/hooks/useLang";
 import { formatPercent } from "@/lib/format";
-import { portfolioGlance, type GlanceMetrics, type RiskLevel } from "@/lib/portfolio/plain-language";
+import {
+  portfolioGlance,
+  type GlanceMetrics,
+  type RiskLevel,
+} from "@/lib/portfolio/plain-language";
 
 /**
  * Coup d'œil « glanceable » de l'Accueil (refonte mobile §5/§24) : les trois
@@ -68,7 +72,8 @@ function GlanceTile({
   tone?: "mint" | "alert";
   scale?: number; // 1..3
 }) {
-  const valueColor = tone === "mint" ? "text-mint-ink" : tone === "alert" ? "text-rust" : "text-ink";
+  const valueColor =
+    tone === "mint" ? "text-mint-ink" : tone === "alert" ? "text-rust" : "text-ink";
   return (
     <Link
       to={to}

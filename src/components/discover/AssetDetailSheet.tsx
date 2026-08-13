@@ -162,56 +162,58 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
             {/* Détail carbone + piliers ESG — replié : le verdict (badge) au-dessus
                 suffit au premier coup d'œil, le détail dense se déplie à la demande. */}
             <Disclosure title={t("asset_detail.carbon_detail")}>
-            {/* Intensité carbone RÉELLE (WACI MSCI) — mesurée, comparée à l'ETF Monde.
+              {/* Intensité carbone RÉELLE (WACI MSCI) — mesurée, comparée à l'ETF Monde.
                 Jamais d'estimation dérivée du score ESG. */}
-            {waci != null ? (
-              <div className="bg-paper-2 rounded-xl p-3 border border-paper-3">
-                <div className="flex items-baseline justify-between gap-2">
-                  <p className="font-value text-xl leading-none text-ink">
-                    {waci.toLocaleString(numLocale, { maximumFractionDigits: 0 })}
-                    <span className="text-tag text-ink-3 ml-1 font-sans">
-                      {t("impact_hero.intensity_unit")}
-                    </span>
+              {waci != null ? (
+                <div className="bg-paper-2 rounded-xl p-3 border border-paper-3">
+                  <div className="flex items-baseline justify-between gap-2">
+                    <p className="font-value text-xl leading-none text-ink">
+                      {waci.toLocaleString(numLocale, { maximumFractionDigits: 0 })}
+                      <span className="text-tag text-ink-3 ml-1 font-sans">
+                        {t("impact_hero.intensity_unit")}
+                      </span>
+                    </p>
+                    {intensityCmp && (
+                      <span
+                        className={`text-tag font-semibold px-2 py-0.5 rounded-full ${
+                          intensityCmp.cleaner
+                            ? "bg-highlight-5 text-highlight-1"
+                            : "bg-alert-tint text-rust"
+                        }`}
+                      >
+                        {t(
+                          intensityCmp.cleaner
+                            ? "impact_hero.vs_benchmark_cleaner"
+                            : "impact_hero.vs_benchmark_dirtier",
+                          { pct: Math.round(Math.abs(intensityCmp.deltaPct) * 100) },
+                        )}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-tag text-ink-3 mt-1.5 font-medium uppercase tracking-wider">
+                    {t("asset_detail.carbon_intensity")}
                   </p>
-                  {intensityCmp && (
-                    <span
-                      className={`text-tag font-semibold px-2 py-0.5 rounded-full ${
-                        intensityCmp.cleaner
-                          ? "bg-highlight-5 text-highlight-1"
-                          : "bg-alert-tint text-rust"
-                      }`}
-                    >
-                      {t(
-                        intensityCmp.cleaner
-                          ? "impact_hero.vs_benchmark_cleaner"
-                          : "impact_hero.vs_benchmark_dirtier",
-                        { pct: Math.round(Math.abs(intensityCmp.deltaPct) * 100) },
-                      )}
-                    </span>
-                  )}
+                  <p className="text-tag text-ink-3 mt-1 leading-snug">
+                    {t("impact_hero.benchmark_ref", {
+                      bench: ACWI_WACI_TCO2E_PER_MUSD,
+                      source: `${ACWI_WACI_SOURCE} · ${ACWI_WACI_ASOF}`,
+                    })}
+                  </p>
                 </div>
-                <p className="text-tag text-ink-3 mt-1.5 font-medium uppercase tracking-wider">
-                  {t("asset_detail.carbon_intensity")}
+              ) : (
+                <p className="text-caption text-ink-3 italic">
+                  {t("asset_detail.co2_unavailable")}
                 </p>
-                <p className="text-tag text-ink-3 mt-1 leading-snug">
-                  {t("impact_hero.benchmark_ref", {
-                    bench: ACWI_WACI_TCO2E_PER_MUSD,
-                    source: `${ACWI_WACI_SOURCE} · ${ACWI_WACI_ASOF}`,
-                  })}
-                </p>
-              </div>
-            ) : (
-              <p className="text-caption text-ink-3 italic">{t("asset_detail.co2_unavailable")}</p>
-            )}
+              )}
 
-            <div className="grid grid-cols-3 gap-2.5 mt-2.5">
-              <MiniBar label={t("asset_detail.climate")} value={asset.climate_score} />
-              <MiniBar label={t("asset_detail.social")} value={asset.social_score} />
-              <MiniBar label={t("asset_detail.ethics")} value={asset.governance_score} />
-            </div>
-            <div className="mt-2.5">
-              <SourceLink />
-            </div>
+              <div className="grid grid-cols-3 gap-2.5 mt-2.5">
+                <MiniBar label={t("asset_detail.climate")} value={asset.climate_score} />
+                <MiniBar label={t("asset_detail.social")} value={asset.social_score} />
+                <MiniBar label={t("asset_detail.ethics")} value={asset.governance_score} />
+              </div>
+              <div className="mt-2.5">
+                <SourceLink />
+              </div>
             </Disclosure>
           </section>
 
@@ -223,37 +225,37 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
               title={t("transparency.section_title")}
               defaultOpen={asset.greenwashing_risk !== "low"}
             >
-            <div className="paper-card p-3.5 space-y-3">
-              <div className="flex flex-wrap gap-1.5">
-                <DataCoverageBadge coverage={asset.data_coverage} />
-                <GreenwashingBadge
-                  risk={asset.greenwashing_risk}
-                  reasons={asset.greenwashing_reasons}
-                />
+              <div className="paper-card p-3.5 space-y-3">
+                <div className="flex flex-wrap gap-1.5">
+                  <DataCoverageBadge coverage={asset.data_coverage} />
+                  <GreenwashingBadge
+                    risk={asset.greenwashing_risk}
+                    reasons={asset.greenwashing_reasons}
+                  />
+                </div>
+                {/* Raisons en clair : les tooltips ne sont pas accessibles au tap mobile */}
+                {asset.greenwashing_reasons.length > 0 ? (
+                  <ul className="space-y-1.5">
+                    {asset.greenwashing_reasons.map((r) => (
+                      <li key={r} className="flex items-start gap-2 text-label text-ink-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-solar mt-1.5 flex-shrink-0" />
+                        {t(`transparency.reasons.${r}`)}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-label text-ink-2">{t("transparency.gw_hint_low")}</p>
+                )}
+                <p className="text-caption text-ink-3 leading-snug">
+                  {t(`transparency.coverage_hint.${asset.data_coverage}`)}
+                </p>
+                {asset.greenwashing_risk !== "low" && (
+                  <RelatedCourse
+                    slug="greenwashing-6-signaux"
+                    reason={t("transparency.learn_greenwashing")}
+                  />
+                )}
               </div>
-              {/* Raisons en clair : les tooltips ne sont pas accessibles au tap mobile */}
-              {asset.greenwashing_reasons.length > 0 ? (
-                <ul className="space-y-1.5">
-                  {asset.greenwashing_reasons.map((r) => (
-                    <li key={r} className="flex items-start gap-2 text-label text-ink-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-solar mt-1.5 flex-shrink-0" />
-                      {t(`transparency.reasons.${r}`)}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-label text-ink-2">{t("transparency.gw_hint_low")}</p>
-              )}
-              <p className="text-caption text-ink-3 leading-snug">
-                {t(`transparency.coverage_hint.${asset.data_coverage}`)}
-              </p>
-              {asset.greenwashing_risk !== "low" && (
-                <RelatedCourse
-                  slug="greenwashing-6-signaux"
-                  reason={t("transparency.learn_greenwashing")}
-                />
-              )}
-            </div>
             </Disclosure>
           </section>
 
@@ -261,61 +263,61 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
               détail (niveau SRI, risques, exclusions) s'il veut creuser. */}
           <section>
             <Disclosure title={t("asset_detail.risks_title")}>
-            <div className="paper-card p-3.5">
-              <div className="flex items-center justify-between pb-3 border-b border-dashed border-paper-3">
-                <Glossary
-                  term="Risque"
-                  className="text-caption !text-ink-3 hover:!text-ink-2 font-medium"
-                >
-                  {t("asset_detail.risk_level")}
-                </Glossary>
-                <div className="flex items-center gap-2">
-                  <div className="flex gap-0.5">
-                    {[1, 2, 3, 4, 5, 6, 7].map((n) => (
-                      <span
-                        key={n}
-                        className={`w-1.5 h-3 rounded-sm ${n <= risk ? "bg-ink" : "bg-paper-3"}`}
-                      />
-                    ))}
-                  </div>
-                  <span className={`text-caption font-semibold ${riskInfo.tone}`}>
-                    {risk}/7 · {riskInfo.label}
-                  </span>
-                </div>
-              </div>
-              {/* Ancrage de l'échelle : un "4/7" ne veut rien dire sans repère */}
-              <p className="text-tag text-ink-3 leading-snug pt-2.5 pb-3">
-                {t("asset_detail.risk_scale")}
-              </p>
-              <ul className="space-y-2">
-                {risksList.map((r) => (
-                  <li key={r.title} className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-rust mt-1.5 flex-shrink-0" />
-                    <div className="text-label leading-relaxed">
-                      <span className="font-semibold text-ink">{r.title} · </span>
-                      <span className="text-ink-2">{r.desc}</span>
+              <div className="paper-card p-3.5">
+                <div className="flex items-center justify-between pb-3 border-b border-dashed border-paper-3">
+                  <Glossary
+                    term="Risque"
+                    className="text-caption !text-ink-3 hover:!text-ink-2 font-medium"
+                  >
+                    {t("asset_detail.risk_level")}
+                  </Glossary>
+                  <div className="flex items-center gap-2">
+                    <div className="flex gap-0.5">
+                      {[1, 2, 3, 4, 5, 6, 7].map((n) => (
+                        <span
+                          key={n}
+                          className={`w-1.5 h-3 rounded-sm ${n <= risk ? "bg-ink" : "bg-paper-3"}`}
+                        />
+                      ))}
                     </div>
-                  </li>
-                ))}
-              </ul>
-              {asset.exclusions && asset.exclusions.length > 0 && (
-                <div className="mt-3 pt-3 border-t border-dashed border-paper-3">
-                  <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold mb-1.5">
-                    {t("asset_detail.exclusions_applied")}
-                  </p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {asset.exclusions.map((e) => (
-                      <span
-                        key={e}
-                        className="text-tag bg-rust/10 text-rust font-semibold px-2 py-0.5 rounded-full border border-rust/20"
-                      >
-                        ⊘ {t(`onboarding.steps.exclusions.${e}`)}
-                      </span>
-                    ))}
+                    <span className={`text-caption font-semibold ${riskInfo.tone}`}>
+                      {risk}/7 · {riskInfo.label}
+                    </span>
                   </div>
                 </div>
-              )}
-            </div>
+                {/* Ancrage de l'échelle : un "4/7" ne veut rien dire sans repère */}
+                <p className="text-tag text-ink-3 leading-snug pt-2.5 pb-3">
+                  {t("asset_detail.risk_scale")}
+                </p>
+                <ul className="space-y-2">
+                  {risksList.map((r) => (
+                    <li key={r.title} className="flex items-start gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-rust mt-1.5 flex-shrink-0" />
+                      <div className="text-label leading-relaxed">
+                        <span className="font-semibold text-ink">{r.title} · </span>
+                        <span className="text-ink-2">{r.desc}</span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                {asset.exclusions && asset.exclusions.length > 0 && (
+                  <div className="mt-3 pt-3 border-t border-dashed border-paper-3">
+                    <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold mb-1.5">
+                      {t("asset_detail.exclusions_applied")}
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {asset.exclusions.map((e) => (
+                        <span
+                          key={e}
+                          className="text-tag bg-rust/10 text-rust font-semibold px-2 py-0.5 rounded-full border border-rust/20"
+                        >
+                          ⊘ {t(`onboarding.steps.exclusions.${e}`)}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </Disclosure>
           </section>
 
