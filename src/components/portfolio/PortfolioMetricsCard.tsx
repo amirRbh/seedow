@@ -4,6 +4,7 @@ import { useViewMode } from "@/hooks/useViewMode";
 import { useLang } from "@/hooks/useLang";
 import { motion } from "framer-motion";
 import { formatNumber, formatPercent } from "@/lib/format";
+import { buildPortfolioImpact } from "@/lib/impact/portfolioImpact";
 import { MetricLabel } from "@/components/ui/MetricLabel";
 import { SourceLink } from "@/components/discover/TransparencyBadges";
 import { Link } from "@tanstack/react-router";
@@ -31,6 +32,12 @@ export function PortfolioMetricsCard({ metrics }: Props) {
   const { lang } = useLang();
   if (!metrics) return null;
 
+  // Intensité carbone RÉELLE vs indice (WACI émetteurs), indépendante du montant.
+  // On ne fabrique plus de « CO₂ évité » dérivé du score ESG (méthodo §0/§6) :
+  // soit on a une donnée réelle avec couverture suffisante, soit « en cours de mesure ».
+  const impact = buildPortfolioImpact(metrics, 0);
+  const carbonDelta = impact.intensity?.vsBenchmarkDeltaPct ?? null;
+
   const items: Item[] = [
     {
       label: t("portfolio_metrics.expected_perf"),
@@ -49,11 +56,14 @@ export function PortfolioMetricsCard({ metrics }: Props) {
       tone: "bloom",
     },
     {
-      label: t("portfolio_metrics.co2_avoided"),
-      anchor: "metric-co2",
-      hint: t("portfolio_metrics.co2_hint"),
-      value: `${formatNumber(metrics.co2_avoided_tons, lang, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}t`,
-      sub: t("portfolio_metrics.per_10k"),
+      label: t("portfolio_metrics.carbon_intensity"),
+      anchor: "metric-carbon-intensity",
+      hint: t("portfolio_metrics.carbon_intensity_hint"),
+      value:
+        carbonDelta != null
+          ? `${carbonDelta >= 0 ? "−" : "+"}${formatPercent(Math.abs(carbonDelta), lang, 0)}`
+          : "—",
+      sub: carbonDelta != null ? t("portfolio_metrics.vs_msci") : t("portfolio_metrics.measuring"),
       tone: "highlight",
     },
     {

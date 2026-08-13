@@ -8,6 +8,7 @@ import { Glossary, GLOSSARY } from "@/components/ui/Glossary";
 import { useViewMode } from "@/hooks/useViewMode";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
+import { buildPortfolioImpact } from "@/lib/impact/portfolioImpact";
 import { cn } from "@/lib/utils";
 
 /**
@@ -151,11 +152,14 @@ export function ComparatifPanel() {
     volatility: metrics?.volatility ?? 0.12,
     ter: metrics?.ter ?? 0.0025,
     esgScore: metrics?.esg_score ?? 0,
-    carbonIntensityGperEur: metrics?.co2_avoided_tons
-      ? Math.max(0, MSCI_WORLD.carbonIntensityGperEur - metrics.co2_avoided_tons * 100)
-      : MSCI_WORLD.carbonIntensityGperEur,
     sfdr: "Article 8 / 9",
   };
+
+  // Intensité carbone RÉELLE (WACI émetteurs) vs indice — plus de « CO₂ évité »
+  // fabriqué à partir du score ESG (méthodo §0/§6). Verdict chiffré seulement si
+  // la couverture des données est représentative, sinon « en cours de mesure ».
+  const impact = metrics ? buildPortfolioImpact(metrics, 0) : null;
+  const carbonDelta = impact?.intensity?.vsBenchmarkDeltaPct ?? null;
 
   const capital = valuation.totalInvested || portfolio.initial_amount || 10_000;
   const project = (r: number) => capital * Math.pow(1 + r, 10);
@@ -183,11 +187,6 @@ export function ComparatifPanel() {
   const seedowDrop = Math.min(1, BENCH_DROP * riskRatio);
   const seedowAfterDrop = capital * (1 - seedowDrop);
   const refAfterDrop = capital * (1 - BENCH_DROP);
-
-  const co2EvitedKg =
-    ref && ref.carbonIntensityGperEur != null
-      ? Math.max(0, ((ref.carbonIntensityGperEur - seedow.carbonIntensityGperEur) * capital) / 1000)
-      : null;
 
   const eur0 = (v: number) =>
     v.toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
@@ -446,14 +445,20 @@ export function ComparatifPanel() {
             benchmarkLabel={t(benchmark.labelKey)}
             label={t("comparatif_panel.carbon_intensity")}
             term="CO2"
-            seedowValue={`${seedow.carbonIntensityGperEur.toFixed(0)} g/€`}
+            seedowValue={
+              impact?.measured && impact.intensityGco2ePerEur != null
+                ? `${impact.intensityGco2ePerEur.toFixed(0)} g/€`
+                : t("portfolio_metrics.measuring")
+            }
             msciValue={
               ref.carbonIntensityGperEur != null ? `${ref.carbonIntensityGperEur} g/€` : "n.d."
             }
-            seedowWins={
-              ref.carbonIntensityGperEur != null &&
-              seedow.carbonIntensityGperEur <= ref.carbonIntensityGperEur
-            }
+            seedowWins={Boolean(
+              impact?.measured &&
+                impact.intensityGco2ePerEur != null &&
+                ref.carbonIntensityGperEur != null &&
+                impact.intensityGco2ePerEur <= ref.carbonIntensityGperEur,
+            )}
             note={t("comparatif_panel.per_euro")}
           />
 
@@ -477,19 +482,14 @@ export function ComparatifPanel() {
           {t("comparatif_panel.avoided_per_year")}
         </h2>
         <div className="mt-6 grid grid-cols-2 gap-4 border-t border-paper-3 pt-5">
-          {co2EvitedKg !== null && (
+          {carbonDelta != null && (
             <KPIFigure
               size="md"
-              label={t("comparatif_panel.co2_avoided")}
-              value={co2EvitedKg.toLocaleString("fr-FR", {
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0,
-              })}
-              unit="kg/an"
+              label={t("comparatif_panel.carbon_intensity")}
+              value={`${carbonDelta >= 0 ? "−" : "+"}${Math.round(Math.abs(carbonDelta) * 100)}`}
+              unit="% vs ETF Monde"
               tone="mint"
-              hint={t("comparatif_panel.paris_lyon_trips", {
-                count: Math.round(co2EvitedKg / 120),
-              })}
+              hint={t("comparatif_panel.carbon_intensity_hint")}
             />
           )}
 

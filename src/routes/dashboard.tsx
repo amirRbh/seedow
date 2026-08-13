@@ -49,15 +49,24 @@ export const Route = createFileRoute("/dashboard")({
 function DashboardEntry() {
   const { user, loading } = useAuth();
   const { guest } = Route.useSearch();
+  const navigate = useNavigate();
 
   // Un compte réel rend la simulation invité caduque : on la purge.
   useEffect(() => {
     if (user) clearGuestSimulation();
   }, [user]);
 
+  // Accueil unique (Le Fil) : un utilisateur CONNECTÉ qui atterrit sur l'ancien
+  // /dashboard (lien obsolète, URL directe, « Mon espace » historique) est renvoyé
+  // vers Le Fil, pour ne plus avoir deux accueils divergents desktop/mobile. Le
+  // mode invité (?guest=true, pas encore de compte) conserve son dashboard local.
+  useEffect(() => {
+    if (user && !guest) navigate({ to: "/le-fil", replace: true });
+  }, [user, guest, navigate]);
+
   if (loading) return <div className="min-h-screen bg-paper" aria-hidden />;
-  if (user) return <Dashboard />;
   if (guest) return <GuestDashboard />;
+  if (user) return <Dashboard />;
   // Non connecté et non invité : la garde beforeLoad a déjà redirigé vers /auth.
   return <div className="min-h-screen bg-paper" aria-hidden />;
 }

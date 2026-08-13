@@ -79,7 +79,7 @@ export function RailNav() {
     >
       {/* Marque compacte */}
       <Link
-        to="/dashboard"
+        to="/le-fil"
         aria-label={t("rail_nav.seedow_home")}
         className="flex items-center justify-center w-10 h-10 mb-2 outline-none rounded-sm focus-visible:ring-2 focus-visible:ring-highlight-1"
       >

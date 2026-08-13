@@ -61,7 +61,6 @@ describe("explainPortfolio", () => {
     sharpe: 0.5,
     esg_score: 78,
     ter: 0.0025,
-    co2_avoided_tons: 1,
     carbon_intensity_gco2e_per_eur: null,
     carbon_intensity_coverage: 0,
     waci_tco2e_per_musd_sales: null,

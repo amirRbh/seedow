@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 interface AppHeaderProps {
   /** Eyebrow en capitales, tracking large — code de revue éditoriale. */
   eyebrow?: string;
-  /** Titre principal (Syne, très grand, letter-spacing serré). */
+  /** Titre principal (Inter `font-value`, très grand, letter-spacing serré). */
   title: string;
   /** Sous-titre optionnel (légende sous le titre). */
   subtitle?: string;
@@ -28,7 +28,7 @@ interface AppHeaderProps {
 /**
  * Header partagé — registre éditorial (revue financière).
  * — Marque "seedow" en texte, identique partout.
- * — Hiérarchie par la typo : eyebrow capitales + grand titre Syne.
+ * — Hiérarchie par la typo : eyebrow capitales + grand titre Inter (`font-value`).
  * — Filet 1px sous l'en-tête de marque pour séparer sans carte.
  * — Tutoiement systématique dans les libellés.
  */

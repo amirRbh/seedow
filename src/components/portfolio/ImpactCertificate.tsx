@@ -44,8 +44,9 @@ export function ImpactCertificate() {
             Édite ton certificat personnel
           </h3>
           <p className="text-body-sm text-ink-2 mt-2 leading-relaxed">
-            Une page sobre, imprimable A4, qui résume l'impact projeté de ton portefeuille simulé :
-            CO₂ évité (estimation), énergie verte financée, score ESG composite et méthodologie.
+            Une page sobre, imprimable A4, qui résume l'impact mesuré de ton portefeuille simulé :
+            intensité carbone comparée à un ETF Monde (quand la donnée est disponible), score ESG
+            composite et méthodologie.
           </p>
 
           <div className="mt-4 flex flex-wrap gap-2">

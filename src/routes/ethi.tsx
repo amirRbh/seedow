@@ -169,7 +169,6 @@ function Ethi() {
                 sharpe: +m.sharpe.toFixed(2),
                 esgScore: +m.esg_score.toFixed(0),
                 terPct: +(m.ter * 100).toFixed(2),
-                co2AvoidedTons: +m.co2_avoided_tons.toFixed(2),
               }
             : null,
           aggregates: briefing?.aggregates ?? null,

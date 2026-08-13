@@ -151,8 +151,8 @@ function LeFil() {
               </div>
             </Node>
 
-            {/* NŒUD 3 — MES INVESTISSEMENTS */}
-            <Node index={3} active {...reveal(3)}>
+            {/* NŒUD 2 — MES INVESTISSEMENTS */}
+            <Node index={2} active {...reveal(2)}>
               <div className="flex items-center justify-between">
                 <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
                   {t("le_fil.investments")}
@@ -197,8 +197,8 @@ function LeFil() {
               )}
             </Node>
 
-            {/* NŒUD 4 — MON IMPACT */}
-            <Node index={4} active {...reveal(4)}>
+            {/* NŒUD 3 — MON IMPACT */}
+            <Node index={3} active {...reveal(3)}>
               <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
                 {t("le_fil.impact")}
               </p>
@@ -257,9 +257,9 @@ function LeFil() {
               )}
             </Node>
 
-            {/* NŒUD 5 — ALLER PLUS LOIN : comparaison + monde réel, repliés par
+            {/* NŒUD 4 — ALLER PLUS LOIN : comparaison + monde réel, repliés par
                 défaut pour limiter le scroll (divulgation progressive, Règle 2). */}
-            <Node index={5} active={false} {...reveal(5)}>
+            <Node index={4} active={false} {...reveal(4)}>
               <details className="group">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
                   <span className="text-caption uppercase tracking-wider text-ink-3 font-mono">
