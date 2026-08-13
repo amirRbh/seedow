@@ -62,6 +62,12 @@ function LeFil() {
       .map(([c]) => c);
   }, [holdings]);
 
+  // Principales lignes, du plus gros poids au plus petit.
+  const topHoldings = useMemo(
+    () => [...holdings].sort((a, b) => (b.allocationPct ?? 0) - (a.allocationPct ?? 0)).slice(0, 4),
+    [holdings],
+  );
+
   const userName = user?.user_metadata?.name || user?.email?.split("@")[0] || "";
 
   const reveal = (i: number) => ({
@@ -127,8 +133,51 @@ function LeFil() {
               )}
             </Node>
 
-            {/* NŒUD 3 — MON IMPACT */}
+            {/* NŒUD 3 — MES INVESTISSEMENTS */}
             <Node index={3} active {...reveal(3)}>
+              <div className="flex items-center justify-between">
+                <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
+                  Mes investissements
+                </p>
+                {holdings.length > 0 && (
+                  <Link to="/portfolio" className="font-mono text-xs text-mint-ink">
+                    Tout voir →
+                  </Link>
+                )}
+              </div>
+              {topHoldings.length > 0 ? (
+                <ul className="mt-3 flex flex-col divide-y divide-paper-3">
+                  {topHoldings.map((h) => (
+                    <li key={h.id} className="flex items-center gap-3 py-2.5 first:pt-0 last:pb-0">
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-medium text-ink">{h.name}</p>
+                        <p className="font-mono text-tag uppercase tracking-wide text-ink-3">
+                          {h.category ?? "—"} · {formatPercent(h.allocationPct ?? 0, lang, 0)}
+                        </p>
+                      </div>
+                      <span className="font-mono text-sm text-ink tabular-nums">
+                        {formatCurrency(((h.allocationPct ?? 0) / 100) * totalValue, lang)}
+                      </span>
+                      <Link
+                        to="/ethi"
+                        search={{ intent: "why", q: h.ticker }}
+                        aria-label={`Pourquoi ${h.name} ?`}
+                        className="shrink-0 rounded-full border border-paper-3 px-2.5 py-1 font-mono text-xs text-ink-2 transition-colors hover:border-mint/40 hover:text-ink"
+                      >
+                        Pourquoi ?
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-sm text-ink-3 mt-2">
+                  Ton portefeuille est vide. Compose-le depuis tes convictions.
+                </p>
+              )}
+            </Node>
+
+            {/* NŒUD 4 — MON IMPACT */}
+            <Node index={4} active {...reveal(4)}>
               <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
                 Mon impact
               </p>
@@ -150,8 +199,8 @@ function LeFil() {
               </div>
             </Node>
 
-            {/* NŒUD 4 — LE MONDE RÉEL */}
-            <Node index={4} active={false} {...reveal(4)}>
+            {/* NŒUD 5 — LE MONDE RÉEL */}
+            <Node index={5} active={false} {...reveal(5)}>
               <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
                 Le monde réel
               </p>
@@ -168,7 +217,7 @@ function LeFil() {
           </div>
 
           {/* Ethi — actions contextuelles, jamais un chat vide */}
-          <motion.div {...reveal(5)} className="mt-5">
+          <motion.div {...reveal(6)} className="mt-5">
             <p className="text-caption uppercase tracking-wider text-ink-3 font-mono mb-2">
               Demander à Ethi
             </p>
