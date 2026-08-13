@@ -168,13 +168,13 @@
      accent porte du TEXTE (badge, label, KPI sur fond papier ou teinté), on
      utilise la variante `--*-ink`, assombrie pour tenir AA (≥4.5:1) même sur
      --paper-2 et sur les fonds teintés. Vérifié par src/lib/a11y. */
-  --mint: #1d8348;
+  --mint: #146a4a;
   --ice: #0071e3;
   --volt: #6e56cf;
   --alert: #e11d48;
   --solar: #b7791f;
   --solar-ink: #8a5a13; /* variante texte-safe de solar (~5.2:1 sur blanc) */
-  --mint-ink: #19703d;
+  --mint-ink: #0f5539;
   --ice-ink: #0064c8;
   --volt-ink: #6349c4;
   --alert-ink: #c81640;
@@ -185,8 +185,8 @@
 
   /* Aliases legacy */
   --rust: #e11d48;
-  --gold: #1d8348;
-  --gold-soft: #1d8348;
+  --gold: #146a4a;
+  --gold-soft: #146a4a;
   --sky: #0071e3;
   --bloom: #6e56cf;
   --peach: #b7791f;
@@ -250,7 +250,7 @@
   --gold-soft: oklch(0.64 0.14 148);
   --glacier: oklch(0.65 0.08 210);
   /* Accents éclaircis pour rester lisibles sur fond sombre */
-  --mint: #2fa564;
+  --mint: #37a56e;
   --ice: #3b9dff;
   --volt: #9b86ec;
   --alert: #ff5c7a;
@@ -258,7 +258,7 @@
   --solar-ink: #e0b158;
   /* Variantes texte : en sombre il faut éclaircir (et non assombrir) pour
      tenir AA sur --paper / --paper-2 et sur les fonds teintés. */
-  --mint-ink: #57c98a;
+  --mint-ink: #54be88;
   --ice-ink: #6fb8ff;
   --volt-ink: #b3a2f2;
   --alert-ink: #ff8298;
@@ -629,7 +629,7 @@
     border-radius: 16px;
     /* Sur fond encre, les variantes texte doivent être éclaircies : on les
        redéfinit localement pour que tout `--*-ink` reste lisible. */
-    --mint-ink: #57c98a;
+    --mint-ink: #54be88;
     --ice-ink: #6fb8ff;
     --volt-ink: #b3a2f2;
     --alert-ink: #ff8298;
