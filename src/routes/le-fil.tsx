@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { HoldingDetailSheet } from "@/components/portfolio/HoldingDetailSheet";
 import { AppHeader } from "@/components/navigation/AppHeader";
@@ -28,6 +29,7 @@ export const Route = createFileRoute("/le-fil")({
  * à une seule question ; l'info secondaire se déplie ailleurs (Ethi, détail).
  */
 function LeFil() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { lang } = useLang();
   const { portfolio } = useActivePortfolio();
@@ -98,10 +100,17 @@ function LeFil() {
     transition: { delay: 0.06 * i, duration: 0.4 },
   });
 
+  const ethiActions = [
+    { key: "le_fil.ethi_why", intent: "why", primary: true },
+    { key: "le_fil.ethi_compare", intent: "compare", primary: false },
+    { key: "le_fil.ethi_challenge", intent: "challenge", primary: false },
+    { key: "le_fil.ethi_simulate", intent: "simulate", primary: false },
+  ];
+
   return (
     <div className="min-h-screen bg-paper">
       <div className="max-w-lg mx-auto pb-28">
-        <AppHeader eyebrow="Le Fil" title={userName} showPortfolioSelector />
+        <AppHeader eyebrow={t("le_fil.eyebrow")} title={userName} showPortfolioSelector />
 
         <div className="relative px-5 pt-4">
           {/* Le fil vertical qui relie les nœuds */}
@@ -114,7 +123,7 @@ function LeFil() {
             {/* NŒUD 1 — MON ARGENT */}
             <Node index={1} active {...reveal(1)}>
               <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
-                Mon argent
+                {t("le_fil.money")}
               </p>
               <h2 className="font-value text-figure-hero text-ink mt-1 leading-none">
                 {formatCurrency(totalValue, lang)}
@@ -131,7 +140,7 @@ function LeFil() {
             {/* NŒUD 2 — MES CONVICTIONS */}
             <Node index={2} active {...reveal(2)}>
               <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
-                Ce que je finance
+                {t("le_fil.finance")}
               </p>
               {convictions.length > 0 ? (
                 <div className="flex flex-wrap gap-2 mt-2">
@@ -149,16 +158,14 @@ function LeFil() {
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-ink-3 mt-2">
-                  Définis tes convictions pour composer ton portefeuille.
-                </p>
+                <p className="text-sm text-ink-3 mt-2">{t("le_fil.define_convictions")}</p>
               )}
               <Link
                 to="/discover"
                 search={{ theme: portfolio?.causes?.[0] }}
                 className="mt-3 inline-block font-mono text-xs text-mint-ink"
               >
-                Explorer d'autres actifs alignés →
+                {t("le_fil.explore_aligned")} →
               </Link>
             </Node>
 
@@ -166,11 +173,11 @@ function LeFil() {
             <Node index={3} active {...reveal(3)}>
               <div className="flex items-center justify-between">
                 <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
-                  Mes investissements
+                  {t("le_fil.investments")}
                 </p>
                 {holdings.length > 0 && (
                   <Link to="/portfolio" className="font-mono text-xs text-mint-ink">
-                    Tout voir →
+                    {t("le_fil.see_all")} →
                   </Link>
                 )}
               </div>
@@ -181,7 +188,7 @@ function LeFil() {
                       <button
                         type="button"
                         onClick={() => setSelectedHolding(h)}
-                        aria-label={`Détail de ${h.name}`}
+                        aria-label={t("le_fil.asset_detail", { name: h.name })}
                         className="min-w-0 flex-1 text-left outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 rounded-sm"
                       >
                         <p className="truncate text-sm font-medium text-ink">{h.name}</p>
@@ -195,107 +202,99 @@ function LeFil() {
                       <Link
                         to="/ethi"
                         search={{ intent: "why", q: h.ticker }}
-                        aria-label={`Pourquoi ${h.name} ?`}
+                        aria-label={t("le_fil.why_asset", { name: h.name })}
                         className="shrink-0 rounded-full border border-paper-3 px-2.5 py-1 font-mono text-xs text-ink-2 transition-colors hover:border-mint/40 hover:text-ink"
                       >
-                        Pourquoi ?
+                        {t("le_fil.why")}
                       </Link>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="text-sm text-ink-3 mt-2">
-                  Ton portefeuille est vide. Compose-le depuis tes convictions.
-                </p>
+                <p className="text-sm text-ink-3 mt-2">{t("le_fil.empty_holdings")}</p>
               )}
             </Node>
 
             {/* NŒUD 4 — MON IMPACT */}
             <Node index={4} active {...reveal(4)}>
               <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
-                Mon impact
+                {t("le_fil.impact")}
               </p>
               <div className="flex items-center gap-4 mt-2">
                 <ImpactRing score={impactScore} />
                 <div className="text-sm text-ink-2 leading-snug">
                   {impactScore !== null ? (
                     <>
-                      Score d'impact pondéré.
+                      {t("le_fil.impact_weighted")}
                       {carbonDelta != null && (
                         <>
                           {" "}
-                          Intensité carbone{" "}
+                          {t("le_fil.carbon_prefix")}{" "}
                           <span className="text-mint-ink font-medium">
                             −{formatPercent(carbonDelta, lang, 0)}
                           </span>{" "}
-                          vs indice Monde.
+                          {t("le_fil.carbon_suffix")}
                         </>
                       )}
                       <br />
                       <Link to="/certificat" className="text-mint-ink font-medium">
-                        Voir ce que ton argent finance →
+                        {t("le_fil.impact_link")} →
                       </Link>
                     </>
                   ) : (
-                    "Ajoute des actifs pour mesurer ton impact."
+                    t("le_fil.impact_empty")
                   )}
                 </div>
               </div>
               {carbonDelta != null && (
-                <p className="mt-2 font-mono text-tag text-ink-3">
-                  Source : WACI émetteurs (MSCI) vs indice ACWI · part couverte du portefeuille.
-                </p>
+                <p className="mt-2 font-mono text-tag text-ink-3">{t("le_fil.carbon_source")}</p>
               )}
             </Node>
 
             {/* NŒUD 5 — COMPARAISON */}
             <Node index={5} active {...reveal(5)}>
               <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
-                Mon Fil vs indice Monde
+                {t("le_fil.compare_title")}
               </p>
               {expectedReturn != null && volatility != null ? (
                 <div className="mt-3 flex flex-col gap-3">
                   <CompareRow
-                    label="Rendement attendu / an"
+                    label={t("le_fil.expected_return")}
+                    mineLabel={t("le_fil.mine")}
                     mine={expectedReturn}
                     benchmark={MSCI_WORLD.expectedReturn}
                     lang={lang}
                     higherIsBetter
                   />
                   <CompareRow
-                    label="Risque (volatilité)"
+                    label={t("le_fil.risk_vol")}
+                    mineLabel={t("le_fil.mine")}
                     mine={volatility}
                     benchmark={MSCI_WORLD.volatility}
                     lang={lang}
                     higherIsBetter={false}
                   />
                   <Link to="/comparatif" className="font-mono text-xs text-mint-ink">
-                    Comparatif détaillé →
+                    {t("le_fil.compare_detail")} →
                   </Link>
-                  <p className="font-mono text-tag text-ink-3">
-                    Rendements attendus, pas garantis. Performance passée ≠ future.
-                  </p>
+                  <p className="font-mono text-tag text-ink-3">{t("le_fil.returns_disclaimer")}</p>
                 </div>
               ) : (
-                <p className="text-sm text-ink-3 mt-2">
-                  La comparaison s'affiche dès que ton portefeuille a des métriques.
-                </p>
+                <p className="text-sm text-ink-3 mt-2">{t("le_fil.compare_empty")}</p>
               )}
             </Node>
 
             {/* NŒUD 6 — LE MONDE RÉEL */}
             <Node index={6} active={false} {...reveal(6)}>
               <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
-                Le monde réel
+                {t("le_fil.real_world")}
               </p>
-              <p className="text-sm text-ink-2 mt-1">
-                Les faits, les sources et le droit de réponse derrière chaque chiffre.
-              </p>
+              <p className="text-sm text-ink-2 mt-1">{t("le_fil.real_world_desc")}</p>
               <Link
                 to="/methodologie"
                 className="inline-block mt-2 font-mono text-xs text-ink-3 hover:text-ink"
               >
-                Méthodologie &amp; sources →
+                {t("le_fil.methodology")} →
               </Link>
             </Node>
           </div>
@@ -303,17 +302,12 @@ function LeFil() {
           {/* Ethi — actions contextuelles, jamais un chat vide */}
           <motion.div {...reveal(7)} className="mt-5">
             <p className="text-caption uppercase tracking-wider text-ink-3 font-mono mb-2">
-              Demander à Ethi
+              {t("le_fil.ask_ethi")}
             </p>
             <div className="flex flex-wrap gap-2">
-              {[
-                { label: "Pourquoi ces actifs ?", intent: "why", primary: true },
-                { label: "Compare au MSCI World", intent: "compare", primary: false },
-                { label: "Challenge mon portefeuille", intent: "challenge", primary: false },
-                { label: "Et si je privilégiais le climat ?", intent: "simulate", primary: false },
-              ].map((a) => (
+              {ethiActions.map((a) => (
                 <Link
-                  key={a.label}
+                  key={a.intent}
                   to="/ethi"
                   search={{ intent: a.intent, q: undefined }}
                   className={`font-mono text-xs px-3 py-2 rounded-full border transition-transform hover:scale-[1.03] ${
@@ -322,7 +316,7 @@ function LeFil() {
                       : "text-ink-2 border-paper-3 bg-card"
                   }`}
                 >
-                  {a.label}
+                  {t(a.key)}
                 </Link>
               ))}
             </div>
@@ -371,12 +365,14 @@ function Node({
  */
 function CompareRow({
   label,
+  mineLabel,
   mine,
   benchmark,
   lang,
   higherIsBetter,
 }: {
   label: string;
+  mineLabel: string;
   mine: number;
   benchmark: number;
   lang: Parameters<typeof formatPercent>[1];
@@ -388,7 +384,7 @@ function CompareRow({
     <div className="flex flex-col gap-1.5">
       <p className="font-mono text-tag uppercase tracking-wide text-ink-3">{label}</p>
       <div className="flex items-center gap-2">
-        <span className="w-14 shrink-0 font-mono text-tag text-ink-2">Mon Fil</span>
+        <span className="w-14 shrink-0 font-mono text-tag text-ink-2">{mineLabel}</span>
         <div className="h-2 flex-1 overflow-hidden rounded-full bg-paper-3">
           <span
             className="block h-full rounded-full"
