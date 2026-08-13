@@ -33,6 +33,7 @@ import { Route as ComparatifRouteImport } from './routes/comparatif'
 import { Route as CommunauteRouteImport } from './routes/communaute'
 import { Route as CguRouteImport } from './routes/cgu'
 import { Route as CertificatRouteImport } from './routes/certificat'
+import { Route as LeFilRouteImport } from './routes/le-fil'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AideRouteImport } from './routes/aide'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
@@ -172,6 +173,11 @@ const CertificatRoute = CertificatRouteImport.update({
   path: '/certificat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LeFilRoute = LeFilRouteImport.update({
+  id: '/le-fil',
+  path: '/le-fil',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -271,6 +277,7 @@ export interface FileRoutesByFullPath {
   '/aide': typeof AideRoute
   '/auth': typeof AuthRoute
   '/certificat': typeof CertificatRoute
+  '/le-fil': typeof LeFilRoute
   '/cgu': typeof CguRoute
   '/communaute': typeof CommunauteRoute
   '/comparatif': typeof ComparatifRoute
@@ -314,6 +321,7 @@ export interface FileRoutesByTo {
   '/aide': typeof AideRoute
   '/auth': typeof AuthRoute
   '/certificat': typeof CertificatRoute
+  '/le-fil': typeof LeFilRoute
   '/cgu': typeof CguRoute
   '/communaute': typeof CommunauteRoute
   '/comparatif': typeof ComparatifRoute
@@ -358,6 +366,7 @@ export interface FileRoutesById {
   '/aide': typeof AideRoute
   '/auth': typeof AuthRoute
   '/certificat': typeof CertificatRoute
+  '/le-fil': typeof LeFilRoute
   '/cgu': typeof CguRoute
   '/communaute': typeof CommunauteRoute
   '/comparatif': typeof ComparatifRoute
@@ -403,6 +412,7 @@ export interface FileRouteTypes {
     | '/aide'
     | '/auth'
     | '/certificat'
+    | '/le-fil'
     | '/cgu'
     | '/communaute'
     | '/comparatif'
@@ -446,6 +456,7 @@ export interface FileRouteTypes {
     | '/aide'
     | '/auth'
     | '/certificat'
+    | '/le-fil'
     | '/cgu'
     | '/communaute'
     | '/comparatif'
@@ -489,6 +500,7 @@ export interface FileRouteTypes {
     | '/aide'
     | '/auth'
     | '/certificat'
+    | '/le-fil'
     | '/cgu'
     | '/communaute'
     | '/comparatif'
@@ -534,6 +546,7 @@ export interface RootRouteChildren {
   AideRoute: typeof AideRoute
   AuthRoute: typeof AuthRoute
   CertificatRoute: typeof CertificatRoute
+  LeFilRoute: typeof LeFilRoute
   CguRoute: typeof CguRoute
   CommunauteRoute: typeof CommunauteRoute
   ComparatifRoute: typeof ComparatifRoute
@@ -738,6 +751,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CertificatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/le-fil': {
+      id: '/le-fil'
+      path: '/le-fil'
+      fullPath: '/le-fil'
+      preLoaderRoute: typeof LeFilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -918,6 +938,7 @@ const rootRouteChildren: RootRouteChildren = {
   AideRoute: AideRoute,
   AuthRoute: AuthRoute,
   CertificatRoute: CertificatRoute,
+  LeFilRoute: LeFilRoute,
   CguRoute: CguRoute,
   CommunauteRoute: CommunauteRoute,
   ComparatifRoute: ComparatifRoute,
