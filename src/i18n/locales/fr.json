@@ -577,6 +577,8 @@
     "refiner_disclosure": "Arbitrages avancés",
     "affiner_disclaimer": "Simulation pédagogique sur un portefeuille virtuel. Les écarts affichés sont la conséquence chiffrée de tes propres choix : Seedow ne formule aucune recommandation personnalisée, n'exécute aucune transaction et n'est ni PSI ni CIF.",
     "comparatif_promoted": "Comparer à un fonds classique",
+    "esg_floor_relaxed_title": "Plancher d'impact non atteint",
+    "esg_floor_relaxed_desc": "Sous tes contraintes (causes, exclusions, budget de risque), l'optimiseur n'a pas pu atteindre notre plancher d'impact ESG de 70/100. On te le dit plutôt que de le masquer : le score affiché est le score réel obtenu. Assouplir une exclusion ou élargir tes causes peut permettre de repasser au-dessus.",
     "compromis": "Ce réglage privilégie l'impact. Il peut coûter un peu de rendement ou ajouter du risque — c'est ton arbitrage, pas une recommandation.",
     "goals": {
       "title": "Mes objectifs",

@@ -53,6 +53,13 @@ export interface ActivePortfolio {
   risk_target: number;
   /** Horizon d'investissement en années. */
   horizon_years: number;
+  /**
+   * true si l'optimiseur n'a pas pu satisfaire le plancher ESG (70/100) sous les
+   * contraintes de l'utilisateur : le plancher a été relâché pour produire une
+   * allocation viable. Exposé pour l'afficher honnêtement (CLAUDE.md §1.2) —
+   * jamais masqué.
+   */
+  esg_floor_relaxed: boolean;
 }
 
 interface State {
@@ -69,7 +76,7 @@ async function fetchActivePortfolio(
   let query = supabase
     .from("portfolios")
     .select(
-      "id, name, initial_amount, generated_at, weights, metrics, exclusions, causes, risk_target, horizon_years",
+      "id, name, initial_amount, generated_at, weights, metrics, exclusions, causes, risk_target, horizon_years, esg_floor_relaxed",
     )
     .eq("user_id", userId)
     .eq("is_active", true);
@@ -120,6 +127,7 @@ async function fetchActivePortfolio(
     causes: (pf.causes ?? []) as CauseTag[],
     risk_target: Number(pf.risk_target ?? 0),
     horizon_years: Number(pf.horizon_years ?? 0),
+    esg_floor_relaxed: Boolean((pf as { esg_floor_relaxed?: boolean }).esg_floor_relaxed),
   };
 }
 

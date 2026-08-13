@@ -577,6 +577,8 @@
     "refiner_disclosure": "Advanced trade-offs",
     "affiner_disclaimer": "Educational simulation on a virtual portfolio. The figures shown are the measured consequence of your own choices: Seedow makes no personalised recommendation, executes no transaction, and is neither an investment services provider nor a financial investment adviser.",
     "comparatif_promoted": "Compare to a classic fund",
+    "esg_floor_relaxed_title": "Impact floor not reached",
+    "esg_floor_relaxed_desc": "Under your constraints (causes, exclusions, risk budget), the optimizer could not reach our ESG impact floor of 70/100. We tell you rather than hide it: the score shown is the actual score obtained. Relaxing an exclusion or broadening your causes may bring it back above the floor.",
     "compromis": "This setting favours impact. It may cost a little return or add risk — that's your trade-off, not a recommendation.",
     "goals": {
       "title": "My goals",
