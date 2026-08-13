@@ -81,7 +81,7 @@ function saveHistory(uid: string, messages: Message[]) {
 function Ethi() {
   const { t } = useTranslation();
   const { lang } = useLang();
-  const { q } = Route.useSearch();
+  const { q, intent } = Route.useSearch();
   const { user } = useAuth();
   const { portfolio, loading: pfLoading } = useActivePortfolio();
   const valuation = usePortfolioValuation();
@@ -90,6 +90,7 @@ function Ethi() {
   const [isLoading, setIsLoading] = useState(false);
   const [showSim, setShowSim] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const intentHandledRef = useRef(false);
 
   const dataLoading = pfLoading || valuation.loading;
   const firstName =
@@ -223,6 +224,27 @@ function Ethi() {
       setIsLoading(false);
     }
   };
+
+  // Action contextuelle venue de l'accueil « Le Fil » (?intent=...) : déclenche
+  // la bonne requête Ethi une seule fois, dès que le contexte portefeuille est
+  // prêt. `simulate` ouvre le formulaire de simulation ; les autres envoient la
+  // question correspondante. Ignoré si un `?q=` est déjà présent (pré-remplissage).
+  useEffect(() => {
+    if (!intent || q || dataLoading || intentHandledRef.current) return;
+    intentHandledRef.current = true;
+    if (intent === "simulate") {
+      setShowSim(true);
+      return;
+    }
+    const prompts: Record<string, string> = {
+      why: t("le_fil.ethi_why"),
+      compare: t("le_fil.ethi_compare"),
+      challenge: t("le_fil.ethi_challenge"),
+    };
+    const prompt = prompts[intent];
+    if (prompt) void send(prompt);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [intent, q, dataLoading]);
 
   const handleChip = (chip: SuggestionChip) => {
     if (chip.kind === "sim") {
