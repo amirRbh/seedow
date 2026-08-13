@@ -249,6 +249,30 @@ function LeFil() {
               {carbonDelta != null && (
                 <p className="mt-2 font-mono text-tag text-ink-3">{t("le_fil.carbon_source")}</p>
               )}
+              {/* Équivalences concrètes — affichées UNIQUEMENT si le moteur
+                  d'impact le juge honnête (empreinte mesurée + couverture ≥ 50 %). */}
+              {impact?.presentation?.show && impact.presentation.equivalences.length > 0 && (
+                <div className="mt-3 border-t border-paper-3 pt-3">
+                  <p className="font-mono text-tag uppercase tracking-wide text-ink-3">
+                    {t("le_fil.equivalences_title")}
+                  </p>
+                  <ul className="mt-2 flex flex-col gap-1.5">
+                    {impact.presentation.equivalences.slice(0, 3).map((e) => (
+                      <li key={e.factorId} className="flex items-baseline justify-between gap-3">
+                        <span className="text-sm text-ink-2">{t(e.labelKey)}</span>
+                        <span className="shrink-0 font-mono text-sm text-mint-ink tabular-nums">
+                          ≈ {Math.round(e.value).toLocaleString(lang, { maximumFractionDigits: 0 })}{" "}
+                          {t(e.unitKey)}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="mt-2 font-mono text-tag text-ink-3">
+                    {t("le_fil.equivalences_source")} :{" "}
+                    {impact.presentation.equivalences[0]?.source}
+                  </p>
+                </div>
+              )}
             </Node>
 
             {/* NŒUD 5 — COMPARAISON */}
