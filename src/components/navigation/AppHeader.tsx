@@ -45,7 +45,7 @@ export function AppHeader({
     <header className="px-5 pt-6 pb-5">
       <div className="md:hidden flex items-center justify-between border-b border-paper-3 pb-3">
         <Link
-          to="/dashboard"
+          to="/le-fil"
           aria-label={t("rail_nav.seedow_home")}
           className="inline-flex items-center outline-none rounded-sm focus-visible:ring-2 focus-visible:ring-highlight-1"
         >
@@ -92,7 +92,7 @@ export function AppHeader({
         )}
         <div className="min-w-0 flex-1">
           {eyebrow && (
-            <p className="text-tag uppercase tracking-[0.2em] text-ink-3 font-semibold mb-2">
+            <p className="text-tag uppercase tracking-[0.2em] text-ink-3 font-mono mb-2">
               {eyebrow}
             </p>
           )}
