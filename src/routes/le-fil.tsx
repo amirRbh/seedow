@@ -12,6 +12,11 @@ import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { AnimatedFigure } from "@/components/ui/AnimatedFigure";
 import { formatCurrency, formatPercent } from "@/lib/format";
 import { buildPortfolioImpact } from "@/lib/impact/portfolioImpact";
+import {
+  weightedImpactScore,
+  dominantCategories,
+  topHoldingsByWeight,
+} from "@/lib/portfolio/leFilSummary";
 import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 
 // Référence de comparaison : ETF MSCI World (IWDA / EUNL). Rendement et
@@ -43,39 +48,10 @@ function LeFil() {
   const returnPct = valuation.returnPct;
   const isGrowing = gain >= 0;
 
-  // Score d'impact : moyenne ESG pondérée par l'allocation (0–100).
-  const impactScore = useMemo(() => {
-    if (holdings.length === 0) return null;
-    let sumW = 0;
-    let sum = 0;
-    for (const h of holdings) {
-      const w = h.allocationPct ?? 0;
-      const s = h.esgScore ?? 0;
-      sumW += w;
-      sum += w * s;
-    }
-    if (sumW === 0) return null;
-    return Math.round(sum / sumW);
-  }, [holdings]);
-
-  // « Ce que je finance » : catégories dominantes du portefeuille.
-  const convictions = useMemo(() => {
-    const byCat = new Map<string, number>();
-    for (const h of holdings) {
-      const cat = h.category ?? "Autres";
-      byCat.set(cat, (byCat.get(cat) ?? 0) + (h.allocationPct ?? 0));
-    }
-    return [...byCat.entries()]
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 3)
-      .map(([c]) => c);
-  }, [holdings]);
-
-  // Principales lignes, du plus gros poids au plus petit.
-  const topHoldings = useMemo(
-    () => [...holdings].sort((a, b) => (b.allocationPct ?? 0) - (a.allocationPct ?? 0)).slice(0, 4),
-    [holdings],
-  );
+  // Résumés du fil (logique pure testée dans lib/portfolio/leFilSummary).
+  const impactScore = useMemo(() => weightedImpactScore(holdings), [holdings]);
+  const convictions = useMemo(() => dominantCategories(holdings), [holdings]);
+  const topHoldings = useMemo(() => topHoldingsByWeight(holdings), [holdings]);
 
   // Impact carbone réel via le moteur d'impact honnête : n'expose un écart
   // chiffré que si la couverture des données émetteurs est suffisante (sinon
