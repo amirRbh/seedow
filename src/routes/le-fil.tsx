@@ -1,11 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
+import { HoldingDetailSheet } from "@/components/portfolio/HoldingDetailSheet";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { useAuth } from "@/hooks/useAuth";
 import { useLang } from "@/hooks/useLang";
-import { useActivePortfolio } from "@/hooks/useActivePortfolio";
+import { useActivePortfolio, type ActiveHolding } from "@/hooks/useActivePortfolio";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { formatCurrency, formatPercent } from "@/lib/format";
 import { buildPortfolioImpact } from "@/lib/impact/portfolioImpact";
@@ -85,6 +86,9 @@ function LeFil() {
 
   const expectedReturn = portfolio?.metrics?.expected_return ?? null;
   const volatility = portfolio?.metrics?.volatility ?? null;
+
+  // Fiche détaillée d'un actif (bottom sheet) — « pourquoi cet actif est là ».
+  const [selectedHolding, setSelectedHolding] = useState<ActiveHolding | null>(null);
 
   const userName = user?.user_metadata?.name || user?.email?.split("@")[0] || "";
 
@@ -170,12 +174,17 @@ function LeFil() {
                 <ul className="mt-3 flex flex-col divide-y divide-paper-3">
                   {topHoldings.map((h) => (
                     <li key={h.id} className="flex items-center gap-3 py-2.5 first:pt-0 last:pb-0">
-                      <div className="min-w-0 flex-1">
+                      <button
+                        type="button"
+                        onClick={() => setSelectedHolding(h)}
+                        aria-label={`Détail de ${h.name}`}
+                        className="min-w-0 flex-1 text-left outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 rounded-sm"
+                      >
                         <p className="truncate text-sm font-medium text-ink">{h.name}</p>
                         <p className="font-mono text-tag uppercase tracking-wide text-ink-3">
                           {h.category ?? "—"} · {formatPercent(h.allocationPct ?? 0, lang, 0)}
                         </p>
-                      </div>
+                      </button>
                       <span className="font-mono text-sm text-ink tabular-nums">
                         {formatCurrency(((h.allocationPct ?? 0) / 100) * totalValue, lang)}
                       </span>
@@ -316,6 +325,12 @@ function LeFil() {
           </motion.div>
         </div>
       </div>
+
+      <HoldingDetailSheet
+        open={selectedHolding !== null}
+        onClose={() => setSelectedHolding(null)}
+        holding={selectedHolding}
+      />
 
       <BottomNavigation />
     </div>
