@@ -307,19 +307,20 @@ function Portfolio() {
           <ObjectivesTeaser />
         </section>
 
-        {/* Réveil, Vote, Watchlist — conséquences de détenir (analyse UX §04/§05).
-            Rapatriés du dashboard vers leur vrai foyer : le portefeuille. */}
+        {/* Secondaire (conséquences de détenir + partage) — replié par défaut
+            pour limiter le scroll mobile ; les Objectifs ci-dessus restent
+            visibles. Réutilise le repli existant de la page. */}
         <section className="px-5 pt-8">
-          <ExploreSection>
-            <ReveilTeaserCard />
-            <VoteTeaserCard />
-            <WatchlistCard />
-          </ExploreSection>
-        </section>
-
-        {/* Partage anonyme — ligne discrète en pied */}
-        <section className="px-5 pt-8">
-          <ShareToggle />
+          <DetailDisclosure summary={t("le_fil.more")}>
+            <div className="space-y-4">
+              <ExploreSection>
+                <ReveilTeaserCard />
+                <VoteTeaserCard />
+                <WatchlistCard />
+              </ExploreSection>
+              <ShareToggle />
+            </div>
+          </DetailDisclosure>
         </section>
       </div>
       <BottomNavigation />
