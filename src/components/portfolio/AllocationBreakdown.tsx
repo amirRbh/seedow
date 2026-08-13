@@ -67,7 +67,7 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
     <div className="paper-card p-5">
       <div className="flex items-baseline justify-between mb-4">
         <div>
-          <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold">Allocation</p>
+          <p className="text-tag uppercase tracking-wider text-ink-3 font-mono">Allocation</p>
           <p className="font-value text-2xl text-ink mt-0.5">
             {holdings.length} <span className="text-base text-ink-3">positions</span>
           </p>
@@ -119,7 +119,7 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
       {/* Movers — actifs dont le prix a évolué */}
       {movers.length > 0 && (
         <div className="border-t border-paper-3 pt-4 mb-4">
-          <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold mb-2">
+          <p className="text-tag uppercase tracking-wider text-ink-3 font-mono mb-2">
             Mouvements notables
           </p>
           <div className="flex flex-wrap gap-2">

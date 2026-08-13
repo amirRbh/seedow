@@ -84,7 +84,7 @@ function AdminBetaPage() {
     <div className="max-w-6xl mx-auto px-6 py-12 space-y-10">
       <header className="flex items-end justify-between flex-wrap gap-4">
         <div>
-          <p className="text-tag uppercase tracking-[0.22em] text-gold font-semibold">
+          <p className="text-tag uppercase tracking-[0.22em] text-gold font-mono">
             {t("admin_beta.eyebrow")}
           </p>
           <h1 className="font-display text-3xl text-ink mt-2">{t("admin_beta.title")}</h1>
@@ -98,7 +98,7 @@ function AdminBetaPage() {
       <section className="border border-paper-3 rounded-2xl p-6 bg-paper-2/40">
         <div className="flex items-end justify-between flex-wrap gap-4 mb-4">
           <div>
-            <p className="text-tag uppercase tracking-[0.22em] text-ink-3 font-semibold">
+            <p className="text-tag uppercase tracking-[0.22em] text-ink-3 font-mono">
               {t("admin_beta.capacity_title")}
             </p>
             <p className="font-display text-4xl text-ink mt-2 tabular-nums">
@@ -106,7 +106,7 @@ function AdminBetaPage() {
             </p>
           </div>
           <div className="text-right">
-            <p className={`text-label uppercase tracking-[0.18em] font-semibold ${statusTone}`}>
+            <p className={`text-label uppercase tracking-[0.18em] font-mono ${statusTone}`}>
               ● {statusLabel}
             </p>
             <p className="text-body-sm text-ink-2 mt-1 tabular-nums">
@@ -192,7 +192,7 @@ function AdminBetaPage() {
         <div className="flex items-end justify-between flex-wrap gap-3 mb-3">
           <h2 className="font-display text-lg text-ink">{t("admin_beta.ingestion_title")}</h2>
           <span
-            className={`text-label uppercase tracking-[0.18em] font-semibold ${
+            className={`text-label uppercase tracking-[0.18em] font-mono ${
               stats.ingestionSuccessRate === null
                 ? "text-ink-3"
                 : stats.ingestionSuccessRate >= 0.9
@@ -438,7 +438,7 @@ function ComprehensionSection({ comp }: { comp: ComprehensionStats }) {
         />
       </div>
       <div className="border border-paper-3 rounded-2xl p-4">
-        <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold mb-3">
+        <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono mb-3">
           {t("admin_beta.comprehension_retention_title")}
         </p>
         <div className="flex items-center justify-between text-body-sm py-1.5">
@@ -468,7 +468,7 @@ function ComprehensionSection({ comp }: { comp: ComprehensionStats }) {
 function Kpi({ label, value }: { label: string; value: string }) {
   return (
     <div className="border border-paper-3 rounded-2xl p-4">
-      <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold">{label}</p>
+      <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono">{label}</p>
       <p className="font-value text-2xl text-ink mt-1 tabular-nums">{value}</p>
     </div>
   );

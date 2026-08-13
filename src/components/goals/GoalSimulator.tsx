@@ -106,7 +106,7 @@ export function GoalSimulator({
         </div>
 
         <div className="rounded-md bg-paper-2 px-4 py-3 text-sm">
-          <p className="text-ink-3 text-xs uppercase tracking-[0.18em] font-semibold mb-1">
+          <p className="text-ink-3 text-xs uppercase tracking-[0.18em] font-mono mb-1">
             {t("goal.sim_to_reach", { amount: formatCurrency(goal.target_amount, lang) })}
           </p>
           {needed.feasible ? (

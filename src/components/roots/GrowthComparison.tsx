@@ -69,7 +69,7 @@ export function GrowthComparison({
       {/* Header : gain principal */}
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold">
+          <p className="text-tag uppercase tracking-wider text-ink-3 font-mono">
             {t("growth_comparison.your_growth")}
           </p>
           <p className="font-value text-3xl text-ink mt-1">
@@ -195,7 +195,7 @@ function AmountTile({
     accent === "highlight" ? "text-highlight-1" : accent === "rust" ? "text-rust" : "text-ink";
   return (
     <div className="rounded-lg border border-paper-2 bg-paper-1/40 p-3">
-      <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold">{label}</p>
+      <p className="text-tag uppercase tracking-wider text-ink-3 font-mono">{label}</p>
       <p className={`font-value text-lg mt-1 ${accentClass}`}>{value}</p>
       <p className="text-tag text-ink-3 mt-0.5">{hint}</p>
     </div>

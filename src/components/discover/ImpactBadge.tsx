@@ -25,7 +25,7 @@ export function ImpactBadge({ score, className }: { score: number; className?: s
       title={`${t("discover.row.impact")} ${score.toFixed(1)}/10`}
     >
       <span className={cn("w-1.5 h-1.5 rounded-full flex-shrink-0", c.dot)} aria-hidden="true" />
-      <span className={cn("text-tag uppercase tracking-wider font-semibold", c.text)}>
+      <span className={cn("text-tag uppercase tracking-wider font-mono", c.text)}>
         {t("discover.row.impact")} {t(`discover.impact_rating.${level}`)}
       </span>
       <span className="text-tag text-ink-3 font-semibold tabular-nums">

@@ -105,7 +105,7 @@ export function InvestDialog({ trigger, defaultAmount = 200, label }: Props) {
 
         <div className="mt-2 space-y-4">
           <div>
-            <Label className="text-caption uppercase tracking-[0.18em] text-ink-3 font-semibold">
+            <Label className="text-caption uppercase tracking-[0.18em] text-ink-3 font-mono">
               {t("invest_dialog.amount")}
             </Label>
             <div className="mt-2 flex items-center gap-2">
@@ -199,7 +199,7 @@ export function InvestDialog({ trigger, defaultAmount = 200, label }: Props) {
 
             <TabsContent value="applepay" className="mt-4">
               <div className="rounded-md border border-paper-3 bg-paper-2 p-4 text-center">
-                <p className="text-caption uppercase tracking-[0.18em] text-ink-3 font-semibold">
+                <p className="text-caption uppercase tracking-[0.18em] text-ink-3 font-mono">
                   {t("invest_dialog.applepay_eyebrow")}
                 </p>
                 <p className="mt-2 text-sm text-ink-2">{t("invest_dialog.applepay_desc")}</p>

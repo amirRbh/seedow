@@ -49,7 +49,7 @@ export function ImpactRibbon({ impact, esgScore10 }: ImpactRibbonProps) {
     >
       <div className="gold-rule mb-5" aria-hidden />
 
-      <p className="text-tag uppercase tracking-[0.22em] font-semibold text-gold">
+      <p className="text-tag uppercase tracking-[0.22em] font-mono text-gold">
         {impact.measured
           ? t("impact_hero.eyebrow")
           : impact.intensity
@@ -59,7 +59,7 @@ export function ImpactRibbon({ impact, esgScore10 }: ImpactRibbonProps) {
 
       {impact.measured ? (
         <>
-          <p className="text-tag uppercase tracking-[0.22em] font-semibold text-ink-3 mt-4">
+          <p className="text-tag uppercase tracking-[0.22em] font-mono text-ink-3 mt-4">
             {t("impact_hero.footprint_label")}
           </p>
           <div className="mt-1 kpi-figure flex flex-wrap items-baseline gap-x-2 text-5xl sm:text-6xl leading-none">
@@ -88,7 +88,7 @@ export function ImpactRibbon({ impact, esgScore10 }: ImpactRibbonProps) {
         </>
       ) : impact.intensity ? (
         <>
-          <p className="text-tag uppercase tracking-[0.22em] font-semibold text-ink-3 mt-4">
+          <p className="text-tag uppercase tracking-[0.22em] font-mono text-ink-3 mt-4">
             {t("impact_hero.intensity_label")}
           </p>
           <div className="mt-1 kpi-figure flex flex-wrap items-baseline gap-x-2 text-5xl sm:text-6xl leading-none">
@@ -131,7 +131,7 @@ export function ImpactRibbon({ impact, esgScore10 }: ImpactRibbonProps) {
         </>
       ) : (
         <>
-          <p className="text-tag uppercase tracking-[0.22em] font-semibold text-ink-3 mt-4">
+          <p className="text-tag uppercase tracking-[0.22em] font-mono text-ink-3 mt-4">
             {t("impact_hero.not_measured_label")}
           </p>
           <div className="mt-1 kpi-figure flex flex-wrap items-baseline gap-x-2 text-5xl sm:text-6xl leading-none">

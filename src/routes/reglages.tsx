@@ -1092,7 +1092,7 @@ function MethodologySection() {
 
         <div className="space-y-4">
           <div>
-            <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold mb-2">
+            <p className="text-caption uppercase tracking-wider text-ink-3 font-mono mb-2">
               {t("reglages.methodology.esg_composite.pillars_title")}
             </p>
             <ul className="text-label text-ink-2 space-y-1.5 leading-relaxed">
@@ -1118,7 +1118,7 @@ function MethodologySection() {
           </div>
 
           <div>
-            <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold mb-2">
+            <p className="text-caption uppercase tracking-wider text-ink-3 font-mono mb-2">
               {t("reglages.methodology.esg_composite.mapping_title")}
             </p>
             <ul className="text-label text-ink-2 space-y-1.5 leading-relaxed">
@@ -1147,7 +1147,7 @@ function MethodologySection() {
           </div>
 
           <div>
-            <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold mb-2">
+            <p className="text-caption uppercase tracking-wider text-ink-3 font-mono mb-2">
               {t("reglages.methodology.esg_composite.portfolio_title")}
             </p>
             <p className="text-label text-ink-2 leading-relaxed">
@@ -1156,7 +1156,7 @@ function MethodologySection() {
           </div>
 
           <div className="pt-2 border-t border-paper-3">
-            <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold mb-2">
+            <p className="text-caption uppercase tracking-wider text-ink-3 font-mono mb-2">
               {t("reglages.methodology.esg_composite.scale_title")}
             </p>
             <div className="grid grid-cols-4 gap-1.5 text-tag">
@@ -1205,7 +1205,7 @@ function MethodologySection() {
         </ul>
 
         <div className="mt-4 rounded border border-paper-3 bg-paper-2 p-3">
-          <p className="text-caption uppercase tracking-wider text-ink-3 font-semibold mb-2">
+          <p className="text-caption uppercase tracking-wider text-ink-3 font-mono mb-2">
             {t("reglages.methodology.carbon.coverage_title")}
           </p>
           <ul className="text-label text-ink-2 space-y-1.5 leading-relaxed mb-3">

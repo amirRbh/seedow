@@ -285,7 +285,7 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
       {/* Ce que ça change — uniquement après une modification */}
       {consequences.length > 0 && (
         <div className="rounded-2xl border border-paper-3 bg-paper-2 p-4">
-          <p className="text-tag uppercase tracking-[0.14em] font-semibold text-ink-3">
+          <p className="text-tag uppercase tracking-[0.14em] font-mono text-ink-3">
             {t("portfolio_customizer.what_changes")}
           </p>
           <ul className="mt-2.5 space-y-2">
@@ -494,7 +494,7 @@ function GlanceStat({
     <div className="rounded-xl border border-paper-3 bg-paper px-3 py-3">
       <div className="flex items-center gap-1.5 text-ink-3">
         {icon}
-        <span className="text-tag uppercase tracking-[0.14em] font-semibold truncate">{label}</span>
+        <span className="text-tag uppercase tracking-[0.14em] font-mono truncate">{label}</span>
       </div>
       <p
         className={`mt-1.5 text-body-sm font-semibold leading-tight ${mint ? "text-mint-ink" : "text-ink"}`}

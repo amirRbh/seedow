@@ -94,11 +94,11 @@ export function CommunityPanel() {
               {formatNumber(median, lang, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>{" "}
             {myESG >= median ? (
-              <span className="text-emerald-700 text-xs uppercase tracking-[0.18em] font-semibold ml-2">
+              <span className="text-emerald-700 text-xs uppercase tracking-[0.18em] font-mono ml-2">
                 {t("community_panel.above")}
               </span>
             ) : (
-              <span className="text-ink-3 text-xs uppercase tracking-[0.18em] font-semibold ml-2">
+              <span className="text-ink-3 text-xs uppercase tracking-[0.18em] font-mono ml-2">
                 {t("community_panel.below")}
               </span>
             )}

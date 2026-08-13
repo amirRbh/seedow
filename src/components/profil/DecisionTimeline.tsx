@@ -41,7 +41,7 @@ export function DecisionTimeline() {
               )}
             />
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-tag uppercase tracking-[0.18em] font-semibold text-ink-3">
+              <span className="text-tag uppercase tracking-[0.18em] font-mono text-ink-3">
                 {tone.label}
               </span>
               <span className="text-tag text-ink-3">·</span>

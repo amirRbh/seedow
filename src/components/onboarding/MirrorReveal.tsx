@@ -87,7 +87,7 @@ export function MirrorReveal({ impact, excludedCount, universeSize, exclusionsCo
     >
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-tag uppercase tracking-[0.2em] text-mint font-semibold">
+          <p className="text-tag uppercase tracking-[0.2em] text-mint font-mono">
             {t("mirror.eyebrow")}
           </p>
           <h3 className="font-value text-2xl text-ink mt-1">{t("mirror.title")}</h3>

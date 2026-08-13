@@ -108,7 +108,7 @@ export function PortfolioHistoryChart() {
     <div className="paper-card p-5">
       <div className="flex items-baseline justify-between mb-3">
         <div>
-          <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold">
+          <p className="text-tag uppercase tracking-wider text-ink-3 font-mono">
             {t("portfolio.history_chart.title")}
           </p>
           <p className="font-value text-2xl text-ink mt-0.5">{fmtEur(last)}</p>

@@ -80,7 +80,7 @@ function GlanceTile({
       search={search}
       className="flex flex-col justify-between rounded-2xl border border-paper-3 bg-paper-2 px-3 py-3 min-h-[76px] transition-colors hover:bg-paper-3/50 outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
     >
-      <span className="text-tag uppercase tracking-[0.12em] font-semibold text-ink-3 leading-none">
+      <span className="text-tag uppercase tracking-[0.12em] font-mono text-ink-3 leading-none">
         {label}
       </span>
       <span className={`mt-2 font-value text-lg leading-none ${valueColor}`}>

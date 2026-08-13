@@ -74,7 +74,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
           <SheetHeader className="text-left p-0">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold">
+                <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono">
                   {asset.category} · {asset.ticker}
                 </p>
                 <SheetTitle className="font-value text-2xl text-ink mt-1 leading-tight">
@@ -106,7 +106,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
               entreprise, un panier, un prêt ou de l'immobilier. On le lui dit en
               une phrase, AVANT le résumé de l'émetteur, sans jargon. */}
           <section className="rounded-xl bg-highlight-5/60 border border-highlight-4 p-3.5">
-            <p className="text-tag uppercase tracking-[0.18em] text-highlight-1 font-semibold mb-1.5">
+            <p className="text-tag uppercase tracking-[0.18em] text-highlight-1 font-mono mb-1.5">
               {t("asset_detail.plain.label")}
             </p>
             <p className="text-body-sm text-ink-2 leading-relaxed">
@@ -119,7 +119,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
 
           {/* {t("asset_detail.summary")} */}
           <section>
-            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold mb-2">
+            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono mb-2">
               {t("asset_detail_sheet.summary")}
             </p>
             <p className="text-body-sm text-ink-2 leading-relaxed">{asset.description}</p>
@@ -141,7 +141,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
 
           {/* Impact dynamique */}
           <section>
-            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold mb-2">
+            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono mb-2">
               {t("asset_detail.impact_overview")}
             </p>
 
@@ -302,7 +302,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                 </ul>
                 {asset.exclusions && asset.exclusions.length > 0 && (
                   <div className="mt-3 pt-3 border-t border-dashed border-paper-3">
-                    <p className="text-tag uppercase tracking-wider text-ink-3 font-semibold mb-1.5">
+                    <p className="text-tag uppercase tracking-wider text-ink-3 font-mono mb-1.5">
                       {t("asset_detail.exclusions_applied")}
                     </p>
                     <div className="flex flex-wrap gap-1.5">
@@ -325,7 +325,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
               Pour un débutant, « frais 0,20 % » ne veut rien dire : on le traduit
               en euros concrets sur 1 000 € et on donne le sens de lecture. */}
           <section>
-            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold mb-2">
+            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono mb-2">
               {t("asset_detail.cost.title")}
             </p>
             <div className="paper-card p-3.5">
@@ -354,7 +354,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
               type="button"
               onClick={() => setDetailsOpen((o) => !o)}
               aria-expanded={detailsOpen}
-              className="w-full flex items-center justify-between text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold hover:text-ink-2 transition-colors"
+              className="w-full flex items-center justify-between text-tag uppercase tracking-[0.18em] text-ink-3 font-mono hover:text-ink-2 transition-colors"
             >
               {t("asset_detail_sheet.id_card")}
               <svg
@@ -462,9 +462,7 @@ function Disclosure({
   return (
     <details className="group" open={defaultOpen || undefined}>
       <summary className="flex cursor-pointer list-none items-center justify-between gap-3 py-0.5 [&::-webkit-details-marker]:hidden">
-        <span className="text-tag uppercase tracking-[0.18em] text-ink-3 font-semibold">
-          {title}
-        </span>
+        <span className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono">{title}</span>
         <svg
           viewBox="0 0 16 16"
           className="w-3.5 h-3.5 flex-none text-ink-3 transition-transform duration-200 group-open:rotate-180"
