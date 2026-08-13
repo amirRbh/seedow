@@ -14,6 +14,7 @@ import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { ShareToggle } from "@/components/community/ShareToggle";
 import { ComparatifPanel } from "@/components/portfolio/ComparatifPanel";
 import { AllocationRefiner } from "@/components/portfolio/AllocationRefiner";
+import { EsgFloorRelaxedNotice } from "@/components/portfolio/EsgFloorRelaxedNotice";
 import { PortfolioCustomizer } from "@/components/portfolio/PortfolioCustomizer";
 import { ObjectivesTeaser } from "@/components/portfolio/ObjectivesTeaser";
 import { ExploreSection } from "@/components/dashboard/ExploreSection";
@@ -260,6 +261,7 @@ function Portfolio() {
             {/* Impact — le récit d'impact ; le comparatif détaillé (redondant avec
                 « Vs le monde » du récit) est replié pour ne pas alourdir. */}
             <TabsContent value="impact" className="pt-5 space-y-8">
+              <EsgFloorRelaxedNotice relaxed={portfolio.esg_floor_relaxed} />
               <ImpactExperience />
               {/* Comparatif promu (analyse UX §05 — P1) : le « moment aha » vs un
                   fonds classique n'est plus replié. Source unique : /comparatif

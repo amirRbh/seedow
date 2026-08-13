@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { HoldingDetailSheet } from "@/components/portfolio/HoldingDetailSheet";
+import { EsgFloorRelaxedNotice } from "@/components/portfolio/EsgFloorRelaxedNotice";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { useAuth } from "@/hooks/useAuth";
 import { useLang } from "@/hooks/useLang";
@@ -230,6 +231,11 @@ function LeFil() {
               </div>
               {carbonDelta != null && (
                 <p className="mt-2 font-mono text-tag text-ink-3">{t("le_fil.carbon_source")}</p>
+              )}
+              {portfolio?.esg_floor_relaxed && (
+                <div className="mt-3">
+                  <EsgFloorRelaxedNotice relaxed />
+                </div>
               )}
               {/* Équivalences concrètes — affichées UNIQUEMENT si le moteur
                   d'impact le juge honnête (empreinte mesurée + couverture ≥ 50 %). */}
