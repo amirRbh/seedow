@@ -51,7 +51,7 @@ function LeFil() {
   // Résumés du fil (logique pure testée dans lib/portfolio/leFilSummary).
   const impactScore = useMemo(() => weightedImpactScore(holdings), [holdings]);
   const convictions = useMemo(() => dominantCategories(holdings), [holdings]);
-  const topHoldings = useMemo(() => topHoldingsByWeight(holdings), [holdings]);
+  const topHoldings = useMemo(() => topHoldingsByWeight(holdings, 3), [holdings]);
 
   // Impact carbone réel via le moteur d'impact honnête : n'expose un écart
   // chiffré que si la couverture des données émetteurs est suffisante (sinon
@@ -96,7 +96,7 @@ function LeFil() {
             className="absolute left-[26px] top-6 bottom-6 w-px bg-gradient-to-b from-mint/70 via-paper-3 to-paper-3"
           />
 
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-2.5">
             {/* NŒUD 1 — MON ARGENT */}
             <Node index={1} active {...reveal(1)}>
               <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
@@ -116,38 +116,39 @@ function LeFil() {
                 {formatPercent(returnPct, lang)} · {isGrowing ? "+" : ""}
                 {formatCurrency(gain, lang)}
               </p>
-            </Node>
 
-            {/* NŒUD 2 — MES CONVICTIONS */}
-            <Node index={2} active {...reveal(2)}>
-              <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
-                {t("le_fil.finance")}
-              </p>
-              {convictions.length > 0 ? (
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {convictions.map((c, i) => (
-                    <span
-                      key={c}
-                      className={`font-mono text-xs px-3 py-1.5 rounded-full border ${
-                        i === 0
-                          ? "text-mint-ink border-mint/40 bg-mint/5"
-                          : "text-ink-2 border-paper-3"
-                      }`}
-                    >
-                      {c}
-                    </span>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-ink-3 mt-2">{t("le_fil.define_convictions")}</p>
-              )}
-              <Link
-                to="/discover"
-                search={{ theme: portfolio?.causes?.[0] }}
-                className="mt-3 inline-block font-mono text-xs text-mint-ink"
-              >
-                {t("le_fil.explore_aligned")} →
-              </Link>
+              {/* Convictions rattachées au solde (moins de scroll : un seul nœud
+                  « 3 secondes » = combien j'ai + ce que ça finance). */}
+              <div className="mt-4 border-t border-paper-3 pt-3">
+                <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
+                  {t("le_fil.finance")}
+                </p>
+                {convictions.length > 0 ? (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {convictions.map((c, i) => (
+                      <span
+                        key={c}
+                        className={`font-mono text-xs px-3 py-1.5 rounded-full border ${
+                          i === 0
+                            ? "text-mint-ink border-mint/40 bg-mint/5"
+                            : "text-ink-2 border-paper-3"
+                        }`}
+                      >
+                        {c}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-ink-3 mt-2">{t("le_fil.define_convictions")}</p>
+                )}
+                <Link
+                  to="/discover"
+                  search={{ theme: portfolio?.causes?.[0] }}
+                  className="mt-3 inline-block font-mono text-xs text-mint-ink"
+                >
+                  {t("le_fil.explore_aligned")} →
+                </Link>
+              </div>
             </Node>
 
             {/* NŒUD 3 — MES INVESTISSEMENTS */}
@@ -256,51 +257,77 @@ function LeFil() {
               )}
             </Node>
 
-            {/* NŒUD 5 — COMPARAISON */}
-            <Node index={5} active {...reveal(5)}>
-              <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
-                {t("le_fil.compare_title")}
-              </p>
-              {expectedReturn != null && volatility != null ? (
-                <div className="mt-3 flex flex-col gap-3">
-                  <CompareRow
-                    label={t("le_fil.expected_return")}
-                    mineLabel={t("le_fil.mine")}
-                    mine={expectedReturn}
-                    benchmark={MSCI_WORLD.expectedReturn}
-                    lang={lang}
-                    higherIsBetter
-                  />
-                  <CompareRow
-                    label={t("le_fil.risk_vol")}
-                    mineLabel={t("le_fil.mine")}
-                    mine={volatility}
-                    benchmark={MSCI_WORLD.volatility}
-                    lang={lang}
-                    higherIsBetter={false}
-                  />
-                  <Link to="/comparatif" className="font-mono text-xs text-mint-ink">
-                    {t("le_fil.compare_detail")} →
-                  </Link>
-                  <p className="font-mono text-tag text-ink-3">{t("le_fil.returns_disclaimer")}</p>
-                </div>
-              ) : (
-                <p className="text-sm text-ink-3 mt-2">{t("le_fil.compare_empty")}</p>
-              )}
-            </Node>
+            {/* NŒUD 5 — ALLER PLUS LOIN : comparaison + monde réel, repliés par
+                défaut pour limiter le scroll (divulgation progressive, Règle 2). */}
+            <Node index={5} active={false} {...reveal(5)}>
+              <details className="group">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
+                  <span className="text-caption uppercase tracking-wider text-ink-3 font-mono">
+                    {t("le_fil.more")}
+                  </span>
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="h-4 w-4 flex-none text-ink-3 transition-transform duration-300 group-open:rotate-180"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    aria-hidden
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </summary>
 
-            {/* NŒUD 6 — LE MONDE RÉEL */}
-            <Node index={6} active={false} {...reveal(6)}>
-              <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
-                {t("le_fil.real_world")}
-              </p>
-              <p className="text-sm text-ink-2 mt-1">{t("le_fil.real_world_desc")}</p>
-              <Link
-                to="/methodologie"
-                className="inline-block mt-2 font-mono text-xs text-ink-3 hover:text-ink"
-              >
-                {t("le_fil.methodology")} →
-              </Link>
+                <div className="mt-4 flex flex-col gap-4">
+                  {/* Comparaison MSCI */}
+                  <div>
+                    <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
+                      {t("le_fil.compare_title")}
+                    </p>
+                    {expectedReturn != null && volatility != null ? (
+                      <div className="mt-3 flex flex-col gap-3">
+                        <CompareRow
+                          label={t("le_fil.expected_return")}
+                          mineLabel={t("le_fil.mine")}
+                          mine={expectedReturn}
+                          benchmark={MSCI_WORLD.expectedReturn}
+                          lang={lang}
+                          higherIsBetter
+                        />
+                        <CompareRow
+                          label={t("le_fil.risk_vol")}
+                          mineLabel={t("le_fil.mine")}
+                          mine={volatility}
+                          benchmark={MSCI_WORLD.volatility}
+                          lang={lang}
+                          higherIsBetter={false}
+                        />
+                        <Link to="/comparatif" className="font-mono text-xs text-mint-ink">
+                          {t("le_fil.compare_detail")} →
+                        </Link>
+                        <p className="font-mono text-tag text-ink-3">
+                          {t("le_fil.returns_disclaimer")}
+                        </p>
+                      </div>
+                    ) : (
+                      <p className="text-sm text-ink-3 mt-2">{t("le_fil.compare_empty")}</p>
+                    )}
+                  </div>
+
+                  {/* Le monde réel */}
+                  <div className="border-t border-paper-3 pt-4">
+                    <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
+                      {t("le_fil.real_world")}
+                    </p>
+                    <p className="text-sm text-ink-2 mt-1">{t("le_fil.real_world_desc")}</p>
+                    <Link
+                      to="/methodologie"
+                      className="inline-block mt-2 font-mono text-xs text-ink-3 hover:text-ink"
+                    >
+                      {t("le_fil.methodology")} →
+                    </Link>
+                  </div>
+                </div>
+              </details>
             </Node>
           </div>
 
