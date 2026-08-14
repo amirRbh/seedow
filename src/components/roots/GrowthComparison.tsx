@@ -17,8 +17,10 @@ interface GrowthComparisonProps {
 
 type Range = 30 | 90 | 365;
 
+const snap = (n: number) => (Number(n.toFixed(2)) === 0 ? 0 : n);
+
 const eur = (n: number) =>
-  n.toLocaleString("fr-FR", {
+  snap(n).toLocaleString("fr-FR", {
     style: "currency",
     currency: "EUR",
     minimumFractionDigits: 2,
@@ -74,7 +76,7 @@ export function GrowthComparison({
           </p>
           <p className="font-value text-3xl text-ink mt-1">
             {isGrowing ? "+" : ""}
-            {gain.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
+            {snap(gain).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
           </p>
           <p className="text-caption text-ink-3 mt-0.5">
             {t("growth_comparison.since_first_deposit")}
@@ -85,7 +87,7 @@ export function GrowthComparison({
         >
           {isGrowing ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
           {isGrowing ? "+" : ""}
-          {returnPct.toFixed(1)} %
+          {(Number(returnPct.toFixed(1)) === 0 ? 0 : returnPct).toFixed(1)} %
         </div>
       </div>
 
