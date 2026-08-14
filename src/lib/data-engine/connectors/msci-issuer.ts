@@ -56,7 +56,15 @@ export function issuerSustainabilityObservations(
         ? { status: "valid", reason: null }
         : { status: "rejected", reason: `esg_score hors bornes (${parsed.esgScore})` };
     out.push(
-      obs("esg_score", parsed.esgScore, raw, asOf, confidence, method, worstOf([dateCheck, bounds])),
+      obs(
+        "esg_score",
+        parsed.esgScore,
+        raw,
+        asOf,
+        confidence,
+        method,
+        worstOf([dateCheck, bounds]),
+      ),
     );
   }
   if (parsed.qualityScore != null)

@@ -121,8 +121,7 @@ export const getDataHealth = createServerFn({ method: "GET" })
         hasSfdrArticle: a.sfdr_article != null,
         hasKidOrProspectus: false, // non suivi pour l'instant (gap assumé)
         hasEsgScore: hasRealEsg,
-        hasCarbon:
-          a.waci_tco2e_per_musd_sales != null || a.carbon_intensity_gco2e_per_eur != null,
+        hasCarbon: a.waci_tco2e_per_musd_sales != null || a.carbon_intensity_gco2e_per_eur != null,
         hasControversyData: false, // non suivi pour l'instant (gap assumé)
       }).score;
 

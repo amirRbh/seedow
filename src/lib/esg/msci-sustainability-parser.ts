@@ -66,7 +66,7 @@ export function parseTerFraction(text: string): number | null {
   const pct = toNumber(
     firstMatch(
       text,
-      /(?:Ongoing Charges?(?: Figure)?|Ongoing Charge \(OCF\)|\bOCF\b|\bTER\b|Total Expense Ratio|Frais courants)\s*(?:\(OCF\))?\s*[:\-]?\s*([\d.,]+)\s*%/i,
+      /(?:Ongoing Charges?(?: Figure)?|Ongoing Charge \(OCF\)|\bOCF\b|\bTER\b|Total Expense Ratio|Frais courants)\s*(?:\(OCF\))?\s*[:-]?\s*([\d.,]+)\s*%/i,
     ),
   );
   if (pct == null) return null;
@@ -81,7 +81,9 @@ export function parseTerFraction(text: string): number | null {
  * PAS un pourcentage (le % est le taux de couverture, jamais l'intensité).
  */
 function parseWaci(text: string): number | null {
-  const labelled = clampWaci(toNumber(firstMatch(text, /\(Tons? CO2E\/\$?M\s*SALES\)\s+([\d.,]+)/i)));
+  const labelled = clampWaci(
+    toNumber(firstMatch(text, /\(Tons? CO2E\/\$?M\s*SALES\)\s+([\d.,]+)/i)),
+  );
   if (labelled != null) return labelled;
 
   const lines = text.split("\n");
@@ -115,10 +117,10 @@ function parseAsOf(text: string): string | null {
 export function parseMsciSustainability(text: string): ParsedSustainability {
   const rating = firstMatch(
     text,
-    /MSCI ESG (?:Fund )?Rating\s*\(?AAA-?CCC\)?\s*[:\-]?\s*(AAA|AA|A|BBB|BB|B|CCC)\b/i,
+    /MSCI ESG (?:Fund )?Rating\s*\(?AAA-?CCC\)?\s*[:-]?\s*(AAA|AA|A|BBB|BB|B|CCC)\b/i,
   );
   const quality = toNumber(
-    firstMatch(text, /MSCI ESG Quality Score\s*\(?0-?10\)?\s*[:\-]?\s*([\d.]+)/i),
+    firstMatch(text, /MSCI ESG Quality Score\s*\(?0-?10\)?\s*[:-]?\s*([\d.]+)/i),
   );
 
   return {
@@ -127,7 +129,7 @@ export function parseMsciSustainability(text: string): ParsedSustainability {
     esgScore: quality != null ? Math.round(quality * 10 * 10) / 10 : null,
     waci: parseWaci(text),
     impliedTempRise: normalizeItr(
-      firstMatch(text, /Implied Temperature Rise\s*\(?0-3\.0\+?\s*°?C\)?\s*[:\-]?\s*([^\n]+)/i),
+      firstMatch(text, /Implied Temperature Rise\s*\(?0-3\.0\+?\s*°?C\)?\s*[:-]?\s*([^\n]+)/i),
     ),
     sfdrArticle: parseSfdrArticle(text),
     ter: parseTerFraction(text),
