@@ -2020,6 +2020,14 @@
     "title": "Share this portfolio anonymously",
     "description": "Only allocation, causes and public metrics are visible. No amounts are shared. Displayed handle:"
   },
+  "share_impact": {
+    "title": "My Seedow impact",
+    "cta": "Share my impact",
+    "message": "My Seedow portfolio has an impact score of {{score}}/100, aligned with my values. Build yours 👉 {{url}}",
+    "message_carbon": "My Seedow portfolio: impact {{score}}/100 and −{{pct}}% carbon intensity vs a World ETF (real data, not an estimate). Build yours 👉 {{url}}",
+    "copied": "Impact message copied — paste it anywhere.",
+    "error": "Couldn't share right now."
+  },
   "decision_timeline": {
     "creation": "Creation",
     "cause": "Cause",

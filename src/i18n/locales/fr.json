@@ -2002,6 +2002,14 @@
     "title": "Partager ce portefeuille anonymement",
     "description": "Seuls allocation, causes et métriques publiques sont visibles. Aucun montant n'est partagé. Pseudo affiché :"
   },
+  "share_impact": {
+    "title": "Mon impact Seedow",
+    "cta": "Partager mon impact",
+    "message": "Mon portefeuille Seedow a un score d'impact de {{score}}/100, aligné avec mes convictions. Construis le tien 👉 {{url}}",
+    "message_carbon": "Mon portefeuille Seedow : impact {{score}}/100 et −{{pct}} % d'intensité carbone vs un ETF Monde (données réelles, pas une estimation). Construis le tien 👉 {{url}}",
+    "copied": "Message d'impact copié — colle-le où tu veux.",
+    "error": "Impossible de partager pour le moment."
+  },
   "decision_timeline": {
     "creation": "Création",
     "cause": "Cause",
