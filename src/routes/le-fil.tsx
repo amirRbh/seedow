@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { HoldingDetailSheet } from "@/components/portfolio/HoldingDetailSheet";
 import { EsgFloorRelaxedNotice } from "@/components/portfolio/EsgFloorRelaxedNotice";
+import { ShareImpactButton } from "@/components/impact/ShareImpactButton";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { useAuth } from "@/hooks/useAuth";
 import { useLang } from "@/hooks/useLang";
@@ -235,6 +236,11 @@ function LeFil() {
               {portfolio?.esg_floor_relaxed && (
                 <div className="mt-3">
                   <EsgFloorRelaxedNotice relaxed />
+                </div>
+              )}
+              {impactScore !== null && (
+                <div className="mt-4 border-t border-paper-3 pt-3">
+                  <ShareImpactButton metrics={portfolio?.metrics ?? null} variant="ghost" />
                 </div>
               )}
               {/* Équivalences concrètes — affichées UNIQUEMENT si le moteur

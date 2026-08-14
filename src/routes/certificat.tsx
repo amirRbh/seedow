@@ -9,6 +9,7 @@ import { formatCurrency, formatDate } from "@/lib/format";
 import { KPIFigure } from "@/components/ui/KPIFigure";
 import { fireConfetti } from "@/lib/confetti";
 import { buildPortfolioImpact } from "@/lib/impact/portfolioImpact";
+import { ShareImpactButton } from "@/components/impact/ShareImpactButton";
 import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 
 export const Route = createFileRoute("/certificat")({
@@ -92,6 +93,7 @@ function CertificatPage() {
             {t("certificate.back_portfolio_short")}
           </Link>
           <div className="flex items-center gap-2">
+            <ShareImpactButton metrics={portfolio.metrics} />
             <button
               type="button"
               onClick={() => window.print()}
