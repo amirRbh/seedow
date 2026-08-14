@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   tallyVotes,
+  tallyFromCounts,
   emptyTally,
   blocShare,
   dominantChoice,
@@ -10,6 +11,31 @@ import {
   isVoteChoice,
   soonestClosingOpen,
 } from "../bloc";
+
+describe("tallyFromCounts", () => {
+  it("agrège des comptes groupés (issus de l'agrégat SQL)", () => {
+    const t = tallyFromCounts([
+      { choice: "for", count: 12 },
+      { choice: "against", count: 5 },
+      { choice: "abstain", count: 2 },
+    ]);
+    expect(t).toEqual({ for: 12, against: 5, abstain: 2, total: 19 });
+  });
+
+  it("ignore les choix invalides et borne les comptes aberrants", () => {
+    const t = tallyFromCounts([
+      { choice: "for", count: 3 },
+      { choice: "maybe", count: 99 },
+      { choice: "against", count: -4 },
+      { choice: "abstain", count: 1.9 },
+    ]);
+    expect(t).toEqual({ for: 3, against: 0, abstain: 1, total: 4 });
+  });
+
+  it("liste vide → décompte vide", () => {
+    expect(tallyFromCounts([])).toEqual(emptyTally());
+  });
+});
 
 describe("isVoteChoice", () => {
   it("accepts only the three known choices", () => {

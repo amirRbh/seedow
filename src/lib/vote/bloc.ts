@@ -44,6 +44,26 @@ export function tallyVotes(rows: ReadonlyArray<{ choice: string | null }>): Bloc
 }
 
 /**
+ * Construit un décompte agrégé à partir de comptes déjà groupés en base
+ * (`{ choice, count }`), tels que renvoyés par l'agrégat SQL `tally_resolution_votes`.
+ * Évite de rapatrier toutes les lignes de vote côté serveur (efficacité §12) :
+ * on ne transporte que trois nombres par résolution. Ignore les choix invalides
+ * et borne les comptes négatifs/non finis pour ne jamais fausser le total.
+ */
+export function tallyFromCounts(
+  rows: ReadonlyArray<{ choice: string | null; count: number }>,
+): BlocTally {
+  const tally = emptyTally();
+  for (const row of rows) {
+    if (!isVoteChoice(row.choice)) continue;
+    const n = Number.isFinite(row.count) ? Math.max(0, Math.floor(row.count)) : 0;
+    tally[row.choice] += n;
+    tally.total += n;
+  }
+  return tally;
+}
+
+/**
  * Part d'un camp dans le Bloc, entre 0 et 1. Renvoie 0 si personne n'a encore
  * voté (pas de division par zéro, pas de NaN affiché à l'écran).
  */

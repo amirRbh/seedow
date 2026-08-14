@@ -17,7 +17,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { tallyVotes, emptyTally, type BlocTally, type VoteChoice } from "./bloc";
+import { tallyFromCounts, emptyTally, type BlocTally, type VoteChoice } from "./bloc";
 import { computeWrapped, emptyWrapped, type WrappedStats } from "./wrapped";
 
 export interface Resolution {
@@ -88,10 +88,10 @@ function mapResolution(row: ResolutionRow): Resolution {
 }
 
 /**
- * Agrège les votes par résolution avec le service_role. Ne renvoie qu'un
- * décompte (jamais une ligne). Borne de sécurité sur le nombre de lignes lues :
- * suffisant à l'échelle bêta, à remplacer par un COUNT groupé si le volume
- * explose.
+ * Agrège les votes par résolution via l'agrégat SQL `tally_resolution_votes`
+ * (GROUP BY en base, service_role). Ne renvoie qu'un décompte (jamais une ligne)
+ * et ne transporte que trois nombres par résolution — pas de lecture de toutes
+ * les lignes de vote (efficacité §12, scalable).
  */
 async function tallyByResolution(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -100,22 +100,25 @@ async function tallyByResolution(
 ): Promise<Map<string, BlocTally>> {
   const byId = new Map<string, BlocTally>();
   if (resolutionIds.length === 0) return byId;
+  for (const id of resolutionIds) byId.set(id, emptyTally());
 
-  const { data, error } = await admin
-    .from("resolution_votes")
-    .select("resolution_id, choice")
-    .in("resolution_id", resolutionIds)
-    .limit(100000);
+  const { data, error } = await admin.rpc("tally_resolution_votes", {
+    p_resolution_ids: resolutionIds,
+  });
   if (error) throw new Error(error.message);
 
-  const grouped = new Map<string, { choice: string | null }[]>();
-  for (const row of (data ?? []) as { resolution_id: string; choice: string | null }[]) {
+  const grouped = new Map<string, { choice: string | null; count: number }[]>();
+  for (const row of (data ?? []) as {
+    resolution_id: string;
+    choice: string | null;
+    count: number;
+  }[]) {
     const list = grouped.get(row.resolution_id) ?? [];
-    list.push({ choice: row.choice });
+    list.push({ choice: row.choice, count: Number(row.count) });
     grouped.set(row.resolution_id, list);
   }
   for (const id of resolutionIds) {
-    byId.set(id, tallyVotes(grouped.get(id) ?? []));
+    byId.set(id, tallyFromCounts(grouped.get(id) ?? []));
   }
   return byId;
 }
