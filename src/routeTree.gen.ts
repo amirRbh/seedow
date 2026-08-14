@@ -22,6 +22,7 @@ import { Route as ObjectifsRouteImport } from './routes/objectifs'
 import { Route as MethodologieRouteImport } from './routes/methodologie'
 import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
 import { Route as McpRouteImport } from './routes/mcp'
+import { Route as LeFilRouteImport } from './routes/le-fil'
 import { Route as EthiRouteImport } from './routes/ethi'
 import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -33,7 +34,6 @@ import { Route as ComparatifRouteImport } from './routes/comparatif'
 import { Route as CommunauteRouteImport } from './routes/communaute'
 import { Route as CguRouteImport } from './routes/cgu'
 import { Route as CertificatRouteImport } from './routes/certificat'
-import { Route as LeFilRouteImport } from './routes/le-fil'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AideRouteImport } from './routes/aide'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
@@ -118,6 +118,11 @@ const McpRoute = McpRouteImport.update({
   path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LeFilRoute = LeFilRouteImport.update({
+  id: '/le-fil',
+  path: '/le-fil',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EthiRoute = EthiRouteImport.update({
   id: '/ethi',
   path: '/ethi',
@@ -171,11 +176,6 @@ const CguRoute = CguRouteImport.update({
 const CertificatRoute = CertificatRouteImport.update({
   id: '/certificat',
   path: '/certificat',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LeFilRoute = LeFilRouteImport.update({
-  id: '/le-fil',
-  path: '/le-fil',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -277,7 +277,6 @@ export interface FileRoutesByFullPath {
   '/aide': typeof AideRoute
   '/auth': typeof AuthRoute
   '/certificat': typeof CertificatRoute
-  '/le-fil': typeof LeFilRoute
   '/cgu': typeof CguRoute
   '/communaute': typeof CommunauteRoute
   '/comparatif': typeof ComparatifRoute
@@ -288,6 +287,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/discover': typeof DiscoverRoute
   '/ethi': typeof EthiRoute
+  '/le-fil': typeof LeFilRoute
   '/mcp': typeof McpRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/methodologie': typeof MethodologieRoute
@@ -321,7 +321,6 @@ export interface FileRoutesByTo {
   '/aide': typeof AideRoute
   '/auth': typeof AuthRoute
   '/certificat': typeof CertificatRoute
-  '/le-fil': typeof LeFilRoute
   '/cgu': typeof CguRoute
   '/communaute': typeof CommunauteRoute
   '/comparatif': typeof ComparatifRoute
@@ -331,6 +330,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/discover': typeof DiscoverRoute
   '/ethi': typeof EthiRoute
+  '/le-fil': typeof LeFilRoute
   '/mcp': typeof McpRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/methodologie': typeof MethodologieRoute
@@ -366,7 +366,6 @@ export interface FileRoutesById {
   '/aide': typeof AideRoute
   '/auth': typeof AuthRoute
   '/certificat': typeof CertificatRoute
-  '/le-fil': typeof LeFilRoute
   '/cgu': typeof CguRoute
   '/communaute': typeof CommunauteRoute
   '/comparatif': typeof ComparatifRoute
@@ -377,6 +376,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/discover': typeof DiscoverRoute
   '/ethi': typeof EthiRoute
+  '/le-fil': typeof LeFilRoute
   '/mcp': typeof McpRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/methodologie': typeof MethodologieRoute
@@ -412,7 +412,6 @@ export interface FileRouteTypes {
     | '/aide'
     | '/auth'
     | '/certificat'
-    | '/le-fil'
     | '/cgu'
     | '/communaute'
     | '/comparatif'
@@ -423,6 +422,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/discover'
     | '/ethi'
+    | '/le-fil'
     | '/mcp'
     | '/mentions-legales'
     | '/methodologie'
@@ -456,7 +456,6 @@ export interface FileRouteTypes {
     | '/aide'
     | '/auth'
     | '/certificat'
-    | '/le-fil'
     | '/cgu'
     | '/communaute'
     | '/comparatif'
@@ -466,6 +465,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/discover'
     | '/ethi'
+    | '/le-fil'
     | '/mcp'
     | '/mentions-legales'
     | '/methodologie'
@@ -500,7 +500,6 @@ export interface FileRouteTypes {
     | '/aide'
     | '/auth'
     | '/certificat'
-    | '/le-fil'
     | '/cgu'
     | '/communaute'
     | '/comparatif'
@@ -511,6 +510,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/discover'
     | '/ethi'
+    | '/le-fil'
     | '/mcp'
     | '/mentions-legales'
     | '/methodologie'
@@ -546,7 +546,6 @@ export interface RootRouteChildren {
   AideRoute: typeof AideRoute
   AuthRoute: typeof AuthRoute
   CertificatRoute: typeof CertificatRoute
-  LeFilRoute: typeof LeFilRoute
   CguRoute: typeof CguRoute
   CommunauteRoute: typeof CommunauteRoute
   ComparatifRoute: typeof ComparatifRoute
@@ -557,6 +556,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   DiscoverRoute: typeof DiscoverRoute
   EthiRoute: typeof EthiRoute
+  LeFilRoute: typeof LeFilRoute
   McpRoute: typeof McpRoute
   MentionsLegalesRoute: typeof MentionsLegalesRoute
   MethodologieRoute: typeof MethodologieRoute
@@ -674,6 +674,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof McpRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/le-fil': {
+      id: '/le-fil'
+      path: '/le-fil'
+      fullPath: '/le-fil'
+      preLoaderRoute: typeof LeFilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ethi': {
       id: '/ethi'
       path: '/ethi'
@@ -749,13 +756,6 @@ declare module '@tanstack/react-router' {
       path: '/certificat'
       fullPath: '/certificat'
       preLoaderRoute: typeof CertificatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/le-fil': {
-      id: '/le-fil'
-      path: '/le-fil'
-      fullPath: '/le-fil'
-      preLoaderRoute: typeof LeFilRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -938,7 +938,6 @@ const rootRouteChildren: RootRouteChildren = {
   AideRoute: AideRoute,
   AuthRoute: AuthRoute,
   CertificatRoute: CertificatRoute,
-  LeFilRoute: LeFilRoute,
   CguRoute: CguRoute,
   CommunauteRoute: CommunauteRoute,
   ComparatifRoute: ComparatifRoute,
@@ -949,6 +948,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   DiscoverRoute: DiscoverRoute,
   EthiRoute: EthiRoute,
+  LeFilRoute: LeFilRoute,
   McpRoute: McpRoute,
   MentionsLegalesRoute: MentionsLegalesRoute,
   MethodologieRoute: MethodologieRoute,

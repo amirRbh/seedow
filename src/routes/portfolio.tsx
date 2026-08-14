@@ -185,10 +185,10 @@ function Portfolio() {
               <AnimatedFigure value={totalValue} from={0} format={(v) => formatCurrency(v, lang)} />
             </h2>
             <p
-              className={`font-mono text-sm mt-1 ${gain >= 0 ? "text-mint-ink" : "text-alert-ink"}`}
+              className={`font-mono text-sm mt-1 ${gain > -0.005 ? "text-mint-ink" : "text-alert-ink"}`}
             >
-              {gain >= 0 ? "+" : ""}
-              {formatPercent(returnPct, lang)} · {gain >= 0 ? "+" : ""}
+              {gain > -0.005 ? "+" : ""}
+              {formatPercent(returnPct, lang)} · {gain > -0.005 ? "+" : ""}
               {formatCurrency(gain, lang)}
             </p>
           </div>

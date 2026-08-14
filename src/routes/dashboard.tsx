@@ -154,7 +154,7 @@ function Dashboard() {
   const totalValue = valuation.currentValue || totalInvested;
   const gain = valuation.pnl;
   const returnPct = valuation.returnPct;
-  const isGrowing = gain >= 0;
+  const isGrowing = gain > -0.005;
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
