@@ -35,7 +35,7 @@ export function GrowthComparison({
   refreshing,
 }: GrowthComparisonProps) {
   const { t } = useTranslation();
-  const isGrowing = gain >= 0;
+  const isGrowing = gain > -0.005;
   const formatRelative = (iso: string | null | undefined): string => {
     if (!iso) return t("growth_comparison.no_data");
     const d = new Date(iso);
