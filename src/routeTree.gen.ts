@@ -43,6 +43,7 @@ import { Route as VoteResolutionIdRouteImport } from './routes/vote.$resolutionI
 import { Route as ObjectifsGoalIdRouteImport } from './routes/objectifs.$goalId'
 import { Route as HooksRefreshMarketDataRouteImport } from './routes/hooks/refresh-market-data'
 import { Route as HooksRecomputeRiskModelRouteImport } from './routes/hooks/recompute-risk-model'
+import { Route as HooksRecomputeIngestionPlanRouteImport } from './routes/hooks/recompute-ingestion-plan'
 import { Route as HooksDispatchNotificationsRouteImport } from './routes/hooks/dispatch-notifications'
 import { Route as CoursSlugRouteImport } from './routes/cours.$slug'
 import { Route as ApiEthiRouteImport } from './routes/api.ethi'
@@ -218,6 +219,11 @@ const HooksRefreshMarketDataRoute = HooksRefreshMarketDataRouteImport.update({
   path: '/hooks/refresh-market-data',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HooksRecomputeIngestionPlanRoute = HooksRecomputeIngestionPlanRouteImport.update({
+  id: '/hooks/recompute-ingestion-plan',
+  path: '/hooks/recompute-ingestion-plan',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HooksRecomputeRiskModelRoute = HooksRecomputeRiskModelRouteImport.update({
   id: '/hooks/recompute-risk-model',
   path: '/hooks/recompute-risk-model',
@@ -312,6 +318,7 @@ export interface FileRoutesByFullPath {
   '/api/ethi': typeof ApiEthiRoute
   '/cours/$slug': typeof CoursSlugRoute
   '/hooks/dispatch-notifications': typeof HooksDispatchNotificationsRoute
+  '/hooks/recompute-ingestion-plan': typeof HooksRecomputeIngestionPlanRoute
   '/hooks/recompute-risk-model': typeof HooksRecomputeRiskModelRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
@@ -356,6 +363,7 @@ export interface FileRoutesByTo {
   '/api/ethi': typeof ApiEthiRoute
   '/cours/$slug': typeof CoursSlugRoute
   '/hooks/dispatch-notifications': typeof HooksDispatchNotificationsRoute
+  '/hooks/recompute-ingestion-plan': typeof HooksRecomputeIngestionPlanRoute
   '/hooks/recompute-risk-model': typeof HooksRecomputeRiskModelRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
@@ -403,6 +411,7 @@ export interface FileRoutesById {
   '/api/ethi': typeof ApiEthiRoute
   '/cours/$slug': typeof CoursSlugRoute
   '/hooks/dispatch-notifications': typeof HooksDispatchNotificationsRoute
+  '/hooks/recompute-ingestion-plan': typeof HooksRecomputeIngestionPlanRoute
   '/hooks/recompute-risk-model': typeof HooksRecomputeRiskModelRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
@@ -450,6 +459,7 @@ export interface FileRouteTypes {
     | '/api/ethi'
     | '/cours/$slug'
     | '/hooks/dispatch-notifications'
+    | '/hooks/recompute-ingestion-plan'
     | '/hooks/recompute-risk-model'
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
@@ -494,6 +504,7 @@ export interface FileRouteTypes {
     | '/api/ethi'
     | '/cours/$slug'
     | '/hooks/dispatch-notifications'
+    | '/hooks/recompute-ingestion-plan'
     | '/hooks/recompute-risk-model'
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
@@ -540,6 +551,7 @@ export interface FileRouteTypes {
     | '/api/ethi'
     | '/cours/$slug'
     | '/hooks/dispatch-notifications'
+    | '/hooks/recompute-ingestion-plan'
     | '/hooks/recompute-risk-model'
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
@@ -586,6 +598,7 @@ export interface RootRouteChildren {
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   ApiEthiRoute: typeof ApiEthiRoute
   HooksDispatchNotificationsRoute: typeof HooksDispatchNotificationsRoute
+  HooksRecomputeIngestionPlanRoute: typeof HooksRecomputeIngestionPlanRoute
   HooksRecomputeRiskModelRoute: typeof HooksRecomputeRiskModelRoute
   HooksRefreshMarketDataRoute: typeof HooksRefreshMarketDataRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
@@ -826,6 +839,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HooksRefreshMarketDataRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/hooks/recompute-ingestion-plan': {
+      id: '/hooks/recompute-ingestion-plan'
+      path: '/hooks/recompute-ingestion-plan'
+      fullPath: '/hooks/recompute-ingestion-plan'
+      preLoaderRoute: typeof HooksRecomputeIngestionPlanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/hooks/recompute-risk-model': {
       id: '/hooks/recompute-risk-model'
       path: '/hooks/recompute-risk-model'
@@ -988,6 +1008,7 @@ const rootRouteChildren: RootRouteChildren = {
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   ApiEthiRoute: ApiEthiRoute,
   HooksDispatchNotificationsRoute: HooksDispatchNotificationsRoute,
+  HooksRecomputeIngestionPlanRoute: HooksRecomputeIngestionPlanRoute,
   HooksRecomputeRiskModelRoute: HooksRecomputeRiskModelRoute,
   HooksRefreshMarketDataRoute: HooksRefreshMarketDataRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,

@@ -3,6 +3,7 @@ import {
   computeStaleDays,
   planIngestion,
   scoreCandidate,
+  summarizePlan,
   type IngestionCandidate,
 } from "../ingestion-plan";
 
@@ -82,5 +83,30 @@ describe("planIngestion", () => {
     const snapshot = JSON.stringify(input);
     planIngestion(input, { now: NOW });
     expect(JSON.stringify(input)).toBe(snapshot);
+  });
+});
+
+describe("summarizePlan", () => {
+  it("compte le total et les raisons (pour le journal cron)", () => {
+    const plan = planIngestion(
+      [
+        cand({ assetId: "new", lastUpdated: null, completeness: null }),
+        cand({ assetId: "stale", lastUpdated: "2026-04-01T00:00:00Z", completeness: 50 }),
+        cand({ assetId: "demand", demandCount: 4 }),
+      ],
+      { now: NOW, staleDays: 30 },
+    );
+    const s = summarizePlan(plan);
+    expect(s.total).toBe(3);
+    expect(s.byReason.never_ingested).toBe(1);
+    expect(s.byReason.high_demand).toBe(1);
+    expect(s.byReason.stale).toBeGreaterThanOrEqual(1);
+  });
+
+  it("file vide → tout à zéro", () => {
+    expect(summarizePlan([])).toEqual({
+      total: 0,
+      byReason: { never_ingested: 0, no_source: 0, stale: 0, incomplete: 0, high_demand: 0 },
+    });
   });
 });
