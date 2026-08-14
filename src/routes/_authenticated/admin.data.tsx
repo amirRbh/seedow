@@ -36,6 +36,7 @@ function AdminDataPage() {
   }
 
   const { quality, sources, connectorsImplemented, connectorsTotal } = report;
+  const { sustainabilityTiers, ingestionPlan } = report;
   const invalidIsin = quality.invalidIsinFundIds.length;
   const dupIsin = Object.keys(quality.duplicateIsin).length;
   const dupTicker = Object.keys(quality.duplicateTicker).length;
@@ -119,6 +120,63 @@ function AdminDataPage() {
           </tbody>
         </table>
       </div>
+
+      <h2 className="apple-title mt-10 mb-1" style={{ fontSize: "18px" }}>
+        Durabilité
+      </h2>
+      <p className="text-label mb-3" style={{ color: "var(--ink-2)" }}>
+        Tiers dérivés des signaux bruts (carbone, température, ESG, exclusions) — indépendants de
+        l'article SFDR.
+      </p>
+      <section
+        className="grid gap-3"
+        style={{ gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))" }}
+      >
+        <Stat label="Paris-aligned" value={sustainabilityTiers.paris_aligned} tone="good" />
+        <Stat label="Transition" value={sustainabilityTiers.transition} />
+        <Stat label="ESG large" value={sustainabilityTiers.broad_esg} />
+        <Stat
+          label="Preuves insuffisantes"
+          value={sustainabilityTiers.insufficient_evidence}
+          tone={sustainabilityTiers.insufficient_evidence > 0 ? "warn" : "good"}
+        />
+      </section>
+
+      <h2 className="apple-title mt-10 mb-1" style={{ fontSize: "18px" }}>
+        Prochaines ingestions
+      </h2>
+      <p className="text-label mb-3" style={{ color: "var(--ink-2)" }}>
+        File priorisée par demande, fraîcheur et complétude. {ingestionPlan.length} fonds à traiter
+        en priorité.
+      </p>
+      {ingestionPlan.length === 0 ? (
+        <p className="text-body-sm" style={{ color: "var(--ink-2)" }}>
+          Rien à ré-ingérer : données fraîches et complètes.
+        </p>
+      ) : (
+        <div style={{ overflowX: "auto", border: "1px solid var(--paper-3)", borderRadius: 14 }}>
+          <table className="w-full text-body-sm" style={{ borderCollapse: "collapse" }}>
+            <thead>
+              <tr style={{ background: "var(--paper-2)" }}>
+                <Th>Fonds</Th>
+                <Th>Priorité</Th>
+                <Th>Raisons</Th>
+                <Th>Ancienneté</Th>
+              </tr>
+            </thead>
+            <tbody>
+              {ingestionPlan.map((item) => (
+                <tr key={item.assetId} style={{ borderTop: "1px solid var(--paper-3)" }}>
+                  <Td>{item.ticker ?? item.isin ?? item.assetId.slice(0, 8)}</Td>
+                  <Td mono>{item.priority}</Td>
+                  <Td mono>{item.reasons.join(", ")}</Td>
+                  <Td mono>{item.staleDays == null ? "jamais" : `${item.staleDays} j`}</Td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       <h2 className="apple-title mt-10 mb-3" style={{ fontSize: "18px" }}>
         Anomalies
