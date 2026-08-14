@@ -28,6 +28,7 @@ function makePortfolio(overrides: Partial<ActivePortfolio> = {}): ActivePortfoli
     causes: [],
     risk_target: 0.09,
     horizon_years: 10,
+    esg_floor_relaxed: false,
     ...overrides,
   };
 }

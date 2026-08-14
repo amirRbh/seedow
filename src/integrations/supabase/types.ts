@@ -14,6 +14,69 @@ export type Database = {
   }
   public: {
     Tables: {
+      agm_resolutions: {
+        Row: {
+          against_label: string
+          closes_at: string
+          company: string
+          created_at: string
+          for_label: string
+          funds_stance: string
+          id: string
+          meeting_date: string
+          outcome_note: string | null
+          outcome_pct: number | null
+          source_name: string
+          source_url: string
+          status: string
+          summary: string
+          theme: string | null
+          ticker: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          against_label: string
+          closes_at: string
+          company: string
+          created_at?: string
+          for_label: string
+          funds_stance: string
+          id?: string
+          meeting_date: string
+          outcome_note?: string | null
+          outcome_pct?: number | null
+          source_name: string
+          source_url: string
+          status?: string
+          summary: string
+          theme?: string | null
+          ticker?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          against_label?: string
+          closes_at?: string
+          company?: string
+          created_at?: string
+          for_label?: string
+          funds_stance?: string
+          id?: string
+          meeting_date?: string
+          outcome_note?: string | null
+          outcome_pct?: number | null
+          source_name?: string
+          source_url?: string
+          status?: string
+          summary?: string
+          theme?: string | null
+          ticker?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       alerts: {
         Row: {
           body: string
@@ -959,6 +1022,41 @@ export type Database = {
             columns: ["portfolio_id"]
             isOneToOne: false
             referencedRelation: "portfolios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      resolution_votes: {
+        Row: {
+          choice: string
+          created_at: string
+          id: string
+          resolution_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          choice: string
+          created_at?: string
+          id?: string
+          resolution_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          choice?: string
+          created_at?: string
+          id?: string
+          resolution_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "resolution_votes_resolution_id_fkey"
+            columns: ["resolution_id"]
+            isOneToOne: false
+            referencedRelation: "agm_resolutions"
             referencedColumns: ["id"]
           },
         ]

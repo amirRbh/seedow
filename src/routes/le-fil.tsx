@@ -48,7 +48,7 @@ function LeFil() {
   const totalValue = valuation.currentValue || totalInvested;
   const gain = valuation.pnl;
   const returnPct = valuation.returnPct;
-  const isGrowing = gain >= 0;
+  const isGrowing = gain > -0.005;
 
   // Résumés du fil (logique pure testée dans lib/portfolio/leFilSummary).
   const impactScore = useMemo(() => weightedImpactScore(holdings), [holdings]);
