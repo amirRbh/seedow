@@ -50,6 +50,7 @@ import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } fr
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as ApiPublicEsgPreviewRouteImport } from './routes/api.public.esg-preview'
 import { Route as AuthenticatedAdminBetaRouteImport } from './routes/_authenticated/admin.beta'
+import { Route as AuthenticatedAdminDataRouteImport } from './routes/_authenticated/admin.data'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 
@@ -260,6 +261,11 @@ const AuthenticatedAdminBetaRoute = AuthenticatedAdminBetaRouteImport.update({
   path: '/admin/beta',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAdminDataRoute = AuthenticatedAdminDataRouteImport.update({
+  id: '/admin/data',
+  path: '/admin/data',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const Char91DotmcpChar93InvokeToolToolRoute =
   Char91DotmcpChar93InvokeToolToolRouteImport.update({
     id: '/.mcp/invoke-tool/$tool',
@@ -314,6 +320,7 @@ export interface FileRoutesByFullPath {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/beta': typeof AuthenticatedAdminBetaRoute
+  '/admin/data': typeof AuthenticatedAdminDataRoute
   '/api/public/esg-preview': typeof ApiPublicEsgPreviewRoute
 }
 export interface FileRoutesByTo {
@@ -357,6 +364,7 @@ export interface FileRoutesByTo {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/beta': typeof AuthenticatedAdminBetaRoute
+  '/admin/data': typeof AuthenticatedAdminDataRoute
   '/api/public/esg-preview': typeof ApiPublicEsgPreviewRoute
 }
 export interface FileRoutesById {
@@ -403,6 +411,7 @@ export interface FileRoutesById {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/admin/beta': typeof AuthenticatedAdminBetaRoute
+  '/_authenticated/admin/data': typeof AuthenticatedAdminDataRoute
   '/api/public/esg-preview': typeof ApiPublicEsgPreviewRoute
 }
 export interface FileRouteTypes {
@@ -449,6 +458,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/admin/beta'
+    | '/admin/data'
     | '/api/public/esg-preview'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -492,6 +502,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/admin/beta'
+    | '/admin/data'
     | '/api/public/esg-preview'
   id:
     | '__root__'
@@ -537,6 +548,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/admin/beta'
+    | '/_authenticated/admin/data'
     | '/api/public/esg-preview'
   fileRoutesById: FileRoutesById
 }
@@ -870,6 +882,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminBetaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/data': {
+      id: '/_authenticated/admin/data'
+      path: '/admin/data'
+      fullPath: '/admin/data'
+      preLoaderRoute: typeof AuthenticatedAdminDataRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/.mcp/invoke-tool/$tool': {
       id: '/.mcp/invoke-tool/$tool'
       path: '/.mcp/invoke-tool/$tool'
@@ -889,10 +908,12 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminBetaRoute: typeof AuthenticatedAdminBetaRoute
+  AuthenticatedAdminDataRoute: typeof AuthenticatedAdminDataRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminBetaRoute: AuthenticatedAdminBetaRoute,
+  AuthenticatedAdminDataRoute: AuthenticatedAdminDataRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
