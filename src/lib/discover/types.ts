@@ -1,5 +1,6 @@
 import type { Database } from "@/integrations/supabase/types";
 import type { DataCoverage, GreenwashingReason, GreenwashingRisk } from "@/lib/esg/transparency";
+import type { SustainabilityTier } from "@/lib/esg/sustainability-classification";
 
 export type ExclusionTag = Database["public"]["Enums"]["exclusion_tag"];
 export type AssetClass = Database["public"]["Enums"]["asset_class"];
@@ -39,4 +40,10 @@ export interface DiscoverAsset {
   /** Cohérence revendications (SFDR, thèmes) vs données observées. */
   greenwashing_risk: GreenwashingRisk;
   greenwashing_reasons: GreenwashingReason[];
+  /**
+   * Tier de durabilité dérivé des SIGNAUX BRUTS (carbone, température, ESG,
+   * exclusions), indépendant de l'article SFDR — source de vérité unique de la
+   * durabilité affichée (l'article SFDR devient un simple tag corroborant).
+   */
+  sustainability_tier: SustainabilityTier;
 }

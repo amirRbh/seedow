@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import type { DataCoverage, GreenwashingReason, GreenwashingRisk } from "@/lib/esg/transparency";
+import type { SustainabilityTier } from "@/lib/esg/sustainability-classification";
 
 /**
  * Badges de transparence — le différenciateur confiance de Seedow :
@@ -85,6 +86,47 @@ export function GreenwashingBadge({
             ))}
           </ul>
         )}
+      </TooltipContent>
+    </Tooltip>
+  );
+}
+
+const TIER_TONE: Record<SustainabilityTier, string> = {
+  paris_aligned: "bg-highlight-5 text-highlight-1 border-highlight-4",
+  transition: "bg-solar-tint text-ink border-solar/40",
+  broad_esg: "bg-paper-2 text-ink-2 border-paper-3",
+  insufficient_evidence: "bg-paper-2 text-ink-2 border-paper-3",
+};
+
+/**
+ * Tier de durabilité dérivé des signaux bruts (carbone, température, ESG,
+ * exclusions), INDÉPENDANT de l'article SFDR. C'est le signal de durabilité qui
+ * mène ; l'article SFDR n'est plus qu'un tag corroborant.
+ */
+export function SustainabilityTierBadge({
+  tier,
+  className,
+}: {
+  tier: SustainabilityTier;
+  className?: string;
+}) {
+  const { t } = useTranslation();
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <span
+          className={cn(
+            "inline-flex items-center gap-1 text-tag font-semibold px-2 py-0.5 rounded-full border cursor-help",
+            TIER_TONE[tier],
+            className,
+          )}
+        >
+          <span aria-hidden className="inline-block w-1.5 h-1.5 rounded-full bg-current" />
+          {t(`sustainability.tier.${tier}`)}
+        </span>
+      </TooltipTrigger>
+      <TooltipContent className="max-w-[280px] text-caption leading-snug">
+        {t(`sustainability.tier_hint.${tier}`)}
       </TooltipContent>
     </Tooltip>
   );

@@ -2,6 +2,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { AssetClass, DiscoverAsset, ExclusionTag } from "@/lib/discover/types";
+import { deriveDiscoverAssetTier } from "@/lib/discover/sustainability";
 import {
   assessGreenwashingRisk,
   computeDataCoverage,
@@ -70,6 +71,7 @@ interface AssetRow {
   carbon_intensity_gco2e_per_eur: number | null;
   waci_tco2e_per_musd_sales: number | null;
   sfdr_article: number | null;
+  implied_temp_rise: string | null;
   volatility: number;
   cause_exposure: Record<string, number> | null;
   excluded_sectors: ExclusionTag[] | null;
@@ -81,7 +83,7 @@ async function fetchAssetUniverse(): Promise<AssetUniverseResult> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (supabase.from("assets") as any)
       .select(
-        "id, ticker, name, asset_class, region, currency, issuer, ter, esg_score, env_score, social_score, governance_score, carbon_intensity_gco2e_per_eur, waci_tco2e_per_musd_sales, sfdr_article, volatility, cause_exposure, excluded_sectors, description",
+        "id, ticker, name, asset_class, region, currency, issuer, ter, esg_score, env_score, social_score, governance_score, carbon_intensity_gco2e_per_eur, waci_tco2e_per_musd_sales, sfdr_article, implied_temp_rise, volatility, cause_exposure, excluded_sectors, description",
       )
       .eq("is_active", true),
     supabase.from("asset_quotes").select("asset_id, price, fetched_at"),
@@ -143,6 +145,18 @@ async function fetchAssetUniverse(): Promise<AssetUniverseResult> {
       claimsGreenTheme: themes.some((th) => GREEN_CAUSE_TAGS.has(th)),
     };
     const greenwashing = assessGreenwashingRisk(transparencyInput);
+    const dataCoverage = computeDataCoverage(transparencyInput);
+    // Durabilité dérivée des signaux bruts (indépendante de SFDR) — même vérité
+    // pour tous les consommateurs Découvrir. On passe les scores en échelle 0..100.
+    const sustainability = deriveDiscoverAssetTier({
+      esgScore0to100: esg,
+      climateScore0to100: r.env_score,
+      waci: r.waci_tco2e_per_musd_sales != null ? Number(r.waci_tco2e_per_musd_sales) : null,
+      impliedTempRise: r.implied_temp_rise,
+      exclusionsCount: (r.excluded_sectors ?? []).length,
+      dataCoverage,
+      sfdrArticle: r.sfdr_article,
+    });
     return {
       id: r.id,
       ticker: r.ticker,
@@ -168,9 +182,10 @@ async function fetchAssetUniverse(): Promise<AssetUniverseResult> {
       exclusions: r.excluded_sectors ?? [],
       tags: r.sfdr_article ? [`SFDR Art. ${r.sfdr_article}`] : [],
       themes,
-      data_coverage: computeDataCoverage(transparencyInput),
+      data_coverage: dataCoverage,
       greenwashing_risk: greenwashing.risk,
       greenwashing_reasons: greenwashing.reasons,
+      sustainability_tier: sustainability.tier,
     };
   });
 

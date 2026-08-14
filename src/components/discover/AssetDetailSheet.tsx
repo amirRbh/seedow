@@ -12,6 +12,7 @@ import {
   DataCoverageBadge,
   GreenwashingBadge,
   SourceLink,
+  SustainabilityTierBadge,
 } from "@/components/discover/TransparencyBadges";
 import { ImpactBadge } from "@/components/discover/ImpactBadge";
 import { useWatchlist } from "@/hooks/useWatchlist";
@@ -227,6 +228,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
             >
               <div className="paper-card p-3.5 space-y-3">
                 <div className="flex flex-wrap gap-1.5">
+                  <SustainabilityTierBadge tier={asset.sustainability_tier} />
                   <DataCoverageBadge coverage={asset.data_coverage} />
                   <GreenwashingBadge
                     risk={asset.greenwashing_risk}
