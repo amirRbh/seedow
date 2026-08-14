@@ -2112,7 +2112,11 @@
       "methodologie_label": "Methodology",
       "methodologie_hint": "Models, assumptions, sources",
       "reglages_label": "Settings",
-      "reglages_hint": "Account, notifications, security"
+      "reglages_hint": "Account, notifications, security",
+      "vote_label": "The Vote",
+      "vote_hint": "Weigh in on AGM resolutions",
+      "reveil_label": "Morning",
+      "reveil_hint": "Your money’s wake-up"
     }
   },
   "rail_nav": {

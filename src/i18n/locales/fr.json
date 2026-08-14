@@ -2094,7 +2094,11 @@
       "methodologie_label": "Méthodologie",
       "methodologie_hint": "Modèles, hypothèses, sources",
       "reglages_label": "Réglages",
-      "reglages_hint": "Compte, notifications, sécurité"
+      "reglages_hint": "Compte, notifications, sécurité",
+      "vote_label": "Le Vote",
+      "vote_hint": "Peser sur les résolutions d’AG",
+      "reveil_label": "Le Réveil",
+      "reveil_hint": "Le réveil de ton argent"
     }
   },
   "rail_nav": {

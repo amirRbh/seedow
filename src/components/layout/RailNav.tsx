@@ -60,16 +60,11 @@ export function RailNav() {
   // Secondaire = 4 portes d'entrée seulement. Les surfaces annexes (Objectifs,
   // Comparatif, Certificat, Bilan, Méthodologie, Réglages) ne disparaissent pas :
   // elles sont regroupées dans le hub « Mon compte » et dans « Apprendre ».
+  // Resserrement de surface : Vote et Réveil (paris non prouvés) quittent le rail
+  // pour ne pas diluer le cœur. Ils restent accessibles par ⌘K et par leurs
+  // raccourcis (g v / g r) — routes intactes, rien de supprimé.
   const SECONDARY: NavItem[] = [
     { key: "ethi", path: "/ethi", label: t("rail_nav.ethi_assistant"), icon: "ethi" },
-    { key: "vote", path: "/vote", label: t("rail_nav.vote"), icon: "vote", shortcut: "g v" },
-    {
-      key: "reveil",
-      path: "/reveil",
-      label: t("rail_nav.reveil"),
-      icon: "reveil",
-      shortcut: "g r",
-    },
     { key: "profil", path: "/profil", label: t("rail_nav.account"), icon: "profil" },
   ];
   return (
