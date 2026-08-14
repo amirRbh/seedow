@@ -6,16 +6,16 @@
 
 `Traffic → Signup → Onboarding → First Portfolio → Activation → Retention → Referral → Monetization`
 
-| Étape | Métrique cible (OBJECTIF, à instrumenter) | Levier principal |
-|---|---|---|
-| Traffic | CTR contenu / partage | SEO cours + certificat viral + PR anti-greenwashing |
-| Signup | Visiteur→compte | **Laisser simuler SANS compte**, gater seulement le « vrai » |
-| Onboarding | Complétion ≥ 70 % | Onboarding progressif (3 questions) |
-| First Portfolio | ≥ 90 % des onboardés | Génération instantanée (déjà en place) |
-| Activation | ≥ 40-50 % inscrits | « moment aha » : miroir choc + Le Fil |
-| Retention D30 | ≥ 25 % | Alertes greenwashing, Vote, Wrapped, objectifs |
-| Referral | k-factor > 0,3 | Certificat partageable (#100) |
-| Monetization | conv. payante mesurée | Abonnement + passerelle courtier (`07`) |
+| Étape           | Métrique cible (OBJECTIF, à instrumenter) | Levier principal                                             |
+| --------------- | ----------------------------------------- | ------------------------------------------------------------ |
+| Traffic         | CTR contenu / partage                     | SEO cours + certificat viral + PR anti-greenwashing          |
+| Signup          | Visiteur→compte                           | **Laisser simuler SANS compte**, gater seulement le « vrai » |
+| Onboarding      | Complétion ≥ 70 %                         | Onboarding progressif (3 questions)                          |
+| First Portfolio | ≥ 90 % des onboardés                      | Génération instantanée (déjà en place)                       |
+| Activation      | ≥ 40-50 % inscrits                        | « moment aha » : miroir choc + Le Fil                        |
+| Retention D30   | ≥ 25 %                                    | Alertes greenwashing, Vote, Wrapped, objectifs               |
+| Referral        | k-factor > 0,3                            | Certificat partageable (#100)                                |
+| Monetization    | conv. payante mesurée                     | Abonnement + passerelle courtier (`07`)                      |
 
 ## Acquisition (par ordre de ROI attendu — HYPOTHÈSE)
 
@@ -30,14 +30,14 @@
 
 ## Activation — « comprendre Seedow en 10 secondes »
 
-Le miroir : *« Voilà ce que finance ton épargne aujourd'hui »* (sourcé) → *« Voilà le portefeuille de tes convictions »* (3 chiffres). Une interaction, une révélation. C'est l'intuition du Fil ; à en faire le tout premier écran, sans mur d'inscription.
+Le miroir : _« Voilà ce que finance ton épargne aujourd'hui »_ (sourcé) → _« Voilà le portefeuille de tes convictions »_ (3 chiffres). Une interaction, une révélation. C'est l'intuition du Fil ; à en faire le tout premier écran, sans mur d'inscription.
 
 ## Referral
 
-Le certificat d'impact honnête (#100) : on partage parce qu'on est fier d'un choix, pas parce qu'on est soudoyé (pas de dark pattern — CLAUDE.md §1.5). Ajouter un « défi » léger (comparer son empreinte vs un ami) *si* cela reste factuel.
+Le certificat d'impact honnête (#100) : on partage parce qu'on est fier d'un choix, pas parce qu'on est soudoyé (pas de dark pattern — CLAUDE.md §1.5). Ajouter un « défi » léger (comparer son empreinte vs un ami) _si_ cela reste factuel.
 
 ## Retention
 
-Raisons de revenir : **alertes greenwashing** sur ses lignes, **résolutions d'AG à voter** (rendez-vous récurrents), **Wrapped** annuel, **objectifs** qui progressent, **briefing Ethi**. La rétention est le point fort *potentiel* — mais **non prouvée** (aucune donnée d'usage).
+Raisons de revenir : **alertes greenwashing** sur ses lignes, **résolutions d'AG à voter** (rendez-vous récurrents), **Wrapped** annuel, **objectifs** qui progressent, **briefing Ethi**. La rétention est le point fort _potentiel_ — mais **non prouvée** (aucune donnée d'usage).
 
 > Priorité GTM n°1 : **débloquer le débouché** (acte d'investir). Un funnel qui finit sur un formulaire d'intention plafonne mécaniquement l'activation et la monétisation (`03` P1).

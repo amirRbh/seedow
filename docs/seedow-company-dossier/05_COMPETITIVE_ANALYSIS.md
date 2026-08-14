@@ -5,11 +5,13 @@
 ## Concurrents
 
 **Directs (investissement responsable / robo ESG)**
+
 - **Yomoni, Nalo** (FR) : robo-advisors, gestion pilotée, options ESG/ISR ; gèrent l'argent réel (assurance-vie, PEA). Fort sur exécution + agrément ; faible sur pédagogie de conviction et transparence granulaire par actif.
 - **Goodvest** (FR) : assurance-vie « climat », alignement Accord de Paris, transparence carbone — **le plus proche de la promesse Seedow**, mais exécute (assurance-vie) et cible un public déjà convaincu.
 - **Helios, Green-Got** (FR) : néobanques « vertes » — adjacentes (compte courant/épargne), pas construction de portefeuille conviction.
 
 **Indirects (courtiers low-cost / néobanques)**
+
 - **Trade Republic, Scalable Capital** (DE) : ETF à très bas coût, énormes AUM ; ESG en option, pas en cœur. Exécutent.
 - **Revolut, BoursoBank** : super-apps/banques avec brique investissement ; ESG marginal, pédagogie faible.
 - **ETF ESG en direct** (iShares/Amundi via n'importe quel courtier) : substitut le moins cher — « je prends un ETF Paris-Aligned moi-même ».
@@ -18,28 +20,28 @@
 
 ## Matrice concurrentielle (qualitative)
 
-Échelle ●●● fort / ●● moyen / ● faible. *(Jugement d'expert, à challenger.)*
+Échelle ●●● fort / ●● moyen / ● faible. _(Jugement d'expert, à challenger.)_
 
-| Critère | Seedow | Trade Republic | Yomoni/Nalo | Goodvest | Revolut/Bourso | ETF direct |
-|---|---|---|---|---|---|---|
-| UX / simplicité | ●●● | ●●● | ●● | ●● | ●● | ● |
-| Investissement réel (exécution) | ● *(aucune)* | ●●● | ●●● | ●●● | ●●● | ●●● |
-| ESG au cœur | ●●● | ● | ●● | ●●● | ● | ●● |
-| Personnalisation par conviction | ●●● | ● | ●● | ●● | ● | ● |
-| Construction de portefeuille | ●●● | ● | ●●● | ●● | ● | ● |
-| Transparence donnée (source/coverage) | ●●● | ● | ● | ●● | ● | ●● |
-| Détection greenwashing | ●●● | ○ | ○ | ● | ○ | ○ |
-| Impact mesuré + partageable | ●●● | ○ | ● | ●● | ○ | ○ |
-| Engagement actionnarial (vote) | ●● *(pari)* | ○ | ○ | ○ | ○ | ○ |
-| Pédagogie / IA | ●●● | ● | ● | ● | ● | ○ |
-| Prix (pour l'utilisateur) | ●●● *(gratuit)* | ●●● | ● | ●● | ●● | ●●● |
-| Confiance / marque établie | ● | ●●● | ●● | ●● | ●●● | ●●● |
+| Critère                               | Seedow          | Trade Republic | Yomoni/Nalo | Goodvest | Revolut/Bourso | ETF direct |
+| ------------------------------------- | --------------- | -------------- | ----------- | -------- | -------------- | ---------- |
+| UX / simplicité                       | ●●●             | ●●●            | ●●          | ●●       | ●●             | ●          |
+| Investissement réel (exécution)       | ● _(aucune)_    | ●●●            | ●●●         | ●●●      | ●●●            | ●●●        |
+| ESG au cœur                           | ●●●             | ●              | ●●          | ●●●      | ●              | ●●         |
+| Personnalisation par conviction       | ●●●             | ●              | ●●          | ●●       | ●              | ●          |
+| Construction de portefeuille          | ●●●             | ●              | ●●●         | ●●       | ●              | ●          |
+| Transparence donnée (source/coverage) | ●●●             | ●              | ●           | ●●       | ●              | ●●         |
+| Détection greenwashing                | ●●●             | ○              | ○           | ●        | ○              | ○          |
+| Impact mesuré + partageable           | ●●●             | ○              | ●           | ●●       | ○              | ○          |
+| Engagement actionnarial (vote)        | ●● _(pari)_     | ○              | ○           | ○        | ○              | ○          |
+| Pédagogie / IA                        | ●●●             | ●              | ●           | ●        | ●              | ○          |
+| Prix (pour l'utilisateur)             | ●●● _(gratuit)_ | ●●●            | ●           | ●●       | ●●             | ●●●        |
+| Confiance / marque établie            | ●               | ●●●            | ●●          | ●●       | ●●●            | ●●●        |
 
 **Lecture** : Seedow domine sur **conviction + transparence + pédagogie + impact + engagement**, et **perd nettement sur l'exécution et la confiance/marque** — les deux dimensions qui font qu'un euro bouge réellement.
 
 ## Pourquoi choisir Seedow
 
-Parce que c'est le seul endroit où l'on **comprend et façonne** un portefeuille aligné sur ses valeurs, avec chaque chiffre sourcé, une détection de greenwashing, et un assistant qui explique sans rien vendre — sans conflit d'intérêt commercial. *(interprétation.)*
+Parce que c'est le seul endroit où l'on **comprend et façonne** un portefeuille aligné sur ses valeurs, avec chaque chiffre sourcé, une détection de greenwashing, et un assistant qui explique sans rien vendre — sans conflit d'intérêt commercial. _(interprétation.)_
 
 ## Pourquoi NE PAS choisir Seedow (la partie honnête)
 

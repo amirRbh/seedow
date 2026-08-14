@@ -29,7 +29,7 @@ Devenir **la couche de confiance de l'investissement responsable en Europe** : l
 
 - Un incumbent (Trade Republic, Revolut, une néobanque verte) copie la couche conviction/transparence et l'adosse à son exécution + sa marque.
 - SFDR 2.0 périme la méthodo et la refonte prend du retard.
-- Le coût de la donnée ESG *premium* rend le différenciateur non rentable.
+- Le coût de la donnée ESG _premium_ rend le différenciateur non rentable.
 - Épuisement du fondateur / pas de co-fondateur complémentaire (data/finance ou growth).
 
 ## Qu'est-ce qui pourrait le faire exploser

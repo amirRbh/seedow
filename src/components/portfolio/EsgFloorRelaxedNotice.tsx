@@ -11,10 +11,7 @@ export function EsgFloorRelaxedNotice({ relaxed }: { relaxed: boolean }) {
   const { t } = useTranslation();
   if (!relaxed) return null;
   return (
-    <div
-      role="note"
-      className="rounded-[14px] border border-solar-tint-border bg-solar-tint p-4"
-    >
+    <div role="note" className="rounded-[14px] border border-solar-tint-border bg-solar-tint p-4">
       <div className="flex items-start gap-3">
         <svg
           viewBox="0 0 24 24"

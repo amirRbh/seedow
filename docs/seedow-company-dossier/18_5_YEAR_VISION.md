@@ -23,10 +23,11 @@ La **couche de conviction et de pédagogie** de l'investissement responsable : u
 ## Seedow dans 5 ans (VISION)
 
 **La couche de confiance de l'investissement responsable en Europe.** Deux faces indissociables :
+
 1. **Grand public** : des millions de personnes façonnent, comprennent et pilotent un portefeuille aligné sur leurs valeurs — et pèsent collectivement en assemblée générale.
 2. **Infrastructure** : la donnée ESG et l'anti-greenwashing de Seedow font autorité et alimentent d'autres acteurs (B2B), créant le moat et la marge.
 
-Le fil directeur de la marque reste tenu : *« Ce n'est pas une fatalité. C'est un choix. Le tien aussi. »* — informer et outiller, jamais vendre ni alarmer.
+Le fil directeur de la marque reste tenu : _« Ce n'est pas une fatalité. C'est un choix. Le tien aussi. »_ — informer et outiller, jamais vendre ni alarmer.
 
 ## Condition de vérité
 

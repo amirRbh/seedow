@@ -455,9 +455,9 @@ export function ComparatifPanel() {
             }
             seedowWins={Boolean(
               impact?.measured &&
-                impact.intensityGco2ePerEur != null &&
-                ref.carbonIntensityGperEur != null &&
-                impact.intensityGco2ePerEur <= ref.carbonIntensityGperEur,
+              impact.intensityGco2ePerEur != null &&
+              ref.carbonIntensityGperEur != null &&
+              impact.intensityGco2ePerEur <= ref.carbonIntensityGperEur,
             )}
             note={t("comparatif_panel.per_euro")}
           />

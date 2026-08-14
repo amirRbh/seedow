@@ -76,7 +76,11 @@ export function GrowthComparison({
           </p>
           <p className="font-value text-3xl text-ink mt-1">
             {isGrowing ? "+" : ""}
-            {snap(gain).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
+            {snap(gain).toLocaleString("fr-FR", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}{" "}
+            €
           </p>
           <p className="text-caption text-ink-3 mt-0.5">
             {t("growth_comparison.since_first_deposit")}

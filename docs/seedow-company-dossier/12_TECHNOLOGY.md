@@ -20,12 +20,14 @@
 
 ## Scalabilité
 
-**1 000 → 100 000 utilisateurs ?** *(ESTIMATION)* Oui, sans refonte majeure : l'Edge (Cloudflare) + Supabase managé absorbent cette charge ; le coût dominant devient **l'IA (Ethi)** et l'ingestion data. Points de vigilance :
+**1 000 → 100 000 utilisateurs ?** _(ESTIMATION)_ Oui, sans refonte majeure : l'Edge (Cloudflare) + Supabase managé absorbent cette charge ; le coût dominant devient **l'IA (Ethi)** et l'ingestion data. Points de vigilance :
+
 - **Ethi = coût variable non borné** par utilisateur (tokens LLM) → le rate-limit existe, mais l'économie doit être surveillée (`08`).
 - **Agrégats de Vote** lus ligne à ligne avec `limit(100000)` (commentaire dans `vote.functions.ts`) → à remplacer par un `COUNT` groupé avant l'échelle.
 - **pg_cron horaire** : OK ; surveiller la fenêtre d'ingestion si l'univers grossit beaucoup.
 
-**Vers 1 000 000 ?** *(ESTIMATION)* Il faudrait :
+**Vers 1 000 000 ?** _(ESTIMATION)_ Il faudrait :
+
 - Découpler l'ingestion data (file/queue, connecteurs multiples) et matérialiser les agrégats (vues matérialisées / cache).
 - Optimiser le coût IA (modèles moins chers pour les tâches simples, cache de réponses, réponses pré-calculées pour Le Fil).
 - Cache CDN agressif sur les surfaces publiques (cours, méthodologie, esg-preview).
@@ -33,12 +35,12 @@
 
 ## Coûts (structure, valeurs UNKNOWN)
 
-Postes : Lovable Cloud/Supabase (hébergement + DB), Cloudflare Workers, **AI Gateway (variable, le plus incertain)**, sources de données ESG/marché (Yahoo gratuit aujourd'hui ; une donnée ESG *premium* type MSCI est coûteuse — impact direct sur le moat data et la marge). Montants réels : **UNKNOWN — à confirmer.**
+Postes : Lovable Cloud/Supabase (hébergement + DB), Cloudflare Workers, **AI Gateway (variable, le plus incertain)**, sources de données ESG/marché (Yahoo gratuit aujourd'hui ; une donnée ESG _premium_ type MSCI est coûteuse — impact direct sur le moat data et la marge). Montants réels : **UNKNOWN — à confirmer.**
 
 ## Risques techniques
 
 - **Dépendance plateforme Lovable Cloud** (backend, types auto-générés, AI Gateway) : lock-in + point de défaillance unique. Stratégie de sortie à documenter.
 - **Fichiers auto-générés** (`types.ts`, `client.ts`) : plusieurs fonctions passent par des casts `as any` (tables récentes non régénérées) — dette de typage à résorber.
-- **Coût/qualité de la donnée ESG** : le différenciateur repose sur une donnée dont la version *premium* est chère.
+- **Coût/qualité de la donnée ESG** : le différenciateur repose sur une donnée dont la version _premium_ est chère.
 
 **Verdict** : stack moderne, sécurité soignée, base testée — **très bon pour le stade**. Le vrai saut de complexité n'est pas la montée en charge web, c'est **l'exécution financière** si elle est choisie.

@@ -6,7 +6,8 @@
 
 **Seedow est un produit remarquable sans preuve d'entreprise.** Il construit un portefeuille d'investissement responsable piloté par les convictions de l'utilisateur, avec données de marché réelles, transparence anti-greenwashing codée en dur, et un assistant pédagogique (Ethi) — le tout avec une qualité d'ingénierie (RLS, 51 tests, CI, 39 tables) et une DA au-dessus de son stade.
 
-**Mais** *(les 3 vérités dures)* :
+**Mais** _(les 3 vérités dures)_ :
+
 1. **Seedow ne fait pas investir.** Pas de courtage/custody ; le parcours culmine sur un **formulaire d'intention** (`real_investment_intents`). Le funnel est mécaniquement plafonné.
 2. **Traction = UNKNOWN, revenu = 0, modèle non défini** (`tarifs.future` vide). Impossible de valider l'économie.
 3. **Pas de moat** : tout est copiable par un incumbent financé (Trade Republic, Revolut, Goodvest, Scalable).
@@ -17,7 +18,7 @@
 
 ## Réponse à la question finale
 
-*« Pour faire de Seedow une fintech européenne majeure de l'investissement responsable, qu'est-ce qui doit changer, pourquoi, dans quel ordre, combien, et quelles preuves ? »*
+_« Pour faire de Seedow une fintech européenne majeure de l'investissement responsable, qu'est-ce qui doit changer, pourquoi, dans quel ordre, combien, et quelles preuves ? »_
 
 - **Quoi/ordre** : débouché (acte) → preuves d'activation/rétention → prix → moat data/B2B → (éventuellement) exécution en propre. Voir `17`.
 - **Pourquoi** : sans débouché ni moat, le scénario réaliste est le « zombie » rentable jamais (`13`).
@@ -26,20 +27,21 @@
 
 ## Score (sur 100) — jugement d'expert, à recalibrer avec la traction réelle
 
-| Domaine | Score | Commentaire |
-|---|---:|---|
-| Product | 72 | Ampleur + qualité ; plafonné par l'absence de débouché |
-| UX | 74 | DA cohérente, mobile-first, transparence ; surcharge/dispersion à corriger |
-| Technology | 78 | RLS, tests, CI, sécurité soignée ; dépendance plateforme |
-| Market | 80 | Porteur, sourcé (AMF/Morningstar) ; concurrentiel |
-| Business Model | 30 | Non défini, 0 revenu, économie B2C fragile |
-| Differentiation | 55 | Angle réel mais copiable — pas encore de moat |
-| ESG | 68 | Transparence excellente ; optimisation (μ statiques) + dépendance SFDR faibles |
-| Growth | 40 | Boucles présentes mais non prouvées ; traction UNKNOWN |
-| Fundraising readiness | 45 | Récit + produit forts ; preuves manquantes |
-| **Overall** | **≈ 58** | **Excellent produit, entreprise non prouvée** |
+| Domaine               |    Score | Commentaire                                                                    |
+| --------------------- | -------: | ------------------------------------------------------------------------------ |
+| Product               |       72 | Ampleur + qualité ; plafonné par l'absence de débouché                         |
+| UX                    |       74 | DA cohérente, mobile-first, transparence ; surcharge/dispersion à corriger     |
+| Technology            |       78 | RLS, tests, CI, sécurité soignée ; dépendance plateforme                       |
+| Market                |       80 | Porteur, sourcé (AMF/Morningstar) ; concurrentiel                              |
+| Business Model        |       30 | Non défini, 0 revenu, économie B2C fragile                                     |
+| Differentiation       |       55 | Angle réel mais copiable — pas encore de moat                                  |
+| ESG                   |       68 | Transparence excellente ; optimisation (μ statiques) + dépendance SFDR faibles |
+| Growth                |       40 | Boucles présentes mais non prouvées ; traction UNKNOWN                         |
+| Fundraising readiness |       45 | Récit + produit forts ; preuves manquantes                                     |
+| **Overall**           | **≈ 58** | **Excellent produit, entreprise non prouvée**                                  |
 
 ### 5 raisons qui empêchent Seedow d'être excellent aujourd'hui
+
 1. **Il ne fait pas investir** (pas de débouché).
 2. **Aucune preuve de traction** (UNKNOWN).
 3. **Pas de modèle de revenu défini** ni de willingness-to-pay testée.
@@ -47,6 +49,7 @@
 5. **Dispersion** : trop de paris ouverts avant l'activation du cœur.
 
 ### 5 changements qui feraient passer Seedow au niveau supérieur
+
 1. **Brancher l'acte d'investir** (passerelle courtier).
 2. **Instrumenter + prouver activation/rétention.**
 3. **Industrialiser la data-engine** en moat + licence B2B.
@@ -54,4 +57,5 @@
 5. **Focaliser** sur un chemin héros unique et une boucle virale.
 
 ## Navigation
+
 Voir `MASTER_INDEX.md`. Dossiers de synthèse : `INVESTOR_DOSSIER.md`, `INCUBATOR_DOSSIER.md`, `FOUNDER_BRIEF.md`. Contrôle qualité : `FINAL_QC.md`.

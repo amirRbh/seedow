@@ -1,21 +1,21 @@
 # 19 — Risks & Mitigations
 
-| # | Risque | Type | Prob. | Impact | Mitigation |
-|---|---|---|---|---|---|
-| R1 | **Funnel plafonné (pas d'exécution)** | Produit/Business | Élevée | Critique | Passerelle courtier (referral) court terme ; décision exécution/agrément à moyen terme (`07`/`14`) |
-| R2 | **Zéro traction / produit-zombie** | Business | Élevée | Critique | Instrumenter + prouver activation/rétention avant de scaler (`17` #1-3) |
-| R3 | **Pas de moat (copiable)** | Stratégie | Élevée | Élevé | Industrialiser data-engine + autorité de marque (`06`) |
-| R4 | **SFDR 2.0 périme la méthodo** | Réglementaire | Moyenne-Élevée | Élevé | Découpler la classification durable de SFDR ; critères propres (exclusions+carbone+trajectoire) (`11`) |
-| R5 | **Barrière d'agrément à l'exécution** | Réglementaire | Élevée (si exécution) | Élevé | Voie capital-efficient d'abord (passerelle + data B2B) ; agrément seulement financé |
-| R6 | **Économie unitaire fragile (B2C seul)** | Financier | Élevée | Élevé | Acquisition organique + data B2B + (à terme) % encours (`08`/`13`) |
-| R7 | **Coût donnée ESG premium** | Financier/Tech | Moyenne | Élevé | Multi-sources, données publiques + propriétaires ; négocier ; tarifer le B2B en conséquence |
-| R8 | **Coût IA (Ethi) non borné** | Tech/Financier | Moyenne | Moyen | Rate-limit (déjà) + modèles moins chers pour tâches simples + cache réponses |
-| R9 | **Dépendance plateforme (Lovable Cloud/AI Gateway)** | Tech | Moyenne | Moyen-Élevé | Documenter stratégie de sortie ; abstraire l'accès data/IA |
-| R10 | **Concurrence incumbents** | Marché | Élevée | Élevé | Vitesse sur data+confiance ; distribution B2B2C exclusive |
-| R11 | **Faiblesse d'optimisation (μ/σ statiques)** attaquée en DD | Méthodo/Réputation | Moyenne | Moyen | Estimer depuis prix ingérés ou assumer règle-based transparent (`11`) |
-| R12 | **Risque conformité communication** (frontière conseil) | Réglementaire/Juridique | Moyenne | Élevé | Non-négociables déjà en place (Ethi ≠ conseil) ; revue juridique des textes ; disclaimers (présents dans le code) |
-| R13 | **Dépendance homme-clé / équipe UNKNOWN** | Équipe | Moyenne | Élevé | Recruter co-fondateur/profil data-ESG + growth ; documenter |
-| R14 | **RGPD / données personnelles** (emails d'intention, votes) | Juridique | Faible-Moyenne | Moyen | RLS déjà stricte ; DPA, registre, minimisation ; audit |
-| R15 | **Backlash / fatigue ESG** | Marché | Moyenne | Moyen | Ancrer sur factualité et transparence (pas militantisme) — déjà dans l'ADN |
+| #   | Risque                                                      | Type                    | Prob.                 | Impact      | Mitigation                                                                                                        |
+| --- | ----------------------------------------------------------- | ----------------------- | --------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------- |
+| R1  | **Funnel plafonné (pas d'exécution)**                       | Produit/Business        | Élevée                | Critique    | Passerelle courtier (referral) court terme ; décision exécution/agrément à moyen terme (`07`/`14`)                |
+| R2  | **Zéro traction / produit-zombie**                          | Business                | Élevée                | Critique    | Instrumenter + prouver activation/rétention avant de scaler (`17` #1-3)                                           |
+| R3  | **Pas de moat (copiable)**                                  | Stratégie               | Élevée                | Élevé       | Industrialiser data-engine + autorité de marque (`06`)                                                            |
+| R4  | **SFDR 2.0 périme la méthodo**                              | Réglementaire           | Moyenne-Élevée        | Élevé       | Découpler la classification durable de SFDR ; critères propres (exclusions+carbone+trajectoire) (`11`)            |
+| R5  | **Barrière d'agrément à l'exécution**                       | Réglementaire           | Élevée (si exécution) | Élevé       | Voie capital-efficient d'abord (passerelle + data B2B) ; agrément seulement financé                               |
+| R6  | **Économie unitaire fragile (B2C seul)**                    | Financier               | Élevée                | Élevé       | Acquisition organique + data B2B + (à terme) % encours (`08`/`13`)                                                |
+| R7  | **Coût donnée ESG premium**                                 | Financier/Tech          | Moyenne               | Élevé       | Multi-sources, données publiques + propriétaires ; négocier ; tarifer le B2B en conséquence                       |
+| R8  | **Coût IA (Ethi) non borné**                                | Tech/Financier          | Moyenne               | Moyen       | Rate-limit (déjà) + modèles moins chers pour tâches simples + cache réponses                                      |
+| R9  | **Dépendance plateforme (Lovable Cloud/AI Gateway)**        | Tech                    | Moyenne               | Moyen-Élevé | Documenter stratégie de sortie ; abstraire l'accès data/IA                                                        |
+| R10 | **Concurrence incumbents**                                  | Marché                  | Élevée                | Élevé       | Vitesse sur data+confiance ; distribution B2B2C exclusive                                                         |
+| R11 | **Faiblesse d'optimisation (μ/σ statiques)** attaquée en DD | Méthodo/Réputation      | Moyenne               | Moyen       | Estimer depuis prix ingérés ou assumer règle-based transparent (`11`)                                             |
+| R12 | **Risque conformité communication** (frontière conseil)     | Réglementaire/Juridique | Moyenne               | Élevé       | Non-négociables déjà en place (Ethi ≠ conseil) ; revue juridique des textes ; disclaimers (présents dans le code) |
+| R13 | **Dépendance homme-clé / équipe UNKNOWN**                   | Équipe                  | Moyenne               | Élevé       | Recruter co-fondateur/profil data-ESG + growth ; documenter                                                       |
+| R14 | **RGPD / données personnelles** (emails d'intention, votes) | Juridique               | Faible-Moyenne        | Moyen       | RLS déjà stricte ; DPA, registre, minimisation ; audit                                                            |
+| R15 | **Backlash / fatigue ESG**                                  | Marché                  | Moyenne               | Moyen       | Ancrer sur factualité et transparence (pas militantisme) — déjà dans l'ADN                                        |
 
 **Top 3 à traiter en premier** : R1 (débouché), R2 (preuve de traction), R3 (moat). Ce sont les trois qui déterminent si Seedow est une entreprise ou une démo brillante.

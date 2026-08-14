@@ -13,16 +13,16 @@
 
 ## 2. Stade de maturité
 
-| Dimension | État (FACT) |
-|---|---|
-| Produit | Bêta ouverte, à capacité limitée (cap bêta + liste d'attente, enforced en base) |
-| Prix | **0 €** pendant la bêta (`tarifs.tsx`) ; modèle futur **non défini** (`tarifs.future` = placeholder) |
-| Monétisation | Aucune — **0 € de revenu** par construction |
-| Code | ~68 migrations, 39 tables, 51 fichiers de test, CI (typecheck/lint/format/test) |
-| Traction | **UNKNOWN** — aucune donnée d'usage réel dans le repo (users, activation, NPS, rétention) |
-| Équipe | **UNKNOWN** — non documenté ; indices : produit construit avec Lovable, un seul contact fondateur |
-| Entité légale / statut réglementaire | **UNKNOWN** — aucun statut CIF/PSI/agrément visible |
-| Financement levé | **UNKNOWN** — aucune trace ; à confirmer par le fondateur |
+| Dimension                            | État (FACT)                                                                                          |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| Produit                              | Bêta ouverte, à capacité limitée (cap bêta + liste d'attente, enforced en base)                      |
+| Prix                                 | **0 €** pendant la bêta (`tarifs.tsx`) ; modèle futur **non défini** (`tarifs.future` = placeholder) |
+| Monétisation                         | Aucune — **0 € de revenu** par construction                                                          |
+| Code                                 | ~68 migrations, 39 tables, 51 fichiers de test, CI (typecheck/lint/format/test)                      |
+| Traction                             | **UNKNOWN** — aucune donnée d'usage réel dans le repo (users, activation, NPS, rétention)            |
+| Équipe                               | **UNKNOWN** — non documenté ; indices : produit construit avec Lovable, un seul contact fondateur    |
+| Entité légale / statut réglementaire | **UNKNOWN** — aucun statut CIF/PSI/agrément visible                                                  |
+| Financement levé                     | **UNKNOWN** — aucune trace ; à confirmer par le fondateur                                            |
 
 ## 3. Stack technique (FACT)
 
@@ -54,4 +54,4 @@ Le produit a **dépassé** la description du README. Fonctionnalités présentes
 
 ## 5. En une phrase
 
-**FACT + interprétation.** Seedow est, aujourd'hui, **la couche de conviction et de pédagogie de l'investissement responsable** : elle transforme des valeurs en un portefeuille modèle chiffré, sourcé et expliqué — mais ne l'exécute pas encore. La question stratégique centrale du dossier : *doit-elle devenir la plateforme d'exécution, ou rester la couche de conviction au-dessus des plateformes existantes ?*
+**FACT + interprétation.** Seedow est, aujourd'hui, **la couche de conviction et de pédagogie de l'investissement responsable** : elle transforme des valeurs en un portefeuille modèle chiffré, sourcé et expliqué — mais ne l'exécute pas encore. La question stratégique centrale du dossier : _doit-elle devenir la plateforme d'exécution, ou rester la couche de conviction au-dessus des plateformes existantes ?_
