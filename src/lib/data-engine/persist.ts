@@ -73,6 +73,7 @@ const CANONICAL_FIELD_TO_COLUMN: Record<string, string> = {
   waci_tco2e_per_musd_sales: "waci_tco2e_per_musd_sales",
   implied_temp_rise: "implied_temp_rise",
   sfdr_article: "sfdr_article",
+  ter: "ter",
 };
 
 /**
