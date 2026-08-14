@@ -2112,7 +2112,11 @@
       "methodologie_label": "Methodology",
       "methodologie_hint": "Models, assumptions, sources",
       "reglages_label": "Settings",
-      "reglages_hint": "Account, notifications, security"
+      "reglages_hint": "Account, notifications, security",
+      "vote_label": "The Vote",
+      "vote_hint": "Weigh in on AGM resolutions",
+      "reveil_label": "Morning",
+      "reveil_hint": "Your money’s wake-up"
     }
   },
   "rail_nav": {
@@ -2880,5 +2884,19 @@
     "equivalences_title": "In real terms, every year",
     "equivalences_source": "Source",
     "more": "Go further"
+  },
+  "sustainability": {
+    "tier": {
+      "paris_aligned": "Paris-aligned",
+      "transition": "Transitioning",
+      "broad_esg": "Broad ESG",
+      "insufficient_evidence": "Insufficient evidence"
+    },
+    "tier_hint": {
+      "paris_aligned": "Strong signals: temperature pathway ≤ 1.5°C and/or carbon far below a World ETF, solid ESG, exclusions. Derived from observed data — not the SFDR article.",
+      "transition": "Moderate signals: credible improvement (temperature, carbon or ESG) without full alignment proof. Derived from data, not the SFDR article.",
+      "broad_esg": "ESG orientation, but no strong climate proof. Derived from observed data.",
+      "insufficient_evidence": "Data too partial or contradictory to decide. We never upgrade a fund without evidence."
+    }
   }
 }

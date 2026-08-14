@@ -122,18 +122,18 @@ Direction artistique extraite des supports de contenu (`seedow_carousel_duel.htm
 
 ### Palette (design tokens, identiques sur tous les supports — à porter tels quels dans `styles.css`)
 
-| Token       | Valeur    | Usage                                                                                                      |
-| ----------- | --------- | ---------------------------------------------------------------------------------------------------------- |
-| `--paper`   | `#FFFFFF` | Fond neutre principal                                                                                      |
-| `--paper-2` | `#F5F5F7` | Fond secondaire / page                                                                                     |
-| `--paper-3` | `#D2D2D7` | Bordures, séparateurs                                                                                      |
-| `--ink`     | `#1D1D1F` | Texte principal, fonds sombres                                                                             |
+| Token       | Valeur    | Usage                                                                                                       |
+| ----------- | --------- | ----------------------------------------------------------------------------------------------------------- |
+| `--paper`   | `#FFFFFF` | Fond neutre principal                                                                                       |
+| `--paper-2` | `#F5F5F7` | Fond secondaire / page                                                                                      |
+| `--paper-3` | `#D2D2D7` | Bordures, séparateurs                                                                                       |
+| `--ink`     | `#1D1D1F` | Texte principal, fonds sombres                                                                              |
 | `--ink-2`   | `#64646a` | Texte secondaire, métadonnées (assombri vs `#86868B` d'origine pour passer WCAG AA, ~5.9:1 sur `--paper`)   |
 | `--mint`    | `#146a4a` | **Positif** — bonne nouvelle, chiffre favorable, CTA de marque (assombri vs `#1D8348` pour le contraste AA) |
-| `--ice`     | `#0071E3` | Information neutre / lien                                                                                  |
-| `--volt`    | `#6E56CF` | Accent secondaire (usage rare, à ne pas banaliser)                                                         |
-| `--alert`   | `#E11D48` | **Négatif** — chiffre défavorable, alerte, danger réel (pas de sur-usage : perd son sens si trop fréquent) |
-| `--solar`   | `#B7791F` | Nuance d'avertissement doux (usage rare)                                                                   |
+| `--ice`     | `#0071E3` | Information neutre / lien                                                                                   |
+| `--volt`    | `#6E56CF` | Accent secondaire (usage rare, à ne pas banaliser)                                                          |
+| `--alert`   | `#E11D48` | **Négatif** — chiffre défavorable, alerte, danger réel (pas de sur-usage : perd son sens si trop fréquent)  |
+| `--solar`   | `#B7791F` | Nuance d'avertissement doux (usage rare)                                                                    |
 
 **Sémantique stricte à respecter** : mint = positif/marque, alert = négatif réel — ne jamais inverser ces deux couleurs, l'utilisateur les lit comme un code binaire (l'exemple type est l'enchaînement mint/alert dans le format « Le Duel »).
 

@@ -2094,7 +2094,11 @@
       "methodologie_label": "Méthodologie",
       "methodologie_hint": "Modèles, hypothèses, sources",
       "reglages_label": "Réglages",
-      "reglages_hint": "Compte, notifications, sécurité"
+      "reglages_hint": "Compte, notifications, sécurité",
+      "vote_label": "Le Vote",
+      "vote_hint": "Peser sur les résolutions d’AG",
+      "reveil_label": "Le Réveil",
+      "reveil_hint": "Le réveil de ton argent"
     }
   },
   "rail_nav": {
@@ -2862,5 +2866,19 @@
     "equivalences_title": "Concrètement, chaque année",
     "equivalences_source": "Source",
     "more": "Aller plus loin"
+  },
+  "sustainability": {
+    "tier": {
+      "paris_aligned": "Aligné Paris",
+      "transition": "En transition",
+      "broad_esg": "ESG large",
+      "insufficient_evidence": "Preuves insuffisantes"
+    },
+    "tier_hint": {
+      "paris_aligned": "Signaux forts : trajectoire température ≤ 1,5 °C et/ou carbone très en-dessous d’un ETF Monde, ESG solide, exclusions. Dérivé des données observées — pas de l’article SFDR.",
+      "transition": "Signaux modérés : amélioration crédible (température, carbone ou ESG) sans preuve d’alignement complet. Dérivé des données, pas de l’article SFDR.",
+      "broad_esg": "Orientation ESG, mais sans preuve climat forte. Dérivé des données observées.",
+      "insufficient_evidence": "Données trop partielles ou contradictoires pour trancher. On ne surclasse jamais un fonds sans preuve."
+    }
   }
 }

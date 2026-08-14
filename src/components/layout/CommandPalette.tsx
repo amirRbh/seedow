@@ -73,6 +73,18 @@ export function CommandPalette({ open, onOpenChange }: Props) {
       hint: t("command_palette.routes.discover_hint"),
     },
     {
+      path: "/vote",
+      label: t("command_palette.routes.vote_label"),
+      hint: t("command_palette.routes.vote_hint"),
+      shortcut: "g v",
+    },
+    {
+      path: "/reveil",
+      label: t("command_palette.routes.reveil_label"),
+      hint: t("command_palette.routes.reveil_hint"),
+      shortcut: "g r",
+    },
+    {
       path: "/methodologie",
       label: t("command_palette.routes.methodologie_label"),
       hint: t("command_palette.routes.methodologie_hint"),

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
+import { trimHistory, MAX_OUTPUT_TOKENS } from "@/lib/ethi/cost";
 
 // Le client n'envoie jamais de message `system` : le seul prompt système
 // est celui construit côté serveur ci-dessous. Restreindre les rôles ferme
@@ -195,12 +196,18 @@ Reply in English.${contextBlock}`;
             headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
             body: JSON.stringify({
               model: "google/gemini-2.5-flash",
-              messages: [{ role: "system", content: systemPrompt }, ...body.messages],
+              // Bornage du coût (rationalisation) : on n'envoie que l'historique
+              // récent (les plus anciens messages n'ajoutent pas de contexte utile
+              // mais coûtent des tokens d'entrée à chaque appel).
+              messages: [{ role: "system", content: systemPrompt }, ...trimHistory(body.messages)],
               // Explicateur financier sensible à la conformité : température
               // basse pour resserrer l'adhérence à la structure et aux
               // garde-fous (§5), et réduire la dérive vers une reco / une
               // hallucination de chiffre. Assez de naturel pour rester « vif ».
               temperature: 0.4,
+              // Réponses courtes par conception (3 blocs) → plafond de sortie qui
+              // borne le pire cas de coût sans brider une réponse normale.
+              max_tokens: MAX_OUTPUT_TOKENS,
             }),
           });
 
