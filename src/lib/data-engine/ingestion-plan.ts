@@ -59,6 +59,23 @@ const W_INCOMPLETE = 1.5; // par point de complétude manquant
 const BOOST_NEVER = 400; // jamais ingéré : priorité forte (le Socle est vide pour lui)
 const BOOST_NO_SOURCE = 250; // pas de source canonique : à sourcer d'urgence
 
+/** Récapitulatif d'une file d'ingestion : total + décompte par raison. Pur,
+ *  destiné au journal cron (`cron_run_log.details`) pour un suivi daté. */
+export function summarizePlan(items: readonly IngestionPlanItem[]): {
+  total: number;
+  byReason: Record<IngestionReason, number>;
+} {
+  const byReason: Record<IngestionReason, number> = {
+    never_ingested: 0,
+    no_source: 0,
+    stale: 0,
+    incomplete: 0,
+    high_demand: 0,
+  };
+  for (const it of items) for (const r of it.reasons) byReason[r] += 1;
+  return { total: items.length, byReason };
+}
+
 /** Ancienneté en jours d'une date ISO, ou null si absente/illisible. */
 export function computeStaleDays(lastUpdated: string | null, now: Date): number | null {
   if (!lastUpdated) return null;
