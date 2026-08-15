@@ -31,7 +31,7 @@ import {
   type GecoDocument,
   type GecoIdentity,
 } from "../src/lib/data-engine/sources/geco.server";
-import { parseSfdrArticle, parseTerFraction } from "../src/lib/esg/msci-sustainability-parser";
+import { parseKidSfdrArticle, parseKidOngoingCharges } from "../src/lib/esg/kid-parser";
 
 type Status = "ok" | "unavailable" | "error";
 
@@ -107,8 +107,18 @@ function extractPdf(text: string | null, sourceUrl: string): PdfDerived {
       sourceUrl: null,
       reason: "pdftotext indisponible (job offline requis)",
     };
-  const sfdr = parseSfdrArticle(text);
-  const terFrac = parseTerFraction(text);
+  // Debug facultatif : révèle le libellé réel des coûts/SFDR dans le KID pour
+  // calibrer les regex (SEEDOW_DUMP=1). N'affecte pas l'extraction.
+  if (process.env.SEEDOW_DUMP === "1") {
+    for (const line of text.split("\n")) {
+      if (/frais|co[ûu]t|article\s*[689]|SFDR|durabilit/i.test(line)) {
+        const t = line.trim();
+        if (t) console.log(`    [dump] ${t.slice(0, 140)}`);
+      }
+    }
+  }
+  const sfdr = parseKidSfdrArticle(text);
+  const terFrac = parseKidOngoingCharges(text);
   const ongoingChargesPct = terFrac == null ? null : Math.round(terFrac * 100 * 100) / 100;
   const got = sfdr != null || ongoingChargesPct != null;
   return {

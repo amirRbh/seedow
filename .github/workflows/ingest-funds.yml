@@ -19,6 +19,11 @@ on:
         type: boolean
         required: false
         default: false
+      dump:
+        description: "Debug : logue le libellé réel des coûts/SFDR des KID"
+        type: boolean
+        required: false
+        default: false
 
 jobs:
   ingest:
@@ -43,6 +48,7 @@ jobs:
       - name: Ingest
         env:
           SEEDOW_PERSIST: ${{ inputs.persist && '1' || '0' }}
+          SEEDOW_DUMP: ${{ inputs.dump && '1' || '0' }}
           # Le client server lit ces variables ; renseigner les secrets du repo
           # pour activer la persistance (sinon le job se contente d'extraire + logguer).
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
