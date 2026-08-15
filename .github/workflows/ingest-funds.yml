@@ -10,6 +10,10 @@ on:
         description: "ISIN séparés par des espaces (vide = 5 ISIN de démo)"
         required: false
         default: ""
+      discover:
+        description: "Découvrir automatiquement N ISIN via GECO (prioritaire sur isins)"
+        required: false
+        default: ""
       persist:
         description: "Écrire en base (nécessite les secrets Supabase)"
         type: boolean
@@ -45,4 +49,9 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
-        run: bun run scripts/ingest-funds.ts ${{ inputs.isins }}
+        run: |
+          if [ -n "${{ inputs.discover }}" ]; then
+            bun run scripts/ingest-funds.ts --discover "${{ inputs.discover }}"
+          else
+            bun run scripts/ingest-funds.ts ${{ inputs.isins }}
+          fi

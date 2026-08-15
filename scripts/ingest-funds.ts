@@ -27,6 +27,7 @@ import {
   getShare,
   getDocuments,
   mapIdentity,
+  discoverIsins,
   type GecoDocument,
   type GecoIdentity,
 } from "../src/lib/data-engine/sources/geco.server";
@@ -227,7 +228,18 @@ async function persist(result: IngestionResult): Promise<string> {
 const DEMO_ISINS = ["FR0010752543", "FR0013306735", "FR0011291657", "FR0013478591", "FR0010929836"];
 
 async function main() {
-  const isins = process.argv.slice(2).length ? process.argv.slice(2) : DEMO_ISINS;
+  const args = process.argv.slice(2);
+  // `--discover N` : récupère automatiquement N ISIN réels via GECO ; sinon
+  // ISIN passés en arguments ; sinon les 5 ISIN de démo.
+  let isins: string[];
+  if (args[0] === "--discover") {
+    const limit = Math.max(1, Number(args[1]) || 50);
+    console.log(`Découverte de ${limit} ISIN via GECO…`);
+    isins = await discoverIsins(limit);
+    console.log(`→ ${isins.length} ISIN découverts.`);
+  } else {
+    isins = args.length ? args : DEMO_ISINS;
+  }
   const doPersist = process.env.SEEDOW_PERSIST === "1";
   console.log(`pdftotext: ${hasPdftotext ? "présent" : "absent"} · persist: ${doPersist}`);
   let ok = 0;

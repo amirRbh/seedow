@@ -107,6 +107,28 @@ export function mapDocuments(arr: any): GecoDocument[] {
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
+/** Une page de la liste GECO des compartiments → ISIN réels extraits. */
+export interface CompartmentPage {
+  total: number;
+  isins: string[];
+}
+
+const ISIN_RE = /^[A-Z]{2}[A-Z0-9]{9}[0-9]$/;
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/** Extrait les ISIN valides d'une page `getCompartmentsBycriteria` (dédupliqués). */
+export function mapCompartmentList(json: any): CompartmentPage {
+  const total = Number(json?.total) || 0;
+  const seen = new Set<string>();
+  for (const c of Array.isArray(json?.compartmentDtos) ? json.compartmentDtos : []) {
+    for (const i of Array.isArray(c?.sharesIsins) ? c.sharesIsins : []) {
+      if (typeof i === "string" && ISIN_RE.test(i)) seen.add(i);
+    }
+  }
+  return { total, isins: [...seen] };
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
 // ── Fetchers live (server) — ne lèvent jamais (§17) ────────────────────────
 
 async function getJson(url: string, fetchImpl: typeof fetch): Promise<unknown | null> {
@@ -133,4 +155,52 @@ export async function getShare(idInterne: number, fetchImpl: typeof fetch = fetc
 
 export async function getDocuments(idInterne: number, fetchImpl: typeof fetch = fetch) {
   return mapDocuments(await getJson(gecoUrls.documents(idInterne), fetchImpl));
+}
+
+/** Une page de la liste GECO des compartiments (POST lazy-load). */
+export async function listCompartments(
+  first: number,
+  rows: number,
+  fetchImpl: typeof fetch = fetch,
+): Promise<CompartmentPage> {
+  try {
+    const resp = await fetchImpl(
+      `${GECO_BASE}/funds/getCompartmentsBycriteria?productType=&idThirdParty=0`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ first, rows, filters: {}, globalFilter: null }),
+      },
+    );
+    if (!resp.ok) return { total: 0, isins: [] };
+    return mapCompartmentList(await resp.json());
+  } catch {
+    return { total: 0, isins: [] };
+  }
+}
+
+/**
+ * Découvre automatiquement des ISIN réels via GECO (source régulateur), jusqu'à
+ * `limit`. Pagine la liste officielle et déduplique. Zéro invention.
+ */
+export async function discoverIsins(
+  limit: number,
+  fetchImpl: typeof fetch = fetch,
+): Promise<string[]> {
+  const out: string[] = [];
+  const seen = new Set<string>();
+  const pageSize = 100;
+  for (let first = 0; out.length < limit; first += pageSize) {
+    const page = await listCompartments(first, pageSize, fetchImpl);
+    if (page.isins.length === 0) break;
+    for (const i of page.isins) {
+      if (!seen.has(i)) {
+        seen.add(i);
+        out.push(i);
+      }
+      if (out.length >= limit) break;
+    }
+    if (first + pageSize >= page.total) break;
+  }
+  return out.slice(0, limit);
 }
