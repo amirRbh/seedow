@@ -1,0 +1,46 @@
+# Applique les migrations `supabase/migrations/` au projet Supabase lié, via la
+# CLI officielle (`supabase db push`) — aucune édition manuelle du schéma.
+# Déclenchement manuel. Secrets requis :
+#   SUPABASE_ACCESS_TOKEN  (Personal Access Token « sbp_… », compte-niveau)
+#   SUPABASE_DB_PASSWORD   (mot de passe base du projet)
+name: DB migrate (Supabase)
+
+on:
+  workflow_dispatch:
+    inputs:
+      project_ref:
+        description: "Référence du projet Supabase"
+        required: false
+        default: "jthpgbsxzzibqlfsatat"
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Link project
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: supabase link --project-ref "${{ inputs.project_ref }}" --password "$SUPABASE_DB_PASSWORD"
+
+      - name: Push migrations
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: supabase db push --password "$SUPABASE_DB_PASSWORD" --include-all --yes
+
+      - name: List tables (vérification)
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: |
+          supabase db push --password "$SUPABASE_DB_PASSWORD" --dry-run 2>&1 | tail -5 || true
+          echo "Migrations appliquées. Vérification de 'assets' à l'étape suivante (REST)."
