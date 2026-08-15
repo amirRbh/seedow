@@ -1,0 +1,48 @@
+# Ingestion B1 — job offline avec poppler (extraction PDF impossible sur l'edge).
+# ISIN → GECO (identité + documents officiels) → pdftotext (SFDR/frais) → persistance.
+# Déclenchement manuel. La persistance est OPT-IN (nécessite les secrets Supabase).
+name: Ingest funds (GECO)
+
+on:
+  workflow_dispatch:
+    inputs:
+      isins:
+        description: "ISIN séparés par des espaces (vide = 5 ISIN de démo)"
+        required: false
+        default: ""
+      persist:
+        description: "Écrire en base (nécessite les secrets Supabase)"
+        type: boolean
+        required: false
+        default: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      # poppler-utils fournit `pdftotext` — indispensable à l'extraction PDF,
+      # absente du runtime edge (raison du job offline).
+      - name: Install poppler
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.11"
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Ingest
+        env:
+          SEEDOW_PERSIST: ${{ inputs.persist && '1' || '0' }}
+          # Le client server lit ces variables ; renseigner les secrets du repo
+          # pour activer la persistance (sinon le job se contente d'extraire + logguer).
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+        run: bun run scripts/ingest-funds.ts ${{ inputs.isins }}

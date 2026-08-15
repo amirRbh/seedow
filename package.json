@@ -14,7 +14,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "ingest:esg": "bun run scripts/ingest-issuer-esg.ts",
-    "ingest:fund-data": "bun run scripts/ingest-fund-data.ts"
+    "ingest:fund-data": "bun run scripts/ingest-fund-data.ts",
+    "ingest:funds": "bun run scripts/ingest-funds.ts"
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.25.5",
