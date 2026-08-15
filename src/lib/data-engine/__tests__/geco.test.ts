@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { buildDownloadUrl, mapDocuments, mapIdentity, mapRef } from "../sources/geco.server";
+import {
+  buildDownloadUrl,
+  mapCompartmentList,
+  mapDocuments,
+  mapIdentity,
+  mapRef,
+} from "../sources/geco.server";
 
 // Extraits RÉELS de l'API GECO (FR0010752543 = LAZARD CREDIT FI SRI), capturés
 // en direct — pas des mocks inventés, de vraies réponses du back-office AMF.
@@ -72,5 +78,19 @@ describe("GECO mappers (payloads réels)", () => {
   it("mapDocuments : liste vide → aucun document (unavailable)", () => {
     expect(mapDocuments([])).toEqual([]);
     expect(mapDocuments(null)).toEqual([]);
+  });
+
+  it("mapCompartmentList extrait les ISIN valides, ignore les null (payload réel)", () => {
+    // Forme réelle de getCompartmentsBycriteria (sharesIsins contient des null).
+    const page = mapCompartmentList({
+      total: 15737,
+      compartmentDtos: [
+        { cmpNom: "100% INDICE ACTIONS EURO", sharesIsins: [null] },
+        { cmpNom: "117 EURO LT", sharesIsins: ["FR0013336385"] },
+        { cmpNom: "X", sharesIsins: ["FR0013336385", "LU1861134382", "pas-un-isin"] },
+      ],
+    });
+    expect(page.total).toBe(15737);
+    expect(page.isins).toEqual(["FR0013336385", "LU1861134382"]); // dédupliqué, filtré
   });
 });
