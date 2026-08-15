@@ -21,23 +21,22 @@ jobs:
         with:
           version: latest
 
-      - name: Push migrations
+      - name: Push migrations (accepte DB_URL OU access token + mot de passe)
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
         run: |
-          if [ -z "$SUPABASE_DB_URL" ]; then
-            echo "::error::Secret SUPABASE_DB_URL manquant."; exit 1
+          echo "Secrets détectés : DB_URL=$([ -n "$SUPABASE_DB_URL" ] && echo oui || echo non)" \
+               "ACCESS_TOKEN=$([ -n "$SUPABASE_ACCESS_TOKEN" ] && echo oui || echo non)" \
+               "DB_PASSWORD=$([ -n "$SUPABASE_DB_PASSWORD" ] && echo oui || echo non)"
+          if [ -n "$SUPABASE_DB_URL" ]; then
+            supabase db push --db-url "$SUPABASE_DB_URL" --include-all --yes
+          elif [ -n "$SUPABASE_ACCESS_TOKEN" ] && [ -n "$SUPABASE_DB_PASSWORD" ]; then
+            supabase link --project-ref jthpgbsxzzibqlfsatat --password "$SUPABASE_DB_PASSWORD"
+            supabase db push --password "$SUPABASE_DB_PASSWORD" --include-all --yes
+          else
+            echo "::error::Fournir soit SUPABASE_DB_URL, soit SUPABASE_ACCESS_TOKEN + SUPABASE_DB_PASSWORD."
+            exit 1
           fi
-          supabase db push --db-url "$SUPABASE_DB_URL" --include-all --yes
-
-      - name: Vérifier que 'assets' existe
-        env:
-          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
-        run: |
-          echo "Tables publiques principales :"
-          psql "$SUPABASE_DB_URL" -Atc \
-            "select table_name from information_schema.tables where table_schema='public' order by 1;" | tr '\n' ' '
-          echo
-          echo -n "assets : "
-          psql "$SUPABASE_DB_URL" -Atc "select count(*) from public.assets;" \
-            && echo "→ 'assets' OK" || { echo "→ 'assets' ABSENTE"; exit 1; }
+          echo "Migrations appliquées. Vérification de 'assets' via REST (étape suivante)."
