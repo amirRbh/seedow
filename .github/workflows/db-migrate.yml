@@ -1,17 +1,13 @@
-# Applique les migrations `supabase/migrations/` au projet Supabase lié, via la
-# CLI officielle (`supabase db push`) — aucune édition manuelle du schéma.
-# Déclenchement manuel. Secrets requis :
-#   SUPABASE_ACCESS_TOKEN  (Personal Access Token « sbp_… », compte-niveau)
-#   SUPABASE_DB_PASSWORD   (mot de passe base du projet)
+# Applique les migrations `supabase/migrations/` au projet, via la CLI officielle
+# (`supabase db push --db-url`) — aucune édition manuelle du schéma, aucun access
+# token requis (juste l'URL de connexion base).
+# Déclenchement manuel. Secret requis :
+#   SUPABASE_DB_URL  (chaîne de connexion « Session pooler », port 5432, IPv4)
+#     ex. postgresql://postgres.<ref>:<motdepasse>@aws-0-<region>.pooler.supabase.com:5432/postgres
 name: DB migrate (Supabase)
 
 on:
   workflow_dispatch:
-    inputs:
-      project_ref:
-        description: "Référence du projet Supabase"
-        required: false
-        default: "jthpgbsxzzibqlfsatat"
 
 jobs:
   migrate:
@@ -25,22 +21,23 @@ jobs:
         with:
           version: latest
 
-      - name: Link project
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
-        run: supabase link --project-ref "${{ inputs.project_ref }}" --password "$SUPABASE_DB_PASSWORD"
-
       - name: Push migrations
         env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
-        run: supabase db push --password "$SUPABASE_DB_PASSWORD" --include-all --yes
-
-      - name: List tables (vérification)
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
-          supabase db push --password "$SUPABASE_DB_PASSWORD" --dry-run 2>&1 | tail -5 || true
-          echo "Migrations appliquées. Vérification de 'assets' à l'étape suivante (REST)."
+          if [ -z "$SUPABASE_DB_URL" ]; then
+            echo "::error::Secret SUPABASE_DB_URL manquant."; exit 1
+          fi
+          supabase db push --db-url "$SUPABASE_DB_URL" --include-all --yes
+
+      - name: Vérifier que 'assets' existe
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          echo "Tables publiques principales :"
+          psql "$SUPABASE_DB_URL" -Atc \
+            "select table_name from information_schema.tables where table_schema='public' order by 1;" | tr '\n' ' '
+          echo
+          echo -n "assets : "
+          psql "$SUPABASE_DB_URL" -Atc "select count(*) from public.assets;" \
+            && echo "→ 'assets' OK" || { echo "→ 'assets' ABSENTE"; exit 1; }
