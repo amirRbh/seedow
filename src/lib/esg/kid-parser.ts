@@ -21,18 +21,29 @@ export function parseFrenchNumber(s: string | null | undefined): number | null {
 }
 
 /**
- * Article SFDR (6/8/9) d'un KID : on n'accepte un « Article X » que s'il est en
- * contexte de durabilité (SFDR / règlement 2019/2088 / « durable »), pour éviter
- * de confondre avec un article juridique quelconque. null si absent.
+ * Article SFDR (6/8/9) d'un fonds. Les documents GECO regroupent KID +
+ * prospectus + règlement, truffés d'« article 6/8/9 » hors-sujet (dépositaire,
+ * comptes, taxonomie 2020/852…). Un simple « article X près de durabilité » y
+ * produit des faux positifs (ex. confondre l'art. 6 de la taxonomie 2020/852
+ * avec l'art. 6 SFDR). On n'accepte donc un numéro que s'il est **directement
+ * rattaché au règlement SFDR** (2019/2088). null si absent ou ambigu — jamais
+ * une classification inventée ou approximative.
  */
 export function parseKidSfdrArticle(text: string): number | null {
-  const ctx =
-    /(?:SFDR|2019\/2088|durabilit|informations? en mati[èe]re de durabilit)[\s\S]{0,200}?article\s*(6|8|9)\b/i;
-  const ctxRev = /article\s*(6|8|9)\b[\s\S]{0,120}?(?:SFDR|2019\/2088|durabilit)/i;
-  const m = text.match(ctx) ?? text.match(ctxRev);
-  if (!m) return null;
-  const n = Number(m[1]);
-  return n === 6 || n === 8 || n === 9 ? n : null;
+  // 1) Formulation de classification explicite (« au sens de l'article X … du
+  //    règlement SFDR / 2019/2088 ») — la plus fiable.
+  const authoritative =
+    /au sens de l['’]article\s*(6|8|9)\b[^.\n]{0,40}?\bdu r[èe]glement\s*(?:\(UE\)\s*)?(?:n[°ºo]?\s*)?(?:2019\/2088|SFDR)/i;
+  const auth = text.match(authoritative);
+  if (auth) return Number(auth[1]);
+
+  // 2) Sinon, toute référence « article X … du règlement SFDR / 2019/2088 » —
+  //    retenue uniquement si non ambiguë (une seule valeur distincte).
+  const bound =
+    /article\s*(6|8|9)\b[^.\n]{0,40}?\bdu r[èe]glement\s*(?:\(UE\)\s*)?(?:n[°ºo]?\s*)?(?:2019\/2088|SFDR)/gi;
+  const values = new Set<number>();
+  for (const m of text.matchAll(bound)) values.add(Number(m[1]));
+  return values.size === 1 ? [...values][0] : null;
 }
 
 const TER_MAX = 0.1; // 10 % : au-delà = erreur de lecture

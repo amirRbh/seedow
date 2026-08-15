@@ -11,15 +11,43 @@ describe("parseFrenchNumber", () => {
 });
 
 describe("parseKidSfdrArticle", () => {
-  it("extrait l'article en contexte de durabilité", () => {
-    expect(parseKidSfdrArticle("Ce produit relève de l'article 8 du règlement SFDR.")).toBe(8);
+  it("extrait l'article rattaché au règlement SFDR", () => {
+    // Formulation réelle d'un DIC Lazard (article 8).
     expect(
-      parseKidSfdrArticle("Informations en matière de durabilité : article 9 (2019/2088)."),
+      parseKidSfdrArticle(
+        "…des caractéristiques environnementales ou sociales au sens de l'article 8 du règlement SFDR.",
+      ),
+    ).toBe(8);
+    // Référence à l'annexe pré-contractuelle 2019/2088 (article 9).
+    expect(
+      parseKidSfdrArticle(
+        "Conformément à l'article 9, paragraphes 1 à 4bis, du règlement (UE) 2019/2088.",
+      ),
     ).toBe(9);
+    expect(parseKidSfdrArticle("Ce produit relève de l'article 6 du règlement SFDR.")).toBe(6);
   });
-  it("ignore un « article » hors contexte durabilité", () => {
+
+  it("rejette les « article » hors-SFDR d'un document groupé (prospectus + règlement)", () => {
+    // Cas réel : le PDF GECO mêle KID + règlement + taxonomie ; seul l'article
+    // rattaché à 2019/2088 compte, pas ceux du règlement interne ni de 2020/852.
+    const bundled = [
+      "ARTICLE 6 - LE DÉPOSITAIRE",
+      "ARTICLE 8 - LES COMPTES ET LE RAPPORT DE GESTION",
+      "ARTICLE 9 - MODALITÉS D'AFFECTATION DES SOMMES DISTRIBUABLES",
+      "conformément à l'article 6, premier alinéa, du règlement (UE) 2020/852",
+      "…environnementales ou sociales au sens de l'article 8 du règlement SFDR.",
+    ].join("\n");
+    expect(parseKidSfdrArticle(bundled)).toBe(8);
+  });
+
+  it("null hors contexte SFDR, ou si ambigu sans formulation de classification", () => {
     expect(parseKidSfdrArticle("Conformément à l'article 8 du code monétaire.")).toBeNull();
     expect(parseKidSfdrArticle("aucune mention")).toBeNull();
+    // Deux articles distincts rattachés à SFDR sans « au sens de … » → ambigu.
+    const ambiguous = ["ni l'article 8 du règlement SFDR", "ni l'article 9 du règlement SFDR"].join(
+      "\n",
+    );
+    expect(parseKidSfdrArticle(ambiguous)).toBeNull();
   });
 });
 
