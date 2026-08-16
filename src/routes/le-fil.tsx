@@ -110,9 +110,10 @@ function LeFil() {
                   />
                 </h2>
                 <p
-                  className={`mt-2.5 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-xs tabular-nums ${
-                    isGrowing ? "bg-mint/15 text-mint" : "bg-alert/15 text-alert"
+                  className={`mt-2.5 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-xs tabular-nums text-paper ${
+                    isGrowing ? "bg-mint" : "bg-alert"
                   }`}
+
                 >
                   <span aria-hidden>{isGrowing ? "▲" : "▼"}</span>
                   {isGrowing ? "+" : ""}
