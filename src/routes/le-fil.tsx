@@ -156,39 +156,40 @@ function LeFil() {
 
             {/* NŒUD 2 — MES INVESTISSEMENTS */}
             <Node index={2} active {...reveal(2)}>
-              <div className="flex items-center justify-between">
-                <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
-                  {t("le_fil.investments")}
-                </p>
+              <div className="flex items-baseline justify-between gap-3">
+                <SectionLabel>{t("le_fil.investments")}</SectionLabel>
                 {holdings.length > 0 && (
-                  <Link to="/portfolio" className="font-mono text-xs text-mint-ink">
+                  <Link
+                    to="/portfolio"
+                    className="font-mono text-xs text-mint-ink underline-offset-4 hover:underline"
+                  >
                     {t("le_fil.see_all")} →
                   </Link>
                 )}
               </div>
               {topHoldings.length > 0 ? (
-                <ul className="mt-3 flex flex-col divide-y divide-paper-3">
+                <ul className="mt-1 flex flex-col divide-y divide-paper-3/70">
                   {topHoldings.map((h) => (
-                    <li key={h.id} className="flex items-center gap-3 py-2.5 first:pt-0 last:pb-0">
+                    <li key={h.id} className="group flex items-center gap-3 py-3">
                       <button
                         type="button"
                         onClick={() => setSelectedHolding(h)}
                         aria-label={t("le_fil.asset_detail", { name: h.name })}
-                        className="min-w-0 flex-1 text-left outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 rounded-sm"
+                        className="min-w-0 flex-1 rounded-sm text-left outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
                       >
                         <p className="truncate text-sm font-medium text-ink">{h.name}</p>
-                        <p className="font-mono text-tag uppercase tracking-wide text-ink-3">
+                        <p className="mt-0.5 font-mono text-tag uppercase tracking-[0.12em] text-ink-3">
                           {h.category ?? "—"} · {formatPercent(h.allocationPct ?? 0, lang, 0)}
                         </p>
                       </button>
-                      <span className="font-mono text-sm text-ink tabular-nums">
+                      <span className="font-mono text-sm tabular-nums text-ink">
                         {formatCurrency(((h.allocationPct ?? 0) / 100) * totalValue, lang)}
                       </span>
                       <Link
                         to="/ethi"
                         search={{ intent: "why", q: h.ticker }}
                         aria-label={t("le_fil.why_asset", { name: h.name })}
-                        className="shrink-0 rounded-full border border-paper-3 px-2.5 py-1 font-mono text-xs text-ink-2 transition-colors hover:border-mint/40 hover:text-ink"
+                        className="shrink-0 font-mono text-tag uppercase tracking-[0.12em] text-ink-3 opacity-70 transition-opacity hover:text-mint-ink focus-visible:opacity-100 group-hover:opacity-100"
                       >
                         {t("le_fil.why")}
                       </Link>
@@ -196,8 +197,9 @@ function LeFil() {
                   ))}
                 </ul>
               ) : (
-                <p className="text-sm text-ink-3 mt-2">{t("le_fil.empty_holdings")}</p>
+                <p className="mt-2 text-sm text-ink-3">{t("le_fil.empty_holdings")}</p>
               )}
+
             </Node>
 
             {/* NŒUD 3 — MON IMPACT */}
