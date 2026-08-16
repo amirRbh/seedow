@@ -276,6 +276,7 @@ function LeFil() {
               <details className="group">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
                   <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-3">
+                    {t("le_fil.more")}
 
                   </span>
                   <svg
