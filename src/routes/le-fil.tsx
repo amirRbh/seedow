@@ -475,13 +475,14 @@ function ImpactRing({ score }: { score: number | null }) {
   const pct = score ?? 0;
   return (
     <div
-      className="relative w-16 h-16 rounded-full grid place-items-center shrink-0"
+      className="relative grid h-[76px] w-[76px] shrink-0 place-items-center rounded-full"
       style={{
         background: `conic-gradient(var(--color-mint) ${pct}%, var(--paper-3) ${pct}% 100%)`,
       }}
     >
-      <div className="absolute w-11 h-11 rounded-full bg-card" />
-      <span className="relative font-mono text-base font-bold text-ink">
+      <div className="absolute h-[58px] w-[58px] rounded-full bg-card" />
+      <span className="relative font-mono text-lg font-bold tabular-nums text-ink">
+
         {score === null ? (
           "—"
         ) : (
