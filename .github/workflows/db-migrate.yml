@@ -21,6 +21,27 @@ jobs:
         with:
           version: latest
 
+      # Certaines migrations « reschedule » un job pg_cron avec un cron.unschedule()
+      # non gardé, qui échoue sur une base vierge (job inexistant). On pré-enregistre
+      # ces noms de job pour rendre ces migrations rejouables — sans toucher aux
+      # fichiers de migration. No-op si pg_cron/les jobs existent déjà.
+      - name: Pré-enregistrer les jobs pg_cron (idempotence base vierge)
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          if [ -z "$SUPABASE_DB_URL" ]; then echo "SUPABASE_DB_URL absent — étape ignorée"; exit 0; fi
+          sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client
+          psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=0 <<'SQL'
+          do $$
+          begin
+            perform cron.schedule('refresh-market-data-hourly', '0 * * * *', 'select 1');
+            perform cron.schedule('refresh-market-data-daily',  '0 2 * * *', 'select 1');
+            perform cron.schedule('dispatch-notifications-daily','0 8 * * *', 'select 1');
+          exception when others then
+            raise notice 'pré-enregistrement cron ignoré : %', sqlerrm;
+          end $$;
+          SQL
+
       - name: Push migrations (accepte DB_URL OU access token + mot de passe)
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
@@ -39,4 +60,15 @@ jobs:
             echo "::error::Fournir soit SUPABASE_DB_URL, soit SUPABASE_ACCESS_TOKEN + SUPABASE_DB_PASSWORD."
             exit 1
           fi
-          echo "Migrations appliquées. Vérification de 'assets' via REST (étape suivante)."
+          echo "Migrations appliquées."
+
+      - name: Vérifier que 'assets' existe
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          if [ -z "$SUPABASE_DB_URL" ]; then echo "SUPABASE_DB_URL absent — vérif ignorée"; exit 0; fi
+          echo -n "Nb de tables publiques : "
+          psql "$SUPABASE_DB_URL" -Atc "select count(*) from information_schema.tables where table_schema='public';"
+          echo -n "assets : "
+          psql "$SUPABASE_DB_URL" -Atc "select count(*) || ' lignes' from public.assets;" \
+            && echo "→ 'assets' OK" || { echo "→ 'assets' ABSENTE"; exit 1; }
