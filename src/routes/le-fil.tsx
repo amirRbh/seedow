@@ -204,12 +204,11 @@ function LeFil() {
 
             {/* NŒUD 3 — MON IMPACT */}
             <Node index={3} active {...reveal(3)}>
-              <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
-                {t("le_fil.impact")}
-              </p>
-              <div className="flex items-center gap-4 mt-2">
+              <SectionLabel>{t("le_fil.impact")}</SectionLabel>
+              <div className="mt-3 flex items-center gap-4">
                 <ImpactRing score={impactScore} />
-                <div className="text-sm text-ink-2 leading-snug">
+                <div className="text-sm leading-snug text-ink-2">
+
                   {impactScore !== null ? (
                     <>
                       {t("le_fil.impact_weighted")}
