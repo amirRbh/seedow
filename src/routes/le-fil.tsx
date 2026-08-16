@@ -93,47 +93,48 @@ function LeFil() {
 
         <div className="relative px-5 pt-4">
           {/* Le fil vertical qui relie les nœuds */}
-          <div
-            aria-hidden
-            className="absolute left-[26px] top-6 bottom-6 w-px bg-gradient-to-b from-mint/70 via-paper-3 to-paper-3"
-          />
+          <div aria-hidden className="absolute left-[26px] top-8 bottom-10 w-px bg-paper-3" />
 
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-4">
             {/* NŒUD 1 — MON ARGENT */}
             <Node index={1} active {...reveal(1)}>
-              <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
-                {t("le_fil.money")}
-              </p>
-              <h2 className="font-value text-figure-hero text-ink mt-1 leading-none">
-                <AnimatedFigure
-                  value={totalValue}
-                  from={0}
-                  format={(v) => formatCurrency(v, lang)}
-                />
-              </h2>
-              <p
-                className={`font-mono text-sm mt-1 ${isGrowing ? "text-mint-ink" : "text-alert-ink"}`}
-              >
-                {isGrowing ? "+" : ""}
-                {formatPercent(returnPct, lang)} · {isGrowing ? "+" : ""}
-                {formatCurrency(gain, lang)}
-              </p>
+              <div className="-m-5 mb-0 rounded-t-[14px] bg-ink px-5 pb-6 pt-5">
+                <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-paper/60">
+                  {t("le_fil.money")}
+                </p>
+                <h2 className="font-value mt-2 text-figure-hero leading-none text-paper">
+                  <AnimatedFigure
+                    value={totalValue}
+                    from={0}
+                    format={(v) => formatCurrency(v, lang)}
+                  />
+                </h2>
+                <p
+                  className={`mt-2.5 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-xs tabular-nums text-paper ${
+                    isGrowing ? "bg-mint" : "bg-alert"
+                  }`}
+
+                >
+                  <span aria-hidden>{isGrowing ? "▲" : "▼"}</span>
+                  {isGrowing ? "+" : ""}
+                  {formatPercent(returnPct, lang)} · {isGrowing ? "+" : ""}
+                  {formatCurrency(gain, lang)}
+                </p>
+              </div>
 
               {/* Convictions rattachées au solde (moins de scroll : un seul nœud
                   « 3 secondes » = combien j'ai + ce que ça finance). */}
-              <div className="mt-4 border-t border-paper-3 pt-3">
-                <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
-                  {t("le_fil.finance")}
-                </p>
+              <div className="pt-5">
+                <SectionLabel>{t("le_fil.finance")}</SectionLabel>
                 {convictions.length > 0 ? (
-                  <div className="flex flex-wrap gap-2 mt-2">
+                  <div className="mt-3 flex flex-wrap gap-2">
                     {convictions.map((c, i) => (
                       <span
                         key={c}
-                        className={`font-mono text-xs px-3 py-1.5 rounded-full border ${
+                        className={`rounded-full border px-3 py-1.5 font-mono text-xs ${
                           i === 0
-                            ? "text-mint-ink border-mint/40 bg-mint/5"
-                            : "text-ink-2 border-paper-3"
+                            ? "border-mint/40 bg-mint/8 text-mint-ink"
+                            : "border-paper-3 bg-paper-2 text-ink-2"
                         }`}
                       >
                         {c}
@@ -141,53 +142,55 @@ function LeFil() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-ink-3 mt-2">{t("le_fil.define_convictions")}</p>
+                  <p className="mt-2 text-sm text-ink-3">{t("le_fil.define_convictions")}</p>
                 )}
                 <Link
                   to="/discover"
                   search={{ theme: portfolio?.causes?.[0] }}
-                  className="mt-3 inline-block font-mono text-xs text-mint-ink"
+                  className="mt-3.5 inline-block font-mono text-xs text-mint-ink underline-offset-4 hover:underline"
                 >
                   {t("le_fil.explore_aligned")} →
                 </Link>
               </div>
             </Node>
 
+
             {/* NŒUD 2 — MES INVESTISSEMENTS */}
             <Node index={2} active {...reveal(2)}>
-              <div className="flex items-center justify-between">
-                <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
-                  {t("le_fil.investments")}
-                </p>
+              <div className="flex items-baseline justify-between gap-3">
+                <SectionLabel>{t("le_fil.investments")}</SectionLabel>
                 {holdings.length > 0 && (
-                  <Link to="/portfolio" className="font-mono text-xs text-mint-ink">
+                  <Link
+                    to="/portfolio"
+                    className="font-mono text-xs text-mint-ink underline-offset-4 hover:underline"
+                  >
                     {t("le_fil.see_all")} →
                   </Link>
                 )}
               </div>
               {topHoldings.length > 0 ? (
-                <ul className="mt-3 flex flex-col divide-y divide-paper-3">
+                <ul className="mt-1 flex flex-col divide-y divide-paper-3/70">
                   {topHoldings.map((h) => (
-                    <li key={h.id} className="flex items-center gap-3 py-2.5 first:pt-0 last:pb-0">
+                    <li key={h.id} className="group flex items-center gap-3 py-3">
                       <button
                         type="button"
                         onClick={() => setSelectedHolding(h)}
                         aria-label={t("le_fil.asset_detail", { name: h.name })}
-                        className="min-w-0 flex-1 text-left outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 rounded-sm"
+                        className="min-w-0 flex-1 rounded-sm text-left outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
                       >
                         <p className="truncate text-sm font-medium text-ink">{h.name}</p>
-                        <p className="font-mono text-tag uppercase tracking-wide text-ink-3">
+                        <p className="mt-0.5 font-mono text-tag uppercase tracking-[0.12em] text-ink-3">
                           {h.category ?? "—"} · {formatPercent(h.allocationPct ?? 0, lang, 0)}
                         </p>
                       </button>
-                      <span className="font-mono text-sm text-ink tabular-nums">
+                      <span className="font-mono text-sm tabular-nums text-ink">
                         {formatCurrency(((h.allocationPct ?? 0) / 100) * totalValue, lang)}
                       </span>
                       <Link
                         to="/ethi"
                         search={{ intent: "why", q: h.ticker }}
                         aria-label={t("le_fil.why_asset", { name: h.name })}
-                        className="shrink-0 rounded-full border border-paper-3 px-2.5 py-1 font-mono text-xs text-ink-2 transition-colors hover:border-mint/40 hover:text-ink"
+                        className="shrink-0 font-mono text-tag uppercase tracking-[0.12em] text-ink-3 opacity-70 transition-opacity hover:text-mint-ink focus-visible:opacity-100 group-hover:opacity-100"
                       >
                         {t("le_fil.why")}
                       </Link>
@@ -195,18 +198,18 @@ function LeFil() {
                   ))}
                 </ul>
               ) : (
-                <p className="text-sm text-ink-3 mt-2">{t("le_fil.empty_holdings")}</p>
+                <p className="mt-2 text-sm text-ink-3">{t("le_fil.empty_holdings")}</p>
               )}
+
             </Node>
 
             {/* NŒUD 3 — MON IMPACT */}
             <Node index={3} active {...reveal(3)}>
-              <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
-                {t("le_fil.impact")}
-              </p>
-              <div className="flex items-center gap-4 mt-2">
+              <SectionLabel>{t("le_fil.impact")}</SectionLabel>
+              <div className="mt-3 flex items-center gap-4">
                 <ImpactRing score={impactScore} />
-                <div className="text-sm text-ink-2 leading-snug">
+                <div className="text-sm leading-snug text-ink-2">
+
                   {impactScore !== null ? (
                     <>
                       {t("le_fil.impact_weighted")}
@@ -246,11 +249,10 @@ function LeFil() {
               {/* Équivalences concrètes — affichées UNIQUEMENT si le moteur
                   d'impact le juge honnête (empreinte mesurée + couverture ≥ 50 %). */}
               {impact?.presentation?.show && impact.presentation.equivalences.length > 0 && (
-                <div className="mt-3 border-t border-paper-3 pt-3">
-                  <p className="font-mono text-tag uppercase tracking-wide text-ink-3">
-                    {t("le_fil.equivalences_title")}
-                  </p>
-                  <ul className="mt-2 flex flex-col gap-1.5">
+                <div className="mt-4 rounded-[10px] border border-paper-3 bg-paper-2 p-3.5">
+                  <SectionLabel>{t("le_fil.equivalences_title")}</SectionLabel>
+                  <ul className="mt-2.5 flex flex-col gap-2">
+
                     {impact.presentation.equivalences.slice(0, 3).map((e) => (
                       <li key={e.factorId} className="flex items-baseline justify-between gap-3">
                         <span className="text-sm text-ink-2">{t(e.labelKey)}</span>
@@ -274,8 +276,9 @@ function LeFil() {
             <Node index={4} active={false} {...reveal(4)}>
               <details className="group">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
-                  <span className="text-caption uppercase tracking-wider text-ink-3 font-mono">
+                  <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-3">
                     {t("le_fil.more")}
+
                   </span>
                   <svg
                     viewBox="0 0 24 24"
@@ -344,20 +347,18 @@ function LeFil() {
           </div>
 
           {/* Ethi — actions contextuelles, jamais un chat vide */}
-          <motion.div {...reveal(7)} className="mt-5">
-            <p className="text-caption uppercase tracking-wider text-ink-3 font-mono mb-2">
-              {t("le_fil.ask_ethi")}
-            </p>
-            <div className="flex flex-wrap gap-2">
+          <motion.div {...reveal(7)} className="mt-6 pl-9">
+            <SectionLabel>{t("le_fil.ask_ethi")}</SectionLabel>
+            <div className="mt-3 flex flex-wrap gap-2">
               {ethiActions.map((a) => (
                 <Link
                   key={a.intent}
                   to="/ethi"
                   search={{ intent: a.intent, q: undefined }}
-                  className={`font-mono text-xs px-3 py-2 rounded-full border transition-transform hover:scale-[1.03] ${
+                  className={`inline-flex h-9 items-center rounded-full border px-3.5 font-mono text-xs transition-colors ${
                     a.primary
-                      ? "text-white bg-mint border-mint"
-                      : "text-ink-2 border-paper-3 bg-card"
+                      ? "border-ink bg-ink text-paper hover:bg-ink/90"
+                      : "border-paper-3 bg-paper-2 text-ink-2 hover:border-ink/30 hover:text-ink"
                   }`}
                 >
                   {t(a.key)}
@@ -365,6 +366,7 @@ function LeFil() {
               ))}
             </div>
           </motion.div>
+
         </div>
       </div>
 
@@ -376,6 +378,13 @@ function LeFil() {
 
       <BottomNavigation />
     </div>
+  );
+}
+
+/** Intitulé de section : traitement typographique unique dans tout le fil. */
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-3">{children}</p>
   );
 }
 
@@ -394,14 +403,16 @@ function Node({
     <motion.div {...motionProps} className="relative pl-9">
       <span
         aria-hidden
-        className={`absolute left-[18px] top-2 -translate-x-1/2 w-3 h-3 rounded-full bg-paper border-[2.5px] ${
-          active ? "border-mint" : "border-paper-3"
+        className={`absolute left-[18px] top-[26px] h-[9px] w-[9px] -translate-x-1/2 rounded-full ring-4 ring-paper ${
+          active ? "bg-mint" : "border border-paper-3 bg-paper"
         }`}
       />
-      <div className="rounded-[14px] border border-paper-3 bg-card p-4 shadow-sm">{children}</div>
+      <div className="rounded-[14px] border border-paper-3 bg-card p-5">{children}</div>
     </motion.div>
   );
 }
+
+
 
 /**
  * Ligne de comparaison honnête : deux barres (mon Fil vs indice), la couleur
@@ -465,13 +476,14 @@ function ImpactRing({ score }: { score: number | null }) {
   const pct = score ?? 0;
   return (
     <div
-      className="relative w-16 h-16 rounded-full grid place-items-center shrink-0"
+      className="relative grid h-[76px] w-[76px] shrink-0 place-items-center rounded-full"
       style={{
         background: `conic-gradient(var(--color-mint) ${pct}%, var(--paper-3) ${pct}% 100%)`,
       }}
     >
-      <div className="absolute w-11 h-11 rounded-full bg-card" />
-      <span className="relative font-mono text-base font-bold text-ink">
+      <div className="absolute h-[58px] w-[58px] rounded-full bg-card" />
+      <span className="relative font-mono text-lg font-bold tabular-nums text-ink">
+
         {score === null ? (
           "—"
         ) : (
