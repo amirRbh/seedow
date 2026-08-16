@@ -93,47 +93,47 @@ function LeFil() {
 
         <div className="relative px-5 pt-4">
           {/* Le fil vertical qui relie les nœuds */}
-          <div
-            aria-hidden
-            className="absolute left-[26px] top-6 bottom-6 w-px bg-gradient-to-b from-mint/70 via-paper-3 to-paper-3"
-          />
+          <div aria-hidden className="absolute left-[26px] top-8 bottom-10 w-px bg-paper-3" />
 
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-4">
             {/* NŒUD 1 — MON ARGENT */}
             <Node index={1} active {...reveal(1)}>
-              <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
-                {t("le_fil.money")}
-              </p>
-              <h2 className="font-value text-figure-hero text-ink mt-1 leading-none">
-                <AnimatedFigure
-                  value={totalValue}
-                  from={0}
-                  format={(v) => formatCurrency(v, lang)}
-                />
-              </h2>
-              <p
-                className={`font-mono text-sm mt-1 ${isGrowing ? "text-mint-ink" : "text-alert-ink"}`}
-              >
-                {isGrowing ? "+" : ""}
-                {formatPercent(returnPct, lang)} · {isGrowing ? "+" : ""}
-                {formatCurrency(gain, lang)}
-              </p>
+              <div className="-m-5 mb-0 rounded-t-[14px] bg-ink px-5 pb-6 pt-5">
+                <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-paper/60">
+                  {t("le_fil.money")}
+                </p>
+                <h2 className="font-value mt-2 text-figure-hero leading-none text-paper">
+                  <AnimatedFigure
+                    value={totalValue}
+                    from={0}
+                    format={(v) => formatCurrency(v, lang)}
+                  />
+                </h2>
+                <p
+                  className={`mt-2.5 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-xs tabular-nums ${
+                    isGrowing ? "bg-mint/15 text-mint" : "bg-alert/15 text-alert"
+                  }`}
+                >
+                  <span aria-hidden>{isGrowing ? "▲" : "▼"}</span>
+                  {isGrowing ? "+" : ""}
+                  {formatPercent(returnPct, lang)} · {isGrowing ? "+" : ""}
+                  {formatCurrency(gain, lang)}
+                </p>
+              </div>
 
               {/* Convictions rattachées au solde (moins de scroll : un seul nœud
                   « 3 secondes » = combien j'ai + ce que ça finance). */}
-              <div className="mt-4 border-t border-paper-3 pt-3">
-                <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
-                  {t("le_fil.finance")}
-                </p>
+              <div className="pt-5">
+                <SectionLabel>{t("le_fil.finance")}</SectionLabel>
                 {convictions.length > 0 ? (
-                  <div className="flex flex-wrap gap-2 mt-2">
+                  <div className="mt-3 flex flex-wrap gap-2">
                     {convictions.map((c, i) => (
                       <span
                         key={c}
-                        className={`font-mono text-xs px-3 py-1.5 rounded-full border ${
+                        className={`rounded-full border px-3 py-1.5 font-mono text-xs ${
                           i === 0
-                            ? "text-mint-ink border-mint/40 bg-mint/5"
-                            : "text-ink-2 border-paper-3"
+                            ? "border-mint/40 bg-mint/8 text-mint-ink"
+                            : "border-paper-3 bg-paper-2 text-ink-2"
                         }`}
                       >
                         {c}
@@ -141,17 +141,18 @@ function LeFil() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-ink-3 mt-2">{t("le_fil.define_convictions")}</p>
+                  <p className="mt-2 text-sm text-ink-3">{t("le_fil.define_convictions")}</p>
                 )}
                 <Link
                   to="/discover"
                   search={{ theme: portfolio?.causes?.[0] }}
-                  className="mt-3 inline-block font-mono text-xs text-mint-ink"
+                  className="mt-3.5 inline-block font-mono text-xs text-mint-ink underline-offset-4 hover:underline"
                 >
                   {t("le_fil.explore_aligned")} →
                 </Link>
               </div>
             </Node>
+
 
             {/* NŒUD 2 — MES INVESTISSEMENTS */}
             <Node index={2} active {...reveal(2)}>
