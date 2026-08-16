@@ -346,20 +346,18 @@ function LeFil() {
           </div>
 
           {/* Ethi — actions contextuelles, jamais un chat vide */}
-          <motion.div {...reveal(7)} className="mt-5">
-            <p className="text-caption uppercase tracking-wider text-ink-3 font-mono mb-2">
-              {t("le_fil.ask_ethi")}
-            </p>
-            <div className="flex flex-wrap gap-2">
+          <motion.div {...reveal(7)} className="mt-6 pl-9">
+            <SectionLabel>{t("le_fil.ask_ethi")}</SectionLabel>
+            <div className="mt-3 flex flex-wrap gap-2">
               {ethiActions.map((a) => (
                 <Link
                   key={a.intent}
                   to="/ethi"
                   search={{ intent: a.intent, q: undefined }}
-                  className={`font-mono text-xs px-3 py-2 rounded-full border transition-transform hover:scale-[1.03] ${
+                  className={`inline-flex h-9 items-center rounded-full border px-3.5 font-mono text-xs transition-colors ${
                     a.primary
-                      ? "text-white bg-mint border-mint"
-                      : "text-ink-2 border-paper-3 bg-card"
+                      ? "border-ink bg-ink text-paper hover:bg-ink/90"
+                      : "border-paper-3 bg-paper-2 text-ink-2 hover:border-ink/30 hover:text-ink"
                   }`}
                 >
                   {t(a.key)}
@@ -367,6 +365,7 @@ function LeFil() {
               ))}
             </div>
           </motion.div>
+
         </div>
       </div>
 
