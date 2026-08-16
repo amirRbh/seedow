@@ -50,8 +50,8 @@ import { Route as ApiEthiRouteImport } from './routes/api.ethi'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as ApiPublicEsgPreviewRouteImport } from './routes/api.public.esg-preview'
-import { Route as AuthenticatedAdminBetaRouteImport } from './routes/_authenticated/admin.beta'
 import { Route as AuthenticatedAdminDataRouteImport } from './routes/_authenticated/admin.data'
+import { Route as AuthenticatedAdminBetaRouteImport } from './routes/_authenticated/admin.beta'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 
@@ -219,16 +219,17 @@ const HooksRefreshMarketDataRoute = HooksRefreshMarketDataRouteImport.update({
   path: '/hooks/refresh-market-data',
   getParentRoute: () => rootRouteImport,
 } as any)
-const HooksRecomputeIngestionPlanRoute = HooksRecomputeIngestionPlanRouteImport.update({
-  id: '/hooks/recompute-ingestion-plan',
-  path: '/hooks/recompute-ingestion-plan',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const HooksRecomputeRiskModelRoute = HooksRecomputeRiskModelRouteImport.update({
   id: '/hooks/recompute-risk-model',
   path: '/hooks/recompute-risk-model',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HooksRecomputeIngestionPlanRoute =
+  HooksRecomputeIngestionPlanRouteImport.update({
+    id: '/hooks/recompute-ingestion-plan',
+    path: '/hooks/recompute-ingestion-plan',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const HooksDispatchNotificationsRoute =
   HooksDispatchNotificationsRouteImport.update({
     id: '/hooks/dispatch-notifications',
@@ -262,14 +263,14 @@ const ApiPublicEsgPreviewRoute = ApiPublicEsgPreviewRouteImport.update({
   path: '/api/public/esg-preview',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedAdminBetaRoute = AuthenticatedAdminBetaRouteImport.update({
-  id: '/admin/beta',
-  path: '/admin/beta',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedAdminDataRoute = AuthenticatedAdminDataRouteImport.update({
   id: '/admin/data',
   path: '/admin/data',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminBetaRoute = AuthenticatedAdminBetaRouteImport.update({
+  id: '/admin/beta',
+  path: '/admin/beta',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const Char91DotmcpChar93InvokeToolToolRoute =
@@ -839,18 +840,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HooksRefreshMarketDataRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/hooks/recompute-ingestion-plan': {
-      id: '/hooks/recompute-ingestion-plan'
-      path: '/hooks/recompute-ingestion-plan'
-      fullPath: '/hooks/recompute-ingestion-plan'
-      preLoaderRoute: typeof HooksRecomputeIngestionPlanRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/hooks/recompute-risk-model': {
       id: '/hooks/recompute-risk-model'
       path: '/hooks/recompute-risk-model'
       fullPath: '/hooks/recompute-risk-model'
       preLoaderRoute: typeof HooksRecomputeRiskModelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hooks/recompute-ingestion-plan': {
+      id: '/hooks/recompute-ingestion-plan'
+      path: '/hooks/recompute-ingestion-plan'
+      fullPath: '/hooks/recompute-ingestion-plan'
+      preLoaderRoute: typeof HooksRecomputeIngestionPlanRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/hooks/dispatch-notifications': {
@@ -895,18 +896,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicEsgPreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/admin/beta': {
-      id: '/_authenticated/admin/beta'
-      path: '/admin/beta'
-      fullPath: '/admin/beta'
-      preLoaderRoute: typeof AuthenticatedAdminBetaRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/admin/data': {
       id: '/_authenticated/admin/data'
       path: '/admin/data'
       fullPath: '/admin/data'
       preLoaderRoute: typeof AuthenticatedAdminDataRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/beta': {
+      id: '/_authenticated/admin/beta'
+      path: '/admin/beta'
+      fullPath: '/admin/beta'
+      preLoaderRoute: typeof AuthenticatedAdminBetaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/.mcp/invoke-tool/$tool': {
