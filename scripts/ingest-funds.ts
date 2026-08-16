@@ -186,11 +186,69 @@ export async function ingestIsin(isin: string): Promise<IngestionResult> {
 }
 
 /**
- * Persiste un résultat en base (si SEEDOW_PERSIST + Supabase configuré) : matche
- * l'asset par ISIN, écrit les observations sourcées + MAJ canonique (sfdr_article,
- * ter) via le writer existant. N'invente rien ; sans asset correspondant → skip.
+ * Déduit l'`asset_class` (enum requis, NOT NULL) à partir de la classification
+ * AMF réelle renvoyée par GECO. Mapping conservateur ; sans correspondance nette
+ * (fonds « mixtes », diversifiés…), on retombe sur `thematic` (bucket « autre »
+ * déjà utilisé par le seed). La classification AMF réelle reste conservée telle
+ * quelle dans `description` ET dans une observation dédiée — rien n'est perdu ni
+ * inventé, seul le bucket enum est approximé pour satisfaire la contrainte NOT NULL.
  */
-async function persist(result: IngestionResult): Promise<string> {
+export function deriveAssetClass(identity: GecoIdentity): string {
+  const s = `${identity.amfClassification ?? ""} ${identity.legalNature ?? ""}`.toLowerCase();
+  if (/mon[ée]taire/.test(s)) return "cash";
+  if (/immobili|opci|scpi|reit/.test(s)) return "reit";
+  if (/mati[èe]res? premi[èe]res?|commodit/.test(s)) return "commodity";
+  if (/obligation|cr[ée]ance|taux|bond/.test(s))
+    return /souverain|[ée]tat|public|govern/.test(s) ? "sov_bond" : "corporate_bond";
+  if (/action|[ée]quity|share/.test(s))
+    return /[ée]mergent|emerging/.test(s) ? "equity_em" : "equity_dev";
+  return "thematic";
+}
+
+/**
+ * Trouve l'asset par ISIN, sinon le CRÉE depuis l'identité GECO réelle.
+ * Idempotent : `isin` et `ticker` (= ISIN, faute de symbole marché côté GECO)
+ * sont UNIQUE → aucun doublon au rejeu. On ne renseigne que des champs réels ;
+ * un champ absent reste au défaut du schéma (jamais une valeur inventée). Un
+ * asset auto-créé est `is_active = false` (non revu éditorialement).
+ */
+export async function ensureAsset(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  admin: any,
+  isin: string,
+  identity: GecoIdentity,
+): Promise<{ id: string; created: boolean }> {
+  const { data: existing } = await admin.from("assets").select("id").eq("isin", isin).maybeSingle();
+  if (existing?.id) return { id: existing.id, created: false };
+
+  const description =
+    [identity.amfClassification, identity.legalNature, identity.domicile]
+      .filter(Boolean)
+      .join(" · ") || null;
+  const row: Record<string, unknown> = {
+    ticker: isin,
+    isin,
+    name: identity.fundName ?? identity.shareName ?? isin,
+    issuer: identity.managementCompany,
+    asset_class: deriveAssetClass(identity),
+    currency: identity.currency ?? "EUR",
+    description,
+    is_active: false,
+  };
+  const { data: created, error } = await admin.from("assets").insert(row).select("id").single();
+  if (error) throw new Error(`create asset ${isin}: ${error.message}`);
+  return { id: created.id, created: true };
+}
+
+/**
+ * Persiste un résultat en base (si SEEDOW_PERSIST + Supabase configuré) :
+ * enrichit l'asset existant OU le crée s'il est absent (via `ensureAsset`), puis
+ * écrit les observations sourcées + MAJ canonique (sfdr_article, ter) via le
+ * writer existant. Idempotent : purge les observations `amf_geco` antérieures de
+ * l'asset avant réinsertion (le rejeu ne duplique ni asset ni observations ;
+ * sources/URL/dates conservées). N'invente rien : champ absent → non écrit.
+ */
+export async function persist(result: IngestionResult): Promise<string> {
   if (result.status !== "ok" || !result.identity) return "skip (non ok)";
   const { supabaseAdmin } = await import("../src/integrations/supabase/client.server");
   const { persistObservations } = await import("../src/lib/data-engine/persist");
@@ -198,12 +256,7 @@ async function persist(result: IngestionResult): Promise<string> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const admin = supabaseAdmin as any;
 
-  const { data: asset } = await admin
-    .from("assets")
-    .select("id")
-    .eq("isin", result.isin)
-    .maybeSingle();
-  if (!asset?.id) return "skip (ISIN absent de assets)";
+  const { id: assetId, created } = await ensureAsset(admin, result.isin, result.identity);
 
   const src =
     result.sources.documents ?? result.sources.compartment ?? gecoUrls.resolve(result.isin);
@@ -225,14 +278,34 @@ async function persist(result: IngestionResult): Promise<string> {
   if (result.identity.fundName) push("fund_name", result.identity.fundName, src);
   if (result.identity.managementCompany)
     push("management_company", result.identity.managementCompany, src);
+  if (result.identity.amfClassification)
+    push(
+      "amf_classification",
+      result.identity.amfClassification,
+      result.sources.compartment ?? src,
+    );
   if (result.pdfDerived.sfdrArticle != null && result.pdfDerived.sourceUrl)
     push("sfdr_article", result.pdfDerived.sfdrArticle, result.pdfDerived.sourceUrl);
   if (result.pdfDerived.ongoingChargesPct != null && result.pdfDerived.sourceUrl)
     push("ter", result.pdfDerived.ongoingChargesPct / 100, result.pdfDerived.sourceUrl);
   for (const d of result.documents) push("kid_document_url", d.url, d.url);
 
-  const r = await persistObservations(supabaseObservationWriter(supabaseAdmin), asset.id, obs);
-  return `persisted ${r.observationsInserted} obs, canonique: ${r.canonicalFieldsUpdated.join(",") || "—"}`;
+  // Idempotence : supprime les observations amf_geco antérieures de cet asset
+  // avant de réécrire le lot courant (pas de doublons au rejeu).
+  const { data: srcRow } = await admin
+    .from("data_sources")
+    .select("id")
+    .eq("key", "amf_geco")
+    .maybeSingle();
+  if (srcRow?.id)
+    await admin
+      .from("data_observations")
+      .delete()
+      .eq("asset_id", assetId)
+      .eq("source_id", srcRow.id);
+
+  const r = await persistObservations(supabaseObservationWriter(supabaseAdmin), assetId, obs);
+  return `${created ? "created" : "updated"} asset · ${r.observationsInserted} obs, canonique: ${r.canonicalFieldsUpdated.join(",") || "—"}`;
 }
 
 const DEMO_ISINS = ["FR0010752543", "FR0013306735", "FR0011291657", "FR0013478591", "FR0010929836"];
@@ -283,7 +356,9 @@ async function main() {
   console.log(`\n--- ${ok} ok, ${unavailable} unavailable, ${isins.length} total ---`);
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+if (import.meta.main) {
+  main().catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
+}
