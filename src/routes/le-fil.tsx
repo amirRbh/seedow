@@ -380,6 +380,13 @@ function LeFil() {
   );
 }
 
+/** Intitulé de section : traitement typographique unique dans tout le fil. */
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-3">{children}</p>
+  );
+}
+
 /** Un nœud du fil : puce sur la ligne + carte de contenu. */
 function Node({
   index,
@@ -395,13 +402,15 @@ function Node({
     <motion.div {...motionProps} className="relative pl-9">
       <span
         aria-hidden
-        className={`absolute left-[18px] top-2 -translate-x-1/2 w-3 h-3 rounded-full bg-paper border-[2.5px] ${
-          active ? "border-mint" : "border-paper-3"
+        className={`absolute left-[18px] top-[26px] h-[9px] w-[9px] -translate-x-1/2 rounded-full ring-4 ring-paper ${
+          active ? "bg-mint" : "border border-paper-3 bg-paper"
         }`}
       />
-      <div className="rounded-[14px] border border-paper-3 bg-card p-4 shadow-sm">{children}</div>
+      <div className="rounded-[14px] border border-paper-3 bg-card p-5">{children}</div>
     </motion.div>
   );
+}
+
 }
 
 /**
