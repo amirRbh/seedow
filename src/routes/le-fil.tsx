@@ -411,7 +411,7 @@ function Node({
   );
 }
 
-}
+
 
 /**
  * Ligne de comparaison honnête : deux barres (mon Fil vs indice), la couleur
