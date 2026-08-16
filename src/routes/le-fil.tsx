@@ -275,8 +275,8 @@ function LeFil() {
             <Node index={4} active={false} {...reveal(4)}>
               <details className="group">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
-                  <span className="text-caption uppercase tracking-wider text-ink-3 font-mono">
-                    {t("le_fil.more")}
+                  <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-3">
+
                   </span>
                   <svg
                     viewBox="0 0 24 24"
