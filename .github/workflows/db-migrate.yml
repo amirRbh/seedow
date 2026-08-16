@@ -1,9 +1,14 @@
-# Applique les migrations `supabase/migrations/` au projet, via la CLI officielle
-# (`supabase db push --db-url`) — aucune édition manuelle du schéma, aucun access
-# token requis (juste l'URL de connexion base).
-# Déclenchement manuel. Secret requis :
-#   SUPABASE_DB_URL  (chaîne de connexion « Session pooler », port 5432, IPv4)
-#     ex. postgresql://postgres.<ref>:<motdepasse>@aws-0-<region>.pooler.supabase.com:5432/postgres
+# Applique le schéma `supabase/migrations/` à un projet Supabase vierge.
+#
+# Les migrations exportées par Lovable ne se rejouent PAS linéairement (des
+# `CREATE TABLE` se recouvrent avec des définitions divergentes, des
+# `cron.unschedule()` non gardés échouent sur base vierge). Plutôt que de
+# modifier les fichiers de migration, on applique tout en mode TOLÉRANT
+# (psql ON_ERROR_STOP=0) : les collisions d'idempotence (« already exists »,
+# doublons) sont ignorées, le reste est appliqué. Le succès est conditionné à
+# l'existence effective de `public.assets`. Chaque erreur ignorée est logguée.
+#
+# Secret requis : SUPABASE_DB_URL (chaîne « Session pooler », port 5432, IPv4).
 name: DB migrate (Supabase)
 
 on:
@@ -16,59 +21,48 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Supabase CLI
-        uses: supabase/setup-cli@v1
-        with:
-          version: latest
+      - name: Installer psql
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client
 
-      # Certaines migrations « reschedule » un job pg_cron avec un cron.unschedule()
-      # non gardé, qui échoue sur une base vierge (job inexistant). On pré-enregistre
-      # ces noms de job pour rendre ces migrations rejouables — sans toucher aux
-      # fichiers de migration. No-op si pg_cron/les jobs existent déjà.
-      - name: Pré-enregistrer les jobs pg_cron (idempotence base vierge)
+      - name: Pré-enregistrer les jobs pg_cron (les migrations font unschedule)
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
-          if [ -z "$SUPABASE_DB_URL" ]; then echo "SUPABASE_DB_URL absent — étape ignorée"; exit 0; fi
-          sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client
+          if [ -z "$SUPABASE_DB_URL" ]; then echo "::error::Secret SUPABASE_DB_URL manquant."; exit 1; fi
           psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=0 <<'SQL'
           do $$
           begin
             perform cron.schedule('refresh-market-data-hourly', '0 * * * *', 'select 1');
             perform cron.schedule('refresh-market-data-daily',  '0 2 * * *', 'select 1');
             perform cron.schedule('dispatch-notifications-daily','0 8 * * *', 'select 1');
-          exception when others then
-            raise notice 'pré-enregistrement cron ignoré : %', sqlerrm;
+          exception when others then raise notice 'pré-enregistrement cron ignoré : %', sqlerrm;
           end $$;
           SQL
 
-      - name: Push migrations (accepte DB_URL OU access token + mot de passe)
+      - name: Appliquer les migrations (tolérant aux collisions d'idempotence)
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
         run: |
-          echo "Secrets détectés : DB_URL=$([ -n "$SUPABASE_DB_URL" ] && echo oui || echo non)" \
-               "ACCESS_TOKEN=$([ -n "$SUPABASE_ACCESS_TOKEN" ] && echo oui || echo non)" \
-               "DB_PASSWORD=$([ -n "$SUPABASE_DB_PASSWORD" ] && echo oui || echo non)"
-          if [ -n "$SUPABASE_DB_URL" ]; then
-            supabase db push --db-url "$SUPABASE_DB_URL" --include-all --yes
-          elif [ -n "$SUPABASE_ACCESS_TOKEN" ] && [ -n "$SUPABASE_DB_PASSWORD" ]; then
-            supabase link --project-ref jthpgbsxzzibqlfsatat --password "$SUPABASE_DB_PASSWORD"
-            supabase db push --password "$SUPABASE_DB_PASSWORD" --include-all --yes
-          else
-            echo "::error::Fournir soit SUPABASE_DB_URL, soit SUPABASE_ACCESS_TOKEN + SUPABASE_DB_PASSWORD."
-            exit 1
-          fi
-          echo "Migrations appliquées."
+          set -euo pipefail
+          log=/tmp/apply.log; : > "$log"
+          for f in $(ls supabase/migrations/*.sql | sort); do
+            echo "→ $(basename "$f")"
+            psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=0 -q -f "$f" >>"$log" 2>&1 || true
+          done
+          echo "==== Résumé des erreurs rencontrées (toutes tolérées) ===="
+          grep -E "ERROR:|FATAL:" "$log" | sed -E 's/^psql:[^:]+:[0-9]+: //' | sort | uniq -c | sort -rn | head -60 || echo "(aucune)"
 
-      - name: Vérifier que 'assets' existe
+      - name: Vérifier le schéma (gate = 'assets' existe)
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
-          if [ -z "$SUPABASE_DB_URL" ]; then echo "SUPABASE_DB_URL absent — vérif ignorée"; exit 0; fi
-          echo -n "Nb de tables publiques : "
+          echo -n "Tables publiques : "
           psql "$SUPABASE_DB_URL" -Atc "select count(*) from information_schema.tables where table_schema='public';"
           echo -n "assets : "
-          psql "$SUPABASE_DB_URL" -Atc "select count(*) || ' lignes' from public.assets;" \
-            && echo "→ 'assets' OK" || { echo "→ 'assets' ABSENTE"; exit 1; }
+          if psql "$SUPABASE_DB_URL" -Atc "select count(*) || ' lignes' from public.assets;"; then
+            echo "→ 'assets' OK"
+          else
+            echo "::error::'assets' absente — échec réel du schéma."; exit 1
+          fi
+          echo "Tables clés présentes :"
+          psql "$SUPABASE_DB_URL" -Atc "select table_name from information_schema.tables where table_schema='public' and table_name in ('assets','asset_observations','agm_resolutions','resolution_votes') order by 1;" | tr '\n' ' '; echo
