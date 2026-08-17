@@ -18,6 +18,7 @@ import { Route as ReglagesRouteImport } from './routes/reglages'
 import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as ObservatoireRouteImport } from './routes/observatoire'
 import { Route as ObjectifsRouteImport } from './routes/objectifs'
 import { Route as MethodologieRouteImport } from './routes/methodologie'
 import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
@@ -45,6 +46,7 @@ import { Route as HooksRefreshMarketDataRouteImport } from './routes/hooks/refre
 import { Route as HooksRecomputeRiskModelRouteImport } from './routes/hooks/recompute-risk-model'
 import { Route as HooksRecomputeIngestionPlanRouteImport } from './routes/hooks/recompute-ingestion-plan'
 import { Route as HooksDispatchNotificationsRouteImport } from './routes/hooks/dispatch-notifications'
+import { Route as FondsIsinRouteImport } from './routes/fonds.$isin'
 import { Route as CoursSlugRouteImport } from './routes/cours.$slug'
 import { Route as ApiEthiRouteImport } from './routes/api.ethi'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
@@ -98,6 +100,11 @@ const PortfolioRoute = PortfolioRouteImport.update({
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ObservatoireRoute = ObservatoireRouteImport.update({
+  id: '/observatoire',
+  path: '/observatoire',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ObjectifsRoute = ObjectifsRouteImport.update({
@@ -236,6 +243,11 @@ const HooksDispatchNotificationsRoute =
     path: '/hooks/dispatch-notifications',
     getParentRoute: () => rootRouteImport,
   } as any)
+const FondsIsinRoute = FondsIsinRouteImport.update({
+  id: '/fonds/$isin',
+  path: '/fonds/$isin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CoursSlugRoute = CoursSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -305,6 +317,7 @@ export interface FileRoutesByFullPath {
   '/mentions-legales': typeof MentionsLegalesRoute
   '/methodologie': typeof MethodologieRoute
   '/objectifs': typeof ObjectifsRouteWithChildren
+  '/observatoire': typeof ObservatoireRoute
   '/onboarding': typeof OnboardingRoute
   '/portfolio': typeof PortfolioRoute
   '/profil': typeof ProfilRoute
@@ -318,6 +331,7 @@ export interface FileRoutesByFullPath {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/api/ethi': typeof ApiEthiRoute
   '/cours/$slug': typeof CoursSlugRoute
+  '/fonds/$isin': typeof FondsIsinRoute
   '/hooks/dispatch-notifications': typeof HooksDispatchNotificationsRoute
   '/hooks/recompute-ingestion-plan': typeof HooksRecomputeIngestionPlanRoute
   '/hooks/recompute-risk-model': typeof HooksRecomputeRiskModelRoute
@@ -350,6 +364,7 @@ export interface FileRoutesByTo {
   '/mentions-legales': typeof MentionsLegalesRoute
   '/methodologie': typeof MethodologieRoute
   '/objectifs': typeof ObjectifsRouteWithChildren
+  '/observatoire': typeof ObservatoireRoute
   '/onboarding': typeof OnboardingRoute
   '/portfolio': typeof PortfolioRoute
   '/profil': typeof ProfilRoute
@@ -363,6 +378,7 @@ export interface FileRoutesByTo {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/api/ethi': typeof ApiEthiRoute
   '/cours/$slug': typeof CoursSlugRoute
+  '/fonds/$isin': typeof FondsIsinRoute
   '/hooks/dispatch-notifications': typeof HooksDispatchNotificationsRoute
   '/hooks/recompute-ingestion-plan': typeof HooksRecomputeIngestionPlanRoute
   '/hooks/recompute-risk-model': typeof HooksRecomputeRiskModelRoute
@@ -398,6 +414,7 @@ export interface FileRoutesById {
   '/mentions-legales': typeof MentionsLegalesRoute
   '/methodologie': typeof MethodologieRoute
   '/objectifs': typeof ObjectifsRouteWithChildren
+  '/observatoire': typeof ObservatoireRoute
   '/onboarding': typeof OnboardingRoute
   '/portfolio': typeof PortfolioRoute
   '/profil': typeof ProfilRoute
@@ -411,6 +428,7 @@ export interface FileRoutesById {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/api/ethi': typeof ApiEthiRoute
   '/cours/$slug': typeof CoursSlugRoute
+  '/fonds/$isin': typeof FondsIsinRoute
   '/hooks/dispatch-notifications': typeof HooksDispatchNotificationsRoute
   '/hooks/recompute-ingestion-plan': typeof HooksRecomputeIngestionPlanRoute
   '/hooks/recompute-risk-model': typeof HooksRecomputeRiskModelRoute
@@ -446,6 +464,7 @@ export interface FileRouteTypes {
     | '/mentions-legales'
     | '/methodologie'
     | '/objectifs'
+    | '/observatoire'
     | '/onboarding'
     | '/portfolio'
     | '/profil'
@@ -459,6 +478,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/api/ethi'
     | '/cours/$slug'
+    | '/fonds/$isin'
     | '/hooks/dispatch-notifications'
     | '/hooks/recompute-ingestion-plan'
     | '/hooks/recompute-risk-model'
@@ -491,6 +511,7 @@ export interface FileRouteTypes {
     | '/mentions-legales'
     | '/methodologie'
     | '/objectifs'
+    | '/observatoire'
     | '/onboarding'
     | '/portfolio'
     | '/profil'
@@ -504,6 +525,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/api/ethi'
     | '/cours/$slug'
+    | '/fonds/$isin'
     | '/hooks/dispatch-notifications'
     | '/hooks/recompute-ingestion-plan'
     | '/hooks/recompute-risk-model'
@@ -538,6 +560,7 @@ export interface FileRouteTypes {
     | '/mentions-legales'
     | '/methodologie'
     | '/objectifs'
+    | '/observatoire'
     | '/onboarding'
     | '/portfolio'
     | '/profil'
@@ -551,6 +574,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/api/ethi'
     | '/cours/$slug'
+    | '/fonds/$isin'
     | '/hooks/dispatch-notifications'
     | '/hooks/recompute-ingestion-plan'
     | '/hooks/recompute-risk-model'
@@ -586,6 +610,7 @@ export interface RootRouteChildren {
   MentionsLegalesRoute: typeof MentionsLegalesRoute
   MethodologieRoute: typeof MethodologieRoute
   ObjectifsRoute: typeof ObjectifsRouteWithChildren
+  ObservatoireRoute: typeof ObservatoireRoute
   OnboardingRoute: typeof OnboardingRoute
   PortfolioRoute: typeof PortfolioRoute
   ProfilRoute: typeof ProfilRoute
@@ -598,6 +623,7 @@ export interface RootRouteChildren {
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   ApiEthiRoute: typeof ApiEthiRoute
+  FondsIsinRoute: typeof FondsIsinRoute
   HooksDispatchNotificationsRoute: typeof HooksDispatchNotificationsRoute
   HooksRecomputeIngestionPlanRoute: typeof HooksRecomputeIngestionPlanRoute
   HooksRecomputeRiskModelRoute: typeof HooksRecomputeRiskModelRoute
@@ -670,6 +696,13 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/observatoire': {
+      id: '/observatoire'
+      path: '/observatoire'
+      fullPath: '/observatoire'
+      preLoaderRoute: typeof ObservatoireRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/objectifs': {
@@ -861,6 +894,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HooksDispatchNotificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/fonds/$isin': {
+      id: '/fonds/$isin'
+      path: '/fonds/$isin'
+      fullPath: '/fonds/$isin'
+      preLoaderRoute: typeof FondsIsinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/cours/$slug': {
       id: '/cours/$slug'
       path: '/$slug'
@@ -995,6 +1035,7 @@ const rootRouteChildren: RootRouteChildren = {
   MentionsLegalesRoute: MentionsLegalesRoute,
   MethodologieRoute: MethodologieRoute,
   ObjectifsRoute: ObjectifsRouteWithChildren,
+  ObservatoireRoute: ObservatoireRoute,
   OnboardingRoute: OnboardingRoute,
   PortfolioRoute: PortfolioRoute,
   ProfilRoute: ProfilRoute,
@@ -1008,6 +1049,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   ApiEthiRoute: ApiEthiRoute,
+  FondsIsinRoute: FondsIsinRoute,
   HooksDispatchNotificationsRoute: HooksDispatchNotificationsRoute,
   HooksRecomputeIngestionPlanRoute: HooksRecomputeIngestionPlanRoute,
   HooksRecomputeRiskModelRoute: HooksRecomputeRiskModelRoute,
