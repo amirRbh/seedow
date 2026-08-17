@@ -1794,9 +1794,9 @@
       "unit": "u."
     },
     "reason": {
-      "no_data": "Carbon footprint not yet measured for this portfolio.",
-      "estimated_only": "Estimated data — no equivalence until it is measured.",
-      "low_coverage": "Data coverage too low for a reliable equivalence."
+      "no_data": "No measured carbon data on this portfolio yet — as soon as a fund provides it, the concrete equivalent (car km, meals...) will show up here automatically.",
+      "estimated_only": "The carbon data available is estimated, not measured — we only show a concrete equivalent for measured data, never for an estimate.",
+      "low_coverage": "{{pct}}% of your portfolio has measured carbon data (50% is needed for a reliable figure) — this share grows as Seedow enriches each fund."
     }
   },
   "mirror": {
