@@ -99,7 +99,7 @@ function LeFil() {
             {/* NŒUD 1 — MON ARGENT */}
             <Node index={1} active {...reveal(1)}>
               <div className="-m-5 mb-0 rounded-t-[14px] bg-ink px-5 pb-6 pt-5">
-                <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-paper/60">
+                <p className="text-[13px] font-medium tracking-[-0.01em] text-paper/60">
                   {t("le_fil.money")}
                 </p>
                 <h2 className="font-value mt-2 text-figure-hero leading-none text-paper">
@@ -179,7 +179,7 @@ function LeFil() {
                         className="min-w-0 flex-1 rounded-sm text-left outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
                       >
                         <p className="truncate text-sm font-medium text-ink">{h.name}</p>
-                        <p className="mt-0.5 font-mono text-tag uppercase tracking-[0.12em] text-ink-3">
+                        <p className="mt-0.5 text-xs text-ink-3">
                           {h.category ?? "—"} · {formatPercent(h.allocationPct ?? 0, lang, 0)}
                         </p>
                       </button>
@@ -190,7 +190,7 @@ function LeFil() {
                         to="/ethi"
                         search={{ intent: "why", q: h.ticker }}
                         aria-label={t("le_fil.why_asset", { name: h.name })}
-                        className="shrink-0 font-mono text-tag uppercase tracking-[0.12em] text-ink-3 opacity-70 transition-opacity hover:text-mint-ink focus-visible:opacity-100 group-hover:opacity-100"
+                        className="shrink-0 text-xs text-ink-3 opacity-70 transition-opacity hover:text-mint-ink focus-visible:opacity-100 group-hover:opacity-100"
                       >
                         {t("le_fil.why")}
                       </Link>
@@ -276,7 +276,7 @@ function LeFil() {
             <Node index={4} active={false} {...reveal(4)}>
               <details className="group">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
-                  <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-3">
+                  <span className="text-[13px] font-semibold tracking-[-0.01em] text-ink-2">
                     {t("le_fil.more")}
 
                   </span>
@@ -295,7 +295,7 @@ function LeFil() {
                 <div className="mt-4 flex flex-col gap-4">
                   {/* Comparaison MSCI */}
                   <div>
-                    <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
+                    <p className="text-[13px] font-semibold tracking-[-0.01em] text-ink-2">
                       {t("le_fil.compare_title")}
                     </p>
                     {expectedReturn != null && volatility != null ? (
@@ -330,7 +330,7 @@ function LeFil() {
 
                   {/* Le monde réel */}
                   <div className="border-t border-paper-3 pt-4">
-                    <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
+                    <p className="text-[13px] font-semibold tracking-[-0.01em] text-ink-2">
                       {t("le_fil.real_world")}
                     </p>
                     <p className="text-sm text-ink-2 mt-1">{t("le_fil.real_world_desc")}</p>
@@ -384,7 +384,7 @@ function LeFil() {
 /** Intitulé de section : traitement typographique unique dans tout le fil. */
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-3">{children}</p>
+    <p className="text-[13px] font-semibold tracking-[-0.01em] text-ink-2">{children}</p>
   );
 }
 
@@ -437,7 +437,7 @@ function CompareRow({
   const better = higherIsBetter ? mine >= benchmark : mine <= benchmark;
   return (
     <div className="flex flex-col gap-1.5">
-      <p className="font-mono text-tag uppercase tracking-wide text-ink-3">{label}</p>
+      <p className="text-[13px] font-medium tracking-[-0.01em] text-ink-2">{label}</p>
       <div className="flex items-center gap-2">
         <span className="w-14 shrink-0 font-mono text-tag text-ink-2">{mineLabel}</span>
         <div className="h-2 flex-1 overflow-hidden rounded-full bg-paper-3">
