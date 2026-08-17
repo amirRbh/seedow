@@ -159,8 +159,8 @@ export interface PlanBacklogEntry {
 export function backlogIsins(top: readonly PlanBacklogEntry[], limit: number): string[] {
   const out: string[] = [];
   for (const entry of top) {
-    if (entry.isin && !out.includes(entry.isin)) out.push(entry.isin);
     if (out.length >= limit) break;
+    if (entry.isin && !out.includes(entry.isin)) out.push(entry.isin);
   }
   return out;
 }
