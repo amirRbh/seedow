@@ -69,6 +69,15 @@ export interface SustainabilityProfile {
   confidence: ClassificationConfidence;
   /** Toujours vrai : le tier ne dépend jamais du seul article SFDR. */
   sfdrIndependent: true;
+  /**
+   * Score Seedow 0..100 — composite pondéré PROPRIÉTAIRE (méthodologie
+   * publiée et versionnée sur `/methodologie`, cf. `SEEDOW_SCORE_VERSION`).
+   * Jamais basé sur SFDR (même garantie que le tier) : c'est ce qui le
+   * distingue d'un simple relais d'un score tiers (MSCI…) — un concurrent ne
+   * peut pas le recopier sans reproduire toute la chaîne de signaux + poids.
+   * `null` si aucun pilier n'est exploitable.
+   */
+  score: number | null;
 }
 
 // ── Seuils nommés (pas de nombre magique). Échelle 0..100 pour ESG/climat. ──
@@ -80,6 +89,64 @@ const CLIMATE_STRONG = 60;
 const CARBON_FAR_BELOW_RATIO = 0.6;
 const TEMP_ALIGNED_C = 1.5;
 const TEMP_TRANSITION_C = 2.0;
+
+// ── Score Seedow (composite pondéré, méthodologie propriétaire — publiée et
+// versionnée sur /methodologie). 3 piliers, jamais SFDR : c'est le point qui
+// le distingue d'un simple relais d'un score tiers. Un pilier absent est
+// exclu et les poids restants renormalisés (même logique que completeness.ts)
+// — pas de valeur neutre inventée pour un signal manquant.
+export const SEEDOW_SCORE_VERSION = "1.0";
+const W_ESG = 0.4;
+const W_CLIMATE = 0.4;
+const W_EXCLUSIONS = 0.2;
+/** Au-delà de cette trajectoire, le sous-score température tombe à 0. */
+const TEMP_SCORE_WORST_C = 4.0;
+/** Au-delà de ce multiple de la référence, le sous-score carbone tombe à 0. */
+const CARBON_SCORE_RATIO_CAP = 2;
+/** Nombre d'exclusions actives pour le crédit plein (2x le nombre habituel
+ *  d'exclusions posées à l'onboarding — cf. §2 CLAUDE.md). */
+const EXCLUSIONS_FULL_CREDIT = 4;
+
+function tempSubScore(tempC: number | null): number | null {
+  if (tempC == null) return null;
+  if (tempC <= TEMP_ALIGNED_C) return 100;
+  if (tempC >= TEMP_SCORE_WORST_C) return 0;
+  return Math.round((100 * (TEMP_SCORE_WORST_C - tempC)) / (TEMP_SCORE_WORST_C - TEMP_ALIGNED_C));
+}
+
+function carbonSubScore(waci: number | null, benchmarkWaci: number | null): number | null {
+  if (waci == null || benchmarkWaci == null || benchmarkWaci <= 0) return null;
+  const ratio = waci / benchmarkWaci;
+  return Math.round(Math.min(100, Math.max(0, 100 * (1 - ratio / CARBON_SCORE_RATIO_CAP))));
+}
+
+/** Composite pondéré : renormalise sur les piliers réellement exploitables. */
+function computeSeedowScore(
+  esg: number | null,
+  tempC: number | null,
+  waci: number | null,
+  benchmarkWaci: number | null,
+  exclusions: number,
+): number | null {
+  const climateParts = [tempSubScore(tempC), carbonSubScore(waci, benchmarkWaci)].filter(
+    (v): v is number => v != null,
+  );
+  const climate = climateParts.length
+    ? climateParts.reduce((a, b) => a + b, 0) / climateParts.length
+    : null;
+  const exclusionsScore = Math.min(100, (exclusions / EXCLUSIONS_FULL_CREDIT) * 100);
+
+  const pillars: Array<[number, number | null]> = [
+    [W_ESG, esg],
+    [W_CLIMATE, climate],
+    [W_EXCLUSIONS, exclusionsScore],
+  ];
+  const present = pillars.filter((p): p is [number, number] => p[1] != null);
+  if (present.length === 0) return null;
+  const totalWeight = present.reduce((acc, [w]) => acc + w, 0);
+  const weighted = present.reduce((acc, [w, v]) => acc + w * v, 0);
+  return Math.round(weighted / totalWeight);
+}
 
 /** Borne un score dans [0..100], ou null si non exploitable. */
 function clampScore(v: number | null): number | null {
@@ -195,5 +262,7 @@ export function deriveSustainabilityProfile(signals: SustainabilitySignals): Sus
     drivers.push("low_data_coverage");
   }
 
-  return { tier, drivers, confidence, sfdrIndependent: true };
+  const score = computeSeedowScore(esg, tempC, signals.waci, signals.benchmarkWaci, exclusions);
+
+  return { tier, drivers, confidence, sfdrIndependent: true, score };
 }

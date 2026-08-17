@@ -14,6 +14,7 @@ function row(over: Partial<PublicFundRow>): PublicFundRow {
     governance_score: 72,
     ter: 0.002,
     carbon_intensity_gco2e_per_eur: 10,
+    waci_tco2e_per_musd_sales: 50,
     implied_temp_rise: "1.5°C",
     sfdr_article: 8,
     excluded_sectors: ["fossiles"],
@@ -48,5 +49,21 @@ describe("mapPublicFundRow", () => {
     const f = mapPublicFundRow(row({}));
     expect(["low", "medium", "high"]).toContain(f.greenwashing_risk);
     expect(Array.isArray(f.greenwashing_reasons)).toBe(true);
+  });
+
+  it("expose le score Seedow propriétaire et le tier (sustainability-classification.ts)", () => {
+    const f = mapPublicFundRow(row({}));
+    expect(f.seedow_score).not.toBeNull();
+    expect(f.seedow_score!).toBeGreaterThanOrEqual(0);
+    expect(f.seedow_score!).toBeLessThanOrEqual(100);
+    expect(["paris_aligned", "transition", "broad_esg", "insufficient_evidence"]).toContain(
+      f.sustainability_tier,
+    );
+  });
+
+  it("le score Seedow ignore l'article SFDR", () => {
+    const withSfdr = mapPublicFundRow(row({ sfdr_article: 9 })).seedow_score;
+    const withoutSfdr = mapPublicFundRow(row({ sfdr_article: null })).seedow_score;
+    expect(withoutSfdr).toBe(withSfdr);
   });
 });

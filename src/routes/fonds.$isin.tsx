@@ -44,6 +44,13 @@ const RISK_LABEL: Record<PublicFundAsset["greenwashing_risk"], string> = {
   high: "fonds_page.risk_high",
 };
 
+const TIER_LABEL: Record<PublicFundAsset["sustainability_tier"], string> = {
+  paris_aligned: "fonds_page.tier_paris_aligned",
+  transition: "fonds_page.tier_transition",
+  broad_esg: "fonds_page.tier_broad_esg",
+  insufficient_evidence: "fonds_page.tier_insufficient",
+};
+
 function FundAuthorityPage() {
   const { fund } = Route.useLoaderData();
   const { t } = useTranslation();
@@ -70,6 +77,31 @@ function FundAuthorityPage() {
             {t("fonds_page.intro")}
           </p>
         </div>
+
+        {fund.seedow_score != null && (
+          <section className="border border-ink rounded-2xl p-5 bg-paper-2/40">
+            <div className="flex items-baseline justify-between gap-3 flex-wrap">
+              <div>
+                <p className="text-tag uppercase tracking-[0.14em] text-ink-3 font-mono">
+                  {t("fonds_page.seedow_score_title")}
+                </p>
+                <p className="font-value text-4xl mt-1 tabular-nums">
+                  {fund.seedow_score}
+                  <span className="text-ink-3 text-xl">/100</span>
+                </p>
+              </div>
+              <p className="text-body-sm font-medium">{t(TIER_LABEL[fund.sustainability_tier])}</p>
+            </div>
+            {fund.sustainability_drivers.length > 0 && (
+              <p className="text-caption text-ink-3 mt-3">
+                {fund.sustainability_drivers.join(" · ")}
+              </p>
+            )}
+            <p className="text-caption text-ink-3 mt-3">
+              {t("fonds_page.seedow_score_disclaimer")}
+            </p>
+          </section>
+        )}
 
         <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Metric label={t("fonds_page.metric_esg")} value={`${fund.esg.toFixed(1)}/10`} />

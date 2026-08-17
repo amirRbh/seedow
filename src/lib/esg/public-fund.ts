@@ -10,9 +10,14 @@ import {
   GREEN_CAUSE_TAGS,
   type TransparencyInput,
 } from "./transparency";
+import {
+  deriveSustainabilityProfile,
+  type SustainabilityTier,
+} from "./sustainability-classification";
+import { ACWI_WACI_TCO2E_PER_MUSD } from "./benchmark";
 
 export const PUBLIC_FUND_COLUMNS =
-  "ticker, name, issuer, isin, asset_class, esg_score, env_score, social_score, governance_score, ter, carbon_intensity_gco2e_per_eur, implied_temp_rise, sfdr_article, excluded_sectors, cause_exposure, esg_score_source, esg_data_asof";
+  "ticker, name, issuer, isin, asset_class, esg_score, env_score, social_score, governance_score, ter, carbon_intensity_gco2e_per_eur, waci_tco2e_per_musd_sales, implied_temp_rise, sfdr_article, excluded_sectors, cause_exposure, esg_score_source, esg_data_asof";
 
 export interface PublicFundRow {
   ticker: string;
@@ -26,6 +31,7 @@ export interface PublicFundRow {
   governance_score: number | string | null;
   ter: number | string;
   carbon_intensity_gco2e_per_eur: number | null;
+  waci_tco2e_per_musd_sales: number | null;
   implied_temp_rise: string | null;
   sfdr_article: number | null;
   excluded_sectors: string[] | null;
@@ -55,6 +61,11 @@ export interface PublicFundAsset {
   themes: { tag: string; pct: number }[];
   source: string | null;
   data_asof: string | null;
+  /** Score Seedow propriétaire 0..100 (composite pondéré, indépendant de SFDR
+   *  — cf. `sustainability-classification.ts`), et le tier/drivers associés. */
+  seedow_score: number | null;
+  sustainability_tier: SustainabilityTier;
+  sustainability_drivers: string[];
 }
 
 /** Transforme une ligne `assets` en vue publique — jamais de valeur inventée. */
@@ -80,6 +91,17 @@ export function mapPublicFundRow(r: PublicFundRow): PublicFundAsset {
     claimsGreenTheme: claimThemes.some((th) => GREEN_CAUSE_TAGS.has(th)),
   };
   const gw = assessGreenwashingRisk(input);
+  const coverage = computeDataCoverage(input);
+  const profile = deriveSustainabilityProfile({
+    esgScore: Number.isFinite(esg) ? esg : null,
+    climateScore: r.env_score != null ? Number(r.env_score) : null,
+    waci: r.waci_tco2e_per_musd_sales,
+    benchmarkWaci: ACWI_WACI_TCO2E_PER_MUSD,
+    impliedTempRise: r.implied_temp_rise,
+    exclusionsCount: (r.excluded_sectors ?? []).length,
+    dataCoverage: coverage,
+    sfdrArticle: r.sfdr_article,
+  });
   return {
     ticker: r.ticker,
     name: r.name,
@@ -94,12 +116,15 @@ export function mapPublicFundRow(r: PublicFundRow): PublicFundAsset {
     carbon_intensity: r.carbon_intensity_gco2e_per_eur,
     implied_temp_rise: r.implied_temp_rise,
     sfdr_article: r.sfdr_article,
-    coverage: computeDataCoverage(input),
+    coverage,
     greenwashing_risk: gw.risk,
     greenwashing_reasons: gw.reasons,
     excluded_sectors: r.excluded_sectors ?? [],
     themes: themesOut,
     source: r.esg_score_source,
     data_asof: r.esg_data_asof,
+    seedow_score: profile.score,
+    sustainability_tier: profile.tier,
+    sustainability_drivers: profile.drivers,
   };
 }

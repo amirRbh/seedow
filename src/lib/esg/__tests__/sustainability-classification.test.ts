@@ -104,3 +104,57 @@ describe("deriveSustainabilityProfile", () => {
     expect(["paris_aligned", "transition", "broad_esg", "insufficient_evidence"]).toContain(p.tier);
   });
 });
+
+describe("score Seedow (composite pondéré, propriétaire)", () => {
+  it("combine les 3 piliers quand tout est présent (0..100)", () => {
+    const p = deriveSustainabilityProfile(base);
+    expect(p.score).not.toBeNull();
+    expect(p.score!).toBeGreaterThanOrEqual(0);
+    expect(p.score!).toBeLessThanOrEqual(100);
+    expect(p.score!).toBeGreaterThan(70); // signaux forts + exclusions → score élevé
+  });
+
+  it("ignore SFDR : score identique avec ou sans article déclaré", () => {
+    const withSfdr = deriveSustainabilityProfile(base).score;
+    const withoutSfdr = deriveSustainabilityProfile({ ...base, sfdrArticle: null }).score;
+    expect(withoutSfdr).toBe(withSfdr);
+  });
+
+  it("renormalise sur les piliers disponibles plutôt que d'inventer un neutre", () => {
+    // Seul le pilier ESG est exploitable (climat et exclusions absents/nuls) :
+    // le score doit refléter directement le pilier ESG, pas une moyenne avec 0.
+    const p = deriveSustainabilityProfile({
+      esgScore: 80,
+      climateScore: null,
+      waci: null,
+      benchmarkWaci: null,
+      impliedTempRise: null,
+      exclusionsCount: 0,
+      dataCoverage: "partial",
+      sfdrArticle: null,
+    });
+    // ESG (80, poids 0.4) + exclusions (0, poids 0.2) renormalisés sur 0.6
+    expect(p.score).toBe(Math.round((0.4 * 80) / 0.6));
+  });
+
+  it("null si aucun signal exploitable", () => {
+    const p = deriveSustainabilityProfile({
+      esgScore: null,
+      climateScore: null,
+      waci: null,
+      benchmarkWaci: null,
+      impliedTempRise: null,
+      exclusionsCount: 0,
+      dataCoverage: "estimated",
+      sfdrArticle: null,
+    });
+    // exclusionsCount=0 reste un pilier valide (0/100) : score non-null mais bas.
+    expect(p.score).toBe(0);
+  });
+
+  it("trajectoire température à/au-delà des bornes → sous-score 100/0", () => {
+    const aligned = deriveSustainabilityProfile({ ...base, impliedTempRise: "1.0°C" }).score!;
+    const misaligned = deriveSustainabilityProfile({ ...base, impliedTempRise: "5.0°C" }).score!;
+    expect(aligned).toBeGreaterThan(misaligned);
+  });
+});
