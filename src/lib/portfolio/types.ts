@@ -1,5 +1,7 @@
 // Domain types for the portfolio construction engine
 
+import type { CarbonDataQuality } from "@/lib/esg/carbon-engine";
+
 export type AssetClass =
   | "equity_dev"
   | "equity_em"
@@ -46,6 +48,20 @@ export interface Asset {
   implied_temp_rise?: string | null;
   /** Date « as of » de la donnée ESG/carbone fournisseur (ISO). */
   esg_data_asof?: string | null;
+  /**
+   * Palier de fiabilité de `carbon_intensity_gco2e_per_eur`. 'measured' quand le
+   * fonds publie lui-même sa donnée ; sinon le palier dominant de l'estimation
+   * bottom-up calculée depuis les holdings (voir lib/esg/carbon-engine.ts).
+   * null si `carbon_intensity_gco2e_per_eur` est lui-même null.
+   */
+  carbon_data_quality?: CarbonDataQuality | null;
+  /**
+   * Part (0..1) de la donnée carbone de CET actif qui est directement sourcée
+   * (measured/reported) plutôt qu'estimée. 1 pour une divulgation fonds directe ;
+   * dérivé de `carbon_estimates.sourced_coverage/coverage` pour une estimation
+   * bottom-up. null si aucune donnée.
+   */
+  carbon_sourced_ratio?: number | null;
 }
 
 /**
@@ -128,6 +144,16 @@ export interface PortfolioMetrics {
   // null si aucun actif de la sélection n'a de WACI renseigné.
   waci_tco2e_per_musd_sales: number | null;
   waci_coverage: number; // 0..1, share of weight with a real WACI
+  // Part (0..1) de `carbon_intensity_gco2e_per_eur` qui est directement sourcée
+  // (measured/reported) plutôt qu'estimée bottom-up depuis les holdings. null si
+  // carbon_intensity_coverage = 0. Sert à afficher « X% des données sont
+  // directement sourcées » sans jamais présenter une estimation comme une mesure.
+  // Optionnel : absent sur les métriques persistées avant ce moteur (rétrocompat).
+  carbon_sourced_share?: number | null;
+  // Palier de fiabilité le moins bon parmi les actifs qui contribuent à la
+  // couverture carbone — label honnête pour le portefeuille entier, pas juste
+  // pour la moyenne. null si carbon_intensity_coverage = 0. Optionnel (idem).
+  carbon_data_quality?: CarbonDataQuality | null;
   by_class: Record<AssetClass, number>;
   by_region: Record<string, number>;
   diversification: number; // 1 - HHI

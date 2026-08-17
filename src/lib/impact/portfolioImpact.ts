@@ -20,7 +20,15 @@ import {
   WACI_MIN_COVERAGE_FOR_VERDICT,
   type PortfolioCarbon,
 } from "@/lib/esg/carbon";
-import { presentImpact, type ImpactPresentation } from "@/lib/impact/equivalences";
+import { roundSignificant, type CarbonDataQuality } from "@/lib/esg/carbon-engine";
+import {
+  presentImpact,
+  co2Equivalences,
+  ADEME_FACTORS,
+  type ImpactPresentation,
+  type EmissionFactor,
+} from "@/lib/impact/equivalences";
+import { carbonConfidenceTier, type CarbonConfidence } from "@/lib/impact/translator";
 import { ACWI_WACI_TCO2E_PER_MUSD } from "@/lib/esg/benchmark";
 
 /** Sous-ensemble des métriques persistées nécessaires au calcul d'impact. */
@@ -33,6 +41,15 @@ export interface PortfolioImpactMetrics {
   waci_tco2e_per_musd_sales?: number | null;
   /** Part du poids couverte par un WACI réel (0..1). */
   waci_coverage?: number;
+  /**
+   * Part (0..1) de `carbon_intensity_coverage` qui est directement sourcée
+   * (measured/reported) plutôt qu'estimée bottom-up depuis les holdings
+   * (cf. lib/esg/carbon-engine.ts). Absent sur les métriques antérieures au
+   * moteur d'estimation → traité comme 100% sourcé (comportement historique).
+   */
+  carbon_sourced_share?: number | null;
+  /** Palier de fiabilité dominant de la donnée carbone du portefeuille. */
+  carbon_data_quality?: CarbonDataQuality | null;
   /** Score d'impact ESG (0..100) — toujours réel, calculé par le moteur. */
   esg_score: number;
 }
@@ -54,6 +71,32 @@ export interface PortfolioIntensityView {
   vsBenchmarkDeltaPct: number | null;
   /** true si le portefeuille est MOINS intensif que la référence. */
   cleaner: boolean;
+}
+
+/**
+ * Vue graduée de l'empreinte carbone — mesurée OU estimée, toujours étiquetée
+ * comme telle. Contrairement à `measured`/`presentation` (repli historique,
+ * conservé tel quel pour ne pas changer le comportement des écrans qui les
+ * consomment déjà), `estimate` s'affiche dès que `coverage > 0`, mesuré ou
+ * estimé — c'est la seule donnée que consomme la carte carbone (§ carte
+ * carbone de ImpactExperience). Jamais de fausse précision : `kgCo2ePerYear`
+ * et `carEquivalenceKm` sont arrondis à 2 chiffres significatifs.
+ */
+export interface CarbonEstimateView {
+  /** kg CO₂e/an, arrondi (2 chiffres significatifs) sur la part couverte. */
+  kgCo2ePerYear: number;
+  /** Part du portefeuille couverte par une donnée quelconque, 0..100. */
+  coveragePct: number;
+  /** Part de CETTE couverture qui est directement sourcée (measured/reported), 0..100. */
+  sourcedPct: number;
+  /** Palier de fiabilité dominant. */
+  dataQuality: CarbonDataQuality;
+  /** Palier de confiance dérivé de la couverture (cf. lib/impact/translator.ts). */
+  confidence: CarbonConfidence;
+  /** true si la couverture est trop faible pour être représentative (confidence = "low"). */
+  lowCoverage: boolean;
+  /** Équivalent km en voiture (ADEME), arrondi — null si non calculable. */
+  carEquivalenceKm: number | null;
 }
 
 export interface PortfolioImpactView {
@@ -82,6 +125,13 @@ export interface PortfolioImpactView {
   intensity: PortfolioIntensityView | null;
   /** Score d'impact ESG (0..100) — le repère honnête à afficher quand rien n'est mesuré. */
   esgScore: number;
+  /**
+   * Vue graduée mesurée-ou-estimée, dès que `coverage > 0` — voir CarbonEstimateView.
+   * null si la couverture carbone est nulle. Optionnel pour rester compatible avec
+   * les fixtures de test antérieures à ce champ (toujours présent, jamais
+   * `undefined`, sur les vues produites par `buildPortfolioImpact`).
+   */
+  estimate?: CarbonEstimateView | null;
 }
 
 /**
@@ -89,10 +139,14 @@ export interface PortfolioImpactView {
  *
  * @param metrics       Métriques du portefeuille (issues du moteur / de la DB).
  * @param investedAmount Montant investi en € (capital de référence).
+ * @param factors        Facteurs d'équivalence ADEME — par défaut la constante
+ *                        locale (fallback/tests) ; en production, préférer les
+ *                        valeurs chargées depuis `carbon_equivalences` (DB).
  */
 export function buildPortfolioImpact(
   metrics: PortfolioImpactMetrics,
   investedAmount: number,
+  factors: readonly EmissionFactor[] = ADEME_FACTORS,
 ): PortfolioImpactView {
   const rawIntensity = metrics.carbon_intensity_gco2e_per_eur;
   const coverage = Number.isFinite(metrics.carbon_intensity_coverage)
@@ -100,7 +154,15 @@ export function buildPortfolioImpact(
     : 0;
 
   const hasIntensity = rawIntensity != null && Number.isFinite(rawIntensity) && rawIntensity >= 0;
-  const measured = hasIntensity && coverage > 0;
+  // Palier dominant de la donnée carbone. Absent sur les métriques antérieures au
+  // moteur d'estimation (rétrocompat : elles ne pouvaient être que des divulgations
+  // réelles). `measured` (legacy) ne reste vrai que si TOUTE la part couverte est
+  // directement sourcée (measured/reported) — jamais vrai pour une estimation
+  // bottom-up, pour ne jamais présenter une estimation comme une mesure.
+  const dataQuality: CarbonDataQuality | null =
+    metrics.carbon_data_quality ?? (hasIntensity && coverage > 0 ? "measured" : null);
+  const directlySourced = dataQuality === "measured" || dataQuality === "reported";
+  const measured = hasIntensity && coverage > 0 && directlySourced;
 
   const carbon: PortfolioCarbon = {
     intensityGco2ePerEur: measured ? rawIntensity : null,
@@ -139,6 +201,39 @@ export function buildPortfolioImpact(
     };
   }
 
+  // Vue graduée mesurée-ou-estimée : s'affiche dès que la couverture carbone est
+  // non nulle, qu'elle soit mesurée ou estimée bottom-up — contrairement à
+  // `presentation` (gate stricte "measured only", conservée telle quelle pour
+  // les écrans historiques). Jamais de fausse précision : arrondi à 2 chiffres
+  // significatifs (cf. carbon-engine.ts).
+  let estimate: CarbonEstimateView | null = null;
+  if (hasIntensity && coverage > 0 && dataQuality != null) {
+    // Contrairement à `financed` (gate stricte, mesuré uniquement), cette valeur
+    // couvre TOUTE la part couverte — mesurée et estimée — puisque `estimate`
+    // porte lui-même l'étiquette de fiabilité (jamais présentée comme mesurée).
+    const financedAll = financedEmissionsKgPerYear(
+      { intensityGco2ePerEur: rawIntensity, coverage, dataQualityScore: null },
+      investedAmount,
+    );
+    if (financedAll != null) {
+      const sourcedShare = Math.max(
+        0,
+        Math.min(1, metrics.carbon_sourced_share ?? (directlySourced ? 1 : 0)),
+      );
+      const confidence = carbonConfidenceTier(coverage);
+      const carEquiv = co2Equivalences(financedAll, factors).find((e) => e.factorId === "car_km");
+      estimate = {
+        kgCo2ePerYear: roundSignificant(financedAll, 2),
+        coveragePct: Math.round(coverage * 100),
+        sourcedPct: Math.round(sourcedShare * 100),
+        dataQuality,
+        confidence,
+        lowCoverage: confidence === "low",
+        carEquivalenceKm: carEquiv ? roundSignificant(carEquiv.value, 2) : null,
+      };
+    }
+  }
+
   return {
     measured,
     intensityGco2ePerEur: measured ? rawIntensity : null,
@@ -147,5 +242,6 @@ export function buildPortfolioImpact(
     presentation,
     intensity,
     esgScore: Number.isFinite(metrics.esg_score) ? metrics.esg_score : 0,
+    estimate,
   };
 }

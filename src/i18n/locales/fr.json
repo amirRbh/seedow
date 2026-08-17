@@ -1678,9 +1678,19 @@
       "title": "Rendu tangible",
       "subtitle": "L'empreinte carbone que ton capital finance, traduite en repères concrets.",
       "footprint_label": "Empreinte financée",
+      "footprint_label_measured": "Empreinte financée mesurée",
+      "footprint_label_estimated": "Votre empreinte estimée",
       "per_year": "CO₂e / an",
       "pending": "L'empreinte carbone chiffrée s'affichera dès que les données émetteurs couvriront ton portefeuille. On ne fabrique aucun chiffre en attendant.",
-      "esg_fallback": "En attendant, ton repère honnête : score d'impact ESG {{score}}/100."
+      "esg_fallback": "En attendant, ton repère honnête : score d'impact ESG {{score}}/100.",
+      "reliability_line": "Estimation Seedow · Fiabilité : {{level}}",
+      "reliability_measured": "Donnée directement sourcée par les émetteurs — mesurée, pas estimée.",
+      "confidence_high": "haute",
+      "confidence_partial": "moyenne",
+      "confidence_low": "faible",
+      "sourced_pct": "{{pct}} % des données sont directement sourcées.",
+      "low_coverage_banner": "Estimation indicative — couverture limitée.",
+      "how_we_calculate": "Voir comment nous calculons cette estimation →"
     },
     "finance": {
       "title": "Ce que ton argent finance",
