@@ -1,0 +1,53 @@
+# Ingestion A1/A2/A4 — factsheets émetteurs (iShares/Amundi/Vanguard) → Data Engine.
+# `unpdf` (pur-JS) fait l'extraction PDF ici, pas de dépendance native requise ;
+# job offline car il nécessite le réseau vers les sites émetteurs (bloqué en
+# sandbox dev). Déclenchement manuel. La persistance est OPT-IN.
+name: Ingest fund data (issuer factsheets)
+
+on:
+  workflow_dispatch:
+    inputs:
+      issuer:
+        description: "Émetteur : ishares (défaut, liste vérifiée) | amundi | vanguard"
+        required: false
+        default: "ishares"
+      funds:
+        description: "Paires ISIN/ticker=URL séparées par des espaces (requis pour amundi/vanguard)"
+        required: false
+        default: ""
+      persist:
+        description: "Écrire en base (nécessite les secrets Supabase ; asset absent → skip)"
+        type: boolean
+        required: false
+        default: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.11"
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      # unpdf n'est pas (encore) une dépendance déclarée du repo — installé ici
+      # dans le runner éphémère seulement ; ce job ne commit jamais rien, donc
+      # la modification locale de package.json/bun.lock n'affecte pas le repo.
+      - name: Install unpdf
+        run: bun add unpdf
+
+      - name: Ingest
+        env:
+          SEEDOW_PERSIST: ${{ inputs.persist && '1' || '0' }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          bun run scripts/ingest-fund-data.ts --issuer "${{ inputs.issuer }}" ${{ inputs.funds }}
