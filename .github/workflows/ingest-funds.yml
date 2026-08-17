@@ -1,9 +1,14 @@
-# Ingestion B1 — job offline avec poppler (extraction PDF impossible sur l'edge).
+# Ingestion B1/B2 — job offline avec poppler (extraction PDF impossible sur l'edge).
 # ISIN → GECO (identité + documents officiels) → pdftotext (SFDR/frais) → persistance.
-# Déclenchement manuel. La persistance est OPT-IN (nécessite les secrets Supabase).
+# Déclenchement manuel (persistance opt-in) OU hebdomadaire (boucle de fraîcheur B2) :
+# recompute-ingestion-plan-daily (pg_cron, 06h UTC) tient le backlog priorisé à jour
+# (demande + fraîcheur + complétude) ; ce job le rejoue chaque lundi et persiste,
+# fermant la boucle « fonds périmé détecté → ré-ingéré » sans intervention manuelle.
 name: Ingest funds (GECO)
 
 on:
+  schedule:
+    - cron: "0 7 * * 1" # hebdo, lundi 07h UTC — après recompute-ingestion-plan-daily
   workflow_dispatch:
     inputs:
       isins:
@@ -51,7 +56,9 @@ jobs:
 
       - name: Ingest
         env:
-          SEEDOW_PERSIST: ${{ inputs.persist && '1' || '0' }}
+          # Le run planifié (boucle de fraîcheur B2) persiste toujours ; le run manuel
+          # reste opt-in via l'input `persist`.
+          SEEDOW_PERSIST: ${{ (github.event_name == 'schedule' || inputs.persist) && '1' || '0' }}
           SEEDOW_DUMP: ${{ inputs.dump && '1' || '0' }}
           # Le client server lit ces variables ; renseigner les secrets du repo
           # pour activer la persistance (sinon le job se contente d'extraire + logguer).
@@ -60,7 +67,9 @@ jobs:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
         run: |
-          if [ -n "${{ inputs.discover }}" ]; then
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            bun run scripts/ingest-funds.ts --plan 50
+          elif [ -n "${{ inputs.discover }}" ]; then
             bun run scripts/ingest-funds.ts --discover "${{ inputs.discover }}"
           elif [ -n "${{ inputs.plan }}" ]; then
             bun run scripts/ingest-funds.ts --plan "${{ inputs.plan }}"
