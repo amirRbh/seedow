@@ -20,29 +20,60 @@ export function parseFrenchNumber(s: string | null | undefined): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
+/** Fenêtre de recherche d'une négation avant un match « au sens de l'article X ». */
+const NEGATION_WINDOW = 80;
+
+/**
+ * Un « au sens de l'article X » précédé d'une négation (« ne comprend pas
+ * d'objectif … au sens de l'article 9 ») décrit ce que le fonds N'EST PAS, pas
+ * sa classification réelle. Cas réel (DIC PRIIPS 123 Investment Managers) :
+ * le même document affirme l'article 8 juste après avoir écarté l'article 9 —
+ * sans ce garde-fou, le premier match (négatif) l'emporterait à tort.
+ */
+function isNegatedBefore(text: string, index: number): boolean {
+  const before = text.slice(Math.max(0, index - NEGATION_WINDOW), index);
+  return /\bne\s+\S+\s+pas\b|\bn['’]est\s+pas\b|\bpas\s+d['’]/i.test(before);
+}
+
 /**
  * Article SFDR (6/8/9) d'un fonds. Les documents GECO regroupent KID +
  * prospectus + règlement, truffés d'« article 6/8/9 » hors-sujet (dépositaire,
  * comptes, taxonomie 2020/852…). Un simple « article X près de durabilité » y
  * produit des faux positifs (ex. confondre l'art. 6 de la taxonomie 2020/852
  * avec l'art. 6 SFDR). On n'accepte donc un numéro que s'il est **directement
- * rattaché au règlement SFDR** (2019/2088). null si absent ou ambigu — jamais
- * une classification inventée ou approximative.
+ * rattaché au règlement SFDR** (2019/2088) ET affirmé, pas écarté par une
+ * négation. null si absent ou ambigu — jamais une classification inventée ou
+ * approximative.
  */
 export function parseKidSfdrArticle(text: string): number | null {
-  // 1) Formulation de classification explicite (« au sens de l'article X … du
-  //    règlement SFDR / 2019/2088 ») — la plus fiable.
-  const authoritative =
-    /au sens de l['’]article\s*(6|8|9)\b[^.\n]{0,40}?\bdu r[èe]glement\s*(?:\(UE\)\s*)?(?:n[°ºo]?\s*)?(?:2019\/2088|SFDR)/i;
-  const auth = text.match(authoritative);
-  if (auth) return Number(auth[1]);
+  // « du règlement » ou « de la réglementation » (SFDR) — les deux formulations
+  // coexistent dans les DIC réels.
+  const reglementRef = "(?:du r[éèe]glement|de la r[éèe]glementation)";
 
-  // 2) Sinon, toute référence « article X … du règlement SFDR / 2019/2088 » —
-  //    retenue uniquement si non ambiguë (une seule valeur distincte).
-  const bound =
-    /article\s*(6|8|9)\b[^.\n]{0,40}?\bdu r[èe]glement\s*(?:\(UE\)\s*)?(?:n[°ºo]?\s*)?(?:2019\/2088|SFDR)/gi;
+  // 1) Formulation de classification explicite (« au sens de l'article X … du
+  //    règlement/de la réglementation SFDR / 2019/2088 ») — la plus fiable.
+  const authoritative = new RegExp(
+    String.raw`au sens de l['’]article\s*(6|8|9)\b[^.\n]{0,40}?\b${reglementRef}\s*(?:\(UE\)\s*)?(?:n[°ºo]?\s*)?(?:2019\/2088|SFDR)`,
+    "gi",
+  );
+  const authValues = new Set<number>();
+  for (const m of text.matchAll(authoritative)) {
+    if (!isNegatedBefore(text, m.index)) authValues.add(Number(m[1]));
+  }
+  if (authValues.size === 1) return [...authValues][0];
+  if (authValues.size > 1) return null; // plusieurs classifications affirmées → ambigu
+
+  // 2) Sinon, toute référence « article X … règlement/réglementation SFDR /
+  //    2019/2088 » — retenue uniquement si non ambiguë (une seule valeur
+  //    distincte, hors mentions négatives).
+  const bound = new RegExp(
+    String.raw`article\s*(6|8|9)\b[^.\n]{0,40}?\b${reglementRef}\s*(?:\(UE\)\s*)?(?:n[°ºo]?\s*)?(?:2019\/2088|SFDR)`,
+    "gi",
+  );
   const values = new Set<number>();
-  for (const m of text.matchAll(bound)) values.add(Number(m[1]));
+  for (const m of text.matchAll(bound)) {
+    if (!isNegatedBefore(text, m.index)) values.add(Number(m[1]));
+  }
   return values.size === 1 ? [...values][0] : null;
 }
 

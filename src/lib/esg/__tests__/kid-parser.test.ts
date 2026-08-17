@@ -40,6 +40,26 @@ describe("parseKidSfdrArticle", () => {
     expect(parseKidSfdrArticle(bundled)).toBe(8);
   });
 
+  it("gère « de la réglementation SFDR » et ignore l'article écarté par une négation", () => {
+    // Texte réel (DIC PRIIPS 123 Investment Managers, FR0014008553, via GECO/dump) :
+    // le document écarte l'article 9 avant d'affirmer l'article 8 — sans le
+    // garde-fou de négation, le premier match (9, négatif) l'emporterait à tort.
+    const real = [
+      "L’objectif de gestion ne comprend pas d’objectif d’investissement durable dans sa gestion au sens de l’article 9 du règlement européen",
+      "2019/2088 sur la publication d’informations en matière de durabilité dans le secteur des services financiers (« SFDR »).",
+      "Le Fonds assure néanmoins la promotion de critères sociaux et de gouvernance spécifiques, au sens de l’article 8 de la réglementation SFDR,",
+    ].join("\n");
+    expect(parseKidSfdrArticle(real)).toBe(8);
+  });
+
+  it("une négation seule (aucun article affirmé) → null", () => {
+    expect(
+      parseKidSfdrArticle(
+        "Le Fonds ne poursuit pas d'objectif d'investissement durable au sens de l'article 9 du règlement SFDR.",
+      ),
+    ).toBeNull();
+  });
+
   it("null hors contexte SFDR, ou si ambigu sans formulation de classification", () => {
     expect(parseKidSfdrArticle("Conformément à l'article 8 du code monétaire.")).toBeNull();
     expect(parseKidSfdrArticle("aucune mention")).toBeNull();
