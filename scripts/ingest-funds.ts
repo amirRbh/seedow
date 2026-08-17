@@ -4,7 +4,16 @@
  *
  * Usage :
  *   bun run scripts/ingest-funds.ts FR0010752543 FR0013306735 ...   (défaut : 5 ISIN démo)
+ *   bun run scripts/ingest-funds.ts --discover 50                   (N nouveaux ISIN via GECO)
+ *   bun run scripts/ingest-funds.ts --plan 50                       (backlog priorisé, cf. ci-dessous)
  *   SEEDOW_PERSIST=1 bun run scripts/ingest-funds.ts ...            (écrit en base)
+ *
+ * `--plan N` referme la boucle planification → exécution : reprend les N ISIN
+ * les plus prioritaires du dernier backlog calculé par le cron
+ * `recompute-ingestion-plan` (demande réelle + fraîcheur + complétude, cf.
+ * `lib/data-engine/ingestion-plan.ts`), journalisé dans `cron_run_log`. Contrairement
+ * à `--discover`, qui découvre des fonds neufs via la pagination GECO, `--plan`
+ * cible les fonds déjà en base qui ont le plus besoin d'être (ré)ingérés.
  *
  * Étapes (zéro mock, zéro invention — champ absent → null) :
  *   1. GECO : identité (nom, société de gestion + LEI, domicile, classif AMF, devise) ;
@@ -32,6 +41,7 @@ import {
   type GecoIdentity,
 } from "../src/lib/data-engine/sources/geco.server";
 import { parseKidSfdrArticle, parseKidOngoingCharges } from "../src/lib/esg/kid-parser";
+import { backlogIsins } from "../src/lib/data-engine/ingestion-plan";
 
 type Status = "ok" | "unavailable" | "error";
 
@@ -308,18 +318,50 @@ export async function persist(result: IngestionResult): Promise<string> {
   return `${created ? "created" : "updated"} asset · ${r.observationsInserted} obs, canonique: ${r.canonicalFieldsUpdated.join(",") || "—"}`;
 }
 
+/**
+ * Lit le dernier backlog priorisé calculé par le cron `recompute-ingestion-plan`
+ * (`cron_run_log`, le plus récent en `status = 'ok'`) et en extrait jusqu'à
+ * `limit` ISIN, du plus prioritaire au moins. Backlog absent (cron jamais
+ * exécuté) ou vide → liste vide, jamais une erreur qui bloquerait l'ingestion.
+ */
+export async function loadPlanIsins(limit: number): Promise<string[]> {
+  const { supabaseAdmin } = await import("../src/integrations/supabase/client.server");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const admin = supabaseAdmin as any;
+  const { data, error } = await admin
+    .from("cron_run_log")
+    .select("details")
+    .eq("job_name", "recompute-ingestion-plan")
+    .eq("status", "ok")
+    .order("ran_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error || !data?.details?.top) return [];
+  return backlogIsins(data.details.top, limit);
+}
+
 const DEMO_ISINS = ["FR0010752543", "FR0013306735", "FR0011291657", "FR0013478591", "FR0010929836"];
 
 async function main() {
   const args = process.argv.slice(2);
-  // `--discover N` : récupère automatiquement N ISIN réels via GECO ; sinon
-  // ISIN passés en arguments ; sinon les 5 ISIN de démo.
+  // `--discover N` : récupère automatiquement N ISIN neufs via GECO.
+  // `--plan N` : reprend le backlog priorisé (fonds déjà en base à ré-ingérer).
+  // Sinon : ISIN passés en arguments ; sinon les 5 ISIN de démo.
   let isins: string[];
   if (args[0] === "--discover") {
     const limit = Math.max(1, Number(args[1]) || 50);
     console.log(`Découverte de ${limit} ISIN via GECO…`);
     isins = await discoverIsins(limit);
     console.log(`→ ${isins.length} ISIN découverts.`);
+  } else if (args[0] === "--plan") {
+    const limit = Math.max(1, Number(args[1]) || 50);
+    console.log(`Lecture du backlog priorisé (recompute-ingestion-plan, top ${limit})…`);
+    isins = await loadPlanIsins(limit);
+    console.log(
+      isins.length
+        ? `→ ${isins.length} ISIN du backlog.`
+        : `→ backlog vide (cron jamais exécuté, ou rien à ingérer en priorité).`,
+    );
   } else {
     isins = args.length ? args : DEMO_ISINS;
   }

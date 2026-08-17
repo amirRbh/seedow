@@ -11,7 +11,11 @@ on:
         required: false
         default: ""
       discover:
-        description: "Découvrir automatiquement N ISIN via GECO (prioritaire sur isins)"
+        description: "Découvrir automatiquement N ISIN via GECO (prioritaire sur plan/isins)"
+        required: false
+        default: ""
+      plan:
+        description: "Reprendre le backlog priorisé (top N, cf. recompute-ingestion-plan ; prioritaire sur isins)"
         required: false
         default: ""
       persist:
@@ -58,6 +62,8 @@ jobs:
         run: |
           if [ -n "${{ inputs.discover }}" ]; then
             bun run scripts/ingest-funds.ts --discover "${{ inputs.discover }}"
+          elif [ -n "${{ inputs.plan }}" ]; then
+            bun run scripts/ingest-funds.ts --plan "${{ inputs.plan }}"
           else
             bun run scripts/ingest-funds.ts ${{ inputs.isins }}
           fi

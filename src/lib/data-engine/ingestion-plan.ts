@@ -141,3 +141,26 @@ export function planIngestion(
 
   return limit > 0 ? items.slice(0, limit) : items;
 }
+
+/** Sous-ensemble d'un `IngestionPlanItem` tel que journalisé dans
+ *  `cron_run_log.details.top` (voir hook `recompute-ingestion-plan`). */
+export interface PlanBacklogEntry {
+  isin: string | null;
+  priority: number;
+}
+
+/**
+ * Referme la boucle planification → exécution : extrait, dans l'ordre de
+ * priorité déjà trié, les ISIN valides et uniques du backlog journalisé par le
+ * cron `recompute-ingestion-plan`, jusqu'à `limit`. Pur — l'appelant (script
+ * d'ingestion) reste seul responsable de lire `cron_run_log` et d'exécuter
+ * l'ingestion réelle pour ces ISIN.
+ */
+export function backlogIsins(top: readonly PlanBacklogEntry[], limit: number): string[] {
+  const out: string[] = [];
+  for (const entry of top) {
+    if (entry.isin && !out.includes(entry.isin)) out.push(entry.isin);
+    if (out.length >= limit) break;
+  }
+  return out;
+}

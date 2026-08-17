@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  backlogIsins,
   computeStaleDays,
   planIngestion,
   scoreCandidate,
@@ -108,5 +109,31 @@ describe("summarizePlan", () => {
       total: 0,
       byReason: { never_ingested: 0, no_source: 0, stale: 0, incomplete: 0, high_demand: 0 },
     });
+  });
+});
+
+describe("backlogIsins", () => {
+  it("garde l'ordre de priorité et respecte la limite", () => {
+    const top = [
+      { isin: "FR0010752543", priority: 400 },
+      { isin: "FR0013306735", priority: 250 },
+      { isin: "FR0011291657", priority: 90 },
+    ];
+    expect(backlogIsins(top, 2)).toEqual(["FR0010752543", "FR0013306735"]);
+  });
+
+  it("ignore les entrées sans ISIN et dédoublonne", () => {
+    const top = [
+      { isin: "FR0010752543", priority: 400 },
+      { isin: null, priority: 300 },
+      { isin: "FR0010752543", priority: 250 }, // doublon (asset revu deux fois)
+      { isin: "FR0013306735", priority: 90 },
+    ];
+    expect(backlogIsins(top, 10)).toEqual(["FR0010752543", "FR0013306735"]);
+  });
+
+  it("backlog vide ou limite nulle → aucun ISIN", () => {
+    expect(backlogIsins([], 10)).toEqual([]);
+    expect(backlogIsins([{ isin: "FR0010752543", priority: 1 }], 0)).toEqual([]);
   });
 });
