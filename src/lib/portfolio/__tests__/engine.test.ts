@@ -68,9 +68,9 @@ describe("buildPortfolio", () => {
     expect(result.excluded_count).toBe(0);
   });
 
-  it("keeps only the top 50% per class when many titles are present", () => {
-    // 6 equity_dev assets: best-in-class keeps top 50% => 3 assets (indices 3,4,5)
-    const universe = Array.from({ length: 6 }, (_, i) =>
+  it("drops only the bottom ESG quartile per class when many titles are present (v1.3)", () => {
+    // 8 equity_dev assets (> thin-class guard of 5): drop floor(8*0.25)=2 lowest.
+    const universe = Array.from({ length: 8 }, (_, i) =>
       makeAsset({
         id: `eq-${i}`,
         asset_class: "equity_dev",
@@ -82,8 +82,8 @@ describe("buildPortfolio", () => {
       covariance: diagonalCovMap(universe),
       params: defaultParams(),
     });
-    // 6 in, top 50% (floor(6*0.5)=3) kept → 3 dropped
-    expect(result.excluded_count).toBe(3);
+    // 8 in, bottom quartile (floor(8*0.25)=2) dropped
+    expect(result.excluded_count).toBe(2);
   });
 
   it("returns weights that sum to 1 and respect MAX_SINGLE_WEIGHT", () => {

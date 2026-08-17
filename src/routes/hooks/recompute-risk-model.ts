@@ -65,10 +65,22 @@ export const Route = createFileRoute("/hooks/recompute-risk-model")({
         const { stats, covariance, skipped, diagnostics } = buildRiskModel(pricesByAsset, groups);
 
         let assetsUpdated = 0;
+        const recomputedAt = new Date().toISOString();
         for (const [id, s] of stats) {
           const { error: uErr } = await supabaseAdmin
             .from("assets")
-            .update({ expected_return: s.expectedReturn, volatility: s.volatility })
+            // `stats_observations` / `stats_updated_at` : provenance de l'estimation,
+            // consommée par le moteur (lib/portfolio/data-quality.ts) pour ne jamais
+            // traiter une valeur de seed comme une donnée réelle. Colonnes ajoutées
+            // par la migration asset_stats_provenance, hors types Supabase générés
+            // tant qu'ils n'ont pas été régénérés → cast localisé.
+            .update({
+              expected_return: s.expectedReturn,
+              volatility: s.volatility,
+              stats_observations: s.observations,
+              stats_updated_at: recomputedAt,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } as any)
             .eq("id", id);
           if (uErr) {
             console.error(`[recompute-risk-model] update assets.${id} failed:`, uErr.message);

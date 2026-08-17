@@ -62,7 +62,17 @@ export interface Asset {
    * bottom-up. null si aucune donnée.
    */
   carbon_sourced_ratio?: number | null;
+  /**
+   * Nombre d'observations (rendements quotidiens) réellement utilisées par le
+   * modèle de risque pour estimer `expected_return` / `volatility`. Écrit par
+   * /hooks/recompute-risk-model. null/absent ⇒ le modèle n'a jamais tourné sur
+   * cet actif → μ/σ sont la valeur de seed (voir lib/portfolio/data-quality.ts).
+   */
+  stats_observations?: number | null;
 }
+
+/** Palier de fiabilité des statistiques risque/rendement d'un actif. */
+export type DataQualityTier = "full" | "partial" | "insufficient";
 
 /**
  * Pillar weights used when computing a composite ESG score.
@@ -159,6 +169,36 @@ export interface PortfolioMetrics {
   diversification: number; // 1 - HHI
 }
 
+/** Résumé de qualité de données du portefeuille (voir data-quality.ts). */
+export interface DataQualitySummary {
+  full: number;
+  partial: number;
+  insufficient: number;
+  /** Part (0..1) du POIDS final porté par des actifs à statistiques `full`. */
+  full_weight_share: number;
+  /** Ids dont le μ a été ancré sur des pairs réels (transparence). */
+  anchored_ids: string[];
+}
+
+/**
+ * Explication déterministe et lisible du portefeuille (aucun texte en dur : des
+ * clés i18n + les valeurs réelles). Construite par lib/portfolio/explanation.ts.
+ */
+export interface PortfolioExplanation {
+  risk_level: "prudent" | "modere" | "dynamique";
+  /** Diversification sur 10 (dérivée de 1 − HHI). */
+  diversification_10: number;
+  position_count: number;
+  /** Poids de la plus grosse ligne (0..1). */
+  max_weight: number;
+  /** Part du portefeuille appuyée sur des données de marché réelles (0..1). */
+  real_data_share: number;
+  /** Points saillants : { key: clé i18n, vars }. */
+  highlights: { key: string; vars?: Record<string, string | number> }[];
+  /** Clé i18n de la phrase de synthèse. */
+  summary_key: string;
+}
+
 export interface PortfolioResult {
   weights: PortfolioWeights;
   metrics: PortfolioMetrics;
@@ -166,6 +206,10 @@ export interface PortfolioResult {
   excluded_count: number; // assets removed by filter
   esg_floor_relaxed: boolean; // true if QP couldn't satisfy MIN_PORTFOLIO_ESG
   methodology_version: string;
+  /** Provenance des statistiques utilisées (jamais de donnée inventée). */
+  data_quality: DataQualitySummary;
+  /** Explication lisible du « pourquoi ce portefeuille ». */
+  explanation: PortfolioExplanation;
 }
 
 // Default risk targets per horizon goal
