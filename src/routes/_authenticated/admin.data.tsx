@@ -1,254 +1,214 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState, type ReactNode } from "react";
-import { callAuthed } from "@/lib/authedServerFn";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { getDataHealth, type DataHealthReport } from "@/lib/data-engine/health.functions";
+import { callAuthed } from "@/lib/authedServerFn";
+import { useLang } from "@/hooks/useLang";
+import { formatDate } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/admin/data")({
   component: AdminDataPage,
 });
 
-/** Tableau de bord interne de santé des données d'ingestion (§20). */
 function AdminDataPage() {
+  const { t } = useTranslation();
+  const { lang } = useLang();
   const [report, setReport] = useState<DataHealthReport | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     callAuthed(getDataHealth, undefined as never)
       .then(setReport)
-      .catch((err) => setError(err instanceof Error ? err.message : "Erreur de chargement"));
-  }, []);
+      .catch((err) =>
+        setError(err instanceof Error ? err.message : t("admin_data.error_fallback")),
+      );
+  }, [t]);
 
   if (error) {
     return (
       <div className="max-w-3xl mx-auto px-6 py-12">
-        <p className="text-sm" style={{ color: "var(--alert)" }}>
-          {error}
-        </p>
+        <p className="text-rust text-sm">{error}</p>
         <Link to="/dashboard" className="text-label underline mt-4 inline-block">
-          Retour au tableau de bord
+          {t("admin_data.back_dashboard")}
         </Link>
       </div>
     );
   }
 
   if (!report) {
-    return <div className="max-w-5xl mx-auto px-6 py-12 text-label">Chargement…</div>;
+    return (
+      <div className="max-w-3xl mx-auto px-6 py-12 text-ink-3 text-sm">
+        {t("admin_data.loading")}
+      </div>
+    );
   }
 
-  const { quality, sources, connectorsImplemented, connectorsTotal } = report;
-  const { sustainabilityTiers, ingestionPlan } = report;
-  const invalidIsin = quality.invalidIsinFundIds.length;
-  const dupIsin = Object.keys(quality.duplicateIsin).length;
-  const dupTicker = Object.keys(quality.duplicateTicker).length;
+  const { quality } = report;
+  const dtOpts: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  };
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-10">
-      <p className="apple-eyebrow" style={{ color: "var(--mint)" }}>
-        Data engine
-      </p>
-      <h1 className="apple-title mt-2" style={{ fontSize: "clamp(22px,3vw,30px)" }}>
-        Santé des données
-      </h1>
-      <p className="text-label mt-2" style={{ color: "var(--ink-2)" }}>
-        Instantané au {new Date(report.generatedAt).toLocaleString("fr-FR")} — pilote l'effort
-        d'ingestion (§20/§21).
-      </p>
-
-      <section
-        className="grid gap-3 mt-8"
-        style={{ gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))" }}
-      >
-        <Stat label="Fonds suivis" value={quality.fundsTracked} />
-        <Stat label="Sains (frais & complets)" value={quality.healthy} tone="good" />
-        <Stat
-          label="À mettre à jour"
-          value={quality.needsUpdate}
-          tone={quality.needsUpdate > 0 ? "warn" : "good"}
-        />
-        <Stat
-          label="Sans holdings"
-          value={quality.fundsWithoutHoldings}
-          tone={quality.fundsWithoutHoldings > 0 ? "warn" : "good"}
-        />
-        <Stat
-          label="Sans source"
-          value={quality.fundsWithoutSource}
-          tone={quality.fundsWithoutSource > 0 ? "warn" : "good"}
-        />
-        <Stat
-          label="Connecteurs actifs"
-          value={`${connectorsImplemented}/${connectorsTotal}`}
-          tone="good"
-        />
-      </section>
-
-      <h2 className="apple-title mt-10 mb-3" style={{ fontSize: "18px" }}>
-        Sources
-      </h2>
-      <div style={{ overflowX: "auto", border: "1px solid var(--paper-3)", borderRadius: 14 }}>
-        <table className="w-full text-body-sm" style={{ borderCollapse: "collapse" }}>
-          <thead>
-            <tr style={{ background: "var(--paper-2)" }}>
-              <Th>Source</Th>
-              <Th>Priorité</Th>
-              <Th>Automatisation</Th>
-              <Th>Connecteur</Th>
-              <Th>Santé</Th>
-              <Th>Dernier contrôle</Th>
-            </tr>
-          </thead>
-          <tbody>
-            {sources.map((s) => (
-              <tr key={s.key} style={{ borderTop: "1px solid var(--paper-3)" }}>
-                <Td>{s.name}</Td>
-                <Td mono>P{s.priority}</Td>
-                <Td mono>{s.automation ?? "—"}</Td>
-                <Td>
-                  <span
-                    className="font-mono"
-                    style={{ color: s.implemented ? "var(--mint)" : "var(--ink-2)" }}
-                  >
-                    {s.implemented ? "✓ actif" : "— à venir"}
-                  </span>
-                </Td>
-                <Td mono>{s.health}</Td>
-                <Td mono>
-                  {s.lastCheckedAt ? new Date(s.lastCheckedAt).toLocaleDateString("fr-FR") : "—"}
-                </Td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <h2 className="apple-title mt-10 mb-1" style={{ fontSize: "18px" }}>
-        Durabilité
-      </h2>
-      <p className="text-label mb-3" style={{ color: "var(--ink-2)" }}>
-        Tiers dérivés des signaux bruts (carbone, température, ESG, exclusions) — indépendants de
-        l'article SFDR.
-      </p>
-      <section
-        className="grid gap-3"
-        style={{ gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))" }}
-      >
-        <Stat label="Paris-aligned" value={sustainabilityTiers.paris_aligned} tone="good" />
-        <Stat label="Transition" value={sustainabilityTiers.transition} />
-        <Stat label="ESG large" value={sustainabilityTiers.broad_esg} />
-        <Stat
-          label="Preuves insuffisantes"
-          value={sustainabilityTiers.insufficient_evidence}
-          tone={sustainabilityTiers.insufficient_evidence > 0 ? "warn" : "good"}
-        />
-      </section>
-
-      <h2 className="apple-title mt-10 mb-1" style={{ fontSize: "18px" }}>
-        Prochaines ingestions
-      </h2>
-      <p className="text-label mb-3" style={{ color: "var(--ink-2)" }}>
-        File priorisée par demande, fraîcheur et complétude. {ingestionPlan.length} fonds à traiter
-        en priorité.
-      </p>
-      {ingestionPlan.length === 0 ? (
-        <p className="text-body-sm" style={{ color: "var(--ink-2)" }}>
-          Rien à ré-ingérer : données fraîches et complètes.
-        </p>
-      ) : (
-        <div style={{ overflowX: "auto", border: "1px solid var(--paper-3)", borderRadius: 14 }}>
-          <table className="w-full text-body-sm" style={{ borderCollapse: "collapse" }}>
-            <thead>
-              <tr style={{ background: "var(--paper-2)" }}>
-                <Th>Fonds</Th>
-                <Th>Priorité</Th>
-                <Th>Raisons</Th>
-                <Th>Ancienneté</Th>
-              </tr>
-            </thead>
-            <tbody>
-              {ingestionPlan.map((item) => (
-                <tr key={item.assetId} style={{ borderTop: "1px solid var(--paper-3)" }}>
-                  <Td>{item.ticker ?? item.isin ?? item.assetId.slice(0, 8)}</Td>
-                  <Td mono>{item.priority}</Td>
-                  <Td mono>{item.reasons.join(", ")}</Td>
-                  <Td mono>{item.staleDays == null ? "jamais" : `${item.staleDays} j`}</Td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+    <div className="max-w-6xl mx-auto px-6 py-12 space-y-10">
+      <header className="flex items-end justify-between flex-wrap gap-4">
+        <div>
+          <p className="text-tag uppercase tracking-[0.22em] text-gold font-mono">
+            {t("admin_data.eyebrow")}
+          </p>
+          <h1 className="font-display text-3xl text-ink mt-2">{t("admin_data.title")}</h1>
         </div>
-      )}
+        <Link to="/dashboard" className="text-label underline text-ink-3 hover:text-ink">
+          {t("admin_data.back_dashboard")}
+        </Link>
+      </header>
 
-      <h2 className="apple-title mt-10 mb-3" style={{ fontSize: "18px" }}>
-        Anomalies
-      </h2>
-      <ul className="text-body-sm flex flex-col gap-1" style={{ color: "var(--ink-2)" }}>
-        <li>
-          ISIN invalides :{" "}
-          <strong style={{ color: invalidIsin ? "var(--alert)" : "var(--mint)" }}>
-            {invalidIsin}
-          </strong>
-        </li>
-        <li>
-          Doublons ISIN :{" "}
-          <strong style={{ color: dupIsin ? "var(--alert)" : "var(--mint)" }}>{dupIsin}</strong>
-        </li>
-        <li>
-          Doublons ticker :{" "}
-          <strong style={{ color: dupTicker ? "var(--alert)" : "var(--mint)" }}>{dupTicker}</strong>
-        </li>
-      </ul>
+      <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Kpi label={t("admin_data.kpi_tracked")} value={String(quality.fundsTracked)} />
+        <Kpi label={t("admin_data.kpi_healthy")} value={String(quality.healthy)} tone="forest" />
+        <Kpi
+          label={t("admin_data.kpi_needs_update")}
+          value={String(quality.needsUpdate)}
+          tone="rust"
+        />
+        <Kpi
+          label={t("admin_data.kpi_connectors")}
+          value={`${report.connectorsImplemented} / ${report.connectorsTotal}`}
+        />
+        <Kpi label={t("admin_data.kpi_no_holdings")} value={String(quality.fundsWithoutHoldings)} />
+        <Kpi label={t("admin_data.kpi_no_source")} value={String(quality.fundsWithoutSource)} />
+        <Kpi
+          label={t("admin_data.kpi_invalid_isin")}
+          value={String(quality.invalidIsinFundIds.length)}
+        />
+        <Kpi
+          label={t("admin_data.kpi_duplicates")}
+          value={String(
+            Object.keys(quality.duplicateIsin).length + Object.keys(quality.duplicateTicker).length,
+          )}
+        />
+      </section>
 
-      <Link to="/dashboard" className="text-label underline mt-8 inline-block">
-        Retour au tableau de bord
-      </Link>
+      {/* Sources */}
+      <section>
+        <h2 className="font-display text-lg text-ink mb-3">{t("admin_data.sources_title")}</h2>
+        <div className="border border-paper-3 rounded-2xl overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-body-sm">
+              <thead className="bg-paper-2/60 text-tag uppercase tracking-[0.14em] text-ink-3">
+                <tr>
+                  <th className="text-left font-semibold px-4 py-3">
+                    {t("admin_data.col_source")}
+                  </th>
+                  <th className="text-center font-semibold px-4 py-3">
+                    {t("admin_data.col_priority")}
+                  </th>
+                  <th className="text-center font-semibold px-4 py-3">
+                    {t("admin_data.col_connector")}
+                  </th>
+                  <th className="text-center font-semibold px-4 py-3">
+                    {t("admin_data.col_health")}
+                  </th>
+                  <th className="text-right font-semibold px-4 py-3">
+                    {t("admin_data.col_checked")}
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-paper-3">
+                {report.sources.map((s) => (
+                  <tr key={s.key} className="hover:bg-paper-2/40 transition-colors">
+                    <td className="px-4 py-3 text-ink">{s.name}</td>
+                    <td className="px-4 py-3 text-center text-ink-3 tabular-nums">{s.priority}</td>
+                    <td className="px-4 py-3 text-center">
+                      {s.implemented ? (
+                        <span className="text-forest">●</span>
+                      ) : (
+                        <span className="text-ink-3">—</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-center text-ink-3 uppercase text-caption tracking-wide">
+                      {s.health}
+                    </td>
+                    <td className="px-4 py-3 text-right text-ink-3 text-caption tabular-nums">
+                      {s.lastCheckedAt ? formatDate(s.lastCheckedAt, lang, dtOpts) : "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* Sustainability tiers (B4) */}
+      <section>
+        <h2 className="font-display text-lg text-ink mb-3">{t("admin_data.tiers_title")}</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Kpi
+            label={t("admin_data.tier_paris_aligned")}
+            value={String(report.sustainabilityTiers.paris_aligned)}
+            tone="forest"
+          />
+          <Kpi
+            label={t("admin_data.tier_transition")}
+            value={String(report.sustainabilityTiers.transition)}
+          />
+          <Kpi
+            label={t("admin_data.tier_broad_esg")}
+            value={String(report.sustainabilityTiers.broad_esg)}
+          />
+          <Kpi
+            label={t("admin_data.tier_insufficient")}
+            value={String(report.sustainabilityTiers.insufficient_evidence)}
+            tone="rust"
+          />
+        </div>
+      </section>
+
+      {/* Ingestion plan (B2/B3) */}
+      <section>
+        <h2 className="font-display text-lg text-ink mb-3">{t("admin_data.plan_title")}</h2>
+        <div className="border border-paper-3 rounded-2xl divide-y divide-paper-3">
+          {report.ingestionPlan.length === 0 ? (
+            <p className="p-4 text-body-sm text-ink-3">{t("admin_data.plan_empty")}</p>
+          ) : (
+            report.ingestionPlan.map((item) => (
+              <div
+                key={item.assetId}
+                className="p-4 flex items-center justify-between text-body-sm"
+              >
+                <span className="flex items-center gap-2">
+                  <span className="font-mono text-ink">{item.ticker ?? item.isin ?? "—"}</span>
+                  <span className="text-ink-3 text-caption">{item.reasons.join(", ")}</span>
+                </span>
+                <span className="text-ink-3 text-caption tabular-nums">
+                  {t("admin_data.priority")} {item.priority}
+                  {item.staleDays != null ? ` · ${item.staleDays}j` : ""}
+                </span>
+              </div>
+            ))
+          )}
+        </div>
+        <p className="text-caption text-ink-3 mt-2">{t("admin_data.plan_hint")}</p>
+      </section>
     </div>
   );
 }
 
-function Stat({
-  label,
-  value,
-  tone,
-}: {
-  label: string;
-  value: number | string;
-  tone?: "good" | "warn";
-}) {
-  const color = tone === "good" ? "var(--mint)" : tone === "warn" ? "var(--solar)" : "var(--ink)";
+function Kpi({ label, value, tone }: { label: string; value: string; tone?: "forest" | "rust" }) {
   return (
-    <div
-      style={{
-        background: "var(--paper-2)",
-        border: "1px solid var(--paper-3)",
-        borderRadius: 14,
-        padding: 16,
-      }}
-    >
-      <div className="font-mono" style={{ fontSize: 26, color }}>
+    <div className="border border-paper-3 rounded-2xl p-4">
+      <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono">{label}</p>
+      <p
+        className={`font-value text-2xl mt-1 tabular-nums ${
+          tone === "forest" ? "text-forest" : tone === "rust" ? "text-rust" : "text-ink"
+        }`}
+      >
         {value}
-      </div>
-      <div className="text-label mt-1" style={{ color: "var(--ink-2)" }}>
-        {label}
-      </div>
+      </p>
     </div>
-  );
-}
-
-function Th({ children }: { children: ReactNode }) {
-  return (
-    <th
-      className="text-label text-left"
-      style={{ padding: "9px 12px", color: "var(--ink-2)", fontWeight: 600 }}
-    >
-      {children}
-    </th>
-  );
-}
-
-function Td({ children, mono }: { children: ReactNode; mono?: boolean }) {
-  return (
-    <td className={mono ? "font-mono" : undefined} style={{ padding: "9px 12px" }}>
-      {children}
-    </td>
   );
 }
