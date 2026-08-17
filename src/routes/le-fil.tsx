@@ -243,8 +243,10 @@ function LeFil() {
                 </div>
               )}
               {/* Équivalences concrètes — affichées UNIQUEMENT si le moteur
-                  d'impact le juge honnête (empreinte mesurée + couverture ≥ 50 %). */}
-              {impact?.presentation?.show && impact.presentation.equivalences.length > 0 && (
+                  d'impact le juge honnête (empreinte mesurée + couverture ≥ 50 %).
+                  Sinon, état de repli honnête ET engageant (jamais de silence) :
+                  on montre où on en est et ce qui manque pour débloquer le chiffre. */}
+              {impact?.presentation?.show && impact.presentation.equivalences.length > 0 ? (
                 <div className="mt-4 rounded-[10px] border border-paper-3 bg-paper-2 p-3.5">
                   <SectionLabel>{t("le_fil.equivalences_title")}</SectionLabel>
                   <ul className="mt-2.5 flex flex-col gap-2">
@@ -263,6 +265,32 @@ function LeFil() {
                     {impact.presentation.equivalences[0]?.source}
                   </p>
                 </div>
+              ) : (
+                impact?.presentation && (
+                  <div className="mt-4 rounded-[10px] border border-paper-3 bg-paper-2 p-3.5">
+                    <SectionLabel>{t("le_fil.equivalences_title")}</SectionLabel>
+                    <p className="mt-2 text-sm text-ink-2 leading-snug">
+                      {t(impact.presentation.reasonKey ?? "impact.reason.no_data", {
+                        pct: Math.round(impact.presentation.coverage * 100),
+                      })}
+                    </p>
+                    {impact.presentation.reasonKey === "impact.reason.low_coverage" && (
+                      <div className="mt-2.5">
+                        <div className="h-1.5 w-full bg-paper-3 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-mint transition-all"
+                            style={{
+                              width: `${Math.min(100, Math.round(impact.presentation.coverage * 100 * 2))}%`,
+                            }}
+                          />
+                        </div>
+                        <p className="mt-1 font-mono text-tag text-ink-3">
+                          {Math.round(impact.presentation.coverage * 100)}% / 50%
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )
               )}
             </Node>
 

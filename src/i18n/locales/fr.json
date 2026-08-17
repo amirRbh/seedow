@@ -1776,9 +1776,9 @@
       "unit": "u."
     },
     "reason": {
-      "no_data": "Empreinte carbone pas encore mesurée sur ce portefeuille.",
-      "estimated_only": "Donnée estimée — pas d'équivalence tant qu'elle n'est pas mesurée.",
-      "low_coverage": "Couverture des données trop faible pour une équivalence fiable."
+      "no_data": "Pas encore de données carbone mesurées sur ce portefeuille — dès qu'un fonds en fournit, l'équivalent concret (km en voiture, repas...) apparaît ici automatiquement.",
+      "estimated_only": "La donnée carbone disponible est estimée, pas mesurée — on n'affiche un équivalent concret que sur du mesuré, jamais sur une estimation.",
+      "low_coverage": "{{pct}}% de ton portefeuille a des données carbone mesurées (il en faut 50% pour un chiffre fiable) — cette part grandit à mesure que Seedow enrichit chaque fonds."
     }
   },
   "mirror": {
