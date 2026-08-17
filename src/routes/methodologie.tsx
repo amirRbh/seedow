@@ -27,6 +27,11 @@ import {
  */
 const METHODOLOGY_VERSIONS = [
   {
+    version: "1.1",
+    date: "2026-08-17",
+    noteKey: "methodologie.version_1_1_note",
+  },
+  {
     version: "1.0",
     date: "2026-08-17",
     noteKey: "methodologie.version_1_0_note",
@@ -562,6 +567,31 @@ function MethodologyPage() {
             )}
           </div>
         </div>
+      </section>
+
+      {/* Score Seedow — méthodologie propriétaire, publique et versionnée */}
+      <section className="max-w-6xl mx-auto px-6 py-10 border-t border-paper-3">
+        <p className="text-tag uppercase tracking-[0.12em] text-ink-3 font-medium mb-3">
+          {t("methodologie.seedow_score_title")}
+        </p>
+        <p className="text-body-sm text-ink-2 leading-relaxed max-w-2xl">
+          {t("methodologie.seedow_score_intro")}
+        </p>
+        <ul className="mt-4 space-y-2 text-body-sm">
+          <li className="flex justify-between border-b border-paper-3 pb-2">
+            <span className="text-ink-2">{t("methodologie.seedow_score_pillar_esg")}</span>
+            <span className="tabular-nums font-medium">40 %</span>
+          </li>
+          <li className="flex justify-between border-b border-paper-3 pb-2">
+            <span className="text-ink-2">{t("methodologie.seedow_score_pillar_climate")}</span>
+            <span className="tabular-nums font-medium">40 %</span>
+          </li>
+          <li className="flex justify-between pb-2">
+            <span className="text-ink-2">{t("methodologie.seedow_score_pillar_exclusions")}</span>
+            <span className="tabular-nums font-medium">20 %</span>
+          </li>
+        </ul>
+        <p className="text-caption text-ink-3 mt-3">{t("methodologie.seedow_score_renorm")}</p>
       </section>
 
       {/* C3 — Historique de version (transparence auditable, Moat Blueprint) */}

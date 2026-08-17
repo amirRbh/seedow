@@ -92,7 +92,15 @@ function ObservatoryPage() {
                   <p className="text-ink truncate">{f.name}</p>
                   <p className="text-caption text-ink-3 font-mono">{f.isin ?? f.ticker}</p>
                 </div>
-                <RiskBadge risk={f.greenwashing_risk} />
+                <div className="shrink-0 flex items-center gap-3">
+                  {f.seedow_score != null && (
+                    <span className="font-value text-body tabular-nums text-ink-2">
+                      {f.seedow_score}
+                      <span className="text-ink-3 text-caption">/100</span>
+                    </span>
+                  )}
+                  <RiskBadge risk={f.greenwashing_risk} />
+                </div>
               </Link>
             ))
           )}
