@@ -113,7 +113,6 @@ function LeFil() {
                   className={`mt-2.5 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-xs tabular-nums text-paper ${
                     isGrowing ? "bg-mint" : "bg-alert"
                   }`}
-
                 >
                   <span aria-hidden>{isGrowing ? "▲" : "▼"}</span>
                   {isGrowing ? "+" : ""}
@@ -153,7 +152,6 @@ function LeFil() {
                 </Link>
               </div>
             </Node>
-
 
             {/* NŒUD 2 — MES INVESTISSEMENTS */}
             <Node index={2} active {...reveal(2)}>
@@ -200,7 +198,6 @@ function LeFil() {
               ) : (
                 <p className="mt-2 text-sm text-ink-3">{t("le_fil.empty_holdings")}</p>
               )}
-
             </Node>
 
             {/* NŒUD 3 — MON IMPACT */}
@@ -209,7 +206,6 @@ function LeFil() {
               <div className="mt-3 flex items-center gap-4">
                 <ImpactRing score={impactScore} />
                 <div className="text-sm leading-snug text-ink-2">
-
                   {impactScore !== null ? (
                     <>
                       {t("le_fil.impact_weighted")}
@@ -252,7 +248,6 @@ function LeFil() {
                 <div className="mt-4 rounded-[10px] border border-paper-3 bg-paper-2 p-3.5">
                   <SectionLabel>{t("le_fil.equivalences_title")}</SectionLabel>
                   <ul className="mt-2.5 flex flex-col gap-2">
-
                     {impact.presentation.equivalences.slice(0, 3).map((e) => (
                       <li key={e.factorId} className="flex items-baseline justify-between gap-3">
                         <span className="text-sm text-ink-2">{t(e.labelKey)}</span>
@@ -278,7 +273,6 @@ function LeFil() {
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
                   <span className="text-[13px] font-semibold tracking-[-0.01em] text-ink-2">
                     {t("le_fil.more")}
-
                   </span>
                   <svg
                     viewBox="0 0 24 24"
@@ -366,7 +360,6 @@ function LeFil() {
               ))}
             </div>
           </motion.div>
-
         </div>
       </div>
 
@@ -383,9 +376,7 @@ function LeFil() {
 
 /** Intitulé de section : traitement typographique unique dans tout le fil. */
 function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="text-[13px] font-semibold tracking-[-0.01em] text-ink-2">{children}</p>
-  );
+  return <p className="text-[13px] font-semibold tracking-[-0.01em] text-ink-2">{children}</p>;
 }
 
 /** Un nœud du fil : puce sur la ligne + carte de contenu. */
@@ -411,8 +402,6 @@ function Node({
     </motion.div>
   );
 }
-
-
 
 /**
  * Ligne de comparaison honnête : deux barres (mon Fil vs indice), la couleur
@@ -483,7 +472,6 @@ function ImpactRing({ score }: { score: number | null }) {
     >
       <div className="absolute h-[58px] w-[58px] rounded-full bg-card" />
       <span className="relative font-mono text-lg font-bold tabular-nums text-ink">
-
         {score === null ? (
           "—"
         ) : (
