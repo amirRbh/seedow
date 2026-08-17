@@ -513,6 +513,9 @@ function Landing() {
             <Link to="/methodologie" className="hover:text-[color:var(--apple-text)]">
               {t("landing.footer.methodology")}
             </Link>
+            <Link to="/observatoire" className="hover:text-[color:var(--apple-text)]">
+              {t("landing.footer.observatory")}
+            </Link>
             <Link to="/tarifs" className="hover:text-[color:var(--apple-text)]">
               {t("landing.footer.pricing")}
             </Link>

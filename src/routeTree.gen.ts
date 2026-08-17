@@ -13,6 +13,7 @@ import { Route as WrappedRouteImport } from './routes/wrapped'
 import { Route as WaitlistRouteImport } from './routes/waitlist'
 import { Route as VoteRouteImport } from './routes/vote'
 import { Route as TarifsRouteImport } from './routes/tarifs'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ReveilRouteImport } from './routes/reveil'
 import { Route as ReglagesRouteImport } from './routes/reglages'
 import { Route as ProfilRouteImport } from './routes/profil'
@@ -75,6 +76,11 @@ const VoteRoute = VoteRouteImport.update({
 const TarifsRoute = TarifsRouteImport.update({
   id: '/tarifs',
   path: '/tarifs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReveilRoute = ReveilRouteImport.update({
@@ -323,6 +329,7 @@ export interface FileRoutesByFullPath {
   '/profil': typeof ProfilRoute
   '/reglages': typeof ReglagesRoute
   '/reveil': typeof ReveilRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tarifs': typeof TarifsRoute
   '/vote': typeof VoteRouteWithChildren
   '/waitlist': typeof WaitlistRoute
@@ -370,6 +377,7 @@ export interface FileRoutesByTo {
   '/profil': typeof ProfilRoute
   '/reglages': typeof ReglagesRoute
   '/reveil': typeof ReveilRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tarifs': typeof TarifsRoute
   '/vote': typeof VoteRouteWithChildren
   '/waitlist': typeof WaitlistRoute
@@ -420,6 +428,7 @@ export interface FileRoutesById {
   '/profil': typeof ProfilRoute
   '/reglages': typeof ReglagesRoute
   '/reveil': typeof ReveilRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tarifs': typeof TarifsRoute
   '/vote': typeof VoteRouteWithChildren
   '/waitlist': typeof WaitlistRoute
@@ -470,6 +479,7 @@ export interface FileRouteTypes {
     | '/profil'
     | '/reglages'
     | '/reveil'
+    | '/sitemap.xml'
     | '/tarifs'
     | '/vote'
     | '/waitlist'
@@ -517,6 +527,7 @@ export interface FileRouteTypes {
     | '/profil'
     | '/reglages'
     | '/reveil'
+    | '/sitemap.xml'
     | '/tarifs'
     | '/vote'
     | '/waitlist'
@@ -566,6 +577,7 @@ export interface FileRouteTypes {
     | '/profil'
     | '/reglages'
     | '/reveil'
+    | '/sitemap.xml'
     | '/tarifs'
     | '/vote'
     | '/waitlist'
@@ -616,6 +628,7 @@ export interface RootRouteChildren {
   ProfilRoute: typeof ProfilRoute
   ReglagesRoute: typeof ReglagesRoute
   ReveilRoute: typeof ReveilRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TarifsRoute: typeof TarifsRoute
   VoteRoute: typeof VoteRouteWithChildren
   WaitlistRoute: typeof WaitlistRoute
@@ -661,6 +674,13 @@ declare module '@tanstack/react-router' {
       path: '/tarifs'
       fullPath: '/tarifs'
       preLoaderRoute: typeof TarifsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reveil': {
@@ -1041,6 +1061,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfilRoute: ProfilRoute,
   ReglagesRoute: ReglagesRoute,
   ReveilRoute: ReveilRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TarifsRoute: TarifsRoute,
   VoteRoute: VoteRouteWithChildren,
   WaitlistRoute: WaitlistRoute,
