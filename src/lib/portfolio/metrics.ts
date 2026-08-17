@@ -1,5 +1,6 @@
 import type { Asset, PortfolioWeights, PortfolioMetrics, AssetClass, PillarWeights } from "./types";
 import { DEFAULT_PILLAR_WEIGHTS, compositeEsgScore } from "./types";
+import { CARBON_QUALITY_RANK, type CarbonDataQuality } from "@/lib/esg/carbon-engine";
 
 export function computeMetrics(
   assets: Asset[],
@@ -17,6 +18,11 @@ export function computeMetrics(
   // assets that actually have a value. Coverage = share of weight with real data.
   let carbonNumerator = 0;
   let carbonCoverage = 0;
+  // Part de la couverture carbone qui est directement sourcée (measured/reported)
+  // plutôt qu'estimée bottom-up, et palier le moins bon parmi les actifs couverts
+  // (label honnête du portefeuille — cf. lib/esg/carbon-engine.ts).
+  let carbonSourcedNumerator = 0;
+  let carbonWorstQuality: CarbonDataQuality | null = null;
   // WACI (tCO2e/M$ CA) — même logique : moyenne pondérée sur la part couverte.
   let waciNumerator = 0;
   let waciCoverage = 0;
@@ -35,6 +41,17 @@ export function computeMetrics(
     if (a.carbon_intensity_gco2e_per_eur != null) {
       carbonNumerator += w * a.carbon_intensity_gco2e_per_eur;
       carbonCoverage += w;
+      // Legacy assets with a value but no explicit quality predate this engine
+      // and always came from a direct fund-level disclosure → treat as measured.
+      const quality = a.carbon_data_quality ?? "measured";
+      const sourcedRatio = a.carbon_sourced_ratio ?? 1;
+      carbonSourcedNumerator += w * sourcedRatio;
+      if (
+        carbonWorstQuality == null ||
+        CARBON_QUALITY_RANK[quality] > CARBON_QUALITY_RANK[carbonWorstQuality]
+      ) {
+        carbonWorstQuality = quality;
+      }
     }
     // WACI émetteurs (données MSCI réelles), quand disponible
     if (a.waci_tco2e_per_musd_sales != null) {
@@ -98,6 +115,8 @@ export function computeMetrics(
     ter: portfolioTER,
     carbon_intensity_gco2e_per_eur: realCarbon,
     carbon_intensity_coverage: carbonCoverage,
+    carbon_sourced_share: carbonCoverage > 0 ? carbonSourcedNumerator / carbonCoverage : null,
+    carbon_data_quality: carbonWorstQuality,
     waci_tco2e_per_musd_sales: waci,
     waci_coverage: waciCoverage,
     by_class: byClass,

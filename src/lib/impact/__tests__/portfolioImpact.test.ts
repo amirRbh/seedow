@@ -143,3 +143,63 @@ describe("buildPortfolioImpact — verdict carbone gaté par la couverture", () 
     expect(view.intensity?.cleaner).toBe(true);
   });
 });
+
+describe("buildPortfolioImpact — estimate (moteur d'estimation carbone, holdings)", () => {
+  it("expose une estimation graduée (jamais 'measured') quand la donnée est estimée bottom-up", () => {
+    const view = buildPortfolioImpact(
+      {
+        carbon_intensity_gco2e_per_eur: 423.72,
+        carbon_intensity_coverage: 0.72,
+        carbon_sourced_share: 0,
+        carbon_data_quality: "estimated_sector",
+        esg_score: 78,
+      },
+      1000,
+    );
+    // Jamais présentée comme mesurée : measured=false, mais estimate est peuplé.
+    expect(view.measured).toBe(false);
+    expect(view.estimate).not.toBeNull();
+    expect(view.estimate?.dataQuality).toBe("estimated_sector");
+    expect(view.estimate?.sourcedPct).toBe(0);
+    expect(view.estimate?.coveragePct).toBe(72);
+    // Jamais de fausse précision (423.72 × 0.72 = 305.08 kg → arrondi à 2 chiffres sig.)
+    expect(view.estimate?.kgCo2ePerYear).toBe(310);
+    expect(Number.isInteger(view.estimate!.kgCo2ePerYear * 100)).toBe(true);
+  });
+
+  it("signale une couverture faible ('lowCoverage') sans jamais masquer le chiffre", () => {
+    const view = buildPortfolioImpact(
+      {
+        carbon_intensity_gco2e_per_eur: 200,
+        carbon_intensity_coverage: 0.1,
+        carbon_sourced_share: 0.5,
+        carbon_data_quality: "estimated_company",
+        esg_score: 60,
+      },
+      1000,
+    );
+    expect(view.estimate).not.toBeNull();
+    expect(view.estimate?.lowCoverage).toBe(true);
+    expect(view.estimate?.confidence).toBe("low");
+    expect(view.estimate?.kgCo2ePerYear).toBeGreaterThan(0);
+  });
+
+  it("reste mixte : measured=true et estimate mesuré quand toute la couverture est directement sourcée", () => {
+    const view = buildPortfolioImpact(
+      { carbon_intensity_gco2e_per_eur: 100, carbon_intensity_coverage: 1, esg_score: 78 },
+      1000,
+    );
+    expect(view.measured).toBe(true);
+    expect(view.estimate).not.toBeNull();
+    expect(view.estimate?.dataQuality).toBe("measured");
+    expect(view.estimate?.sourcedPct).toBe(100);
+  });
+
+  it("estimate reste null quand la couverture est nulle (rien à afficher)", () => {
+    const view = buildPortfolioImpact(
+      { carbon_intensity_gco2e_per_eur: null, carbon_intensity_coverage: 0, esg_score: 82 },
+      1000,
+    );
+    expect(view.estimate).toBeNull();
+  });
+});

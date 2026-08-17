@@ -17,8 +17,11 @@ import {
   type ConvictionTier,
   type ConvictionsModel,
 } from "@/lib/impact/narrative";
-import { carbonConfidenceTier } from "@/lib/impact/translator";
-import type { PortfolioImpactView, PortfolioIntensityView } from "@/lib/impact/portfolioImpact";
+import type {
+  PortfolioImpactView,
+  PortfolioIntensityView,
+  CarbonEstimateView,
+} from "@/lib/impact/portfolioImpact";
 import { ACWI_WACI_SOURCE, ACWI_WACI_ASOF } from "@/lib/esg/benchmark";
 import { LeFil } from "@/components/impact/LeFil";
 import { ClimateLeverCard } from "@/components/impact/ClimateLeverCard";
@@ -446,8 +449,6 @@ function TangibleSection({
   numLocale: string;
 }) {
   const { t } = useTranslation();
-  const measured =
-    impact.measured && impact.presentation.show && impact.financedEmissionsKgPerYear != null;
 
   return (
     <div className="space-y-4">
@@ -457,13 +458,8 @@ function TangibleSection({
         subtitle={t("impact_xp.tangible.subtitle")}
       />
       <div className="rounded-3xl border border-paper-3 bg-paper p-5 md:p-6">
-        {measured ? (
-          <TangibleMeasured
-            kg={impact.financedEmissionsKgPerYear as number}
-            equivalences={impact.presentation.equivalences}
-            coverage={impact.coverage}
-            numLocale={numLocale}
-          />
+        {impact.estimate ? (
+          <TangibleEstimate estimate={impact.estimate} numLocale={numLocale} />
         ) : (
           <div className="space-y-3">
             <p className="text-body-sm leading-relaxed text-ink-2">
@@ -472,7 +468,6 @@ function TangibleSection({
             <p className="text-body-sm text-ink-2">
               {t("impact_xp.tangible.esg_fallback", { score: Math.round(impact.esgScore) })}
             </p>
-            <ConfidenceBadge coverage={impact.coverage} />
           </div>
         )}
       </div>
@@ -480,72 +475,81 @@ function TangibleSection({
   );
 }
 
-function TangibleMeasured({
-  kg,
-  equivalences,
-  coverage,
+/**
+ * Rendu de la carte carbone — mesurée OU estimée, toujours étiquetée. Ne montre
+ * jamais une fausse précision (impact.estimate est déjà arrondi, cf.
+ * carbon-engine.ts::roundSignificant) et affiche systématiquement la part
+ * directement sourcée, pour que « mesuré » et « estimé » restent visuellement
+ * distincts (CLAUDE.md §5.4 / consigne produit : jamais une estimation
+ * présentée comme une mesure).
+ */
+function TangibleEstimate({
+  estimate,
   numLocale,
 }: {
-  kg: number;
-  equivalences: { factorId: string; labelKey: string; unitKey: string; value: number }[];
-  coverage: number;
+  estimate: CarbonEstimateView;
   numLocale: string;
 }) {
   const { t } = useTranslation();
-  const inTonnes = kg >= 1000;
-  const footprint = inTonnes ? kg / 1000 : kg;
+  const inTonnes = estimate.kgCo2ePerYear >= 1000;
+  const footprint = inTonnes ? estimate.kgCo2ePerYear / 1000 : estimate.kgCo2ePerYear;
   const unit = inTonnes ? "t" : "kg";
   const fmt = (v: number) =>
     v.toLocaleString(numLocale, {
-      minimumFractionDigits: inTonnes ? 2 : 0,
       maximumFractionDigits: inTonnes ? 2 : 0,
     });
+  const fullySourced = estimate.dataQuality === "measured" && estimate.sourcedPct === 100;
 
   return (
     <div className="space-y-4">
       <div>
         <p className="text-caption uppercase tracking-wider text-ink-3">
-          {t("impact_xp.tangible.footprint_label")}
+          {fullySourced
+            ? t("impact_xp.tangible.footprint_label_measured")
+            : t("impact_xp.tangible.footprint_label_estimated")}
         </p>
         <p className="mt-1 font-value text-3xl text-ink">
-          {fmt(footprint)} {unit}
+          ≈ {fmt(footprint)} {unit}
           <span className="ml-1 text-body-sm font-normal text-ink-3">
             {t("impact_xp.tangible.per_year")}
           </span>
         </p>
+        {estimate.carEquivalenceKm != null && (
+          <p className="mt-1 text-body-sm text-ink-2">
+            ≈ {Math.round(Math.abs(estimate.carEquivalenceKm)).toLocaleString(numLocale)}{" "}
+            {t("impact.equiv.car_km")}
+          </p>
+        )}
       </div>
-      <ul className="flex flex-col divide-y divide-paper-3 border-b border-t border-paper-3">
-        {equivalences.slice(0, 4).map((e) => (
-          <li key={e.factorId} className="flex items-center justify-between py-2.5">
-            <span className="text-body-sm text-ink-2">{t(e.labelKey)}</span>
-            <span className="font-mono text-body-sm tabular-nums text-ink">
-              {Math.round(e.value).toLocaleString(numLocale)} {t(e.unitKey)}
-            </span>
-          </li>
-        ))}
-      </ul>
-      <ConfidenceBadge coverage={coverage} />
-    </div>
-  );
-}
 
-function ConfidenceBadge({ coverage }: { coverage: number }) {
-  const { t } = useTranslation();
-  const tier = carbonConfidenceTier(coverage);
-  const pct = Math.round(Math.max(0, Math.min(1, coverage)) * 100);
-  const tone =
-    tier === "high"
-      ? "bg-mint/12 text-mint-ink"
-      : tier === "partial"
-        ? "bg-solar-tint text-solar-ink"
-        : "bg-paper-2 text-ink-3";
-  return (
-    <span
-      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-tag font-semibold uppercase tracking-[0.14em] ${tone}`}
-    >
-      <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden />
-      {t(`impact_translator.confidence.${tier}`, { pct })}
-    </span>
+      {estimate.lowCoverage && (
+        <p className="rounded-xl bg-solar-tint px-3 py-2 text-caption font-medium text-solar-ink">
+          {t("impact_xp.tangible.low_coverage_banner")}
+        </p>
+      )}
+
+      <div className="space-y-1 border-t border-paper-3 pt-3">
+        <p className="text-caption text-ink-2">
+          {fullySourced
+            ? t("impact_xp.tangible.reliability_measured")
+            : t("impact_xp.tangible.reliability_line", {
+                level: t(`impact_xp.tangible.confidence_${estimate.confidence}`),
+              })}
+        </p>
+        {!fullySourced && (
+          <p className="text-caption text-ink-3">
+            {t("impact_xp.tangible.sourced_pct", { pct: estimate.sourcedPct })}
+          </p>
+        )}
+      </div>
+
+      <Link
+        to="/methodologie"
+        className="inline-block text-caption text-ink-2 underline underline-offset-2 hover:text-ink"
+      >
+        {t("impact_xp.tangible.how_we_calculate")}
+      </Link>
+    </div>
   );
 }
 

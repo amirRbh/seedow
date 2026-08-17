@@ -46,6 +46,7 @@ import { Route as ObjectifsGoalIdRouteImport } from './routes/objectifs.$goalId'
 import { Route as HooksRefreshMarketDataRouteImport } from './routes/hooks/refresh-market-data'
 import { Route as HooksRecomputeRiskModelRouteImport } from './routes/hooks/recompute-risk-model'
 import { Route as HooksRecomputeIngestionPlanRouteImport } from './routes/hooks/recompute-ingestion-plan'
+import { Route as HooksRecomputeCarbonEstimatesRouteImport } from './routes/hooks/recompute-carbon-estimates'
 import { Route as HooksDispatchNotificationsRouteImport } from './routes/hooks/dispatch-notifications'
 import { Route as FondsIsinRouteImport } from './routes/fonds.$isin'
 import { Route as CoursSlugRouteImport } from './routes/cours.$slug'
@@ -243,6 +244,12 @@ const HooksRecomputeIngestionPlanRoute =
     path: '/hooks/recompute-ingestion-plan',
     getParentRoute: () => rootRouteImport,
   } as any)
+const HooksRecomputeCarbonEstimatesRoute =
+  HooksRecomputeCarbonEstimatesRouteImport.update({
+    id: '/hooks/recompute-carbon-estimates',
+    path: '/hooks/recompute-carbon-estimates',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const HooksDispatchNotificationsRoute =
   HooksDispatchNotificationsRouteImport.update({
     id: '/hooks/dispatch-notifications',
@@ -340,6 +347,7 @@ export interface FileRoutesByFullPath {
   '/cours/$slug': typeof CoursSlugRoute
   '/fonds/$isin': typeof FondsIsinRoute
   '/hooks/dispatch-notifications': typeof HooksDispatchNotificationsRoute
+  '/hooks/recompute-carbon-estimates': typeof HooksRecomputeCarbonEstimatesRoute
   '/hooks/recompute-ingestion-plan': typeof HooksRecomputeIngestionPlanRoute
   '/hooks/recompute-risk-model': typeof HooksRecomputeRiskModelRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
@@ -388,6 +396,7 @@ export interface FileRoutesByTo {
   '/cours/$slug': typeof CoursSlugRoute
   '/fonds/$isin': typeof FondsIsinRoute
   '/hooks/dispatch-notifications': typeof HooksDispatchNotificationsRoute
+  '/hooks/recompute-carbon-estimates': typeof HooksRecomputeCarbonEstimatesRoute
   '/hooks/recompute-ingestion-plan': typeof HooksRecomputeIngestionPlanRoute
   '/hooks/recompute-risk-model': typeof HooksRecomputeRiskModelRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
@@ -439,6 +448,7 @@ export interface FileRoutesById {
   '/cours/$slug': typeof CoursSlugRoute
   '/fonds/$isin': typeof FondsIsinRoute
   '/hooks/dispatch-notifications': typeof HooksDispatchNotificationsRoute
+  '/hooks/recompute-carbon-estimates': typeof HooksRecomputeCarbonEstimatesRoute
   '/hooks/recompute-ingestion-plan': typeof HooksRecomputeIngestionPlanRoute
   '/hooks/recompute-risk-model': typeof HooksRecomputeRiskModelRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
@@ -490,6 +500,7 @@ export interface FileRouteTypes {
     | '/cours/$slug'
     | '/fonds/$isin'
     | '/hooks/dispatch-notifications'
+    | '/hooks/recompute-carbon-estimates'
     | '/hooks/recompute-ingestion-plan'
     | '/hooks/recompute-risk-model'
     | '/hooks/refresh-market-data'
@@ -538,6 +549,7 @@ export interface FileRouteTypes {
     | '/cours/$slug'
     | '/fonds/$isin'
     | '/hooks/dispatch-notifications'
+    | '/hooks/recompute-carbon-estimates'
     | '/hooks/recompute-ingestion-plan'
     | '/hooks/recompute-risk-model'
     | '/hooks/refresh-market-data'
@@ -588,6 +600,7 @@ export interface FileRouteTypes {
     | '/cours/$slug'
     | '/fonds/$isin'
     | '/hooks/dispatch-notifications'
+    | '/hooks/recompute-carbon-estimates'
     | '/hooks/recompute-ingestion-plan'
     | '/hooks/recompute-risk-model'
     | '/hooks/refresh-market-data'
@@ -638,6 +651,7 @@ export interface RootRouteChildren {
   ApiEthiRoute: typeof ApiEthiRoute
   FondsIsinRoute: typeof FondsIsinRoute
   HooksDispatchNotificationsRoute: typeof HooksDispatchNotificationsRoute
+  HooksRecomputeCarbonEstimatesRoute: typeof HooksRecomputeCarbonEstimatesRoute
   HooksRecomputeIngestionPlanRoute: typeof HooksRecomputeIngestionPlanRoute
   HooksRecomputeRiskModelRoute: typeof HooksRecomputeRiskModelRoute
   HooksRefreshMarketDataRoute: typeof HooksRefreshMarketDataRoute
@@ -907,6 +921,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HooksRecomputeIngestionPlanRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/hooks/recompute-carbon-estimates': {
+      id: '/hooks/recompute-carbon-estimates'
+      path: '/hooks/recompute-carbon-estimates'
+      fullPath: '/hooks/recompute-carbon-estimates'
+      preLoaderRoute: typeof HooksRecomputeCarbonEstimatesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/hooks/dispatch-notifications': {
       id: '/hooks/dispatch-notifications'
       path: '/hooks/dispatch-notifications'
@@ -1072,6 +1093,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiEthiRoute: ApiEthiRoute,
   FondsIsinRoute: FondsIsinRoute,
   HooksDispatchNotificationsRoute: HooksDispatchNotificationsRoute,
+  HooksRecomputeCarbonEstimatesRoute: HooksRecomputeCarbonEstimatesRoute,
   HooksRecomputeIngestionPlanRoute: HooksRecomputeIngestionPlanRoute,
   HooksRecomputeRiskModelRoute: HooksRecomputeRiskModelRoute,
   HooksRefreshMarketDataRoute: HooksRefreshMarketDataRoute,

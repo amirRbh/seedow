@@ -1696,9 +1696,19 @@
       "title": "Made tangible",
       "subtitle": "The carbon footprint your capital finances, translated into concrete terms.",
       "footprint_label": "Financed footprint",
+      "footprint_label_measured": "Measured financed footprint",
+      "footprint_label_estimated": "Your estimated footprint",
       "per_year": "CO₂e / year",
       "pending": "The measured carbon footprint will appear as soon as issuer data covers your portfolio. We won't fabricate any number in the meantime.",
-      "esg_fallback": "In the meantime, your honest benchmark: ESG impact score {{score}}/100."
+      "esg_fallback": "In the meantime, your honest benchmark: ESG impact score {{score}}/100.",
+      "reliability_line": "Seedow estimate · Reliability: {{level}}",
+      "reliability_measured": "Directly sourced from issuer disclosures — measured, not estimated.",
+      "confidence_high": "high",
+      "confidence_partial": "medium",
+      "confidence_low": "low",
+      "sourced_pct": "{{pct}}% of the data is directly sourced.",
+      "low_coverage_banner": "Indicative estimate — limited coverage.",
+      "how_we_calculate": "See how we calculate this estimate →"
     },
     "finance": {
       "title": "What your money finances",
