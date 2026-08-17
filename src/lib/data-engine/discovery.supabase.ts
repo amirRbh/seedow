@@ -62,6 +62,9 @@ export async function ensureDiscoveredAssets(
     };
     if (f.currency) row.currency = f.currency;
     if (f.ter != null) row.ter = f.ter;
+    // Symbole Yahoo (si la place est connue) : permet de pricer le candidat pour
+    // prouver qu'il cote réellement avant activation (voir activation.ts).
+    if (f.yahooSymbol) row.yahoo_symbol = f.yahooSymbol;
     return row;
   });
 

@@ -49,10 +49,15 @@ export const Route = createFileRoute("/hooks/refresh-market-data")({
         const symbolFilter = body.symbols?.length ? new Set(body.symbols) : null;
 
         // ── Load assets with a yahoo_symbol ──────────────────
+        // On price les fonds ACTIFS *et* les candidats INACTIFS ayant un symbole
+        // Yahoo : c'est ce qui permet à un fonds fraîchement découvert (créé
+        // is_active=false) d'accumuler un historique de cours et de PROUVER qu'il
+        // cote réellement — critère d'activation « tradeabilité prouvée »
+        // (lib/data-engine/activation.ts). Un symbole erroné ne renvoie rien : le
+        // candidat n'obtient pas de série et n'est jamais activé (auto-correction).
         const { data: assets, error: aErr } = await supabaseAdmin
           .from("assets")
           .select("id, ticker, yahoo_symbol")
-          .eq("is_active", true)
           .not("yahoo_symbol", "is", null);
 
         if (aErr) {

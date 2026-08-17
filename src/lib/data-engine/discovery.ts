@@ -27,8 +27,43 @@ export interface DiscoveredFund {
   currency: string | null;
   /** Frais courants en fraction (0.002 = 0,20 %/an), ou null si absent. */
   ter: number | null;
+  /**
+   * Symbole Yahoo construit à partir du ticker d'échange + suffixe de place,
+   * ou null si la place n'est pas connue (jamais deviné). Sert à pricer le
+   * candidat pour PROUVER qu'il cote réellement avant activation.
+   */
+  yahooSymbol: string | null;
   sourceKey: string;
   sourceUrl: string;
+}
+
+/**
+ * Suffixe Yahoo par place de cotation. On ne construit un symbole QUE pour une
+ * place connue : un ticker seul (« IWDA ») produit des collisions dangereuses
+ * (cf. migration fix_investable_universe) — on ne devine jamais.
+ */
+const EXCHANGE_SUFFIX: { match: RegExp; suffix: string }[] = [
+  { match: /london|lse|\bl\b/i, suffix: ".L" },
+  { match: /xetra|deutsche|frankfurt/i, suffix: ".DE" },
+  { match: /amsterdam/i, suffix: ".AS" },
+  { match: /paris/i, suffix: ".PA" },
+  { match: /borsa italiana|milan/i, suffix: ".MI" },
+  { match: /six|swiss/i, suffix: ".SW" },
+  { match: /brussels/i, suffix: ".BR" },
+  { match: /madrid|bme/i, suffix: ".MC" },
+  { match: /nasdaq|nyse|new york/i, suffix: "" }, // US : pas de suffixe
+];
+
+/** Construit un symbole Yahoo depuis ticker + place, ou null si place inconnue. */
+export function buildYahooSymbol(ticker: string, exchange: string): string | null {
+  const t = ticker.trim();
+  if (!t) return null;
+  const ex = exchange.trim();
+  if (!ex) return null;
+  for (const { match, suffix } of EXCHANGE_SUFFIX) {
+    if (match.test(ex)) return `${t}${suffix}`;
+  }
+  return null; // place non reconnue → on ne fabrique pas de symbole
 }
 
 /**
@@ -143,6 +178,7 @@ export function parseISharesProductCsv(raw: RawData): DiscoveredFund[] {
   const iRegion = findCol(headers, "region", "geography", "market");
   const iCcy = findCol(headers, "base currency", "currency", "fund currency");
   const iTer = findCol(headers, "net expense ratio (%)", "ter", "ongoing charge", "total expense ratio");
+  const iExch = findCol(headers, "exchange", "listing exchange", "primary exchange");
 
   const at = (cols: string[], i: number) => (i >= 0 && i < cols.length ? cols[i].trim() : "");
 
@@ -166,6 +202,7 @@ export function parseISharesProductCsv(raw: RawData): DiscoveredFund[] {
       region: at(cols, iRegion) || null,
       currency: at(cols, iCcy) || null,
       ter: terPct != null ? terPct / 100 : null, // % → fraction
+      yahooSymbol: buildYahooSymbol(ticker, at(cols, iExch)),
       sourceKey: raw.sourceKey,
       sourceUrl: raw.sourceUrl,
     });

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  buildYahooSymbol,
   mapISharesAssetClass,
   parseISharesProductCsv,
   planAssetInserts,
@@ -56,13 +57,13 @@ describe("mapISharesAssetClass", () => {
 describe("parseISharesProductCsv", () => {
   const content = [
     '"iShares Product List — export"',
-    "Ticker,Name,ISIN,Asset Class,Sub Asset Class,Region,Base Currency,Net Expense Ratio (%)",
-    'IWDA,"iShares Core MSCI World UCITS ETF",IE00B4L5Y983,Equity,Large Cap,World,USD,0.20',
-    'INRG,"iShares Global Clean Energy UCITS ETF",IE00B1XNHC34,Equity,Sector,Global,USD,0.65',
-    'IEMA,"iShares MSCI EM UCITS ETF",IE00B0M63177,Equity,Emerging Markets,EM,USD,0.18',
-    'IEGA,"iShares Core Euro Govt Bond",IE00B4WXJJ64,Fixed Income,Government,Europe,EUR,0.09',
-    'MULT,"iShares Diversified Multi-Asset",IE00MULTI001,Multi-Asset,Balanced,World,EUR,0.25',
-    ',"No ticker row",IE00BROKEN01,Equity,Large Cap,World,USD,0.20',
+    "Ticker,Name,ISIN,Asset Class,Sub Asset Class,Region,Base Currency,Net Expense Ratio (%),Exchange",
+    'IWDA,"iShares Core MSCI World UCITS ETF",IE00B4L5Y983,Equity,Large Cap,World,USD,0.20,London Stock Exchange',
+    'INRG,"iShares Global Clean Energy UCITS ETF",IE00B1XNHC34,Equity,Sector,Global,USD,0.65,Xetra',
+    'IEMA,"iShares MSCI EM UCITS ETF",IE00B0M63177,Equity,Emerging Markets,EM,USD,0.18,Euronext Amsterdam',
+    'IEGA,"iShares Core Euro Govt Bond",IE00B4WXJJ64,Fixed Income,Government,Europe,EUR,0.09,Borsa Italiana',
+    'MULT,"iShares Diversified Multi-Asset",IE00MULTI001,Multi-Asset,Balanced,World,EUR,0.25,London Stock Exchange',
+    ',"No ticker row",IE00BROKEN01,Equity,Large Cap,World,USD,0.20,London Stock Exchange',
   ].join("\n");
 
   it("parses identity rows, converts TER %→fraction, skips headerless junk", () => {
@@ -78,6 +79,10 @@ describe("parseISharesProductCsv", () => {
     expect(byTicker.IWDA.ter).toBeCloseTo(0.002, 6); // 0.20% → 0.0020
     expect(byTicker.IWDA.isin).toBe("IE00B4L5Y983");
     expect(byTicker.IWDA.issuer).toBe("iShares");
+    // Yahoo symbol built from ticker + exchange suffix.
+    expect(byTicker.IWDA.yahooSymbol).toBe("IWDA.L");
+    expect(byTicker.INRG.yahooSymbol).toBe("INRG.DE");
+    expect(byTicker.IEMA.yahooSymbol).toBe("IEMA.AS");
     expect(byTicker.MULT).toBeUndefined();
   });
 
@@ -96,8 +101,17 @@ describe("planAssetInserts", () => {
     region: "world",
     currency: "USD",
     ter: 0.002,
+    yahooSymbol: `${ticker}.L`,
     sourceKey: "ishares_products",
     sourceUrl: "u",
+  });
+
+  it("buildYahooSymbol maps known exchanges and refuses unknown ones", () => {
+    expect(buildYahooSymbol("IWDA", "London Stock Exchange")).toBe("IWDA.L");
+    expect(buildYahooSymbol("EUNL", "Xetra")).toBe("EUNL.DE");
+    expect(buildYahooSymbol("IVV", "NYSE Arca")).toBe("IVV"); // US: no suffix
+    expect(buildYahooSymbol("XXXX", "Some Unknown Exchange")).toBeNull();
+    expect(buildYahooSymbol("XXXX", "")).toBeNull();
   });
 
   it("skips funds already present by ticker or ISIN", () => {

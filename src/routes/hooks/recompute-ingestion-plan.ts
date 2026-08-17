@@ -7,6 +7,7 @@ import {
   summarizePlan,
   type IngestionCandidate,
 } from "@/lib/data-engine/ingestion-plan";
+import { shouldActivate } from "@/lib/data-engine/activation";
 
 /**
  * POST /hooks/recompute-ingestion-plan
@@ -23,13 +24,14 @@ import {
  * La même file est visible en temps réel côté admin (`/admin/data`) ; ce hook en
  * garde une trace historique pour piloter l'effort dans le temps.
  *
- * Active aussi automatiquement (`is_active = true`) les fonds auto-créés par
- * l'ingestion GECO (`ensureAsset`, is_active=false par défaut — non revus
- * éditorialement) dès que leur complétude (`completeness.ts`) atteint
- * AUTO_ACTIVATION_THRESHOLD : assez de champs réels pour être présentable, sans
- * exiger une revue humaine par fonds (§1.3 — jamais avant que la donnée existe).
+ * Active aussi automatiquement (`is_active = true`) les fonds découverts
+ * (créés par /hooks/discover-funds en is_active=false, non revus
+ * éditorialement) selon la politique PURE `shouldActivate` (activation.ts) :
+ * soit une complétude suffisante (`completeness.ts`), soit une identité
+ * complète + une série de cours réelle prouvant que le fonds cote vraiment —
+ * jamais avant que la donnée existe (§1.3), et jamais un ISIN placeholder sans
+ * cours.
  */
-const AUTO_ACTIVATION_THRESHOLD = 50; // moitié du score 0-100 (identité + au moins un autre pilier réel)
 export const Route = createFileRoute("/hooks/recompute-ingestion-plan")({
   server: {
     handlers: {
@@ -48,7 +50,7 @@ export const Route = createFileRoute("/hooks/recompute-ingestion-plan")({
           admin
             .from("assets")
             .select(
-              "id, ticker, isin, name, issuer, region, currency, ter, esg_score, esg_score_source, esg_data_asof, sfdr_article, waci_tco2e_per_musd_sales, carbon_intensity_gco2e_per_eur, is_active",
+              "id, ticker, isin, name, issuer, region, currency, ter, esg_score, esg_score_source, esg_data_asof, sfdr_article, waci_tco2e_per_musd_sales, carbon_intensity_gco2e_per_eur, is_active, yahoo_symbol",
             )
             .limit(2000),
           admin.from("fund_holdings").select("asset_id, as_of").limit(100000),
@@ -72,8 +74,32 @@ export const Route = createFileRoute("/hooks/recompute-ingestion-plan")({
           waci_tco2e_per_musd_sales: number | null;
           carbon_intensity_gco2e_per_eur: number | null;
           is_active: boolean;
+          yahoo_symbol: string | null;
         }
         const assets = (assetsRes.data ?? []) as Row[];
+
+        // Compte de cours réels par candidat INACTIF ayant un symbole Yahoo — sert
+        // la voie d'activation « tradeabilité prouvée » (activation.ts). On ne
+        // requête que ces candidats : inutile de compter les cours des actifs déjà
+        // actifs. Un ISIN placeholder n'a pas de série → jamais activé.
+        const inactiveWithSymbol = assets
+          .filter((a) => !a.is_active && a.yahoo_symbol)
+          .map((a) => a.id);
+        const priceObsByAsset = new Map<string, number>();
+        if (inactiveWithSymbol.length > 0) {
+          const { data: priceRows, error: pErr } = await admin
+            .from("asset_prices")
+            .select("asset_id")
+            .in("asset_id", inactiveWithSymbol)
+            .limit(500000);
+          if (pErr) {
+            console.error("[recompute-ingestion-plan] price count failed:", pErr.message);
+          } else {
+            for (const p of (priceRows ?? []) as { asset_id: string }[]) {
+              priceObsByAsset.set(p.asset_id, (priceObsByAsset.get(p.asset_id) ?? 0) + 1);
+            }
+          }
+        }
 
         const holdingsByAsset = new Map<string, { count: number; latest: string | null }>();
         for (const h of (holdingsRes.data ?? []) as { asset_id: string; as_of: string | null }[]) {
@@ -121,7 +147,23 @@ export const Route = createFileRoute("/hooks/recompute-ingestion-plan")({
             hasSource: a.esg_score_source != null,
           });
 
-          if (!a.is_active && completeness >= AUTO_ACTIVATION_THRESHOLD) toActivate.push(a.id);
+          if (
+            !a.is_active &&
+            shouldActivate({
+              completeness,
+              identity: {
+                hasIsin: !!a.isin,
+                hasName: !!a.name,
+                hasIssuer: !!a.issuer,
+                hasDomicile: !!a.region,
+                hasCurrency: !!a.currency,
+                hasTer: a.ter != null,
+              },
+              priceObservations: priceObsByAsset.get(a.id) ?? 0,
+            })
+          ) {
+            toActivate.push(a.id);
+          }
         }
 
         if (toActivate.length) {
