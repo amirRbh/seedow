@@ -20,6 +20,19 @@ import {
   type ExclusionTag,
 } from "@/lib/portfolio/types";
 
+/**
+ * Historique de version de la méthodologie (§8 CLAUDE.md — cohérence DA/transparence).
+ * Nouvelle entrée à ajouter EN TÊTE à chaque évolution réelle des paramètres
+ * (pondérations, seuils, exclusions) — jamais réécrite rétroactivement.
+ */
+const METHODOLOGY_VERSIONS = [
+  {
+    version: "1.0",
+    date: "2026-08-17",
+    noteKey: "methodologie.version_1_0_note",
+  },
+] as const;
+
 export const Route = createFileRoute("/methodologie")({
   head: () => ({
     meta: [
@@ -549,6 +562,23 @@ function MethodologyPage() {
             )}
           </div>
         </div>
+      </section>
+
+      {/* C3 — Historique de version (transparence auditable, Moat Blueprint) */}
+      <section className="max-w-6xl mx-auto px-6 py-10 border-t border-paper-3">
+        <p className="text-tag uppercase tracking-[0.12em] text-ink-3 font-medium mb-3">
+          {t("methodologie.version_title")}
+        </p>
+        <ul className="space-y-3">
+          {METHODOLOGY_VERSIONS.map((v) => (
+            <li key={v.version} className="flex items-baseline gap-3 text-body-sm">
+              <span className="font-mono text-ink-3 shrink-0">v{v.version}</span>
+              <span className="text-ink-3 shrink-0 tabular-nums">{v.date}</span>
+              <span className="text-ink-2">{t(v.noteKey)}</span>
+            </li>
+          ))}
+        </ul>
+        <p className="text-caption text-ink-3 mt-3">{t("methodologie.version_note")}</p>
       </section>
     </div>
   );
