@@ -6,7 +6,7 @@ import type {
   PortfolioParams,
   PortfolioResult,
 } from "./types";
-import { MIN_PORTFOLIO_ESG, causeToPillarWeights } from "./types";
+import { MAX_SINGLE_WEIGHT, MIN_PORTFOLIO_ESG, causeToPillarWeights } from "./types";
 import { optimizeMarkowitz, applyConvictionAdjustment, applyCarbonPreference } from "./markowitz";
 import { computeMetrics } from "./metrics";
 import {
@@ -30,6 +30,46 @@ const METHODOLOGY_VERSION = "v1.3";
  */
 const ELIGIBILITY_DROP_FRACTION = 0.25;
 const ELIGIBILITY_THIN_CLASS = 5;
+
+/**
+ * Garantie anti-concentration finale (v1.3).
+ *
+ * Le QP borne déjà chaque poids à MAX_SINGLE_WEIGHT, mais les REPLIS (equal-weight
+ * borné par classe, filet ≥3 positions) ne le faisaient pas : sur l'univers réel
+ * — étroit, avec des classes quasi vides — un repli pouvait sortir une ligne à
+ * 45 %. On applique donc un plafonnement + redistribution proportionnelle (water
+ * filling) sur TOUS les chemins, juste avant les métriques. Si l'univers est trop
+ * petit pour respecter le plafond (cap·n < 1, ex. < 4 lignes à 25 %), on ne peut
+ * mathématiquement pas : on laisse tel quel plutôt que d'inventer des lignes.
+ */
+export function capAndRedistribute(
+  weights: Record<string, number>,
+  cap: number = MAX_SINGLE_WEIGHT,
+): Record<string, number> {
+  const ids = Object.keys(weights);
+  const n = ids.length;
+  if (n === 0 || cap * n < 1 - 1e-9) return weights; // plafond infaisable → inchangé
+  const w = { ...weights };
+  const EPS = 1e-9;
+  for (let iter = 0; iter < n + 1; iter++) {
+    let excess = 0;
+    const free: string[] = [];
+    for (const id of ids) {
+      if (w[id] > cap + EPS) {
+        excess += w[id] - cap;
+        w[id] = cap;
+      } else if (w[id] < cap - EPS) {
+        free.push(id);
+      }
+    }
+    if (excess <= EPS) break;
+    let freeSum = 0;
+    for (const id of free) freeSum += w[id];
+    if (freeSum <= EPS) break;
+    for (const id of free) w[id] += (excess * w[id]) / freeSum;
+  }
+  return w;
+}
 
 /**
  * Stage 1 — Hard exclusions filter.
@@ -268,6 +308,12 @@ export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
     }
   }
   if (total > 0) for (const id in cleaned) cleaned[id] /= total;
+
+  // Stage 5 (contrainte) — garantie anti-concentration sur TOUS les chemins (QP
+  // comme replis) : aucune ligne au-dessus de MAX_SINGLE_WEIGHT tant que l'univers
+  // le permet. C'est ce qui empêche un portefeuille absurde (ligne à 45 %) quand
+  // l'univers réel est étroit et force un repli.
+  cleaned = capAndRedistribute(cleaned);
 
   const selectedAssets = pool.filter((a) => cleaned[a.id] !== undefined);
   // Rendement REPORTÉ : on utilise les μ ancrés (non les seed/μ bruités), jamais

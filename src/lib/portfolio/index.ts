@@ -1,5 +1,5 @@
 export * from "./types";
-export { buildPortfolio } from "./engine";
+export { buildPortfolio, capAndRedistribute } from "./engine";
 export { computeMetrics } from "./metrics";
 export {
   classifyDataQuality,

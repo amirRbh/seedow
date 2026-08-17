@@ -4,7 +4,7 @@
  * respectées, aucune donnée fictive utilisée, stabilité face à un léger bruit.
  */
 import { describe, it, expect } from "vitest";
-import { buildPortfolio } from "../engine";
+import { buildPortfolio, capAndRedistribute } from "../engine";
 import { MAX_SINGLE_WEIGHT } from "../types";
 import { makeAsset, defaultParams, balancedUniverse, diagonalCovMap } from "./fixtures";
 
@@ -167,6 +167,42 @@ describe("engine v1.3 — universe & constraints edge cases", () => {
       }
     }
     const result = buildPortfolio({ universe, covariance: cov, params: defaultParams() });
+    for (const w of Object.values(result.weights)) {
+      expect(w).toBeLessThanOrEqual(MAX_SINGLE_WEIGHT + 1e-6);
+    }
+  });
+});
+
+describe("engine v1.3 — anti-concentration guarantee (real-universe regression)", () => {
+  it("capAndRedistribute caps every weight and preserves the total", () => {
+    const capped = capAndRedistribute({ a: 0.6, b: 0.2, c: 0.1, d: 0.1 }, 0.25);
+    for (const w of Object.values(capped)) expect(w).toBeLessThanOrEqual(0.25 + 1e-9);
+    expect(Object.values(capped).reduce((s, x) => s + x, 0)).toBeCloseTo(1, 9);
+  });
+
+  it("leaves weights unchanged when the cap is mathematically infeasible (too few names)", () => {
+    // 3 names cannot all sit ≤ 25% and still sum to 1 → cannot cap, must not invent.
+    const w = { a: 0.4, b: 0.4, c: 0.2 };
+    expect(capAndRedistribute(w, 0.25)).toEqual(w);
+  });
+
+  it("never emits a line above MAX_SINGLE_WEIGHT even when a narrow universe forces a fallback", () => {
+    // Sparse classes + defensive risk target push the QP infeasible → fallback path.
+    // Regression: the fallback used to emit a single ~45% line on the real catalog.
+    const universe = [
+      makeAsset({ id: "eq1", asset_class: "equity_dev", esg_score: 72 }),
+      makeAsset({ id: "eq2", asset_class: "equity_dev", esg_score: 74 }),
+      makeAsset({ id: "eq3", asset_class: "equity_dev", esg_score: 76 }),
+      makeAsset({ id: "eq4", asset_class: "equity_dev", esg_score: 78 }),
+      makeAsset({ id: "gb1", asset_class: "green_bond", esg_score: 80 }),
+      makeAsset({ id: "cb1", asset_class: "corporate_bond", esg_score: 71 }),
+    ];
+    const result = buildPortfolio({
+      universe,
+      covariance: diagonalCovMap(universe),
+      params: defaultParams({ risk_target: 0.04, exclusions: ["fossiles", "armes"] }),
+    });
+    expect(sum(result.weights)).toBeCloseTo(1, 6);
     for (const w of Object.values(result.weights)) {
       expect(w).toBeLessThanOrEqual(MAX_SINGLE_WEIGHT + 1e-6);
     }

@@ -167,14 +167,14 @@ describe("buildPortfolio", () => {
 });
 
 describe("buildPortfolio — carbon awareness (v1.2)", () => {
-  it("stamps the v1.2 methodology version", () => {
+  it("stamps the current methodology version", () => {
     const universe = balancedUniverse();
     const result = buildPortfolio({
       universe,
       covariance: diagonalCovMap(universe),
       params: defaultParams(),
     });
-    expect(result.methodology_version).toBe("v1.2");
+    expect(result.methodology_version).toBe("v1.3");
   });
 
   it("under-weights a carbon-dirty asset vs an otherwise-identical clean peer", () => {
