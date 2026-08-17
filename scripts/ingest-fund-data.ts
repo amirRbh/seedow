@@ -15,10 +15,11 @@
  * en quelques semaines, elles sont fournies en argument (ISIN=URL), à récupérer
  * fraîches sur amundietf.fr / vanguard.co.uk au moment de l'ingestion.
  *
- * Il n'écrit RIEN en base directement (le sandbox n'a pas la clé service_role,
- * et l'écriture doit rester gouvernée) : il ÉMET le SQL prêt à appliquer, comme
- * les scripts existants. Brancher `persistObservations` + `supabaseObservationWriter`
- * sur un client admin est immédiat quand la clé service_role est disponible.
+ * `SEEDOW_PERSIST=1` écrit réellement (ledger + colonnes canoniques) via
+ * `persistObservations`/`supabaseObservationWriter` — même chemin que
+ * `scripts/ingest-funds.ts` (A4 : provenance bout-en-bout, tous connecteurs).
+ * Sans persist (ou `--sql`), le script reste en dry-run : JSON et/ou SQL émis,
+ * rien n'est créé (asset absent pour la clé → skip, jamais inventé).
  *
  * On ne produit QUE ce qui est réellement lu dans le document — aucune valeur
  * inventée, chaque observation datée et sourcée (§9, §12).
@@ -182,9 +183,39 @@ function parseFundArgs(args: string[]): FundSource[] {
     });
 }
 
+/**
+ * Persiste réellement (ledger + colonnes canoniques) via le Data Engine
+ * générique (`persistObservations`/`supabaseObservationWriter` — même chemin
+ * que `scripts/ingest-funds.ts`). Ne CRÉE jamais d'asset ici (contrairement au
+ * pipeline GECO) : iShares/Amundi/Vanguard sont des émetteurs qui enrichissent
+ * des fonds déjà connus (univers seedé) — asset absent → skip, jamais inventé.
+ */
+async function persist(
+  matchBy: MatchColumn,
+  key: string,
+  observations: Observation[],
+): Promise<string> {
+  const { supabaseAdmin } = await import("../src/integrations/supabase/client.server");
+  const { persistObservations } = await import("../src/lib/data-engine/persist");
+  const { supabaseObservationWriter } = await import("../src/lib/data-engine/persist.supabase");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const admin = supabaseAdmin as any;
+
+  const { data: asset } = await admin.from("assets").select("id").eq(matchBy, key).maybeSingle();
+  if (!asset?.id) return `skip (aucun asset avec ${matchBy}=${key})`;
+
+  const r = await persistObservations(
+    supabaseObservationWriter(supabaseAdmin),
+    asset.id,
+    observations,
+  );
+  return `${r.observationsInserted} obs, canonique: ${r.canonicalFieldsUpdated.join(",") || "—"}`;
+}
+
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
   const emitSql = args.includes("--sql");
+  const doPersist = process.env.SEEDOW_PERSIST === "1";
   const issuerIdx = args.indexOf("--issuer");
   const issuerKey = issuerIdx >= 0 ? args[issuerIdx + 1] : "ishares";
   const setup = ISSUERS[issuerKey];
@@ -230,6 +261,13 @@ async function main(): Promise<void> {
     perFund.push({ key: f.key, observations });
     const fields = publishable.map((o) => o.field).join(", ");
     console.error(`✓ ${f.key}: ${publishable.length} observations (${fields})`);
+    if (doPersist) {
+      try {
+        console.error(`  persist    : ${await persist(setup.matchBy, f.key, observations)}`);
+      } catch (e) {
+        console.error(`  persist    : error (${e instanceof Error ? e.message : String(e)})`);
+      }
+    }
   }
 
   console.error(`\n${perFund.length} fonds ingérés, ${skipped.length} ignorés.`);
