@@ -4,7 +4,16 @@
  *
  * Usage :
  *   bun run scripts/ingest-funds.ts FR0010752543 FR0013306735 ...   (défaut : 5 ISIN démo)
+ *   bun run scripts/ingest-funds.ts --discover 50                   (N nouveaux ISIN via GECO)
+ *   bun run scripts/ingest-funds.ts --plan 50                       (backlog priorisé, cf. ci-dessous)
  *   SEEDOW_PERSIST=1 bun run scripts/ingest-funds.ts ...            (écrit en base)
+ *
+ * `--plan N` referme la boucle planification → exécution : reprend les N ISIN
+ * les plus prioritaires du dernier backlog calculé par le cron
+ * `recompute-ingestion-plan` (demande réelle + fraîcheur + complétude, cf.
+ * `lib/data-engine/ingestion-plan.ts`), journalisé dans `cron_run_log`. Contrairement
+ * à `--discover`, qui découvre des fonds neufs via la pagination GECO, `--plan`
+ * cible les fonds déjà en base qui ont le plus besoin d'être (ré)ingérés.
  *
  * Étapes (zéro mock, zéro invention — champ absent → null) :
  *   1. GECO : identité (nom, société de gestion + LEI, domicile, classif AMF, devise) ;
@@ -32,6 +41,7 @@ import {
   type GecoIdentity,
 } from "../src/lib/data-engine/sources/geco.server";
 import { parseKidSfdrArticle, parseKidOngoingCharges } from "../src/lib/esg/kid-parser";
+import { backlogIsins } from "../src/lib/data-engine/ingestion-plan";
 
 type Status = "ok" | "unavailable" | "error";
 
@@ -186,11 +196,69 @@ export async function ingestIsin(isin: string): Promise<IngestionResult> {
 }
 
 /**
- * Persiste un résultat en base (si SEEDOW_PERSIST + Supabase configuré) : matche
- * l'asset par ISIN, écrit les observations sourcées + MAJ canonique (sfdr_article,
- * ter) via le writer existant. N'invente rien ; sans asset correspondant → skip.
+ * Déduit l'`asset_class` (enum requis, NOT NULL) à partir de la classification
+ * AMF réelle renvoyée par GECO. Mapping conservateur ; sans correspondance nette
+ * (fonds « mixtes », diversifiés…), on retombe sur `thematic` (bucket « autre »
+ * déjà utilisé par le seed). La classification AMF réelle reste conservée telle
+ * quelle dans `description` ET dans une observation dédiée — rien n'est perdu ni
+ * inventé, seul le bucket enum est approximé pour satisfaire la contrainte NOT NULL.
  */
-async function persist(result: IngestionResult): Promise<string> {
+export function deriveAssetClass(identity: GecoIdentity): string {
+  const s = `${identity.amfClassification ?? ""} ${identity.legalNature ?? ""}`.toLowerCase();
+  if (/mon[ée]taire/.test(s)) return "cash";
+  if (/immobili|opci|scpi|reit/.test(s)) return "reit";
+  if (/mati[èe]res? premi[èe]res?|commodit/.test(s)) return "commodity";
+  if (/obligation|cr[ée]ance|taux|bond/.test(s))
+    return /souverain|[ée]tat|public|govern/.test(s) ? "sov_bond" : "corporate_bond";
+  if (/action|[ée]quity|share/.test(s))
+    return /[ée]mergent|emerging/.test(s) ? "equity_em" : "equity_dev";
+  return "thematic";
+}
+
+/**
+ * Trouve l'asset par ISIN, sinon le CRÉE depuis l'identité GECO réelle.
+ * Idempotent : `isin` et `ticker` (= ISIN, faute de symbole marché côté GECO)
+ * sont UNIQUE → aucun doublon au rejeu. On ne renseigne que des champs réels ;
+ * un champ absent reste au défaut du schéma (jamais une valeur inventée). Un
+ * asset auto-créé est `is_active = false` (non revu éditorialement).
+ */
+export async function ensureAsset(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  admin: any,
+  isin: string,
+  identity: GecoIdentity,
+): Promise<{ id: string; created: boolean }> {
+  const { data: existing } = await admin.from("assets").select("id").eq("isin", isin).maybeSingle();
+  if (existing?.id) return { id: existing.id, created: false };
+
+  const description =
+    [identity.amfClassification, identity.legalNature, identity.domicile]
+      .filter(Boolean)
+      .join(" · ") || null;
+  const row: Record<string, unknown> = {
+    ticker: isin,
+    isin,
+    name: identity.fundName ?? identity.shareName ?? isin,
+    issuer: identity.managementCompany,
+    asset_class: deriveAssetClass(identity),
+    currency: identity.currency ?? "EUR",
+    description,
+    is_active: false,
+  };
+  const { data: created, error } = await admin.from("assets").insert(row).select("id").single();
+  if (error) throw new Error(`create asset ${isin}: ${error.message}`);
+  return { id: created.id, created: true };
+}
+
+/**
+ * Persiste un résultat en base (si SEEDOW_PERSIST + Supabase configuré) :
+ * enrichit l'asset existant OU le crée s'il est absent (via `ensureAsset`), puis
+ * écrit les observations sourcées + MAJ canonique (sfdr_article, ter) via le
+ * writer existant. Idempotent : purge les observations `amf_geco` antérieures de
+ * l'asset avant réinsertion (le rejeu ne duplique ni asset ni observations ;
+ * sources/URL/dates conservées). N'invente rien : champ absent → non écrit.
+ */
+export async function persist(result: IngestionResult): Promise<string> {
   if (result.status !== "ok" || !result.identity) return "skip (non ok)";
   const { supabaseAdmin } = await import("../src/integrations/supabase/client.server");
   const { persistObservations } = await import("../src/lib/data-engine/persist");
@@ -198,12 +266,7 @@ async function persist(result: IngestionResult): Promise<string> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const admin = supabaseAdmin as any;
 
-  const { data: asset } = await admin
-    .from("assets")
-    .select("id")
-    .eq("isin", result.isin)
-    .maybeSingle();
-  if (!asset?.id) return "skip (ISIN absent de assets)";
+  const { id: assetId, created } = await ensureAsset(admin, result.isin, result.identity);
 
   const src =
     result.sources.documents ?? result.sources.compartment ?? gecoUrls.resolve(result.isin);
@@ -225,28 +288,80 @@ async function persist(result: IngestionResult): Promise<string> {
   if (result.identity.fundName) push("fund_name", result.identity.fundName, src);
   if (result.identity.managementCompany)
     push("management_company", result.identity.managementCompany, src);
+  if (result.identity.amfClassification)
+    push(
+      "amf_classification",
+      result.identity.amfClassification,
+      result.sources.compartment ?? src,
+    );
   if (result.pdfDerived.sfdrArticle != null && result.pdfDerived.sourceUrl)
     push("sfdr_article", result.pdfDerived.sfdrArticle, result.pdfDerived.sourceUrl);
   if (result.pdfDerived.ongoingChargesPct != null && result.pdfDerived.sourceUrl)
     push("ter", result.pdfDerived.ongoingChargesPct / 100, result.pdfDerived.sourceUrl);
   for (const d of result.documents) push("kid_document_url", d.url, d.url);
 
-  const r = await persistObservations(supabaseObservationWriter(supabaseAdmin), asset.id, obs);
-  return `persisted ${r.observationsInserted} obs, canonique: ${r.canonicalFieldsUpdated.join(",") || "—"}`;
+  // Idempotence : supprime les observations amf_geco antérieures de cet asset
+  // avant de réécrire le lot courant (pas de doublons au rejeu).
+  const { data: srcRow } = await admin
+    .from("data_sources")
+    .select("id")
+    .eq("key", "amf_geco")
+    .maybeSingle();
+  if (srcRow?.id)
+    await admin
+      .from("data_observations")
+      .delete()
+      .eq("asset_id", assetId)
+      .eq("source_id", srcRow.id);
+
+  const r = await persistObservations(supabaseObservationWriter(supabaseAdmin), assetId, obs);
+  return `${created ? "created" : "updated"} asset · ${r.observationsInserted} obs, canonique: ${r.canonicalFieldsUpdated.join(",") || "—"}`;
+}
+
+/**
+ * Lit le dernier backlog priorisé calculé par le cron `recompute-ingestion-plan`
+ * (`cron_run_log`, le plus récent en `status = 'ok'`) et en extrait jusqu'à
+ * `limit` ISIN, du plus prioritaire au moins. Backlog absent (cron jamais
+ * exécuté) ou vide → liste vide, jamais une erreur qui bloquerait l'ingestion.
+ */
+export async function loadPlanIsins(limit: number): Promise<string[]> {
+  const { supabaseAdmin } = await import("../src/integrations/supabase/client.server");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const admin = supabaseAdmin as any;
+  const { data, error } = await admin
+    .from("cron_run_log")
+    .select("details")
+    .eq("job_name", "recompute-ingestion-plan")
+    .eq("status", "ok")
+    .order("ran_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error || !data?.details?.top) return [];
+  return backlogIsins(data.details.top, limit);
 }
 
 const DEMO_ISINS = ["FR0010752543", "FR0013306735", "FR0011291657", "FR0013478591", "FR0010929836"];
 
 async function main() {
   const args = process.argv.slice(2);
-  // `--discover N` : récupère automatiquement N ISIN réels via GECO ; sinon
-  // ISIN passés en arguments ; sinon les 5 ISIN de démo.
+  // `--discover N` : récupère automatiquement N ISIN neufs via GECO.
+  // `--plan N` : reprend le backlog priorisé (fonds déjà en base à ré-ingérer).
+  // Sinon : ISIN passés en arguments ; sinon les 5 ISIN de démo.
   let isins: string[];
   if (args[0] === "--discover") {
     const limit = Math.max(1, Number(args[1]) || 50);
     console.log(`Découverte de ${limit} ISIN via GECO…`);
     isins = await discoverIsins(limit);
     console.log(`→ ${isins.length} ISIN découverts.`);
+  } else if (args[0] === "--plan") {
+    const limit = Math.max(1, Number(args[1]) || 50);
+    console.log(`Lecture du backlog priorisé (recompute-ingestion-plan, top ${limit})…`);
+    isins = await loadPlanIsins(limit);
+    console.log(
+      isins.length
+        ? `→ ${isins.length} ISIN du backlog.`
+        : `→ backlog vide (cron jamais exécuté, ou rien à ingérer en priorité).`,
+    );
   } else {
     isins = args.length ? args : DEMO_ISINS;
   }
@@ -283,7 +398,9 @@ async function main() {
   console.log(`\n--- ${ok} ok, ${unavailable} unavailable, ${isins.length} total ---`);
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+if (import.meta.main) {
+  main().catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
+}
