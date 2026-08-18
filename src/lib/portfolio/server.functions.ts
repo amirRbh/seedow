@@ -144,6 +144,10 @@ export const simulatePortfolio = createServerFn({ method: "POST" })
       universe_size: universe.assets.length,
       esg_floor_relaxed: result.esg_floor_relaxed,
       methodology_version: result.methodology_version,
+      // Explicabilité : provenance des données + lecture « pourquoi ce portefeuille »
+      // (déterministe, dérivée des vrais poids/métriques — voir explanation.ts).
+      data_quality: result.data_quality,
+      explanation: result.explanation,
     };
   });
 

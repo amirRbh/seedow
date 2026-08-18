@@ -22,6 +22,7 @@ export interface AssetOverrides {
   cause_exposure?: Record<string, number>;
   excluded_sectors?: ExclusionTag[];
   description?: string | null;
+  stats_observations?: number | null;
 }
 
 let counter = 0;
@@ -50,6 +51,10 @@ export function makeAsset(overrides: AssetOverrides = {}): Asset {
     cause_exposure: overrides.cause_exposure ?? {},
     excluded_sectors: overrides.excluded_sectors ?? [],
     description: overrides.description ?? null,
+    // Par défaut : historique complet réel (≥ 12 mois) — l'engine traite l'actif
+    // comme `full`. Les tests de qualité de données surchargent explicitement.
+    stats_observations:
+      overrides.stats_observations === undefined ? 300 : overrides.stats_observations,
   };
 }
 

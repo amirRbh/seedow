@@ -1,10 +1,75 @@
-import type { Asset, ExclusionTag, PortfolioParams, PortfolioResult } from "./types";
-import { MIN_PORTFOLIO_ESG, causeToPillarWeights } from "./types";
+import type {
+  Asset,
+  DataQualitySummary,
+  DataQualityTier,
+  ExclusionTag,
+  PortfolioParams,
+  PortfolioResult,
+} from "./types";
+import { MAX_SINGLE_WEIGHT, MIN_PORTFOLIO_ESG, causeToPillarWeights } from "./types";
 import { optimizeMarkowitz, applyConvictionAdjustment, applyCarbonPreference } from "./markowitz";
 import { computeMetrics } from "./metrics";
+import {
+  anchorLowConfidenceReturns,
+  classifyDataQuality,
+  covarianceFallback,
+} from "./data-quality";
+import { buildExplanation } from "./explanation";
 import { ACWI_WACI_TCO2E_PER_MUSD } from "@/lib/esg/benchmark";
 
-const METHODOLOGY_VERSION = "v1.2";
+const METHODOLOGY_VERSION = "v1.3";
+
+/**
+ * Éligibilité best-in-class ESG (v1.3, desserré).
+ *
+ * L'ancienne règle jetait la MOITIÉ basse ESG de chaque classe (split médian),
+ * alors que le QP impose déjà un plancher ESG≥70 au portefeuille : double
+ * filtrage qui rétrécissait inutilement l'univers. On ne retire désormais que
+ * le QUART le plus faible de chaque classe, et jamais rien sous
+ * `ELIGIBILITY_THIN_CLASS` titres (pour ne pas assécher une classe fine).
+ */
+const ELIGIBILITY_DROP_FRACTION = 0.25;
+const ELIGIBILITY_THIN_CLASS = 5;
+
+/**
+ * Garantie anti-concentration finale (v1.3).
+ *
+ * Le QP borne déjà chaque poids à MAX_SINGLE_WEIGHT, mais les REPLIS (equal-weight
+ * borné par classe, filet ≥3 positions) ne le faisaient pas : sur l'univers réel
+ * — étroit, avec des classes quasi vides — un repli pouvait sortir une ligne à
+ * 45 %. On applique donc un plafonnement + redistribution proportionnelle (water
+ * filling) sur TOUS les chemins, juste avant les métriques. Si l'univers est trop
+ * petit pour respecter le plafond (cap·n < 1, ex. < 4 lignes à 25 %), on ne peut
+ * mathématiquement pas : on laisse tel quel plutôt que d'inventer des lignes.
+ */
+export function capAndRedistribute(
+  weights: Record<string, number>,
+  cap: number = MAX_SINGLE_WEIGHT,
+): Record<string, number> {
+  const ids = Object.keys(weights);
+  const n = ids.length;
+  if (n === 0 || cap * n < 1 - 1e-9) return weights; // plafond infaisable → inchangé
+  const w = { ...weights };
+  const EPS = 1e-9;
+  for (let iter = 0; iter < n + 1; iter++) {
+    let excess = 0;
+    const free: string[] = [];
+    for (const id of ids) {
+      if (w[id] > cap + EPS) {
+        excess += w[id] - cap;
+        w[id] = cap;
+      } else if (w[id] < cap - EPS) {
+        free.push(id);
+      }
+    }
+    if (excess <= EPS) break;
+    let freeSum = 0;
+    for (const id of free) freeSum += w[id];
+    if (freeSum <= EPS) break;
+    for (const id of free) w[id] += (excess * w[id]) / freeSum;
+  }
+  return w;
+}
 
 /**
  * Stage 1 — Hard exclusions filter.
@@ -16,10 +81,10 @@ function applyExclusions(assets: Asset[], exclusions: ExclusionTag[]): Asset[] {
 }
 
 /**
- * Stage 2 — Best-in-class.
- * Keep the top 50% (median split) of each asset class by ESG score.
- * Class with ≤3 assets: keep all (avoids killing thin classes).
- * Threshold is the median, not Q3 — naming aligned with implementation.
+ * Stage 2 — Éligibilité best-in-class ESG (desserré, v1.3).
+ * Retire le quart le plus faible en ESG de chaque classe ; garde tout si la
+ * classe compte ≤ ELIGIBILITY_THIN_CLASS titres. Le plancher ESG du QP garantit
+ * la qualité globale — cet étage ne fait qu'écarter la queue basse évidente.
  */
 function applyBestInClass(assets: Asset[]): Asset[] {
   const byClass = new Map<string, Asset[]>();
@@ -31,13 +96,13 @@ function applyBestInClass(assets: Asset[]): Asset[] {
 
   const kept: Asset[] = [];
   for (const [, arr] of byClass) {
-    if (arr.length <= 3) {
+    if (arr.length <= ELIGIBILITY_THIN_CLASS) {
       kept.push(...arr);
       continue;
     }
     const sorted = [...arr].sort((a, b) => a.esg_score - b.esg_score);
-    const medianIndex = Math.floor(sorted.length * 0.5); // top 50%
-    kept.push(...sorted.slice(medianIndex));
+    const dropCount = Math.floor(sorted.length * ELIGIBILITY_DROP_FRACTION);
+    kept.push(...sorted.slice(dropCount));
   }
   return kept;
 }
@@ -84,8 +149,10 @@ export function applyCarbonBestInClass(assets: Asset[]): Asset[] {
  * l'univers, historique pas encore chargé) : on retombe sur volatility² du
  * seed plutôt que 0 — une variance nulle ferait passer l'actif pour du
  * rendement sans risque et l'optimiseur le surpondérerait massivement.
- * Hors-diagonale absente : 0 (hypothèse non-corrélé), acceptable en attendant
- * le recalcul du modèle de risque.
+ * Hors-diagonale absente : prior de corrélation de classe · σ_i · σ_j au lieu
+ * de 0 (voir data-quality.covarianceFallback). Retomber sur 0 FABRIQUAIT de la
+ * diversification — l'optimiseur croyait pouvoir annuler un risque bien réel et
+ * surpondérait les paires « faussement décorrélées ».
  */
 function buildCovariance(assets: Asset[], covMap: Map<string, number>): number[][] {
   const n = assets.length;
@@ -94,8 +161,8 @@ function buildCovariance(assets: Asset[], covMap: Map<string, number>): number[]
     const row: number[] = [];
     for (let j = 0; j < n; j++) {
       const key = `${assets[i].id}|${assets[j].id}`;
-      const fallback = i === j ? assets[i].volatility ** 2 : 0;
-      row.push(covMap.get(key) ?? fallback);
+      const real = covMap.get(key);
+      row.push(real ?? covarianceFallback(assets[i], assets[j]));
     }
     Σ.push(row);
   }
@@ -133,31 +200,54 @@ export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
   pool = applyCarbonBestInClass(pool);
 
   if (pool.length === 0) {
+    const emptyMetrics = {
+      expected_return: 0,
+      volatility: 0,
+      sharpe: 0,
+      esg_score: 0,
+      ter: 0,
+      carbon_intensity_gco2e_per_eur: null,
+      carbon_intensity_coverage: 0,
+      waci_tco2e_per_musd_sales: null,
+      waci_coverage: 0,
+      by_class: {} as never,
+      by_region: {},
+      diversification: 0,
+    };
+    const emptyDq: DataQualitySummary = {
+      full: 0,
+      partial: 0,
+      insufficient: 0,
+      full_weight_share: 0,
+      anchored_ids: [],
+    };
     return {
       weights: {},
-      metrics: {
-        expected_return: 0,
-        volatility: 0,
-        sharpe: 0,
-        esg_score: 0,
-        ter: 0,
-        carbon_intensity_gco2e_per_eur: null,
-        carbon_intensity_coverage: 0,
-        waci_tco2e_per_musd_sales: null,
-        waci_coverage: 0,
-        by_class: {} as never,
-        by_region: {},
-        diversification: 0,
-      },
+      metrics: emptyMetrics,
       selected_assets: [],
       excluded_count: initialCount,
       esg_floor_relaxed: false,
       methodology_version: METHODOLOGY_VERSION,
+      data_quality: emptyDq,
+      explanation: buildExplanation({
+        weights: {},
+        metrics: emptyMetrics,
+        params,
+        dataQuality: emptyDq,
+        esgFloorRelaxed: false,
+      }),
     };
   }
 
   const Σ = buildCovariance(pool, covariance);
-  const baseReturns = pool.map((a) => a.expected_return);
+
+  // Stage 2c — Data Quality : classe chaque actif selon la fiabilité réelle de
+  // ses stats, puis ANCRE le μ des actifs peu fiables (< ~12 mois d'historique,
+  // ou valeur de seed) sur la médiane des μ de leurs pairs `full` de classe.
+  // On ne laisse jamais un μ inventé/bruité piloter l'optimiseur.
+  const tiers: DataQualityTier[] = pool.map((a) => classifyDataQuality(a));
+  const rawReturns = pool.map((a) => a.expected_return);
+  const { mu: baseReturns, anchored } = anchorLowConfidenceReturns(pool, rawReturns, tiers);
 
   // Stage 3 — conviction adjustment (was misnamed "Black-Litterman")
   const μConviction = applyConvictionAdjustment(
@@ -219,11 +309,35 @@ export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
   }
   if (total > 0) for (const id in cleaned) cleaned[id] /= total;
 
+  // Stage 5 (contrainte) — garantie anti-concentration sur TOUS les chemins (QP
+  // comme replis) : aucune ligne au-dessus de MAX_SINGLE_WEIGHT tant que l'univers
+  // le permet. C'est ce qui empêche un portefeuille absurde (ligne à 45 %) quand
+  // l'univers réel est étroit et force un repli.
+  cleaned = capAndRedistribute(cleaned);
+
   const selectedAssets = pool.filter((a) => cleaned[a.id] !== undefined);
-  const μFinal = pool.map((a) => a.expected_return);
+  // Rendement REPORTÉ : on utilise les μ ancrés (non les seed/μ bruités), jamais
+  // les tilts de préférence (conviction/carbone) — cf. markowitz.ts. Le chiffre
+  // montré à l'utilisateur reste ainsi honnête et non gonflé.
+  const μFinal = baseReturns;
   // Pillar weights derived from active causes; passed to metrics for composite ESG
   const pillarWeights = causeToPillarWeights(params.causes);
   const metrics = computeMetrics(pool, cleaned, Σ, μFinal, pillarWeights);
+
+  // Stage 8 — Data Quality summary + Explanation, à partir des poids finaux.
+  const tierById = new Map(pool.map((a, i) => [a.id, tiers[i]]));
+  const dataQuality: DataQualitySummary = {
+    full: 0,
+    partial: 0,
+    insufficient: 0,
+    full_weight_share: 0,
+    anchored_ids: anchored.filter((id) => cleaned[id] !== undefined),
+  };
+  for (const id in cleaned) {
+    const t = tierById.get(id) ?? "insufficient";
+    dataQuality[t] += 1;
+    if (t === "full") dataQuality.full_weight_share += cleaned[id];
+  }
 
   // The QP-side relax flag covers infeasibility; we also flag when the final
   // realised composite ESG score lands below the floor (e.g. after fallbacks).
@@ -234,12 +348,21 @@ export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
     );
   }
 
+  const esgRelaxed = esgFloorRelaxed || finalEsgBelowFloor;
   return {
     weights: cleaned,
     metrics,
     selected_assets: selectedAssets,
     excluded_count: initialCount - pool.length,
-    esg_floor_relaxed: esgFloorRelaxed || finalEsgBelowFloor,
+    esg_floor_relaxed: esgRelaxed,
     methodology_version: METHODOLOGY_VERSION,
+    data_quality: dataQuality,
+    explanation: buildExplanation({
+      weights: cleaned,
+      metrics,
+      params,
+      dataQuality,
+      esgFloorRelaxed: esgRelaxed,
+    }),
   };
 }

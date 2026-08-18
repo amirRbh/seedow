@@ -93,6 +93,20 @@ export const SOURCE_REGISTRY: readonly SourceDefinition[] = [
       "Factsheets et fichiers de composition publiés par l'émetteur. Déjà parsés (lib/esg/factsheet-parser). Télécharger le document officiel, ne pas scraper la page dynamiquement.",
   },
   {
+    key: "ishares_products",
+    name: "iShares / BlackRock — liste produits (screener officiel)",
+    type: "official_asset_manager",
+    priority: 1,
+    provides: ["fund_identity", "isin", "ticker", "asset_class", "ter", "domicile", "currency"],
+    homeUrl: "https://www.ishares.com/",
+    termsUrl: "https://www.ishares.com/uk/legal/terms-and-conditions",
+    robotsAllowed: null,
+    automation: "document_download",
+    attribution: "Source : iShares / BlackRock (liste produits officielle)",
+    notes:
+      "Export « product screener » officiel (CSV) : sert à DÉCOUVRIR les fonds de la gamme (identité, ISIN, ticker, classe, TER) et créer les actifs manquants en is_active=false. L'URL exacte de l'export est fournie via ISHARES_PRODUCTS_CSV_URL (non codée en dur : elle est régionale et paramétrée). Enrichissement ESG/holdings via ishares_factsheet ensuite.",
+  },
+  {
     key: "amundi_factsheet",
     name: "Amundi ETF — documents officiels",
     type: "official_asset_manager",

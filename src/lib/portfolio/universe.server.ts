@@ -33,7 +33,7 @@ export async function loadUniverse(
   // qu'après régénération post-migration. Passer un littéral les ferait rejeter
   // par le typage strict de select() avant régénération — on lit donc via `r`.
   const ASSET_COLUMNS: string =
-    "id, ticker, name, asset_class, region, ter, esg_score, env_score, social_score, governance_score, esg_score_source, carbon_intensity_gco2e_per_eur, carbon_intensity_source, carbon_intensity_updated_at, sfdr_article, expected_return, volatility, cause_exposure, excluded_sectors, description, waci_tco2e_per_musd_sales, msci_esg_quality_score, implied_temp_rise, esg_data_asof";
+    "id, ticker, name, asset_class, region, ter, esg_score, env_score, social_score, governance_score, esg_score_source, carbon_intensity_gco2e_per_eur, carbon_intensity_source, carbon_intensity_updated_at, sfdr_article, expected_return, volatility, cause_exposure, excluded_sectors, description, waci_tco2e_per_musd_sales, msci_esg_quality_score, implied_temp_rise, esg_data_asof, stats_observations";
   // `carbon_estimates_latest` (repli holdings→émetteur quand le fonds ne publie
   // pas sa propre intensité) n'est pas encore dans les types Supabase générés
   // (auto-générés — ne pas éditer à la main) : accès via un cast localisé, comme
@@ -123,6 +123,7 @@ export async function loadUniverse(
       msci_esg_quality_score: num(r.msci_esg_quality_score),
       implied_temp_rise: str(r.implied_temp_rise),
       esg_data_asof: str(r.esg_data_asof),
+      stats_observations: num(r.stats_observations),
       carbon_data_quality:
         directIntensity != null ? "measured" : hasEstimate ? estimate!.data_quality : null,
       carbon_sourced_ratio:
