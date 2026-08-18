@@ -38,7 +38,15 @@ import { SimulationBadge } from "@/components/common/SimulationBadge";
 import { callAuthed } from "@/lib/authedServerFn";
 import { trackPreference, type PreferenceStep } from "@/lib/preferences/tracking";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
-import type { CauseTag, ExclusionTag, PortfolioParams } from "@/lib/portfolio/types";
+import type { PortfolioParams } from "@/lib/portfolio/types";
+import {
+  answersToParams,
+  loadDraft,
+  saveDraft,
+  clearDraft,
+  type Answers,
+  type Phase,
+} from "@/lib/onboarding/params";
 
 export const Route = createFileRoute("/onboarding")({
   validateSearch: (s: Record<string, unknown>): { new?: 1; guest?: true; resume?: "guest" } => ({
@@ -110,107 +118,8 @@ function StepOptionIcon({ icon }: { icon: string | LucideIcon }) {
   return <Icon className="w-[18px] h-[18px]" strokeWidth={1.8} aria-hidden="true" />;
 }
 
-type StepId = (typeof STEPS)[number]["id"];
-type Phase = "steps" | "agency" | "preview" | "account" | "naming" | "building" | "saving";
-type Answers = Partial<Record<StepId, string[]>>;
-
-// ─────────────────────────────────────────────────────────
-// Persistance du brouillon d'onboarding.
-//
-// localStorage (et non sessionStorage) : la confirmation d'email s'ouvre
-// presque toujours dans un NOUVEL onglet/appareil — une nouvelle session
-// navigateur où sessionStorage est vide. Avec sessionStorage, l'utilisateur
-// qui revient via le lien email reperdait toute sa progression et repartait
-// du questionnaire à zéro (le pire point d'abandon). localStorage survit à ce
-// round-trip et au flux OAuth.
-//
-// Contrepartie (un brouillon qui traînerait indéfiniment) : on horodate et on
-// expire au bout de DRAFT_MAX_AGE_MS, et on nettoie à la fin de l'onboarding.
-// ─────────────────────────────────────────────────────────
-const DRAFT_KEY = "seedow_onboarding_draft";
-const DRAFT_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 24 h
-
-interface OnboardingDraft {
-  phase: Phase;
-  stepIndex: number;
-  answers: Answers;
-  portfolioName: string;
-  isAdditive: boolean;
-}
-
-function loadDraft(isAdditive: boolean): OnboardingDraft | null {
-  try {
-    const raw = localStorage.getItem(DRAFT_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as Partial<OnboardingDraft> & { savedAt?: number };
-    // Brouillon expiré : on le purge et on repart proprement.
-    if (typeof parsed.savedAt === "number" && Date.now() - parsed.savedAt > DRAFT_MAX_AGE_MS) {
-      clearDraft();
-      return null;
-    }
-    // Un brouillon "nouveau portefeuille" ne doit pas être repris par le flux
-    // du premier portefeuille, et inversement.
-    if (!parsed.phase || Boolean(parsed.isAdditive) !== isAdditive) return null;
-    return {
-      phase: parsed.phase,
-      stepIndex: parsed.stepIndex ?? 0,
-      answers: parsed.answers ?? {},
-      portfolioName: parsed.portfolioName ?? "",
-      isAdditive,
-    };
-  } catch {
-    return null;
-  }
-}
-
-function saveDraft(draft: OnboardingDraft) {
-  try {
-    localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...draft, savedAt: Date.now() }));
-  } catch {
-    // Stockage indisponible (mode privé strict, quota) : on continue sans persister.
-  }
-}
-
-function clearDraft() {
-  try {
-    localStorage.removeItem(DRAFT_KEY);
-  } catch {
-    // ignore
-  }
-}
-
-/** Dérive les paramètres du moteur de portefeuille depuis les réponses de l'onboarding. */
-function answersToParams(answers: Answers): PortfolioParams {
-  const causes = ((answers.values ?? []) as CauseTag[]).slice(0, 6);
-  const exclusions = ((answers.exclusions ?? []) as ExclusionTag[]).slice(0, 6);
-  const { risk, horizon } = objectiveToRiskHorizon(answers.objective?.[0]);
-  const amount = Number(answers.amount?.[0] ?? "10") || 10;
-  const cause_intensity: Record<string, number> = {};
-  for (const c of causes) cause_intensity[c] = 0.7;
-  return {
-    causes,
-    cause_intensity,
-    exclusions,
-    risk_target: risk,
-    horizon_years: horizon,
-    initial_amount: amount,
-  };
-}
-
-// Map onboarding objective → (risk_target, horizon_years)
-function objectiveToRiskHorizon(obj: string | undefined): { risk: number; horizon: number } {
-  switch (obj) {
-    case "retraite":
-      return { risk: 0.13, horizon: 25 };
-    case "maison":
-      return { risk: 0.1, horizon: 8 };
-    case "court":
-      return { risk: 0.06, horizon: 2 };
-    case "epargne":
-    default:
-      return { risk: 0.09, horizon: 10 };
-  }
-}
+// La logique pure (mapping réponses → paramètres, persistance du brouillon) vit
+// dans `@/lib/onboarding/params` — extraite et couverte par des tests.
 
 function Onboarding() {
   const navigate = useNavigate();
