@@ -50,7 +50,7 @@ export const Route = createFileRoute("/hooks/discover-funds")({
         }
 
         const discovered = parseISharesProductCsv(raw);
-        let result = { created: 0, skippedExisting: 0, createdTickers: [] as string[] };
+        let result = { created: 0, enriched: 0, skippedExisting: 0, createdTickers: [] as string[] };
         try {
           result = await ensureDiscoveredAssets(supabaseAdmin, discovered);
         } catch (e) {
@@ -62,10 +62,10 @@ export const Route = createFileRoute("/hooks/discover-funds")({
         const durationMs = Date.now() - startedAt;
         await logRun(
           "ok",
-          `${discovered.length} fonds lus, ${result.created} créés (inactifs), ${result.skippedExisting} déjà connus`,
-          result.created,
+          `${discovered.length} fonds lus, ${result.created} créés (inactifs), ${result.enriched} enrichis ESG, ${result.skippedExisting} déjà connus`,
+          result.created + result.enriched,
           discovered.length - result.created,
-          { createdTickers: result.createdTickers.slice(0, 50) },
+          { createdTickers: result.createdTickers.slice(0, 50), enriched: result.enriched },
         );
 
         return json({
@@ -73,6 +73,7 @@ export const Route = createFileRoute("/hooks/discover-funds")({
           configured: true,
           parsed: discovered.length,
           created: result.created,
+          enriched: result.enriched,
           skipped_existing: result.skippedExisting,
           duration_ms: durationMs,
         });
