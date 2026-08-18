@@ -3,6 +3,7 @@ import {
   buildYahooSymbol,
   mapISharesAssetClass,
   parseISharesProductCsv,
+  parseSfdrArticle,
   planAssetInserts,
   type DiscoveredFund,
   type ExistingAssetKey,
@@ -54,6 +55,16 @@ describe("mapISharesAssetClass", () => {
   });
 });
 
+describe("parseSfdrArticle", () => {
+  it("maps SFDR classification labels to article numbers", () => {
+    expect(parseSfdrArticle("Article 8")).toBe(8);
+    expect(parseSfdrArticle("Art. 9")).toBe(9);
+    expect(parseSfdrArticle("Article 6")).toBe(6);
+    expect(parseSfdrArticle("Other")).toBe(6);
+    expect(parseSfdrArticle("")).toBeNull();
+  });
+});
+
 describe("parseISharesProductCsv", () => {
   const content = [
     '"iShares Product List — export"',
@@ -90,6 +101,30 @@ describe("parseISharesProductCsv", () => {
     expect(parseISharesProductCsv({ ...csv(content), contentType: "json" })).toEqual([]);
   });
 
+  it("extracts ESG columns when present (SFDR, MSCI quality → esg_score, WACI)", () => {
+    const esgCsv = [
+      "Ticker,Name,ISIN,Asset Class,Sub Asset Class,Region,Base Currency,Net Expense Ratio (%),Exchange,SFDR Classification,MSCI ESG Quality Score (0-10),MSCI Weighted Average Carbon Intensity (Tons CO2E/$M SALES),ESG As Of Date",
+      'SUSW,"iShares MSCI World SRI",IE00B4L5Y983,Equity,Large Cap,World,USD,0.20,London Stock Exchange,Article 8,8.4,45.2,2026-06-30',
+      'INRG,"iShares Global Clean Energy",IE00B1XNHC34,Equity,Sector,Global,USD,0.65,Xetra,Article 9,6.1,120.0,2026-06-30',
+    ].join("\n");
+    const funds = parseISharesProductCsv(csv(esgCsv));
+    const byT = Object.fromEntries(funds.map((f) => [f.ticker, f]));
+    expect(byT.SUSW.sfdrArticle).toBe(8);
+    expect(byT.SUSW.msciEsgQualityScore).toBeCloseTo(8.4, 6);
+    expect(byT.SUSW.esgScore).toBeCloseTo(84, 6); // 8.4 × 10
+    expect(byT.SUSW.waci).toBeCloseTo(45.2, 6);
+    expect(byT.SUSW.esgAsOf).toBe("2026-06-30");
+    expect(byT.INRG.sfdrArticle).toBe(9);
+    expect(byT.INRG.esgScore).toBeCloseTo(61, 6);
+  });
+
+  it("leaves ESG fields null when the screener has no ESG columns (never invents)", () => {
+    const funds = parseISharesProductCsv(csv(content));
+    expect(funds[0].sfdrArticle).toBeNull();
+    expect(funds[0].esgScore).toBeNull();
+    expect(funds[0].waci).toBeNull();
+  });
+
   it("handles the French BlackRock export: ';' delimiter, FR headers, preamble, decimal comma", () => {
     const fr = [
       '"iShares® - Liste des produits BlackRock France";;;;;;;;',
@@ -122,6 +157,11 @@ describe("planAssetInserts", () => {
     currency: "USD",
     ter: 0.002,
     yahooSymbol: `${ticker}.L`,
+    sfdrArticle: null,
+    msciEsgQualityScore: null,
+    esgScore: null,
+    waci: null,
+    esgAsOf: null,
     sourceKey: "ishares_products",
     sourceUrl: "u",
   });

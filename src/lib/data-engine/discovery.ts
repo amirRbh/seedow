@@ -33,8 +33,29 @@ export interface DiscoveredFund {
    * candidat pour PROUVER qu'il cote réellement avant activation.
    */
   yahooSymbol: string | null;
+  // ── ESG / réglementaire, extraits du screener QUAND les colonnes existent ──
+  // (opportuniste : un champ absent reste null, jamais inventé).
+  /** Article SFDR (6/8/9) dérivé de la classification SFDR. */
+  sfdrArticle: number | null;
+  /** Score de qualité ESG MSCI (0-10), donnée réelle du screener. */
+  msciEsgQualityScore: number | null;
+  /** Score ESG 0-100 = qualité MSCI × 10 (rééchelonnage d'une donnée réelle). */
+  esgScore: number | null;
+  /** Intensité carbone WACI (tCO₂e/M$ CA) si publiée dans le screener. */
+  waci: number | null;
+  /** Date « as of » de la donnée ESG si présente. */
+  esgAsOf: string | null;
   sourceKey: string;
   sourceUrl: string;
+}
+
+/** « Article 8 » / « Art. 9 » / « 8 » / « Other » → 8 / 9 / 6 / null. */
+export function parseSfdrArticle(v: string): number | null {
+  const s = v.toLowerCase();
+  if (/9/.test(s)) return 9;
+  if (/8/.test(s)) return 8;
+  if (/6|other|autre|non|n\/a/.test(s) && s.trim() !== "") return 6;
+  return null;
 }
 
 /**
@@ -235,6 +256,30 @@ export function parseISharesProductCsv(raw: RawData): DiscoveredFund[] {
     "bourse",
     "place de cotation",
   );
+  // ESG / réglementaire (présents dans la plupart des screeners iShares/BlackRock).
+  const iSfdr = findCol(
+    headers,
+    "sfdr classification",
+    "sfdr",
+    "classification sfdr",
+    "sfdr fund classification",
+  );
+  const iQuality = findCol(
+    headers,
+    "msci esg quality score (0-10)",
+    "msci esg quality score",
+    "esg quality score",
+    "score de qualite esg msci",
+  );
+  const iWaci = findCol(
+    headers,
+    "msci weighted average carbon intensity (tons co2e/$m sales)",
+    "msci weighted average carbon intensity",
+    "weighted average carbon intensity",
+    "waci",
+    "intensite carbone",
+  );
+  const iEsgAsOf = findCol(headers, "esg as of date", "esg as of", "date esg", "sustainability as of");
 
   const at = (cols: string[], i: number) => (i >= 0 && i < cols.length ? cols[i].trim() : "");
 
@@ -249,6 +294,11 @@ export function parseISharesProductCsv(raw: RawData): DiscoveredFund[] {
     if (!assetClass) continue; // non mappable → ignoré (pas de classe devinée)
 
     const terPct = parseNum(at(cols, iTer));
+    const sfdrArticle = iSfdr >= 0 ? parseSfdrArticle(at(cols, iSfdr)) : null;
+    const quality = parseNum(at(cols, iQuality));
+    // Score ESG 0-100 = qualité MSCI (0-10) × 10 : rééchelonnage transparent d'une
+    // donnée réelle, source attribuée. null si la qualité n'est pas publiée.
+    const esgScore = quality != null && quality >= 0 && quality <= 10 ? quality * 10 : null;
     out.push({
       isin: at(cols, iIsin) || null,
       ticker,
@@ -259,6 +309,11 @@ export function parseISharesProductCsv(raw: RawData): DiscoveredFund[] {
       currency: at(cols, iCcy) || null,
       ter: terPct != null ? terPct / 100 : null, // % → fraction
       yahooSymbol: buildYahooSymbol(ticker, at(cols, iExch)),
+      sfdrArticle,
+      msciEsgQualityScore: quality != null && quality >= 0 && quality <= 10 ? quality : null,
+      esgScore,
+      waci: parseNum(at(cols, iWaci)),
+      esgAsOf: at(cols, iEsgAsOf) || null,
       sourceKey: raw.sourceKey,
       sourceUrl: raw.sourceUrl,
     });
