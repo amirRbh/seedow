@@ -207,11 +207,32 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                 </p>
               )}
 
-              <div className="grid grid-cols-3 gap-2.5 mt-2.5">
-                <MiniBar label={t("asset_detail.climate")} value={asset.climate_score} />
-                <MiniBar label={t("asset_detail.social")} value={asset.social_score} />
-                <MiniBar label={t("asset_detail.ethics")} value={asset.governance_score} />
-              </div>
+              {/* Détail par pilier E/S/G — affiché UNIQUEMENT si la source fournit
+                  réellement les trois piliers. Sinon on ne fabrique pas trois barres
+                  identiques dérivées du score global (fausse précision, §1.3) : on
+                  affiche le score global honnêtement, avec sa nature d'indicateur. */}
+              {asset.has_pillar_scores ? (
+                <div className="grid grid-cols-3 gap-2.5 mt-2.5">
+                  <MiniBar label={t("asset_detail.climate")} value={asset.climate_score} />
+                  <MiniBar label={t("asset_detail.social")} value={asset.social_score} />
+                  <MiniBar label={t("asset_detail.ethics")} value={asset.governance_score} />
+                </div>
+              ) : (
+                <div className="bg-paper-2 rounded-xl p-3 border border-paper-3 mt-2.5">
+                  <div className="flex items-baseline justify-between gap-2">
+                    <span className="text-tag text-ink-3 font-medium uppercase tracking-wider">
+                      {t("asset_detail.esg_overall_label")}
+                    </span>
+                    <span className="font-value text-xl leading-none text-ink">
+                      {asset.overall_esg_score.toFixed(1)}
+                      <span className="text-tag text-ink-3 ml-1 font-sans">/ 10</span>
+                    </span>
+                  </div>
+                  <p className="text-caption text-ink-3 leading-snug mt-2">
+                    {t("asset_detail.pillars_unavailable")}
+                  </p>
+                </div>
+              )}
               <div className="mt-2.5">
                 <SourceLink />
               </div>

@@ -210,7 +210,7 @@ function Manifesto({
           <>
             <p className="mt-4 max-w-md text-[15px] leading-relaxed text-paper/70">
               {t("impact_xp.manifesto.sub", {
-                companies: t("impact_common.companies", { count: companies }),
+                companies: t("impact_common.funds", { count: companies }),
                 convictions: t("impact_common.convictions", { count: convictions.themesCount }),
               })}
               {since ? ` · ${t("impact_xp.manifesto.since", { date: since })}` : ""}

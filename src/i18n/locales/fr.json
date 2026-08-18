@@ -1556,6 +1556,8 @@
     "climate": "Climat",
     "social": "Social",
     "ethics": "Éthique",
+    "esg_overall_label": "Score ESG global (indicatif)",
+    "pillars_unavailable": "Le détail par pilier (climat / social / gouvernance) n'est pas encore fourni par la source pour ce fonds. On affiche le score global plutôt qu'un détail dérivé qui donnerait une fausse impression de précision. Voir la méthodologie pour comprendre comment ce score est établi.",
     "risks_title": "Risques à considérer",
     "risk_level": "Niveau de risque",
     "exclusions_applied": "Exclusions appliquées",
@@ -1636,6 +1638,8 @@
   "impact_common": {
     "companies_one": "{{count}} entreprise",
     "companies_other": "{{count}} entreprises",
+    "funds_one": "{{count}} fonds",
+    "funds_other": "{{count}} fonds",
     "convictions_one": "{{count}} conviction",
     "convictions_other": "{{count}} convictions"
   },
@@ -1665,7 +1669,7 @@
     "coverage": "mesuré sur {{pct}} % du portefeuille",
     "manifesto": {
       "headline": "Ton argent n'est pas juste placé. Il agit.",
-      "sub": "{{companies}} financées · {{convictions}}",
+      "sub": "{{companies}} · {{convictions}}",
       "since": "depuis {{date}}",
       "germination": "Ton monde n'attend qu'une graine.",
       "germination_sub": "Dès ton premier euro investi, ton impact commence à se dessiner ici — thème par thème, entreprise par entreprise."
@@ -1817,6 +1821,8 @@
     "classic_label": "Référence Seedow",
     "yours_label": "Ton portefeuille",
     "waci_unit": "tCO₂e/M$ de CA",
+    "lead_cleaner": "En clair : ton argent soutient une économie {{pct}} % moins intense en carbone qu'un placement classique.",
+    "lead_dirtier": "En clair : sur les données connues, ton argent est {{pct}} % plus intense en carbone qu'un placement classique. L'intensité carbone reste un critère parmi d'autres — tes exclusions comptent aussi.",
     "cleaner": "−{{pct}}% d'intensité carbone vs le référentiel Seedow.",
     "dirtier": "+{{pct}}% d'intensité carbone vs le référentiel Seedow.",
     "intensity_pending": "Intensité carbone en cours de mesure sur cet aperçu.",
@@ -2513,7 +2519,7 @@
         "caution": "Point de vigilance"
       },
       "identity": {
-        "headline": "Ton argent finance {{count}} entreprises, sur {{themes}} convictions.",
+        "headline": "Ton argent finance {{count}} fonds, sur {{themes}} convictions.",
         "body": "Ta conviction principale, {{cause}}, pèse {{pct}} % de ton monde."
       },
       "cleaner": {

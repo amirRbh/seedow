@@ -86,11 +86,11 @@ export function ImpactMoment() {
         <p className="mt-4 text-balance text-lg font-medium leading-snug tracking-[-0.01em] text-ink md:text-xl">
           {convictions.themesCount > 0
             ? t("impact_moment.headline", {
-                companies: t("impact_common.companies", { count: holdings.length }),
+                companies: t("impact_common.funds", { count: holdings.length }),
                 convictions: t("impact_common.convictions", { count: convictions.themesCount }),
               })
             : t("impact_moment.headline_no_themes", {
-                companies: t("impact_common.companies", { count: holdings.length }),
+                companies: t("impact_common.funds", { count: holdings.length }),
               })}
         </p>
 

@@ -173,6 +173,7 @@ async function fetchAssetUniverse(): Promise<AssetUniverseResult> {
       climate_score: Number(r.env_score ?? esg) / 10,
       social_score: Number(r.social_score ?? esg) / 10,
       governance_score: Number(r.governance_score ?? esg) / 10,
+      has_pillar_scores: transparencyInput.hasPillarScores,
       ter_pct: Number(r.ter) * 100,
       risk_level: riskLevelFromVolatility(Number(r.volatility)),
       co2_factor_per_1k_eur: carbon != null ? Number(carbon) : null,

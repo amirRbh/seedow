@@ -27,6 +27,13 @@ export interface DiscoverAsset {
   climate_score: number; // 0..10
   social_score: number; // 0..10
   governance_score: number; // 0..10
+  /**
+   * true seulement si les 3 piliers E/S/G viennent RÉELLEMENT de la source
+   * (colonnes env_score/social_score/governance_score renseignées). false = les
+   * scores ci-dessus sont dérivés du score global : on ne les affiche PAS comme un
+   * détail par pilier, sous peine de fabriquer une fausse précision (CLAUDE.md §1.3).
+   */
+  has_pillar_scores: boolean;
   ter_pct: number; // %
   risk_level: 1 | 2 | 3 | 4 | 5 | 6 | 7; // SRRI approximé depuis la volatilité annualisée
   co2_factor_per_1k_eur: number | null; // kg CO2e / 1000€ investis/an, null si non mesuré

@@ -114,6 +114,16 @@ export function MirrorReveal({ impact, excludedCount, universeSize, exclusionsCo
         </TooltipProvider>
       </div>
 
+      {/* Phrase d'ouverture en clair — la « porte émotionnelle » : on traduit la
+          comparaison carbone en langage humain AVANT les deux chiffres bruts
+          (WACI), qu'un débutant ne sait pas lire. N'invente rien : dérivée du
+          delta réel déjà calculé. */}
+      {hasComparison && (
+        <p className="mt-4 text-body-sm text-ink leading-relaxed">
+          {t(cleaner ? "mirror.lead_cleaner" : "mirror.lead_dirtier", { pct: deltaPct })}
+        </p>
+      )}
+
       {/* Confrontation intensité carbone */}
       <div className="mt-5 grid grid-cols-2 gap-3">
         <div className="rounded-xl border border-paper-3 bg-paper px-4 py-3">

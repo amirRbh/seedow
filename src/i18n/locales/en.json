@@ -1556,6 +1556,8 @@
     "climate": "Climate",
     "social": "Social",
     "ethics": "Ethics",
+    "esg_overall_label": "Overall ESG score (indicative)",
+    "pillars_unavailable": "The per-pillar breakdown (climate / social / governance) isn't provided by the source for this fund yet. We show the overall score rather than a derived breakdown that would give a false sense of precision. See the methodology for how this score is established.",
     "risks_title": "Risks to consider",
     "risk_level": "Risk level",
     "exclusions_applied": "Applied exclusions",
@@ -1636,6 +1638,8 @@
   "impact_common": {
     "companies_one": "{{count}} company",
     "companies_other": "{{count}} companies",
+    "funds_one": "{{count}} fund",
+    "funds_other": "{{count}} funds",
     "convictions_one": "{{count}} conviction",
     "convictions_other": "{{count}} convictions"
   },
@@ -1665,7 +1669,7 @@
     "coverage": "measured on {{pct}}% of the portfolio",
     "manifesto": {
       "headline": "Your money isn't just parked. It acts.",
-      "sub": "{{companies}} financed · {{convictions}}",
+      "sub": "{{companies}} · {{convictions}}",
       "since": "since {{date}}",
       "germination": "Your world is one seed away.",
       "germination_sub": "From your very first euro invested, your impact starts taking shape here — theme by theme, company by company."
@@ -1817,6 +1821,8 @@
     "classic_label": "Seedow reference",
     "yours_label": "Your portfolio",
     "waci_unit": "tCO₂e/$M revenue",
+    "lead_cleaner": "In plain terms: your money backs an economy {{pct}}% less carbon-intensive than a standard investment.",
+    "lead_dirtier": "In plain terms: on the data we have, your money is {{pct}}% more carbon-intensive than a standard investment. Carbon intensity is one criterion among several — your exclusions count too.",
     "cleaner": "−{{pct}}% carbon intensity vs the Seedow reference.",
     "dirtier": "+{{pct}}% carbon intensity vs the Seedow reference.",
     "intensity_pending": "Carbon intensity still being measured on this preview.",
@@ -2513,7 +2519,7 @@
         "caution": "Watch point"
       },
       "identity": {
-        "headline": "Your money funds {{count}} companies, across {{themes}} convictions.",
+        "headline": "Your money is spread across {{count}} funds, serving {{themes}} convictions.",
         "body": "Your leading conviction, {{cause}}, makes up {{pct}}% of your world."
       },
       "cleaner": {
