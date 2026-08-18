@@ -1317,7 +1317,35 @@ const leFilEn = {
   ethi_simulate: "What if I prioritised climate?",
 };
 
+// Traductions FR manquantes du bloc « Réglages » (données de marché, santé des
+// données, pipeline, version du moteur) — présentes en EN, absentes en FR.
+const reglagesFr = {
+  block_market_data: "Données de marché",
+  market_data_desc:
+    "Les cours sont rafraîchis automatiquement chaque jour de bourse à la clôture. Tu peux forcer une mise à jour immédiate ici.",
+  refresh_prices: "Rafraîchir les cours maintenant",
+  refreshing: "Rafraîchissement…",
+  refresh_ok: "{{ok}} actif(s) mis à jour{{failedSuffix}}.",
+  refresh_failed_suffix: ", {{n}} en échec",
+  refresh_error: "Erreur de rafraîchissement",
+  block_data_health: "Santé des données",
+  history_loading: "Chargement de l'historique…",
+  no_runs:
+    "Aucune exécution enregistrée pour l'instant. Force un rafraîchissement ci-dessus pour lancer le suivi.",
+  last_success: "Dernier succès :",
+  ago_hours: "il y a {{h}} h",
+  never: "jamais",
+  block_pipeline: "Pipeline de construction",
+  pipeline_desc:
+    "Six étapes traçables : profilage, univers investissable, exclusions sectorielles, filtres ESG best-in-class, optimisation de Markowitz sous contraintes (plancher ESG, budget de risque, bornes de poids), puis inclinaison pré-optimisation des rendements attendus selon tes causes. Le simulateur interactif et la documentation détaillée sont sur la page dédiée.",
+  see_methodology: "Lire la méthodologie complète",
+  block_engine_version: "Version du moteur",
+  engine_version_desc:
+    "Méthodologie v1.1 · piliers E/S/G pondérés par les causes, intensité carbone réelle, traçabilité des sources. Revue chaque trimestre.",
+};
+
 const mergedFr = deepMerge(fr, {
+  reglages: reglagesFr,
   le_fil: leFilFr,
   allocation_refiner: refinerPlainFr,
   landing: { rayon_x: rayonXFr, ...landingPathsFr },
