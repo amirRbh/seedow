@@ -89,6 +89,26 @@ describe("parseISharesProductCsv", () => {
   it("returns [] for non-CSV content (never fabricates)", () => {
     expect(parseISharesProductCsv({ ...csv(content), contentType: "json" })).toEqual([]);
   });
+
+  it("handles the French BlackRock export: ';' delimiter, FR headers, preamble, decimal comma", () => {
+    const fr = [
+      '"iShares® - Liste des produits BlackRock France";;;;;;;;',
+      ";;;;;;;;",
+      "Symbole;Nom;ISIN;Classe d'actifs;Sous-classe d'actifs;Région;Devise;Frais courants (%);Bourse",
+      "IWDA;iShares Core MSCI World UCITS ETF;IE00B4L5Y983;Actions;Grandes capitalisations;Monde;USD;0,20;Bourse de Londres",
+      "IEGA;iShares Core Euro Govt Bond;IE00B4WXJJ64;Obligations;Emprunts d'État;Europe;EUR;0,09;Borsa Italiana",
+      "IQQH;iShares Global Clean Energy;IE00B1XNHC34;Actions;Énergie propre;Monde;USD;0,65;Xetra",
+    ].join("\n");
+    const funds = parseISharesProductCsv(csv(fr));
+    const byT = Object.fromEntries(funds.map((f) => [f.ticker, f]));
+    expect(funds).toHaveLength(3);
+    expect(byT.IWDA.assetClass).toBe("equity_dev");
+    expect(byT.IWDA.ter).toBeCloseTo(0.002, 6); // "0,20" → 0.0020
+    expect(byT.IWDA.yahooSymbol).toBe("IWDA.L"); // "Bourse de Londres"
+    expect(byT.IEGA.assetClass).toBe("sov_bond"); // "Emprunts d'État"
+    expect(byT.IEGA.yahooSymbol).toBe("IEGA.MI"); // "Borsa Italiana"
+    expect(byT.IQQH.assetClass).toBe("thematic"); // "Énergie propre"
+  });
 });
 
 describe("planAssetInserts", () => {

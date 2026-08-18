@@ -43,14 +43,14 @@ export interface DiscoveredFund {
  * (cf. migration fix_investable_universe) — on ne devine jamais.
  */
 const EXCHANGE_SUFFIX: { match: RegExp; suffix: string }[] = [
-  { match: /london|lse|\bl\b/i, suffix: ".L" },
-  { match: /xetra|deutsche|frankfurt/i, suffix: ".DE" },
+  { match: /london|londres|lse/i, suffix: ".L" },
+  { match: /xetra|deutsche|frankfurt|francfort/i, suffix: ".DE" },
   { match: /amsterdam/i, suffix: ".AS" },
   { match: /paris/i, suffix: ".PA" },
-  { match: /borsa italiana|milan/i, suffix: ".MI" },
-  { match: /six|swiss/i, suffix: ".SW" },
-  { match: /brussels/i, suffix: ".BR" },
-  { match: /madrid|bme/i, suffix: ".MC" },
+  { match: /borsa italiana|milan|milano/i, suffix: ".MI" },
+  { match: /six|swiss|suisse|zurich/i, suffix: ".SW" },
+  { match: /brussels|bruxelles/i, suffix: ".BR" },
+  { match: /madrid|bme|bolsa/i, suffix: ".MC" },
   { match: /nasdaq|nyse|new york/i, suffix: "" }, // US : pas de suffixe
 ];
 
@@ -72,35 +72,44 @@ export function buildYahooSymbol(ticker: string, exchange: string): string | nul
  * fonds non mappable n'est jamais créé avec une classe devinée (il polluerait
  * l'optimiseur), il est simplement ignoré et journalisé.
  */
+/** Minuscule + suppression des accents (robustesse FR / encodage). */
+function deaccent(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "");
+}
+
 export function mapISharesAssetClass(
   assetClass: string,
   subAssetClass: string,
   name: string,
 ): AssetClass | null {
-  const a = assetClass.toLowerCase();
-  const sub = subAssetClass.toLowerCase();
-  const n = name.toLowerCase();
-  const hay = `${sub} ${n}`;
+  const a = deaccent(assetClass);
+  const hay = deaccent(`${subAssetClass} ${name}`);
 
-  // Thématique : mots-clés secteur/thème forts, priment sur equity générique.
+  // Thématique : mots-clés secteur/thème forts (EN + FR), priment sur equity.
   const thematic =
-    /clean energy|hydrogen|water|clean|solar|wind|climate|biodivers|circular|timber|agribusiness|ageing|digital|robotic|automation|healthcare innovation|battery|electric vehicle|semiconductor|infrastructure/i;
+    /clean energy|hydrogen|hydrogene|water|\beau\b|clean|solar|solaire|wind|eolien|climate|climat|biodivers|circular|circulaire|timber|agribusiness|ageing|digital|robotic|robot|automation|healthcare|sante|battery|batterie|electric vehicle|vehicule electrique|semiconductor|semi-conducteur|infrastructure|energie propre/i;
 
-  if (a.includes("equity") || a.includes("action")) {
+  if (/equity|action/.test(a)) {
     if (thematic.test(hay)) return "thematic";
-    if (/emerging|marchés émergents|em\b|china|india|latin/i.test(hay)) return "equity_em";
+    if (/emerging|emergent|marches emergents|\bem\b|china|chine|india|inde|latin/i.test(hay))
+      return "equity_em";
     return "equity_dev";
   }
-  if (a.includes("fixed income") || a.includes("bond") || a.includes("oblig")) {
-    if (/green bond|green\b/i.test(hay)) return "green_bond";
-    if (/social bond|social\b/i.test(hay)) return "social_bond";
-    if (/govern|treasury|sovereign|gilt|bund|oat|govt/i.test(hay)) return "sov_bond";
-    if (/corporate|corp\b|credit/i.test(hay)) return "corporate_bond";
+  if (/fixed income|bond|oblig/.test(a)) {
+    if (/green bond|green\b|obligation verte|\bvert/i.test(hay)) return "green_bond";
+    if (/social bond|social\b|obligation sociale/i.test(hay)) return "social_bond";
+    if (/govern|treasury|sovereign|souverain|\betat\b|gilt|bund|oat|govt/i.test(hay))
+      return "sov_bond";
+    if (/corporate|corp\b|credit|entreprise/i.test(hay)) return "corporate_bond";
     return "corporate_bond"; // repli obligataire le plus courant pour un ETF crédit
   }
-  if (a.includes("real estate") || /reit|immobil/i.test(hay)) return "reit";
-  if (a.includes("commodit") || /gold|silver|metal|matières premières/i.test(hay)) return "commodity";
-  if (a.includes("money market") || /cash|monétaire|liquid/i.test(hay)) return "cash";
+  if (/real estate|immobil|reit/.test(a) || /reit|immobil/i.test(hay)) return "reit";
+  if (/commodit|matieres premieres/.test(a) || /gold|\bor\b|silver|argent|metal|matieres premieres/i.test(hay))
+    return "commodity";
+  if (/money market|monetaire/.test(a) || /cash|monetaire|liquid/i.test(hay)) return "cash";
 
   return null; // inconnu → on n'invente pas de classe
 }
@@ -114,8 +123,8 @@ function parseNum(v: string | undefined): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
-/** Découpe une ligne CSV en respectant les guillemets. */
-function splitCsvLine(line: string): string[] {
+/** Découpe une ligne CSV en respectant les guillemets, séparateur paramétrable. */
+function splitCsvLine(line: string, delim = ","): string[] {
   const out: string[] = [];
   let cur = "";
   let q = false;
@@ -129,13 +138,32 @@ function splitCsvLine(line: string): string[] {
         } else q = false;
       } else cur += c;
     } else if (c === '"') q = true;
-    else if (c === ",") {
+    else if (c === delim) {
       out.push(cur);
       cur = "";
     } else cur += c;
   }
   out.push(cur);
   return out;
+}
+
+/**
+ * Détecte le séparateur d'une ligne d'en-tête (virgule, point-virgule ou
+ * tabulation) : l'export FR de BlackRock peut être en `;` (locale française),
+ * l'export EN en `,`. On choisit celui qui produit le plus de colonnes.
+ */
+function detectDelimiter(headerLine: string): string {
+  const candidates = [",", ";", "\t"];
+  let best = ",";
+  let bestCount = -1;
+  for (const d of candidates) {
+    const count = splitCsvLine(headerLine, d).length;
+    if (count > bestCount) {
+      bestCount = count;
+      best = d;
+    }
+  }
+  return best;
 }
 
 /** Trouve l'index d'une colonne par nom d'en-tête (insensible casse/espaces/accents). */
@@ -164,27 +192,55 @@ export function parseISharesProductCsv(raw: RawData): DiscoveredFund[] {
   const lines = raw.content.split(/\r?\n/).filter((l) => l.trim() !== "");
   if (lines.length < 2) return [];
 
-  // L'export iShares préfixe parfois des lignes de titre : on cherche la 1ʳᵉ
-  // ligne contenant un en-tête « Ticker ».
-  let headerIdx = lines.findIndex((l) => /(^|,)\s*"?ticker"?\s*(,|$)/i.test(l));
+  // L'export BlackRock/iShares préfixe des lignes de titre/disclaimer : on cherche
+  // la 1ʳᵉ ligne contenant un en-tête « ISIN » (présent EN comme FR, sans accent),
+  // repli sur ticker/nom/symbole. Détection indépendante du séparateur.
+  let headerIdx = lines.findIndex((l) => /(^|[,;\t])\s*"?isin"?\s*([,;\t]|$)/i.test(l));
+  if (headerIdx < 0) headerIdx = lines.findIndex((l) => /isin|ticker|symbole|\bnom\b/i.test(l));
   if (headerIdx < 0) headerIdx = 0;
-  const headers = splitCsvLine(lines[headerIdx]).map((h) => h.trim());
 
-  const iTicker = findCol(headers, "ticker");
-  const iName = findCol(headers, "name", "fund name");
+  const delim = detectDelimiter(lines[headerIdx]);
+  const headers = splitCsvLine(lines[headerIdx], delim).map((h) => h.trim());
+
+  // Alias EN + FR pour survivre à l'export localisé français.
+  const iTicker = findCol(headers, "ticker", "symbole");
+  const iName = findCol(headers, "name", "fund name", "nom", "nom du fonds");
   const iIsin = findCol(headers, "isin");
-  const iClass = findCol(headers, "asset class", "assetclass");
-  const iSub = findCol(headers, "sub asset class", "subassetclass", "sub-asset class");
-  const iRegion = findCol(headers, "region", "geography", "market");
-  const iCcy = findCol(headers, "base currency", "currency", "fund currency");
-  const iTer = findCol(headers, "net expense ratio (%)", "ter", "ongoing charge", "total expense ratio");
-  const iExch = findCol(headers, "exchange", "listing exchange", "primary exchange");
+  const iClass = findCol(headers, "asset class", "assetclass", "classe d'actifs", "classe d actifs");
+  const iSub = findCol(
+    headers,
+    "sub asset class",
+    "subassetclass",
+    "sub-asset class",
+    "sous-classe d'actifs",
+    "sous classe d actifs",
+  );
+  const iRegion = findCol(headers, "region", "geography", "market", "marche", "zone");
+  const iCcy = findCol(headers, "base currency", "currency", "fund currency", "devise");
+  const iTer = findCol(
+    headers,
+    "net expense ratio (%)",
+    "ter",
+    "ongoing charge",
+    "total expense ratio",
+    "frais courants",
+    "frais courants (%)",
+    "frais totaux sur encours",
+  );
+  const iExch = findCol(
+    headers,
+    "exchange",
+    "listing exchange",
+    "primary exchange",
+    "bourse",
+    "place de cotation",
+  );
 
   const at = (cols: string[], i: number) => (i >= 0 && i < cols.length ? cols[i].trim() : "");
 
   const out: DiscoveredFund[] = [];
   for (let r = headerIdx + 1; r < lines.length; r++) {
-    const cols = splitCsvLine(lines[r]);
+    const cols = splitCsvLine(lines[r], delim);
     const ticker = at(cols, iTicker);
     const name = at(cols, iName);
     if (!ticker || !name) continue;

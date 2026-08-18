@@ -20,6 +20,14 @@ import { ensureDiscoveredAssets } from "@/lib/data-engine/discovery.supabase";
  * L'URL de l'export est paramétrée (ISHARES_PRODUCTS_CSV_URL) et non codée en dur
  * (elle est régionale). Sans elle, le hook no-op proprement.
  */
+/**
+ * URL par défaut : export « product screener » officiel BlackRock France (CSV).
+ * Publique, non sensible. Surchargeable via ISHARES_PRODUCTS_CSV_URL (autre
+ * région/gamme) sans redéploiement de code.
+ */
+const DEFAULT_ISHARES_PRODUCTS_CSV_URL =
+  "https://www.blackrock.com/fr/particuliers/product-screener/product-screener-v3.1.jsn?type=csv&siteEntryPassthrough=true&dcrPath=/templatedata/config/product-screener-v3/data/fr/France/product-screener-excel-config&disclosureContentDcrPath=";
+
 export const Route = createFileRoute("/hooks/discover-funds")({
   server: {
     handlers: {
@@ -32,18 +40,10 @@ export const Route = createFileRoute("/hooks/discover-funds")({
         if (!expected) return json({ error: "CRON_SECRET not configured" }, 500);
         if (!token || token !== expected) return json({ error: "Unauthorized" }, 401);
 
-        const url = process.env.ISHARES_PRODUCTS_CSV_URL;
-        if (!url) {
-          // Pas d'URL configurée → on ne fabrique rien, on le dit clairement.
-          return json({
-            ok: true,
-            configured: false,
-            message:
-              "ISHARES_PRODUCTS_CSV_URL non configuré : aucune découverte lancée. Renseigner l'URL de l'export product-screener officiel pour activer.",
-          });
-        }
+        // URL par défaut BlackRock France, surchargeable par variable d'env.
+        const url = process.env.ISHARES_PRODUCTS_CSV_URL ?? DEFAULT_ISHARES_PRODUCTS_CSV_URL;
 
-        const raw = await httpDownload("ishares_products", url, { kind: "csv", maxBytes: 10_000_000 });
+        const raw = await httpDownload("ishares_products", url, { kind: "csv", maxBytes: 20_000_000 });
         if (!raw) {
           await logRun("error", "Téléchargement de l'export iShares indisponible", 0, 0);
           return json({ error: "download failed (source indisponible)" }, 502);
