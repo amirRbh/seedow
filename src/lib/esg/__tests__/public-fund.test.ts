@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { mapPublicFundRow, type PublicFundRow } from "../public-fund";
+import {
+  mapCarbonEstimateRow,
+  mapPublicFundRow,
+  type CarbonEstimateRow,
+  type PublicFundRow,
+} from "../public-fund";
 
 function row(over: Partial<PublicFundRow>): PublicFundRow {
   return {
@@ -65,5 +70,63 @@ describe("mapPublicFundRow", () => {
     const withSfdr = mapPublicFundRow(row({ sfdr_article: 9 })).seedow_score;
     const withoutSfdr = mapPublicFundRow(row({ sfdr_article: null })).seedow_score;
     expect(withoutSfdr).toBe(withSfdr);
+  });
+
+  it("has_pillar_scores=true seulement si les 3 piliers viennent de la source", () => {
+    expect(mapPublicFundRow(row({})).has_pillar_scores).toBe(true);
+    // un seul pilier manquant → le détail par pilier n'est pas réel (§1.3)
+    expect(mapPublicFundRow(row({ env_score: null })).has_pillar_scores).toBe(false);
+    expect(mapPublicFundRow(row({ social_score: null })).has_pillar_scores).toBe(false);
+    expect(mapPublicFundRow(row({ governance_score: null })).has_pillar_scores).toBe(false);
+  });
+
+  it("carbon_trace est null quand aucune estimation n'est fournie", () => {
+    expect(mapPublicFundRow(row({})).carbon_trace).toBeNull();
+    expect(mapPublicFundRow(row({}), null).carbon_trace).toBeNull();
+  });
+
+  it("carbon_trace reprend l'estimation carbone sans rien inventer", () => {
+    const est: CarbonEstimateRow = {
+      intensity_gco2e_per_eur: "123.4",
+      coverage: "0.82",
+      sourced_coverage: "0.55",
+      data_quality: "estimated_sector",
+      methodology: "Estimation Seedow (PCAF) sur 82% du fonds.",
+      holdings_considered: 40,
+      holdings_covered: 33,
+      as_of: "2026-08-01",
+    };
+    const trace = mapPublicFundRow(row({}), est).carbon_trace;
+    expect(trace).not.toBeNull();
+    expect(trace!.intensityGco2ePerEur).toBeCloseTo(123.4, 5);
+    expect(trace!.coverage).toBeCloseTo(0.82, 5);
+    expect(trace!.sourcedCoverage).toBeCloseTo(0.55, 5);
+    expect(trace!.dataQuality).toBe("estimated_sector");
+    expect(trace!.holdingsCovered).toBe(33);
+    expect(trace!.asOf).toBe("2026-08-01");
+  });
+});
+
+describe("mapCarbonEstimateRow", () => {
+  it("renvoie null pour une entrée absente", () => {
+    expect(mapCarbonEstimateRow(null)).toBeNull();
+    expect(mapCarbonEstimateRow(undefined)).toBeNull();
+  });
+
+  it("laisse intensityGco2ePerEur à null quand la couverture est nulle", () => {
+    const trace = mapCarbonEstimateRow({
+      intensity_gco2e_per_eur: null,
+      coverage: 0,
+      sourced_coverage: 0,
+      data_quality: "unavailable",
+      methodology: "Couverture nulle.",
+      holdings_considered: 12,
+      holdings_covered: 0,
+      as_of: null,
+    });
+    expect(trace).not.toBeNull();
+    expect(trace!.intensityGco2ePerEur).toBeNull();
+    expect(trace!.coverage).toBe(0);
+    expect(trace!.dataQuality).toBe("unavailable");
   });
 });
