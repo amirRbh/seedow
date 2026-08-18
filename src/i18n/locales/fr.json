@@ -905,7 +905,23 @@
     "source_unknown": "non communiquée",
     "coverage_complete": "Couverture complète",
     "coverage_partial": "Couverture partielle",
-    "coverage_estimated": "Couverture estimée"
+    "coverage_estimated": "Couverture estimée",
+    "climate_derived_note": "Le score climat détaillé n'est pas fourni séparément par la source pour ce fonds — on affiche le score ESG global plutôt qu'un détail dérivé (fausse précision évitée, §1.3).",
+    "carbon_trace_title": "Traçabilité de l'empreinte carbone",
+    "carbon_trace_intensity": "Intensité estimée",
+    "carbon_trace_coverage": "Part du fonds couverte",
+    "carbon_trace_sourced": "dont directement sourcée (émetteur)",
+    "carbon_trace_quality": "Fiabilité la plus basse retenue",
+    "carbon_trace_holdings": "{{covered}} positions couvertes sur {{considered}} analysées",
+    "carbon_trace_asof": "au {{date}}",
+    "carbon_quality": {
+      "measured": "Mesurée (publiée et auditée)",
+      "reported": "Déclarée (publiée, non auditée)",
+      "estimated_company": "Estimée (méthode spécifique à l'entreprise)",
+      "estimated_sector": "Estimée (intensité sectorielle × CA réel)",
+      "proxy": "Approchée (proxy sectoriel générique)",
+      "unavailable": "Indisponible"
+    }
   },
   "observatoire": {
     "back": "← Comprendre",

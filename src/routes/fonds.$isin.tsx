@@ -51,6 +51,15 @@ const TIER_LABEL: Record<PublicFundAsset["sustainability_tier"], string> = {
   insufficient_evidence: "fonds_page.tier_insufficient",
 };
 
+const CARBON_QUALITY_LABEL: Record<string, string> = {
+  measured: "fonds_page.carbon_quality.measured",
+  reported: "fonds_page.carbon_quality.reported",
+  estimated_company: "fonds_page.carbon_quality.estimated_company",
+  estimated_sector: "fonds_page.carbon_quality.estimated_sector",
+  proxy: "fonds_page.carbon_quality.proxy",
+  unavailable: "fonds_page.carbon_quality.unavailable",
+};
+
 function FundAuthorityPage() {
   const { fund } = Route.useLoaderData();
   const { t } = useTranslation();
@@ -105,7 +114,11 @@ function FundAuthorityPage() {
 
         <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Metric label={t("fonds_page.metric_esg")} value={`${fund.esg.toFixed(1)}/10`} />
-          <Metric label={t("fonds_page.metric_climate")} value={`${fund.climate.toFixed(1)}/10`} />
+          {/* Score climat affiché seulement s'il vient réellement de la source :
+              sinon il serait égal au score ESG global (fausse précision, §1.3). */}
+          {fund.has_pillar_scores && (
+            <Metric label={t("fonds_page.metric_climate")} value={`${fund.climate.toFixed(1)}/10`} />
+          )}
           <Metric
             label={t("fonds_page.metric_ter")}
             value={`${(fund.ter * 100).toFixed(2).replace(".", ",")} %`}
@@ -122,6 +135,59 @@ function FundAuthorityPage() {
           />
           <Metric label={t("fonds_page.metric_temp")} value={fund.implied_temp_rise ?? "—"} />
         </section>
+
+        {!fund.has_pillar_scores && (
+          <p className="text-caption text-ink-3 leading-relaxed -mt-4">
+            {t("fonds_page.climate_derived_note")}
+          </p>
+        )}
+
+        {/* Traçabilité carbone — le moteur bottom-up (carbon-engine.ts) calcule déjà
+            couverture, part directement sourcée, palier de fiabilité et méthode.
+            On l'expose ici au lieu d'un chiffre nu : la transparence radicale de la
+            méthode est un différenciateur (§1.2). Rien affiché si non calculé. */}
+        {fund.carbon_trace && (
+          <section className="border border-paper-3 rounded-2xl p-5">
+            <p className="text-tag uppercase tracking-[0.14em] text-ink-3 font-mono mb-3">
+              {t("fonds_page.carbon_trace_title")}
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {fund.carbon_trace.intensityGco2ePerEur != null && (
+                <TraceStat
+                  label={t("fonds_page.carbon_trace_intensity")}
+                  value={`${Math.round(fund.carbon_trace.intensityGco2ePerEur)} gCO₂e/€`}
+                />
+              )}
+              <TraceStat
+                label={t("fonds_page.carbon_trace_coverage")}
+                value={`${Math.round(fund.carbon_trace.coverage * 100)} %`}
+              />
+              <TraceStat
+                label={t("fonds_page.carbon_trace_sourced")}
+                value={`${Math.round(fund.carbon_trace.sourcedCoverage * 100)} %`}
+              />
+              <TraceStat
+                label={t("fonds_page.carbon_trace_quality")}
+                value={t(
+                  CARBON_QUALITY_LABEL[fund.carbon_trace.dataQuality] ??
+                    "fonds_page.carbon_quality.unavailable",
+                )}
+              />
+            </div>
+            <p className="text-body-sm text-ink-2 leading-relaxed mt-4">
+              {fund.carbon_trace.methodology}
+            </p>
+            <p className="text-caption text-ink-3 mt-2">
+              {t("fonds_page.carbon_trace_holdings", {
+                covered: fund.carbon_trace.holdingsCovered,
+                considered: fund.carbon_trace.holdingsConsidered,
+              })}
+              {fund.carbon_trace.asOf
+                ? ` · ${t("fonds_page.carbon_trace_asof", { date: fund.carbon_trace.asOf })}`
+                : ""}
+            </p>
+          </section>
+        )}
 
         <section className="border border-paper-3 rounded-2xl p-5">
           <p className="text-tag uppercase tracking-[0.14em] text-ink-3 font-mono mb-2">
@@ -181,6 +247,18 @@ function Metric({ label, value }: { label: string; value: string }) {
     <div className="border border-paper-3 rounded-2xl p-4">
       <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono">{label}</p>
       <p className="font-value text-xl text-ink mt-1 tabular-nums">{value}</p>
+    </div>
+  );
+}
+
+/** Statistique de traçabilité carbone — libellé fin au-dessus, valeur lisible. */
+function TraceStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="text-tag uppercase tracking-[0.14em] text-ink-3 font-mono leading-snug">
+        {label}
+      </p>
+      <p className="font-value text-lg text-ink mt-1 tabular-nums">{value}</p>
     </div>
   );
 }

@@ -40,6 +40,40 @@ export interface PublicFundRow {
   esg_data_asof: string | null;
 }
 
+/**
+ * Traçabilité de l'estimation carbone bottom-up (table `carbon_estimates`,
+ * produite par le moteur `carbon-engine.ts`). Exposée telle quelle : on montre
+ * la part réellement couverte et la part directement sourcée plutôt qu'un chiffre
+ * nu qui donnerait une fausse impression d'exhaustivité (§1.2/§1.3).
+ */
+export interface FundCarbonTrace {
+  /** gCO₂e / € investi dans le fonds, sur la part couverte. null si couverture nulle. */
+  intensityGco2ePerEur: number | null;
+  /** Part du fonds couverte par une donnée quelconque (mesurée → proxy), 0..1. */
+  coverage: number;
+  /** Part du fonds couverte par une donnée DIRECTEMENT sourcée (measured/reported), 0..1. */
+  sourcedCoverage: number;
+  /** Palier le moins fiable parmi les holdings qui contribuent (label honnête). */
+  dataQuality: string;
+  /** Phrase de méthode écrite par le moteur (déjà en clair, sourcée). */
+  methodology: string;
+  holdingsConsidered: number;
+  holdingsCovered: number;
+  asOf: string | null;
+}
+
+/** Ligne brute `carbon_estimates` (pas encore dans les types Supabase générés). */
+export interface CarbonEstimateRow {
+  intensity_gco2e_per_eur: number | string | null;
+  coverage: number | string;
+  sourced_coverage: number | string;
+  data_quality: string;
+  methodology: string;
+  holdings_considered: number;
+  holdings_covered: number;
+  as_of: string | null;
+}
+
 export interface PublicFundAsset {
   ticker: string;
   name: string;
@@ -50,8 +84,14 @@ export interface PublicFundAsset {
   climate: number;
   social: number;
   governance: number;
+  /** true seulement si les 3 piliers E/S/G viennent réellement de la source. false
+   *  = climate/social/governance sont dérivés du score global (ne pas les afficher
+   *  comme un détail par pilier — fausse précision, §1.3). */
+  has_pillar_scores: boolean;
   ter: number;
   carbon_intensity: number | null;
+  /** Traçabilité de l'estimation carbone bottom-up, null si non calculée. */
+  carbon_trace: FundCarbonTrace | null;
   implied_temp_rise: string | null;
   sfdr_article: number | null;
   coverage: "complete" | "partial" | "estimated";
@@ -68,8 +108,28 @@ export interface PublicFundAsset {
   sustainability_drivers: string[];
 }
 
+/** Convertit une ligne `carbon_estimates` en trace publique (jamais fabriquée). */
+export function mapCarbonEstimateRow(row: CarbonEstimateRow | null | undefined): FundCarbonTrace | null {
+  if (!row) return null;
+  const intensity =
+    row.intensity_gco2e_per_eur != null ? Number(row.intensity_gco2e_per_eur) : null;
+  return {
+    intensityGco2ePerEur: intensity != null && Number.isFinite(intensity) ? intensity : null,
+    coverage: Number(row.coverage) || 0,
+    sourcedCoverage: Number(row.sourced_coverage) || 0,
+    dataQuality: row.data_quality,
+    methodology: row.methodology,
+    holdingsConsidered: row.holdings_considered ?? 0,
+    holdingsCovered: row.holdings_covered ?? 0,
+    asOf: row.as_of,
+  };
+}
+
 /** Transforme une ligne `assets` en vue publique — jamais de valeur inventée. */
-export function mapPublicFundRow(r: PublicFundRow): PublicFundAsset {
+export function mapPublicFundRow(
+  r: PublicFundRow,
+  carbonEstimate?: CarbonEstimateRow | null,
+): PublicFundAsset {
   const esg = Number(r.esg_score);
   const causeExposure = r.cause_exposure ?? {};
   const claimThemes = Object.entries(causeExposure)
@@ -112,8 +172,10 @@ export function mapPublicFundRow(r: PublicFundRow): PublicFundAsset {
     climate: Math.round(Number(r.env_score ?? esg)) / 10,
     social: Math.round(Number(r.social_score ?? esg)) / 10,
     governance: Math.round(Number(r.governance_score ?? esg)) / 10,
+    has_pillar_scores: input.hasPillarScores,
     ter: Number(r.ter),
     carbon_intensity: r.carbon_intensity_gco2e_per_eur,
+    carbon_trace: mapCarbonEstimateRow(carbonEstimate),
     implied_temp_rise: r.implied_temp_rise,
     sfdr_article: r.sfdr_article,
     coverage,

@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { AlertCircle, RefreshCw, X } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
+import { useTranslation } from "react-i18next";
+import { useLang } from "@/hooks/useLang";
 import { triggerMarketRefresh } from "@/lib/market/refresh.functions";
 
 interface Props {
@@ -31,6 +33,8 @@ function computeStaleness(latestQuoteAt: string | null, hasQuotes: boolean) {
 const SESSION_DISMISS_KEY = "seedow:market-banner-dismissed";
 
 export function MarketFreshnessBanner({ latestQuoteAt, hasQuotes, onRefreshed }: Props) {
+  const { t } = useTranslation();
+  const { lang } = useLang();
   const refresh = useServerFn(triggerMarketRefresh);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
@@ -68,23 +72,23 @@ export function MarketFreshnessBanner({ latestQuoteAt, hasQuotes, onRefreshed }:
     : "border-paper-3 bg-paper-2 text-ink-2";
 
   const ageLabel = latestQuoteAt
-    ? new Date(latestQuoteAt).toLocaleDateString("fr-FR", {
+    ? new Date(latestQuoteAt).toLocaleDateString(lang === "en" ? "en-US" : "fr-FR", {
         day: "2-digit",
         month: "short",
         hour: "2-digit",
         minute: "2-digit",
       })
-    : "jamais";
+    : t("market_freshness.never");
 
   const onClick = async () => {
     setBusy(true);
     setMsg(null);
     try {
       const res = await refresh();
-      setMsg(`${res.ok} actif(s) mis à jour.`);
+      setMsg(t("market_freshness.refresh_ok", { ok: res.ok }));
       onRefreshed?.();
     } catch (e) {
-      setMsg(e instanceof Error ? e.message : "Erreur de rafraîchissement");
+      setMsg(e instanceof Error ? e.message : t("market_freshness.error"));
     } finally {
       setBusy(false);
     }
@@ -95,10 +99,12 @@ export function MarketFreshnessBanner({ latestQuoteAt, hasQuotes, onRefreshed }:
       <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
       <div className="flex-1 min-w-0">
         <p className="text-label font-medium">
-          {isCritical ? "Prix de marché obsolètes" : "Prix de marché un peu anciens"}
+          {isCritical
+            ? t("market_freshness.critical_title")
+            : t("market_freshness.stale_title")}
         </p>
         <p className="text-caption opacity-80 mt-0.5">
-          Dernière mise à jour&nbsp;: {ageLabel}
+          {t("market_freshness.last_updated", { date: ageLabel })}
           {msg && ` · ${msg}`}
         </p>
       </div>
@@ -109,12 +115,12 @@ export function MarketFreshnessBanner({ latestQuoteAt, hasQuotes, onRefreshed }:
         className="text-caption font-medium px-2.5 py-1 rounded border border-current/30 hover:bg-current/5 transition-colors flex items-center gap-1 disabled:opacity-50 flex-shrink-0"
       >
         <RefreshCw className={`w-3 h-3 ${busy ? "animate-spin" : ""}`} />
-        Rafraîchir
+        {t("market_freshness.refresh")}
       </button>
       <button
         type="button"
         onClick={onDismiss}
-        aria-label="Masquer cet avertissement"
+        aria-label={t("market_freshness.dismiss")}
         className="text-current opacity-60 hover:opacity-100 transition-opacity flex-shrink-0 p-1"
       >
         <X className="w-3.5 h-3.5" />
