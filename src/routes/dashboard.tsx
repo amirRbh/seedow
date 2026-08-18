@@ -23,6 +23,7 @@ import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 import { RealInvestmentInterestCard } from "@/components/beta/RealInvestmentInterestCard";
 import { FeedbackButton } from "@/components/beta/FeedbackButton";
 import { ImpactMoment } from "@/components/impact/ImpactMoment";
+import { VoteTeaserCard } from "@/components/vote/VoteTeaserCard";
 import { GuestBanner } from "@/components/dashboard/GuestBanner";
 import { UnderstandPortfolioCard } from "@/components/dashboard/UnderstandPortfolioCard";
 import { GuestDashboard } from "@/components/dashboard/GuestDashboard";
@@ -345,6 +346,11 @@ function Dashboard() {
 
         {/* 4. Impact — porte d'entrée émotionnelle */}
         {portfolio && holdings.length > 0 && <ImpactMoment />}
+
+        {/* 4b. Ton argent vote — l'agir prolonge l'impact. Auto-masqué s'il n'y a
+            aucune résolution ouverte (jamais d'écran mort). C'est le
+            différenciateur produit : on l'expose là où l'utilisateur revient. */}
+        {portfolio && holdings.length > 0 && <VoteTeaserCard />}
 
         {/* 5. Lien Voir le détail */}
         <motion.section
