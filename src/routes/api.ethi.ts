@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 import { trimHistory, MAX_OUTPUT_TOKENS } from "@/lib/ethi/cost";
+import { evaluateEthiReply } from "@/lib/ethi/compliance";
 
 // Le client n'envoie jamais de message `system` : le seul prompt système
 // est celui construit côté serveur ci-dessous. Restreindre les rôles ferme
@@ -234,8 +235,15 @@ Reply in English.${contextBlock}`;
             });
 
           const json = (await resp.json()) as { choices?: { message?: { content?: string } }[] };
-          const content = json.choices?.[0]?.message?.content ?? "";
-          return Response.json({ content });
+          const rawContent = json.choices?.[0]?.message?.content ?? "";
+          // Garde-fou de conformité en sortie (§5) : si le modèle a produit une
+          // recommandation d'investissement personnalisée/chiffrée malgré le
+          // prompt, on la remplace par un message sûr AVANT de la renvoyer.
+          const evaluation = evaluateEthiReply(rawContent, lang);
+          if (!evaluation.safe) {
+            console.warn(`[ethi] réponse filtrée (conformité §5) : ${evaluation.reason}`);
+          }
+          return Response.json({ content: evaluation.content, filtered: !evaluation.safe });
         } catch (e) {
           console.error("ethi error", e);
           return Response.json({
