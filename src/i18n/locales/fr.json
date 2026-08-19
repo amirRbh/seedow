@@ -1981,7 +1981,9 @@
     "sharpe_hint": "Ratio de Sharpe : mesure si la performance vaut le risque pris. Au-dessus de 1 = très bon.",
     "sharpe": "Sharpe",
     "annual_fees": "Frais annuels",
-    "ter_hint": "TER : pourcentage prélevé chaque année par les fonds. Plus c'est bas, mieux c'est."
+    "ter_hint": "TER : pourcentage prélevé chaque année par les fonds. Plus c'est bas, mieux c'est.",
+    "esg_measured": "{{pct}} % mesuré",
+    "esg_estimated": "estimé"
   },
   "comparatif_panel": {
     "why_gap": "Pourquoi cet écart ?",

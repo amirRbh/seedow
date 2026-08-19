@@ -38,6 +38,17 @@ export function PortfolioMetricsCard({ metrics }: Props) {
   const impact = buildPortfolioImpact(metrics, 0);
   const carbonDelta = impact.intensity?.vsBenchmarkDeltaPct ?? null;
 
+  // N1 — traçabilité ESG : on affiche la part du score réellement mesurée (vs
+  // estimée par catégorie) directement sur la tuile, jamais reléguée (§1.2).
+  // Absent/null sur les portefeuilles générés avant N1 → on retombe sur « sur 100 ».
+  const esgSourced = metrics.esg_sourced_share;
+  const esgProvenanceSub =
+    typeof esgSourced === "number" && Number.isFinite(esgSourced)
+      ? esgSourced > 0
+        ? t("portfolio_metrics.esg_measured", { pct: Math.round(esgSourced * 100) })
+        : t("portfolio_metrics.esg_estimated")
+      : t("portfolio_metrics.out_of_100");
+
   const items: Item[] = [
     {
       label: t("portfolio_metrics.expected_perf"),
@@ -52,7 +63,7 @@ export function PortfolioMetricsCard({ metrics }: Props) {
       anchor: "metric-esg",
       hint: t("portfolio_metrics.impact_score_hint"),
       value: formatNumber(metrics.esg_score, lang, { maximumFractionDigits: 0 }),
-      sub: t("portfolio_metrics.out_of_100"),
+      sub: esgProvenanceSub,
       tone: "bloom",
     },
     {
