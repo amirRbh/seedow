@@ -24,7 +24,9 @@ describe("classifyDataQuality", () => {
 
   it("returns 'partial' between the two thresholds", () => {
     expect(classifyDataQuality({ stats_observations: PARTIAL_CONFIDENCE_MIN_OBS })).toBe("partial");
-    expect(classifyDataQuality({ stats_observations: FULL_CONFIDENCE_MIN_OBS - 1 })).toBe("partial");
+    expect(classifyDataQuality({ stats_observations: FULL_CONFIDENCE_MIN_OBS - 1 })).toBe(
+      "partial",
+    );
   });
 
   it("returns 'full' at or above ~12 months of history", () => {
@@ -78,7 +80,7 @@ describe("anchorLowConfidenceReturns", () => {
   it("anchors a low-confidence asset to the class median of full peers", () => {
     const assets = [
       makeAsset({ id: "full1", asset_class: "equity_dev", expected_return: 0.06 }),
-      makeAsset({ id: "full2", asset_class: "equity_dev", expected_return: 0.10 }),
+      makeAsset({ id: "full2", asset_class: "equity_dev", expected_return: 0.1 }),
       makeAsset({ id: "seed", asset_class: "equity_dev", expected_return: 0.99 }), // absurd seed
     ];
     const mu = assets.map((a) => a.expected_return);
@@ -88,7 +90,7 @@ describe("anchorLowConfidenceReturns", () => {
     expect(anchored).toEqual(["seed"]);
     // never invents: full peers preserved
     expect(out[0]).toBe(0.06);
-    expect(out[1]).toBe(0.10);
+    expect(out[1]).toBe(0.1);
   });
 
   it("falls back to the GLOBAL full median when the class has no full peer", () => {

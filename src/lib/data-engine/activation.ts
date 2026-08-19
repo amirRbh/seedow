@@ -34,9 +34,7 @@ export interface IdentityFlags {
 
 /** Identité « complète » = tous les champs d'identité + frais présents. */
 export function hasFullIdentity(f: IdentityFlags): boolean {
-  return (
-    f.hasIsin && f.hasName && f.hasIssuer && f.hasDomicile && f.hasCurrency && f.hasTer
-  );
+  return f.hasIsin && f.hasName && f.hasIssuer && f.hasDomicile && f.hasCurrency && f.hasTer;
 }
 
 export interface ActivationInput {

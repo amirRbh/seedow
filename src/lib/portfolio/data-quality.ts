@@ -37,7 +37,8 @@ export const PARTIAL_CONFIDENCE_MIN_OBS = 40;
  */
 export function classifyDataQuality(asset: Pick<Asset, "stats_observations">): DataQualityTier {
   const obs = asset.stats_observations;
-  if (obs == null || !Number.isFinite(obs) || obs < PARTIAL_CONFIDENCE_MIN_OBS) return "insufficient";
+  if (obs == null || !Number.isFinite(obs) || obs < PARTIAL_CONFIDENCE_MIN_OBS)
+    return "insufficient";
   if (obs < FULL_CONFIDENCE_MIN_OBS) return "partial";
   return "full";
 }

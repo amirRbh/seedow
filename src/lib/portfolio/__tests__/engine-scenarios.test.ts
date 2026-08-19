@@ -151,7 +151,12 @@ describe("engine v1.3 — universe & constraints edge cases", () => {
     // 6 near-identical equities + real (high) covariance between them → optimiser
     // must spread rather than pile into one, thanks to the non-zero correlation.
     const universe = Array.from({ length: 6 }, (_, i) =>
-      makeAsset({ id: `eq-${i}`, asset_class: "equity_dev", volatility: 0.2, expected_return: 0.07 }),
+      makeAsset({
+        id: `eq-${i}`,
+        asset_class: "equity_dev",
+        volatility: 0.2,
+        expected_return: 0.07,
+      }),
     ).concat([
       makeAsset({ id: "gb", asset_class: "green_bond", volatility: 0.05, expected_return: 0.03 }),
       makeAsset({ id: "sb", asset_class: "sov_bond", volatility: 0.04, expected_return: 0.02 }),
