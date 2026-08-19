@@ -124,7 +124,12 @@ Diversif_vraie = 1 − HHI(exposition agrégée par titre sous-jacent)
 
 ### ▶ NOW (débloque la crédibilité, sans refonte de moteur)
 
-**N1 — Étiqueter `esg_score` estimé vs mesuré partout**
+**État d'avancement** — N1 ✅ · N3 ✅ · N4 ✅ · N5 ✅ (implémentés ; validation CI à confirmer, le registre npm privé étant bloqué dans l'environnement d'audit). **N2 ⏳ bloqué sur donnée** : peupler `fund_holdings` exige un flux de compositions réel — inventer des holdings violerait §1.3. La table et le chemin d'ingestion existent déjà (`fund_holdings`, `carbon-estimate.server.ts`) ; seul le raccordement à une source réelle manque.
+
+**N1 — Étiqueter `esg_score` estimé vs mesuré partout** ✅ *(couche lib)*
+- Fait : `isEsgSourced()` (`types.ts`) + `metrics.esg_sourced_share` (part du poids dont l'ESG vient d'un fournisseur externe réel vs `seedow-internal*`). Reste : brancher l'affichage dans l'UI `discover/`, `portfolio/`, `impact/`.
+- (spéc initiale ci-dessous)
+**N1 (spéc) — Étiqueter `esg_score` estimé vs mesuré partout**
 - Fichiers : `src/lib/portfolio/types.ts` (exposer `esg_score_source` dans les métriques), composants `discover/`, `portfolio/`, `impact/` + `methodologie.tsx`.
 - Done : toute UI affichant un score ESG affiche sa provenance (`mesuré MSCI` / `estimé Seedow v1`), aucune donnée estimée présentée comme mesurée. Test snapshot i18n.
 

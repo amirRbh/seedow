@@ -17,7 +17,7 @@ import {
 import { buildExplanation } from "./explanation";
 import { ACWI_WACI_TCO2E_PER_MUSD } from "@/lib/esg/benchmark";
 
-const METHODOLOGY_VERSION = "v1.3";
+const METHODOLOGY_VERSION = "v1.4";
 
 /**
  * Éligibilité best-in-class ESG (v1.3, desserré).
@@ -178,8 +178,9 @@ export interface BuildPortfolioInput {
 /**
  * Pipeline:
  *   1. Exclusions (hard)
- *   2. Best-in-class (top 50% ESG per class)
- *   3. Conviction adjustment on expected returns (causes → μ)
+ *   2. Best-in-class ESG (drop weakest quartile per class)
+ *   3. Conviction adjustment on expected returns (causes → μ) + carbon tilt
+ *      (the ONLY place carbon enters allocation since v1.4 — no more hard prune)
  *   4. Markowitz optimisation under constraints
  *   5. Compute metrics with cause-weighted composite ESG score
  *
@@ -196,8 +197,14 @@ export function buildPortfolio(input: BuildPortfolioInput): PortfolioResult {
   let pool = applyExclusions(universe, params.exclusions);
   // Stage 2 — best-in-class ESG (score)
   pool = applyBestInClass(pool);
-  // Stage 2b — best-in-class carbone (écarte le tiers le plus intensif là où mesurable)
-  pool = applyCarbonBestInClass(pool);
+  // NOTE (v1.4, N5) — le carbone n'agit plus qu'UNE fois dans l'allocation, via le
+  // tilt de préférence sur μ (`applyCarbonPreference`, étage 3b). L'ancien
+  // best-in-class carbone (filtrage dur par classe) a été retiré du pipeline pour
+  // supprimer le double/triple comptage carbone (filtre dur + tilt + affichage) :
+  // c'était une pondération arbitraire non maîtrisée qui assèchait en plus des
+  // classes fines. `applyCarbonBestInClass` reste exportée (testée isolément) mais
+  // n'est plus appliquée ici — le tilt continu, borné et réversible est plus
+  // défendable qu'un filtre dur, et ne détruit pas la diversification.
 
   if (pool.length === 0) {
     const emptyMetrics = {
