@@ -10,6 +10,9 @@ import {
   DRAFT_MAX_AGE_MS,
   DEFAULT_AMOUNT,
   CAUSE_INTENSITY,
+  applyRiskAppetite,
+  rankedCauseIntensity,
+  RISK_TARGET_MAX,
   type Answers,
   type DraftStorage,
   type OnboardingDraft,
@@ -77,6 +80,47 @@ describe("answersToParams", () => {
     expect(answersToParams({ amount: ["abc"] }).initial_amount).toBe(DEFAULT_AMOUNT);
     expect(answersToParams({ amount: ["0"] }).initial_amount).toBe(DEFAULT_AMOUNT); // 0 → default
     expect(answersToParams({ amount: ["500"] }).initial_amount).toBe(500);
+  });
+});
+
+describe("X2 — appétence au risque", () => {
+  it("is a no-op when no risk appetite is answered (backward compatible)", () => {
+    expect(answersToParams({ objective: ["retraite"] }).risk_target).toBe(0.13);
+    expect(applyRiskAppetite(0.13, undefined)).toBe(0.13);
+  });
+
+  it("lowers risk for prudent, raises it for dynamique", () => {
+    expect(applyRiskAppetite(0.13, "prudent")).toBeCloseTo(0.091, 6);
+    expect(applyRiskAppetite(0.06, "dynamique")).toBeCloseTo(0.081, 6);
+    const p = answersToParams({ objective: ["court"], risk: ["dynamique"] });
+    expect(p.risk_target).toBeCloseTo(0.06 * 1.35, 9);
+  });
+
+  it("clamps the final risk target to the safe bounds", () => {
+    expect(applyRiskAppetite(0.13, "dynamique")).toBeLessThanOrEqual(RISK_TARGET_MAX);
+    expect(applyRiskAppetite(0.13, "dynamique")).toBe(RISK_TARGET_MAX); // 0.1755 → 0.16
+  });
+});
+
+describe("X2 — intensité de cause relative", () => {
+  it("keeps uniform intensity by default (rankedIntensity off)", () => {
+    const p = answersToParams({ values: ["climat", "humain"] });
+    expect(p.cause_intensity).toEqual({ climat: CAUSE_INTENSITY, humain: CAUSE_INTENSITY });
+  });
+
+  it("ranks intensity by selection order when enabled", () => {
+    const ri = rankedCauseIntensity(["climat", "humain", "tech"]);
+    expect(ri.climat).toBeCloseTo(0.9, 9);
+    expect(ri.humain).toBeCloseTo(0.78, 9);
+    expect(ri.tech).toBeCloseTo(0.66, 9);
+    const p = answersToParams({ values: ["climat", "humain"] }, { rankedIntensity: true });
+    expect(p.cause_intensity.climat).toBeCloseTo(0.9, 9);
+    expect(p.cause_intensity.humain).toBeCloseTo(0.78, 9);
+  });
+
+  it("never drops below the floor for long priority lists", () => {
+    const ri = rankedCauseIntensity(["climat", "humain", "tech", "egalite", "biodiversite", "circulaire"]);
+    for (const v of Object.values(ri)) expect(v).toBeGreaterThanOrEqual(0.45);
   });
 });
 
