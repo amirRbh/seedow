@@ -119,6 +119,19 @@ export function causeToPillarWeights(causes: CauseTag[]): PillarWeights {
  * If any pillar is missing on the asset, falls back to the aggregate esg_score
  * for that pillar only (so partial data degrades gracefully).
  */
+/**
+ * Vrai si le score ESG de l'actif provient d'un fournisseur externe réel plutôt
+ * que d'une estimation interne par catégorie de fonds. Estimé (donc NON sourcé) :
+ * `esg_score_source` absent/null ou préfixé `seedow-internal`. Tout autre libellé
+ * (MSCI, Sustainalytics, Yahoo…) est considéré comme sourcé. Sert à afficher
+ * honnêtement « X% des scores ESG sont mesurés » (CLAUDE.md §1.2).
+ */
+export function isEsgSourced(asset: Pick<Asset, "esg_score_source">): boolean {
+  const s = asset.esg_score_source;
+  if (s == null || s.trim() === "") return false;
+  return !s.toLowerCase().startsWith("seedow-internal");
+}
+
 export function compositeEsgScore(asset: Asset, w: PillarWeights): number {
   const e = asset.env_score ?? asset.esg_score;
   const s = asset.social_score ?? asset.esg_score;
@@ -144,6 +157,12 @@ export interface PortfolioMetrics {
   volatility: number;
   sharpe: number;
   esg_score: number;
+  // Part (0..1) du POIDS final dont le score ESG provient d'un fournisseur externe
+  // réel (MSCI, Sustainalytics…) plutôt que d'une estimation interne par catégorie
+  // (`esg_score_source` null ou 'seedow-internal*'). Sert à ne jamais présenter un
+  // score estimé maison comme une mesure (CLAUDE.md §1.2). Optionnel (rétrocompat
+  // avec les métriques persistées avant N1).
+  esg_sourced_share?: number | null;
   ter: number;
   // Real carbon footprint when per-asset intensity data is available.
   // null if no asset in the selection has a carbon_intensity_gco2e_per_eur value.

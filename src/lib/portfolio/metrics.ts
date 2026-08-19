@@ -1,5 +1,5 @@
 import type { Asset, PortfolioWeights, PortfolioMetrics, AssetClass, PillarWeights } from "./types";
-import { DEFAULT_PILLAR_WEIGHTS, compositeEsgScore } from "./types";
+import { DEFAULT_PILLAR_WEIGHTS, compositeEsgScore, isEsgSourced } from "./types";
 import { CARBON_QUALITY_RANK, type CarbonDataQuality } from "@/lib/esg/carbon-engine";
 
 export function computeMetrics(
@@ -14,6 +14,10 @@ export function computeMetrics(
   let portfolioReturn = 0;
   let portfolioTER = 0;
   let portfolioESG = 0;
+  // Part du poids dont le score ESG est réellement sourcé (fournisseur externe)
+  // plutôt qu'estimé maison — honnêteté §1.2, jamais un estimé présenté en mesuré.
+  let esgSourcedWeight = 0;
+  let esgTotalWeight = 0;
   // Real carbon footprint — weighted average of per-asset intensity, only over
   // assets that actually have a value. Coverage = share of weight with real data.
   let carbonNumerator = 0;
@@ -37,6 +41,8 @@ export function computeMetrics(
     // Composite ESG: pillar-weighted, with per-pillar fallback to global esg_score
     const composite = compositeEsgScore(a, pillarWeights);
     portfolioESG += w * composite;
+    esgTotalWeight += w;
+    if (isEsgSourced(a)) esgSourcedWeight += w;
     // Real carbon intensity, when available
     if (a.carbon_intensity_gco2e_per_eur != null) {
       carbonNumerator += w * a.carbon_intensity_gco2e_per_eur;
@@ -112,6 +118,7 @@ export function computeMetrics(
     volatility: vol,
     sharpe,
     esg_score: portfolioESG,
+    esg_sourced_share: esgTotalWeight > 0 ? esgSourcedWeight / esgTotalWeight : null,
     ter: portfolioTER,
     carbon_intensity_gco2e_per_eur: realCarbon,
     carbon_intensity_coverage: carbonCoverage,
