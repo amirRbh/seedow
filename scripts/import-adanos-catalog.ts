@@ -99,12 +99,10 @@ async function main(): Promise<void> {
 
   let errors = 0;
   for (let i = 0; i < kept.length; i += BATCH) {
-    const chunk = kept
-      .slice(i, i + BATCH)
-      .map((l) => ({
-        ...toCatalogRow(l, { sourceVersion: version, sourceUrl: url, seenAt }),
-        is_present_in_latest: true,
-      }));
+    const chunk = kept.slice(i, i + BATCH).map((l) => ({
+      ...toCatalogRow(l, { sourceVersion: version, sourceUrl: url, seenAt }),
+      is_present_in_latest: true,
+    }));
     const { error } = await admin
       .from("catalog_instruments")
       .upsert(chunk, { onConflict: "listing_key" });
