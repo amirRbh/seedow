@@ -19,14 +19,7 @@ import type { CauseTag, ExclusionTag, PortfolioParams } from "@/lib/portfolio/ty
 
 /** IDs d'étape — alignés sur les enums DB. */
 export type StepId = "values" | "exclusions" | "objective" | "amount" | "risk";
-export type Phase =
-  | "steps"
-  | "agency"
-  | "preview"
-  | "account"
-  | "naming"
-  | "building"
-  | "saving";
+export type Phase = "steps" | "agency" | "preview" | "account" | "naming" | "building" | "saving";
 export type Answers = Partial<Record<StepId, string[]>>;
 
 export const DRAFT_KEY = "seedow_onboarding_draft";
@@ -70,7 +63,7 @@ export function rankedCauseIntensity(
 
 /** Applique l'appétence au risque dérivé du but, borné dans [MIN, MAX]. */
 export function applyRiskAppetite(baseRisk: number, appetite: string | undefined): number {
-  const factor = (appetite && RISK_APPETITE_FACTORS[appetite]) ?? 1.0;
+  const factor = appetite ? (RISK_APPETITE_FACTORS[appetite] ?? 1.0) : 1.0;
   return Math.min(RISK_TARGET_MAX, Math.max(RISK_TARGET_MIN, baseRisk * factor));
 }
 /** Bornes défensives (le moteur en attend au plus 6 de chaque). */
@@ -115,7 +108,10 @@ export interface AnswersToParamsOptions {
 }
 
 /** Dérive les paramètres du moteur de portefeuille depuis les réponses. */
-export function answersToParams(answers: Answers, opts: AnswersToParamsOptions = {}): PortfolioParams {
+export function answersToParams(
+  answers: Answers,
+  opts: AnswersToParamsOptions = {},
+): PortfolioParams {
   const causes = ((answers.values ?? []) as CauseTag[]).slice(0, MAX_CAUSES);
   const exclusions = ((answers.exclusions ?? []) as ExclusionTag[]).slice(0, MAX_EXCLUSIONS);
   const { risk, horizon } = objectiveToRiskHorizon(answers.objective?.[0]);
@@ -154,11 +150,7 @@ function defaultStorage(): DraftStorage | null {
   }
 }
 
-export function isDraftExpired(
-  savedAt: unknown,
-  now: number,
-  maxAge = DRAFT_MAX_AGE_MS,
-): boolean {
+export function isDraftExpired(savedAt: unknown, now: number, maxAge = DRAFT_MAX_AGE_MS): boolean {
   return typeof savedAt === "number" && now - savedAt > maxAge;
 }
 

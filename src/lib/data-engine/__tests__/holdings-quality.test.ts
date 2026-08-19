@@ -21,7 +21,10 @@ describe("runHoldingsQualityChecks", () => {
   it("passes a clean partial-coverage lot as valid", () => {
     const r = runHoldingsQualityChecks({
       ...base,
-      holdings: [h({ name: "A", isin: "US0378331005", weightPct: 30 }), h({ name: "B", weightPct: 20 })],
+      holdings: [
+        h({ name: "A", isin: "US0378331005", weightPct: 30 }),
+        h({ name: "B", weightPct: 20 }),
+      ],
     });
     expect(r.status).toBe("valid");
     expect(r.issues).toHaveLength(0);

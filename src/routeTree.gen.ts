@@ -9,194 +9,65 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as WrappedRouteImport } from './routes/wrapped'
-import { Route as WaitlistRouteImport } from './routes/waitlist'
-import { Route as VoteRouteImport } from './routes/vote'
-import { Route as TarifsRouteImport } from './routes/tarifs'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as ReveilRouteImport } from './routes/reveil'
-import { Route as ReglagesRouteImport } from './routes/reglages'
-import { Route as ProfilRouteImport } from './routes/profil'
-import { Route as PortfolioRouteImport } from './routes/portfolio'
-import { Route as OnboardingRouteImport } from './routes/onboarding'
-import { Route as ObservatoireRouteImport } from './routes/observatoire'
-import { Route as ObjectifsRouteImport } from './routes/objectifs'
-import { Route as MethodologieRouteImport } from './routes/methodologie'
-import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
-import { Route as McpRouteImport } from './routes/mcp'
-import { Route as LeFilRouteImport } from './routes/le-fil'
-import { Route as EthiRouteImport } from './routes/ethi'
-import { Route as DiscoverRouteImport } from './routes/discover'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as CoursRouteImport } from './routes/cours'
-import { Route as ConstruireRouteImport } from './routes/construire'
-import { Route as ConfidentialiteRouteImport } from './routes/confidentialite'
-import { Route as ComprendreRouteImport } from './routes/comprendre'
-import { Route as ComparatifRouteImport } from './routes/comparatif'
-import { Route as CommunauteRouteImport } from './routes/communaute'
-import { Route as CguRouteImport } from './routes/cgu'
-import { Route as CertificatRouteImport } from './routes/certificat'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AideRouteImport } from './routes/aide'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as CoursIndexRouteImport } from './routes/cours.index'
-import { Route as VoteResolutionIdRouteImport } from './routes/vote.$resolutionId'
-import { Route as ObjectifsGoalIdRouteImport } from './routes/objectifs.$goalId'
-import { Route as HooksRefreshMarketDataRouteImport } from './routes/hooks/refresh-market-data'
-import { Route as HooksRecomputeRiskModelRouteImport } from './routes/hooks/recompute-risk-model'
-import { Route as HooksRecomputeIngestionPlanRouteImport } from './routes/hooks/recompute-ingestion-plan'
-import { Route as HooksRecomputeCarbonEstimatesRouteImport } from './routes/hooks/recompute-carbon-estimates'
-import { Route as HooksDispatchNotificationsRouteImport } from './routes/hooks/dispatch-notifications'
-import { Route as FondsIsinRouteImport } from './routes/fonds.$isin'
-import { Route as CoursSlugRouteImport } from './routes/cours.$slug'
-import { Route as ApiEthiRouteImport } from './routes/api.ethi'
-import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AideRouteImport } from './routes/aide'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as CertificatRouteImport } from './routes/certificat'
+import { Route as CguRouteImport } from './routes/cgu'
+import { Route as CommunauteRouteImport } from './routes/communaute'
+import { Route as ComparatifRouteImport } from './routes/comparatif'
+import { Route as ComprendreRouteImport } from './routes/comprendre'
+import { Route as ConfidentialiteRouteImport } from './routes/confidentialite'
+import { Route as ConstruireRouteImport } from './routes/construire'
+import { Route as CoursRouteImport } from './routes/cours'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as DiscoverRouteImport } from './routes/discover'
+import { Route as EthiRouteImport } from './routes/ethi'
+import { Route as LeFilRouteImport } from './routes/le-fil'
+import { Route as McpRouteImport } from './routes/mcp'
+import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
+import { Route as MethodologieRouteImport } from './routes/methodologie'
+import { Route as ObjectifsRouteImport } from './routes/objectifs'
+import { Route as ObservatoireRouteImport } from './routes/observatoire'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as PortfolioRouteImport } from './routes/portfolio'
+import { Route as ProfilRouteImport } from './routes/profil'
+import { Route as ReglagesRouteImport } from './routes/reglages'
+import { Route as ReveilRouteImport } from './routes/reveil'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as TarifsRouteImport } from './routes/tarifs'
+import { Route as VoteRouteImport } from './routes/vote'
+import { Route as WaitlistRouteImport } from './routes/waitlist'
+import { Route as WrappedRouteImport } from './routes/wrapped'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
-import { Route as ApiPublicEsgPreviewRouteImport } from './routes/api.public.esg-preview'
-import { Route as AuthenticatedAdminDataRouteImport } from './routes/_authenticated/admin.data'
-import { Route as AuthenticatedAdminBetaRouteImport } from './routes/_authenticated/admin.beta'
-import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as ApiEthiRouteImport } from './routes/api.ethi'
+import { Route as CoursIndexRouteImport } from './routes/cours.index'
+import { Route as CoursSlugRouteImport } from './routes/cours.$slug'
+import { Route as FondsIsinRouteImport } from './routes/fonds.$isin'
+import { Route as HooksDiscoverFundsRouteImport } from './routes/hooks/discover-funds'
+import { Route as HooksDispatchNotificationsRouteImport } from './routes/hooks/dispatch-notifications'
+import { Route as HooksIngestHoldingsRouteImport } from './routes/hooks/ingest-holdings'
+import { Route as HooksRecomputeCarbonEstimatesRouteImport } from './routes/hooks/recompute-carbon-estimates'
+import { Route as HooksRecomputeIngestionPlanRouteImport } from './routes/hooks/recompute-ingestion-plan'
+import { Route as HooksRecomputeRiskModelRouteImport } from './routes/hooks/recompute-risk-model'
+import { Route as HooksRefreshMarketDataRouteImport } from './routes/hooks/refresh-market-data'
+import { Route as ObjectifsGoalIdRouteImport } from './routes/objectifs.$goalId'
+import { Route as VoteResolutionIdRouteImport } from './routes/vote.$resolutionId'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
+import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
+import { Route as AuthenticatedAdminBetaRouteImport } from './routes/_authenticated/admin.beta'
+import { Route as AuthenticatedAdminDataRouteImport } from './routes/_authenticated/admin.data'
+import { Route as ApiPublicEsgPreviewRouteImport } from './routes/api.public.esg-preview'
 
-const WrappedRoute = WrappedRouteImport.update({
-  id: '/wrapped',
-  path: '/wrapped',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WaitlistRoute = WaitlistRouteImport.update({
-  id: '/waitlist',
-  path: '/waitlist',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const VoteRoute = VoteRouteImport.update({
-  id: '/vote',
-  path: '/vote',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TarifsRoute = TarifsRouteImport.update({
-  id: '/tarifs',
-  path: '/tarifs',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ReveilRoute = ReveilRouteImport.update({
-  id: '/reveil',
-  path: '/reveil',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ReglagesRoute = ReglagesRouteImport.update({
-  id: '/reglages',
-  path: '/reglages',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfilRoute = ProfilRouteImport.update({
-  id: '/profil',
-  path: '/profil',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PortfolioRoute = PortfolioRouteImport.update({
-  id: '/portfolio',
-  path: '/portfolio',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OnboardingRoute = OnboardingRouteImport.update({
-  id: '/onboarding',
-  path: '/onboarding',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ObservatoireRoute = ObservatoireRouteImport.update({
-  id: '/observatoire',
-  path: '/observatoire',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ObjectifsRoute = ObjectifsRouteImport.update({
-  id: '/objectifs',
-  path: '/objectifs',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MethodologieRoute = MethodologieRouteImport.update({
-  id: '/methodologie',
-  path: '/methodologie',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MentionsLegalesRoute = MentionsLegalesRouteImport.update({
-  id: '/mentions-legales',
-  path: '/mentions-legales',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const McpRoute = McpRouteImport.update({
-  id: '/mcp',
-  path: '/mcp',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LeFilRoute = LeFilRouteImport.update({
-  id: '/le-fil',
-  path: '/le-fil',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const EthiRoute = EthiRouteImport.update({
-  id: '/ethi',
-  path: '/ethi',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DiscoverRoute = DiscoverRouteImport.update({
-  id: '/discover',
-  path: '/discover',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CoursRoute = CoursRouteImport.update({
-  id: '/cours',
-  path: '/cours',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ConstruireRoute = ConstruireRouteImport.update({
-  id: '/construire',
-  path: '/construire',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ConfidentialiteRoute = ConfidentialiteRouteImport.update({
-  id: '/confidentialite',
-  path: '/confidentialite',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ComprendreRoute = ComprendreRouteImport.update({
-  id: '/comprendre',
-  path: '/comprendre',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ComparatifRoute = ComparatifRouteImport.update({
-  id: '/comparatif',
-  path: '/comparatif',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CommunauteRoute = CommunauteRouteImport.update({
-  id: '/communaute',
-  path: '/communaute',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CguRoute = CguRouteImport.update({
-  id: '/cgu',
-  path: '/cgu',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CertificatRoute = CertificatRouteImport.update({
-  id: '/certificat',
-  path: '/certificat',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AideRoute = AideRouteImport.update({
@@ -204,13 +75,161 @@ const AideRoute = AideRouteImport.update({
   path: '/aide',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const CertificatRoute = CertificatRouteImport.update({
+  id: '/certificat',
+  path: '/certificat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CguRoute = CguRouteImport.update({
+  id: '/cgu',
+  path: '/cgu',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommunauteRoute = CommunauteRouteImport.update({
+  id: '/communaute',
+  path: '/communaute',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComparatifRoute = ComparatifRouteImport.update({
+  id: '/comparatif',
+  path: '/comparatif',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComprendreRoute = ComprendreRouteImport.update({
+  id: '/comprendre',
+  path: '/comprendre',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConfidentialiteRoute = ConfidentialiteRouteImport.update({
+  id: '/confidentialite',
+  path: '/confidentialite',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConstruireRoute = ConstruireRouteImport.update({
+  id: '/construire',
+  path: '/construire',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CoursRoute = CoursRouteImport.update({
+  id: '/cours',
+  path: '/cours',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiscoverRoute = DiscoverRouteImport.update({
+  id: '/discover',
+  path: '/discover',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EthiRoute = EthiRouteImport.update({
+  id: '/ethi',
+  path: '/ethi',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LeFilRoute = LeFilRouteImport.update({
+  id: '/le-fil',
+  path: '/le-fil',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MentionsLegalesRoute = MentionsLegalesRouteImport.update({
+  id: '/mentions-legales',
+  path: '/mentions-legales',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MethodologieRoute = MethodologieRouteImport.update({
+  id: '/methodologie',
+  path: '/methodologie',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ObjectifsRoute = ObjectifsRouteImport.update({
+  id: '/objectifs',
+  path: '/objectifs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ObservatoireRoute = ObservatoireRouteImport.update({
+  id: '/observatoire',
+  path: '/observatoire',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortfolioRoute = PortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfilRoute = ProfilRouteImport.update({
+  id: '/profil',
+  path: '/profil',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReglagesRoute = ReglagesRouteImport.update({
+  id: '/reglages',
+  path: '/reglages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReveilRoute = ReveilRouteImport.update({
+  id: '/reveil',
+  path: '/reveil',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TarifsRoute = TarifsRouteImport.update({
+  id: '/tarifs',
+  path: '/tarifs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VoteRoute = VoteRouteImport.update({
+  id: '/vote',
+  path: '/vote',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WaitlistRoute = WaitlistRouteImport.update({
+  id: '/waitlist',
+  path: '/waitlist',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WrappedRoute = WrappedRouteImport.update({
+  id: '/wrapped',
+  path: '/wrapped',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Char91DotmcpChar93ListToolsRoute =
+  Char91DotmcpChar93ListToolsRouteImport.update({
+    id: '/.mcp/list-tools',
+    path: '/.mcp/list-tools',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiEthiRoute = ApiEthiRouteImport.update({
+  id: '/api/ethi',
+  path: '/api/ethi',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CoursIndexRoute = CoursIndexRouteImport.update({
@@ -218,85 +237,68 @@ const CoursIndexRoute = CoursIndexRouteImport.update({
   path: '/',
   getParentRoute: () => CoursRoute,
 } as any)
-const VoteResolutionIdRoute = VoteResolutionIdRouteImport.update({
-  id: '/$resolutionId',
-  path: '/$resolutionId',
-  getParentRoute: () => VoteRoute,
+const CoursSlugRoute = CoursSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => CoursRoute,
 } as any)
-const ObjectifsGoalIdRoute = ObjectifsGoalIdRouteImport.update({
-  id: '/$goalId',
-  path: '/$goalId',
-  getParentRoute: () => ObjectifsRoute,
-} as any)
-const HooksRefreshMarketDataRoute = HooksRefreshMarketDataRouteImport.update({
-  id: '/hooks/refresh-market-data',
-  path: '/hooks/refresh-market-data',
+const FondsIsinRoute = FondsIsinRouteImport.update({
+  id: '/fonds/$isin',
+  path: '/fonds/$isin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const HooksRecomputeRiskModelRoute = HooksRecomputeRiskModelRouteImport.update({
-  id: '/hooks/recompute-risk-model',
-  path: '/hooks/recompute-risk-model',
+const HooksDiscoverFundsRoute = HooksDiscoverFundsRouteImport.update({
+  id: '/hooks/discover-funds',
+  path: '/hooks/discover-funds',
   getParentRoute: () => rootRouteImport,
 } as any)
-const HooksRecomputeIngestionPlanRoute =
-  HooksRecomputeIngestionPlanRouteImport.update({
-    id: '/hooks/recompute-ingestion-plan',
-    path: '/hooks/recompute-ingestion-plan',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const HooksRecomputeCarbonEstimatesRoute =
-  HooksRecomputeCarbonEstimatesRouteImport.update({
-    id: '/hooks/recompute-carbon-estimates',
-    path: '/hooks/recompute-carbon-estimates',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const HooksDispatchNotificationsRoute =
   HooksDispatchNotificationsRouteImport.update({
     id: '/hooks/dispatch-notifications',
     path: '/hooks/dispatch-notifications',
     getParentRoute: () => rootRouteImport,
   } as any)
-const FondsIsinRoute = FondsIsinRouteImport.update({
-  id: '/fonds/$isin',
-  path: '/fonds/$isin',
+const HooksIngestHoldingsRoute = HooksIngestHoldingsRouteImport.update({
+  id: '/hooks/ingest-holdings',
+  path: '/hooks/ingest-holdings',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CoursSlugRoute = CoursSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => CoursRoute,
-} as any)
-const ApiEthiRoute = ApiEthiRouteImport.update({
-  id: '/api/ethi',
-  path: '/api/ethi',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Char91DotwellKnownChar93OauthProtectedResourceRoute =
-  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
-    id: '/.well-known/oauth-protected-resource',
-    path: '/.well-known/oauth-protected-resource',
+const HooksRecomputeCarbonEstimatesRoute =
+  HooksRecomputeCarbonEstimatesRouteImport.update({
+    id: '/hooks/recompute-carbon-estimates',
+    path: '/hooks/recompute-carbon-estimates',
     getParentRoute: () => rootRouteImport,
   } as any)
-const Char91DotmcpChar93ListToolsRoute =
-  Char91DotmcpChar93ListToolsRouteImport.update({
-    id: '/.mcp/list-tools',
-    path: '/.mcp/list-tools',
+const HooksRecomputeIngestionPlanRoute =
+  HooksRecomputeIngestionPlanRouteImport.update({
+    id: '/hooks/recompute-ingestion-plan',
+    path: '/hooks/recompute-ingestion-plan',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiPublicEsgPreviewRoute = ApiPublicEsgPreviewRouteImport.update({
-  id: '/api/public/esg-preview',
-  path: '/api/public/esg-preview',
+const HooksRecomputeRiskModelRoute = HooksRecomputeRiskModelRouteImport.update({
+  id: '/hooks/recompute-risk-model',
+  path: '/hooks/recompute-risk-model',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedAdminDataRoute = AuthenticatedAdminDataRouteImport.update({
-  id: '/admin/data',
-  path: '/admin/data',
-  getParentRoute: () => AuthenticatedRouteRoute,
+const HooksRefreshMarketDataRoute = HooksRefreshMarketDataRouteImport.update({
+  id: '/hooks/refresh-market-data',
+  path: '/hooks/refresh-market-data',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedAdminBetaRoute = AuthenticatedAdminBetaRouteImport.update({
-  id: '/admin/beta',
-  path: '/admin/beta',
-  getParentRoute: () => AuthenticatedRouteRoute,
+const ObjectifsGoalIdRoute = ObjectifsGoalIdRouteImport.update({
+  id: '/$goalId',
+  path: '/$goalId',
+  getParentRoute: () => ObjectifsRoute,
+} as any)
+const VoteResolutionIdRoute = VoteResolutionIdRouteImport.update({
+  id: '/$resolutionId',
+  path: '/$resolutionId',
+  getParentRoute: () => VoteRoute,
+} as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const Char91DotmcpChar93InvokeToolToolRoute =
   Char91DotmcpChar93InvokeToolToolRouteImport.update({
@@ -304,9 +306,19 @@ const Char91DotmcpChar93InvokeToolToolRoute =
     path: '/.mcp/invoke-tool/$tool',
     getParentRoute: () => rootRouteImport,
   } as any)
-const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
-  id: '/.lovable/oauth/consent',
-  path: '/.lovable/oauth/consent',
+const AuthenticatedAdminBetaRoute = AuthenticatedAdminBetaRouteImport.update({
+  id: '/admin/beta',
+  path: '/admin/beta',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminDataRoute = AuthenticatedAdminDataRouteImport.update({
+  id: '/admin/data',
+  path: '/admin/data',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const ApiPublicEsgPreviewRoute = ApiPublicEsgPreviewRouteImport.update({
+  id: '/api/public/esg-preview',
+  path: '/api/public/esg-preview',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -346,7 +358,9 @@ export interface FileRoutesByFullPath {
   '/api/ethi': typeof ApiEthiRoute
   '/cours/$slug': typeof CoursSlugRoute
   '/fonds/$isin': typeof FondsIsinRoute
+  '/hooks/discover-funds': typeof HooksDiscoverFundsRoute
   '/hooks/dispatch-notifications': typeof HooksDispatchNotificationsRoute
+  '/hooks/ingest-holdings': typeof HooksIngestHoldingsRoute
   '/hooks/recompute-carbon-estimates': typeof HooksRecomputeCarbonEstimatesRoute
   '/hooks/recompute-ingestion-plan': typeof HooksRecomputeIngestionPlanRoute
   '/hooks/recompute-risk-model': typeof HooksRecomputeRiskModelRoute
@@ -395,7 +409,9 @@ export interface FileRoutesByTo {
   '/api/ethi': typeof ApiEthiRoute
   '/cours/$slug': typeof CoursSlugRoute
   '/fonds/$isin': typeof FondsIsinRoute
+  '/hooks/discover-funds': typeof HooksDiscoverFundsRoute
   '/hooks/dispatch-notifications': typeof HooksDispatchNotificationsRoute
+  '/hooks/ingest-holdings': typeof HooksIngestHoldingsRoute
   '/hooks/recompute-carbon-estimates': typeof HooksRecomputeCarbonEstimatesRoute
   '/hooks/recompute-ingestion-plan': typeof HooksRecomputeIngestionPlanRoute
   '/hooks/recompute-risk-model': typeof HooksRecomputeRiskModelRoute
@@ -447,7 +463,9 @@ export interface FileRoutesById {
   '/api/ethi': typeof ApiEthiRoute
   '/cours/$slug': typeof CoursSlugRoute
   '/fonds/$isin': typeof FondsIsinRoute
+  '/hooks/discover-funds': typeof HooksDiscoverFundsRoute
   '/hooks/dispatch-notifications': typeof HooksDispatchNotificationsRoute
+  '/hooks/ingest-holdings': typeof HooksIngestHoldingsRoute
   '/hooks/recompute-carbon-estimates': typeof HooksRecomputeCarbonEstimatesRoute
   '/hooks/recompute-ingestion-plan': typeof HooksRecomputeIngestionPlanRoute
   '/hooks/recompute-risk-model': typeof HooksRecomputeRiskModelRoute
@@ -499,7 +517,9 @@ export interface FileRouteTypes {
     | '/api/ethi'
     | '/cours/$slug'
     | '/fonds/$isin'
+    | '/hooks/discover-funds'
     | '/hooks/dispatch-notifications'
+    | '/hooks/ingest-holdings'
     | '/hooks/recompute-carbon-estimates'
     | '/hooks/recompute-ingestion-plan'
     | '/hooks/recompute-risk-model'
@@ -548,7 +568,9 @@ export interface FileRouteTypes {
     | '/api/ethi'
     | '/cours/$slug'
     | '/fonds/$isin'
+    | '/hooks/discover-funds'
     | '/hooks/dispatch-notifications'
+    | '/hooks/ingest-holdings'
     | '/hooks/recompute-carbon-estimates'
     | '/hooks/recompute-ingestion-plan'
     | '/hooks/recompute-risk-model'
@@ -599,7 +621,9 @@ export interface FileRouteTypes {
     | '/api/ethi'
     | '/cours/$slug'
     | '/fonds/$isin'
+    | '/hooks/discover-funds'
     | '/hooks/dispatch-notifications'
+    | '/hooks/ingest-holdings'
     | '/hooks/recompute-carbon-estimates'
     | '/hooks/recompute-ingestion-plan'
     | '/hooks/recompute-risk-model'
@@ -650,7 +674,9 @@ export interface RootRouteChildren {
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   ApiEthiRoute: typeof ApiEthiRoute
   FondsIsinRoute: typeof FondsIsinRoute
+  HooksDiscoverFundsRoute: typeof HooksDiscoverFundsRoute
   HooksDispatchNotificationsRoute: typeof HooksDispatchNotificationsRoute
+  HooksIngestHoldingsRoute: typeof HooksIngestHoldingsRoute
   HooksRecomputeCarbonEstimatesRoute: typeof HooksRecomputeCarbonEstimatesRoute
   HooksRecomputeIngestionPlanRoute: typeof HooksRecomputeIngestionPlanRoute
   HooksRecomputeRiskModelRoute: typeof HooksRecomputeRiskModelRoute
@@ -662,207 +688,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/wrapped': {
-      id: '/wrapped'
-      path: '/wrapped'
-      fullPath: '/wrapped'
-      preLoaderRoute: typeof WrappedRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/waitlist': {
-      id: '/waitlist'
-      path: '/waitlist'
-      fullPath: '/waitlist'
-      preLoaderRoute: typeof WaitlistRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/vote': {
-      id: '/vote'
-      path: '/vote'
-      fullPath: '/vote'
-      preLoaderRoute: typeof VoteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/tarifs': {
-      id: '/tarifs'
-      path: '/tarifs'
-      fullPath: '/tarifs'
-      preLoaderRoute: typeof TarifsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reveil': {
-      id: '/reveil'
-      path: '/reveil'
-      fullPath: '/reveil'
-      preLoaderRoute: typeof ReveilRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reglages': {
-      id: '/reglages'
-      path: '/reglages'
-      fullPath: '/reglages'
-      preLoaderRoute: typeof ReglagesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profil': {
-      id: '/profil'
-      path: '/profil'
-      fullPath: '/profil'
-      preLoaderRoute: typeof ProfilRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/portfolio': {
-      id: '/portfolio'
-      path: '/portfolio'
-      fullPath: '/portfolio'
-      preLoaderRoute: typeof PortfolioRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/onboarding': {
-      id: '/onboarding'
-      path: '/onboarding'
-      fullPath: '/onboarding'
-      preLoaderRoute: typeof OnboardingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/observatoire': {
-      id: '/observatoire'
-      path: '/observatoire'
-      fullPath: '/observatoire'
-      preLoaderRoute: typeof ObservatoireRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/objectifs': {
-      id: '/objectifs'
-      path: '/objectifs'
-      fullPath: '/objectifs'
-      preLoaderRoute: typeof ObjectifsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/methodologie': {
-      id: '/methodologie'
-      path: '/methodologie'
-      fullPath: '/methodologie'
-      preLoaderRoute: typeof MethodologieRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mentions-legales': {
-      id: '/mentions-legales'
-      path: '/mentions-legales'
-      fullPath: '/mentions-legales'
-      preLoaderRoute: typeof MentionsLegalesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mcp': {
-      id: '/mcp'
-      path: '/mcp'
-      fullPath: '/mcp'
-      preLoaderRoute: typeof McpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/le-fil': {
-      id: '/le-fil'
-      path: '/le-fil'
-      fullPath: '/le-fil'
-      preLoaderRoute: typeof LeFilRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ethi': {
-      id: '/ethi'
-      path: '/ethi'
-      fullPath: '/ethi'
-      preLoaderRoute: typeof EthiRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/discover': {
-      id: '/discover'
-      path: '/discover'
-      fullPath: '/discover'
-      preLoaderRoute: typeof DiscoverRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cours': {
-      id: '/cours'
-      path: '/cours'
-      fullPath: '/cours'
-      preLoaderRoute: typeof CoursRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/construire': {
-      id: '/construire'
-      path: '/construire'
-      fullPath: '/construire'
-      preLoaderRoute: typeof ConstruireRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/confidentialite': {
-      id: '/confidentialite'
-      path: '/confidentialite'
-      fullPath: '/confidentialite'
-      preLoaderRoute: typeof ConfidentialiteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/comprendre': {
-      id: '/comprendre'
-      path: '/comprendre'
-      fullPath: '/comprendre'
-      preLoaderRoute: typeof ComprendreRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/comparatif': {
-      id: '/comparatif'
-      path: '/comparatif'
-      fullPath: '/comparatif'
-      preLoaderRoute: typeof ComparatifRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/communaute': {
-      id: '/communaute'
-      path: '/communaute'
-      fullPath: '/communaute'
-      preLoaderRoute: typeof CommunauteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cgu': {
-      id: '/cgu'
-      path: '/cgu'
-      fullPath: '/cgu'
-      preLoaderRoute: typeof CguRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/certificat': {
-      id: '/certificat'
-      path: '/certificat'
-      fullPath: '/certificat'
-      preLoaderRoute: typeof CertificatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/aide': {
-      id: '/aide'
-      path: '/aide'
-      fullPath: '/aide'
-      preLoaderRoute: typeof AideRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -872,95 +702,207 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/aide': {
+      id: '/aide'
+      path: '/aide'
+      fullPath: '/aide'
+      preLoaderRoute: typeof AideRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/cours/': {
-      id: '/cours/'
-      path: '/'
-      fullPath: '/cours/'
-      preLoaderRoute: typeof CoursIndexRouteImport
-      parentRoute: typeof CoursRoute
-    }
-    '/vote/$resolutionId': {
-      id: '/vote/$resolutionId'
-      path: '/$resolutionId'
-      fullPath: '/vote/$resolutionId'
-      preLoaderRoute: typeof VoteResolutionIdRouteImport
-      parentRoute: typeof VoteRoute
-    }
-    '/objectifs/$goalId': {
-      id: '/objectifs/$goalId'
-      path: '/$goalId'
-      fullPath: '/objectifs/$goalId'
-      preLoaderRoute: typeof ObjectifsGoalIdRouteImport
-      parentRoute: typeof ObjectifsRoute
-    }
-    '/hooks/refresh-market-data': {
-      id: '/hooks/refresh-market-data'
-      path: '/hooks/refresh-market-data'
-      fullPath: '/hooks/refresh-market-data'
-      preLoaderRoute: typeof HooksRefreshMarketDataRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/hooks/recompute-risk-model': {
-      id: '/hooks/recompute-risk-model'
-      path: '/hooks/recompute-risk-model'
-      fullPath: '/hooks/recompute-risk-model'
-      preLoaderRoute: typeof HooksRecomputeRiskModelRouteImport
+    '/certificat': {
+      id: '/certificat'
+      path: '/certificat'
+      fullPath: '/certificat'
+      preLoaderRoute: typeof CertificatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/hooks/recompute-ingestion-plan': {
-      id: '/hooks/recompute-ingestion-plan'
-      path: '/hooks/recompute-ingestion-plan'
-      fullPath: '/hooks/recompute-ingestion-plan'
-      preLoaderRoute: typeof HooksRecomputeIngestionPlanRouteImport
+    '/cgu': {
+      id: '/cgu'
+      path: '/cgu'
+      fullPath: '/cgu'
+      preLoaderRoute: typeof CguRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/hooks/recompute-carbon-estimates': {
-      id: '/hooks/recompute-carbon-estimates'
-      path: '/hooks/recompute-carbon-estimates'
-      fullPath: '/hooks/recompute-carbon-estimates'
-      preLoaderRoute: typeof HooksRecomputeCarbonEstimatesRouteImport
+    '/communaute': {
+      id: '/communaute'
+      path: '/communaute'
+      fullPath: '/communaute'
+      preLoaderRoute: typeof CommunauteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/hooks/dispatch-notifications': {
-      id: '/hooks/dispatch-notifications'
-      path: '/hooks/dispatch-notifications'
-      fullPath: '/hooks/dispatch-notifications'
-      preLoaderRoute: typeof HooksDispatchNotificationsRouteImport
+    '/comparatif': {
+      id: '/comparatif'
+      path: '/comparatif'
+      fullPath: '/comparatif'
+      preLoaderRoute: typeof ComparatifRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/fonds/$isin': {
-      id: '/fonds/$isin'
-      path: '/fonds/$isin'
-      fullPath: '/fonds/$isin'
-      preLoaderRoute: typeof FondsIsinRouteImport
+    '/comprendre': {
+      id: '/comprendre'
+      path: '/comprendre'
+      fullPath: '/comprendre'
+      preLoaderRoute: typeof ComprendreRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/cours/$slug': {
-      id: '/cours/$slug'
-      path: '/$slug'
-      fullPath: '/cours/$slug'
-      preLoaderRoute: typeof CoursSlugRouteImport
-      parentRoute: typeof CoursRoute
-    }
-    '/api/ethi': {
-      id: '/api/ethi'
-      path: '/api/ethi'
-      fullPath: '/api/ethi'
-      preLoaderRoute: typeof ApiEthiRouteImport
+    '/confidentialite': {
+      id: '/confidentialite'
+      path: '/confidentialite'
+      fullPath: '/confidentialite'
+      preLoaderRoute: typeof ConfidentialiteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/.well-known/oauth-protected-resource': {
-      id: '/.well-known/oauth-protected-resource'
-      path: '/.well-known/oauth-protected-resource'
-      fullPath: '/.well-known/oauth-protected-resource'
-      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+    '/construire': {
+      id: '/construire'
+      path: '/construire'
+      fullPath: '/construire'
+      preLoaderRoute: typeof ConstruireRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cours': {
+      id: '/cours'
+      path: '/cours'
+      fullPath: '/cours'
+      preLoaderRoute: typeof CoursRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/discover': {
+      id: '/discover'
+      path: '/discover'
+      fullPath: '/discover'
+      preLoaderRoute: typeof DiscoverRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ethi': {
+      id: '/ethi'
+      path: '/ethi'
+      fullPath: '/ethi'
+      preLoaderRoute: typeof EthiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/le-fil': {
+      id: '/le-fil'
+      path: '/le-fil'
+      fullPath: '/le-fil'
+      preLoaderRoute: typeof LeFilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mentions-legales': {
+      id: '/mentions-legales'
+      path: '/mentions-legales'
+      fullPath: '/mentions-legales'
+      preLoaderRoute: typeof MentionsLegalesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/methodologie': {
+      id: '/methodologie'
+      path: '/methodologie'
+      fullPath: '/methodologie'
+      preLoaderRoute: typeof MethodologieRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/objectifs': {
+      id: '/objectifs'
+      path: '/objectifs'
+      fullPath: '/objectifs'
+      preLoaderRoute: typeof ObjectifsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/observatoire': {
+      id: '/observatoire'
+      path: '/observatoire'
+      fullPath: '/observatoire'
+      preLoaderRoute: typeof ObservatoireRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portfolio': {
+      id: '/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof PortfolioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profil': {
+      id: '/profil'
+      path: '/profil'
+      fullPath: '/profil'
+      preLoaderRoute: typeof ProfilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reglages': {
+      id: '/reglages'
+      path: '/reglages'
+      fullPath: '/reglages'
+      preLoaderRoute: typeof ReglagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reveil': {
+      id: '/reveil'
+      path: '/reveil'
+      fullPath: '/reveil'
+      preLoaderRoute: typeof ReveilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tarifs': {
+      id: '/tarifs'
+      path: '/tarifs'
+      fullPath: '/tarifs'
+      preLoaderRoute: typeof TarifsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vote': {
+      id: '/vote'
+      path: '/vote'
+      fullPath: '/vote'
+      preLoaderRoute: typeof VoteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/waitlist': {
+      id: '/waitlist'
+      path: '/waitlist'
+      fullPath: '/waitlist'
+      preLoaderRoute: typeof WaitlistRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/wrapped': {
+      id: '/wrapped'
+      path: '/wrapped'
+      fullPath: '/wrapped'
+      preLoaderRoute: typeof WrappedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/.mcp/list-tools': {
@@ -970,26 +912,110 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/esg-preview': {
-      id: '/api/public/esg-preview'
-      path: '/api/public/esg-preview'
-      fullPath: '/api/public/esg-preview'
-      preLoaderRoute: typeof ApiPublicEsgPreviewRouteImport
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/admin/data': {
-      id: '/_authenticated/admin/data'
-      path: '/admin/data'
-      fullPath: '/admin/data'
-      preLoaderRoute: typeof AuthenticatedAdminDataRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/api/ethi': {
+      id: '/api/ethi'
+      path: '/api/ethi'
+      fullPath: '/api/ethi'
+      preLoaderRoute: typeof ApiEthiRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/admin/beta': {
-      id: '/_authenticated/admin/beta'
-      path: '/admin/beta'
-      fullPath: '/admin/beta'
-      preLoaderRoute: typeof AuthenticatedAdminBetaRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/cours/': {
+      id: '/cours/'
+      path: '/'
+      fullPath: '/cours/'
+      preLoaderRoute: typeof CoursIndexRouteImport
+      parentRoute: typeof CoursRoute
+    }
+    '/cours/$slug': {
+      id: '/cours/$slug'
+      path: '/$slug'
+      fullPath: '/cours/$slug'
+      preLoaderRoute: typeof CoursSlugRouteImport
+      parentRoute: typeof CoursRoute
+    }
+    '/fonds/$isin': {
+      id: '/fonds/$isin'
+      path: '/fonds/$isin'
+      fullPath: '/fonds/$isin'
+      preLoaderRoute: typeof FondsIsinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hooks/discover-funds': {
+      id: '/hooks/discover-funds'
+      path: '/hooks/discover-funds'
+      fullPath: '/hooks/discover-funds'
+      preLoaderRoute: typeof HooksDiscoverFundsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hooks/dispatch-notifications': {
+      id: '/hooks/dispatch-notifications'
+      path: '/hooks/dispatch-notifications'
+      fullPath: '/hooks/dispatch-notifications'
+      preLoaderRoute: typeof HooksDispatchNotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hooks/ingest-holdings': {
+      id: '/hooks/ingest-holdings'
+      path: '/hooks/ingest-holdings'
+      fullPath: '/hooks/ingest-holdings'
+      preLoaderRoute: typeof HooksIngestHoldingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hooks/recompute-carbon-estimates': {
+      id: '/hooks/recompute-carbon-estimates'
+      path: '/hooks/recompute-carbon-estimates'
+      fullPath: '/hooks/recompute-carbon-estimates'
+      preLoaderRoute: typeof HooksRecomputeCarbonEstimatesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hooks/recompute-ingestion-plan': {
+      id: '/hooks/recompute-ingestion-plan'
+      path: '/hooks/recompute-ingestion-plan'
+      fullPath: '/hooks/recompute-ingestion-plan'
+      preLoaderRoute: typeof HooksRecomputeIngestionPlanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hooks/recompute-risk-model': {
+      id: '/hooks/recompute-risk-model'
+      path: '/hooks/recompute-risk-model'
+      fullPath: '/hooks/recompute-risk-model'
+      preLoaderRoute: typeof HooksRecomputeRiskModelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hooks/refresh-market-data': {
+      id: '/hooks/refresh-market-data'
+      path: '/hooks/refresh-market-data'
+      fullPath: '/hooks/refresh-market-data'
+      preLoaderRoute: typeof HooksRefreshMarketDataRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/objectifs/$goalId': {
+      id: '/objectifs/$goalId'
+      path: '/$goalId'
+      fullPath: '/objectifs/$goalId'
+      preLoaderRoute: typeof ObjectifsGoalIdRouteImport
+      parentRoute: typeof ObjectifsRoute
+    }
+    '/vote/$resolutionId': {
+      id: '/vote/$resolutionId'
+      path: '/$resolutionId'
+      fullPath: '/vote/$resolutionId'
+      preLoaderRoute: typeof VoteResolutionIdRouteImport
+      parentRoute: typeof VoteRoute
+    }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/.mcp/invoke-tool/$tool': {
       id: '/.mcp/invoke-tool/$tool'
@@ -998,11 +1024,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/.lovable/oauth/consent': {
-      id: '/.lovable/oauth/consent'
-      path: '/.lovable/oauth/consent'
-      fullPath: '/.lovable/oauth/consent'
-      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
+    '/_authenticated/admin/beta': {
+      id: '/_authenticated/admin/beta'
+      path: '/admin/beta'
+      fullPath: '/admin/beta'
+      preLoaderRoute: typeof AuthenticatedAdminBetaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/data': {
+      id: '/_authenticated/admin/data'
+      path: '/admin/data'
+      fullPath: '/admin/data'
+      preLoaderRoute: typeof AuthenticatedAdminDataRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/api/public/esg-preview': {
+      id: '/api/public/esg-preview'
+      path: '/api/public/esg-preview'
+      fullPath: '/api/public/esg-preview'
+      preLoaderRoute: typeof ApiPublicEsgPreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -1092,7 +1132,9 @@ const rootRouteChildren: RootRouteChildren = {
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   ApiEthiRoute: ApiEthiRoute,
   FondsIsinRoute: FondsIsinRoute,
+  HooksDiscoverFundsRoute: HooksDiscoverFundsRoute,
   HooksDispatchNotificationsRoute: HooksDispatchNotificationsRoute,
+  HooksIngestHoldingsRoute: HooksIngestHoldingsRoute,
   HooksRecomputeCarbonEstimatesRoute: HooksRecomputeCarbonEstimatesRoute,
   HooksRecomputeIngestionPlanRoute: HooksRecomputeIngestionPlanRoute,
   HooksRecomputeRiskModelRoute: HooksRecomputeRiskModelRoute,

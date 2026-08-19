@@ -87,7 +87,10 @@ describe("ingestHoldingsForAsset", () => {
   });
 
   it("returns empty when the file has no parseable holdings", async () => {
-    const res = await ingestHoldingsForAsset(asset, deps({ download: async () => "garbage,no,header" }));
+    const res = await ingestHoldingsForAsset(
+      asset,
+      deps({ download: async () => "garbage,no,header" }),
+    );
     expect(res.status).toBe("empty");
     expect(res.inserted).toBe(0);
   });

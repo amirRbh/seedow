@@ -40,7 +40,9 @@ export interface ResolvedHoldingsSource {
 
 export interface HoldingsIngestDeps {
   /** Résout l'URL du fichier de holdings officiel pour un fonds (ou null). */
-  resolveUrl: (asset: HoldingsIngestAsset) => Promise<ResolvedHoldingsSource | null> | ResolvedHoldingsSource | null;
+  resolveUrl: (
+    asset: HoldingsIngestAsset,
+  ) => Promise<ResolvedHoldingsSource | null> | ResolvedHoldingsSource | null;
   /** Télécharge le contenu texte (CSV) — lève en cas d'échec réseau. */
   download: (url: string) => Promise<string>;
   /** Persistance des lignes (writer Supabase en prod, mock en test). */
