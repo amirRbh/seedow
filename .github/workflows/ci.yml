@@ -30,6 +30,14 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      # Régénère `src/routeTree.gen.ts` (le plugin router TanStack le produit au
+      # build) AVANT le typecheck : sinon `tsc` tourne contre un arbre commité
+      # potentiellement périmé et casse sur toute route serveur récemment ajoutée
+      # (ce qui bloquait la CI depuis l'ajout des hooks). Le build valide aussi le
+      # bundle Edge (CLAUDE.md §8) — gate qui manquait.
+      - name: Build (regenerates route tree)
+        run: bun run build
+
       - name: Typecheck
         run: bun run typecheck
 
