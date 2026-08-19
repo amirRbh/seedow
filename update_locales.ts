@@ -1368,6 +1368,8 @@ const mergedFr = deepMerge(fr, {
   post_sim_fork: postSimForkFr,
   portfolio_glance: portfolioGlanceFr,
   portfolio_customizer: deepMerge(portfolioCustomizerFr, customizerV2Fr),
+  // N1 — traçabilité ESG : part des scores réellement mesurés (vs estimés maison).
+  portfolio_metrics: { esg_measured: "{{pct}} % mesuré", esg_estimated: "estimé" },
 });
 const mergedEn = deepMerge(en, {
   le_fil: leFilEn,
@@ -1392,6 +1394,8 @@ const mergedEn = deepMerge(en, {
   portfolio_glance: portfolioGlanceEn,
   portfolio_customizer: deepMerge(portfolioCustomizerEn, customizerV2En),
   allocation_refiner: refinerPlainEn,
+  // N1 — ESG traceability: share of scores that are actually measured (vs estimated).
+  portfolio_metrics: { esg_measured: "{{pct}}% measured", esg_estimated: "estimated" },
 });
 
 writeFileSync("src/i18n/locales/fr.json", JSON.stringify(mergedFr, null, 2) + "\n", "utf-8");

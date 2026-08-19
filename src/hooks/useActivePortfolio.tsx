@@ -26,6 +26,10 @@ export interface ActivePortfolioMetrics {
   volatility: number;
   sharpe: number;
   esg_score: number;
+  // Part (0..1) du poids dont le score ESG vient d'un fournisseur externe réel
+  // (MSCI…) plutôt que d'une estimation interne par catégorie. Absent/null sur les
+  // portefeuilles générés avant la traçabilité ESG (N1, rétrocompat).
+  esg_sourced_share?: number | null;
   ter: number;
   // Empreinte carbone réelle (données émetteurs) — présente sur les portefeuilles
   // générés depuis l'ajout de la méthodo carbone ; null/absente sur les plus anciens.

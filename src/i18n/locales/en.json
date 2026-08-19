@@ -1981,7 +1981,9 @@
     "sharpe_hint": "Sharpe ratio: measures whether performance is worth the risk taken. Above 1 = very good.",
     "sharpe": "Sharpe",
     "annual_fees": "Annual fees",
-    "ter_hint": "TER: percentage deducted each year by funds. Lower is better."
+    "ter_hint": "TER: percentage deducted each year by funds. Lower is better.",
+    "esg_measured": "{{pct}}% measured",
+    "esg_estimated": "estimated"
   },
   "comparatif_panel": {
     "why_gap": "Why this gap?",
