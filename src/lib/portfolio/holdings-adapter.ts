@@ -33,16 +33,16 @@ export interface FundHoldingRecord {
 }
 
 /** Clé de rapprochement d'un titre : ISIN canonique si valide, sinon nom normalisé. */
-export function securityKey(rec: Pick<FundHoldingRecord, "security_isin" | "security_name">): string {
+export function securityKey(
+  rec: Pick<FundHoldingRecord, "security_isin" | "security_name">,
+): string {
   const isin = toCanonicalIsin(rec.security_isin);
   if (isin) return isin;
   return `name:${rec.security_name.trim().toLowerCase().replace(/\s+/g, " ")}`;
 }
 
 /** Ne conserve, par fonds, que les lignes de la date de référence la plus récente. */
-export function latestHoldingsByAsset(
-  rows: FundHoldingRecord[],
-): Map<string, FundHoldingRecord[]> {
+export function latestHoldingsByAsset(rows: FundHoldingRecord[]): Map<string, FundHoldingRecord[]> {
   const latestAsOf = new Map<string, string>();
   for (const r of rows) {
     const cur = latestAsOf.get(r.asset_id);
@@ -65,9 +65,7 @@ export function latestHoldingsByAsset(
  * quand la couverture est partielle). Les doublons de titre dans un même fonds
  * sont sommés. Lignes sans poids > 0 ignorées.
  */
-export function fundHoldingsToOverlapMap(
-  rows: FundHoldingRecord[],
-): Map<string, HoldingWeights> {
+export function fundHoldingsToOverlapMap(rows: FundHoldingRecord[]): Map<string, HoldingWeights> {
   const byAsset = latestHoldingsByAsset(rows);
   const out = new Map<string, HoldingWeights>();
   for (const [assetId, holdings] of byAsset) {

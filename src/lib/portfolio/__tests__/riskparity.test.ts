@@ -1,9 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {
-  riskParityWeights,
-  inverseVolatilityWeights,
-  riskContributions,
-} from "../riskparity";
+import { riskParityWeights, inverseVolatilityWeights, riskContributions } from "../riskparity";
 
 describe("inverseVolatilityWeights", () => {
   it("weights inversely to volatility (σ from variance)", () => {

@@ -174,7 +174,7 @@ describe("buildPortfolio — carbon awareness (v1.2)", () => {
       covariance: diagonalCovMap(universe),
       params: defaultParams(),
     });
-    expect(result.methodology_version).toBe("v1.3");
+    expect(result.methodology_version).toBe("v1.4");
   });
 
   it("under-weights a carbon-dirty asset vs an otherwise-identical clean peer", () => {

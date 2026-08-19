@@ -43,14 +43,22 @@ export const Route = createFileRoute("/hooks/discover-funds")({
         // URL par défaut BlackRock France, surchargeable par variable d'env.
         const url = process.env.ISHARES_PRODUCTS_CSV_URL ?? DEFAULT_ISHARES_PRODUCTS_CSV_URL;
 
-        const raw = await httpDownload("ishares_products", url, { kind: "csv", maxBytes: 20_000_000 });
+        const raw = await httpDownload("ishares_products", url, {
+          kind: "csv",
+          maxBytes: 20_000_000,
+        });
         if (!raw) {
           await logRun("error", "Téléchargement de l'export iShares indisponible", 0, 0);
           return json({ error: "download failed (source indisponible)" }, 502);
         }
 
         const discovered = parseISharesProductCsv(raw);
-        let result = { created: 0, enriched: 0, skippedExisting: 0, createdTickers: [] as string[] };
+        let result = {
+          created: 0,
+          enriched: 0,
+          skippedExisting: 0,
+          createdTickers: [] as string[],
+        };
         try {
           result = await ensureDiscoveredAssets(supabaseAdmin, discovered);
         } catch (e) {
@@ -90,7 +98,10 @@ async function logRun(
   details: Record<string, unknown> = {},
 ) {
   try {
-    await supabaseAdmin.from("cron_run_log").insert({
+    // `details` est un JSON libre : le type généré Supabase (Json) n'accepte pas
+    // Record<string, unknown> tel quel → cast localisé, comme les autres hooks.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabaseAdmin as any).from("cron_run_log").insert({
       job_name: "discover-funds",
       status,
       message,

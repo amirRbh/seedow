@@ -19,7 +19,9 @@ import {
 } from "../params";
 
 /** Fake Storage en mémoire pour tester la persistance en environnement Node. */
-function fakeStorage(seed: Record<string, string> = {}): DraftStorage & { map: Map<string, string> } {
+function fakeStorage(
+  seed: Record<string, string> = {},
+): DraftStorage & { map: Map<string, string> } {
   const map = new Map(Object.entries(seed));
   return {
     map,
@@ -119,7 +121,14 @@ describe("X2 — intensité de cause relative", () => {
   });
 
   it("never drops below the floor for long priority lists", () => {
-    const ri = rankedCauseIntensity(["climat", "humain", "tech", "egalite", "biodiversite", "circulaire"]);
+    const ri = rankedCauseIntensity([
+      "climat",
+      "humain",
+      "tech",
+      "egalite",
+      "biodiversite",
+      "circulaire",
+    ]);
     for (const v of Object.values(ri)) expect(v).toBeGreaterThanOrEqual(0.45);
   });
 });

@@ -82,10 +82,7 @@ describe("lookThroughDiversification", () => {
   });
 
   it("returns null when no fund has known holdings", () => {
-    const { diversification, coverage } = lookThroughDiversification(
-      { fundA: 1 },
-      new Map(),
-    );
+    const { diversification, coverage } = lookThroughDiversification({ fundA: 1 }, new Map());
     expect(diversification).toBeNull();
     expect(coverage).toBe(0);
   });

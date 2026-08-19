@@ -49,7 +49,9 @@ export const Route = createFileRoute("/hooks/ingest-holdings")({
         }
         if (Object.keys(sources).length === 0) {
           return json(
-            { note: "HOLDINGS_SOURCES vide — aucune URL officielle curée fournie, rien à ingérer." },
+            {
+              note: "HOLDINGS_SOURCES vide — aucune URL officielle curée fournie, rien à ingérer.",
+            },
             200,
           );
         }
@@ -63,7 +65,13 @@ export const Route = createFileRoute("/hooks/ingest-holdings")({
         if (aErr) return json({ error: `assets: ${aErr.message}` }, 500);
 
         const assets: HoldingsIngestAsset[] = (assetRows ?? []).map(
-          (a: { id: string; ticker: string; name: string; isin: string | null; issuer: string | null }) => ({
+          (a: {
+            id: string;
+            ticker: string;
+            name: string;
+            isin: string | null;
+            issuer: string | null;
+          }) => ({
             id: a.id,
             ticker: a.ticker,
             name: a.name,

@@ -64,19 +64,28 @@ export function runHoldingsQualityChecks(input: HoldingsQualityInput): HoldingsQ
 
   // 1) Date de référence : obligatoire (§12) et pas dans le futur / trop vieille.
   if (!asOf) {
-    issues.push({ kind: "missing_as_of", detail: "Aucune date de référence (as_of) — non publiable." });
+    issues.push({
+      kind: "missing_as_of",
+      detail: "Aucune date de référence (as_of) — non publiable.",
+    });
     results.push({ status: "rejected", reason: "as_of manquant" });
   } else {
     const dateRes = validateReferenceDate(asOf);
     if (dateRes.status !== "valid") {
-      issues.push({ kind: "missing_as_of", detail: `Date de référence : ${dateRes.reason ?? ""}`.trim() });
+      issues.push({
+        kind: "missing_as_of",
+        detail: `Date de référence : ${dateRes.reason ?? ""}`.trim(),
+      });
       results.push(dateRes);
     }
   }
 
   // 2) Source obligatoire (traçabilité §1.2 : jamais un chiffre sans origine).
   if (!sourceId && !sourceUrl) {
-    issues.push({ kind: "missing_source", detail: "Ni source_id ni source_url — traçabilité impossible." });
+    issues.push({
+      kind: "missing_source",
+      detail: "Ni source_id ni source_url — traçabilité impossible.",
+    });
     results.push({ status: "rejected", reason: "source manquante" });
   }
 
@@ -98,7 +107,11 @@ export function runHoldingsQualityChecks(input: HoldingsQualityInput): HoldingsQ
 
     const dupKey = (h.isin?.trim() || h.name.trim().toLowerCase()).toString();
     if (seen.has(dupKey)) {
-      issues.push({ kind: "duplicate_security", detail: `Titre en double dans le fonds`, security: h.name });
+      issues.push({
+        kind: "duplicate_security",
+        detail: `Titre en double dans le fonds`,
+        security: h.name,
+      });
       results.push({ status: "review_required", reason: "doublon" });
     } else {
       seen.add(dupKey);
@@ -107,7 +120,11 @@ export function runHoldingsQualityChecks(input: HoldingsQualityInput): HoldingsQ
     if (h.isin) {
       if (isValidIsin(h.isin)) isinValid++;
       else {
-        issues.push({ kind: "incoherent_isin", detail: `ISIN incohérent : ${h.isin}`, security: h.name });
+        issues.push({
+          kind: "incoherent_isin",
+          detail: `ISIN incohérent : ${h.isin}`,
+          security: h.name,
+        });
         results.push({ status: "review_required", reason: "isin incohérent" });
       }
     }
@@ -119,7 +136,10 @@ export function runHoldingsQualityChecks(input: HoldingsQualityInput): HoldingsQ
     sumTolerancePct,
   );
   if (sumRes.status !== "valid") {
-    issues.push({ kind: "sum_out_of_range", detail: `Somme des poids ${weightSum.toFixed(2)}% : ${sumRes.reason ?? ""}`.trim() });
+    issues.push({
+      kind: "sum_out_of_range",
+      detail: `Somme des poids ${weightSum.toFixed(2)}% : ${sumRes.reason ?? ""}`.trim(),
+    });
   }
   results.push(sumRes);
 
