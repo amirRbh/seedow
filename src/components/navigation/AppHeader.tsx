@@ -83,10 +83,7 @@ export function AppHeader({
 
       <div className="mt-5 flex items-start gap-4">
         {sectionNumber && (
-          <span
-            aria-hidden="true"
-            className="stamp pt-3 select-none"
-          >
+          <span aria-hidden="true" className="stamp pt-3 select-none">
             {sectionNumber.padStart(2, "0")}
           </span>
         )}

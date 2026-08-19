@@ -125,9 +125,7 @@ export function PortfolioHistoryChart() {
           <p className="stamp">{t("portfolio.history_chart.title")}</p>
           <p className="font-value text-[30px] leading-none text-ink mt-2">{fmtEur(last)}</p>
           {points.length > 0 && (
-            <p
-              className={`font-value text-label mt-1.5 ${isUp ? "text-ink-2" : "text-alert-ink"}`}
-            >
+            <p className={`font-value text-label mt-1.5 ${isUp ? "text-ink-2" : "text-alert-ink"}`}>
               {isUp ? "+" : ""}
               {fmtEur(deltaAbs)} ({isUp ? "+" : ""}
               {deltaPct.toFixed(2)}%)

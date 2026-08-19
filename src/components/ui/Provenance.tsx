@@ -52,15 +52,7 @@ const STATUS_LABEL: Record<ProvenanceStatus, string | null> = {
  * l'ocre. Discipline : une attestation par BLOC de données, pas une par ligne
  * — sinon l'écran devient un formulaire.
  */
-export function Provenance({
-  source,
-  asOf,
-  coverage,
-  status,
-  href,
-  note,
-  className,
-}: Props) {
+export function Provenance({ source, asOf, coverage, status, href, note, className }: Props) {
   const { t } = useTranslation();
   const { lang } = useLang();
 

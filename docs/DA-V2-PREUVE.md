@@ -10,20 +10,20 @@
 
 ### 1.1 Ce qui a été trouvé dans le code
 
-| Domaine        | État V1 (`src/styles.css`, composants)                                                                                                        |
-| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| Couleurs       | `--paper #FFFFFF` / `#F5F5F7` / `#D2D2D7`, `--ink #1D1D1F`, `--ink-2 #86868B` → **palette système Apple, à l'hexadécimal près**. Le commentaire du fichier l'écrit lui-même : « palette Apple ». |
-| Accents        | 5 accents de poids égal : `mint #146A4A`, `ice #0071E3` (bleu système Apple), `volt #6E56CF` (Radix violet-9), `alert #E11D48` (Tailwind rose-600), `solar #B7791F` (Chakra yellow-600). |
-| Typographies   | `--font-display`, `--font-value`, `--font-sans` → **les trois pointent sur Inter**. IBM Plex Mono pour les labels. Inter + Plex Mono = le pairing SaaS le plus répandu de la décennie. |
-| Rayons         | 14px (cartes), 16px (`.ink-section`), 22px (bulles), 32px (`.rv-card`), 40px (`.rv-hero`), 100px et 980px (pills). **Six rayons sans grammaire.** |
-| Ombres         | `--shadow-flat-1/2/3` = `0 0 0 0 transparent` (désactivées « design flat éditorial »)… mais la landing réintroduit `0 22px 50px -30px rgba(0,0,0,.25)` et trois halos flous (`.apple-aura`, `.rv-hero-glow`). **Le système se contredit.** |
-| Composants     | `.paper-card` = boîte grise + bordure + radius 14. Le motif « boîte grise arrondie » est le seul conteneur de toute l'app.                        |
-| Landing        | Système parallèle complet : `.apple-landing`, `.apple-btn-primary` (`border-radius: 980px` = valeur exacte d'Apple), `.apple-title`, `.rv-card`… **Deux design systems dans un produit.** |
-| Graphiques     | Recharts par défaut : `AreaChart` + `CartesianGrid` + `Tooltip`, `stroke: var(--highlight-1)` (= `#1D1D1F`). Aucune intervention graphique.        |
-| Icônes         | SVG inline 24×24, `strokeWidth 1.8`, bouts arrondis = géométrie Feather/Lucide. Le langage d'icônes le plus générique disponible.                  |
-| Animations     | framer-motion `opacity + translateY(12px)`, `delay: 0.1 / 0.25 / 0.45` sur chaque section. Plus trois pulsations concurrentes (`breathe`, `pulse-dot`, `halo-pulse`). |
-| Fond           | Blanc pur, plus un grain SVG à `opacity: .06` (invisible en pratique).                                                                            |
-| Navigation     | Rail 64px + bottom nav 4 entrées. Correct, mais visuellement neutre.                                                                              |
+| Domaine      | État V1 (`src/styles.css`, composants)                                                                                                                                                                                                     |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Couleurs     | `--paper #FFFFFF` / `#F5F5F7` / `#D2D2D7`, `--ink #1D1D1F`, `--ink-2 #86868B` → **palette système Apple, à l'hexadécimal près**. Le commentaire du fichier l'écrit lui-même : « palette Apple ».                                           |
+| Accents      | 5 accents de poids égal : `mint #146A4A`, `ice #0071E3` (bleu système Apple), `volt #6E56CF` (Radix violet-9), `alert #E11D48` (Tailwind rose-600), `solar #B7791F` (Chakra yellow-600).                                                   |
+| Typographies | `--font-display`, `--font-value`, `--font-sans` → **les trois pointent sur Inter**. IBM Plex Mono pour les labels. Inter + Plex Mono = le pairing SaaS le plus répandu de la décennie.                                                     |
+| Rayons       | 14px (cartes), 16px (`.ink-section`), 22px (bulles), 32px (`.rv-card`), 40px (`.rv-hero`), 100px et 980px (pills). **Six rayons sans grammaire.**                                                                                          |
+| Ombres       | `--shadow-flat-1/2/3` = `0 0 0 0 transparent` (désactivées « design flat éditorial »)… mais la landing réintroduit `0 22px 50px -30px rgba(0,0,0,.25)` et trois halos flous (`.apple-aura`, `.rv-hero-glow`). **Le système se contredit.** |
+| Composants   | `.paper-card` = boîte grise + bordure + radius 14. Le motif « boîte grise arrondie » est le seul conteneur de toute l'app.                                                                                                                 |
+| Landing      | Système parallèle complet : `.apple-landing`, `.apple-btn-primary` (`border-radius: 980px` = valeur exacte d'Apple), `.apple-title`, `.rv-card`… **Deux design systems dans un produit.**                                                  |
+| Graphiques   | Recharts par défaut : `AreaChart` + `CartesianGrid` + `Tooltip`, `stroke: var(--highlight-1)` (= `#1D1D1F`). Aucune intervention graphique.                                                                                                |
+| Icônes       | SVG inline 24×24, `strokeWidth 1.8`, bouts arrondis = géométrie Feather/Lucide. Le langage d'icônes le plus générique disponible.                                                                                                          |
+| Animations   | framer-motion `opacity + translateY(12px)`, `delay: 0.1 / 0.25 / 0.45` sur chaque section. Plus trois pulsations concurrentes (`breathe`, `pulse-dot`, `halo-pulse`).                                                                      |
+| Fond         | Blanc pur, plus un grain SVG à `opacity: .06` (invisible en pratique).                                                                                                                                                                     |
+| Navigation   | Rail 64px + bottom nav 4 entrées. Correct, mais visuellement neutre.                                                                                                                                                                       |
 
 ### 1.2 Pourquoi ça ne produit pas d'impact
 
@@ -41,7 +41,7 @@
 
 **7. Aucun extrême.** Les titres plafonnent à 62px, le corps à 17px, les KPI à ~48px. Tout est « moyen ». Les identités mémorables ont toutes un extrême : la densité (Bloomberg), l'obscurité (Linear), l'échelle (Apple), la photo (Patagonia). Seedow n'en a nulle part.
 
-**8. Vestiges d'une DA plus forte, sablée.** Le code garde `.outline-number` (« façon presse magazine »), `.gold-rule`, et un docstring de `KPIFigure` qui dit « Space Grotesk tabulaire » alors que le composant rend de l'Inter. L'identité n'a pas été *conçue* neutre : elle a été **érodée** vers le neutre.
+**8. Vestiges d'une DA plus forte, sablée.** Le code garde `.outline-number` (« façon presse magazine »), `.gold-rule`, et un docstring de `KPIFigure` qui dit « Space Grotesk tabulaire » alors que le composant rend de l'Inter. L'identité n'a pas été _conçue_ neutre : elle a été **érodée** vers le neutre.
 
 ### 1.3 Ce qui est bon et doit survivre
 
@@ -57,7 +57,7 @@
 
 ### Direction A — « L'INSTRUMENT »
 
-1. **Concept** — Seedow comme instrument de mesure de précision. Densité de terminal financier, typographie de revue (Monocle, Le Monde diplomatique). Aucune illustration, jamais : la donnée *est* l'image. Grille visible, filets plutôt que cartes.
+1. **Concept** — Seedow comme instrument de mesure de précision. Densité de terminal financier, typographie de revue (Monocle, Le Monde diplomatique). Aucune illustration, jamais : la donnée _est_ l'image. Grille visible, filets plutôt que cartes.
 2. **Émotion** — Rigueur, autorité, « on ne me raconte pas d'histoires ».
 3. **Palette** — Encre `#0B0B0C`, papier chaud `#F7F5F0`, un seul signal cyan-électrique. Aucune couleur décorative.
 4. **Typo** — Grotesque à caractère (Bricolage, Archivo) pour les titres ; **mono pour tous les chiffres**, pas seulement les labels.
@@ -83,7 +83,7 @@
 8. **Illustrations** — Aucune image. La seule « illustration » autorisée est un document : extrait, tableau, capture de source.
 9. **Hero** — Une affirmation en Fraunces 96px, et immédiatement dessous sa preuve : le chiffre en mono, la source, la date, la couverture — même hiérarchie visuelle que l'affirmation.
 10. **Dashboard** — Le solde en mono géant, et sous lui l'attestation : « valorisé sur 4 cours Yahoo Finance · 19 août, 14 h 02 · couverture 100 % ». Chaque tuile porte la sienne.
-11. **Différenciation** — Revolut, Trade Republic, Robinhood **cachent** leur méthode ; Ecosia et les banques vertes affirment sans prouver. C'est la seule direction où l'esthétique *est* la promesse — donc la seule qu'un concurrent ne peut pas copier sans changer son modèle.
+11. **Différenciation** — Revolut, Trade Republic, Robinhood **cachent** leur méthode ; Ecosia et les banques vertes affirment sans prouver. C'est la seule direction où l'esthétique _est_ la promesse — donc la seule qu'un concurrent ne peut pas copier sans changer son modèle.
 12. **Risques** — Peut devenir bureaucratique ; l'annotation permanente menace la densité ; difficile de créer de l'émotion. Il faut discipliner le nombre d'attestations par écran.
 13. **Pourquoi ça marcherait** — Elle sert les 4 personas d'un coup (Karim/Thomas/Inès sur la transparence, Léa parce que chaque chiffre porte son explication) et elle applique une règle déjà **non négociable** dans `CLAUDE.md`.
 
@@ -128,7 +128,7 @@
 5. **Composants** — Blocs de légende, filets de crédit photo, rythme de magazine.
 6. **Graphiques** — Incrustés sur l'image, en blanc 1px.
 7. **Animations** — Parallaxe très lente, fondus au noir.
-8. **Illustrations** — La photographie *est* le système.
+8. **Illustrations** — La photographie _est_ le système.
 9. **Hero** — Photo pleine page + une phrase + un chiffre.
 10. **Dashboard** — Difficile : la photo ne survit pas à un écran utilitaire consulté 30 fois par mois.
 11. **Différenciation** — Forte en communication, faible en produit.
@@ -163,9 +163,9 @@ Trois signes suffisent à reconnaître Seedow sans lire le nom :
 
 ### Positionnement face à la concurrence
 
-| Marque             | Son territoire                    | Où Seedow se place                                               |
-| ------------------ | --------------------------------- | ---------------------------------------------------------------- |
-| **Revolut**        | Néon, ludique, gamifié            | À l'opposé : sobre, adulte, documentaire                           |
+| Marque             | Son territoire                     | Où Seedow se place                                                |
+| ------------------ | ---------------------------------- | ----------------------------------------------------------------- |
+| **Revolut**        | Néon, ludique, gamifié             | À l'opposé : sobre, adulte, documentaire                          |
 | **Trade Republic** | Noir/blanc minimal, méthode opaque | Même sobriété, méthode **ouverte** — c'est là que se joue l'écart |
 | **Robinhood**      | Vert néon, gamification, urgence   | Anti-urgence : aucune couleur d'excitation                        |
 | **N26**            | Gradient corail, lifestyle         | Aucun dégradé, aucun lifestyle                                    |
@@ -185,24 +185,24 @@ Trois signes suffisent à reconnaître Seedow sans lire le nom :
 
 **Surfaces — papier d'archive, jamais du gris système.**
 
-| Token         | Clair     | Sombre    | Usage                                   |
-| ------------- | --------- | --------- | --------------------------------------- |
-| `--paper`     | `#FAF8F3` | `#100F0D` | Fond principal                          |
-| `--paper-2`   | `#F1EDE4` | `#191814` | Feuillet secondaire, encarts            |
-| `--paper-3`   | `#D6D0BF` | `#33312B` | **Filets** (usage n°1), bordures        |
-| `--ink`       | `#121210` | `#F4F1E9` | Texte principal, aplats de contraste    |
-| `--ink-2`     | `#56564E` | `#A9A69C` | Texte secondaire (6,97:1)               |
-| `--ink-3`     | `#707066` | `#8A877E` | Métadonnées (4,71:1 — passe AA)         |
+| Token       | Clair     | Sombre    | Usage                                |
+| ----------- | --------- | --------- | ------------------------------------ |
+| `--paper`   | `#FAF8F3` | `#100F0D` | Fond principal                       |
+| `--paper-2` | `#F1EDE4` | `#191814` | Feuillet secondaire, encarts         |
+| `--paper-3` | `#D6D0BF` | `#33312B` | **Filets** (usage n°1), bordures     |
+| `--ink`     | `#121210` | `#F4F1E9` | Texte principal, aplats de contraste |
+| `--ink-2`   | `#56564E` | `#A9A69C` | Texte secondaire (6,97:1)            |
+| `--ink-3`   | `#707066` | `#8A877E` | Métadonnées (4,71:1 — passe AA)      |
 
 **Signaux — la couleur est un statut de preuve.**
 
-| Token     | Clair     | Statut encodé                                                    |
-| --------- | --------- | ---------------------------------------------------------------- |
+| Token     | Clair     | Statut encodé                                                                        |
+| --------- | --------- | ------------------------------------------------------------------------------------ |
 | `--ice`   | `#1B3BD8` | **Vérifié / actionnable.** Liens, sources cliquables, état actif. Bleu de signature. |
-| `--mint`  | `#0B5138` | **Impact positif prouvé.** Vert forêt profond, jamais un vert vif. |
-| `--alert` | `#B32718` | **Négatif réel.** Vermillon d'imprimerie. Rare, donc fort.        |
-| `--solar` | `#8A6410` | **Estimé / modélisé.** Ocre. Marque tout ce qui n'est pas mesuré. |
-| `--volt`  | `#5B3FA8` | Pédagogie (cours, méthode). Usage rare.                           |
+| `--mint`  | `#0B5138` | **Impact positif prouvé.** Vert forêt profond, jamais un vert vif.                   |
+| `--alert` | `#B32718` | **Négatif réel.** Vermillon d'imprimerie. Rare, donc fort.                           |
+| `--solar` | `#8A6410` | **Estimé / modélisé.** Ocre. Marque tout ce qui n'est pas mesuré.                    |
+| `--volt`  | `#5B3FA8` | Pédagogie (cours, méthode). Usage rare.                                              |
 
 Règle : **aucun élément ne prend une couleur pour être joli.** Si un chiffre est bleu, c'est qu'il est vérifié. Si un chiffre est ocre, c'est qu'il est estimé. Un utilisateur doit pouvoir apprendre ce code en une session.
 
@@ -210,26 +210,26 @@ Les variantes `--*-ink` (texte-safe, AA sur `--paper` et `--paper-2` et sur les 
 
 ### 4.2 Typographies
 
-| Rôle                        | Famille                     | Justification                                                    |
-| --------------------------- | --------------------------- | ---------------------------------------------------------------- |
-| **Éditorial** (titres, hero) | **Fraunces** 500–700, `opsz` haute, `SOFT 0`, `WONK 0` | Serif variable contemporain. Intelligence + chaleur, sans « vieille banque ». Absent de la fintech. |
-| **Interface / prose**        | **Inter** 400–700           | Excellent en densité, déjà chargé, aucune raison de le remplacer pour l'UI. |
-| **Mesure**                   | **IBM Plex Mono** 400/500/600 | **Tous les chiffres**, tous les labels de donnée, toutes les provenances, tous les tickers. Y compris le solde du portefeuille. |
+| Rôle                         | Famille                                                | Justification                                                                                                                   |
+| ---------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| **Éditorial** (titres, hero) | **Fraunces** 500–700, `opsz` haute, `SOFT 0`, `WONK 0` | Serif variable contemporain. Intelligence + chaleur, sans « vieille banque ». Absent de la fintech.                             |
+| **Interface / prose**        | **Inter** 400–700                                      | Excellent en densité, déjà chargé, aucune raison de le remplacer pour l'UI.                                                     |
+| **Mesure**                   | **IBM Plex Mono** 400/500/600                          | **Tous les chiffres**, tous les labels de donnée, toutes les provenances, tous les tickers. Y compris le solde du portefeuille. |
 
 Règle absolue : **si c'est mesurable, c'est en mono.** C'est le geste typographique signature.
 
 Échelle (les tailles suivent `--font-scale`, accessibilité inchangée) :
 
-| Utilitaire        | Taille                      | Famille  |
-| ----------------- | --------------------------- | -------- |
-| `.display-xl`     | `clamp(3rem, 8vw, 6.5rem)`  | Fraunces |
-| `.display-lg`     | `clamp(2.25rem, 5vw, 3.75rem)` | Fraunces |
-| `h1`              | `clamp(2rem, 4.5vw, 3rem)`  | Fraunces |
-| `h2`              | `clamp(1.5rem, 3vw, 2rem)`  | Fraunces |
-| `h3`              | `clamp(1.125rem, 2vw, 1.35rem)` | Inter 600 |
-| `.text-figure-hero` | `clamp(2.75rem, 12vw, 4.5rem)` | **Plex Mono 500** |
-| `.data-xl`        | `clamp(2rem, 5vw, 3.25rem)` | **Plex Mono 500** |
-| `.stamp`          | 10-11px, `tracking .14em`, capitales | **Plex Mono 600** |
+| Utilitaire          | Taille                               | Famille           |
+| ------------------- | ------------------------------------ | ----------------- |
+| `.display-xl`       | `clamp(3rem, 8vw, 6.5rem)`           | Fraunces          |
+| `.display-lg`       | `clamp(2.25rem, 5vw, 3.75rem)`       | Fraunces          |
+| `h1`                | `clamp(2rem, 4.5vw, 3rem)`           | Fraunces          |
+| `h2`                | `clamp(1.5rem, 3vw, 2rem)`           | Fraunces          |
+| `h3`                | `clamp(1.125rem, 2vw, 1.35rem)`      | Inter 600         |
+| `.text-figure-hero` | `clamp(2.75rem, 12vw, 4.5rem)`       | **Plex Mono 500** |
+| `.data-xl`          | `clamp(2rem, 5vw, 3.25rem)`          | **Plex Mono 500** |
+| `.stamp`            | 10-11px, `tracking .14em`, capitales | **Plex Mono 600** |
 
 Plancher de lisibilité maintenu : jamais sous 13px pour une information financière porteuse dans l'app (`CLAUDE.md` §4).
 
@@ -270,13 +270,13 @@ Trois modificateurs :
 
 ### 4.6 Boutons
 
-| Variante        | Rendu                                                             |
-| --------------- | ------------------------------------------------------------------ |
-| `default`       | Aplat `--ink`, texte `--paper`, radius 2px, hauteur 44px, Inter 500 |
-| `accent`        | Aplat `--ice`, texte `--paper` — action vérifiée/principale          |
-| `outline-ink`   | Filet 1px `--ink`, fond transparent, s'inverse au survol            |
-| `ghost`         | Texte seul + soulignement d'1px au survol                           |
-| `link`          | `--ice-ink`, souligné en permanence (aucun lien non souligné)       |
+| Variante      | Rendu                                                               |
+| ------------- | ------------------------------------------------------------------- |
+| `default`     | Aplat `--ink`, texte `--paper`, radius 2px, hauteur 44px, Inter 500 |
+| `accent`      | Aplat `--ice`, texte `--paper` — action vérifiée/principale         |
+| `outline-ink` | Filet 1px `--ink`, fond transparent, s'inverse au survol            |
+| `ghost`       | Texte seul + soulignement d'1px au survol                           |
+| `link`        | `--ice-ink`, souligné en permanence (aucun lien non souligné)       |
 
 Plus jamais de `border-radius: 980px` sur un bouton.
 
@@ -322,19 +322,19 @@ Un seul pulse subsiste : le point d'état « données en cours de rafraîchissem
 
 ## Partie 5 — Ce que la V2 supprime explicitement
 
-| Supprimé                                        | Raison                                                        |
-| ----------------------------------------------- | -------------------------------------------------------------- |
-| Palette Apple `#F5F5F7` / `#D2D2D7` / `#86868B` | Empruntée, non reconnaissable                                   |
-| `border-radius: 980px` et le radius 14px         | Pill Apple + carte SaaS générique                               |
-| Le système `.apple-*` parallèle                  | Deux design systems = pas de marque (alias de compatibilité conservés le temps de la migration, cf. `styles.css`) |
-| `.apple-aura`, `.rv-hero-glow`, `.apple-lift`    | Halos flous et lift au survol = « premium » artificiel          |
-| Les cinq accents décoratifs de poids égal        | Remplacés par quatre statuts de preuve                          |
-| Inter en typographie de titre                    | Aucune signature typographique                                  |
-| Les chiffres en Inter                            | Remplacés par du mono — le geste signature                      |
-| Les remplissages de graphiques en aplat          | Remplacés par des hachures                                      |
-| Les icônes à bouts arrondis, trait 1,8           | Remplacées par du dessin technique 1,25 px                      |
-| Les cascades `delay: 0.1 / 0.25 / 0.45`          | Remplacées par le tracé                                         |
-| La source en 11px gris dans un coin              | Remplacée par le crochet de provenance                          |
+| Supprimé                                        | Raison                                                                                                            |
+| ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Palette Apple `#F5F5F7` / `#D2D2D7` / `#86868B` | Empruntée, non reconnaissable                                                                                     |
+| `border-radius: 980px` et le radius 14px        | Pill Apple + carte SaaS générique                                                                                 |
+| Le système `.apple-*` parallèle                 | Deux design systems = pas de marque (alias de compatibilité conservés le temps de la migration, cf. `styles.css`) |
+| `.apple-aura`, `.rv-hero-glow`, `.apple-lift`   | Halos flous et lift au survol = « premium » artificiel                                                            |
+| Les cinq accents décoratifs de poids égal       | Remplacés par quatre statuts de preuve                                                                            |
+| Inter en typographie de titre                   | Aucune signature typographique                                                                                    |
+| Les chiffres en Inter                           | Remplacés par du mono — le geste signature                                                                        |
+| Les remplissages de graphiques en aplat         | Remplacés par des hachures                                                                                        |
+| Les icônes à bouts arrondis, trait 1,8          | Remplacées par du dessin technique 1,25 px                                                                        |
+| Les cascades `delay: 0.1 / 0.25 / 0.45`         | Remplacées par le tracé                                                                                           |
+| La source en 11px gris dans un coin             | Remplacée par le crochet de provenance                                                                            |
 
 ---
 

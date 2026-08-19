@@ -163,7 +163,9 @@
   /* Encre — noir chaud */
   --ink: #121210; /* 17.67:1 sur --paper */
   --ink-2: #56564e; /* 6.97:1 — texte secondaire */
-  --ink-3: #707066; /* 4.71:1 — métadonnées, passe AA */
+  --ink-3: #68685f; /* 5.30:1 sur --paper, 4.81:1 sur --paper-2 — le crochet
+                       de provenance porte de l'information, il doit tenir AA
+                       sur les DEUX surfaces, pas seulement sur le papier. */
 
   /* Échelle de mise en avant interactive (focus rings, états actifs) */
   --highlight-1: #121210;
@@ -685,11 +687,7 @@
   /* ── Hachures : le seul « remplissage » autorisé. Lisible en
      daltonisme et à l'impression, contrairement à un aplat. ────── */
   .hatch {
-    background-image: repeating-linear-gradient(
-      45deg,
-      currentColor 0 1px,
-      transparent 1px 5px
-    );
+    background-image: repeating-linear-gradient(45deg, currentColor 0 1px, transparent 1px 5px);
   }
 
   /* Section encre — contraste maximal (hero, CTA, chiffre clé) */

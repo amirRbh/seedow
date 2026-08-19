@@ -56,12 +56,7 @@ export function BottomNavigation() {
                 )}
               >
                 <NavIcon type={item.icon} />
-                <span
-                  className={cn(
-                    "stamp leading-none",
-                    isActive ? "text-ink" : "text-ink-3",
-                  )}
-                >
+                <span className={cn("stamp leading-none", isActive ? "text-ink" : "text-ink-3")}>
                   {t(item.labelKey)}
                 </span>
                 {isActive && (

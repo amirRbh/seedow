@@ -102,11 +102,7 @@ function Landing() {
                   {t("landing.nav.login")}
                 </Link>
                 <Button asChild size="sm">
-                  <Link
-                    to="/onboarding"
-                    search={{ guest: true }}
-                    onClick={onCta("nav", "preview")}
-                  >
+                  <Link to="/onboarding" search={{ guest: true }} onClick={onCta("nav", "preview")}>
                     {t("landing.nav.simulate_cta")}
                   </Link>
                 </Button>
@@ -162,9 +158,7 @@ function Landing() {
               )}
             </div>
 
-            <p className="mt-5 text-body-sm text-ink-3 max-w-[52ch]">
-              {t("landing.rv.hero.note")}
-            </p>
+            <p className="mt-5 text-body-sm text-ink-3 max-w-[52ch]">{t("landing.rv.hero.note")}</p>
           </div>
 
           <HeroProof t={t} />
@@ -232,7 +226,11 @@ function Landing() {
         desc={t("landing.rv.cards.simulate.desc")}
         action={
           <Button asChild size="pill">
-            <Link to="/onboarding" search={{ guest: true }} onClick={onCta("card_simulate", "preview")}>
+            <Link
+              to="/onboarding"
+              search={{ guest: true }}
+              onClick={onCta("card_simulate", "preview")}
+            >
               {t("landing.rv.cards.simulate.cta")}
             </Link>
           </Button>
@@ -245,13 +243,12 @@ function Landing() {
       <section className="max-w-[1080px] mx-auto px-6 py-6">
         <Reveal>
           <div className="ink-section px-6 py-14 md:px-14 md:py-20">
-            <p className="stamp">
-              02 — {t("landing.rv.cards.problem.eyebrow")}
-            </p>
-            <h2 className="mt-5 max-w-[20ch] text-paper">
-              {t("landing.rv.cards.problem.title")}
-            </h2>
-            <p className="mt-5 max-w-[54ch] text-body-lg leading-relaxed" style={{ color: "#b4b1a8" }}>
+            <p className="stamp">02 — {t("landing.rv.cards.problem.eyebrow")}</p>
+            <h2 className="mt-5 max-w-[20ch] text-paper">{t("landing.rv.cards.problem.title")}</h2>
+            <p
+              className="mt-5 max-w-[54ch] text-body-lg leading-relaxed"
+              style={{ color: "#b4b1a8" }}
+            >
               {t("landing.rv.cards.problem.desc")}
             </p>
 
@@ -260,11 +257,18 @@ function Landing() {
                 <div key={s.figure} className="border-t pt-5" style={{ borderColor: "#3a3833" }}>
                   <div
                     className="font-value text-paper"
-                    style={{ fontSize: "clamp(52px, 7vw, 84px)", lineHeight: 0.92, letterSpacing: "-0.05em" }}
+                    style={{
+                      fontSize: "clamp(52px, 7vw, 84px)",
+                      lineHeight: 0.92,
+                      letterSpacing: "-0.05em",
+                    }}
                   >
                     {s.figure}
                   </div>
-                  <p className="mt-4 text-body-lg leading-snug max-w-[26ch]" style={{ color: "#b4b1a8" }}>
+                  <p
+                    className="mt-4 text-body-lg leading-snug max-w-[26ch]"
+                    style={{ color: "#b4b1a8" }}
+                  >
                     {s.text}
                   </p>
                   <Provenance className="mt-4" source={s.src} status="verified" />
@@ -341,12 +345,18 @@ function Landing() {
           <div className="ink-section px-6 py-16 md:py-24 text-center">
             <h2 className="mx-auto max-w-[18ch] text-paper">{t("landing.rv.final.title")}</h2>
             <p className="mt-5 mx-auto max-w-[44ch] text-body-lg" style={{ color: "#b4b1a8" }}>
-              {isAuthed ? t("landing.rv.final.subtitle_authed") : t("landing.rv.final.subtitle_new")}
+              {isAuthed
+                ? t("landing.rv.final.subtitle_authed")
+                : t("landing.rv.final.subtitle_new")}
             </p>
 
             <div className="mt-10 flex flex-col items-center gap-4">
               {isAuthed ? (
-                <Button asChild size="pill" className="border-paper bg-paper text-ink hover:bg-transparent hover:text-paper">
+                <Button
+                  asChild
+                  size="pill"
+                  className="border-paper bg-paper text-ink hover:bg-transparent hover:text-paper"
+                >
                   <Link to="/dashboard">{t("landing.rv.hero.cta_authed")}</Link>
                 </Button>
               ) : (
@@ -356,7 +366,11 @@ function Landing() {
                     size="pill"
                     className="border-paper bg-paper text-ink hover:bg-transparent hover:text-paper"
                   >
-                    <Link to="/onboarding" search={{ guest: true }} onClick={onCta("final", "preview")}>
+                    <Link
+                      to="/onboarding"
+                      search={{ guest: true }}
+                      onClick={onCta("final", "preview")}
+                    >
                       {t("landing.rv.hero.cta_primary")}
                     </Link>
                   </Button>

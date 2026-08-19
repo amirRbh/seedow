@@ -243,7 +243,9 @@ function LeFil() {
                   status="verified"
                   source={t("le_fil.carbon_source")}
                   coverage={
-                    impact?.presentation ? Math.round(impact.presentation.coverage * 100) : undefined
+                    impact?.presentation
+                      ? Math.round(impact.presentation.coverage * 100)
+                      : undefined
                   }
                 />
               )}

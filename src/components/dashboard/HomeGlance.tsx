@@ -88,10 +88,7 @@ function GlanceTile({
       {typeof scale === "number" && (
         <span className="mt-1.5 flex gap-1" aria-hidden>
           {[1, 2, 3].map((n) => (
-            <span
-              key={n}
-              className={`h-[3px] flex-1 ${n <= scale ? "bg-ink" : "bg-paper-3"}`}
-            />
+            <span key={n} className={`h-[3px] flex-1 ${n <= scale ? "bg-ink" : "bg-paper-3"}`} />
           ))}
         </span>
       )}
