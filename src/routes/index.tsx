@@ -5,7 +5,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { EsgQuickCheck } from "@/components/landing/EsgQuickCheck";
 import { LandingCourses } from "@/components/landing/LandingCourses";
 import { LandingTour } from "@/components/landing/LandingTour";
-import { KPIFigure } from "@/components/ui/KPIFigure";
+import { Provenance } from "@/components/ui/Provenance";
+import { Button } from "@/components/ui/button";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
 
 const SITE_URL = "https://seedow.life";
@@ -36,6 +37,18 @@ export const Route = createFileRoute("/")({
   component: Landing,
 });
 
+/**
+ * Landing — DA V2 « Preuve » (docs/DA-V2-PREUVE.md).
+ *
+ * La page n'est plus une pile de cartes arrondies : c'est un DOSSIER. Des
+ * chapitres numérotés, séparés par des filets, où chaque affirmation est
+ * suivie de sa preuve (source · date · couverture) à la même échelle
+ * typographique que l'affirmation elle-même (CLAUDE.md §1.2).
+ *
+ * Le système `.apple-*` de la V1 n'est plus utilisé ici : la landing et l'app
+ * partagent désormais les mêmes primitives (Button, .sheet, .stamp,
+ * Provenance) — un seul design system, donc une seule marque.
+ */
 function Landing() {
   const { t } = useTranslation();
   const [isAuthed, setIsAuthed] = useState<boolean | null>(null);
@@ -55,429 +68,306 @@ function Landing() {
   };
 
   const STATS: { figure: string; text: string; src: string }[] = [
-    {
-      figure: "0%",
-      text: t("landing.stats.visibility"),
-      src: t("landing.stats.visibility_src"),
-    },
-    {
-      figure: "∞",
-      text: t("landing.stats.jargon"),
-      src: t("landing.stats.jargon_src"),
-    },
-    {
-      figure: "1",
-      text: t("landing.stats.only_app"),
-      src: t("landing.stats.only_app_src"),
-    },
+    { figure: "0 %", text: t("landing.stats.visibility"), src: t("landing.stats.visibility_src") },
+    { figure: "∞", text: t("landing.stats.jargon"), src: t("landing.stats.jargon_src") },
+    { figure: "1", text: t("landing.stats.only_app"), src: t("landing.stats.only_app_src") },
   ];
 
   return (
-    <div className="apple-landing min-h-screen">
-      {/* NAV */}
-      <nav
-        className="sticky top-0 z-50 backdrop-blur-xl"
-        style={{ background: "rgba(255,255,255,0.72)", borderBottom: "1px solid #d2d2d7" }}
-      >
-        <div className="max-w-[1100px] mx-auto px-6 h-12 flex items-center justify-between">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-[22px] font-bold text-[color:var(--apple-text)]"
-            style={{ letterSpacing: "-0.02em" }}
-          >
-            SEEDOW
-            <span
-              aria-hidden
-              className="inline-block w-[6px] h-[6px] rounded-full"
-              style={{ background: "var(--mint)" }}
-            />
-          </Link>
+    <div className="min-h-screen bg-paper text-ink paper-grain">
+      {/* ── NAV — filet, pas d'ombre, pas de flou ─────────────────── */}
+      <nav className="sticky top-0 z-50 bg-paper border-b border-paper-3">
+        <div className="max-w-[1080px] mx-auto px-6 h-14 flex items-center justify-between">
+          <Wordmark />
 
-          <div className="flex items-center gap-6 text-body-sm text-[color:var(--apple-text)]">
-            <Link to="/cours" className="hidden md:inline opacity-90 hover:opacity-100">
+          <div className="flex items-center gap-5">
+            <Link to="/cours" className="hidden md:inline stamp hover:text-ink">
               {t("landing.nav.courses")}
             </Link>
-            <Link to="/methodologie" className="hidden md:inline opacity-90 hover:opacity-100">
+            <Link to="/methodologie" className="hidden md:inline stamp hover:text-ink">
               {t("landing.nav.methodology")}
             </Link>
             {isAuthed ? (
-              <Link to="/le-fil" className="apple-btn-primary apple-btn-primary--sm">
-                {t("landing.nav.my_space")}
-              </Link>
+              <Button asChild size="sm">
+                <Link to="/le-fil">{t("landing.nav.my_space")}</Link>
+              </Button>
             ) : (
               <>
                 <Link
                   to="/auth"
                   search={{ redirect: "/le-fil", mode: "login" }}
                   onClick={onCta("nav", "login")}
-                  className="opacity-90 hover:opacity-100"
+                  className="stamp hover:text-ink"
                 >
                   {t("landing.nav.login")}
                 </Link>
-                <Link
-                  to="/onboarding"
-                  search={{ guest: true }}
-                  onClick={onCta("nav", "preview")}
-                  className="apple-btn-primary apple-btn-primary--sm"
-                >
-                  {t("landing.nav.simulate_cta")}
-                </Link>
+                <Button asChild size="sm">
+                  <Link
+                    to="/onboarding"
+                    search={{ guest: true }}
+                    onClick={onCta("nav", "preview")}
+                  >
+                    {t("landing.nav.simulate_cta")}
+                  </Link>
+                </Button>
               </>
             )}
           </div>
         </div>
       </nav>
 
-      {/* HERO — sombre, plein écran, un seul message */}
-      <section className="rv-hero px-6 pt-20 pb-24 md:pt-28 md:pb-32">
-        <div aria-hidden className="rv-hero-glow" />
-        <div aria-hidden className="rv-hero-glow rv-hero-glow--ice" />
+      {/* ── HERO — l'affirmation, puis sa preuve, côte à côte ─────── */}
+      <header className="max-w-[1080px] mx-auto px-6 pt-14 pb-16 md:pt-20 md:pb-20">
+        <p className="stamp flex items-center gap-2">
+          <span aria-hidden className="live-dot" />
+          {t("landing.rv.hero.eyebrow")}
+        </p>
 
-        <div className="relative z-10 max-w-[1100px] mx-auto grid lg:grid-cols-[1.05fr_0.95fr] gap-14 lg:gap-16 items-center">
-          <div className="text-center lg:text-left flex flex-col items-center lg:items-start">
-            <span
-              className="inline-flex items-center gap-2 rounded-full px-4 py-2 font-mono"
-              style={{
-                fontSize: 12,
-                letterSpacing: "0.06em",
-                color: "var(--apple-text-2)",
-                background: "var(--apple-bg)",
-                border: "1px solid var(--paper-3)",
-              }}
-            >
-              <span aria-hidden className="apple-live" />
-              {t("landing.rv.hero.eyebrow")}
-            </span>
-
-            <h1 className="rv-section-title mt-7 max-w-[620px]">
+        <div className="mt-8 grid lg:grid-cols-[1.15fr_0.85fr] gap-12 lg:gap-16 items-end">
+          <div>
+            <h1 className="display-xl max-w-[13ch]">
               {t("landing.rv.hero.title_line1")}
               <br />
-              <span style={{ color: "var(--mint)" }}>{t("landing.rv.hero.title_accent")}</span>
+              <span className="italic">{t("landing.rv.hero.title_accent")}</span>
             </h1>
 
-            <p className="apple-subtitle mt-6 max-w-[540px]">{t("landing.rv.hero.subtitle")}</p>
+            <div aria-hidden className="rule-chapter mt-8 max-w-[420px] trace" />
 
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 mt-9">
+            <p className="mt-7 max-w-[46ch] text-body-xl leading-relaxed text-ink-2">
+              {t("landing.rv.hero.subtitle")}
+            </p>
+
+            <div className="flex flex-wrap items-center gap-3 mt-9">
               {isAuthed ? (
-                <Link to="/dashboard" className="apple-btn-primary">
-                  {t("landing.rv.hero.cta_authed")}
-                </Link>
+                <Button asChild size="pill">
+                  <Link to="/dashboard">{t("landing.rv.hero.cta_authed")}</Link>
+                </Button>
               ) : (
                 <>
-                  <Link
-                    to="/onboarding"
-                    search={{ guest: true }}
-                    onClick={onCta("hero", "preview")}
-                    className="apple-btn-primary"
-                    style={{ background: "var(--mint)", color: "#ffffff" }}
-                  >
-                    {t("landing.rv.hero.cta_primary")}
-                  </Link>
-                  <Link
-                    to="/auth"
-                    onClick={onCta("hero", "signup")}
-                    className="apple-btn-secondary"
-                    style={{
-                      background: "var(--apple-bg)",
-                      color: "var(--apple-text)",
-                      border: "1px solid var(--paper-3)",
-                    }}
-                  >
-                    {t("landing.rv.hero.cta_secondary")}
-                  </Link>
+                  <Button asChild size="pill">
+                    <Link
+                      to="/onboarding"
+                      search={{ guest: true }}
+                      onClick={onCta("hero", "preview")}
+                    >
+                      {t("landing.rv.hero.cta_primary")}
+                    </Link>
+                  </Button>
+                  <Button asChild size="pill" variant="outline">
+                    <Link to="/auth" onClick={onCta("hero", "signup")}>
+                      {t("landing.rv.hero.cta_secondary")}
+                    </Link>
+                  </Button>
                 </>
               )}
             </div>
 
-            <p className="mt-5 text-body-sm" style={{ color: "var(--apple-text-2)" }}>
+            <p className="mt-5 text-body-sm text-ink-3 max-w-[52ch]">
               {t("landing.rv.hero.note")}
             </p>
           </div>
 
-          <HeroPreview t={t} />
+          <HeroProof t={t} />
+        </div>
+      </header>
+
+      {/* ── REGISTRE DE PREUVES — une ligne de comptes, pas des pills ── */}
+      <section className="border-y border-paper-3 bg-paper-2">
+        <div className="max-w-[1080px] mx-auto px-6 grid grid-cols-2 md:grid-cols-4">
+          <LedgerCell>
+            <Trans i18nKey="landing.rv.proof.funds" components={{ b: <b /> }} />
+          </LedgerCell>
+          <LedgerCell>
+            <Trans i18nKey="landing.rv.proof.sources" components={{ b: <b /> }} />
+          </LedgerCell>
+          <LedgerCell>
+            <Trans i18nKey="landing.rv.proof.no_advice" components={{ b: <b /> }} />
+          </LedgerCell>
+          <LedgerCell last>
+            <Trans i18nKey="landing.rv.proof.free" components={{ b: <b /> }} />
+          </LedgerCell>
         </div>
       </section>
 
-      {/* SÉLECTEUR DE PARCOURS — « Que veux-tu faire ? » (mobile-first, §3) */}
+      {/* ── PARCOURS ──────────────────────────────────────────────── */}
       {isAuthed ? null : (
-        <section className="px-6 pt-4 pb-8 md:pt-8">
-          <Reveal>
-            <div className="max-w-[1100px] mx-auto">
-              <h2 className="rv-card-title text-center mb-8">{t("landing.paths.heading")}</h2>
-              <div className="grid gap-4 md:grid-cols-3">
-                <PathCard
-                  accent="var(--mint)"
-                  eyebrow={t("landing.paths.beginner_eyebrow")}
-                  title={t("landing.paths.beginner_title")}
-                  desc={t("landing.paths.beginner_desc")}
-                  cta={t("landing.paths.beginner_cta")}
-                  to="/onboarding"
-                  search={{ guest: true }}
-                  onClick={onCta("path_beginner", "preview")}
-                />
-                <PathCard
-                  accent="var(--ice)"
-                  eyebrow={t("landing.paths.learn_eyebrow")}
-                  title={t("landing.paths.learn_title")}
-                  desc={t("landing.paths.learn_desc")}
-                  cta={t("landing.paths.learn_cta")}
-                  to="/comprendre"
-                  onClick={onCta("path_learn", "preview")}
-                />
-                <PathCard
-                  accent="var(--volt)"
-                  eyebrow={t("landing.paths.investor_eyebrow")}
-                  title={t("landing.paths.investor_title")}
-                  desc={t("landing.paths.investor_desc")}
-                  cta={t("landing.paths.investor_cta")}
-                  to="/auth"
-                  search={{ redirect: "/portfolio", mode: "login" }}
-                  onClick={onCta("path_investor", "login")}
-                />
-              </div>
-            </div>
-          </Reveal>
-        </section>
+        <Chapter number="00" title={t("landing.paths.heading")}>
+          <div className="grid md:grid-cols-3 border-t border-paper-3">
+            <PathRow
+              eyebrow={t("landing.paths.beginner_eyebrow")}
+              title={t("landing.paths.beginner_title")}
+              desc={t("landing.paths.beginner_desc")}
+              cta={t("landing.paths.beginner_cta")}
+              to="/onboarding"
+              search={{ guest: true }}
+              onClick={onCta("path_beginner", "preview")}
+            />
+            <PathRow
+              eyebrow={t("landing.paths.learn_eyebrow")}
+              title={t("landing.paths.learn_title")}
+              desc={t("landing.paths.learn_desc")}
+              cta={t("landing.paths.learn_cta")}
+              to="/comprendre"
+              onClick={onCta("path_learn", "preview")}
+            />
+            <PathRow
+              eyebrow={t("landing.paths.investor_eyebrow")}
+              title={t("landing.paths.investor_title")}
+              desc={t("landing.paths.investor_desc")}
+              cta={t("landing.paths.investor_cta")}
+              to="/auth"
+              search={{ redirect: "/portfolio", mode: "login" }}
+              onClick={onCta("path_investor", "login")}
+              last
+            />
+          </div>
+        </Chapter>
       )}
 
-      {/* BANDEAU PREUVE — chiffres réels et sourcés */}
-      <section className="px-6 py-10 md:py-12">
+      {/* ── 01 · SIMULATEUR ───────────────────────────────────────── */}
+      <Chapter
+        number="01"
+        eyebrow={t("landing.rv.cards.simulate.eyebrow")}
+        title={t("landing.rv.cards.simulate.title")}
+        desc={t("landing.rv.cards.simulate.desc")}
+        action={
+          <Button asChild size="pill">
+            <Link to="/onboarding" search={{ guest: true }} onClick={onCta("card_simulate", "preview")}>
+              {t("landing.rv.cards.simulate.cta")}
+            </Link>
+          </Button>
+        }
+      >
+        <LandingTour embedded />
+      </Chapter>
+
+      {/* ── 02 · LE CONSTAT — pleine largeur encre ────────────────── */}
+      <section className="max-w-[1080px] mx-auto px-6 py-6">
         <Reveal>
-          <div className="max-w-[1100px] mx-auto rv-proof">
-            <span className="rv-proof-item">
-              <Trans i18nKey="landing.rv.proof.funds" components={{ b: <b /> }} />
-            </span>
-            <span className="rv-proof-item">
-              <Trans i18nKey="landing.rv.proof.sources" components={{ b: <b /> }} />
-            </span>
-            <span className="rv-proof-item">
-              <Trans i18nKey="landing.rv.proof.no_advice" components={{ b: <b /> }} />
-            </span>
-            <span className="rv-proof-item">
-              <Trans i18nKey="landing.rv.proof.free" components={{ b: <b /> }} />
-            </span>
+          <div className="ink-section px-6 py-14 md:px-14 md:py-20">
+            <p className="stamp">
+              02 — {t("landing.rv.cards.problem.eyebrow")}
+            </p>
+            <h2 className="mt-5 max-w-[20ch] text-paper">
+              {t("landing.rv.cards.problem.title")}
+            </h2>
+            <p className="mt-5 max-w-[54ch] text-body-lg leading-relaxed" style={{ color: "#b4b1a8" }}>
+              {t("landing.rv.cards.problem.desc")}
+            </p>
+
+            <div className="grid md:grid-cols-3 gap-10 md:gap-8 mt-14">
+              {STATS.map((s) => (
+                <div key={s.figure} className="border-t pt-5" style={{ borderColor: "#3a3833" }}>
+                  <div
+                    className="font-value text-paper"
+                    style={{ fontSize: "clamp(52px, 7vw, 84px)", lineHeight: 0.92, letterSpacing: "-0.05em" }}
+                  >
+                    {s.figure}
+                  </div>
+                  <p className="mt-4 text-body-lg leading-snug max-w-[26ch]" style={{ color: "#b4b1a8" }}>
+                    {s.text}
+                  </p>
+                  <Provenance className="mt-4" source={s.src} status="verified" />
+                </div>
+              ))}
+            </div>
           </div>
         </Reveal>
       </section>
 
-      {/* CARTES PRODUIT — enchaînement narratif façon fintech */}
-      <div className="px-6 pb-6 flex flex-col gap-6 max-w-[1100px] mx-auto">
-        {/* 1 · Simulateur (ice) */}
+      {/* ── 03 · IMPACT ───────────────────────────────────────────── */}
+      <Chapter
+        number="03"
+        eyebrow={t("landing.rv.cards.impact.eyebrow")}
+        title={t("landing.rv.cards.impact.title")}
+        desc={t("landing.rv.cards.impact.desc")}
+        action={
+          <Button asChild variant="link" size="pill" className="px-0">
+            <Link to="/methodologie">{t("landing.rv.cards.impact.cta")}</Link>
+          </Button>
+        }
+        side
+      >
+        <ImpactProof t={t} />
+      </Chapter>
+
+      {/* ── 04 · COURS ────────────────────────────────────────────── */}
+      <Chapter
+        number="04"
+        eyebrow={t("landing.rv.cards.courses.eyebrow")}
+        title={t("landing.rv.cards.courses.title")}
+        desc={t("landing.rv.cards.courses.desc")}
+      >
+        <LandingCourses embedded />
+      </Chapter>
+
+      {/* ── 05 · ETHI ─────────────────────────────────────────────── */}
+      <Chapter
+        number="05"
+        eyebrow={t("landing.rv.cards.ethi.eyebrow")}
+        title={t("landing.rv.cards.ethi.title")}
+        desc={t("landing.rv.cards.ethi.desc")}
+        side
+      >
+        <div>
+          <p className="stamp mb-4">{t("landing.ethi.example_label")}</p>
+          <div className="flex flex-col gap-4">
+            <Exchange who="user">{t("landing.ethi.chat_q1")}</Exchange>
+            <Exchange who="ethi">{t("landing.ethi.chat_a1")}</Exchange>
+            <Exchange who="user">{t("landing.ethi.chat_q2")}</Exchange>
+            <Exchange who="ethi">{t("landing.ethi.chat_a2")}</Exchange>
+          </div>
+        </div>
+      </Chapter>
+
+      {/* ── 06 · MÉTHODE ──────────────────────────────────────────── */}
+      <Chapter
+        number="06"
+        eyebrow={t("landing.rv.cards.method.eyebrow")}
+        title={t("landing.rv.cards.method.title")}
+        desc={t("landing.rv.cards.method.desc")}
+        action={
+          <Button asChild variant="link" size="pill" className="px-0">
+            <Link to="/methodologie">{t("landing.rv.cards.method.cta")}</Link>
+          </Button>
+        }
+      >
+        <EsgQuickCheck embedded />
+      </Chapter>
+
+      {/* ── CTA FINAL ─────────────────────────────────────────────── */}
+      <section className="max-w-[1080px] mx-auto px-6 pt-6 pb-20">
         <Reveal>
-          <ShowcaseCard
-            accent="accent-ice"
-            eyebrow={t("landing.rv.cards.simulate.eyebrow")}
-            title={t("landing.rv.cards.simulate.title")}
-            desc={t("landing.rv.cards.simulate.desc")}
-            action={
-              <Link
-                to="/onboarding"
-                search={{ guest: true }}
-                onClick={onCta("card_simulate", "preview")}
-                className="apple-btn-primary mt-8"
-              >
-                {t("landing.rv.cards.simulate.cta")}
-              </Link>
-            }
-            visual={<LandingTour embedded />}
-            stacked
-          />
-        </Reveal>
-
-        {/* 2 · Impact (mint) */}
-        <Reveal>
-          <ShowcaseCard
-            accent="accent-mint"
-            eyebrow={t("landing.rv.cards.impact.eyebrow")}
-            title={t("landing.rv.cards.impact.title")}
-            desc={t("landing.rv.cards.impact.desc")}
-            action={
-              <Link to="/methodologie" className="apple-link mt-7">
-                {t("landing.rv.cards.impact.cta")} <span aria-hidden>›</span>
-              </Link>
-            }
-            visual={
-              <div
-                className="apple-card w-full"
-                style={{ border: "1px solid var(--paper-3)", padding: "22px" }}
-                aria-hidden
-              >
-                {/* Un seul chiffre d'impact héros (analyse UX §08 — P1) : le score
-                    d'impact domine, le CO₂ évité est sa preuve concrète, la
-                    projection 10 ans reste un axe distinct (rendement). La note
-                    ESG « AA » redondante est retirée. */}
-                <KPIFigure
-                  label={t("comparatif_panel.impact_score")}
-                  value="74 / 100"
-                  tone="mint"
-                />
-                <div className="mt-4 grid grid-cols-2 gap-5">
-                  <KPIFigure
-                    size="sm"
-                    label={t("landing.hero2.preview.kpi_carbon")}
-                    value="−58 %"
-                    tone="mint"
-                  />
-                  <KPIFigure
-                    size="sm"
-                    label={t("comparatif_panel.simulated_10y")}
-                    value="24 180"
-                    unit="€"
-                    tone="ice"
-                    hint={t("comparatif_panel.on_invested", { amount: "10 000" })}
-                  />
-                </div>
-                <p className="mt-5 text-caption leading-[1.45] text-[color:var(--apple-text-2)]">
-                  {t("landing.hero2.preview.note")}
-                </p>
-              </div>
-            }
-          />
-        </Reveal>
-
-        {/* 3 · Le constat (solar, fond ink) */}
-        <Reveal>
-          <section className="accent-solar rv-card rv-card--ink text-center">
-            <p className="rv-card-eyebrow justify-center">
-              <span aria-hidden className="rv-card-dot" />
-              {t("landing.rv.cards.problem.eyebrow")}
-            </p>
-            <h2 className="rv-card-title mt-4 mx-auto max-w-[720px]">
-              {t("landing.rv.cards.problem.title")}
-            </h2>
-            <p className="apple-subtitle mx-auto max-w-[560px] mt-5">
-              {t("landing.rv.cards.problem.desc")}
-            </p>
-
-            <div className="grid md:grid-cols-3 gap-12 md:gap-8 mt-14">
-              {STATS.map((s) => (
-                <div key={s.figure}>
-                  <div
-                    className="font-bold"
-                    style={{
-                      fontSize: "clamp(60px, 8vw, 104px)",
-                      lineHeight: 0.9,
-                      letterSpacing: "-0.05em",
-                      color: "var(--section-accent)",
-                    }}
-                  >
-                    {s.figure}
-                  </div>
-                  <p
-                    className="mt-4 text-body-lg leading-[1.45] max-w-[240px] mx-auto"
-                    style={{ color: "#b8b8bf" }}
-                  >
-                    {s.text}
-                  </p>
-                  <p className="apple-stat-src" style={{ color: "#8e8e94" }}>
-                    {s.src}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </section>
-        </Reveal>
-
-        {/* 4 · Cours (volt) */}
-        <Reveal>
-          <ShowcaseCard
-            accent="accent-volt"
-            eyebrow={t("landing.rv.cards.courses.eyebrow")}
-            title={t("landing.rv.cards.courses.title")}
-            desc={t("landing.rv.cards.courses.desc")}
-            visual={<LandingCourses embedded />}
-            stacked
-          />
-        </Reveal>
-
-        {/* 5 · Ethi (ice, fond ink) */}
-        <Reveal>
-          <section className="accent-ice rv-card rv-card--ink">
-            <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
-              <div>
-                <p className="rv-card-eyebrow">
-                  <span aria-hidden className="rv-card-dot" />
-                  {t("landing.rv.cards.ethi.eyebrow")}
-                </p>
-                <h2 className="rv-card-title mt-4">{t("landing.rv.cards.ethi.title")}</h2>
-                <p className="apple-subtitle mt-5 max-w-[480px]">
-                  {t("landing.rv.cards.ethi.desc")}
-                </p>
-                <p
-                  className="mt-7 text-body-sm font-mono"
-                  style={{ color: "#a1a1a6", letterSpacing: "0.02em" }}
-                >
-                  {t("landing.ethi.example_label")}
-                </p>
-              </div>
-
-              <div className="flex flex-col gap-3">
-                <ChatBubble side="user">{t("landing.ethi.chat_q1")}</ChatBubble>
-                <ChatBubble side="ethi">{t("landing.ethi.chat_a1")}</ChatBubble>
-                <ChatBubble side="user">{t("landing.ethi.chat_q2")}</ChatBubble>
-                <ChatBubble side="ethi">{t("landing.ethi.chat_a2")}</ChatBubble>
-              </div>
-            </div>
-          </section>
-        </Reveal>
-
-        {/* 6 · Méthode ouverte + test ESG sans compte (solar) */}
-        <Reveal>
-          <ShowcaseCard
-            accent="accent-solar"
-            eyebrow={t("landing.rv.cards.method.eyebrow")}
-            title={t("landing.rv.cards.method.title")}
-            desc={t("landing.rv.cards.method.desc")}
-            action={
-              <Link to="/methodologie" className="apple-link mt-7">
-                {t("landing.rv.cards.method.cta")} <span aria-hidden>›</span>
-              </Link>
-            }
-            visual={<EsgQuickCheck embedded />}
-            stacked
-          />
-        </Reveal>
-      </div>
-
-      {/* CTA FINAL */}
-      <section className="px-6 pt-10 pb-20">
-        <Reveal>
-          <div className="max-w-[1100px] mx-auto rv-card rv-card--ink text-center py-20 md:py-28">
-            <h2 className="rv-section-title mx-auto max-w-[620px] text-balance">
-              {t("landing.rv.final.title")}
-            </h2>
-            <p className="apple-subtitle mx-auto max-w-[520px] mt-5">
-              {isAuthed
-                ? t("landing.rv.final.subtitle_authed")
-                : t("landing.rv.final.subtitle_new")}
+          <div className="ink-section px-6 py-16 md:py-24 text-center">
+            <h2 className="mx-auto max-w-[18ch] text-paper">{t("landing.rv.final.title")}</h2>
+            <p className="mt-5 mx-auto max-w-[44ch] text-body-lg" style={{ color: "#b4b1a8" }}>
+              {isAuthed ? t("landing.rv.final.subtitle_authed") : t("landing.rv.final.subtitle_new")}
             </p>
 
             <div className="mt-10 flex flex-col items-center gap-4">
               {isAuthed ? (
-                <Link to="/dashboard" className="apple-btn-primary">
-                  {t("landing.rv.hero.cta_authed")}
-                </Link>
+                <Button asChild size="pill" className="border-paper bg-paper text-ink hover:bg-transparent hover:text-paper">
+                  <Link to="/dashboard">{t("landing.rv.hero.cta_authed")}</Link>
+                </Button>
               ) : (
                 <>
-                  <Link
-                    to="/onboarding"
-                    search={{ guest: true }}
-                    onClick={onCta("final", "preview")}
-                    className="apple-btn-primary"
-                    style={{ background: "var(--mint)", color: "#ffffff" }}
+                  <Button
+                    asChild
+                    size="pill"
+                    className="border-paper bg-paper text-ink hover:bg-transparent hover:text-paper"
                   >
-                    {t("landing.rv.hero.cta_primary")}
-                  </Link>
-                  <p className="text-body-sm" style={{ color: "#a1a1a6" }}>
-                    {t("landing.hero.trust_line")}
-                  </p>
+                    <Link to="/onboarding" search={{ guest: true }} onClick={onCta("final", "preview")}>
+                      {t("landing.rv.hero.cta_primary")}
+                    </Link>
+                  </Button>
+                  <p className="stamp">{t("landing.hero.trust_line")}</p>
                 </>
               )}
             </div>
 
             <p
-              className="mt-10 mx-auto max-w-[560px] text-caption leading-[1.5]"
-              style={{ color: "#8e8e94" }}
+              className="mt-12 mx-auto max-w-[60ch] text-body-sm leading-relaxed"
+              style={{ color: "#9c998f" }}
             >
               {t("landing.badge_simulation")}
             </p>
@@ -485,66 +375,43 @@ function Landing() {
         </Reveal>
       </section>
 
-      {/* FOOTER */}
-      <footer
-        className="px-6 py-10 text-label text-[color:var(--apple-text-2)]"
-        style={{ background: "var(--apple-surface)", borderTop: "1px solid #d2d2d7" }}
-      >
-        <div className="max-w-[1100px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <span
-              className="inline-flex items-center gap-1.5 text-body-lg font-bold text-[color:var(--apple-text)]"
-              style={{ letterSpacing: "-0.02em" }}
-            >
-              SEEDOW
-              <span
-                aria-hidden
-                className="inline-block w-[5px] h-[5px] rounded-full"
-                style={{ background: "var(--mint)" }}
-              />
-            </span>
-            <span>{t("landing.footer.copyright")}</span>
+      {/* ── FOOTER ────────────────────────────────────────────────── */}
+      <footer className="border-t border-ink">
+        <div className="max-w-[1080px] mx-auto px-6 py-10 flex flex-col md:flex-row md:items-start justify-between gap-8">
+          <div>
+            <Wordmark />
+            <p className="stamp mt-3">{t("landing.footer.copyright")}</p>
           </div>
 
-          <nav className="flex flex-wrap gap-x-6 gap-y-2">
-            <Link to="/cours" className="hover:text-[color:var(--apple-text)]">
-              {t("landing.footer.courses")}
-            </Link>
-            <Link to="/methodologie" className="hover:text-[color:var(--apple-text)]">
-              {t("landing.footer.methodology")}
-            </Link>
-            <Link to="/observatoire" className="hover:text-[color:var(--apple-text)]">
-              {t("landing.footer.observatory")}
-            </Link>
-            <Link to="/tarifs" className="hover:text-[color:var(--apple-text)]">
-              {t("landing.footer.pricing")}
-            </Link>
-            <Link to="/aide" className="hover:text-[color:var(--apple-text)]">
-              {t("landing.footer.help")}
-            </Link>
+          <nav className="grid grid-cols-2 sm:grid-cols-3 gap-x-10 gap-y-2.5">
+            {[
+              { to: "/cours", label: t("landing.footer.courses") },
+              { to: "/methodologie", label: t("landing.footer.methodology") },
+              { to: "/observatoire", label: t("landing.footer.observatory") },
+              { to: "/tarifs", label: t("landing.footer.pricing") },
+              { to: "/aide", label: t("landing.footer.help") },
+              { to: "/mentions-legales", label: t("landing.footer.legal") },
+              { to: "/confidentialite", label: t("landing.footer.privacy") },
+              { to: "/cgu", label: t("landing.footer.terms") },
+            ].map((l) => (
+              <Link key={l.to} to={l.to} className="stamp hover:text-ink">
+                {l.label}
+              </Link>
+            ))}
             {isAuthed ? (
-              <Link to="/dashboard" className="hover:text-[color:var(--apple-text)]">
+              <Link to="/dashboard" className="stamp hover:text-ink">
                 {t("landing.footer.my_space")}
               </Link>
             ) : (
               <Link
                 to="/auth"
                 search={{ redirect: "/le-fil", mode: "login" }}
-                className="hover:text-[color:var(--apple-text)]"
+                className="stamp hover:text-ink"
               >
                 {t("landing.footer.login")}
               </Link>
             )}
-            <Link to="/mentions-legales" className="hover:text-[color:var(--apple-text)]">
-              {t("landing.footer.legal")}
-            </Link>
-            <Link to="/confidentialite" className="hover:text-[color:var(--apple-text)]">
-              {t("landing.footer.privacy")}
-            </Link>
-            <Link to="/cgu" className="hover:text-[color:var(--apple-text)]">
-              {t("landing.footer.terms")}
-            </Link>
-            <a href="mailto:hello@seedow.life" className="hover:text-[color:var(--apple-text)]">
+            <a href="mailto:hello@seedow.life" className="stamp hover:text-ink">
               {t("landing.footer.contact")}
             </a>
           </nav>
@@ -554,9 +421,19 @@ function Landing() {
   );
 }
 
-/* ---------- Sub-components ---------- */
+/* ---------- Sous-composants ---------- */
 
-/** Apparition au scroll — sobre (fade + 14px), neutralisée si reduced-motion. */
+/** Marque : Fraunces + un carré d'encre (pas un rond — cf. §4.8). */
+function Wordmark() {
+  return (
+    <Link to="/" className="inline-flex items-baseline gap-1.5 font-display text-[21px] text-ink">
+      seedow
+      <span aria-hidden className="inline-block w-[5px] h-[5px] bg-mint" />
+    </Link>
+  );
+}
+
+/** Apparition au scroll — un fondu de 6px, pas une cascade différée. */
 function Reveal({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -574,25 +451,83 @@ function Reveal({ children }: { children: React.ReactNode }) {
           obs.disconnect();
         }
       },
-      { rootMargin: "0px 0px -12% 0px" },
+      { rootMargin: "0px 0px -10% 0px" },
     );
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
 
   return (
-    <div ref={ref} className={visible ? "rv-reveal is-in" : "rv-reveal"}>
+    <div ref={ref} className={visible ? "reveal in-view" : "reveal"}>
       {children}
     </div>
   );
 }
 
 /**
- * Carte de parcours — grande zone tactile (toute la carte est un lien), pensée
- * pouce sur mobile. Réponds à « quelle est la prochaine chose que je peux faire ? »
+ * Chapitre — l'unité de composition de la page. Numéro en marge (mono),
+ * filet d'ouverture, titre éditorial. Pas de boîte, pas d'ombre, pas de
+ * rayon : c'est un document.
  */
-function PathCard({
-  accent,
+function Chapter({
+  number,
+  eyebrow,
+  title,
+  desc,
+  action,
+  side = false,
+  children,
+}: {
+  number: string;
+  eyebrow?: string;
+  title: string;
+  desc?: string;
+  action?: React.ReactNode;
+  /** true = visuel à droite du texte ; false = visuel sous le texte. */
+  side?: boolean;
+  children?: React.ReactNode;
+}) {
+  return (
+    <section className="max-w-[1080px] mx-auto px-6 py-16 md:py-20 border-t border-paper-3">
+      <Reveal>
+        <div className={side ? "grid lg:grid-cols-2 gap-12 lg:gap-16 items-start" : ""}>
+          <div className="flex gap-5 md:gap-8">
+            <span aria-hidden className="stamp pt-2 shrink-0 tabular-nums">
+              {number}
+            </span>
+            <div className="min-w-0">
+              {eyebrow && <p className="stamp mb-3">{eyebrow}</p>}
+              <h2 className="max-w-[18ch]">{title}</h2>
+              {desc && (
+                <p className="mt-5 max-w-[52ch] text-body-lg leading-relaxed text-ink-2">{desc}</p>
+              )}
+              {action && <div className="mt-8">{action}</div>}
+            </div>
+          </div>
+          {children && (
+            <div className={side ? "" : "mt-12 md:pl-[calc(1.25rem+2ch)]"}>{children}</div>
+          )}
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+/** Cellule du registre de preuves — filets verticaux, mono. */
+function LedgerCell({ children, last = false }: { children: React.ReactNode; last?: boolean }) {
+  return (
+    <p
+      className={`stamp normal-case tracking-[0.06em] leading-relaxed py-5 px-4 first:pl-0 ${
+        last ? "" : "md:border-r border-paper-3"
+      }`}
+    >
+      {children}
+    </p>
+  );
+}
+
+/** Ligne de parcours — toute la zone est cliquable (grande cible tactile). */
+function PathRow({
   eyebrow,
   title,
   desc,
@@ -600,8 +535,8 @@ function PathCard({
   to,
   search,
   onClick,
+  last = false,
 }: {
-  accent: string;
   eyebrow: string;
   title: string;
   desc: string;
@@ -609,170 +544,132 @@ function PathCard({
   to: string;
   search?: Record<string, unknown>;
   onClick?: () => void;
+  last?: boolean;
 }) {
   return (
     <Link
       to={to}
       search={search}
       onClick={onClick}
-      className="apple-card group flex flex-col p-6 min-h-[168px] transition-transform duration-200 hover:-translate-y-0.5 outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--mint)]"
-      style={{ border: "1px solid var(--paper-3)" }}
+      className={`group flex flex-col p-6 md:py-8 outline-none border-b md:border-b-0 border-paper-3 hover:bg-paper-2 focus-visible:ring-2 focus-visible:ring-ink ${
+        last ? "" : "md:border-r"
+      }`}
     >
-      <span
-        className="font-mono text-caption uppercase tracking-[0.14em] inline-flex items-center gap-2"
-        style={{ color: accent }}
-      >
-        <span
-          aria-hidden
-          className="inline-block w-[7px] h-[7px] rounded-full"
-          style={{ background: accent }}
-        />
-        {eyebrow}
-      </span>
-      <h3
-        className="mt-3 text-body-lg font-semibold text-[color:var(--apple-text)]"
-        style={{ letterSpacing: "-0.01em" }}
-      >
-        {title}
-      </h3>
-      <p className="mt-2 text-body-sm leading-[1.45] text-[color:var(--apple-text-2)]">{desc}</p>
-      <span
-        className="mt-auto pt-4 text-body-sm font-semibold inline-flex items-center gap-1"
-        style={{ color: accent }}
-      >
+      <span className="stamp">{eyebrow}</span>
+      <h3 className="mt-3">{title}</h3>
+      <p className="mt-2 text-body-sm leading-relaxed text-ink-2">{desc}</p>
+      <span className="mt-auto pt-5 stamp text-ice-ink">
         {cta}
-        <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-0.5">
-          ›
+        <span aria-hidden className="ml-1">
+          →
         </span>
       </span>
     </Link>
   );
 }
 
-function ShowcaseCard({
-  accent,
-  eyebrow,
-  title,
-  desc,
-  action,
-  visual,
-  stacked = false,
-}: {
-  accent: string;
-  eyebrow: string;
-  title: string;
-  desc: string;
-  action?: React.ReactNode;
-  visual: React.ReactNode;
-  stacked?: boolean;
-}) {
-  return (
-    <section className={`${accent} rv-card`}>
-      <div className={stacked ? "" : "grid lg:grid-cols-2 gap-10 lg:gap-14 items-center"}>
-        <div className={stacked ? "max-w-[680px]" : ""}>
-          <p className="rv-card-eyebrow">
-            <span aria-hidden className="rv-card-dot" />
-            {eyebrow}
-          </p>
-          <h2 className="rv-card-title mt-4">{title}</h2>
-          <p className="apple-subtitle mt-5 max-w-[520px]">{desc}</p>
-          {action}
-        </div>
-        <div className={stacked ? "mt-10" : ""}>{visual}</div>
-      </div>
-    </section>
-  );
-}
-
-function HeroPreview({ t }: { t: (key: string, opts?: Record<string, unknown>) => string }) {
+/**
+ * Bloc de preuve du hero — un extrait de simulation, avec ses chiffres en
+ * chasse fixe et son attestation. Ce n'est pas une capture d'écran décorative :
+ * c'est la démonstration de ce que promet le titre.
+ */
+function HeroProof({ t }: { t: (key: string, opts?: Record<string, unknown>) => string }) {
   const convictions = [
-    { label: t("landing.hero2.preview.conv_climate"), weight: 42, color: "var(--mint)" },
-    { label: t("landing.hero2.preview.conv_biodiversity"), weight: 33, color: "var(--ice)" },
-    { label: t("landing.hero2.preview.conv_social"), weight: 25, color: "var(--volt)" },
+    { label: t("landing.hero2.preview.conv_climate"), weight: 42 },
+    { label: t("landing.hero2.preview.conv_biodiversity"), weight: 33 },
+    { label: t("landing.hero2.preview.conv_social"), weight: 25 },
   ];
 
   return (
-    <div
-      className="apple-card w-full"
-      style={{ border: "1px solid var(--paper-3)", padding: "22px 22px 26px" }}
-      aria-hidden
-    >
-      <div className="flex items-center justify-between">
-        <p className="text-caption font-mono uppercase tracking-[0.16em] text-[color:var(--apple-text-2)]">
-          {t("landing.hero2.preview.label")}
-        </p>
-        <span className="text-caption font-mono text-[color:var(--apple-text-2)]">
-          {t("landing.hero2.preview.source")}
-        </span>
-      </div>
+    <div className="sheet pt-5" aria-hidden>
+      <p className="stamp">{t("landing.hero2.preview.label")}</p>
 
-      <div className="mt-5 flex flex-col gap-3">
-        {convictions.map((c) => (
+      <div className="mt-6 flex flex-col gap-4">
+        {convictions.map((c, i) => (
           <div key={c.label}>
-            <div className="flex items-baseline justify-between text-body-sm text-[color:var(--apple-text)]">
-              <span className="inline-flex items-center gap-2">
-                <span
-                  aria-hidden
-                  className="inline-block w-[7px] h-[7px] rounded-full"
-                  style={{ background: c.color }}
-                />
-                {c.label}
-              </span>
-              <span className="font-mono text-[color:var(--apple-text-2)]">{c.weight}%</span>
+            <div className="flex items-baseline justify-between text-body-sm">
+              <span className="text-ink">{c.label}</span>
+              <span className="font-value text-label text-ink-2">{c.weight} %</span>
             </div>
-            <div
-              className="mt-1.5 h-[6px] rounded-full overflow-hidden"
-              style={{ background: "var(--paper-3)" }}
-            >
+            <div className="mt-2 h-[3px] bg-paper-3">
               <div
-                className="h-full rounded-full"
-                style={{ width: `${c.weight}%`, background: c.color }}
+                className="h-full bg-ink trace"
+                style={{ width: `${c.weight}%`, animationDelay: `${0.15 + i * 0.08}s` }}
               />
             </div>
           </div>
         ))}
       </div>
 
-      <div
-        className="mt-6 pt-5 grid grid-cols-2 gap-4"
-        style={{ borderTop: "1px solid var(--paper-3)" }}
-      >
-        <KPIFigure
-          size="sm"
-          label={t("landing.hero2.preview.kpi_esg")}
-          value="74 / 100"
-          tone="mint"
-        />
-        <KPIFigure
-          size="sm"
-          label={t("landing.hero2.preview.kpi_carbon")}
-          value="−58 %"
-          tone="ice"
-        />
+      <div className="mt-7 pt-5 border-t border-paper-3 grid grid-cols-2 gap-6">
+        <div>
+          <p className="stamp">{t("landing.hero2.preview.kpi_esg")}</p>
+          <p className="font-value text-[32px] leading-none mt-2 text-ink">74</p>
+        </div>
+        <div>
+          <p className="stamp">{t("landing.hero2.preview.kpi_carbon")}</p>
+          <p className="font-value text-[32px] leading-none mt-2 text-mint-ink">−58 %</p>
+        </div>
       </div>
 
-      <p className="mt-4 text-caption leading-[1.45] text-[color:var(--apple-text-2)]">
-        {t("landing.hero2.preview.note")}
-      </p>
+      <Provenance
+        className="mt-5"
+        status="modelled"
+        source="MSCI ESG"
+        note={t("landing.hero2.preview.note")}
+      />
     </div>
   );
 }
 
-function ChatBubble({ side, children }: { side: "user" | "ethi"; children: React.ReactNode }) {
-  const isUser = side === "user";
+/** Preuve d'impact — trois mesures, une attestation. */
+function ImpactProof({ t }: { t: (key: string, opts?: Record<string, unknown>) => string }) {
   return (
-    <div className={isUser ? "self-end" : "self-start"} style={{ maxWidth: "85%" }}>
-      <div
-        className="text-body-lg leading-[1.4] px-5 py-3"
-        style={{
-          background: isUser ? "var(--mint)" : "var(--apple-dark-2)",
-          color: "#ffffff",
-          borderRadius: 22,
-          marginLeft: isUser ? "auto" : 0,
-        }}
+    <div className="sheet pt-5">
+      <p className="stamp">{t("comparatif_panel.impact_score")}</p>
+      <p className="font-value text-[clamp(48px,7vw,72px)] leading-none mt-3 text-ink">
+        74
+        <span className="text-ink-3 text-[0.4em] ml-1.5">/ 100</span>
+      </p>
+
+      <div className="mt-8 pt-5 border-t border-paper-3 grid grid-cols-2 gap-6">
+        <div>
+          <p className="stamp">{t("landing.hero2.preview.kpi_carbon")}</p>
+          <p className="font-value text-[28px] leading-none mt-2 text-mint-ink">−58 %</p>
+        </div>
+        <div>
+          <p className="stamp">{t("comparatif_panel.simulated_10y")}</p>
+          <p className="font-value text-[28px] leading-none mt-2 text-ink">24 180 €</p>
+          <p className="stamp mt-2 normal-case tracking-normal text-ink-3">
+            {t("comparatif_panel.on_invested", { amount: "10 000" })}
+          </p>
+        </div>
+      </div>
+
+      <Provenance
+        className="mt-5"
+        status="modelled"
+        source="MSCI ESG"
+        note={t("landing.hero2.preview.note")}
+      />
+    </div>
+  );
+}
+
+/**
+ * Échange avec Ethi — cité comme un procès-verbal (filet + attribution),
+ * pas comme une bulle de messagerie arrondie.
+ */
+function Exchange({ who, children }: { who: "user" | "ethi"; children: React.ReactNode }) {
+  const isUser = who === "user";
+  return (
+    <div className={`border-l-2 pl-4 ${isUser ? "border-paper-3" : "border-ink"}`}>
+      <p className="stamp">{isUser ? "—" : "ethi"}</p>
+      <p
+        className={`mt-1.5 text-body-lg leading-relaxed ${isUser ? "text-ink-2 italic" : "text-ink"}`}
       >
         {children}
-      </div>
+      </p>
     </div>
   );
 }

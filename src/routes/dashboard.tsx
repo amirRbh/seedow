@@ -28,6 +28,7 @@ import { UnderstandPortfolioCard } from "@/components/dashboard/UnderstandPortfo
 import { GuestDashboard } from "@/components/dashboard/GuestDashboard";
 import { SimulationBadge } from "@/components/common/SimulationBadge";
 import { clearGuestSimulation } from "@/lib/beta/guest";
+import { Provenance } from "@/components/ui/Provenance";
 
 export const Route = createFileRoute("/dashboard")({
   validateSearch: (s: Record<string, unknown>): { guest?: true } => ({
@@ -172,11 +173,9 @@ function Dashboard() {
           transition={{ delay: 0.1 }}
           className="px-5 pt-6"
         >
-          <p className="text-caption uppercase tracking-wider text-ink-3 font-medium">
-            {t("dashboard.total_value")}
-          </p>
-          <h2 className="font-value text-figure-hero text-ink mt-1">
-            <sup className="text-xl sm:text-2xl align-super mr-1">€</sup>
+          <p className="stamp">{t("dashboard.total_value")}</p>
+          <h2 className="text-figure-hero text-ink mt-2.5">
+            <sup className="text-[0.42em] align-super mr-1 text-ink-3">€</sup>
             <AnimatedFigure
               value={totalValue}
               from={0}
@@ -189,8 +188,8 @@ function Dashboard() {
             />
           </h2>
           <div
-            className={`inline-flex items-center gap-1.5 mt-3 px-3 py-1 rounded-full text-xs font-semibold transition-colors duration-500 ${
-              isGrowing ? "bg-highlight-5 text-highlight-1" : "bg-alert-tint text-rust"
+            className={`inline-flex items-center gap-1.5 mt-3.5 font-value text-body ${
+              isGrowing ? "text-ink" : "text-alert-ink"
             }`}
           >
             <svg
@@ -208,8 +207,20 @@ function Dashboard() {
             </svg>
             {isGrowing ? "+" : ""}
             {formatCurrency(gain, lang)} · {formatPercent(returnPct / 100, lang, 2)}
-            <span className="text-ink-3 font-normal ml-1">{t("dashboard.since_start")}</span>
+            <span className="stamp ml-1.5">{t("dashboard.since_start")}</span>
           </div>
+
+          {/* Le solde porte son attestation : d'où vient le prix, quand, sur
+              quelle part du portefeuille (CLAUDE.md §1.2). */}
+          {portfolio && holdings.length > 0 && (
+            <Provenance
+              className="mt-3"
+              status="verified"
+              source="Yahoo Finance"
+              asOf={new Date()}
+              coverage={100}
+            />
+          )}
 
           {/* Pourquoi ce chiffre bouge — désamorce l'opacité du total pour un néophyte */}
           {portfolio && holdings.length > 0 && (
@@ -218,7 +229,7 @@ function Dashboard() {
                 type="button"
                 onClick={() => setWhyOpen((o) => !o)}
                 aria-expanded={whyOpen}
-                className="inline-flex items-center gap-1 text-caption text-ink-3 hover:text-ink-2 border-b border-dotted border-ink-3/60 transition-colors"
+                className="inline-flex items-center gap-1 stamp hover:text-ink border-b border-dotted border-ink-3 transition-colors"
               >
                 {t("dashboard.why_cta")}
                 <svg
@@ -242,7 +253,7 @@ function Dashboard() {
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
-                    <div className="mt-2 rounded-[14px] bg-paper-2 border border-paper-3 p-3.5 text-body-sm text-ink-2 leading-relaxed space-y-1.5">
+                    <div className="mt-3 border-t border-ink pt-3 text-body-sm text-ink-2 leading-relaxed space-y-1.5">
                       <p>
                         {t("dashboard.why_assets", { count: holdings.length })}{" "}
                         {t("dashboard.why_moves")}
@@ -258,7 +269,9 @@ function Dashboard() {
                               })
                             : t("dashboard.why_flat")}
                       </p>
-                      <p className="text-caption text-ink-3">{t("dashboard.why_virtual")}</p>
+                      <p className="stamp normal-case tracking-[0.06em]">
+                        {t("dashboard.why_virtual")}
+                      </p>
                     </div>
                   </motion.div>
                 )}
@@ -303,30 +316,17 @@ function Dashboard() {
               ))}
             </div>
           ) : holdings.length === 0 ? (
-            <div className="border border-dashed border-paper-3 rounded-[14px] p-8 text-center flex flex-col items-center">
-              {/* Illustration légère — pousse/graine, décorative */}
-              <svg
-                viewBox="0 0 48 48"
-                className="w-10 h-10 text-ink-3 mb-4"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={1.6}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M24 42V22" />
-                <path d="M24 26c0-6 4-11 11-12 0 6-4 11-11 12Z" />
-                <path d="M24 30c0-5-3-9-9-10 0 5 3 9 9 10Z" />
-                <path d="M14 42h20" />
-              </svg>
-              <p className="text-body-sm text-ink-2 mb-4 max-w-[240px]">
+            /* État vide : pas de pictogramme décoratif (DA V2 §4.10) — un
+               feuillet vide, réglé, qui dit ce qui manque et où aller. */
+            <div className="border-t border-ink pt-5">
+              <p className="stamp">{t("dashboard.total_value")}</p>
+              <p className="mt-3 text-body text-ink-2 max-w-[42ch] leading-relaxed">
                 {t("dashboard.empty_portfolio")}
               </p>
               <Link
                 to="/onboarding"
                 search={{ new: undefined }}
-                className="inline-block px-4 py-2 text-label font-medium border border-ink rounded-full hover:bg-ink hover:text-paper transition-colors"
+                className="mt-5 inline-flex h-11 items-center rounded-[--radius] border border-ink bg-ink px-5 text-body font-medium text-paper transition-colors hover:bg-transparent hover:text-ink"
               >
                 {t("dashboard.first_investment")}
               </Link>
@@ -355,18 +355,20 @@ function Dashboard() {
         >
           <Link
             to="/portfolio"
-            className="w-full flex items-center justify-between p-4 rounded-2xl bg-paper-2 hover:bg-paper-3 transition-colors"
+            className="w-full flex items-center justify-between gap-4 border-t border-ink py-4 hover:bg-paper-2 transition-colors"
           >
             <div className="text-left">
-              <p className="text-sm font-semibold text-ink">{t("dashboard.see_detail")}</p>
-              <p className="text-xs text-ink-3 mt-0.5">{t("dashboard.see_detail_desc")}</p>
+              <p className="text-body font-medium text-ink">{t("dashboard.see_detail")}</p>
+              <p className="stamp mt-1 normal-case tracking-[0.06em]">
+                {t("dashboard.see_detail_desc")}
+              </p>
             </div>
             <svg
               viewBox="0 0 24 24"
-              className="w-5 h-5 text-ink-3"
+              className="w-4 h-4 text-ink-3"
               fill="none"
               stroke="currentColor"
-              strokeWidth="2"
+              strokeWidth="1.25"
             >
               <path d="M9 6l6 6-6 6" />
             </svg>

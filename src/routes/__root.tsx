@@ -85,7 +85,7 @@ export const Route = createRootRoute({
       { name: "twitter:image", content: "https://seedow.life/og-seedow.jpg" },
 
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "theme-color", content: "#0d1f14" },
+      { name: "theme-color", content: "#faf8f3" },
       { name: "mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
@@ -97,7 +97,10 @@ export const Route = createRootRoute({
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap",
+        // DA V2 « Preuve » (docs/DA-V2-PREUVE.md) — trois voix, trois métiers :
+        // Fraunces = éditorial (titres), Inter = interface et prose,
+        // IBM Plex Mono = tout ce qui est mesurable (chiffres, labels, sources).
+        href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap",
       },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "apple-touch-icon", href: "/favicon.png" },
