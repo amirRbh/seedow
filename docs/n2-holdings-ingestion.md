@@ -7,11 +7,11 @@
 
 ## 1. Sources officielles retenues (gratuites, sans clé)
 
-| Source | Type | Fournit | Coût |
-|---|---|---|---|
+| Source              | Type                                                              | Fournit                       | Coût                    |
+| ------------------- | ----------------------------------------------------------------- | ----------------------------- | ----------------------- |
 | iShares / BlackRock | fichier CSV de composition officiel, daté (`Fund Holdings as of`) | holdings ligne à ligne + ISIN | **gratuit, aucune clé** |
-| Amundi ETF | documents officiels (CSV/PDF) | holdings | gratuit |
-| Vanguard UCITS | documents officiels | holdings | gratuit |
+| Amundi ETF          | documents officiels (CSV/PDF)                                     | holdings                      | gratuit                 |
+| Vanguard UCITS      | documents officiels                                               | holdings                      | gratuit                 |
 
 **Aucune dépendance payante.** Ces fichiers sont des téléchargements publics. Le
 parser CSV **iShares** est implémenté et testé (`data-engine/holdings.ts`,
@@ -25,16 +25,16 @@ resolveUrl(fonds)  →  httpDownload  →  parse CSV  →  QC dure  →  persist
    (URL curée)         (never throws)   (as_of+lignes)  (rejette)   (daté + sourcé)
 ```
 
-| Étape | Fichier | Statut |
-|---|---|---|
-| Résolution d'URL officielle | `routes/hooks/ingest-holdings.ts` (config `HOLDINGS_SOURCES`) | **neuf** |
-| Téléchargement | `data-engine/download.server.ts` (`httpDownload`) | existant |
-| Parsing CSV iShares | `data-engine/holdings.ts` | existant |
-| Contrôle qualité | `data-engine/holdings-quality.ts` | **neuf** |
+| Étape                           | Fichier                                                           | Statut   |
+| ------------------------------- | ----------------------------------------------------------------- | -------- |
+| Résolution d'URL officielle     | `routes/hooks/ingest-holdings.ts` (config `HOLDINGS_SOURCES`)     | **neuf** |
+| Téléchargement                  | `data-engine/download.server.ts` (`httpDownload`)                 | existant |
+| Parsing CSV iShares             | `data-engine/holdings.ts`                                         | existant |
+| Contrôle qualité                | `data-engine/holdings-quality.ts`                                 | **neuf** |
 | Construction/persistance lignes | `data-engine/holdings.ts` (`buildHoldingRows`, `persistHoldings`) | existant |
-| Writer Supabase | `data-engine/holdings.supabase.ts` | existant |
-| **Orchestrateur** | `data-engine/holdings-ingest.ts` | **neuf** |
-| **Hook d'exécution** | `routes/hooks/ingest-holdings.ts` | **neuf** |
+| Writer Supabase                 | `data-engine/holdings.supabase.ts`                                | existant |
+| **Orchestrateur**               | `data-engine/holdings-ingest.ts`                                  | **neuf** |
+| **Hook d'exécution**            | `routes/hooks/ingest-holdings.ts`                                 | **neuf** |
 
 Schéma `fund_holdings` (déjà présent, `20260812130000_data_engine_foundation.sql`) :
 historisé par `(asset_id, security_name, as_of)`, avec `source_id`/`source_url`/
@@ -43,6 +43,7 @@ historisé par `(asset_id, security_name, as_of)`, avec `source_id`/`source_url`
 ## 3. Contrôles qualité (`holdings-quality.ts`)
 
 Un lot est **rejeté** (rien persisté) ou **`review_required`** selon :
+
 - poids impossible (< 0 ou > 100) → rejeté ;
 - somme des poids > 100 + tolérance → rejetée (double comptage/parsing) ; sous-couverture tolérée ;
 - ISIN présent mais checksum/format incohérent → review ;
@@ -80,6 +81,7 @@ Un lot est **rejeté** (rien persisté) ou **`review_required`** selon :
   doit confirmer.
 
 ### Pour exécuter en production
+
 1. Autoriser l'egress sortant vers les domaines des sociétés de gestion.
 2. Renseigner le secret `HOLDINGS_SOURCES` = `{ "<ISIN>": "<url csv officielle>" }`
    pour un premier lot de fonds représentatifs (ex. iShares Core MSCI World,
@@ -88,6 +90,7 @@ Un lot est **rejeté** (rien persisté) ou **`review_required`** selon :
 4. `POST /hooks/recompute-carbon-estimates` pour activer le carbone bottom-up.
 
 ## 7. Reste à faire
+
 - Parsers **Amundi** et **Vanguard** (formats propres, sur échantillon réel).
 - Résolution d'URL automatique via le **product screener** iShares (mapping
   ISIN→productId) plutôt que config manuelle, quand l'egress est ouvert.

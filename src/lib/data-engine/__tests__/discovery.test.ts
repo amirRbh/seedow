@@ -27,7 +27,9 @@ describe("mapISharesAssetClass", () => {
   });
 
   it("routes thematic equity by keyword", () => {
-    expect(mapISharesAssetClass("Equity", "Sector", "iShares Global Clean Energy")).toBe("thematic");
+    expect(mapISharesAssetClass("Equity", "Sector", "iShares Global Clean Energy")).toBe(
+      "thematic",
+    );
     expect(mapISharesAssetClass("Equity", "Thematic", "iShares Global Water")).toBe("thematic");
   });
 

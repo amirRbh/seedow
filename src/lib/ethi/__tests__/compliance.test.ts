@@ -1,9 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  detectPersonalizedRecommendation,
-  evaluateEthiReply,
-  SAFE_FALLBACK,
-} from "../compliance";
+import { detectPersonalizedRecommendation, evaluateEthiReply, SAFE_FALLBACK } from "../compliance";
 
 // Réponses NON conformes : recommandation d'investissement personnalisée/chiffrée.
 // Le filet DOIT les attraper.
@@ -67,7 +63,8 @@ describe("evaluateEthiReply", () => {
   });
 
   it("passes a compliant reply through untouched", () => {
-    const ok = "**Constat.** Ton portefeuille a 12 lignes. **Piste à explorer.** Le simulateur peut aider.";
+    const ok =
+      "**Constat.** Ton portefeuille a 12 lignes. **Piste à explorer.** Le simulateur peut aider.";
     const r = evaluateEthiReply(ok, "fr");
     expect(r.safe).toBe(true);
     expect(r.content).toBe(ok);
