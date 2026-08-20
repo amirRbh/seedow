@@ -28,13 +28,13 @@ ESG Gate  (PRIMARY + VERIFIED ⇒ PASS ; SECONDARY seul / UNKNOWN ⇒ FAIL)
 
 ## Les briques (génériques, injectées — §5 « pas 20 scrapers »)
 
-| Brique                | Fichier                        | Rôle                                                                                  |
-| --------------------- | ------------------------------ | ------------------------------------------------------------------------------------- |
-| `DocumentResolver`    | `pipeline.ts` (interface)      | ISIN → fonds officiel + liste de documents. Ordonnés par priorité (§2).               |
-| `GecoResolver`        | `geco-resolver.ts`             | Adapte le client GECO **existant** (`data-engine/sources/geco.server`). Source PRIMARY. |
-| `downloadAndExtract`  | `document-extractor.ts`        | Télécharge + extrait le texte (backend PDF injecté), avec cache par URL/empreinte.     |
-| `extractSfdrEvidence` | `sfdr-parser.ts`               | Détermine l'article SFDR **et la preuve**, ou `null`. Bilingue, versionné.            |
-| `runSfdrForIsin`      | `pipeline.ts`                  | Orchestre le tout ; renvoie une observation traçable OU un échec catégorisé (§12).    |
+| Brique                | Fichier                   | Rôle                                                                                    |
+| --------------------- | ------------------------- | --------------------------------------------------------------------------------------- |
+| `DocumentResolver`    | `pipeline.ts` (interface) | ISIN → fonds officiel + liste de documents. Ordonnés par priorité (§2).                 |
+| `GecoResolver`        | `geco-resolver.ts`        | Adapte le client GECO **existant** (`data-engine/sources/geco.server`). Source PRIMARY. |
+| `downloadAndExtract`  | `document-extractor.ts`   | Télécharge + extrait le texte (backend PDF injecté), avec cache par URL/empreinte.      |
+| `extractSfdrEvidence` | `sfdr-parser.ts`          | Détermine l'article SFDR **et la preuve**, ou `null`. Bilingue, versionné.              |
+| `runSfdrForIsin`      | `pipeline.ts`             | Orchestre le tout ; renvoie une observation traçable OU un échec catégorisé (§12).      |
 
 Un second resolver (asset-manager) s'ajoute **sans toucher le cœur** : il suffit
 d'implémenter `DocumentResolver` et de l'insérer dans la liste ordonnée. C'est le
@@ -43,11 +43,11 @@ mesure le justifie (§13).
 
 ## Hiérarchie des sources (§2)
 
-| Niveau        | Exemples                                        | `source_tier` | `verification_status` | Passe le gate ?          |
-| ------------- | ----------------------------------------------- | ------------- | --------------------- | ------------------------ |
-| 1 — primaire  | AMF/GECO, KID/DICI/prospectus officiels          | `PRIMARY`     | `VERIFIED`            | **Oui** (avec preuve)    |
-| 2 — secondaire | extraETF, justETF, agrégateurs                  | `SECONDARY`   | `UNVERIFIED`          | **Non** (à lui seul)     |
-| 3 — aucune    | pas de preuve trouvée                            | `UNKNOWN`     | `UNKNOWN`             | **Non** — reste bloqué   |
+| Niveau         | Exemples                                | `source_tier` | `verification_status` | Passe le gate ?        |
+| -------------- | --------------------------------------- | ------------- | --------------------- | ---------------------- |
+| 1 — primaire   | AMF/GECO, KID/DICI/prospectus officiels | `PRIMARY`     | `VERIFIED`            | **Oui** (avec preuve)  |
+| 2 — secondaire | extraETF, justETF, agrégateurs          | `SECONDARY`   | `UNVERIFIED`          | **Non** (à lui seul)   |
+| 3 — aucune     | pas de preuve trouvée                   | `UNKNOWN`     | `UNKNOWN`             | **Non** — reste bloqué |
 
 Le POC n'utilise que le **niveau 1** (GECO). Aucun scraping d'agrégateur : si les
 ToS/robots d'une source interdisent l'automatisation, elle n'est pas utilisée (§16).
