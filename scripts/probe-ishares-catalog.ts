@@ -5,11 +5,16 @@
  * consomme : s'il contient nos ISIN IE + une URL de document par fonds, il devient
  * la brique de résolution d'URL de l'`IsharesResolver`.
  *
- * Ce probe TESTE plusieurs endpoints candidats (URLs publiques du screener) et
- * IMPRIME, pour chacun : statut HTTP, taille, présence de nos ISIN de test, et un
- * échantillon de STRUCTURE (clés de haut niveau + clés d'un enregistrement). Il ne
- * devine aucune URL de KID, n'écrit rien, n'ingère rien : il révèle la forme réelle
- * du JSON pour écrire ENSUITE un mapper correct (pas deviné).
+ * Deux passes :
+ *   A. DÉCOUVERTE DEPUIS LA PAGE (principal) — récupère la page de liste ETF (HTTP
+ *      200 confirmé) et EXTRAIT les références d'endpoint que le site utilise
+ *      lui-même (`.jsn`, `dcrPath`, `product-screener`, URLs de produits). On lit
+ *      les références réelles du site, on ne devine pas.
+ *   B. TEST d'endpoints candidats (secondaire) — mesure quelques URLs de screener
+ *      (les premières essayées ont répondu 404/500).
+ *
+ * IMPRIME statut HTTP, taille, présence de nos ISIN de test, et la structure JSON.
+ * N'écrit rien, n'ingère rien, ne devine aucune URL de KID.
  *
  * Usage : bun run scripts/probe-ishares-catalog.ts
  */
@@ -19,6 +24,33 @@ const DELAY_MS = 500;
 
 // ISIN de test (ETF iShares UCITS grand public, domicile IE).
 const TEST_ISINS = ["IE00B4L5Y983", "IE00B5BMR087", "IE00BKM4GZ66"];
+
+// Pages de liste ETF iShares (HTML servi par le site — joignabilité 200 confirmée
+// au probe précédent). On les lit pour DÉCOUVRIR l'endpoint de données réel.
+const PAGES: { label: string; url: string }[] = [
+  {
+    label: "uk-etf-list",
+    url: "https://www.ishares.com/uk/individual/en/products/etf-investments",
+  },
+  {
+    label: "uk-etf-list-view",
+    url: "https://www.ishares.com/uk/individual/en/products/etf-investments#/?productView=etf",
+  },
+];
+
+/** Extrait de références d'endpoint que le site utilise (aucune deviné). */
+function extractEndpoints(html: string): Record<string, string[]> {
+  const uniq = (arr: string[]) => [...new Set(arr)].slice(0, 12);
+  const grab = (re: RegExp) => uniq([...html.matchAll(re)].map((m) => m[0]));
+  return {
+    jsn: grab(/[A-Za-z0-9/_.-]*product-screener[A-Za-z0-9/_.-]*\.jsn/gi),
+    dcrPath: grab(/dcrPath=[^"'&\s]+/gi),
+    productData: grab(
+      /\/[A-Za-z0-9/_.-]*\/(?:product-screener|products)[A-Za-z0-9/_.-]*\.(?:jsn|json)/gi,
+    ),
+    ajaxJson: grab(/["'][^"']*\.(?:jsn|json)(?:\?[^"']*)?["']/gi),
+  };
+}
 
 // Endpoints candidats du « product screener » iShares (URLs publiques du site,
 // variantes régionales). On mesure lesquels répondent et portent nos ISIN.
@@ -96,10 +128,43 @@ async function probeOne(url: string): Promise<void> {
   }
 }
 
+async function discoverFromPage(label: string, url: string): Promise<void> {
+  let status: number | "ERR" = "ERR";
+  let html = "";
+  try {
+    const r = await fetch(url, { headers: { "User-Agent": UA, Accept: "text/html" } });
+    status = r.status;
+    html = await r.text();
+  } catch (e) {
+    console.log(`      fetch error: ${e instanceof Error ? e.message : String(e)}`);
+    return;
+  }
+  const isinsFound = TEST_ISINS.filter((i) => html.includes(i));
+  console.log(
+    `      HTTP ${status} · ${html.length}o · ISIN inline: ${isinsFound.length}/${TEST_ISINS.length} [${isinsFound.join(",")}]`,
+  );
+  if (status === 200 && html.length > 0) {
+    const refs = extractEndpoints(html);
+    for (const [kind, matches] of Object.entries(refs)) {
+      if (matches.length) console.log(`      ${kind}: ${matches.join(" | ")}`);
+    }
+    if (!Object.values(refs).some((m) => m.length)) {
+      console.log("      (aucune référence d'endpoint dans le HTML brut → SPA rendu JS probable)");
+    }
+  }
+}
+
 async function main(): Promise<void> {
   console.log(
     `[ishares-probe] read-only · découverte catalogue · ISIN test: ${TEST_ISINS.join(", ")}`,
   );
+  console.log("[ishares-probe] === Passe A : découverte depuis la page de liste ETF ===");
+  for (const p of PAGES) {
+    console.log(`[ishares-probe] ${p.label}: ${p.url.slice(0, 90)}`);
+    await discoverFromPage(p.label, p.url);
+    await new Promise((r) => setTimeout(r, DELAY_MS));
+  }
+  console.log("[ishares-probe] === Passe B : endpoints candidats (déjà 404/500) ===");
   for (const c of CANDIDATES) {
     console.log(`[ishares-probe] ${c.label}: ${c.url.slice(0, 90)}…`);
     await probeOne(c.url);
