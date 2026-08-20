@@ -40,14 +40,14 @@ function CertificatPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-paper flex items-center justify-center">
+      <div className="min-h-screen bg-paper-2 flex items-center justify-center">
         <p className="text-label text-ink-3">{t("certificate.preparing")}</p>
       </div>
     );
   }
   if (!portfolio) {
     return (
-      <div className="min-h-screen bg-paper flex items-center justify-center px-6 text-center">
+      <div className="min-h-screen bg-paper-2 flex items-center justify-center px-6 text-center">
         <div>
           <p className="text-sm text-ink-2">{t("certificate.no_portfolio")}</p>
           <Link to="/portfolio" className="inline-block mt-4 text-label underline text-ink">
@@ -82,7 +82,7 @@ function CertificatPage() {
   const numLocale = lang === "en" ? "en-US" : "fr-FR";
 
   return (
-    <div className="min-h-screen bg-paper">
+    <div className="min-h-screen bg-paper-2">
       {/* Toolbar — masquée à l'impression */}
       <div className="print:hidden sticky top-0 z-10 bg-paper/90 backdrop-blur border-b border-paper-3">
         <div className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between gap-4">

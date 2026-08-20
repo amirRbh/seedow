@@ -76,11 +76,21 @@ const TEXT_PAIRS: Array<[string, string]> = [
   // tenir AA comme n'importe quel texte, et pas seulement être perceptible.
   ["--ink-3", "--paper"],
   ["--ink-3", "--paper-2"],
-  // Boutons pleins de la V2 : `accent` = aplat --ice, `default` = aplat --ink,
-  // tous deux en texte --paper.
+  // Boutons pleins : `accent` = aplat --ice, `default` = aplat --ink.
   ["--paper", "--ice"],
   ["--paper", "--mint"],
   ["--paper", "--alert"],
+  // ── Bande sombre (.on-deep / .ink-section) ──────────────────
+  // Ces tokens sont FIXES : non redéfinis dans .dark, donc les deux
+  // thèmes doivent donner le même résultat. C'est précisément ce que ce
+  // bloc verrouille — utiliser --paper/--ink pour « blanc sur noir »
+  // faisait s'effondrer toute la bande en noir sur noir en thème sombre.
+  ["--on-deep", "--deep"],
+  ["--on-deep-2", "--deep"],
+  ["--on-deep-3", "--deep"],
+  ["--on-deep", "--deep-2"],
+  ["--on-deep-2", "--deep-2"],
+  ["--on-deep-3", "--deep-2"],
 ];
 
 /** Aplats de marque (grands titres, graphiques, filets) : 3:1 suffit. */
@@ -101,6 +111,17 @@ const SEPARATOR_PAIRS: Array<[string, string]> = [
   ["--sky-tint-border", "--sky-tint"],
 ];
 
+/**
+ * Séparation de SURFACES (carte vs sol). Le seuil est volontairement plus bas
+ * que celui des séparateurs : un filet d'un pixel a besoin de contraste pour
+ * être vu, une grande surface non — un blanc pur sur un neutre à 1,10 se
+ * distingue nettement (c'est le rapport exact qu'utilise Revolut, #FFFFFF sur
+ * #F4F4F4). Ce qui est verrouillé ici, c'est que la carte ne soit jamais
+ * EXACTEMENT de la couleur de son fond : c'est ce qui les rendait invisibles,
+ * puisque la DA V3 remplace les ombres par ces aplats.
+ */
+const SURFACE_PAIRS: Array<[string, string]> = [["--paper", "--paper-2"]];
+
 describe("contraste des tokens de couleur", () => {
   for (const [themeName, tokens] of themes) {
     describe(`thème ${themeName}`, () => {
@@ -117,6 +138,11 @@ describe("contraste des tokens de couleur", () => {
       it.each(SEPARATOR_PAIRS)("%s sur %s perceptible (≥ 1.3:1)", (fg, bg) => {
         const ratio = contrastRatio(resolveToken(tokens, fg), resolveToken(tokens, bg));
         expect(Number(ratio.toFixed(2))).toBeGreaterThanOrEqual(1.3);
+      });
+
+      it.each(SURFACE_PAIRS)("%s se détache de %s (≥ 1.08:1)", (fg, bg) => {
+        const ratio = contrastRatio(resolveToken(tokens, fg), resolveToken(tokens, bg));
+        expect(Number(ratio.toFixed(2))).toBeGreaterThanOrEqual(1.08);
       });
     });
   }

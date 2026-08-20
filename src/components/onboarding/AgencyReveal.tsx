@@ -55,7 +55,7 @@ export function AgencyReveal({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-paper text-ink"
+        className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-paper-2 text-ink"
       >
         <div className="w-32 h-px bg-paper-3 relative mb-8 overflow-hidden">
           <motion.div

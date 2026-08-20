@@ -117,7 +117,7 @@ function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen bg-paper flex items-center justify-center px-6 py-12">
+    <div className="min-h-screen bg-paper-2 flex items-center justify-center px-6 py-12">
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}

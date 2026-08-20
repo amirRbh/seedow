@@ -16,7 +16,7 @@ export const Route = createFileRoute("/confidentialite")({
 function ConfidentialitePage() {
   const navigate = useNavigate();
   return (
-    <div className="min-h-screen bg-paper text-ink">
+    <div className="min-h-screen bg-paper-2 text-ink">
       <header className="max-w-3xl mx-auto px-6 pt-10 pb-8 border-b border-paper-3">
         <Link
           to="/"

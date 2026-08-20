@@ -57,14 +57,14 @@ function GoalDetail() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-paper p-10">
+      <div className="min-h-screen bg-paper-2 p-10">
         <p className="text-ink-3">{t("objectives.loading")}</p>
       </div>
     );
   }
   if (!goal) {
     return (
-      <div className="min-h-screen bg-paper p-10 text-center">
+      <div className="min-h-screen bg-paper-2 p-10 text-center">
         <p className="font-value text-2xl text-ink">{t("objectives.goal_not_found")}</p>
         <Button className="mt-4" onClick={() => navigate({ to: "/objectifs" })}>
           {t("objectives.back")}
@@ -78,7 +78,7 @@ function GoalDetail() {
   const dueDate = formatDate(goal.target_date, lang, { month: "long", year: "numeric" });
 
   return (
-    <div className="min-h-screen bg-paper pb-24 md:pb-12">
+    <div className="min-h-screen bg-paper-2 pb-24 md:pb-12">
       <AppHeader eyebrow={t("objectives.eyebrow_goal")} title={goal.name} />
       <div className="mx-auto max-w-3xl px-4 md:px-8">
         <Link

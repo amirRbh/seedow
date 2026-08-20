@@ -147,7 +147,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-paper">
+    <div className="min-h-screen bg-paper-2">
       {showBanner ? <BetaBanner /> : null}
       <div
         className={cn(

@@ -75,14 +75,18 @@ function ReglagesPage() {
 
   if (authLoading || !user) {
     return (
-      <div className="min-h-screen bg-paper flex items-center justify-center">
+      <div className="min-h-screen bg-paper-2 flex items-center justify-center">
         <p className="text-label text-ink-3">{t("common.loading")}</p>
       </div>
     );
   }
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="min-h-screen bg-paper-2"
+    >
       <div className="max-w-lg mx-auto pb-28">
         <AppHeader
           eyebrow={t("reglages.eyebrow")}

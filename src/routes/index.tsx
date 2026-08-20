@@ -75,20 +75,20 @@ function Landing() {
   return (
     <div className="min-h-screen bg-paper-2 text-ink">
       {/* ── BANDE SOMBRE : nav + hero ─────────────────────────────── */}
-      <div className="bg-deep text-paper">
+      <div className="on-deep">
         <nav className="max-w-[1160px] mx-auto px-7 h-[76px] flex items-center justify-between">
           <Wordmark onDark />
 
           <div className="flex items-center gap-6">
             <Link
               to="/cours"
-              className="hidden md:inline text-body font-semibold text-paper/70 hover:text-paper transition-colors"
+              className="hidden md:inline text-body font-semibold text-ink-2 hover:text-ink transition-colors"
             >
               {t("landing.nav.courses")}
             </Link>
             <Link
               to="/methodologie"
-              className="hidden md:inline text-body font-semibold text-paper/70 hover:text-paper transition-colors"
+              className="hidden md:inline text-body font-semibold text-ink-2 hover:text-ink transition-colors"
             >
               {t("landing.nav.methodology")}
             </Link>
@@ -102,7 +102,7 @@ function Landing() {
                   to="/auth"
                   search={{ redirect: "/le-fil", mode: "login" }}
                   onClick={onCta("nav", "login")}
-                  className="hidden sm:inline text-body font-semibold text-paper/70 hover:text-paper transition-colors"
+                  className="hidden sm:inline text-body font-semibold text-ink-2 hover:text-ink transition-colors"
                 >
                   {t("landing.nav.login")}
                 </Link>
@@ -124,13 +124,13 @@ function Landing() {
                 {t("landing.rv.hero.eyebrow")}
               </span>
 
-              <h1 className="display-xl mt-7 max-w-[13ch] text-paper">
+              <h1 className="display-xl mt-7 max-w-[13ch]">
                 {t("landing.rv.hero.title_line1")}
                 <br />
                 {t("landing.rv.hero.title_accent")}
               </h1>
 
-              <p className="mt-7 max-w-[46ch] text-body-xl leading-relaxed text-paper/70">
+              <p className="mt-7 max-w-[46ch] text-body-xl leading-relaxed text-ink-2">
                 {t("landing.rv.hero.subtitle")}
               </p>
 
@@ -150,10 +150,7 @@ function Landing() {
                         {t("landing.rv.hero.cta_primary")}
                       </Link>
                     </Button>
-                    <Button
-                      asChild
-                      className="bg-transparent text-paper ring-1 ring-inset ring-paper/25 hover:ring-paper/60 hover:opacity-100"
-                    >
+                    <Button asChild variant="outline">
                       <Link to="/auth" onClick={onCta("hero", "signup")}>
                         {t("landing.rv.hero.cta_secondary")}
                       </Link>
@@ -162,7 +159,7 @@ function Landing() {
                 )}
               </div>
 
-              <p className="mt-6 text-body-sm text-paper/45 max-w-[52ch]">
+              <p className="mt-6 text-body-sm text-ink-3 max-w-[52ch]">
                 {t("landing.rv.hero.note")}
               </p>
             </div>
@@ -251,20 +248,18 @@ function Landing() {
         <Reveal>
           <div className="ink-section px-7 py-16 md:px-14 md:py-20">
             <p className="eyebrow">{t("landing.rv.cards.problem.eyebrow")}</p>
-            <h2 className="mt-4 max-w-[20ch] text-paper">{t("landing.rv.cards.problem.title")}</h2>
-            <p className="mt-5 max-w-[54ch] text-body-lg leading-relaxed text-paper/66">
+            <h2 className="mt-4 max-w-[20ch]">{t("landing.rv.cards.problem.title")}</h2>
+            <p className="mt-5 max-w-[54ch] text-body-lg leading-relaxed text-ink-2">
               {t("landing.rv.cards.problem.desc")}
             </p>
 
             <div className="grid md:grid-cols-3 gap-10 md:gap-8 mt-14">
               {STATS.map((s) => (
                 <div key={s.figure}>
-                  <p className="font-value text-[clamp(48px,6vw,76px)] leading-none text-paper">
+                  <p className="font-value text-[clamp(48px,6vw,76px)] leading-none text-mint-ink">
                     {s.figure}
                   </p>
-                  <p className="mt-4 text-body-lg leading-snug max-w-[26ch] text-paper/66">
-                    {s.text}
-                  </p>
+                  <p className="mt-4 text-body-lg leading-snug max-w-[26ch] text-ink-2">{s.text}</p>
                   <Provenance className="mt-4" source={s.src} status="verified" hideChip />
                 </div>
               ))}
@@ -331,8 +326,8 @@ function Landing() {
         {/* CTA final */}
         <Reveal>
           <div className="ink-section px-7 py-20 md:py-24 text-center">
-            <h2 className="mx-auto max-w-[18ch] text-paper">{t("landing.rv.final.title")}</h2>
-            <p className="mt-5 mx-auto max-w-[44ch] text-body-lg text-paper/66">
+            <h2 className="mx-auto max-w-[18ch]">{t("landing.rv.final.title")}</h2>
+            <p className="mt-5 mx-auto max-w-[44ch] text-body-lg text-ink-2">
               {isAuthed
                 ? t("landing.rv.final.subtitle_authed")
                 : t("landing.rv.final.subtitle_new")}
@@ -354,12 +349,12 @@ function Landing() {
                       {t("landing.rv.hero.cta_primary")}
                     </Link>
                   </Button>
-                  <p className="text-body-sm text-paper/45">{t("landing.hero.trust_line")}</p>
+                  <p className="text-body-sm text-ink-3">{t("landing.hero.trust_line")}</p>
                 </>
               )}
             </div>
 
-            <p className="mt-12 mx-auto max-w-[60ch] text-body-sm leading-relaxed text-paper/45">
+            <p className="mt-12 mx-auto max-w-[60ch] text-body-sm leading-relaxed text-ink-3">
               {t("landing.badge_simulation")}
             </p>
           </div>
@@ -367,11 +362,11 @@ function Landing() {
       </div>
 
       {/* ── FOOTER ────────────────────────────────────────────────── */}
-      <footer className="bg-deep text-paper">
+      <footer className="on-deep">
         <div className="max-w-[1160px] mx-auto px-7 py-14 flex flex-col md:flex-row md:items-start justify-between gap-10">
           <div>
             <Wordmark onDark />
-            <p className="mt-4 text-body-sm text-paper/45">{t("landing.footer.copyright")}</p>
+            <p className="mt-4 text-body-sm text-ink-3">{t("landing.footer.copyright")}</p>
           </div>
 
           <nav className="grid grid-cols-2 sm:grid-cols-3 gap-x-12 gap-y-3">
@@ -388,7 +383,7 @@ function Landing() {
               <Link
                 key={l.to}
                 to={l.to}
-                className="text-body-sm font-medium text-paper/60 hover:text-paper transition-colors"
+                className="text-body-sm font-medium text-ink-2 hover:text-ink transition-colors"
               >
                 {l.label}
               </Link>
@@ -396,7 +391,7 @@ function Landing() {
             {isAuthed ? (
               <Link
                 to="/dashboard"
-                className="text-body-sm font-medium text-paper/60 hover:text-paper transition-colors"
+                className="text-body-sm font-medium text-ink-2 hover:text-ink transition-colors"
               >
                 {t("landing.footer.my_space")}
               </Link>
@@ -404,14 +399,14 @@ function Landing() {
               <Link
                 to="/auth"
                 search={{ redirect: "/le-fil", mode: "login" }}
-                className="text-body-sm font-medium text-paper/60 hover:text-paper transition-colors"
+                className="text-body-sm font-medium text-ink-2 hover:text-ink transition-colors"
               >
                 {t("landing.footer.login")}
               </Link>
             )}
             <a
               href="mailto:hello@seedow.life"
-              className="text-body-sm font-medium text-paper/60 hover:text-paper transition-colors"
+              className="text-body-sm font-medium text-ink-2 hover:text-ink transition-colors"
             >
               {t("landing.footer.contact")}
             </a>
@@ -429,7 +424,7 @@ function Wordmark({ onDark = false }: { onDark?: boolean }) {
     <Link
       to="/"
       className={`inline-flex items-baseline gap-1 text-[22px] font-extrabold tracking-[-0.03em] ${
-        onDark ? "text-paper" : "text-ink"
+        onDark ? "text-on-deep" : "text-ink"
       }`}
     >
       seedow
@@ -561,9 +556,9 @@ function HeroProof({ t }: { t: (key: string, opts?: Record<string, unknown>) => 
   ];
 
   return (
-    <div className="rounded-[--radius] bg-deep-2 p-7" aria-hidden>
+    <div className="paper-card p-7" aria-hidden>
       <div className="flex items-center justify-between gap-3">
-        <p className="text-body font-semibold text-paper/56">{t("landing.hero2.preview.label")}</p>
+        <p className="text-body font-semibold text-ink-2">{t("landing.hero2.preview.label")}</p>
         <span className="chip">{t("landing.hero2.preview.source")}</span>
       </div>
 
@@ -571,10 +566,10 @@ function HeroProof({ t }: { t: (key: string, opts?: Record<string, unknown>) => 
         {convictions.map((c, i) => (
           <div key={c.label}>
             <div className="flex items-baseline justify-between text-body">
-              <span className="text-paper/80">{c.label}</span>
-              <span className="font-value text-paper">{c.weight} %</span>
+              <span className="text-ink">{c.label}</span>
+              <span className="font-value text-ink">{c.weight} %</span>
             </div>
-            <div className="mt-2 h-1.5 rounded-full bg-paper/10 overflow-hidden">
+            <div className="mt-2 h-1.5 rounded-full bg-paper-2 overflow-hidden">
               <div
                 className="h-full rounded-full bg-mint trace"
                 style={{ width: `${c.weight}%`, animationDelay: `${0.15 + i * 0.08}s` }}
@@ -584,22 +579,22 @@ function HeroProof({ t }: { t: (key: string, opts?: Record<string, unknown>) => 
         ))}
       </div>
 
-      <div className="mt-8 pt-6 border-t border-paper/10 grid grid-cols-2 gap-6">
+      <div className="mt-8 pt-6 border-t border-paper-3 grid grid-cols-2 gap-6">
         <div>
-          <p className="text-body-sm font-semibold text-paper/56">
+          <p className="text-body-sm font-semibold text-ink-2">
             {t("landing.hero2.preview.kpi_esg")}
           </p>
-          <p className="font-value text-[34px] leading-none mt-2 text-paper">74</p>
+          <p className="font-value text-[34px] leading-none mt-2 text-ink">74</p>
         </div>
         <div>
-          <p className="text-body-sm font-semibold text-paper/56">
+          <p className="text-body-sm font-semibold text-ink-2">
             {t("landing.hero2.preview.kpi_carbon")}
           </p>
           <p className="font-value text-[34px] leading-none mt-2 text-mint-ink">−58 %</p>
         </div>
       </div>
 
-      <p className="mt-6 text-body-sm leading-relaxed text-paper/45">
+      <p className="mt-6 text-body-sm leading-relaxed text-ink-3">
         {t("landing.hero2.preview.note")}
       </p>
     </div>

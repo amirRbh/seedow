@@ -58,15 +58,20 @@ export function LandingTour({ embedded = false }: { embedded?: boolean } = {}) {
                 onClick={() => select(key)}
                 className="text-left p-5 transition-colors"
                 style={{
-                  background: isActive ? "var(--apple-text)" : "var(--apple-bg)",
-                  color: isActive ? "var(--apple-bg)" : "var(--apple-text)",
-                  border: `1px solid ${isActive ? "var(--apple-text)" : "var(--paper-3)"}`,
-                  borderRadius: 14,
+                  // L'étape active porte l'accent de marque : c'est le premier
+                  // endroit où la couleur travaille vraiment sur la landing.
+                  background: isActive ? "var(--color-mint)" : "var(--color-paper)",
+                  color: isActive ? "#ffffff" : "var(--color-ink)",
+                  border: `1px solid ${isActive ? "var(--color-mint)" : "var(--color-paper-3)"}`,
+                  borderRadius: 20,
                 }}
               >
                 <span
-                  className="font-mono text-caption uppercase tracking-[0.16em]"
-                  style={{ opacity: isActive ? 0.7 : 0.55 }}
+                  className="stamp"
+                  // `.stamp` impose --ink-3 : sur l'aplat d'accent il faut le
+                  // forcer en blanc, sinon le numéro d'étape passe en gris
+                  // sur teal et devient illisible.
+                  style={{ color: isActive ? "#ffffff" : undefined, opacity: isActive ? 0.8 : 1 }}
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>
@@ -146,10 +151,10 @@ function TourVisual({
         style={{
           background: "var(--apple-surface)",
           border: "1px solid var(--paper-3)",
-          borderRadius: 14,
+          borderRadius: 20,
         }}
       >
-        <p className="font-mono text-caption uppercase tracking-[0.16em] text-[color:var(--apple-text-2)]">
+        <p className="stamp text-[color:var(--apple-text-2)]">
           {t("landing.tour.understand.visual_label")}
         </p>
         <div className="mt-4 flex flex-col gap-2">
@@ -185,10 +190,10 @@ function TourVisual({
         style={{
           background: "var(--apple-surface)",
           border: "1px solid var(--paper-3)",
-          borderRadius: 14,
+          borderRadius: 20,
         }}
       >
-        <p className="font-mono text-caption uppercase tracking-[0.16em] text-[color:var(--apple-text-2)]">
+        <p className="stamp text-[color:var(--apple-text-2)]">
           {t("landing.tour.see.visual_label")}
         </p>
         <div className="mt-4 grid grid-cols-2 gap-4">
@@ -213,10 +218,10 @@ function TourVisual({
       style={{
         background: "var(--apple-surface)",
         border: "1px solid var(--paper-3)",
-        borderRadius: 14,
+        borderRadius: 20,
       }}
     >
-      <p className="font-mono text-caption uppercase tracking-[0.16em] text-[color:var(--apple-text-2)]">
+      <p className="stamp text-[color:var(--apple-text-2)]">
         {t("landing.tour.compare.visual_label")}
       </p>
       <div className="mt-4 flex flex-col gap-3">

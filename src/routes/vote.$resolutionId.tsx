@@ -98,7 +98,7 @@ function ResolutionPage() {
   const days = resolution ? daysUntilClose(resolution.closesAt) : null;
 
   return (
-    <div className="min-h-screen bg-paper pb-24 md:pb-12">
+    <div className="min-h-screen bg-paper-2 pb-24 md:pb-12">
       <AppHeader
         eyebrow={t("vote.eyebrow")}
         title={resolution ? resolution.company : t("vote.title")}

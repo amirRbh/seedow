@@ -30,7 +30,7 @@ function ReveilPage() {
   const [detail, setDetail] = useState<DiscoverAsset | null>(null);
 
   return (
-    <div className="min-h-screen bg-paper pb-24 md:pb-12">
+    <div className="min-h-screen bg-paper-2 pb-24 md:pb-12">
       <AppHeader eyebrow={t("reveil.eyebrow")} title={t("reveil.title")} hideViewToggle />
       <div className="mx-auto max-w-3xl px-4 pt-6 md:px-8">
         <p className="mb-6 max-w-prose text-body text-ink-2">

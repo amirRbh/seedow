@@ -43,13 +43,13 @@ export function GuestDashboard() {
 
   // Chargement (avant lecture localStorage) : évite un flash d'état vide.
   if (sim === undefined) {
-    return <div className="min-h-screen bg-paper" aria-hidden />;
+    return <div className="min-h-screen bg-paper-2" aria-hidden />;
   }
 
   // Simulation expirée / absente : expliquer pourquoi, puis relancer utilement.
   if (sim === null) {
     return (
-      <div className="min-h-screen bg-paper flex flex-col items-center justify-center px-6 text-center">
+      <div className="min-h-screen bg-paper-2 flex flex-col items-center justify-center px-6 text-center">
         <p className="text-eyebrow uppercase tracking-[0.15em] text-ink-3">
           {t("dashboard.guest_dashboard.eyebrow")}
         </p>
@@ -75,7 +75,11 @@ export function GuestDashboard() {
   }
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="min-h-screen bg-paper-2"
+    >
       <GuestBanner guestParam />
 
       <div className="max-w-lg mx-auto px-5 pb-28">

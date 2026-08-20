@@ -269,7 +269,7 @@ function Ethi() {
   };
 
   return (
-    <div className="min-h-screen bg-paper text-ink flex flex-col">
+    <div className="min-h-screen bg-paper-2 text-ink flex flex-col">
       <header className="px-5 pt-6 pb-3 border-b border-paper-3 safe-area-top">
         <div className="flex items-center justify-between gap-3 max-w-lg mx-auto w-full">
           <div className="flex items-center gap-3 min-w-0">

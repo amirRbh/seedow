@@ -192,7 +192,7 @@ function MethodologyPage() {
   }, [result]);
 
   return (
-    <div className="min-h-screen bg-paper text-ink">
+    <div className="min-h-screen bg-paper-2 text-ink">
       <header className="max-w-6xl mx-auto px-6 pt-10 pb-8 border-b border-paper-3">
         <div className="flex items-center justify-between">
           <Link

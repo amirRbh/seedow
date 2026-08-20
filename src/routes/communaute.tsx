@@ -23,7 +23,7 @@ export const Route = createFileRoute("/communaute")({
 function CommunautePage() {
   const { t } = useTranslation();
   return (
-    <div className="min-h-screen bg-paper pb-24 md:pb-12">
+    <div className="min-h-screen bg-paper-2 pb-24 md:pb-12">
       <AppHeader eyebrow={t("community.eyebrow")} title={t("community.title")} />
       <div className="mx-auto max-w-6xl px-4 md:px-8">
         <EditorialSection

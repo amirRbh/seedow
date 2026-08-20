@@ -129,7 +129,11 @@ function ProfilPage() {
   const numLocale = lang === "en" ? "en-US" : "fr-FR";
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="min-h-screen bg-paper-2"
+    >
       <div className="max-w-lg mx-auto pb-28">
         <AppHeader
           eyebrow={t("profile.eyebrow")}
