@@ -4,17 +4,18 @@ import { useTranslation } from "react-i18next";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 import { useLang } from "@/hooks/useLang";
 import { formatCurrency, formatDate } from "@/lib/format";
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  Line,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Area, AreaChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { getPortfolioHistory, type HistoryPoint } from "@/lib/portfolio/history.functions";
+import {
+  AREA_DOWN,
+  AREA_UP,
+  CHART_AXIS,
+  CHART_LINE,
+  CHART_REFERENCE,
+  CHART_TOOLTIP_STYLE,
+  ChartAreaDefs,
+} from "@/components/ui/chart-theme";
+import { Provenance } from "@/components/ui/Provenance";
 
 type Range = "1W" | "1M" | "3M" | "1Y" | "ALL";
 
@@ -102,37 +103,33 @@ export function PortfolioHistoryChart() {
         ? "portfolio.history_chart.plain_reading_up"
         : "portfolio.history_chart.plain_reading_down";
 
-  const stroke = isUp ? "var(--highlight-1)" : "var(--rust)";
+  // Encre pour la hausse, vermillon pour la baisse : le signe est aussi
+  // écrit (+/−), la couleur ne porte jamais seule l'information.
+  const stroke = isUp ? "var(--color-mint)" : "var(--color-alert)";
+  const area = isUp ? AREA_UP : AREA_DOWN;
 
   return (
-    <div className="paper-card p-5">
-      <div className="flex items-baseline justify-between mb-3">
+    <div className="paper-card p-6">
+      <div className="flex items-baseline justify-between gap-3 mb-4">
         <div>
-          <p className="text-tag uppercase tracking-wider text-ink-3 font-mono">
-            {t("portfolio.history_chart.title")}
-          </p>
-          <p className="font-value text-2xl text-ink mt-0.5">{fmtEur(last)}</p>
+          <p className="stamp">{t("portfolio.history_chart.title")}</p>
+          <p className="font-value text-[32px] leading-none text-ink mt-2">{fmtEur(last)}</p>
           {points.length > 0 && (
-            <p
-              className={`text-label font-semibold tabular-nums mt-0.5 ${
-                isUp ? "text-highlight-1" : "text-rust"
-              }`}
-            >
+            <p className={`chip mt-3 ${isUp ? "chip--up" : "chip--down"}`}>
               {isUp ? "+" : ""}
               {fmtEur(deltaAbs)} ({isUp ? "+" : ""}
               {deltaPct.toFixed(2)}%)
             </p>
           )}
         </div>
-        <div className="flex gap-1 bg-paper-2 rounded-full p-0.5">
+        <div className="segmented">
           {RANGES.map((r) => (
             <button
               key={r.id}
               type="button"
               onClick={() => setRange(r.id)}
-              className={`text-caption font-medium px-2.5 py-1 rounded-full transition-colors ${
-                range === r.id ? "bg-paper text-ink shadow-sm" : "text-ink-3 hover:text-ink-2"
-              }`}
+              aria-pressed={range === r.id}
+              data-active={range === r.id}
             >
               {r.label}
             </button>
@@ -158,32 +155,14 @@ export function PortfolioHistoryChart() {
         ) : (
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={points} margin={{ top: 4, right: 8, left: 8, bottom: 0 }}>
-              <defs>
-                <linearGradient id="phc-fill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor={stroke} stopOpacity={0.25} />
-                  <stop offset="100%" stopColor={stroke} stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid stroke="var(--paper-3)" strokeDasharray="2 4" vertical={false} />
-              <XAxis
-                dataKey="date"
-                tickFormatter={fmtDate}
-                tick={{ fontSize: 10, fill: "var(--ink-3)" }}
-                axisLine={false}
-                tickLine={false}
-                minTickGap={32}
-              />
+              <ChartAreaDefs />
+              <XAxis dataKey="date" tickFormatter={fmtDate} minTickGap={48} {...CHART_AXIS} />
               <YAxis domain={[minY, maxY]} hide />
               <Tooltip
-                contentStyle={{
-                  background: "var(--ink)",
-                  border: "none",
-                  borderRadius: 8,
-                  fontSize: 11,
-                  padding: "8px 10px",
-                }}
-                labelStyle={{ color: "var(--paper-2)", marginBottom: 4 }}
-                itemStyle={{ color: "var(--paper)" }}
+                cursor={{ stroke: "var(--color-ink-3)", strokeWidth: 1, strokeDasharray: "2 3" }}
+                contentStyle={CHART_TOOLTIP_STYLE}
+                labelStyle={{ color: "var(--color-ink-3)", marginBottom: 4 }}
+                itemStyle={{ color: "var(--color-ink)" }}
                 labelFormatter={(d: string) =>
                   formatDate(d, lang, {
                     weekday: "short",
@@ -199,23 +178,13 @@ export function PortfolioHistoryChart() {
                     : t("portfolio.history_chart.invested_tooltip"),
                 ]}
               />
-              <Line
-                type="monotone"
-                dataKey="invested"
-                stroke="var(--ink-3)"
-                strokeDasharray="3 3"
-                strokeWidth={1}
-                dot={false}
-                activeDot={false}
-              />
+              <Line type="monotone" dataKey="invested" {...CHART_REFERENCE} activeDot={false} />
               <Area
                 type="monotone"
                 dataKey="value"
                 stroke={stroke}
-                strokeWidth={2}
-                fill="url(#phc-fill)"
-                dot={false}
-                activeDot={{ r: 3, fill: stroke }}
+                fill={`url(#${area})`}
+                {...CHART_LINE}
               />
             </AreaChart>
           </ResponsiveContainer>
@@ -223,29 +192,39 @@ export function PortfolioHistoryChart() {
       </div>
 
       {points.length >= 2 && (
-        <div className="flex items-center gap-4 mt-3 pt-3 border-t border-paper-3 text-tag text-ink-3">
-          <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-0.5 inline-block" style={{ backgroundColor: stroke }} />
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-5 stamp">
+          <span className="flex items-center gap-2">
+            <span
+              className="w-3.5 h-[2.5px] rounded-full inline-block"
+              style={{ backgroundColor: stroke }}
+            />
             {t("portfolio.history_chart.value")}
           </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-px inline-block border-t border-dashed border-ink-3" />
+          <span className="flex items-center gap-2">
+            <span className="w-3.5 inline-block border-t-2 border-dashed border-ink-3" />
             {t("portfolio.history_chart.invested_legend")}
-          </span>
-          <span className="ml-auto">
-            {fmtDate(points[0].date)} → {fmtDate(points[points.length - 1].date)}
           </span>
         </div>
       )}
 
       {points.length >= 2 && (
-        <p className="text-caption text-ink-2 leading-relaxed mt-2.5">
-          {t(plainReadingKey, {
-            invested: fmtEur(investedNow),
-            value: fmtEur(last),
-            gain: fmtEur(Math.abs(gainVsDeposit)),
-          })}
-        </p>
+        <>
+          <p className="text-body-sm text-ink-2 leading-relaxed mt-3">
+            {t(plainReadingKey, {
+              invested: fmtEur(investedNow),
+              value: fmtEur(last),
+              gain: fmtEur(Math.abs(gainVsDeposit)),
+            })}
+          </p>
+          {/* Aucun graphique sans sa provenance (DA V2 §4.5). */}
+          <Provenance
+            className="mt-3"
+            status="verified"
+            source="Yahoo Finance"
+            asOf={points[points.length - 1].date}
+            note={`${fmtDate(points[0].date)} → ${fmtDate(points[points.length - 1].date)}`}
+          />
+        </>
       )}
     </div>
   );

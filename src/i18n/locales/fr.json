@@ -2930,7 +2930,14 @@
   },
   "data_provenance": {
     "coverage_label": "Que signifie la couverture ?",
-    "coverage_tooltip": "La part de votre portefeuille pour laquelle nous disposons d'une donnée réelle mesurée. Le reste n'est pas encore mesuré — il n'est pas estimé pour autant."
+    "coverage_tooltip": "La part de votre portefeuille pour laquelle nous disposons d'une donnée réelle mesurée. Le reste n'est pas encore mesuré — il n'est pas estimé pour autant.",
+    "coverage": "couverture {{pct}} %",
+    "no_source": "source non renseignée",
+    "status_modelled": "estimation Seedow",
+    "status_disputed": "contesté par la source",
+    "status_unknown": "non vérifié",
+    "live": "données en direct",
+    "status_verified": "vérifié"
   },
   "simulation_ack": {
     "title": "Avant d'enregistrer",

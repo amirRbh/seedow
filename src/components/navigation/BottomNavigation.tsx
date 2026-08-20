@@ -25,7 +25,9 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 /**
- * Barre de navigation éditoriale — 4 entrées, alignées sur le rail desktop.
+ * Barre de navigation — 4 entrées, alignées sur le rail desktop.
+ * DA V2 : l'onglet actif est marqué par un filet d'encre de 2px au-dessus,
+ * pas par une pastille arrondie.
  */
 export function BottomNavigation() {
   const location = useLocation();
@@ -36,7 +38,7 @@ export function BottomNavigation() {
       <EthiFab />
       <nav
         aria-label={t("bottom_nav.aria")}
-        className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-paper/95 backdrop-blur-xl border-t border-paper-3 safe-area-bottom"
+        className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-paper border-t border-paper-3 safe-area-bottom"
       >
         <div className="flex items-stretch justify-around max-w-lg mx-auto px-2">
           {NAV_ITEMS.map((item) => {
@@ -54,18 +56,13 @@ export function BottomNavigation() {
                 )}
               >
                 <NavIcon type={item.icon} />
-                <span
-                  className={cn(
-                    "text-tag leading-none tracking-[0.14em] uppercase",
-                    isActive ? "font-semibold" : "font-medium",
-                  )}
-                >
+                <span className={cn("stamp leading-none", isActive ? "text-ink" : "text-ink-3")}>
                   {t(item.labelKey)}
                 </span>
                 {isActive && (
                   <span
                     aria-hidden="true"
-                    className="absolute top-0 left-1/2 -translate-x-1/2 h-px w-8 bg-highlight-1"
+                    className="absolute top-0 left-1/2 -translate-x-1/2 h-[2px] w-10 rounded-full bg-ink"
                   />
                 )}
               </Link>
@@ -80,10 +77,10 @@ export function BottomNavigation() {
 function NavIcon({ type }: { type: IconKey }) {
   const common = {
     viewBox: "0 0 24 24",
-    className: "w-[18px] h-[18px]",
+    className: "w-[22px] h-[22px]",
     fill: "none",
     stroke: "currentColor",
-    strokeWidth: 1.8,
+    strokeWidth: 2,
     strokeLinecap: "round" as const,
     strokeLinejoin: "round" as const,
   };

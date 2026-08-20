@@ -5,7 +5,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { EsgQuickCheck } from "@/components/landing/EsgQuickCheck";
 import { LandingCourses } from "@/components/landing/LandingCourses";
 import { LandingTour } from "@/components/landing/LandingTour";
-import { KPIFigure } from "@/components/ui/KPIFigure";
+import { Provenance } from "@/components/ui/Provenance";
+import { Button } from "@/components/ui/button";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
 
 const SITE_URL = "https://seedow.life";
@@ -36,6 +37,17 @@ export const Route = createFileRoute("/")({
   component: Landing,
 });
 
+/**
+ * Landing — DA V3 (docs/DA-V3.md).
+ *
+ * La page alterne deux bandes qui se percutent : `--deep` pour le récit,
+ * `--paper-2` pour le catalogue. C'est ce contraste qui fait toute la
+ * profondeur — aucune ombre, aucun dégradé, aucun halo. Les cartes sont
+ * blanches à 20px de rayon, les CTA des pills de 48px.
+ *
+ * La landing et l'app partagent les mêmes primitives (Button, .paper-card,
+ * .chip, Provenance) : un seul design system, donc une seule marque.
+ */
 function Landing() {
   const { t } = useTranslation();
   const [isAuthed, setIsAuthed] = useState<boolean | null>(null);
@@ -55,398 +67,272 @@ function Landing() {
   };
 
   const STATS: { figure: string; text: string; src: string }[] = [
-    {
-      figure: "0%",
-      text: t("landing.stats.visibility"),
-      src: t("landing.stats.visibility_src"),
-    },
-    {
-      figure: "∞",
-      text: t("landing.stats.jargon"),
-      src: t("landing.stats.jargon_src"),
-    },
-    {
-      figure: "1",
-      text: t("landing.stats.only_app"),
-      src: t("landing.stats.only_app_src"),
-    },
+    { figure: "0 %", text: t("landing.stats.visibility"), src: t("landing.stats.visibility_src") },
+    { figure: "∞", text: t("landing.stats.jargon"), src: t("landing.stats.jargon_src") },
+    { figure: "1", text: t("landing.stats.only_app"), src: t("landing.stats.only_app_src") },
   ];
 
   return (
-    <div className="apple-landing min-h-screen">
-      {/* NAV */}
-      <nav
-        className="sticky top-0 z-50 backdrop-blur-xl"
-        style={{ background: "rgba(255,255,255,0.72)", borderBottom: "1px solid #d2d2d7" }}
-      >
-        <div className="max-w-[1100px] mx-auto px-6 h-12 flex items-center justify-between">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-[22px] font-bold text-[color:var(--apple-text)]"
-            style={{ letterSpacing: "-0.02em" }}
-          >
-            SEEDOW
-            <span
-              aria-hidden
-              className="inline-block w-[6px] h-[6px] rounded-full"
-              style={{ background: "var(--mint)" }}
-            />
-          </Link>
+    <div className="min-h-screen bg-paper-2 text-ink">
+      {/* ── BANDE SOMBRE : nav + hero ─────────────────────────────── */}
+      <div className="bg-deep text-paper">
+        <nav className="max-w-[1160px] mx-auto px-7 h-[76px] flex items-center justify-between">
+          <Wordmark onDark />
 
-          <div className="flex items-center gap-6 text-body-sm text-[color:var(--apple-text)]">
-            <Link to="/cours" className="hidden md:inline opacity-90 hover:opacity-100">
+          <div className="flex items-center gap-6">
+            <Link
+              to="/cours"
+              className="hidden md:inline text-body font-semibold text-paper/70 hover:text-paper transition-colors"
+            >
               {t("landing.nav.courses")}
             </Link>
-            <Link to="/methodologie" className="hidden md:inline opacity-90 hover:opacity-100">
+            <Link
+              to="/methodologie"
+              className="hidden md:inline text-body font-semibold text-paper/70 hover:text-paper transition-colors"
+            >
               {t("landing.nav.methodology")}
             </Link>
             {isAuthed ? (
-              <Link to="/le-fil" className="apple-btn-primary apple-btn-primary--sm">
-                {t("landing.nav.my_space")}
-              </Link>
+              <Button asChild size="sm" variant="on-dark">
+                <Link to="/le-fil">{t("landing.nav.my_space")}</Link>
+              </Button>
             ) : (
               <>
                 <Link
                   to="/auth"
                   search={{ redirect: "/le-fil", mode: "login" }}
                   onClick={onCta("nav", "login")}
-                  className="opacity-90 hover:opacity-100"
+                  className="hidden sm:inline text-body font-semibold text-paper/70 hover:text-paper transition-colors"
                 >
                   {t("landing.nav.login")}
                 </Link>
-                <Link
-                  to="/onboarding"
-                  search={{ guest: true }}
-                  onClick={onCta("nav", "preview")}
-                  className="apple-btn-primary apple-btn-primary--sm"
-                >
-                  {t("landing.nav.simulate_cta")}
-                </Link>
+                <Button asChild size="sm" variant="on-dark">
+                  <Link to="/onboarding" search={{ guest: true }} onClick={onCta("nav", "preview")}>
+                    {t("landing.nav.simulate_cta")}
+                  </Link>
+                </Button>
               </>
             )}
           </div>
-        </div>
-      </nav>
+        </nav>
 
-      {/* HERO — sombre, plein écran, un seul message */}
-      <section className="rv-hero px-6 pt-20 pb-24 md:pt-28 md:pb-32">
-        <div aria-hidden className="rv-hero-glow" />
-        <div aria-hidden className="rv-hero-glow rv-hero-glow--ice" />
+        <header className="max-w-[1160px] mx-auto px-7 pt-12 pb-24 md:pt-16 md:pb-28">
+          <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-14 lg:gap-16 items-center">
+            <div>
+              <span className="chip">
+                <span aria-hidden className="live-dot" />
+                {t("landing.rv.hero.eyebrow")}
+              </span>
 
-        <div className="relative z-10 max-w-[1100px] mx-auto grid lg:grid-cols-[1.05fr_0.95fr] gap-14 lg:gap-16 items-center">
-          <div className="text-center lg:text-left flex flex-col items-center lg:items-start">
-            <span
-              className="inline-flex items-center gap-2 rounded-full px-4 py-2 font-mono"
-              style={{
-                fontSize: 12,
-                letterSpacing: "0.06em",
-                color: "var(--apple-text-2)",
-                background: "var(--apple-bg)",
-                border: "1px solid var(--paper-3)",
-              }}
-            >
-              <span aria-hidden className="apple-live" />
-              {t("landing.rv.hero.eyebrow")}
-            </span>
+              <h1 className="display-xl mt-7 max-w-[13ch] text-paper">
+                {t("landing.rv.hero.title_line1")}
+                <br />
+                {t("landing.rv.hero.title_accent")}
+              </h1>
 
-            <h1 className="rv-section-title mt-7 max-w-[620px]">
-              {t("landing.rv.hero.title_line1")}
-              <br />
-              <span style={{ color: "var(--mint)" }}>{t("landing.rv.hero.title_accent")}</span>
-            </h1>
+              <p className="mt-7 max-w-[46ch] text-body-xl leading-relaxed text-paper/70">
+                {t("landing.rv.hero.subtitle")}
+              </p>
 
-            <p className="apple-subtitle mt-6 max-w-[540px]">{t("landing.rv.hero.subtitle")}</p>
-
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 mt-9">
-              {isAuthed ? (
-                <Link to="/dashboard" className="apple-btn-primary">
-                  {t("landing.rv.hero.cta_authed")}
-                </Link>
-              ) : (
-                <>
-                  <Link
-                    to="/onboarding"
-                    search={{ guest: true }}
-                    onClick={onCta("hero", "preview")}
-                    className="apple-btn-primary"
-                    style={{ background: "var(--mint)", color: "#ffffff" }}
-                  >
-                    {t("landing.rv.hero.cta_primary")}
-                  </Link>
-                  <Link
-                    to="/auth"
-                    onClick={onCta("hero", "signup")}
-                    className="apple-btn-secondary"
-                    style={{
-                      background: "var(--apple-bg)",
-                      color: "var(--apple-text)",
-                      border: "1px solid var(--paper-3)",
-                    }}
-                  >
-                    {t("landing.rv.hero.cta_secondary")}
-                  </Link>
-                </>
-              )}
-            </div>
-
-            <p className="mt-5 text-body-sm" style={{ color: "var(--apple-text-2)" }}>
-              {t("landing.rv.hero.note")}
-            </p>
-          </div>
-
-          <HeroPreview t={t} />
-        </div>
-      </section>
-
-      {/* SÉLECTEUR DE PARCOURS — « Que veux-tu faire ? » (mobile-first, §3) */}
-      {isAuthed ? null : (
-        <section className="px-6 pt-4 pb-8 md:pt-8">
-          <Reveal>
-            <div className="max-w-[1100px] mx-auto">
-              <h2 className="rv-card-title text-center mb-8">{t("landing.paths.heading")}</h2>
-              <div className="grid gap-4 md:grid-cols-3">
-                <PathCard
-                  accent="var(--mint)"
-                  eyebrow={t("landing.paths.beginner_eyebrow")}
-                  title={t("landing.paths.beginner_title")}
-                  desc={t("landing.paths.beginner_desc")}
-                  cta={t("landing.paths.beginner_cta")}
-                  to="/onboarding"
-                  search={{ guest: true }}
-                  onClick={onCta("path_beginner", "preview")}
-                />
-                <PathCard
-                  accent="var(--ice)"
-                  eyebrow={t("landing.paths.learn_eyebrow")}
-                  title={t("landing.paths.learn_title")}
-                  desc={t("landing.paths.learn_desc")}
-                  cta={t("landing.paths.learn_cta")}
-                  to="/comprendre"
-                  onClick={onCta("path_learn", "preview")}
-                />
-                <PathCard
-                  accent="var(--volt)"
-                  eyebrow={t("landing.paths.investor_eyebrow")}
-                  title={t("landing.paths.investor_title")}
-                  desc={t("landing.paths.investor_desc")}
-                  cta={t("landing.paths.investor_cta")}
-                  to="/auth"
-                  search={{ redirect: "/portfolio", mode: "login" }}
-                  onClick={onCta("path_investor", "login")}
-                />
+              <div className="flex flex-wrap items-center gap-3 mt-10">
+                {isAuthed ? (
+                  <Button asChild variant="on-dark">
+                    <Link to="/dashboard">{t("landing.rv.hero.cta_authed")}</Link>
+                  </Button>
+                ) : (
+                  <>
+                    <Button asChild variant="on-dark">
+                      <Link
+                        to="/onboarding"
+                        search={{ guest: true }}
+                        onClick={onCta("hero", "preview")}
+                      >
+                        {t("landing.rv.hero.cta_primary")}
+                      </Link>
+                    </Button>
+                    <Button
+                      asChild
+                      className="bg-transparent text-paper ring-1 ring-inset ring-paper/25 hover:ring-paper/60 hover:opacity-100"
+                    >
+                      <Link to="/auth" onClick={onCta("hero", "signup")}>
+                        {t("landing.rv.hero.cta_secondary")}
+                      </Link>
+                    </Button>
+                  </>
+                )}
               </div>
-            </div>
-          </Reveal>
-        </section>
-      )}
 
-      {/* BANDEAU PREUVE — chiffres réels et sourcés */}
-      <section className="px-6 py-10 md:py-12">
+              <p className="mt-6 text-body-sm text-paper/45 max-w-[52ch]">
+                {t("landing.rv.hero.note")}
+              </p>
+            </div>
+
+            <HeroProof t={t} />
+          </div>
+        </header>
+      </div>
+
+      {/* ── CATALOGUE : bande claire ──────────────────────────────── */}
+      <div className="max-w-[1160px] mx-auto px-7 py-20 md:py-24 flex flex-col gap-20 md:gap-24">
+        {/* Preuves */}
         <Reveal>
-          <div className="max-w-[1100px] mx-auto rv-proof">
-            <span className="rv-proof-item">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <ProofTile>
               <Trans i18nKey="landing.rv.proof.funds" components={{ b: <b /> }} />
-            </span>
-            <span className="rv-proof-item">
+            </ProofTile>
+            <ProofTile>
               <Trans i18nKey="landing.rv.proof.sources" components={{ b: <b /> }} />
-            </span>
-            <span className="rv-proof-item">
+            </ProofTile>
+            <ProofTile>
               <Trans i18nKey="landing.rv.proof.no_advice" components={{ b: <b /> }} />
-            </span>
-            <span className="rv-proof-item">
+            </ProofTile>
+            <ProofTile>
               <Trans i18nKey="landing.rv.proof.free" components={{ b: <b /> }} />
-            </span>
+            </ProofTile>
           </div>
         </Reveal>
-      </section>
 
-      {/* CARTES PRODUIT — enchaînement narratif façon fintech */}
-      <div className="px-6 pb-6 flex flex-col gap-6 max-w-[1100px] mx-auto">
-        {/* 1 · Simulateur (ice) */}
-        <Reveal>
-          <ShowcaseCard
-            accent="accent-ice"
-            eyebrow={t("landing.rv.cards.simulate.eyebrow")}
-            title={t("landing.rv.cards.simulate.title")}
-            desc={t("landing.rv.cards.simulate.desc")}
-            action={
+        {/* Parcours */}
+        {isAuthed ? null : (
+          <Reveal>
+            <h2 className="max-w-[16ch]">{t("landing.paths.heading")}</h2>
+            <div className="grid md:grid-cols-3 gap-4 mt-10">
+              <PathCard
+                eyebrow={t("landing.paths.beginner_eyebrow")}
+                title={t("landing.paths.beginner_title")}
+                desc={t("landing.paths.beginner_desc")}
+                cta={t("landing.paths.beginner_cta")}
+                to="/onboarding"
+                search={{ guest: true }}
+                onClick={onCta("path_beginner", "preview")}
+              />
+              <PathCard
+                eyebrow={t("landing.paths.learn_eyebrow")}
+                title={t("landing.paths.learn_title")}
+                desc={t("landing.paths.learn_desc")}
+                cta={t("landing.paths.learn_cta")}
+                to="/comprendre"
+                onClick={onCta("path_learn", "preview")}
+              />
+              <PathCard
+                eyebrow={t("landing.paths.investor_eyebrow")}
+                title={t("landing.paths.investor_title")}
+                desc={t("landing.paths.investor_desc")}
+                cta={t("landing.paths.investor_cta")}
+                to="/auth"
+                search={{ redirect: "/portfolio", mode: "login" }}
+                onClick={onCta("path_investor", "login")}
+              />
+            </div>
+          </Reveal>
+        )}
+
+        {/* Simulateur */}
+        <Section
+          eyebrow={t("landing.rv.cards.simulate.eyebrow")}
+          title={t("landing.rv.cards.simulate.title")}
+          desc={t("landing.rv.cards.simulate.desc")}
+          action={
+            <Button asChild>
               <Link
                 to="/onboarding"
                 search={{ guest: true }}
                 onClick={onCta("card_simulate", "preview")}
-                className="apple-btn-primary mt-8"
               >
                 {t("landing.rv.cards.simulate.cta")}
               </Link>
-            }
-            visual={<LandingTour embedded />}
-            stacked
-          />
-        </Reveal>
+            </Button>
+          }
+        >
+          <LandingTour embedded />
+        </Section>
 
-        {/* 2 · Impact (mint) */}
+        {/* Le constat — bande sombre encartée */}
         <Reveal>
-          <ShowcaseCard
-            accent="accent-mint"
-            eyebrow={t("landing.rv.cards.impact.eyebrow")}
-            title={t("landing.rv.cards.impact.title")}
-            desc={t("landing.rv.cards.impact.desc")}
-            action={
-              <Link to="/methodologie" className="apple-link mt-7">
-                {t("landing.rv.cards.impact.cta")} <span aria-hidden>›</span>
-              </Link>
-            }
-            visual={
-              <div
-                className="apple-card w-full"
-                style={{ border: "1px solid var(--paper-3)", padding: "22px" }}
-                aria-hidden
-              >
-                {/* Un seul chiffre d'impact héros (analyse UX §08 — P1) : le score
-                    d'impact domine, le CO₂ évité est sa preuve concrète, la
-                    projection 10 ans reste un axe distinct (rendement). La note
-                    ESG « AA » redondante est retirée. */}
-                <KPIFigure
-                  label={t("comparatif_panel.impact_score")}
-                  value="74 / 100"
-                  tone="mint"
-                />
-                <div className="mt-4 grid grid-cols-2 gap-5">
-                  <KPIFigure
-                    size="sm"
-                    label={t("landing.hero2.preview.kpi_carbon")}
-                    value="−58 %"
-                    tone="mint"
-                  />
-                  <KPIFigure
-                    size="sm"
-                    label={t("comparatif_panel.simulated_10y")}
-                    value="24 180"
-                    unit="€"
-                    tone="ice"
-                    hint={t("comparatif_panel.on_invested", { amount: "10 000" })}
-                  />
-                </div>
-                <p className="mt-5 text-caption leading-[1.45] text-[color:var(--apple-text-2)]">
-                  {t("landing.hero2.preview.note")}
-                </p>
-              </div>
-            }
-          />
-        </Reveal>
-
-        {/* 3 · Le constat (solar, fond ink) */}
-        <Reveal>
-          <section className="accent-solar rv-card rv-card--ink text-center">
-            <p className="rv-card-eyebrow justify-center">
-              <span aria-hidden className="rv-card-dot" />
-              {t("landing.rv.cards.problem.eyebrow")}
-            </p>
-            <h2 className="rv-card-title mt-4 mx-auto max-w-[720px]">
-              {t("landing.rv.cards.problem.title")}
-            </h2>
-            <p className="apple-subtitle mx-auto max-w-[560px] mt-5">
+          <div className="ink-section px-7 py-16 md:px-14 md:py-20">
+            <p className="eyebrow">{t("landing.rv.cards.problem.eyebrow")}</p>
+            <h2 className="mt-4 max-w-[20ch] text-paper">{t("landing.rv.cards.problem.title")}</h2>
+            <p className="mt-5 max-w-[54ch] text-body-lg leading-relaxed text-paper/66">
               {t("landing.rv.cards.problem.desc")}
             </p>
 
-            <div className="grid md:grid-cols-3 gap-12 md:gap-8 mt-14">
+            <div className="grid md:grid-cols-3 gap-10 md:gap-8 mt-14">
               {STATS.map((s) => (
                 <div key={s.figure}>
-                  <div
-                    className="font-bold"
-                    style={{
-                      fontSize: "clamp(60px, 8vw, 104px)",
-                      lineHeight: 0.9,
-                      letterSpacing: "-0.05em",
-                      color: "var(--section-accent)",
-                    }}
-                  >
+                  <p className="font-value text-[clamp(48px,6vw,76px)] leading-none text-paper">
                     {s.figure}
-                  </div>
-                  <p
-                    className="mt-4 text-body-lg leading-[1.45] max-w-[240px] mx-auto"
-                    style={{ color: "#b8b8bf" }}
-                  >
+                  </p>
+                  <p className="mt-4 text-body-lg leading-snug max-w-[26ch] text-paper/66">
                     {s.text}
                   </p>
-                  <p className="apple-stat-src" style={{ color: "#8e8e94" }}>
-                    {s.src}
-                  </p>
+                  <Provenance className="mt-4" source={s.src} status="verified" hideChip />
                 </div>
               ))}
             </div>
-          </section>
+          </div>
         </Reveal>
 
-        {/* 4 · Cours (volt) */}
-        <Reveal>
-          <ShowcaseCard
-            accent="accent-volt"
-            eyebrow={t("landing.rv.cards.courses.eyebrow")}
-            title={t("landing.rv.cards.courses.title")}
-            desc={t("landing.rv.cards.courses.desc")}
-            visual={<LandingCourses embedded />}
-            stacked
-          />
-        </Reveal>
+        {/* Impact */}
+        <Section
+          eyebrow={t("landing.rv.cards.impact.eyebrow")}
+          title={t("landing.rv.cards.impact.title")}
+          desc={t("landing.rv.cards.impact.desc")}
+          action={
+            <Button asChild variant="link" className="px-0">
+              <Link to="/methodologie">{t("landing.rv.cards.impact.cta")}</Link>
+            </Button>
+          }
+          side
+        >
+          <ImpactProof t={t} />
+        </Section>
 
-        {/* 5 · Ethi (ice, fond ink) */}
-        <Reveal>
-          <section className="accent-ice rv-card rv-card--ink">
-            <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
-              <div>
-                <p className="rv-card-eyebrow">
-                  <span aria-hidden className="rv-card-dot" />
-                  {t("landing.rv.cards.ethi.eyebrow")}
-                </p>
-                <h2 className="rv-card-title mt-4">{t("landing.rv.cards.ethi.title")}</h2>
-                <p className="apple-subtitle mt-5 max-w-[480px]">
-                  {t("landing.rv.cards.ethi.desc")}
-                </p>
-                <p
-                  className="mt-7 text-body-sm font-mono"
-                  style={{ color: "#a1a1a6", letterSpacing: "0.02em" }}
-                >
-                  {t("landing.ethi.example_label")}
-                </p>
-              </div>
+        {/* Cours */}
+        <Section
+          eyebrow={t("landing.rv.cards.courses.eyebrow")}
+          title={t("landing.rv.cards.courses.title")}
+          desc={t("landing.rv.cards.courses.desc")}
+        >
+          <LandingCourses embedded />
+        </Section>
 
-              <div className="flex flex-col gap-3">
-                <ChatBubble side="user">{t("landing.ethi.chat_q1")}</ChatBubble>
-                <ChatBubble side="ethi">{t("landing.ethi.chat_a1")}</ChatBubble>
-                <ChatBubble side="user">{t("landing.ethi.chat_q2")}</ChatBubble>
-                <ChatBubble side="ethi">{t("landing.ethi.chat_a2")}</ChatBubble>
-              </div>
+        {/* Ethi */}
+        <Section
+          eyebrow={t("landing.rv.cards.ethi.eyebrow")}
+          title={t("landing.rv.cards.ethi.title")}
+          desc={t("landing.rv.cards.ethi.desc")}
+          side
+        >
+          <div className="paper-card p-7">
+            <p className="stamp">{t("landing.ethi.example_label")}</p>
+            <div className="flex flex-col gap-4 mt-5">
+              <Exchange who="user">{t("landing.ethi.chat_q1")}</Exchange>
+              <Exchange who="ethi">{t("landing.ethi.chat_a1")}</Exchange>
+              <Exchange who="user">{t("landing.ethi.chat_q2")}</Exchange>
+              <Exchange who="ethi">{t("landing.ethi.chat_a2")}</Exchange>
             </div>
-          </section>
-        </Reveal>
+          </div>
+        </Section>
 
-        {/* 6 · Méthode ouverte + test ESG sans compte (solar) */}
-        <Reveal>
-          <ShowcaseCard
-            accent="accent-solar"
-            eyebrow={t("landing.rv.cards.method.eyebrow")}
-            title={t("landing.rv.cards.method.title")}
-            desc={t("landing.rv.cards.method.desc")}
-            action={
-              <Link to="/methodologie" className="apple-link mt-7">
-                {t("landing.rv.cards.method.cta")} <span aria-hidden>›</span>
-              </Link>
-            }
-            visual={<EsgQuickCheck embedded />}
-            stacked
-          />
-        </Reveal>
-      </div>
+        {/* Méthode */}
+        <Section
+          eyebrow={t("landing.rv.cards.method.eyebrow")}
+          title={t("landing.rv.cards.method.title")}
+          desc={t("landing.rv.cards.method.desc")}
+          action={
+            <Button asChild variant="link" className="px-0">
+              <Link to="/methodologie">{t("landing.rv.cards.method.cta")}</Link>
+            </Button>
+          }
+        >
+          <EsgQuickCheck embedded />
+        </Section>
 
-      {/* CTA FINAL */}
-      <section className="px-6 pt-10 pb-20">
+        {/* CTA final */}
         <Reveal>
-          <div className="max-w-[1100px] mx-auto rv-card rv-card--ink text-center py-20 md:py-28">
-            <h2 className="rv-section-title mx-auto max-w-[620px] text-balance">
-              {t("landing.rv.final.title")}
-            </h2>
-            <p className="apple-subtitle mx-auto max-w-[520px] mt-5">
+          <div className="ink-section px-7 py-20 md:py-24 text-center">
+            <h2 className="mx-auto max-w-[18ch] text-paper">{t("landing.rv.final.title")}</h2>
+            <p className="mt-5 mx-auto max-w-[44ch] text-body-lg text-paper/66">
               {isAuthed
                 ? t("landing.rv.final.subtitle_authed")
                 : t("landing.rv.final.subtitle_new")}
@@ -454,97 +340,79 @@ function Landing() {
 
             <div className="mt-10 flex flex-col items-center gap-4">
               {isAuthed ? (
-                <Link to="/dashboard" className="apple-btn-primary">
-                  {t("landing.rv.hero.cta_authed")}
-                </Link>
+                <Button asChild variant="on-dark">
+                  <Link to="/dashboard">{t("landing.rv.hero.cta_authed")}</Link>
+                </Button>
               ) : (
                 <>
-                  <Link
-                    to="/onboarding"
-                    search={{ guest: true }}
-                    onClick={onCta("final", "preview")}
-                    className="apple-btn-primary"
-                    style={{ background: "var(--mint)", color: "#ffffff" }}
-                  >
-                    {t("landing.rv.hero.cta_primary")}
-                  </Link>
-                  <p className="text-body-sm" style={{ color: "#a1a1a6" }}>
-                    {t("landing.hero.trust_line")}
-                  </p>
+                  <Button asChild variant="on-dark">
+                    <Link
+                      to="/onboarding"
+                      search={{ guest: true }}
+                      onClick={onCta("final", "preview")}
+                    >
+                      {t("landing.rv.hero.cta_primary")}
+                    </Link>
+                  </Button>
+                  <p className="text-body-sm text-paper/45">{t("landing.hero.trust_line")}</p>
                 </>
               )}
             </div>
 
-            <p
-              className="mt-10 mx-auto max-w-[560px] text-caption leading-[1.5]"
-              style={{ color: "#8e8e94" }}
-            >
+            <p className="mt-12 mx-auto max-w-[60ch] text-body-sm leading-relaxed text-paper/45">
               {t("landing.badge_simulation")}
             </p>
           </div>
         </Reveal>
-      </section>
+      </div>
 
-      {/* FOOTER */}
-      <footer
-        className="px-6 py-10 text-label text-[color:var(--apple-text-2)]"
-        style={{ background: "var(--apple-surface)", borderTop: "1px solid #d2d2d7" }}
-      >
-        <div className="max-w-[1100px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <span
-              className="inline-flex items-center gap-1.5 text-body-lg font-bold text-[color:var(--apple-text)]"
-              style={{ letterSpacing: "-0.02em" }}
-            >
-              SEEDOW
-              <span
-                aria-hidden
-                className="inline-block w-[5px] h-[5px] rounded-full"
-                style={{ background: "var(--mint)" }}
-              />
-            </span>
-            <span>{t("landing.footer.copyright")}</span>
+      {/* ── FOOTER ────────────────────────────────────────────────── */}
+      <footer className="bg-deep text-paper">
+        <div className="max-w-[1160px] mx-auto px-7 py-14 flex flex-col md:flex-row md:items-start justify-between gap-10">
+          <div>
+            <Wordmark onDark />
+            <p className="mt-4 text-body-sm text-paper/45">{t("landing.footer.copyright")}</p>
           </div>
 
-          <nav className="flex flex-wrap gap-x-6 gap-y-2">
-            <Link to="/cours" className="hover:text-[color:var(--apple-text)]">
-              {t("landing.footer.courses")}
-            </Link>
-            <Link to="/methodologie" className="hover:text-[color:var(--apple-text)]">
-              {t("landing.footer.methodology")}
-            </Link>
-            <Link to="/observatoire" className="hover:text-[color:var(--apple-text)]">
-              {t("landing.footer.observatory")}
-            </Link>
-            <Link to="/tarifs" className="hover:text-[color:var(--apple-text)]">
-              {t("landing.footer.pricing")}
-            </Link>
-            <Link to="/aide" className="hover:text-[color:var(--apple-text)]">
-              {t("landing.footer.help")}
-            </Link>
+          <nav className="grid grid-cols-2 sm:grid-cols-3 gap-x-12 gap-y-3">
+            {[
+              { to: "/cours", label: t("landing.footer.courses") },
+              { to: "/methodologie", label: t("landing.footer.methodology") },
+              { to: "/observatoire", label: t("landing.footer.observatory") },
+              { to: "/tarifs", label: t("landing.footer.pricing") },
+              { to: "/aide", label: t("landing.footer.help") },
+              { to: "/mentions-legales", label: t("landing.footer.legal") },
+              { to: "/confidentialite", label: t("landing.footer.privacy") },
+              { to: "/cgu", label: t("landing.footer.terms") },
+            ].map((l) => (
+              <Link
+                key={l.to}
+                to={l.to}
+                className="text-body-sm font-medium text-paper/60 hover:text-paper transition-colors"
+              >
+                {l.label}
+              </Link>
+            ))}
             {isAuthed ? (
-              <Link to="/dashboard" className="hover:text-[color:var(--apple-text)]">
+              <Link
+                to="/dashboard"
+                className="text-body-sm font-medium text-paper/60 hover:text-paper transition-colors"
+              >
                 {t("landing.footer.my_space")}
               </Link>
             ) : (
               <Link
                 to="/auth"
                 search={{ redirect: "/le-fil", mode: "login" }}
-                className="hover:text-[color:var(--apple-text)]"
+                className="text-body-sm font-medium text-paper/60 hover:text-paper transition-colors"
               >
                 {t("landing.footer.login")}
               </Link>
             )}
-            <Link to="/mentions-legales" className="hover:text-[color:var(--apple-text)]">
-              {t("landing.footer.legal")}
-            </Link>
-            <Link to="/confidentialite" className="hover:text-[color:var(--apple-text)]">
-              {t("landing.footer.privacy")}
-            </Link>
-            <Link to="/cgu" className="hover:text-[color:var(--apple-text)]">
-              {t("landing.footer.terms")}
-            </Link>
-            <a href="mailto:hello@seedow.life" className="hover:text-[color:var(--apple-text)]">
+            <a
+              href="mailto:hello@seedow.life"
+              className="text-body-sm font-medium text-paper/60 hover:text-paper transition-colors"
+            >
               {t("landing.footer.contact")}
             </a>
           </nav>
@@ -554,9 +422,25 @@ function Landing() {
   );
 }
 
-/* ---------- Sub-components ---------- */
+/* ---------- Sous-composants ---------- */
 
-/** Apparition au scroll — sobre (fade + 14px), neutralisée si reduced-motion. */
+function Wordmark({ onDark = false }: { onDark?: boolean }) {
+  return (
+    <Link
+      to="/"
+      className={`inline-flex items-baseline gap-1 text-[22px] font-extrabold tracking-[-0.03em] ${
+        onDark ? "text-paper" : "text-ink"
+      }`}
+    >
+      seedow
+      <span aria-hidden className="text-mint">
+        .
+      </span>
+    </Link>
+  );
+}
+
+/** Apparition au scroll — un fondu de 8px, pas une cascade différée. */
 function Reveal({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -574,25 +458,61 @@ function Reveal({ children }: { children: React.ReactNode }) {
           obs.disconnect();
         }
       },
-      { rootMargin: "0px 0px -12% 0px" },
+      { rootMargin: "0px 0px -10% 0px" },
     );
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
 
   return (
-    <div ref={ref} className={visible ? "rv-reveal is-in" : "rv-reveal"}>
+    <div ref={ref} className={visible ? "reveal in-view" : "reveal"}>
       {children}
     </div>
   );
 }
 
-/**
- * Carte de parcours — grande zone tactile (toute la carte est un lien), pensée
- * pouce sur mobile. Réponds à « quelle est la prochaine chose que je peux faire ? »
- */
+/** Section de catalogue : titre à gauche, démonstration à droite ou dessous. */
+function Section({
+  eyebrow,
+  title,
+  desc,
+  action,
+  side = false,
+  children,
+}: {
+  eyebrow: string;
+  title: string;
+  desc?: string;
+  action?: React.ReactNode;
+  side?: boolean;
+  children?: React.ReactNode;
+}) {
+  return (
+    <Reveal>
+      <div className={side ? "grid lg:grid-cols-2 gap-12 lg:gap-16 items-center" : ""}>
+        <div>
+          <p className="eyebrow">{eyebrow}</p>
+          <h2 className="mt-3 max-w-[18ch]">{title}</h2>
+          {desc && (
+            <p className="mt-5 max-w-[52ch] text-body-lg leading-relaxed text-ink-2">{desc}</p>
+          )}
+          {action && <div className="mt-8">{action}</div>}
+        </div>
+        {children && <div className={side ? "" : "mt-10"}>{children}</div>}
+      </div>
+    </Reveal>
+  );
+}
+
+function ProofTile({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="paper-card px-5 py-5 text-body-sm leading-relaxed text-ink-2 [&_b]:text-ink [&_b]:font-bold">
+      {children}
+    </p>
+  );
+}
+
 function PathCard({
-  accent,
   eyebrow,
   title,
   desc,
@@ -601,7 +521,6 @@ function PathCard({
   search,
   onClick,
 }: {
-  accent: string;
   eyebrow: string;
   title: string;
   desc: string;
@@ -615,164 +534,121 @@ function PathCard({
       to={to}
       search={search}
       onClick={onClick}
-      className="apple-card group flex flex-col p-6 min-h-[168px] transition-transform duration-200 hover:-translate-y-0.5 outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--mint)]"
-      style={{ border: "1px solid var(--paper-3)" }}
+      className="paper-card group flex flex-col p-7 outline-none transition-colors hover:bg-paper-inset focus-visible:ring-2 focus-visible:ring-ink"
     >
-      <span
-        className="font-mono text-caption uppercase tracking-[0.14em] inline-flex items-center gap-2"
-        style={{ color: accent }}
-      >
-        <span
-          aria-hidden
-          className="inline-block w-[7px] h-[7px] rounded-full"
-          style={{ background: accent }}
-        />
-        {eyebrow}
-      </span>
-      <h3
-        className="mt-3 text-body-lg font-semibold text-[color:var(--apple-text)]"
-        style={{ letterSpacing: "-0.01em" }}
-      >
-        {title}
-      </h3>
-      <p className="mt-2 text-body-sm leading-[1.45] text-[color:var(--apple-text-2)]">{desc}</p>
-      <span
-        className="mt-auto pt-4 text-body-sm font-semibold inline-flex items-center gap-1"
-        style={{ color: accent }}
-      >
+      <span className="chip">{eyebrow}</span>
+      <h3 className="mt-4">{title}</h3>
+      <p className="mt-2.5 text-body-sm leading-relaxed text-ink-2">{desc}</p>
+      <span className="mt-auto pt-6 text-body font-semibold text-mint-ink inline-flex items-center gap-1.5">
         {cta}
-        <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-0.5">
-          ›
+        <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
+          →
         </span>
       </span>
     </Link>
   );
 }
 
-function ShowcaseCard({
-  accent,
-  eyebrow,
-  title,
-  desc,
-  action,
-  visual,
-  stacked = false,
-}: {
-  accent: string;
-  eyebrow: string;
-  title: string;
-  desc: string;
-  action?: React.ReactNode;
-  visual: React.ReactNode;
-  stacked?: boolean;
-}) {
-  return (
-    <section className={`${accent} rv-card`}>
-      <div className={stacked ? "" : "grid lg:grid-cols-2 gap-10 lg:gap-14 items-center"}>
-        <div className={stacked ? "max-w-[680px]" : ""}>
-          <p className="rv-card-eyebrow">
-            <span aria-hidden className="rv-card-dot" />
-            {eyebrow}
-          </p>
-          <h2 className="rv-card-title mt-4">{title}</h2>
-          <p className="apple-subtitle mt-5 max-w-[520px]">{desc}</p>
-          {action}
-        </div>
-        <div className={stacked ? "mt-10" : ""}>{visual}</div>
-      </div>
-    </section>
-  );
-}
-
-function HeroPreview({ t }: { t: (key: string, opts?: Record<string, unknown>) => string }) {
+/**
+ * Bloc de preuve du hero — un extrait de simulation avec son état de preuve.
+ * Ce n'est pas une capture décorative : c'est la démonstration du titre.
+ */
+function HeroProof({ t }: { t: (key: string, opts?: Record<string, unknown>) => string }) {
   const convictions = [
-    { label: t("landing.hero2.preview.conv_climate"), weight: 42, color: "var(--mint)" },
-    { label: t("landing.hero2.preview.conv_biodiversity"), weight: 33, color: "var(--ice)" },
-    { label: t("landing.hero2.preview.conv_social"), weight: 25, color: "var(--volt)" },
+    { label: t("landing.hero2.preview.conv_climate"), weight: 42 },
+    { label: t("landing.hero2.preview.conv_biodiversity"), weight: 33 },
+    { label: t("landing.hero2.preview.conv_social"), weight: 25 },
   ];
 
   return (
-    <div
-      className="apple-card w-full"
-      style={{ border: "1px solid var(--paper-3)", padding: "22px 22px 26px" }}
-      aria-hidden
-    >
-      <div className="flex items-center justify-between">
-        <p className="text-caption font-mono uppercase tracking-[0.16em] text-[color:var(--apple-text-2)]">
-          {t("landing.hero2.preview.label")}
-        </p>
-        <span className="text-caption font-mono text-[color:var(--apple-text-2)]">
-          {t("landing.hero2.preview.source")}
-        </span>
+    <div className="rounded-[--radius] bg-deep-2 p-7" aria-hidden>
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-body font-semibold text-paper/56">{t("landing.hero2.preview.label")}</p>
+        <span className="chip">{t("landing.hero2.preview.source")}</span>
       </div>
 
-      <div className="mt-5 flex flex-col gap-3">
-        {convictions.map((c) => (
+      <div className="mt-7 flex flex-col gap-4">
+        {convictions.map((c, i) => (
           <div key={c.label}>
-            <div className="flex items-baseline justify-between text-body-sm text-[color:var(--apple-text)]">
-              <span className="inline-flex items-center gap-2">
-                <span
-                  aria-hidden
-                  className="inline-block w-[7px] h-[7px] rounded-full"
-                  style={{ background: c.color }}
-                />
-                {c.label}
-              </span>
-              <span className="font-mono text-[color:var(--apple-text-2)]">{c.weight}%</span>
+            <div className="flex items-baseline justify-between text-body">
+              <span className="text-paper/80">{c.label}</span>
+              <span className="font-value text-paper">{c.weight} %</span>
             </div>
-            <div
-              className="mt-1.5 h-[6px] rounded-full overflow-hidden"
-              style={{ background: "var(--paper-3)" }}
-            >
+            <div className="mt-2 h-1.5 rounded-full bg-paper/10 overflow-hidden">
               <div
-                className="h-full rounded-full"
-                style={{ width: `${c.weight}%`, background: c.color }}
+                className="h-full rounded-full bg-mint trace"
+                style={{ width: `${c.weight}%`, animationDelay: `${0.15 + i * 0.08}s` }}
               />
             </div>
           </div>
         ))}
       </div>
 
-      <div
-        className="mt-6 pt-5 grid grid-cols-2 gap-4"
-        style={{ borderTop: "1px solid var(--paper-3)" }}
-      >
-        <KPIFigure
-          size="sm"
-          label={t("landing.hero2.preview.kpi_esg")}
-          value="74 / 100"
-          tone="mint"
-        />
-        <KPIFigure
-          size="sm"
-          label={t("landing.hero2.preview.kpi_carbon")}
-          value="−58 %"
-          tone="ice"
-        />
+      <div className="mt-8 pt-6 border-t border-paper/10 grid grid-cols-2 gap-6">
+        <div>
+          <p className="text-body-sm font-semibold text-paper/56">
+            {t("landing.hero2.preview.kpi_esg")}
+          </p>
+          <p className="font-value text-[34px] leading-none mt-2 text-paper">74</p>
+        </div>
+        <div>
+          <p className="text-body-sm font-semibold text-paper/56">
+            {t("landing.hero2.preview.kpi_carbon")}
+          </p>
+          <p className="font-value text-[34px] leading-none mt-2 text-mint-ink">−58 %</p>
+        </div>
       </div>
 
-      <p className="mt-4 text-caption leading-[1.45] text-[color:var(--apple-text-2)]">
+      <p className="mt-6 text-body-sm leading-relaxed text-paper/45">
         {t("landing.hero2.preview.note")}
       </p>
     </div>
   );
 }
 
-function ChatBubble({ side, children }: { side: "user" | "ethi"; children: React.ReactNode }) {
-  const isUser = side === "user";
+/** Preuve d'impact — un score, deux mesures, un état de preuve. */
+function ImpactProof({ t }: { t: (key: string, opts?: Record<string, unknown>) => string }) {
   return (
-    <div className={isUser ? "self-end" : "self-start"} style={{ maxWidth: "85%" }}>
-      <div
-        className="text-body-lg leading-[1.4] px-5 py-3"
-        style={{
-          background: isUser ? "var(--mint)" : "var(--apple-dark-2)",
-          color: "#ffffff",
-          borderRadius: 22,
-          marginLeft: isUser ? "auto" : 0,
-        }}
-      >
-        {children}
+    <div className="paper-card p-8">
+      <p className="stamp">{t("comparatif_panel.impact_score")}</p>
+      <p className="font-value text-[clamp(48px,7vw,68px)] leading-none mt-3 text-ink">
+        74
+        <span className="text-ink-3 text-[0.38em] ml-2">/ 100</span>
+      </p>
+
+      <div className="mt-8 pt-6 border-t border-paper-3 grid grid-cols-2 gap-6">
+        <div>
+          <p className="stamp">{t("landing.hero2.preview.kpi_carbon")}</p>
+          <p className="font-value text-[28px] leading-none mt-2 text-mint-ink">−58 %</p>
+        </div>
+        <div>
+          <p className="stamp">{t("comparatif_panel.simulated_10y")}</p>
+          <p className="font-value text-[28px] leading-none mt-2 text-ink">24 180 €</p>
+          <p className="mt-2 text-body-sm text-ink-3">
+            {t("comparatif_panel.on_invested", { amount: "10 000" })}
+          </p>
+        </div>
       </div>
+
+      <Provenance
+        className="mt-6"
+        status="modelled"
+        source="MSCI ESG"
+        note={t("landing.hero2.preview.note")}
+      />
+    </div>
+  );
+}
+
+/** Échange avec Ethi — attribution nette, pas une bulle de messagerie. */
+function Exchange({ who, children }: { who: "user" | "ethi"; children: React.ReactNode }) {
+  const isUser = who === "user";
+  return (
+    <div>
+      <p className="stamp">{isUser ? "—" : "Ethi"}</p>
+      <p className={`mt-1 text-body-lg leading-relaxed ${isUser ? "text-ink-2" : "text-ink"}`}>
+        {children}
+      </p>
     </div>
   );
 }

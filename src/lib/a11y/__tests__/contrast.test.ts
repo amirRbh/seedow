@@ -71,6 +71,16 @@ const TEXT_PAIRS: Array<[string, string]> = [
   ["--paper", "--ink"],
   ["--primary-foreground", "--primary"],
   ["--destructive-foreground", "--destructive"],
+  // DA V2 « Preuve » — le crochet de provenance porte de l'information
+  // (source, date, couverture), pas de la décoration : --ink-3 doit donc
+  // tenir AA comme n'importe quel texte, et pas seulement être perceptible.
+  ["--ink-3", "--paper"],
+  ["--ink-3", "--paper-2"],
+  // Boutons pleins de la V2 : `accent` = aplat --ice, `default` = aplat --ink,
+  // tous deux en texte --paper.
+  ["--paper", "--ice"],
+  ["--paper", "--mint"],
+  ["--paper", "--alert"],
 ];
 
 /** Aplats de marque (grands titres, graphiques, filets) : 3:1 suffit. */

@@ -2930,7 +2930,14 @@
   },
   "data_provenance": {
     "coverage_label": "What does coverage mean?",
-    "coverage_tooltip": "The share of your portfolio for which we have a real, measured data point. The rest isn't measured yet — and it isn't estimated either."
+    "coverage_tooltip": "The share of your portfolio for which we have a real, measured data point. The rest isn't measured yet — and it isn't estimated either.",
+    "coverage": "{{pct}}% coverage",
+    "no_source": "source not recorded",
+    "status_modelled": "Seedow estimate",
+    "status_disputed": "disputed by the source",
+    "status_unknown": "unverified",
+    "live": "live data",
+    "status_verified": "verified"
   },
   "simulation_ack": {
     "title": "Before you save",

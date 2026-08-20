@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 interface AppHeaderProps {
   /** Eyebrow en capitales, tracking large — code de revue éditoriale. */
   eyebrow?: string;
-  /** Titre principal (Inter `font-value`, très grand, letter-spacing serré). */
+  /** Titre principal (Fraunces, éditorial). */
   title: string;
   /** Sous-titre optionnel (légende sous le titre). */
   subtitle?: string;
@@ -26,10 +26,10 @@ interface AppHeaderProps {
 }
 
 /**
- * Header partagé — registre éditorial (revue financière).
- * — Marque "seedow" en texte, identique partout.
- * — Hiérarchie par la typo : eyebrow capitales + grand titre Inter (`font-value`).
- * — Filet 1px sous l'en-tête de marque pour séparer sans carte.
+ * Header partagé — DA V2 « Preuve » (docs/DA-V2-PREUVE.md).
+ * — Marque "seedow" en Fraunces, identique partout.
+ * — Hiérarchie par la typo : tampon mono en capitales + titre éditorial.
+ * — Filets 1px, boutons à coins vifs, aucune ombre.
  * — Tutoiement systématique dans les libellés.
  */
 export function AppHeader({
@@ -43,13 +43,15 @@ export function AppHeader({
   const { t } = useTranslation();
   return (
     <header className="px-5 pt-6 pb-5">
-      <div className="md:hidden flex items-center justify-between border-b border-paper-3 pb-3">
+      <div className="md:hidden flex items-center justify-between pb-3">
         <Link
           to="/le-fil"
           aria-label={t("rail_nav.seedow_home")}
           className="inline-flex items-center outline-none rounded-sm focus-visible:ring-2 focus-visible:ring-highlight-1"
         >
-          <span className="font-value text-lg text-ink tracking-tight">seedow</span>
+          <span className="text-[21px] font-extrabold tracking-[-0.03em] text-ink">
+            seedow<span className="text-mint">.</span>
+          </span>
         </Link>
         <div className="flex items-center gap-2">
           <LanguageToggle />
@@ -58,8 +60,8 @@ export function AppHeader({
             to="/profil"
             aria-label={t("rail_nav.investor_profile")}
             className={cn(
-              "flex items-center justify-center w-11 h-11 rounded-full border border-paper-3 text-ink-2",
-              "transition-colors duration-150 hover:text-ink hover:border-ink-3",
+              "flex items-center justify-center w-11 h-11 rounded-full bg-paper text-ink-2",
+              "transition-colors duration-150 hover:text-ink hover:bg-paper-inset",
               "outline-none focus-visible:ring-2 focus-visible:ring-highlight-1",
             )}
           >
@@ -70,8 +72,8 @@ export function AppHeader({
               to="/reglages"
               aria-label={t("nav.open_settings")}
               className={cn(
-                "flex items-center justify-center w-11 h-11 rounded-full border border-paper-3 text-ink-2",
-                "transition-colors duration-150 hover:text-ink hover:border-ink-3",
+                "flex items-center justify-center w-11 h-11 rounded-full bg-paper text-ink-2",
+                "transition-colors duration-150 hover:text-ink hover:bg-paper-inset",
                 "outline-none focus-visible:ring-2 focus-visible:ring-highlight-1",
               )}
             >
@@ -83,22 +85,15 @@ export function AppHeader({
 
       <div className="mt-5 flex items-start gap-4">
         {sectionNumber && (
-          <span
-            aria-hidden="true"
-            className="font-value text-xs text-ink-3 tabular-nums tracking-widest pt-2 select-none"
-          >
+          <span aria-hidden="true" className="stamp pt-3 select-none">
             {sectionNumber.padStart(2, "0")}
           </span>
         )}
         <div className="min-w-0 flex-1">
-          {eyebrow && (
-            <p className="text-tag uppercase tracking-[0.2em] text-ink-3 font-mono mb-2">
-              {eyebrow}
-            </p>
-          )}
-          <h1 className="font-value text-h1-page text-ink truncate">{title}</h1>
+          {eyebrow && <p className="stamp mb-2.5">{eyebrow}</p>}
+          <h1 className="text-h1-page text-ink truncate">{title}</h1>
           {subtitle && (
-            <p className="text-sm text-ink-2 mt-2 max-w-prose leading-snug">{subtitle}</p>
+            <p className="text-body text-ink-2 mt-2.5 max-w-[52ch] leading-relaxed">{subtitle}</p>
           )}
         </div>
       </div>
@@ -119,7 +114,7 @@ function ProfileIcon() {
       className="w-[18px] h-[18px]"
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.8}
+      strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
@@ -137,7 +132,7 @@ function SettingsIcon() {
       className="w-[18px] h-[18px]"
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.8}
+      strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"

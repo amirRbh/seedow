@@ -24,6 +24,7 @@ import {
 } from "@/lib/portfolio/leFilSummary";
 import { assetClassColor } from "@/lib/portfolio/assetClasses";
 import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
+import { Provenance } from "@/components/ui/Provenance";
 
 // Référence de comparaison : ETF MSCI World (IWDA / EUNL). Rendement et
 // volatilité annualisés (mêmes conventions que le comparatif détaillé).
@@ -97,12 +98,14 @@ function LeFil() {
   ];
 
   return (
-    <div className="min-h-screen bg-paper">
+    <div className="min-h-screen bg-paper-2">
       <div className="max-w-lg mx-auto pb-28">
         <AppHeader eyebrow={t("le_fil.eyebrow")} title={userName} showPortfolioSelector />
 
         <div className="relative px-5 pt-4">
-          {/* Le fil vertical qui relie les nœuds */}
+          {/* Le fil vertical — c'est le rail de provenance de la DA V2 :
+              chaque nœud s'y accroche par un ergot, comme un chiffre s'accroche
+              à sa source (docs/DA-V2-PREUVE.md §4.4). */}
           <div aria-hidden className="absolute left-[26px] top-8 bottom-10 w-px bg-paper-3" />
 
           <div className="flex flex-col gap-4">
@@ -112,11 +115,9 @@ function LeFil() {
                 montant, un pourcentage dérivés du même couple, puis le repère
                 de comparaison et la date des cours. */}
             <Node index={1} active {...reveal(1)}>
-              <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
-                {t("le_fil.money")}
-              </p>
-              <p className="mt-2 text-body-sm text-ink-2">{t("le_fil.money_today")}</p>
-              <h2 className="font-value text-figure-hero leading-none text-ink">
+              <p className="stamp">{t("le_fil.money")}</p>
+              <p className="mt-1.5 text-body-sm text-ink-2">{t("le_fil.money_today")}</p>
+              <h2 className="mt-1 text-figure-hero leading-none text-ink">
                 <AnimatedFigure
                   value={totalValue}
                   from={0}
@@ -127,26 +128,33 @@ function LeFil() {
               <MoneyDelta money={money} lang={lang} />
 
               {totalInvested > 0 ? (
-                <p className="mt-2.5 text-body-sm leading-snug text-ink-2">
+                <p className="mt-3 text-body-sm leading-snug text-ink-2">
                   {t("le_fil.money_since", { invested: formatCurrency(totalInvested, lang) })}
                 </p>
               ) : (
-                <p className="mt-2.5 text-body-sm leading-snug text-ink-2">
+                <p className="mt-3 text-body-sm leading-snug text-ink-2">
                   {t("le_fil.money_empty")}
                 </p>
               )}
-              <p className="mt-1.5 font-mono text-body-sm text-ink-3">
-                {valuation.latestQuoteAt
-                  ? t("le_fil.money_updated", {
-                      date: formatDate(valuation.latestQuoteAt, lang, {
+              {/* La valorisation porte sa provenance : source, heure de cours,
+                  couverture (CLAUDE.md §1.2). L'horodatage garde la précision
+                  à la minute — c'est la fraîcheur du cours qui compte ici. */}
+              <Provenance
+                className="mt-4"
+                status="verified"
+                source="Yahoo Finance"
+                asOf={
+                  valuation.latestQuoteAt
+                    ? formatDate(valuation.latestQuoteAt, lang, {
                         day: "numeric",
                         month: "short",
                         hour: "2-digit",
                         minute: "2-digit",
-                      }),
-                    })
-                  : t("le_fil.money_updated_pending")}
-              </p>
+                      })
+                    : t("le_fil.money_updated_pending")
+                }
+                coverage={100}
+              />
 
               {/* Convictions rattachées au solde (moins de scroll : un seul nœud
                   « 3 secondes » = combien j'ai + ce que ça finance). Les codes
@@ -177,7 +185,7 @@ function LeFil() {
                 <Link
                   to="/discover"
                   search={{ theme: portfolio?.causes?.[0] }}
-                  className="mt-4 inline-block font-mono text-xs text-mint-ink underline-offset-4 hover:underline"
+                  className="mt-4 inline-block text-body font-semibold text-mint-ink hover:underline underline-offset-4"
                 >
                   {t("le_fil.explore_aligned")} →
                 </Link>
@@ -191,7 +199,7 @@ function LeFil() {
                 {holdings.length > 0 && (
                   <Link
                     to="/portfolio"
-                    className="font-mono text-xs text-mint-ink underline-offset-4 hover:underline"
+                    className="stamp text-ice-ink underline underline-offset-4 hover:no-underline"
                   >
                     {t("le_fil.see_all")} →
                   </Link>
@@ -207,7 +215,7 @@ function LeFil() {
                         aria-label={t("le_fil.asset_detail", { name: h.name })}
                         className="min-w-0 flex-1 rounded-sm text-left outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
                       >
-                        <p className="truncate text-sm font-medium text-ink">{h.name}</p>
+                        <p className="truncate text-body font-semibold text-ink">{h.name}</p>
                         {/* `allocationPct` est en POINTS (0..100) : le passer
                             tel quel à `formatPercent` affichait « 6 200 % »
                             pour une ligne à 62 %. */}
@@ -216,14 +224,14 @@ function LeFil() {
                           {formatPercentPoints(h.allocationPct ?? 0, lang, 0)}
                         </p>
                       </button>
-                      <span className="font-mono text-sm tabular-nums text-ink">
+                      <span className="font-value text-body text-ink">
                         {formatCurrency(((h.allocationPct ?? 0) / 100) * totalValue, lang)}
                       </span>
                       <Link
                         to="/ethi"
                         search={{ intent: "why", q: h.ticker }}
                         aria-label={t("le_fil.why_asset", { name: h.name })}
-                        className="shrink-0 text-xs text-ink-3 opacity-70 transition-opacity hover:text-mint-ink focus-visible:opacity-100 group-hover:opacity-100"
+                        className="shrink-0 stamp opacity-70 transition-opacity hover:text-ice-ink focus-visible:opacity-100 group-hover:opacity-100"
                       >
                         {t("le_fil.why")}
                       </Link>
@@ -248,14 +256,17 @@ function LeFil() {
                         <>
                           {" "}
                           {t("le_fil.carbon_prefix")}{" "}
-                          <span className="text-mint-ink font-medium">
+                          <span className="text-mint-ink font-value">
                             −{formatPercent(carbonDelta, lang, 0)}
                           </span>{" "}
                           {t("le_fil.carbon_suffix")}
                         </>
                       )}
                       <br />
-                      <Link to="/certificat" className="text-mint-ink font-medium">
+                      <Link
+                        to="/certificat"
+                        className="text-ice-ink underline underline-offset-4 hover:no-underline"
+                      >
                         {t("le_fil.impact_link")} →
                       </Link>
                     </>
@@ -265,7 +276,16 @@ function LeFil() {
                 </div>
               </div>
               {carbonDelta != null && (
-                <p className="mt-2 font-mono text-tag text-ink-3">{t("le_fil.carbon_source")}</p>
+                <Provenance
+                  className="mt-3"
+                  status="verified"
+                  source={t("le_fil.carbon_source")}
+                  coverage={
+                    impact?.presentation
+                      ? Math.round(impact.presentation.coverage * 100)
+                      : undefined
+                  }
+                />
               )}
               {portfolio?.esg_floor_relaxed && (
                 <div className="mt-3">
@@ -282,44 +302,46 @@ function LeFil() {
                   Sinon, état de repli honnête ET engageant (jamais de silence) :
                   on montre où on en est et ce qui manque pour débloquer le chiffre. */}
               {impact?.presentation?.show && impact.presentation.equivalences.length > 0 ? (
-                <div className="mt-4 rounded-[10px] border border-paper-3 bg-paper-2 p-3.5">
+                <div className="mt-5 paper-card-inset p-4">
                   <SectionLabel>{t("le_fil.equivalences_title")}</SectionLabel>
                   <ul className="mt-2.5 flex flex-col gap-2">
                     {impact.presentation.equivalences.slice(0, 3).map((e) => (
                       <li key={e.factorId} className="flex items-baseline justify-between gap-3">
-                        <span className="text-sm text-ink-2">{t(e.labelKey)}</span>
-                        <span className="shrink-0 font-mono text-sm text-mint-ink tabular-nums">
+                        <span className="text-body text-ink-2">{t(e.labelKey)}</span>
+                        <span className="shrink-0 font-value text-body text-mint-ink">
                           ≈ {Math.round(e.value).toLocaleString(lang, { maximumFractionDigits: 0 })}{" "}
                           {t(e.unitKey)}
                         </span>
                       </li>
                     ))}
                   </ul>
-                  <p className="mt-2 font-mono text-tag text-ink-3">
-                    {t("le_fil.equivalences_source")} :{" "}
-                    {impact.presentation.equivalences[0]?.source}
-                  </p>
+                  <Provenance
+                    className="mt-3"
+                    status="modelled"
+                    source={impact.presentation.equivalences[0]?.source}
+                    coverage={Math.round(impact.presentation.coverage * 100)}
+                  />
                 </div>
               ) : (
                 impact?.presentation && (
-                  <div className="mt-4 rounded-[10px] border border-paper-3 bg-paper-2 p-3.5">
+                  <div className="mt-5 paper-card-inset p-4">
                     <SectionLabel>{t("le_fil.equivalences_title")}</SectionLabel>
-                    <p className="mt-2 text-sm text-ink-2 leading-snug">
+                    <p className="mt-2 text-body text-ink-2 leading-snug">
                       {t(impact.presentation.reasonKey ?? "impact.reason.no_data", {
                         pct: Math.round(impact.presentation.coverage * 100),
                       })}
                     </p>
                     {impact.presentation.reasonKey === "impact.reason.low_coverage" && (
                       <div className="mt-2.5">
-                        <div className="h-1.5 w-full bg-paper-3 rounded-full overflow-hidden">
+                        <div className="h-[3px] w-full bg-paper-3 overflow-hidden">
                           <div
-                            className="h-full bg-mint transition-all"
+                            className="h-full bg-ink"
                             style={{
                               width: `${Math.min(100, Math.round(impact.presentation.coverage * 100 * 2))}%`,
                             }}
                           />
                         </div>
-                        <p className="mt-1 font-mono text-tag text-ink-3">
+                        <p className="mt-1.5 stamp">
                           {Math.round(impact.presentation.coverage * 100)}% / 50%
                         </p>
                       </div>
@@ -334,9 +356,7 @@ function LeFil() {
             <Node index={4} active={false} {...reveal(4)}>
               <details className="group">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
-                  <span className="text-[13px] font-semibold tracking-[-0.01em] text-ink-2">
-                    {t("le_fil.more")}
-                  </span>
+                  <span className="stamp">{t("le_fil.more")}</span>
                   <svg
                     viewBox="0 0 24 24"
                     className="h-4 w-4 flex-none text-ink-3 transition-transform duration-300 group-open:rotate-180"
@@ -352,9 +372,7 @@ function LeFil() {
                 <div className="mt-4 flex flex-col gap-4">
                   {/* Comparaison MSCI */}
                   <div>
-                    <p className="text-[13px] font-semibold tracking-[-0.01em] text-ink-2">
-                      {t("le_fil.compare_title")}
-                    </p>
+                    <SectionLabel>{t("le_fil.compare_title")}</SectionLabel>
                     {expectedReturn != null && volatility != null ? (
                       <div className="mt-3 flex flex-col gap-3">
                         <CompareRow
@@ -373,12 +391,13 @@ function LeFil() {
                           lang={lang}
                           higherIsBetter={false}
                         />
-                        <Link to="/comparatif" className="font-mono text-xs text-mint-ink">
+                        <Link
+                          to="/comparatif"
+                          className="stamp text-ice-ink underline underline-offset-4 hover:no-underline"
+                        >
                           {t("le_fil.compare_detail")} →
                         </Link>
-                        <p className="font-mono text-tag text-ink-3">
-                          {t("le_fil.returns_disclaimer")}
-                        </p>
+                        <Provenance status="modelled" note={t("le_fil.returns_disclaimer")} />
                       </div>
                     ) : (
                       <p className="text-sm text-ink-3 mt-2">{t("le_fil.compare_empty")}</p>
@@ -387,14 +406,9 @@ function LeFil() {
 
                   {/* Le monde réel */}
                   <div className="border-t border-paper-3 pt-4">
-                    <p className="text-[13px] font-semibold tracking-[-0.01em] text-ink-2">
-                      {t("le_fil.real_world")}
-                    </p>
-                    <p className="text-sm text-ink-2 mt-1">{t("le_fil.real_world_desc")}</p>
-                    <Link
-                      to="/methodologie"
-                      className="inline-block mt-2 font-mono text-xs text-ink-3 hover:text-ink"
-                    >
+                    <SectionLabel>{t("le_fil.real_world")}</SectionLabel>
+                    <p className="text-body text-ink-2 mt-1.5">{t("le_fil.real_world_desc")}</p>
+                    <Link to="/methodologie" className="inline-block mt-2.5 stamp hover:text-ink">
                       {t("le_fil.methodology")} →
                     </Link>
                   </div>
@@ -412,10 +426,10 @@ function LeFil() {
                   key={a.intent}
                   to="/ethi"
                   search={{ intent: a.intent, q: undefined }}
-                  className={`inline-flex h-9 items-center rounded-full border px-3.5 font-mono text-xs transition-colors ${
+                  className={`inline-flex h-10 items-center rounded-full px-4 text-body font-semibold transition-opacity ${
                     a.primary
-                      ? "border-ink bg-ink text-paper hover:bg-ink/90"
-                      : "border-paper-3 bg-paper-2 text-ink-2 hover:border-ink/30 hover:text-ink"
+                      ? "bg-ink text-paper hover:opacity-85"
+                      : "bg-paper text-ink-2 hover:text-ink"
                   }`}
                 >
                   {t(a.key)}
@@ -533,7 +547,7 @@ function FinanceRow({
 
 /** Intitulé de section : traitement typographique unique dans tout le fil. */
 function SectionLabel({ children }: { children: React.ReactNode }) {
-  return <p className="text-[13px] font-semibold tracking-[-0.01em] text-ink-2">{children}</p>;
+  return <p className="stamp">{children}</p>;
 }
 
 /** Un nœud du fil : puce sur la ligne + carte de contenu. */
@@ -549,13 +563,14 @@ function Node({
 } & React.ComponentProps<typeof motion.div>) {
   return (
     <motion.div {...motionProps} className="relative pl-9">
+      {/* Ergot sur le fil — une pastille discrète, alignée sur la carte. */}
       <span
         aria-hidden
-        className={`absolute left-[18px] top-[26px] h-[9px] w-[9px] -translate-x-1/2 rounded-full ring-4 ring-paper ${
-          active ? "bg-mint" : "border border-paper-3 bg-paper"
+        className={`absolute left-[18px] top-[26px] h-[9px] w-[9px] -translate-x-1/2 rounded-full ring-4 ring-paper-2 ${
+          active ? "bg-mint" : "bg-paper-3"
         }`}
       />
-      <div className="rounded-[14px] border border-paper-3 bg-card p-5">{children}</div>
+      <div className="paper-card p-6">{children}</div>
     </motion.div>
   );
 }
@@ -583,33 +598,35 @@ function CompareRow({
   const better = higherIsBetter ? mine >= benchmark : mine <= benchmark;
   return (
     <div className="flex flex-col gap-1.5">
-      <p className="text-[13px] font-medium tracking-[-0.01em] text-ink-2">{label}</p>
+      <p className="stamp">{label}</p>
+      {/* Barres à coins vifs : la mienne pleine, la référence hachurée — le
+          motif double la couleur (lisible en daltonisme, DA V2 §4.5). */}
       <div className="flex items-center gap-2">
-        <span className="w-14 shrink-0 font-mono text-tag text-ink-2">{mineLabel}</span>
-        <div className="h-2 flex-1 overflow-hidden rounded-full bg-paper-3">
+        <span className="w-14 shrink-0 stamp">{mineLabel}</span>
+        <div className="h-[6px] flex-1 bg-paper-3">
           <span
-            className="block h-full rounded-full"
+            className="block h-full"
             style={{
               width: `${(mine / max) * 100}%`,
-              background: better ? "var(--color-mint)" : "var(--ink-3)",
+              background: better ? "var(--color-mint)" : "var(--color-ink-3)",
             }}
           />
         </div>
         <span
-          className={`w-12 shrink-0 text-right font-mono text-tag tabular-nums ${better ? "text-mint-ink" : "text-ink-2"}`}
+          className={`w-14 shrink-0 text-right font-value text-caption ${better ? "text-mint-ink" : "text-ink-2"}`}
         >
           {formatPercent(mine, lang, 1)}
         </span>
       </div>
       <div className="flex items-center gap-2">
-        <span className="w-14 shrink-0 font-mono text-tag text-ink-2">MSCI</span>
-        <div className="h-2 flex-1 overflow-hidden rounded-full bg-paper-3">
+        <span className="w-14 shrink-0 stamp">MSCI</span>
+        <div className="h-[6px] flex-1 bg-paper-3">
           <span
-            className="block h-full rounded-full bg-ink-3"
+            className="hatch block h-full text-ink-3"
             style={{ width: `${(benchmark / max) * 100}%` }}
           />
         </div>
-        <span className="w-12 shrink-0 text-right font-mono text-tag text-ink-2 tabular-nums">
+        <span className="w-14 shrink-0 text-right font-value text-caption text-ink-2">
           {formatPercent(benchmark, lang, 1)}
         </span>
       </div>
@@ -617,24 +634,40 @@ function CompareRow({
   );
 }
 
-/** Anneau d'impact — la note n'est jamais un badge A/B/C, c'est une jauge. */
+/**
+ * Jauge d'impact — DA V2 : un instrument gradué, pas un anneau. Le chiffre en
+ * chasse fixe, une réglure de 0 à 100 avec ses graduations, et le curseur
+ * marqué par un trait d'encre. Jamais un badge A/B/C.
+ */
 function ImpactRing({ score }: { score: number | null }) {
-  const pct = score ?? 0;
+  const pct = Math.max(0, Math.min(100, score ?? 0));
   return (
-    <div
-      className="relative grid h-[76px] w-[76px] shrink-0 place-items-center rounded-full"
-      style={{
-        background: `conic-gradient(var(--color-mint) ${pct}%, var(--paper-3) ${pct}% 100%)`,
-      }}
-    >
-      <div className="absolute h-[58px] w-[58px] rounded-full bg-card" />
-      <span className="relative font-mono text-lg font-bold tabular-nums text-ink">
+    <div className="w-[112px] shrink-0">
+      <span className="font-value text-[30px] leading-none text-ink">
         {score === null ? (
           "—"
         ) : (
           <AnimatedFigure value={score} from={0} format={(v) => String(Math.round(v))} />
         )}
+        <span className="text-ink-3 text-[0.45em] ml-1">/ 100</span>
       </span>
+      <div className="relative mt-3 h-[18px]" aria-hidden>
+        <div className="absolute inset-x-0 top-0 h-px bg-paper-3" />
+        {[0, 25, 50, 75, 100].map((tick) => (
+          <span
+            key={tick}
+            className="absolute top-0 w-px bg-paper-3"
+            style={{ left: `${tick}%`, height: tick % 50 === 0 ? 7 : 4 }}
+          />
+        ))}
+        {score !== null && (
+          <span
+            className="absolute top-0 h-[13px] w-[2px] bg-ink"
+            style={{ left: `calc(${pct}% - 1px)` }}
+          />
+        )}
+        <span className="absolute inset-x-0 top-[3px] h-px bg-ink" style={{ width: `${pct}%` }} />
+      </div>
     </div>
   );
 }

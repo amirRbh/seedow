@@ -1087,11 +1087,27 @@ const dataProvenanceFr = {
   coverage_label: "Que signifie la couverture ?",
   coverage_tooltip:
     "La part de votre portefeuille pour laquelle nous disposons d'une donnée réelle mesurée. Le reste n'est pas encore mesuré — il n'est pas estimé pour autant.",
+  // DA V2 « Preuve » — libellés du crochet de provenance (components/ui/Provenance).
+  // Le statut n'est jamais porté par la seule couleur : il s'écrit.
+  coverage: "couverture {{pct}} %",
+  no_source: "source non renseignée",
+  status_verified: "vérifié",
+  status_modelled: "estimation Seedow",
+  status_disputed: "contesté par la source",
+  status_unknown: "non vérifié",
+  live: "données en direct",
 };
 const dataProvenanceEn = {
   coverage_label: "What does coverage mean?",
   coverage_tooltip:
     "The share of your portfolio for which we have a real, measured data point. The rest isn't measured yet — and it isn't estimated either.",
+  coverage: "{{pct}}% coverage",
+  no_source: "source not recorded",
+  status_verified: "verified",
+  status_modelled: "Seedow estimate",
+  status_disputed: "disputed by the source",
+  status_unknown: "unverified",
+  live: "live data",
 };
 
 /** Onglet « Affiner » v2 — langage clair, paliers, zéro pourcentage à viser. */

@@ -4,30 +4,42 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Boutons — DA V3 (docs/DA-V3.md §Boutons).
+ *
+ * Pill 999, hauteur 48px (38px en `sm`) : la convention du marché premium,
+ * et la cible tactile minimale. Aucune ombre, aucun `transform` au survol —
+ * l'état se joue sur l'opacité et le fond.
+ */
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-sans font-semibold transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-paper-2 disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default: "bg-ink btn-on-ink shadow hover:bg-ink/90",
-        destructive: "bg-alert btn-on-ink shadow-sm hover:bg-alert/90",
-        outline:
-          "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
-        secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-ink underline-offset-4 hover:underline",
-        /** Pill mint filled — CTA secondaire (ex-.btn-accent). */
-        accent: "bg-mint btn-on-ink shadow-none hover:opacity-90",
-        /** Pill outline encre, s'inverse en plein au survol (ex-.btn-outline-ink). */
-        "outline-ink": "border border-ink bg-transparent btn-on-paper shadow-none hover:bg-ink",
+        /** Action principale — encre pleine. */
+        default: "bg-ink btn-on-ink hover:opacity-85",
+        destructive: "bg-alert btn-on-ink hover:opacity-85",
+        /** Contour discret sur fond clair. */
+        outline: "bg-transparent text-ink ring-1 ring-inset ring-paper-3 hover:ring-ink",
+        /** Tertiaire — aplat doux, sans contour. */
+        secondary: "bg-paper-2 text-ink hover:bg-paper-inset",
+        ghost: "text-ink-2 hover:text-ink hover:bg-paper-2",
+        link: "text-mint-ink underline underline-offset-4 hover:no-underline",
+        /** Accent de marque — vert-pétrole profond. */
+        accent: "bg-mint btn-on-ink hover:opacity-85",
+        /** Sur bande sombre : blanc plein. */
+        "on-dark": "bg-paper text-ink hover:opacity-85",
+        /** Sur bande sombre : contour clair. */
+        "outline-ink":
+          "bg-transparent text-ink ring-1 ring-inset ring-paper-3 hover:ring-ink hover:bg-paper-2",
       },
       size: {
-        default: "h-9 px-4 py-2",
-        sm: "h-8 rounded-md px-3 text-xs",
-        lg: "h-10 rounded-md px-8",
-        icon: "h-9 w-9",
-        /** Pill Apple-style — CTA principal (ex-.btn-primary/.btn-accent/.btn-outline-ink). */
-        pill: "h-auto rounded-full px-6 py-3 text-body-lg",
+        default: "h-12 px-6 text-body-lg",
+        sm: "h-[38px] px-[18px] text-body",
+        lg: "h-14 px-8 text-body-xl",
+        icon: "h-12 w-12",
+        /** Alias historique du CTA plein format. */
+        pill: "h-12 px-7 text-body-lg",
       },
     },
     defaultVariants: {

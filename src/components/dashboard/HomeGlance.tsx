@@ -29,7 +29,7 @@ export function HomeGlance({
   const perfValue = `${perfPositive ? "+" : ""}${formatPercentPoints(returnPct, lang, 1)}`;
 
   return (
-    <div className="grid grid-cols-3 gap-2.5">
+    <div className="grid grid-cols-3 gap-3">
       <GlanceTile
         to="/portfolio"
         label={t("home_glance.performance")}
@@ -73,27 +73,22 @@ function GlanceTile({
   scale?: number; // 1..3
 }) {
   const valueColor =
-    tone === "mint" ? "text-mint-ink" : tone === "alert" ? "text-rust" : "text-ink";
+    tone === "mint" ? "text-mint-ink" : tone === "alert" ? "text-alert-ink" : "text-ink";
   return (
     <Link
       to={to}
       search={search}
-      className="flex flex-col justify-between rounded-2xl border border-paper-3 bg-paper-2 px-3 py-3 min-h-[76px] transition-colors hover:bg-paper-3/50 outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
+      className="paper-card flex flex-col justify-between px-4 py-4 min-h-[92px] transition-colors hover:bg-paper-inset outline-none focus-visible:ring-2 focus-visible:ring-ink"
     >
-      <span className="text-tag uppercase tracking-[0.12em] font-mono text-ink-3 leading-none">
-        {label}
-      </span>
-      <span className={`mt-2 font-value text-lg leading-none ${valueColor}`}>
+      <span className="stamp leading-none">{label}</span>
+      <span className={`mt-3 font-value text-[24px] leading-none ${valueColor}`}>
         {value}
-        {suffix && <span className="text-tag text-ink-3 font-sans ml-0.5">{suffix}</span>}
+        {suffix && <span className="text-caption text-ink-3 ml-0.5">{suffix}</span>}
       </span>
       {typeof scale === "number" && (
         <span className="mt-1.5 flex gap-1" aria-hidden>
           {[1, 2, 3].map((n) => (
-            <span
-              key={n}
-              className={`h-1 flex-1 rounded-full ${n <= scale ? "bg-ink" : "bg-paper-3"}`}
-            />
+            <span key={n} className={`h-[3px] flex-1 ${n <= scale ? "bg-ink" : "bg-paper-3"}`} />
           ))}
         </span>
       )}
