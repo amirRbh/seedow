@@ -107,6 +107,12 @@ export async function downloadAndExtract(
     return { status: "parse_failed", reason: `contenu non-PDF (préfixe « ${head.trim()} »)` };
   }
 
+  // Empreinte AVANT extraction : certains backends PDF (pdf.js/unpdf) prennent
+  // possession du Uint8Array et DÉTACHENT son ArrayBuffer — après quoi tout
+  // accès à `bytes` (dont le hash) lève « Receiver is detached ». On hashe donc
+  // pendant que le buffer est encore vivant.
+  const documentHash = await hashBytes(bytes);
+
   let extracted: { text: string; pages: number | null };
   try {
     extracted = await deps.pdfToText(bytes);
@@ -120,7 +126,7 @@ export async function downloadAndExtract(
   const doc: ExtractedDocument = {
     url,
     text: extracted.text,
-    documentHash: await hashBytes(bytes),
+    documentHash,
     pageCount: extracted.pages,
     retrievedAt: now(),
   };

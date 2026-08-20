@@ -81,3 +81,80 @@ qu'une source primaire s'ouvre. Le reste du pipeline est prêt et protégé par 
 gate — il n'attend que cette source.
 
 _Note de cadrage — ne décrit pas du code d'ingestion livré. Source à acter avant implémentation._
+
+---
+
+# Pipeline SFDR livré + POC mesuré (2026-08-20)
+
+Le cadrage ci-dessus concluait « aucune source gratuite+licite+programmatique »
+sans avoir **empiriquement** passé des ISIN IE/LU à travers GECO. Ce POC comble ce
+trou : le pipeline complet (`src/lib/esg/sfdr-pipeline/`, cf. `docs/esg-pipeline.md`)
+a été construit et **mesuré sur 100 ETF réels**, source primaire GECO/AMF.
+
+## Résultat mesuré (run Actions, 100 ETF, `persist=false`)
+
+Échantillon stratifié par domicile : IE 35 · LU 30 · FR 20 · AE 10 · CH 2 · XS 2 · DE 1.
+
+| Métrique                        | Valeur            |
+| ------------------------------- | ----------------- |
+| GECO résolus (fonds identifiés) | 1 doc-porteur     |
+| Documents officiels téléchargés | 1                 |
+| Texte PDF extrait               | 1                 |
+| **SFDR vérifié (PRIMARY)**      | **0**             |
+| Article 6 / 8 / 9               | 0 / 0 / 0         |
+| **Couverture officielle**       | **0 / 100 = 0 %** |
+
+**Taxonomie d'échec (§12)** :
+
+| Raison            | Nb  | Lecture                                                                             |
+| ----------------- | --- | ----------------------------------------------------------------------------------- |
+| `NO_GECO_MATCH`   | 83  | ISIN inconnu de GECO. Couvre **100 % des IE/LU/AE/CH/XS/DE** (80) + 3 FR.           |
+| `NO_DOCUMENT`     | 16  | Fonds FR résolu par GECO, mais **aucun document téléchargeable** exposé.            |
+| `NO_SFDR_MENTION` | 1   | Le seul document réellement extrait ne portait aucune classification SFDR affirmée. |
+
+Par domicile : **IE 0/35 · LU 0/30 · FR 0/20** · AE 0/10 · CH 0/2 · XS 0/2 · DE 0/1.
+
+## Ce que la mesure établit (fait, pas supposition)
+
+1. **GECO n'indexe pas les UCITS étrangers.** Les 80 ISIN non-FR de l'échantillon
+   sont tous `NO_GECO_MATCH`. GECO est la base des OPC **de droit français** ; les
+   ETF IE/LU (l'essentiel du catalogue Seedow) n'y sont pas résolus. Confirmé
+   empiriquement, plus une hypothèse.
+2. **Même pour les fonds FR, GECO expose rarement un KID téléchargeable.** Sur 20
+   FR, ~17 sont résolus en **identité** (utile, déjà exploité ailleurs), mais **1
+   seul** a livré un document PDF, et ce document ne contenait pas de mention SFDR
+   affirmée. GECO reste donc une bonne source d'**identité FR**, mais **pas** une
+   source de **documents SFDR** à l'échelle.
+3. **Le pipeline, lui, fonctionne de bout en bout.** La chaîne complète s'est
+   exécutée (résolution → téléchargement → extraction PDF → parsing → preuve) sur
+   le fonds qui l'a permise. Un bug réel (buffer PDF détaché par pdf.js) a même été
+   révélé par le run et corrigé. L'infrastructure est prête ; c'est **la source**
+   qui manque, pas le code.
+
+## Décision (§13)
+
+**0 % < 40 % → NE PAS industrialiser GECO comme source SFDR pour ce catalogue.**
+Présenter les résultats et revoir la stratégie de source (ce document).
+
+## Prochaine étape recommandée
+
+Le verrou n'est pas l'ingénierie (pipeline générique + gate + preuve = prêts) mais
+la **source primaire adaptée à un univers IE/LU** :
+
+1. **KID de l'asset-manager** (source primaire officielle, niveau 1) — brancher un
+   `IssuerResolver` (ISIN + émetteur connu → URL du KID sur le domaine officiel).
+   L'interface `DocumentResolver` l'accepte **sans toucher le cœur**. Verrou : les
+   domaines émetteurs (iShares/Amundi/Vanguard…) répondaient **403 même depuis
+   Actions** (probes précédents) — à re-mesurer avant d'investir.
+2. **Flux EET / SFDR licencié** (European ESG Template par ISIN) — source primaire
+   standard de l'industrie, payante mais faisant-foi et redistribuable. La seule
+   voie **fiable** pour une couverture large IE/LU aujourd'hui.
+3. **GECO conservé pour l'identité FR** uniquement (déjà le cas), pas pour le SFDR.
+
+Le gate ESG reste souverain : tant qu'aucune de ces sources n'est branchée, aucun
+ETF non sourcé n'est exposé — une couverture de 0 % vérifié est **assumée**, jamais
+compensée par une donnée inventée (§1).
+
+_Résultats mesurés le 2026-08-20 via `.github/workflows/esg-sfdr-poc.yml` (run #2,
+100 ETF, lecture seule). Reproductible : `parser_version=1`, échantillon
+`catalog_instruments` stratifié par préfixe ISIN._
