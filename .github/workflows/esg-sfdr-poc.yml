@@ -1,0 +1,55 @@
+# POC ESG/SFDR (§3, §11) : mesure la couverture réelle du pipeline officiel
+# (ISIN → GECO → document officiel → extraction PDF → parser SFDR → preuve) sur un
+# échantillon d'ETF. Manuel uniquement. `persist=false` par défaut → mesure seule,
+# aucune écriture. GECO n'étant joignable que depuis un runner (egress ouvert),
+# c'est le SEUL endroit où le POC peut réellement tourner.
+name: ESG SFDR POC
+
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "Taille de l'échantillon (défaut 100)"
+        required: false
+        default: "100"
+      persist:
+        description: "Écrire les observations sourcées en base (secrets requis)"
+        type: boolean
+        required: false
+        default: false
+      seed_only:
+        description: "Ignorer Supabase, utiliser l'échantillon graine intégré (1 = oui)"
+        required: false
+        default: ""
+
+jobs:
+  poc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.11"
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      # unpdf (extraction PDF, pur JS) est installé au runtime : le lockfile
+      # committé reste la seule source de vérité (§6 CLAUDE.md) et la CI n'est pas
+      # affectée. Le mirror npm du sandbox le bloque, mais l'egress Actions est ouvert.
+      - name: Add PDF extractor (runtime-only)
+        run: bun add --no-save unpdf
+
+      - name: Run SFDR POC
+        env:
+          POC_LIMIT: ${{ inputs.limit }}
+          POC_SEED_ONLY: ${{ inputs.seed_only }}
+          SEEDOW_PERSIST: ${{ inputs.persist && '1' || '0' }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+        run: bun run scripts/esg-sfdr-poc.ts
