@@ -50,7 +50,7 @@ export const Route = createFileRoute("/hooks/recompute-ingestion-plan")({
           admin
             .from("assets")
             .select(
-              "id, ticker, isin, name, issuer, region, currency, ter, esg_score, esg_score_source, esg_data_asof, sfdr_article, waci_tco2e_per_musd_sales, carbon_intensity_gco2e_per_eur, is_active, yahoo_symbol",
+              "id, ticker, isin, name, issuer, region, currency, ter, esg_score, esg_score_source, esg_data_asof, sfdr_article, waci_tco2e_per_musd_sales, carbon_intensity_gco2e_per_eur, is_active, yahoo_symbol, catalog_listing_key",
             )
             .limit(2000),
           admin.from("fund_holdings").select("asset_id, as_of").limit(100000),
@@ -75,6 +75,7 @@ export const Route = createFileRoute("/hooks/recompute-ingestion-plan")({
           carbon_intensity_gco2e_per_eur: number | null;
           is_active: boolean;
           yahoo_symbol: string | null;
+          catalog_listing_key: string | null;
         }
         const assets = (assetsRes.data ?? []) as Row[];
 
@@ -160,6 +161,10 @@ export const Route = createFileRoute("/hooks/recompute-ingestion-plan")({
                 hasTer: a.ter != null,
               },
               priceObservations: priceObsByAsset.get(a.id) ?? 0,
+              // Garde-fou catalogue : un ETF Adanos ne s'active pas sur la seule
+              // tradeabilité sans ESG sourcé (anti-flood §1.2).
+              isCatalogOrigin: a.catalog_listing_key != null,
+              hasSourcedEsg: hasRealEsg,
             })
           ) {
             toActivate.push(a.id);

@@ -30,7 +30,7 @@ const PATTERNS: { re: RegExp; reason: string }[] = [
   // Explicit "I recommend / you should … <action>" (EN).
   {
     re: /\b(i (recommend|suggest|advise)|you (should|ought to|must|need to)|my advice)\b[^.!?\n]{0,40}\b(buy|sell|deposit|invest|put|allocate|move|switch)\b/i,
-    reason: "personalized directive (\"I recommend / you should\")",
+    reason: 'personalized directive ("I recommend / you should")',
   },
   // Impératif « achète/vends … ce/tes/cet [… ] ETF|fonds|action|obligation… » (FR).
   {

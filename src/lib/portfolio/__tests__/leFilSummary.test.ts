@@ -1,5 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { weightedImpactScore, dominantCategories, topHoldingsByWeight } from "../leFilSummary";
+import {
+  weightedImpactScore,
+  dominantCategories,
+  dominantCategoryWeights,
+  topHoldingsByWeight,
+  summarizeMoney,
+} from "../leFilSummary";
 
 const h = (allocationPct: number, esgScore: number, category: string) => ({
   allocationPct,
@@ -54,5 +60,51 @@ describe("topHoldingsByWeight", () => {
     const items = [h(10, 0, "a"), h(50, 0, "b")];
     topHoldingsByWeight(items);
     expect(items.map((x) => x.category)).toEqual(["a", "b"]);
+  });
+});
+
+describe("dominantCategoryWeights", () => {
+  it("expose le poids cumulé de chaque catégorie", () => {
+    const res = dominantCategoryWeights([h(10, 0, "climat"), h(25, 0, "eau"), h(20, 0, "climat")]);
+    expect(res).toEqual([
+      { category: "climat", weightPct: 30 },
+      { category: "eau", weightPct: 25 },
+    ]);
+  });
+
+  it("limite au nombre demandé, les plus gros d'abord", () => {
+    const res = dominantCategoryWeights([h(5, 0, "a"), h(40, 0, "b"), h(3, 0, "c")], 2);
+    expect(res.map((r) => r.category)).toEqual(["b", "a"]);
+  });
+
+  it("retombe sur le fallback pour une catégorie vide", () => {
+    expect(dominantCategoryWeights([h(10, 0, "")])).toEqual([{ category: "other", weightPct: 10 }]);
+  });
+});
+
+describe("summarizeMoney", () => {
+  it("dérive le % du MÊME couple que le montant", () => {
+    // Cas de la capture : 112,00 € investis, 111,21 € aujourd'hui.
+    const s = summarizeMoney(112, 111.21);
+    expect(s.gain).toBeCloseTo(-0.79, 2);
+    expect(s.returnPoints).toBeCloseTo(-0.705, 2);
+    expect(s.trend).toBe("down");
+  });
+
+  it("marque une hausse", () => {
+    const s = summarizeMoney(100, 108);
+    expect(s.returnPoints).toBeCloseTo(8, 6);
+    expect(s.trend).toBe("up");
+  });
+
+  it("est « flat » quand l'écart s'arrondit à 0,00 €", () => {
+    expect(summarizeMoney(100, 100.004).trend).toBe("flat");
+    expect(summarizeMoney(100, 99.998).trend).toBe("flat");
+  });
+
+  it("ne divise pas par zéro sans capital investi", () => {
+    const s = summarizeMoney(0, 0);
+    expect(s.returnPoints).toBe(0);
+    expect(s.trend).toBe("flat");
   });
 });

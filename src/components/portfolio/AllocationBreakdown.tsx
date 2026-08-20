@@ -6,6 +6,7 @@ import type { ValuedHolding } from "@/hooks/usePortfolioValuation";
 import { HoldingDetailSheet } from "./HoldingDetailSheet";
 import { PortfolioImpactBadge } from "./PortfolioImpactBadge";
 import { EASE_REVEAL } from "@/lib/motion";
+import { assetClassColor } from "@/lib/portfolio/assetClasses";
 
 interface Props {
   holdings: ActiveHolding[];
@@ -23,20 +24,6 @@ const CLASS_LABELS: Record<string, string> = {
   reit: "Immobilier durable",
   commodity: "Matières premières",
   cash: "Réserve sécurisée",
-};
-
-// Palette catégorielle : une classe d'actif = une teinte distincte de la planche
-// de marque (données catégorielles = seul cas où l'on mélange les accents).
-const CLASS_COLOR: Record<string, string> = {
-  equity_dev: "var(--mint)",
-  equity_em: "var(--ice)",
-  thematic: "var(--volt)",
-  green_bond: "var(--highlight-2)",
-  social_bond: "var(--sky)",
-  sov_bond: "var(--ink-2)",
-  reit: "var(--solar)",
-  commodity: "var(--alert)",
-  cash: "var(--paper-3)",
 };
 
 export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: Props) {
@@ -93,7 +80,7 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
             initial={{ width: 0 }}
             animate={{ width: `${pct}%` }}
             transition={{ duration: 0.8, ease: EASE_REVEAL, delay: i * 0.08 }}
-            style={{ backgroundColor: CLASS_COLOR[cls] ?? "var(--highlight-2)" }}
+            style={{ backgroundColor: assetClassColor(cls, "var(--highlight-2)") }}
             className="h-full"
             title={`${CLASS_LABELS[cls] ?? cls} · ${pct.toFixed(1)}%`}
           />
@@ -106,7 +93,7 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
           <div key={cls} className="flex items-center gap-1.5">
             <span
               className="w-2 h-2 rounded-full flex-shrink-0"
-              style={{ backgroundColor: CLASS_COLOR[cls] ?? "var(--highlight-2)" }}
+              style={{ backgroundColor: assetClassColor(cls, "var(--highlight-2)") }}
             />
             <span className="text-caption text-ink-2">
               {CLASS_LABELS[cls] ?? cls}
@@ -158,7 +145,7 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
       <div className="border-t border-paper-3 pt-4 space-y-2.5">
         {holdings.map((h, i) => {
           const amount = (h.allocationPct / 100) * totalAmount;
-          const color = CLASS_COLOR[h.category] ?? "var(--highlight-2)";
+          const color = assetClassColor(h.category, "var(--highlight-2)");
           const valued = valuedById.get(h.id);
           const hasMove =
             valued?.currentPrice != null &&

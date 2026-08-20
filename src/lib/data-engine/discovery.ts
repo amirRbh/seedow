@@ -95,10 +95,7 @@ export function buildYahooSymbol(ticker: string, exchange: string): string | nul
  */
 /** Minuscule + suppression des accents (robustesse FR / encodage). */
 function deaccent(s: string): string {
-  return s
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "");
+  return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 }
 
 export function mapISharesAssetClass(
@@ -128,7 +125,10 @@ export function mapISharesAssetClass(
     return "corporate_bond"; // repli obligataire le plus courant pour un ETF crédit
   }
   if (/real estate|immobil|reit/.test(a) || /reit|immobil/i.test(hay)) return "reit";
-  if (/commodit|matieres premieres/.test(a) || /gold|\bor\b|silver|argent|metal|matieres premieres/i.test(hay))
+  if (
+    /commodit|matieres premieres/.test(a) ||
+    /gold|\bor\b|silver|argent|metal|matieres premieres/i.test(hay)
+  )
     return "commodity";
   if (/money market|monetaire/.test(a) || /cash|monetaire|liquid/i.test(hay)) return "cash";
 
@@ -227,7 +227,13 @@ export function parseISharesProductCsv(raw: RawData): DiscoveredFund[] {
   const iTicker = findCol(headers, "ticker", "symbole");
   const iName = findCol(headers, "name", "fund name", "nom", "nom du fonds");
   const iIsin = findCol(headers, "isin");
-  const iClass = findCol(headers, "asset class", "assetclass", "classe d'actifs", "classe d actifs");
+  const iClass = findCol(
+    headers,
+    "asset class",
+    "assetclass",
+    "classe d'actifs",
+    "classe d actifs",
+  );
   const iSub = findCol(
     headers,
     "sub asset class",
@@ -279,7 +285,13 @@ export function parseISharesProductCsv(raw: RawData): DiscoveredFund[] {
     "waci",
     "intensite carbone",
   );
-  const iEsgAsOf = findCol(headers, "esg as of date", "esg as of", "date esg", "sustainability as of");
+  const iEsgAsOf = findCol(
+    headers,
+    "esg as of date",
+    "esg as of",
+    "date esg",
+    "sustainability as of",
+  );
 
   const at = (cols: string[], i: number) => (i >= 0 && i < cols.length ? cols[i].trim() : "");
 

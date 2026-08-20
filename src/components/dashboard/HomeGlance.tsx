@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { useLang } from "@/hooks/useLang";
-import { formatPercent } from "@/lib/format";
+import { formatPercentPoints } from "@/lib/format";
 import {
   portfolioGlance,
   type GlanceMetrics,
@@ -26,7 +26,7 @@ export function HomeGlance({
   const glance = portfolioGlance(metrics);
 
   const perfPositive = returnPct >= 0;
-  const perfValue = `${perfPositive ? "+" : ""}${formatPercent(returnPct / 100, lang, 1)}`;
+  const perfValue = `${perfPositive ? "+" : ""}${formatPercentPoints(returnPct, lang, 1)}`;
 
   return (
     <div className="grid grid-cols-3 gap-3">

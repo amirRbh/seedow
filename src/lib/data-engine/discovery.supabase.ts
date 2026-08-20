@@ -104,7 +104,9 @@ export async function ensureDiscoveredAssets(
   );
   let enriched = 0;
   for (const f of discovered) {
-    const match = byTicker.get(f.ticker.toUpperCase()) ?? (f.isin ? byIsin.get(f.isin.toUpperCase()) : undefined);
+    const match =
+      byTicker.get(f.ticker.toUpperCase()) ??
+      (f.isin ? byIsin.get(f.isin.toUpperCase()) : undefined);
     if (!match || match.esg_score_source != null) continue; // déjà sourcé → intact
     const fields = esgFields(f);
     if (Object.keys(fields).length === 0) continue; // rien à écrire
