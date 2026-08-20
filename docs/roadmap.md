@@ -63,7 +63,7 @@
 
 ## 3. NEXT — dépend d'une décision de source ou d'un pré-requis
 
-- **Décision source ESG/SFDR** *(bloquant produit)* : souscrire un flux licencié par
+- **Décision source ESG/SFDR** _(bloquant produit)_ : souscrire un flux licencié par
   ISIN. **Dès qu'il existe**, brancher l'ingestion ESG → l'activation automatique se
   déclenche seule (cours + identité + ESG réunis, gate levé). Le pipeline est prêt.
 - **Correction `equity_dev`/`equity_em`** : Adanos ne distingue pas dev/em au niveau
