@@ -12,10 +12,10 @@
 
 Deux environnements, deux politiques d'egress — c'est déterminant :
 
-| Depuis                                                      | Egress              | Constat                                                                                                                                                          |
-| ----------------------------------------------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Sandbox agent** (ici)                                     | Restreint par proxy | Seuls registres de paquets + GitHub + Anthropic. Yahoo, justETF, OpenFIGI, sites émetteurs → **403 CONNECT** (policy denial, vérifié via `__agentproxy/status`). |
-| **GitHub Actions** (là où tournent les scripts d'ingestion) | Ouvert              | Yahoo v8 (cours) et Adanos raw **confirmés OK** cette session. Sites émetteurs (iShares/Amundi/Vanguard) historiquement **403** même depuis Actions.             |
+| Depuis                                                      | Egress              | Constat                                                                                                                                                                                                              |
+| ----------------------------------------------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Sandbox agent** (ici)                                     | Restreint par proxy | Seuls registres de paquets + GitHub + Anthropic. Yahoo, justETF, OpenFIGI, sites émetteurs → **403 CONNECT** (policy denial, vérifié via `__agentproxy/status`).                                                     |
+| **GitHub Actions** (là où tournent les scripts d'ingestion) | Ouvert              | Yahoo v8 (cours) et Adanos raw **confirmés OK**. Sites émetteurs (iShares/Amundi/Vanguard…) : **joignables 200** — re-mesuré 2026-08-20, cf. section « Probe KID émetteurs » (l'ancien constat « 403 » est infirmé). |
 
 → La joignabilité qui compte est **celle des runners GitHub Actions**, pas du sandbox. Toute vérification de source doit se faire par un run Actions (probe read-only), pas depuis ici.
 
@@ -143,12 +143,14 @@ la **source primaire adaptée à un univers IE/LU** :
 
 1. **KID de l'asset-manager** (source primaire officielle, niveau 1) — brancher un
    `IssuerResolver` (ISIN + émetteur connu → URL du KID sur le domaine officiel).
-   L'interface `DocumentResolver` l'accepte **sans toucher le cœur**. Verrou : les
-   domaines émetteurs (iShares/Amundi/Vanguard…) répondaient **403 même depuis
-   Actions** (probes précédents) — à re-mesurer avant d'investir.
+   L'interface `DocumentResolver` l'accepte **sans toucher le cœur**. **Verrou levé
+   côté réseau** : les domaines émetteurs sont joignables depuis Actions (probe
+   ci-dessous). Verrou restant : le mécanisme **ISIN → URL de KID**, propre à chaque
+   émetteur.
 2. **Flux EET / SFDR licencié** (European ESG Template par ISIN) — source primaire
-   standard de l'industrie, payante mais faisant-foi et redistribuable. La seule
-   voie **fiable** pour une couverture large IE/LU aujourd'hui.
+   standard de l'industrie, payante mais faisant-foi et redistribuable. Voie
+   **fiable** pour une couverture large IE/LU, à garder comme repli si le mécanisme
+   ISIN→URL de KID s'avère trop fragile émetteur par émetteur.
 3. **GECO conservé pour l'identité FR** uniquement (déjà le cas), pas pour le SFDR.
 
 Le gate ESG reste souverain : tant qu'aucune de ces sources n'est branchée, aucun
@@ -158,3 +160,52 @@ compensée par une donnée inventée (§1).
 _Résultats mesurés le 2026-08-20 via `.github/workflows/esg-sfdr-poc.yml` (run #2,
 100 ETF, lecture seule). Reproductible : `parser_version=1`, échantillon
 `catalog_instruments` stratifié par préfixe ISIN._
+
+---
+
+# Probe joignabilité KID émetteurs (mesuré 2026-08-20)
+
+Le POC ci-dessus recommandait le **KID émetteur** comme prochaine piste primaire,
+mais ce document affirmait aussi que les sites émetteurs répondaient « 403 même
+depuis Actions ». Ce constat était **historique et non re-vérifié**. Le probe
+`scripts/probe-issuer-kid.ts` (workflow `probe-issuer-kid.yml`, read-only) le
+re-mesure : joignabilité HTTP de la racine + lecture du `robots.txt` (aucune URL de
+KID devinée, rien d'écrit).
+
+## Résultat (run Actions, 8 émetteurs)
+
+| Émetteur            | Home HTTP | robots.txt | Interdit les chemins docs ? | Verdict  |
+| ------------------- | --------- | ---------- | --------------------------- | -------- |
+| iShares / BlackRock | **200**   | 200        | non                         | candidat |
+| Amundi ETF          | **200**   | 200        | non                         | candidat |
+| Vanguard            | **200**   | 200        | non                         | candidat |
+| UBS ETF             | **200**   | 200        | non                         | candidat |
+| Xtrackers / DWS     | **200**   | 200        | non                         | candidat |
+| Invesco             | **200**   | 200        | non                         | candidat |
+| SPDR / State Street | **200**   | 200        | non                         | candidat |
+| HSBC AM             | **200**   | 200        | non                         | candidat |
+
+**Synthèse : 8/8 émetteurs joignables · 8/8 candidats** (joignables **et** robots
+n'interdisant pas les chemins de documents).
+
+## Ce que ça change
+
+- **L'ancien constat « 403 même depuis Actions » est infirmé.** Les domaines
+  émetteurs sont accessibles depuis un runner, et leur `robots.txt` n'interdit pas
+  les chemins de documents visés — la collecte automatisée y est donc licite au
+  sens du §16.
+- **Le verrou n'est plus le réseau ni les ToS/robots, mais le mécanisme ISIN → URL
+  de KID**, spécifique à chaque émetteur (screener/CSV produit, index de documents,
+  ou API publique selon l'émetteur).
+
+## Prochaine étape recommandée
+
+Construire un **`IssuerResolver`** (implémente `DocumentResolver`, s'insère dans le
+pipeline **sans toucher le cœur**), émetteur par émetteur, en commençant par ceux
+qui exposent un **index produit/documents public** permettant de retrouver l'URL du
+KID à partir de l'ISIN. Le parser SFDR, l'extracteur, le cache, la preuve et le gate
+sont déjà prêts : il ne manque que ce maillon de résolution d'URL. La piste EET
+licenciée reste le repli si la résolution d'URL s'avère trop fragile.
+
+_Mesuré le 2026-08-20 via `.github/workflows/probe-issuer-kid.yml` (run #1, read-only,
+racine + robots.txt uniquement — aucune URL de KID devinée, rien écrit)._
