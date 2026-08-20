@@ -26,8 +26,11 @@ import {
   type CatalogInstrumentRow,
 } from "../src/lib/data-engine/promotion";
 
-const CATALOG_PAGE = 10000;
-const EXISTING_PAGE = 10000;
+// PostgREST plafonne chaque lecture à 1000 lignes (max-rows) : paginer par 1000,
+// sinon `.range(0, 9999)` ne renvoie que 1000 lignes et la boucle s'arrête (le
+// catalogue compte ~16,5k ETF → il FAUT itérer).
+const CATALOG_PAGE = 1000;
+const EXISTING_PAGE = 1000;
 const INSERT_BATCH = 500;
 
 // Client Supabase admin non typé : catalog_instruments et les nouvelles colonnes
