@@ -40,7 +40,7 @@ function ObjectifsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-paper pb-24 md:pb-12">
+    <div className="min-h-screen bg-paper-2 pb-24 md:pb-12">
       <AppHeader eyebrow={t("objectives.eyebrow_cap")} title={t("objectives.title")} />
       <div className="mx-auto max-w-5xl px-4 md:px-8">
         <EditorialSection

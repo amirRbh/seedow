@@ -31,7 +31,7 @@ function VotePage() {
   const closed = resolutions.filter((r) => r.resolution.status === "closed");
 
   return (
-    <div className="min-h-screen bg-paper pb-24 md:pb-12">
+    <div className="min-h-screen bg-paper-2 pb-24 md:pb-12">
       <AppHeader eyebrow={t("vote.eyebrow")} title={t("vote.title")} hideViewToggle />
       <div className="mx-auto max-w-3xl px-4 md:px-8">
         <EditorialSection

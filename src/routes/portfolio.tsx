@@ -95,7 +95,7 @@ function Portfolio() {
   if (loading) {
     return (
       <div
-        className="min-h-screen bg-paper max-w-lg mx-auto px-5 pt-6 pb-28"
+        className="min-h-screen bg-paper-2 max-w-lg mx-auto px-5 pt-6 pb-28"
         aria-label={t("portfolio.loading")}
       >
         <div className="flex items-center gap-3">
@@ -123,7 +123,7 @@ function Portfolio() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="min-h-screen bg-paper"
+        className="min-h-screen bg-paper-2"
       >
         <EmptyPortfolioState userName={userName} />
         <BottomNavigation />
@@ -160,7 +160,11 @@ function Portfolio() {
   const subtitle = linesLabel;
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="min-h-screen bg-paper-2"
+    >
       <div className="max-w-lg mx-auto pb-28">
         <AppHeader
           eyebrow={t("portfolio.details")}

@@ -65,11 +65,11 @@ function DashboardEntry() {
     if (user && !guest) navigate({ to: "/le-fil", replace: true });
   }, [user, guest, navigate]);
 
-  if (loading) return <div className="min-h-screen bg-paper" aria-hidden />;
+  if (loading) return <div className="min-h-screen bg-paper-2" aria-hidden />;
   if (guest) return <GuestDashboard />;
   if (user) return <Dashboard />;
   // Non connecté et non invité : la garde beforeLoad a déjà redirigé vers /auth.
-  return <div className="min-h-screen bg-paper" aria-hidden />;
+  return <div className="min-h-screen bg-paper-2" aria-hidden />;
 }
 
 function getGreetingKey(hour: number) {
@@ -158,7 +158,11 @@ function Dashboard() {
   const isGrowing = gain > -0.005;
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-paper">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="min-h-screen bg-paper-2"
+    >
       {/* Bandeau mode invité — sticky, pleine largeur (hors conteneur centré) */}
       <GuestBanner guestParam={guest ?? false} />
 

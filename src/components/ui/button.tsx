@@ -27,8 +27,9 @@ const buttonVariants = cva(
         link: "text-mint-ink underline underline-offset-4 hover:no-underline",
         /** Accent de marque — vert-pétrole profond. */
         accent: "bg-mint btn-on-ink hover:opacity-85",
-        /** Sur bande sombre : blanc plein. */
-        "on-dark": "bg-paper text-ink hover:opacity-85",
+        /** Sur bande sombre : blanc plein. Tokens FIXES — `bg-paper`/`text-ink`
+         *  s'inverseraient en thème sombre et dans une zone `.on-deep`. */
+        "on-dark": "bg-on-deep text-deep hover:opacity-85",
         /** Sur bande sombre : contour clair. */
         "outline-ink":
           "bg-transparent text-ink ring-1 ring-inset ring-paper-3 hover:ring-ink hover:bg-paper-2",

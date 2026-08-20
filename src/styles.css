@@ -71,6 +71,9 @@
   --color-paper-inset: var(--paper-inset);
   --color-deep: var(--deep);
   --color-deep-2: var(--deep-2);
+  --color-on-deep: var(--on-deep);
+  --color-on-deep-2: var(--on-deep-2);
+  --color-on-deep-3: var(--on-deep-3);
 
   --color-ink: var(--ink);
   --color-ink-2: var(--ink-2);
@@ -158,8 +161,18 @@
   --paper-2: #f5f4f1;
   --paper-3: #dddad3; /* hairline */
   --paper-inset: #edebe6;
+  /* ── Bande sombre : tokens FIXES ──────────────────────────────
+     Ils ne s'inversent JAMAIS entre les thèmes, parce que la bande est
+     sombre dans les deux. Utiliser --paper / --ink pour « blanc sur
+     noir » était le bug : en thème sombre --paper devient presque noir,
+     et toute la bande s'effondrait en noir sur noir. */
   --deep: #0e0f10;
-  --deep-2: #1b1d1f;
+  --deep-2: #212427;
+  --on-deep: #ffffff; /* 19.2:1 sur --deep */
+  --on-deep-2: #b7bbc0; /*  9.9:1 */
+  --on-deep-3: #90969c; /*  6.4:1 */
+  --on-deep-line: rgb(255 255 255 / 0.13);
+  --on-deep-fill: rgb(255 255 255 / 0.1);
 
   --ink: #16181a; /* 16.4:1 sur --paper */
   --ink-2: #5d6167; /* 6.4:1  — texte secondaire */
@@ -244,15 +257,16 @@
 }
 
 .dark {
-  --paper: #0e0f10;
-  --paper-2: #1b1d1f;
-  --paper-3: #33363a;
-  --paper-inset: #232629;
-  --deep: #000000;
-  --deep-2: #1b1d1f;
-  --ink: #f4f4f2;
-  --ink-2: #a9adb3;
-  --ink-3: #909499;
+  /* Même sémantique qu'en clair : --paper est la CARTE, --paper-2 est le
+     sol sur lequel elle s'élève. L'inverse rendait les cartes invisibles
+     (carte et fond de page exactement de la même couleur). */
+  --paper: #1e2023; /* carte */
+  --paper-2: #121314; /* sol */
+  --paper-3: #33373b;
+  --paper-inset: #282b2f;
+  --ink: #f2f3f3;
+  --ink-2: #aeb2b8;
+  --ink-3: #92979d;
   --highlight-1: #f4f4f2;
   --highlight-2: #33363a;
   --highlight-3: #909499;
@@ -276,11 +290,11 @@
   --bloom-tint-border: #3b3558;
   --sky-tint: #141b29;
   --sky-tint-border: #2a3a55;
-  --background: var(--paper);
+  --background: var(--paper-2);
   --foreground: var(--ink);
-  --card: var(--paper-2);
+  --card: var(--paper);
   --card-foreground: var(--ink);
-  --popover: var(--paper-2);
+  --popover: var(--paper);
   --popover-foreground: var(--ink);
   --border: var(--paper-3);
   --input: var(--paper-3);
@@ -512,6 +526,12 @@
     border-radius: var(--radius);
     box-shadow: none;
   }
+  /* Filet d'un pixel en sombre : l'écart de luminance entre carte et sol
+     y est trop faible pour porter seul la séparation. */
+  .dark .paper-card,
+  .on-deep .paper-card {
+    box-shadow: inset 0 0 0 1px var(--color-paper-3);
+  }
   /* Variante cerclée, pour une carte posée sur du blanc (où l'aplat
      seul ne créerait aucune séparation). */
   .paper-card-line {
@@ -535,32 +555,47 @@
     box-shadow: none;
   }
 
-  /* ── Bande sombre : le second niveau de profondeur ────────────── */
+  /* ── Zone sombre ───────────────────────────────────────────────
+     `.on-deep` remappe les tokens SÉMANTIQUES sur la gamme fixe de la
+     bande. Résultat : `text-ink`, `text-ink-2`, `.stamp`, `.chip`,
+     `.provenance`, `.paper-card` fonctionnent à l'identique dans une
+     zone sombre — plus besoin d'écrire `text-paper/70` à la main, qui
+     était précisément la source du noir-sur-noir.
+     `.ink-section` = la même chose, encartée et arrondie. */
+  .on-deep,
   .ink-section {
     background-color: var(--color-deep);
-    color: #ffffff;
-    border-radius: var(--radius-2xl);
-    --ink-3: rgba(255, 255, 255, 0.56);
-    --paper-3: rgba(255, 255, 255, 0.1);
+    color: var(--on-deep);
+    --ink: var(--on-deep);
+    --ink-2: var(--on-deep-2);
+    --ink-3: var(--on-deep-3);
+    --paper: var(--deep);
+    --paper-2: var(--on-deep-fill);
+    --paper-3: var(--on-deep-line);
+    --paper-inset: rgb(255 255 255 / 0.16);
+    --card: var(--deep-2);
+    --border: var(--on-deep-line);
+    --mint: #4ed0ae;
     --mint-ink: #4ed0ae;
+    --ice: #93bcf8;
     --ice-ink: #93bcf8;
+    --volt: #b7a7f2;
     --volt-ink: #b7a7f2;
+    --alert: #ff9a8a;
     --alert-ink: #ff9a8a;
+    --solar: #e8c27c;
     --solar-ink: #e8c27c;
   }
+  .ink-section {
+    border-radius: var(--radius-2xl);
+  }
+  .on-deep h1,
+  .on-deep h2,
+  .on-deep h3,
   .ink-section h1,
   .ink-section h2,
-  .ink-section h3,
-  .ink-section .display-xl,
-  .ink-section .display-lg,
-  .ink-section .kpi-figure,
-  .ink-section .data-xl,
-  .ink-section .data-lg {
-    color: #ffffff;
-  }
-  .ink-section .eyebrow,
-  .ink-section .stamp {
-    color: rgba(255, 255, 255, 0.56);
+  .ink-section h3 {
+    color: var(--on-deep);
   }
 
   /* ── Libellés ─────────────────────────────────────────────────── */

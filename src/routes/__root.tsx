@@ -32,7 +32,7 @@ import appCss from "../styles.css?url";
 function NotFoundComponent() {
   const { t } = useTranslation();
   return (
-    <div className="flex min-h-screen items-center justify-center bg-paper px-4">
+    <div className="flex min-h-screen items-center justify-center bg-paper-2 px-4">
       <div className="max-w-md text-center">
         <h1 className="font-value text-7xl text-ink">404</h1>
         <h2 className="mt-4 text-xl font-semibold text-ink">{t("root.not_found_title")}</h2>
@@ -145,7 +145,7 @@ class RootErrorBoundary extends Component<{ children: ReactNode }, { hasError: b
   render() {
     if (this.state.hasError) {
       return (
-        <div className="flex min-h-screen items-center justify-center bg-paper px-4">
+        <div className="flex min-h-screen items-center justify-center bg-paper-2 px-4">
           <div className="max-w-md text-center">
             <h1 className="font-value text-4xl text-ink">Oups.</h1>
             <p className="mt-3 text-sm text-ink-3">

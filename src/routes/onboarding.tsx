@@ -244,7 +244,7 @@ function Onboarding() {
   };
 
   return (
-    <div className="min-h-screen bg-paper text-ink">
+    <div className="min-h-screen bg-paper-2 text-ink">
       <AnimatePresence mode="wait">
         {phase === "steps" && (
           <Step
@@ -1099,7 +1099,7 @@ function PreviewScene({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-paper text-ink"
+      className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-paper-2 text-ink"
     >
       <AnimatePresence mode="wait">
         {phase === "loading" && (
@@ -1277,7 +1277,7 @@ function SavingScene({ params, onEnter }: { params: PortfolioParams; onEnter: ()
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-paper text-ink"
+      className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-paper-2 text-ink"
     >
       <AnimatePresence mode="wait">
         {phase === "loading" && (
@@ -1404,7 +1404,7 @@ function BuildingScene({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-paper text-ink"
+      className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-paper-2 text-ink"
     >
       <AnimatePresence mode="wait">
         {phase === "loading" && (
