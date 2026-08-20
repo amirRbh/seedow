@@ -63,4 +63,39 @@ describe("shouldActivate", () => {
       }),
     ).toBe(false);
   });
+
+  it("does NOT activate a catalog ETF on tradeability alone without sourced ESG (anti-flood)", () => {
+    expect(
+      shouldActivate({
+        completeness: 35,
+        identity: fullId,
+        priceObservations: ACTIVATION_MIN_PRICE_OBS,
+        isCatalogOrigin: true,
+        hasSourcedEsg: false,
+      }),
+    ).toBe(false);
+  });
+
+  it("activates a catalog ETF once it has a sourced ESG score too", () => {
+    expect(
+      shouldActivate({
+        completeness: 35,
+        identity: fullId,
+        priceObservations: ACTIVATION_MIN_PRICE_OBS,
+        isCatalogOrigin: true,
+        hasSourcedEsg: true,
+      }),
+    ).toBe(true);
+  });
+
+  it("leaves non-catalog funds on the historical tradeability path (no ESG gate)", () => {
+    expect(
+      shouldActivate({
+        completeness: 35,
+        identity: fullId,
+        priceObservations: ACTIVATION_MIN_PRICE_OBS,
+        // isCatalogOrigin absent → fonds curé : la tradeabilité prouvée suffit.
+      }),
+    ).toBe(true);
+  });
 });

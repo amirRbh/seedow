@@ -42,12 +42,28 @@ export interface ActivationInput {
   identity: IdentityFlags;
   /** Nombre d'observations de cours réelles disponibles pour ce fonds. */
   priceObservations: number;
+  /**
+   * L'asset provient-il du catalogue Adanos (`catalog_listing_key` non nul) ? Ces
+   * ETF sont promus EN MASSE avec `esg_score=0` par défaut → soumis à un garde-fou
+   * ESG supplémentaire ci-dessous. Optionnel : absent = fonds curé historique.
+   */
+  isCatalogOrigin?: boolean;
+  /** Un score ESG SOURCÉ est-il attaché (`esg_score_source` non nul) ? */
+  hasSourcedEsg?: boolean;
 }
 
-/** Décide si un fonds inactif doit être activé. Pur, déterministe. */
+/**
+ * Décide si un fonds inactif doit être activé. Pur, déterministe.
+ *
+ * Garde-fou catalogue (§1.2, anti-flood) : un ETF issu du catalogue Adanos ne
+ * s'active JAMAIS sur la seule tradeabilité prouvée sans ESG sourcé — sinon
+ * Découvrir se remplirait de fonds non notés (`esg_score=0`) promus en masse. Les
+ * fonds curés hors catalogue gardent la voie historique (tradeabilité seule OK).
+ */
 export function shouldActivate(input: ActivationInput): boolean {
   if (input.completeness >= ACTIVATION_COMPLETENESS_THRESHOLD) return true;
   if (hasFullIdentity(input.identity) && input.priceObservations >= ACTIVATION_MIN_PRICE_OBS) {
+    if (input.isCatalogOrigin && !input.hasSourcedEsg) return false;
     return true;
   }
   return false;
