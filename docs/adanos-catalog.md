@@ -108,6 +108,31 @@ acte curé, jamais automatique en masse).
 - **Audit** : chaque run écrit une ligne `cron_run_log`
   (`job_name='promote-catalog-etfs'`, compteurs + rapport).
 
+## Enrichissement (rendre un ETF promu investissable)
+
+Un ETF promu est dormant (`is_active=false`). Pour qu'il devienne présentable, il
+faut l'enrichir puis l'activer (`activation.ts`, automatique dès « tradeabilité
+prouvée » ou complétude ≥ 50). Chantier séquentiel, curé, sourcé.
+
+### Maillon 1 — wiring `yahoo_symbol` (fait)
+
+`src/lib/data-engine/market-symbol.ts` (pur/testé) dérive un symbole Yahoo
+`TICKER[.SUFFIXE]` depuis `exchange`+`ticker` du catalogue ; place inconnue/ambiguë
+→ `null` (jamais deviné). `scripts/wire-yahoo-symbols.ts` sélectionne une fournée
+**curée** (ETF UCITS, domicile IE/LU, place mappable), **valide chaque symbole
+contre Yahoo** (cotation + barres réelles) et n'écrit `assets.yahoo_symbol` que
+pour les validés — `is_active` reste `false`. Workflow **manuel**
+(`.github/workflows/wire-yahoo-symbols.yml`), borné par `WIRE_LIMIT`. Une fois le
+symbole posé, l'ingestion horaire (`refresh-market-data`, qui lit tout asset ayant
+un `yahoo_symbol`, actif ou non) accumule la série de cours.
+
+### Maillons suivants (à faire)
+
+- **Identité** : `issuer`, domicile (`region`), `ter` sourcés — requis par les deux
+  voies d'activation.
+- **ESG/SFDR/carbone** sourcés (pipeline d'ingestion existant).
+- **Classification fine** des non-mappés (3 086 Fixed Income → sov/corp/green/social).
+
 ## Attribution
 
 Source : Adanos Free Global Ticker Database (github.com/adanos-software/free-ticker-database), licence MIT.
