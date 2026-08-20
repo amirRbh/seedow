@@ -60,20 +60,14 @@ function contextAround(html: string, needle: string, span = 160): string | null 
     .trim();
 }
 
-// Endpoints candidats du « product screener » iShares (URLs publiques du site,
-// variantes régionales). On mesure lesquels répondent et portent nos ISIN.
+// Endpoints DÉCLARÉS par le site lui-même (extraits de son `url_map` / `urlMap` au
+// run précédent) — on teste ce que iShares annonce, on ne devine plus.
 const CANDIDATES: { label: string; url: string }[] = [
+  { label: "cwpScreenerApi", url: "https://www.ishares.com/uk/individual/en/product-data.jsn" },
+  { label: "compareEsgApi", url: "https://www.ishares.com/uk/individual/en/esg-product-data.jsn" },
   {
-    label: "uk-retail",
-    url: "https://www.ishares.com/uk/individual/en/product-screener/product-screener-v3.1.jsn?dcrPath=/templatedata/config/product-screener-v3/data/en/uk-retail/product-screener&siteEntryPassthrough=true",
-  },
-  {
-    label: "uk-professional",
-    url: "https://www.ishares.com/uk/professional/en/product-screener/product-screener-v3.1.jsn?dcrPath=/templatedata/config/product-screener-v3/data/en/uk-professional/product-screener&siteEntryPassthrough=true",
-  },
-  {
-    label: "ch-individual",
-    url: "https://www.ishares.com/ch/individual/en/product-screener/product-screener-v3.1.jsn?dcrPath=/templatedata/config/product-screener-v3/data/en/ch-one/product-screener&siteEntryPassthrough=true",
+    label: "downloadExcelApi(v3)",
+    url: "https://www.ishares.com/uk/individual/en/product-screener/product-screener-v3.jsn",
   },
 ];
 
@@ -177,7 +171,7 @@ async function main(): Promise<void> {
     await discoverFromPage(p.label, p.url);
     await new Promise((r) => setTimeout(r, DELAY_MS));
   }
-  console.log("[ishares-probe] === Passe B : endpoints candidats (déjà 404/500) ===");
+  console.log("[ishares-probe] === Passe B : endpoints DÉCLARÉS par le site (url_map) ===");
   for (const c of CANDIDATES) {
     console.log(`[ishares-probe] ${c.label}: ${c.url.slice(0, 90)}…`);
     await probeOne(c.url);
