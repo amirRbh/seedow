@@ -53,4 +53,31 @@ inversée), Yahoo n'est **pas** retenu comme source ESG.
 3. Le **gate ESG reste le filet** : le compteur Découvrir ne monte que pour des
    fonds réellement sourcés ; une couverture partielle est acceptable.
 
+## Résultat du probe sources KID/SFDR (mesuré 2026-08-20)
+
+Run Actions read-only (`scripts/probe-kid-sources.ts`, 2 ISIN IE/LU) :
+
+| Source              | Joignable (Actions) | Signal SFDR dans la réponse | Lecture                                            |
+| ------------------- | ------------------- | --------------------------- | -------------------------------------------------- |
+| OpenFIGI (baseline) | ✅ HTTP 200         | ✅ (identité, pas SFDR)     | egress Actions ouvert hors Yahoo — confirmé        |
+| justETF             | ✅ HTTP 200         | ❌ absent du HTML brut      | contenu rendu côté JS → non exploitable simplement |
+| **extraETF**        | ✅ HTTP 200         | ✅ présent (IE + LU)        | **candidat technique**, mais **ToS à vérifier**    |
+
+## Conclusion du cadrage ESG
+
+Aucune source **gratuite, licite ET programmatique** n'est disponible pour l'ESG/SFDR
+des UCITS IE/LU depuis cet environnement :
+
+- **KID primaires** (sites émetteurs) : bloqués réseau.
+- **Yahoo `esgScores`** : rejeté systématiquement (probe 0/80).
+- **extraETF** : seul joignable-avec-signal, mais son usage automatisé se heurte à
+  ses **conditions d'utilisation** — pas de scraping d'ingestion sans revue/licence
+  (§ respect des ToS, intégrité de la donnée : un agrégateur est une source
+  seconde, pas le KID primaire).
+
+→ Le dernier maillon n'est plus un problème d'ingénierie mais une **décision de
+source** : souscrire un flux de données licencié (SFDR/ESG par ISIN), ou attendre
+qu'une source primaire s'ouvre. Le reste du pipeline est prêt et protégé par le
+gate — il n'attend que cette source.
+
 _Note de cadrage — ne décrit pas du code d'ingestion livré. Source à acter avant implémentation._
