@@ -71,18 +71,42 @@ SEEDOW_PERSIST=1 bun run scripts/import-adanos-catalog.ts
 Secrets GitHub Actions requis : `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`
 (déjà utilisés par les workflows d'ingestion existants).
 
-## Limites / non couvert (promotion catalogue → moteur)
+## Promotion catalogue → moteur (`assets`)
 
-- **Mapping `etf_category` → `asset_class`** : catégories Adanos libres → nos 9
-  classes fonctionnelles. Aucun mapping auto fiable → promotion **curée**, jamais
-  en masse.
-- **Adanos ≠ investabilité** : pas de statut UCITS, dispo retail UE, TER, SFDR,
-  ESG. Un ETF promu ⇒ `is_active=false` obligatoire jusqu'à enrichissement (sinon
-  l'allocateur le voit à `esg_score=0`).
-- **Stocks** : jamais promus dans le moteur de fonds ; `asset_type` conservé pour
-  filtrer.
-- **2 % sans ISIN** (`scope_reason=primary_listing_missing_isin`) : stockés, non
-  promouvables (clé moteur = ISIN).
+Second chantier : sélectionner des ETF du catalogue et les insérer dans `assets`,
+**toujours `is_active=false`**. Logique pure/testée
+(`src/lib/data-engine/promotion.ts`), exécutée par `scripts/promote-catalog-etfs.ts`
+(dry-run par défaut, `SEEDOW_PERSIST=1` pour écrire), workflow **manuel uniquement**
+(`.github/workflows/promote-catalog-etfs.yml`, pas de cron — la promotion est un
+acte curé, jamais automatique en masse).
+
+### Mapping `etf_category` → `asset_class` (taxonomie Adanos réelle, 11 valeurs)
+
+| Catégorie Adanos                             | Classe moteur      | Note                                                                |
+| -------------------------------------------- | ------------------ | ------------------------------------------------------------------- |
+| Equity                                       | `equity_dev`       | bucket dev par défaut ; clivage dev/em curé à l'enrichis.           |
+| Real Estate                                  | `reit`             |                                                                     |
+| Commodity                                    | `commodity`        |                                                                     |
+| Money Market                                 | `cash`             |                                                                     |
+| Fixed Income                                 | **non promu**      | pas de classe « bond » générique ; sov/corp inconnu → jamais deviné |
+| Alternative / Other / Multi-Asset / Currency | **non promu**      | non classables à ce niveau                                          |
+| Leveraged/Inverse · Volatility               | **exclus (choix)** | dérivés à levier, contraires au buy-and-hold éthique                |
+
+### Garde-fous (non destructif, anti-fonds-fictif)
+
+- **`is_active=false`** : l'optimiseur (`universe.server.ts`) et Découvrir filtrent
+  `is_active=true` → un ETF promu est invisible tant qu'il n'est pas enrichi.
+- **Jamais auto-activé** : sans `yahoo_symbol`, la complétude d'un placeholder
+  plafonne ~25-30 (< seuil 50) et il n'a aucune série de cours → `activation.ts` ne
+  l'active jamais.
+- **On n'invente rien** : `issuer`/`region` restent `null`, `asset_class` seulement
+  si mappable. Origine dans `description` + `catalog_listing_key`.
+- **Unicité** : dédup par ISIN contre `assets` existants (backfill du lien si déjà
+  présent) ; `ticker` = ticker Adanos si libre, sinon `listing_key`.
+- **Stocks** : jamais promus (`asset_type='stock'` filtré).
+- **Sans ISIN** : non promouvables (clé moteur = ISIN).
+- **Audit** : chaque run écrit une ligne `cron_run_log`
+  (`job_name='promote-catalog-etfs'`, compteurs + rapport).
 
 ## Attribution
 
