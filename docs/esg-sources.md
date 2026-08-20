@@ -28,16 +28,29 @@ Deux environnements, deux politiques d'egress — c'est déterminant :
 | **EET / European ESG Template**                                               | SFDR complet par ISIN (standard industrie)                                    | Distribué **B2B**, pas de téléchargement ouvert                                                                                | Idéal sur le papier                                                                                                                                                      | Non librement accessible                                                                               |
 | **ESMA FIRDS / GLEIF / OpenFIGI**                                             | Référentiel instrument, LEI, identité                                         | Ouverts                                                                                                                        | **Pas d'ESG** (utile pour `issuer`/LEI seulement)                                                                                                                        | Ouvert                                                                                                 |
 
-## Recommandation
+## Résultat du probe Yahoo (mesuré 2026-08-20)
 
-Aucune source **gratuite unique** ne donne un `esg_score` propre pour des UCITS globaux. Chemin pragmatique, du plus intègre au plus large :
+Run Actions read-only (`scripts/probe-yahoo-esg.ts`, 80 symboles wirés) :
 
-1. **SFDR via KID** en priorité (fait réglementaire sourçable, daté) — mais coverage limitée par la disponibilité de l'URL KID pour IE/LU. À évaluer : existe-t-il un annuaire de KID atteignable depuis Actions ?
-2. **Yahoo `esgScores`** en complément, **seulement si** un probe Actions confirme une couverture ETF réelle sur nos 300 symboles — avec mapping d'inversion **documenté** et la mention de limite/contestation (§2 : « ce que dit la donnée, rien de plus »). Attribution Sustainalytics.
-3. Le **gate ESG reste le filet** : le compteur Découvrir ne monte que pour des fonds réellement sourcés. Une couverture partielle est donc acceptable — pas de fonds non noté activé.
+```
+crumb obtenu · RÉSULTAT: hits=0 no_data=0 http_error=80 → couverture ESG 0% (0/80)
+```
 
-## Prochaine étape (probe, pas ingestion)
+→ **No-go Yahoo.** Le `crumb` est bien obtenu, mais les 80 requêtes `esgScores`
+échouent **toutes en HTTP** (rejet uniforme, pas « pas de données »). Le v10
+`quoteSummary` gate l'ESG derrière un flux de consentement/cookie plus strict que
+le simple crumb et rejette les clients serveur. Avec les autres réserves
+(couverture ETF partielle même quand ça marche, ToS de redistribution, échelle
+inversée), Yahoo n'est **pas** retenu comme source ESG.
 
-Un seul fait bloque la décision Yahoo : **quelle part de nos 300 ETF wirés renvoie un `esgScores` réel** (et le v10 passe-t-il le `crumb` depuis Actions ?). → un run Actions read-only (aucune écriture) sur un échantillon, qui compte les hits. Selon le taux : on branche Yahoo, on se rabat sur le KID/SFDR, ou on cherche une 3ᵉ source. **C'est le go/no-go, à faire avant toute ingestion.**
+## Recommandation (après probe)
 
-_Note de cadrage — ne décrit pas du code livré. Source à acter avant implémentation._
+1. **SFDR via KID** — désormais la piste primaire : fait réglementaire sourçable et
+   daté, licence propre. Verrou à lever : une **source d'URL KID atteignable** pour
+   les ISIN IE/LU (les sites émetteurs sont bloqués ; GECO ne couvre que FR). C'est
+   le prochain cadrage.
+2. **Yahoo `esgScores`** — écarté (probe ci-dessus).
+3. Le **gate ESG reste le filet** : le compteur Découvrir ne monte que pour des
+   fonds réellement sourcés ; une couverture partielle est acceptable.
+
+_Note de cadrage — ne décrit pas du code d'ingestion livré. Source à acter avant implémentation._
