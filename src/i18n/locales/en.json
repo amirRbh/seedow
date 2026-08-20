@@ -2975,7 +2975,63 @@
     "ethi_simulate": "What if I prioritised climate?",
     "equivalences_title": "In real terms, every year",
     "equivalences_source": "Source",
-    "more": "Go further"
+    "more": "Go further",
+    "money_today": "What it's worth today",
+    "money_trend_up": "Up",
+    "money_trend_down": "Down",
+    "money_trend_flat": "Flat",
+    "money_since": "Gap with the {{invested}} you invested at the start — this is not today's move.",
+    "money_updated": "Latest known prices: {{date}}",
+    "money_updated_pending": "Waiting for the first market prices",
+    "money_empty": "Set an invested amount to track the gap over time.",
+    "finance_hint": "The asset families your money funds, largest share first.",
+    "finance_share": "{{pct}} of your money",
+    "classes": {
+      "equity_dev": {
+        "label": "Large listed companies",
+        "hint": "Big established companies (Europe, US, Japan). You own a small share of them."
+      },
+      "equity_em": {
+        "label": "Emerging-market companies",
+        "hint": "Companies in fast-growing economies: more potential, more turbulence."
+      },
+      "thematic": {
+        "label": "Theme funds",
+        "hint": "A basket focused on one topic: clean energy, water, health…"
+      },
+      "green_bond": {
+        "label": "Loans to green projects",
+        "hint": "You lend money to fund environmental projects, repaid with interest."
+      },
+      "social_bond": {
+        "label": "Loans to social projects",
+        "hint": "Same idea, for housing, education or healthcare."
+      },
+      "sov_bond": {
+        "label": "Loans to governments",
+        "hint": "You lend to countries. Usually the calmest part of a portfolio."
+      },
+      "corporate_bond": {
+        "label": "Loans to companies",
+        "hint": "You lend to companies instead of owning a share: more regular payments."
+      },
+      "reit": {
+        "label": "Listed real estate",
+        "hint": "Companies that own and rent out buildings: offices, homes, warehouses."
+      },
+      "commodity": {
+        "label": "Commodities",
+        "hint": "Metals, energy, agriculture — mostly used to diversify."
+      },
+      "cash": {
+        "label": "Cash",
+        "hint": "The share kept liquid, available at any time."
+      },
+      "other": {
+        "label": "Other",
+        "hint": "The rest of your portfolio."
+      }
+    }
   },
   "sustainability": {
     "tier": {

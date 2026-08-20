@@ -9,16 +9,20 @@ import { ShareImpactButton } from "@/components/impact/ShareImpactButton";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { useAuth } from "@/hooks/useAuth";
 import { useLang } from "@/hooks/useLang";
+import type { Lang } from "@/i18n";
 import { useActivePortfolio, type ActiveHolding } from "@/hooks/useActivePortfolio";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { AnimatedFigure } from "@/components/ui/AnimatedFigure";
-import { formatCurrency, formatPercent } from "@/lib/format";
+import { formatCurrency, formatDate, formatPercent, formatPercentPoints } from "@/lib/format";
 import { buildPortfolioImpact } from "@/lib/impact/portfolioImpact";
+import type { MoneySummary } from "@/lib/portfolio/leFilSummary";
 import {
   weightedImpactScore,
-  dominantCategories,
+  dominantCategoryWeights,
   topHoldingsByWeight,
+  summarizeMoney,
 } from "@/lib/portfolio/leFilSummary";
+import { assetClassColor } from "@/lib/portfolio/assetClasses";
 import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 
 // Référence de comparaison : ETF MSCI World (IWDA / EUNL). Rendement et
@@ -46,13 +50,17 @@ function LeFil() {
   const holdings = useMemo(() => portfolio?.holdings ?? [], [portfolio]);
   const totalInvested = valuation.totalInvested || (portfolio?.initial_amount ?? 0);
   const totalValue = valuation.currentValue || totalInvested;
-  const gain = valuation.pnl;
-  const returnPct = valuation.returnPct;
-  const isGrowing = gain > -0.005;
+
+  // « Mon argent » : le montant ET le pourcentage dérivent du même couple
+  // (investi, valeur du jour), donc ils racontent forcément la même histoire.
+  const money = useMemo(
+    () => summarizeMoney(totalInvested, totalValue),
+    [totalInvested, totalValue],
+  );
 
   // Résumés du fil (logique pure testée dans lib/portfolio/leFilSummary).
   const impactScore = useMemo(() => weightedImpactScore(holdings), [holdings]);
-  const convictions = useMemo(() => dominantCategories(holdings), [holdings]);
+  const convictions = useMemo(() => dominantCategoryWeights(holdings, 3), [holdings]);
   const topHoldings = useMemo(() => topHoldingsByWeight(holdings, 3), [holdings]);
 
   // Impact carbone réel via le moteur d'impact honnête : n'expose un écart
@@ -67,6 +75,8 @@ function LeFil() {
 
   const expectedReturn = portfolio?.metrics?.expected_return ?? null;
   const volatility = portfolio?.metrics?.volatility ?? null;
+
+  const classCopy = useAssetClassCopy();
 
   // Fiche détaillée d'un actif (bottom sheet) — « pourquoi cet actif est là ».
   const [selectedHolding, setSelectedHolding] = useState<ActiveHolding | null>(null);
@@ -96,57 +106,78 @@ function LeFil() {
           <div aria-hidden className="absolute left-[26px] top-8 bottom-10 w-px bg-paper-3" />
 
           <div className="flex flex-col gap-4">
-            {/* NŒUD 1 — MON ARGENT */}
+            {/* NŒUD 1 — MON ARGENT
+                Fond papier (le pavé noir écrasait le reste du fil sans rien
+                dire de plus) et une variation qui s'explique : un mot, un
+                montant, un pourcentage dérivés du même couple, puis le repère
+                de comparaison et la date des cours. */}
             <Node index={1} active {...reveal(1)}>
-              <div className="-m-5 mb-0 rounded-t-[14px] bg-ink px-5 pb-6 pt-5">
-                <p className="text-[13px] font-medium tracking-[-0.01em] text-paper/60">
-                  {t("le_fil.money")}
+              <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
+                {t("le_fil.money")}
+              </p>
+              <p className="mt-2 text-body-sm text-ink-2">{t("le_fil.money_today")}</p>
+              <h2 className="font-value text-figure-hero leading-none text-ink">
+                <AnimatedFigure
+                  value={totalValue}
+                  from={0}
+                  format={(v) => formatCurrency(v, lang)}
+                />
+              </h2>
+
+              <MoneyDelta money={money} lang={lang} />
+
+              {totalInvested > 0 ? (
+                <p className="mt-2.5 text-body-sm leading-snug text-ink-2">
+                  {t("le_fil.money_since", { invested: formatCurrency(totalInvested, lang) })}
                 </p>
-                <h2 className="font-value mt-2 text-figure-hero leading-none text-paper">
-                  <AnimatedFigure
-                    value={totalValue}
-                    from={0}
-                    format={(v) => formatCurrency(v, lang)}
-                  />
-                </h2>
-                <p
-                  className={`mt-2.5 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-xs tabular-nums text-paper ${
-                    isGrowing ? "bg-mint" : "bg-alert"
-                  }`}
-                >
-                  <span aria-hidden>{isGrowing ? "▲" : "▼"}</span>
-                  {isGrowing ? "+" : ""}
-                  {formatPercent(returnPct, lang)} · {isGrowing ? "+" : ""}
-                  {formatCurrency(gain, lang)}
+              ) : (
+                <p className="mt-2.5 text-body-sm leading-snug text-ink-2">
+                  {t("le_fil.money_empty")}
                 </p>
-              </div>
+              )}
+              <p className="mt-1.5 font-mono text-body-sm text-ink-3">
+                {valuation.latestQuoteAt
+                  ? t("le_fil.money_updated", {
+                      date: formatDate(valuation.latestQuoteAt, lang, {
+                        day: "numeric",
+                        month: "short",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      }),
+                    })
+                  : t("le_fil.money_updated_pending")}
+              </p>
 
               {/* Convictions rattachées au solde (moins de scroll : un seul nœud
-                  « 3 secondes » = combien j'ai + ce que ça finance). */}
-              <div className="pt-5">
+                  « 3 secondes » = combien j'ai + ce que ça finance). Les codes
+                  techniques (equity_dev…) ne sortent plus à l'écran : un
+                  intitulé courant, la part réelle, et une phrase qui dit ce que
+                  c'est — un néophyte ne devine pas « corporate_bond ». */}
+              <div className="mt-5 border-t border-paper-3 pt-4">
                 <SectionLabel>{t("le_fil.finance")}</SectionLabel>
                 {convictions.length > 0 ? (
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {convictions.map((c, i) => (
-                      <span
-                        key={c}
-                        className={`rounded-full border px-3 py-1.5 font-mono text-xs ${
-                          i === 0
-                            ? "border-mint/40 bg-mint/8 text-mint-ink"
-                            : "border-paper-3 bg-paper-2 text-ink-2"
-                        }`}
-                      >
-                        {c}
-                      </span>
-                    ))}
-                  </div>
+                  <>
+                    <p className="mt-1 text-body-sm leading-snug text-ink-2">
+                      {t("le_fil.finance_hint")}
+                    </p>
+                    <ul className="mt-3.5 flex flex-col gap-3.5">
+                      {convictions.map((c) => (
+                        <FinanceRow
+                          key={c.category}
+                          category={c.category}
+                          weightPct={c.weightPct}
+                          lang={lang}
+                        />
+                      ))}
+                    </ul>
+                  </>
                 ) : (
                   <p className="mt-2 text-sm text-ink-3">{t("le_fil.define_convictions")}</p>
                 )}
                 <Link
                   to="/discover"
                   search={{ theme: portfolio?.causes?.[0] }}
-                  className="mt-3.5 inline-block font-mono text-xs text-mint-ink underline-offset-4 hover:underline"
+                  className="mt-4 inline-block font-mono text-xs text-mint-ink underline-offset-4 hover:underline"
                 >
                   {t("le_fil.explore_aligned")} →
                 </Link>
@@ -177,8 +208,12 @@ function LeFil() {
                         className="min-w-0 flex-1 rounded-sm text-left outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
                       >
                         <p className="truncate text-sm font-medium text-ink">{h.name}</p>
-                        <p className="mt-0.5 text-xs text-ink-3">
-                          {h.category ?? "—"} · {formatPercent(h.allocationPct ?? 0, lang, 0)}
+                        {/* `allocationPct` est en POINTS (0..100) : le passer
+                            tel quel à `formatPercent` affichait « 6 200 % »
+                            pour une ligne à 62 %. */}
+                        <p className="mt-0.5 text-body-sm text-ink-3">
+                          {classCopy.label(h.category ?? "other")} ·{" "}
+                          {formatPercentPoints(h.allocationPct ?? 0, lang, 0)}
                         </p>
                       </button>
                       <span className="font-mono text-sm tabular-nums text-ink">
@@ -399,6 +434,100 @@ function LeFil() {
 
       <BottomNavigation />
     </div>
+  );
+}
+
+/**
+ * Intitulés courants des classes d'actifs. Repli en cascade : libellé néophyte
+ * → libellé technique existant → code brut, pour qu'une classe ajoutée en base
+ * n'affiche jamais une clé i18n. Les codes techniques (`equity_dev`,
+ * `corporate_bond`…) ne doivent pas atteindre l'écran : personne hors finance
+ * ne les décode.
+ */
+function useAssetClassCopy() {
+  const { t } = useTranslation();
+  return {
+    label: (assetClass: string) =>
+      t(`le_fil.classes.${assetClass}.label`, {
+        defaultValue: t(`asset_class.${assetClass}`, { defaultValue: assetClass }),
+      }),
+    hint: (assetClass: string) => t(`le_fil.classes.${assetClass}.hint`, { defaultValue: "" }),
+  };
+}
+
+/**
+ * Variation de « Mon argent ». Trois signaux redondants — un mot, une flèche,
+ * une couleur — parce qu'aucune information ne doit reposer sur la couleur
+ * seule (CLAUDE.md §4). Montant et pourcentage sont affichés en valeur absolue :
+ * le sens est déjà porté par le mot, un « -0,79 € · -0,70 % » derrière « En
+ * baisse » empile les négations pour rien.
+ */
+function MoneyDelta({ money, lang }: { money: MoneySummary; lang: Lang }) {
+  const { t } = useTranslation();
+  const tone = {
+    up: "border-mint/30 bg-mint/10 text-mint-ink",
+    down: "border-alert/25 bg-alert/10 text-alert-ink",
+    flat: "border-paper-3 bg-paper-2 text-ink-2",
+  }[money.trend];
+  const arrow = { up: "▲", down: "▼", flat: "→" }[money.trend];
+  const label = t(`le_fil.money_trend_${money.trend}`);
+
+  return (
+    <p
+      className={`mt-3 inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-body-sm font-medium ${tone}`}
+    >
+      <span aria-hidden>{arrow}</span>
+      <span>{label}</span>
+      <span aria-hidden className="opacity-40">
+        ·
+      </span>
+      <span className="font-mono tabular-nums">{formatCurrency(Math.abs(money.gain), lang)}</span>
+      <span aria-hidden className="opacity-40">
+        ·
+      </span>
+      <span className="font-mono tabular-nums">
+        {formatPercentPoints(Math.abs(money.returnPoints), lang)}
+      </span>
+    </p>
+  );
+}
+
+/**
+ * Une famille d'actifs dans « Ce que je finance » : intitulé courant, part
+ * réelle, et une phrase qui explique ce que c'est. La barre est décorative —
+ * le pourcentage est écrit à côté.
+ */
+function FinanceRow({
+  category,
+  weightPct,
+  lang,
+}: {
+  category: string;
+  weightPct: number;
+  lang: Lang;
+}) {
+  const { t } = useTranslation();
+  const copy = useAssetClassCopy();
+  const label = copy.label(category);
+  const hint = copy.hint(category);
+  const share = Math.max(0, Math.min(100, weightPct));
+
+  return (
+    <li>
+      <div className="flex items-baseline justify-between gap-3">
+        <p className="text-body font-medium text-ink">{label}</p>
+        <span className="shrink-0 font-mono text-body-sm tabular-nums text-ink-2">
+          {t("le_fil.finance_share", { pct: formatPercentPoints(share, lang, 0) })}
+        </span>
+      </div>
+      <div aria-hidden className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-paper-2">
+        <span
+          className="block h-full rounded-full"
+          style={{ width: `${share}%`, background: assetClassColor(category) }}
+        />
+      </div>
+      {hint && <p className="mt-1.5 text-body-sm leading-snug text-ink-2">{hint}</p>}
+    </li>
   );
 }
 

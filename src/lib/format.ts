@@ -34,6 +34,19 @@ export function formatPercent(value: number, lang: Lang, digits = 2) {
   }).format(snapZero(value, digits + 2));
 }
 
+/**
+ * Pourcentage exprimé en POINTS (ex. `-0.7043` → « -0,70 % »).
+ *
+ * `formatPercent` attend une FRACTION (`Intl` multiplie par 100) alors que la
+ * valorisation (`usePortfolioValuation`) expose ses `returnPct` en points.
+ * Mélanger les deux affichait un rendement 100× trop grand (-0,70 % rendu
+ * « -70,43 % »). Ce helper nomme la convention pour que le site d'appel n'ait
+ * plus à se souvenir d'un `/ 100` silencieux.
+ */
+export function formatPercentPoints(points: number, lang: Lang, digits = 2) {
+  return formatPercent(points / 100, lang, digits);
+}
+
 export function formatDate(
   date: Date | string,
   lang: Lang,
