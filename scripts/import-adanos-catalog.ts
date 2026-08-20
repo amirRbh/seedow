@@ -78,10 +78,12 @@ async function main(): Promise<void> {
     .select("listing_key", { count: "exact", head: true });
 
   // Diff new vs updated : on charge les listing_key existants (léger, une colonne).
+  // PostgREST plafonne chaque lecture à 1000 lignes (max-rows) → paginer par 1000,
+  // sinon on ne charge que les 1000 premières clés et le diff new/updated est faux.
   const existing = new Set<string>();
   {
     let from = 0;
-    const page = 10000;
+    const page = 1000;
     for (;;) {
       const { data, error } = await admin
         .from("catalog_instruments")
