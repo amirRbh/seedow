@@ -44,12 +44,20 @@ function extractEndpoints(html: string): Record<string, string[]> {
   const grab = (re: RegExp) => uniq([...html.matchAll(re)].map((m) => m[0]));
   return {
     jsn: grab(/[A-Za-z0-9/_.-]*product-screener[A-Za-z0-9/_.-]*\.jsn/gi),
-    dcrPath: grab(/dcrPath=[^"'&\s]+/gi),
-    productData: grab(
-      /\/[A-Za-z0-9/_.-]*\/(?:product-screener|products)[A-Za-z0-9/_.-]*\.(?:jsn|json)/gi,
-    ),
+    // Les valeurs de dcrPath sont des chemins /templatedata/... (le vrai « verrou »).
+    templatedata: grab(/\/templatedata\/[^"'&\s)]+/gi),
     ajaxJson: grab(/["'][^"']*\.(?:jsn|json)(?:\?[^"']*)?["']/gi),
   };
+}
+
+/** Contexte brut autour de la 1re occurrence d'une aiguille (révèle base + query). */
+function contextAround(html: string, needle: string, span = 160): string | null {
+  const i = html.indexOf(needle);
+  if (i < 0) return null;
+  return html
+    .slice(Math.max(0, i - span), i + needle.length + span)
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 // Endpoints candidats du « product screener » iShares (URLs publiques du site,
@@ -150,6 +158,11 @@ async function discoverFromPage(label: string, url: string): Promise<void> {
     }
     if (!Object.values(refs).some((m) => m.length)) {
       console.log("      (aucune référence d'endpoint dans le HTML brut → SPA rendu JS probable)");
+    }
+    // Contexte autour des endpoints de données ciblés (révèle base URL + dcrPath).
+    for (const needle of ["esg-product-data.jsn", "product-data.jsn"]) {
+      const ctx = contextAround(html, needle);
+      if (ctx) console.log(`      ctx[${needle}]: …${ctx}…`);
     }
   }
 }
