@@ -126,11 +126,25 @@ pour les validés — `is_active` reste `false`. Workflow **manuel**
 symbole posé, l'ingestion horaire (`refresh-market-data`, qui lit tout asset ayant
 un `yahoo_symbol`, actif ou non) accumule la série de cours.
 
+### Maillon 2 — identité `issuer` / `region` (fait)
+
+`src/lib/data-engine/identity.ts` (pur/testé) dérive `issuer` (marque→gérant :
+iShares→BlackRock, Xtrackers→DWS…) et `region` (exposition : World/US/Europe/EM/
+Japon/Chine) **depuis le nom du fonds**. `scripts/enrich-catalog-identity.ts`
+complète ces champs `NULL` sur les ETF promus (ciblé par défaut sur les **wirés**),
+sans écraser l'existant, sans activer. Marque inconnue → `issuer=null` ; pas de
+géographie claire → `region=null` (jamais deviné). Workflow **manuel**.
+
+Effet : un ETF **wiré + identité complète** a `hasFullIdentity=true` ; dès qu'il
+cumule ≥40 cours réels (~2 mois via `refresh-market-data`), `activation.ts` voie
+« tradeabilité prouvée » l'**active automatiquement** (politique existante : un
+fonds qui cote vraiment et qu'on identifie sans ambiguïté est investissable, même
+avant ingestion ESG).
+
 ### Maillons suivants (à faire)
 
-- **Identité** : `issuer`, domicile (`region`), `ter` sourcés — requis par les deux
-  voies d'activation.
-- **ESG/SFDR/carbone** sourcés (pipeline d'ingestion existant).
+- **ESG/SFDR/carbone** sourcés (pipeline d'ingestion existant) — sinon un ETF activé
+  reste à `esg_score=0` tant que l'ESG n'est pas ingéré.
 - **Classification fine** des non-mappés (3 086 Fixed Income → sov/corp/green/social).
 
 ## Attribution
