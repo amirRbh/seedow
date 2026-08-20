@@ -194,12 +194,14 @@
      --volt  #5B4B9E  pédagogie (cours, méthode). Usage rare.
      Les variantes `--*-ink` restent obligatoires dès qu'un accent porte
      du TEXTE (AA vérifié par src/lib/a11y/__tests__/contrast.test.ts). */
-  --mint: #0e4f45;
+  --mint: #0d7a66; /* 5.26:1 sur blanc — un teal qui se lit comme une couleur.
+                      #0E4F45 était si sombre qu'il passait pour du noir : toute
+                      l'interface paraissait monochrome. */
   --ice: #1f5fb8;
   --alert: #c2372a;
   --solar: #a16207;
   --volt: #5b4b9e;
-  --mint-ink: #0e4f45;
+  --mint-ink: #0c6857; /* 6.70:1 — variante texte, marge confortable */
   --ice-ink: #1b5299;
   --alert-ink: #b23124;
   --solar-ink: #8a5406;
@@ -646,6 +648,14 @@
     background-color: color-mix(in srgb, var(--alert) 11%, transparent);
     color: var(--color-alert-ink);
   }
+  .chip--ice {
+    background-color: color-mix(in srgb, var(--ice) 11%, transparent);
+    color: var(--color-ice-ink);
+  }
+  .chip--volt {
+    background-color: color-mix(in srgb, var(--volt) 11%, transparent);
+    color: var(--color-volt-ink);
+  }
   .chip--up {
     background-color: color-mix(in srgb, var(--mint) 10%, transparent);
     color: var(--color-mint-ink);
@@ -709,11 +719,33 @@
     border-color: var(--color-ink-3);
   }
 
+  /* ── Couleur de texte des boutons ─────────────────────────────
+     À passer par une CLASSE, jamais par `text-ink` / `text-deep` :
+     tailwind-merge range les couleurs de thème qu'il ne connaît pas dans
+     le même groupe que les tailles, donc la classe de taille du bouton
+     (`text-body-lg`) les efface silencieusement. Vérifié :
+     twMerge("text-deep", "text-body-lg") → "text-body-lg".
+     C'est ce qui rendait le CTA blanc entièrement vide. */
   .btn-on-ink {
     color: #ffffff;
   }
   .btn-on-paper {
     color: var(--color-ink);
+  }
+  .btn-ink {
+    color: var(--color-ink);
+  }
+  .btn-ink-2 {
+    color: var(--color-ink-2);
+  }
+  .btn-ink-2:hover {
+    color: var(--color-ink);
+  }
+  .btn-on-deep {
+    color: var(--deep);
+  }
+  .btn-mint {
+    color: var(--color-mint-ink);
   }
 
   /* ── Champ : 56px, rayon 14, focus par anneau discret ─────────── */
@@ -849,13 +881,21 @@
    utilisées par les pages marketing pas encore migrées (tarifs, aide,
    vote). Réaccordées à la V3. Ne pas écrire de nouvelle interface avec.
 ═══════════════════════════════════════════════════════════════ */
-.apple-landing {
+/* Ces alias sont désormais définis à la RACINE, pas sous `.apple-landing`.
+   La landing V3 ne porte plus cette classe : les composants qu'elle embarque
+   (LandingTour, LandingCourses, EsgQuickCheck) lisaient donc des variables
+   qui ne résolvaient plus — `background: var(--apple-text)` ne produisait
+   plus aucune couleur, d'où des cartes transparentes et sans bordure. */
+:root,
+.dark {
   --apple-bg: var(--paper);
   --apple-surface: var(--paper-2);
   --apple-text: var(--ink);
   --apple-text-2: var(--ink-2);
   --apple-dark: var(--deep);
   --apple-dark-2: var(--deep-2);
+}
+.apple-landing {
   background-color: var(--paper-2);
   color: var(--ink);
   font-family: var(--font-sans);

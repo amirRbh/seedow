@@ -256,7 +256,9 @@ function Landing() {
             <div className="grid md:grid-cols-3 gap-10 md:gap-8 mt-14">
               {STATS.map((s) => (
                 <div key={s.figure}>
-                  <p className="font-value text-[clamp(48px,6vw,76px)] leading-none">{s.figure}</p>
+                  <p className="font-value text-[clamp(48px,6vw,76px)] leading-none text-mint-ink">
+                    {s.figure}
+                  </p>
                   <p className="mt-4 text-body-lg leading-snug max-w-[26ch] text-ink-2">{s.text}</p>
                   <Provenance className="mt-4" source={s.src} status="verified" hideChip />
                 </div>

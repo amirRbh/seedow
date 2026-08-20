@@ -49,10 +49,10 @@ export function LandingCourses({ embedded = false }: { embedded?: boolean } = {}
         {resume ? (
           <div
             className="mx-auto max-w-[620px] apple-card p-6 md:p-8 flex flex-col sm:flex-row sm:items-center gap-4"
-            style={{ background: "var(--apple-bg)", border: "1px solid #d2d2d7" }}
+            style={{ background: "var(--apple-bg)", border: "1px solid var(--paper-3)" }}
           >
             <div className="flex-1">
-              <p className="text-caption font-mono uppercase tracking-[0.16em] text-[color:var(--apple-text-2)]">
+              <p className="stamp text-[color:var(--apple-text-2)]">
                 {t("landing.learn.resume_prefix")}
               </p>
               <p className="apple-eyebrow mt-1" style={{ color: "var(--apple-text)" }}>
@@ -78,7 +78,7 @@ export function LandingCourses({ embedded = false }: { embedded?: boolean } = {}
                   void trackAppEvent("course_preview_opened", { slug: c.slug });
                 }}
                 className="apple-card p-6 flex flex-col gap-3 text-left hover:opacity-95 transition-opacity"
-                style={{ background: "var(--apple-bg)", border: "1px solid #d2d2d7" }}
+                style={{ background: "var(--apple-bg)", border: "1px solid var(--paper-3)" }}
               >
                 <span className="text-caption font-mono tabular-nums text-[color:var(--apple-text-2)]">
                   N° {String(c.number).padStart(2, "0")} · {c.readingMinutes} min

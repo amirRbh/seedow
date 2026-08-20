@@ -26,11 +26,15 @@ export function CoursePreviewDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         className="apple-landing max-w-[560px] p-0 gap-0 overflow-hidden"
-        style={{ background: "var(--apple-bg)", borderRadius: 18, border: "1px solid #d2d2d7" }}
+        style={{
+          background: "var(--apple-bg)",
+          borderRadius: 20,
+          border: "1px solid var(--paper-3)",
+        }}
       >
         {course && (
           <div className="p-7 md:p-8">
-            <p className="text-caption font-mono uppercase tracking-[0.16em] text-[color:var(--apple-text-2)]">
+            <p className="stamp text-[color:var(--apple-text-2)]">
               {t("landing.course_preview.label")} · N° {String(course.number).padStart(2, "0")} ·{" "}
               {course.readingMinutes} min
             </p>
@@ -53,11 +57,11 @@ export function CoursePreviewDialog({
                 className="mt-6 p-5"
                 style={{
                   background: "var(--apple-surface)",
-                  border: "1px solid #d2d2d7",
-                  borderRadius: 14,
+                  border: "1px solid var(--paper-3)",
+                  borderRadius: 20,
                 }}
               >
-                <p className="text-caption font-mono uppercase tracking-[0.16em] text-[color:var(--apple-text-2)]">
+                <p className="stamp text-[color:var(--apple-text-2)]">
                   {t("landing.course_preview.takeaways")}
                 </p>
                 <ul className="mt-3 flex flex-col gap-2">
