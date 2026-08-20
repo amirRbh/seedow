@@ -29,9 +29,10 @@ import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { useAuth } from "@/hooks/useAuth";
 import { useLang } from "@/hooks/useLang";
-import { formatCurrency, formatPercent } from "@/lib/format";
+import { formatCurrency, formatPercentPoints } from "@/lib/format";
 import { AnimatedFigure } from "@/components/ui/AnimatedFigure";
 import { BADGE_DEFS, computeUnlockedBadgeIds } from "@/lib/portfolio/badges";
+import { summarizeMoney } from "@/lib/portfolio/leFilSummary";
 import type { MilestoneBadge } from "@/components/portfolio/MilestoneBadges";
 import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 
@@ -134,6 +135,7 @@ function Portfolio() {
   const totalValue = valuation.currentValue || totalInvested;
   const gain = valuation.pnl;
   const returnPct = valuation.returnPct;
+  const money = summarizeMoney(totalInvested, totalValue);
 
   const esgScore = portfolio.metrics?.esg_score
     ? Number((portfolio.metrics.esg_score / 10).toFixed(1))
@@ -184,13 +186,27 @@ function Portfolio() {
             <h2 className="font-value text-figure-hero text-ink mt-1 leading-none">
               <AnimatedFigure value={totalValue} from={0} format={(v) => formatCurrency(v, lang)} />
             </h2>
+            {/* Même convention que « Le Fil » : le pourcentage vient du même
+                couple (investi, valeur du jour) que le montant — `returnPct`
+                est en POINTS, d'où `formatPercentPoints` (un `formatPercent`
+                direct affichait un écart 100× trop grand). */}
             <p
-              className={`font-mono text-sm mt-1 ${gain > -0.005 ? "text-mint-ink" : "text-alert-ink"}`}
+              className={`font-mono text-sm mt-1 ${
+                money.trend === "down" ? "text-alert-ink" : "text-mint-ink"
+              }`}
             >
-              {gain > -0.005 ? "+" : ""}
-              {formatPercent(returnPct, lang)} · {gain > -0.005 ? "+" : ""}
-              {formatCurrency(gain, lang)}
+              <span aria-hidden>
+                {money.trend === "up" ? "▲" : money.trend === "down" ? "▼" : "→"}{" "}
+              </span>
+              {t(`le_fil.money_trend_${money.trend}`)} ·{" "}
+              {formatCurrency(Math.abs(money.gain), lang)} ·{" "}
+              {formatPercentPoints(Math.abs(money.returnPoints), lang)}
             </p>
+            {totalInvested > 0 && (
+              <p className="mt-1.5 text-body-sm leading-snug text-ink-2">
+                {t("le_fil.money_since", { invested: formatCurrency(totalInvested, lang) })}
+              </p>
+            )}
           </div>
         </section>
 

@@ -1243,7 +1243,64 @@ const landingPathsEn = {
 const leFilFr = {
   eyebrow: "Le Fil",
   money: "Mon argent",
+  // Nœud « Mon argent » : la variation doit dire par rapport à QUOI et à QUAND,
+  // sinon un néophyte lit « -0,79 € » comme une baisse du jour.
+  money_today: "Ce que ça vaut aujourd'hui",
+  money_trend_up: "En hausse",
+  money_trend_down: "En baisse",
+  money_trend_flat: "Stable",
+  money_since:
+    "Écart avec les {{invested}} que tu as investis au départ — ce n'est pas la variation de la journée.",
+  money_updated: "Derniers cours connus : {{date}}",
+  money_updated_pending: "En attente des premiers cours de marché",
+  money_empty: "Indique un montant investi pour suivre l'écart au fil du temps.",
   finance: "Ce que je finance",
+  finance_hint:
+    "Les familles d'actifs que ton argent finance, de la plus grosse part à la plus petite.",
+  finance_share: "{{pct}} de ton argent",
+  classes: {
+    equity_dev: {
+      label: "Grandes entreprises cotées",
+      hint: "De grandes sociétés déjà installées (Europe, États-Unis, Japon). Tu en détiens une petite part.",
+    },
+    equity_em: {
+      label: "Entreprises des pays émergents",
+      hint: "Des sociétés d'économies en forte croissance : plus de potentiel, plus de secousses.",
+    },
+    thematic: {
+      label: "Fonds à thème",
+      hint: "Un panier centré sur un sujet précis : énergies propres, eau, santé…",
+    },
+    green_bond: {
+      label: "Prêts à des projets écologiques",
+      hint: "Tu prêtes de l'argent pour financer des projets environnementaux, remboursé avec des intérêts.",
+    },
+    social_bond: {
+      label: "Prêts à des projets sociaux",
+      hint: "Même principe, pour du logement, de l'éducation ou de la santé.",
+    },
+    sov_bond: {
+      label: "Prêts à des États",
+      hint: "Tu prêtes à des pays. C'est en général la partie la plus calme d'un portefeuille.",
+    },
+    corporate_bond: {
+      label: "Prêts à des entreprises",
+      hint: "Tu prêtes à des entreprises au lieu d'en détenir une part : des versements plus réguliers.",
+    },
+    reit: {
+      label: "Immobilier coté",
+      hint: "Des sociétés qui possèdent et louent des bâtiments : bureaux, logements, entrepôts.",
+    },
+    commodity: {
+      label: "Matières premières",
+      hint: "Métaux, énergie, agriculture — surtout utilisé pour diversifier.",
+    },
+    cash: {
+      label: "Argent disponible",
+      hint: "La part laissée en liquidités, mobilisable à tout moment.",
+    },
+    other: { label: "Autres", hint: "Le reste de ton portefeuille." },
+  },
   explore_aligned: "Explorer d'autres actifs alignés",
   define_convictions: "Définis tes convictions pour composer ton portefeuille.",
   investments: "Mes investissements",
@@ -1281,7 +1338,57 @@ const leFilFr = {
 const leFilEn = {
   eyebrow: "The Thread",
   money: "My money",
+  money_today: "What it's worth today",
+  money_trend_up: "Up",
+  money_trend_down: "Down",
+  money_trend_flat: "Flat",
+  money_since: "Gap with the {{invested}} you invested at the start — this is not today's move.",
+  money_updated: "Latest known prices: {{date}}",
+  money_updated_pending: "Waiting for the first market prices",
+  money_empty: "Set an invested amount to track the gap over time.",
   finance: "What I fund",
+  finance_hint: "The asset families your money funds, largest share first.",
+  finance_share: "{{pct}} of your money",
+  classes: {
+    equity_dev: {
+      label: "Large listed companies",
+      hint: "Big established companies (Europe, US, Japan). You own a small share of them.",
+    },
+    equity_em: {
+      label: "Emerging-market companies",
+      hint: "Companies in fast-growing economies: more potential, more turbulence.",
+    },
+    thematic: {
+      label: "Theme funds",
+      hint: "A basket focused on one topic: clean energy, water, health…",
+    },
+    green_bond: {
+      label: "Loans to green projects",
+      hint: "You lend money to fund environmental projects, repaid with interest.",
+    },
+    social_bond: {
+      label: "Loans to social projects",
+      hint: "Same idea, for housing, education or healthcare.",
+    },
+    sov_bond: {
+      label: "Loans to governments",
+      hint: "You lend to countries. Usually the calmest part of a portfolio.",
+    },
+    corporate_bond: {
+      label: "Loans to companies",
+      hint: "You lend to companies instead of owning a share: more regular payments.",
+    },
+    reit: {
+      label: "Listed real estate",
+      hint: "Companies that own and rent out buildings: offices, homes, warehouses.",
+    },
+    commodity: {
+      label: "Commodities",
+      hint: "Metals, energy, agriculture — mostly used to diversify.",
+    },
+    cash: { label: "Cash", hint: "The share kept liquid, available at any time." },
+    other: { label: "Other", hint: "The rest of your portfolio." },
+  },
   explore_aligned: "Explore more aligned assets",
   define_convictions: "Set your convictions to build your portfolio.",
   investments: "My investments",
