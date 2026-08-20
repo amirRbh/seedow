@@ -4,26 +4,16 @@ import { useTranslation } from "react-i18next";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 import { useLang } from "@/hooks/useLang";
 import { formatCurrency, formatDate } from "@/lib/format";
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  Line,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Area, AreaChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { getPortfolioHistory, type HistoryPoint } from "@/lib/portfolio/history.functions";
 import {
+  AREA_DOWN,
+  AREA_UP,
   CHART_AXIS,
-  CHART_GRID,
   CHART_LINE,
   CHART_REFERENCE,
   CHART_TOOLTIP_STYLE,
-  ChartHatchDefs,
-  HATCH_ALERT,
-  HATCH_INK,
+  ChartAreaDefs,
 } from "@/components/ui/chart-theme";
 import { Provenance } from "@/components/ui/Provenance";
 
@@ -115,35 +105,31 @@ export function PortfolioHistoryChart() {
 
   // Encre pour la hausse, vermillon pour la baisse : le signe est aussi
   // écrit (+/−), la couleur ne porte jamais seule l'information.
-  const stroke = isUp ? "var(--color-ink)" : "var(--color-alert)";
-  const hatch = isUp ? HATCH_INK : HATCH_ALERT;
+  const stroke = isUp ? "var(--color-mint)" : "var(--color-alert)";
+  const area = isUp ? AREA_UP : AREA_DOWN;
 
   return (
-    <div className="sheet pt-4">
+    <div className="paper-card p-6">
       <div className="flex items-baseline justify-between gap-3 mb-4">
         <div>
           <p className="stamp">{t("portfolio.history_chart.title")}</p>
-          <p className="font-value text-[30px] leading-none text-ink mt-2">{fmtEur(last)}</p>
+          <p className="font-value text-[32px] leading-none text-ink mt-2">{fmtEur(last)}</p>
           {points.length > 0 && (
-            <p className={`font-value text-label mt-1.5 ${isUp ? "text-ink-2" : "text-alert-ink"}`}>
+            <p className={`chip mt-3 ${isUp ? "chip--up" : "chip--down"}`}>
               {isUp ? "+" : ""}
               {fmtEur(deltaAbs)} ({isUp ? "+" : ""}
               {deltaPct.toFixed(2)}%)
             </p>
           )}
         </div>
-        <div className="flex">
+        <div className="segmented">
           {RANGES.map((r) => (
             <button
               key={r.id}
               type="button"
               onClick={() => setRange(r.id)}
               aria-pressed={range === r.id}
-              className={`stamp px-2.5 py-1.5 border-b-2 transition-colors ${
-                range === r.id
-                  ? "border-ink text-ink"
-                  : "border-transparent text-ink-3 hover:text-ink-2"
-              }`}
+              data-active={range === r.id}
             >
               {r.label}
             </button>
@@ -169,9 +155,8 @@ export function PortfolioHistoryChart() {
         ) : (
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={points} margin={{ top: 4, right: 8, left: 8, bottom: 0 }}>
-              <ChartHatchDefs />
-              <CartesianGrid {...CHART_GRID} />
-              <XAxis dataKey="date" tickFormatter={fmtDate} minTickGap={40} {...CHART_AXIS} />
+              <ChartAreaDefs />
+              <XAxis dataKey="date" tickFormatter={fmtDate} minTickGap={48} {...CHART_AXIS} />
               <YAxis domain={[minY, maxY]} hide />
               <Tooltip
                 cursor={{ stroke: "var(--color-ink-3)", strokeWidth: 1, strokeDasharray: "2 3" }}
@@ -193,12 +178,12 @@ export function PortfolioHistoryChart() {
                     : t("portfolio.history_chart.invested_tooltip"),
                 ]}
               />
-              <Line type="linear" dataKey="invested" {...CHART_REFERENCE} activeDot={false} />
+              <Line type="monotone" dataKey="invested" {...CHART_REFERENCE} activeDot={false} />
               <Area
-                type="linear"
+                type="monotone"
                 dataKey="value"
                 stroke={stroke}
-                fill={`url(#${hatch})`}
+                fill={`url(#${area})`}
                 {...CHART_LINE}
               />
             </AreaChart>
@@ -207,13 +192,16 @@ export function PortfolioHistoryChart() {
       </div>
 
       {points.length >= 2 && (
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 mt-4 pt-3 border-t border-paper-3 stamp">
-          <span className="flex items-center gap-1.5">
-            <span className="w-3 h-px inline-block" style={{ backgroundColor: stroke }} />
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-5 stamp">
+          <span className="flex items-center gap-2">
+            <span
+              className="w-3.5 h-[2.5px] rounded-full inline-block"
+              style={{ backgroundColor: stroke }}
+            />
             {t("portfolio.history_chart.value")}
           </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-3 h-px inline-block border-t border-dashed border-ink-3" />
+          <span className="flex items-center gap-2">
+            <span className="w-3.5 inline-block border-t-2 border-dashed border-ink-3" />
             {t("portfolio.history_chart.invested_legend")}
           </span>
         </div>

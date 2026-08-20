@@ -29,7 +29,7 @@ export function HomeGlance({
   const perfValue = `${perfPositive ? "+" : ""}${formatPercent(returnPct / 100, lang, 1)}`;
 
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-3 gap-3">
       <GlanceTile
         to="/portfolio"
         label={t("home_glance.performance")}
@@ -78,10 +78,10 @@ function GlanceTile({
     <Link
       to={to}
       search={search}
-      className="flex flex-col justify-between border-t border-ink px-0 pt-2.5 pb-1 min-h-[76px] transition-colors hover:bg-paper-2 outline-none focus-visible:ring-2 focus-visible:ring-ink"
+      className="paper-card flex flex-col justify-between px-4 py-4 min-h-[92px] transition-colors hover:bg-paper-inset outline-none focus-visible:ring-2 focus-visible:ring-ink"
     >
       <span className="stamp leading-none">{label}</span>
-      <span className={`mt-2 font-value text-[22px] leading-none ${valueColor}`}>
+      <span className={`mt-3 font-value text-[24px] leading-none ${valueColor}`}>
         {value}
         {suffix && <span className="text-caption text-ink-3 ml-0.5">{suffix}</span>}
       </span>

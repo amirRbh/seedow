@@ -2936,7 +2936,8 @@
     "status_modelled": "Seedow estimate",
     "status_disputed": "disputed by the source",
     "status_unknown": "unverified",
-    "live": "live data"
+    "live": "live data",
+    "status_verified": "verified"
   },
   "simulation_ack": {
     "title": "Before you save",

@@ -22,42 +22,95 @@ interface Props {
   href?: string;
   /** Précision libre ajoutée en fin de ligne (méthode, réserve, droit de réponse). */
   note?: string;
+  /** Masque la pastille et ne garde que la ligne grise (blocs déjà étiquetés). */
+  hideChip?: boolean;
   className?: string;
 }
 
-const STATUS_CLASS: Record<ProvenanceStatus, string> = {
-  verified: "provenance--verified",
-  modelled: "provenance--modelled",
-  disputed: "provenance--disputed",
+const CHIP_CLASS: Record<ProvenanceStatus, string> = {
+  verified: "chip--verified",
+  modelled: "chip--modelled",
+  disputed: "chip--disputed",
   unknown: "",
 };
 
-const STATUS_LABEL: Record<ProvenanceStatus, string | null> = {
-  // « Vérifié » n'a pas besoin d'être écrit : c'est l'état attendu, et
-  // l'écrire partout banaliserait les deux cas qui comptent vraiment.
-  verified: null,
+const CHIP_LABEL: Record<ProvenanceStatus, string | null> = {
+  // « Vérifié » se dit, parce que c'est justement l'information de valeur.
+  verified: "data_provenance.status_verified",
   modelled: "data_provenance.status_modelled",
   disputed: "data_provenance.status_disputed",
   unknown: "data_provenance.status_unknown",
 };
 
+const LINE_CLASS: Record<ProvenanceStatus, string> = {
+  verified: "",
+  modelled: "provenance--modelled",
+  disputed: "provenance--disputed",
+  unknown: "",
+};
+
+function StatusIcon({ status }: { status: ProvenanceStatus }) {
+  if (status === "verified") {
+    return (
+      <svg viewBox="0 0 16 16" className="w-3.5 h-3.5" fill="none" aria-hidden="true">
+        <path
+          d="M2.5 8.5l3.5 3 7.5-8"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+  }
+  if (status === "modelled") {
+    return (
+      <svg viewBox="0 0 16 16" className="w-3.5 h-3.5" fill="none" aria-hidden="true">
+        <circle cx="8" cy="8" r="6.2" stroke="currentColor" strokeWidth="1.6" />
+        <path d="M8 4.6V8l2.4 1.4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      </svg>
+    );
+  }
+  return (
+    <svg viewBox="0 0 16 16" className="w-3.5 h-3.5" fill="none" aria-hidden="true">
+      <circle cx="8" cy="8" r="6.2" stroke="currentColor" strokeWidth="1.6" />
+      <path
+        d="M8 4.8v3.6M8 11.1v.2"
+        stroke="currentColor"
+        strokeWidth="1.9"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 /**
- * Le crochet de provenance — motif signature de la DA V2 « Preuve »
- * (docs/DA-V2-PREUVE.md §4.4).
+ * L'état de preuve d'un chiffre — la seule chose que Seedow affiche et qu'aucun
+ * concurrent ne peut copier sans avoir les données (CLAUDE.md §1.2).
  *
- * Chaque chiffre porte sa source, sa date et sa couverture à l'écran, en
- * élément typographique de premier plan, pas en note de bas de page
- * (CLAUDE.md §1.2). Le statut n'est jamais porté par la seule couleur : un
- * `modelled` ou un `disputed` écrit son libellé, un filet pointillé double
- * l'ocre. Discipline : une attestation par BLOC de données, pas une par ligne
- * — sinon l'écran devient un formulaire.
+ * DA V3 : une pastille pour le STATUT, une ligne grise pour la source, la date
+ * et la couverture. La V2 dessinait un crochet « ├ » répété sous chaque nombre :
+ * trop bruyant, et ça lisait « outil interne » plutôt que produit fini.
+ *
+ * Le statut n'est jamais porté par la seule couleur : la pastille écrit son
+ * libellé et porte une icône distincte (CLAUDE.md §4). Discipline inchangée :
+ * une attestation par BLOC de données, pas une par ligne.
  */
-export function Provenance({ source, asOf, coverage, status, href, note, className }: Props) {
+export function Provenance({
+  source,
+  asOf,
+  coverage,
+  status,
+  href,
+  note,
+  hideChip = false,
+  className,
+}: Props) {
   const { t } = useTranslation();
   const { lang } = useLang();
 
   const resolved: ProvenanceStatus = status ?? (source ? "verified" : "unknown");
-  const statusKey = STATUS_LABEL[resolved];
+  const chipKey = CHIP_LABEL[resolved];
 
   // Une date ISO est formatée dans la langue courante ; une chaîne déjà
   // lisible (« T4 2025 », « rapport annuel ») est reprise telle quelle.
@@ -75,7 +128,7 @@ export function Provenance({ source, asOf, coverage, status, href, note, classNa
           href={href}
           target="_blank"
           rel="noreferrer noopener"
-          className="text-ice-ink underline underline-offset-2 hover:no-underline"
+          className="underline underline-offset-2 hover:no-underline"
         >
           {source}
         </a>
@@ -92,17 +145,24 @@ export function Provenance({ source, asOf, coverage, status, href, note, classNa
       <span key="cov">{t("data_provenance.coverage", { pct: Math.round(coverage) })}</span>,
     );
   }
-  if (statusKey) parts.push(<span key="status">{t(statusKey)}</span>);
   if (note) parts.push(<span key="note">{note}</span>);
 
   return (
-    <p className={cn("provenance", STATUS_CLASS[resolved], className)}>
-      {parts.map((node, i) => (
-        <span key={i}>
-          {i > 0 && <span aria-hidden="true"> · </span>}
-          {node}
+    <div className={cn("flex flex-col items-start gap-2", className)}>
+      {!hideChip && chipKey && (
+        <span className={cn("chip", CHIP_CLASS[resolved])}>
+          <StatusIcon status={resolved} />
+          {t(chipKey)}
         </span>
-      ))}
-    </p>
+      )}
+      <p className={cn("provenance", LINE_CLASS[resolved])}>
+        {parts.map((node, i) => (
+          <span key={i}>
+            {i > 0 && <span aria-hidden="true"> · </span>}
+            {node}
+          </span>
+        ))}
+      </p>
+    </div>
   );
 }

@@ -24,18 +24,18 @@ interface Props {
 }
 
 const SIZES: Record<NonNullable<Props["size"]>, string> = {
-  sm: "text-[26px] md:text-[30px]",
-  md: "text-[38px] md:text-[44px]",
-  lg: "text-[52px] md:text-[64px]",
-  xl: "text-[64px] md:text-[84px]",
+  sm: "text-[24px] md:text-[28px]",
+  md: "text-[34px] md:text-[40px]",
+  lg: "text-[48px] md:text-[58px]",
+  xl: "text-[60px] md:text-[76px]",
 };
 
 /**
  * KPIFigure — le chiffre et sa preuve, dans le même bloc.
  *
- * DA V2 « Preuve » : le libellé est un tampon (mono capitales), la valeur est
- * en chasse fixe tabulaire, et la provenance est un élément de premier plan —
- * pas une légende grise dans un coin (CLAUDE.md §1.2).
+ * DA V3 : libellé 13px semi-gras gris, valeur en Manrope 800 tabulaire à
+ * tracking serré, et l'état de preuve en pastille sous le chiffre plutôt
+ * qu'en légende grise dans un coin (CLAUDE.md §1.2).
  */
 export function KPIFigure({
   value,
@@ -83,7 +83,7 @@ export function KPIFigure({
       </div>
       {hasProvenance && (
         <Provenance
-          className={cn("mt-2.5", align === "center" && "inline-block text-left")}
+          className={cn("mt-3", align === "center" && "items-center")}
           source={source}
           asOf={asOf}
           coverage={coverage}

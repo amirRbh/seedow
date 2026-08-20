@@ -88,7 +88,7 @@ function LeFil() {
   ];
 
   return (
-    <div className="min-h-screen bg-paper">
+    <div className="min-h-screen bg-paper-2">
       <div className="max-w-lg mx-auto pb-28">
         <AppHeader eyebrow={t("le_fil.eyebrow")} title={userName} showPortfolioSelector />
 
@@ -101,7 +101,7 @@ function LeFil() {
           <div className="flex flex-col gap-4">
             {/* NŒUD 1 — MON ARGENT */}
             <Node index={1} active {...reveal(1)}>
-              <div className="ink-section -m-5 mb-0 px-5 pb-6 pt-5">
+              <div className="ink-section -m-6 mb-0 px-6 pb-7 pt-6">
                 <p className="stamp">{t("le_fil.money")}</p>
                 <h2 className="mt-3 text-figure-hero leading-none text-paper">
                   <AnimatedFigure
@@ -111,8 +111,8 @@ function LeFil() {
                   />
                 </h2>
                 {/* Le signe est écrit, pas seulement coloré (CLAUDE.md §4). */}
-                <p className="mt-3 font-value text-body text-paper">
-                  <span aria-hidden className="mr-1.5">
+                <p className="chip mt-4">
+                  <span aria-hidden className="mr-0.5">
                     {isGrowing ? "▲" : "▼"}
                   </span>
                   {isGrowing ? "+" : ""}
@@ -135,12 +135,7 @@ function LeFil() {
                 {convictions.length > 0 ? (
                   <div className="mt-3 flex flex-wrap gap-2">
                     {convictions.map((c, i) => (
-                      <span
-                        key={c}
-                        className={`stamp border px-2.5 py-1.5 ${
-                          i === 0 ? "border-ink text-ink" : "border-paper-3 text-ink-2"
-                        }`}
-                      >
+                      <span key={c} className={`chip ${i === 0 ? "chip--verified" : ""}`}>
                         {c}
                       </span>
                     ))}
@@ -182,7 +177,7 @@ function LeFil() {
                         className="min-w-0 flex-1 rounded-sm text-left outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
                       >
                         <p className="truncate text-body font-medium text-ink">{h.name}</p>
-                        <p className="mt-0.5 stamp normal-case tracking-[0.06em]">
+                        <p className="mt-0.5 stamp">
                           {h.category ?? "—"} · {formatPercent(h.allocationPct ?? 0, lang, 0)}
                         </p>
                       </button>
@@ -264,7 +259,7 @@ function LeFil() {
                   Sinon, état de repli honnête ET engageant (jamais de silence) :
                   on montre où on en est et ce qui manque pour débloquer le chiffre. */}
               {impact?.presentation?.show && impact.presentation.equivalences.length > 0 ? (
-                <div className="mt-4 border-t border-ink pt-3.5">
+                <div className="mt-5 paper-card-inset p-4">
                   <SectionLabel>{t("le_fil.equivalences_title")}</SectionLabel>
                   <ul className="mt-2.5 flex flex-col gap-2">
                     {impact.presentation.equivalences.slice(0, 3).map((e) => (
@@ -286,7 +281,7 @@ function LeFil() {
                 </div>
               ) : (
                 impact?.presentation && (
-                  <div className="mt-4 border-t border-paper-3 pt-3.5">
+                  <div className="mt-5 paper-card-inset p-4">
                     <SectionLabel>{t("le_fil.equivalences_title")}</SectionLabel>
                     <p className="mt-2 text-body text-ink-2 leading-snug">
                       {t(impact.presentation.reasonKey ?? "impact.reason.no_data", {
@@ -388,10 +383,10 @@ function LeFil() {
                   key={a.intent}
                   to="/ethi"
                   search={{ intent: a.intent, q: undefined }}
-                  className={`inline-flex h-9 items-center rounded-[--radius] border px-3.5 stamp transition-colors ${
+                  className={`inline-flex h-10 items-center rounded-full px-4 text-body font-semibold transition-opacity ${
                     a.primary
-                      ? "border-ink bg-ink text-paper hover:bg-transparent hover:text-ink"
-                      : "border-paper-3 text-ink-2 hover:border-ink hover:text-ink"
+                      ? "bg-ink text-paper hover:opacity-85"
+                      : "bg-paper text-ink-2 hover:text-ink"
                   }`}
                 >
                   {t(a.key)}
@@ -431,14 +426,14 @@ function Node({
 } & React.ComponentProps<typeof motion.div>) {
   return (
     <motion.div {...motionProps} className="relative pl-9">
-      {/* Ergot sur le rail — un carré, pas une pastille (DA V2 §4.8). */}
+      {/* Ergot sur le fil — une pastille discrète, alignée sur la carte. */}
       <span
         aria-hidden
-        className={`absolute left-[18px] top-[24px] h-[7px] w-[7px] -translate-x-1/2 ring-4 ring-paper ${
-          active ? "bg-ink" : "border border-paper-3 bg-paper"
+        className={`absolute left-[18px] top-[26px] h-[9px] w-[9px] -translate-x-1/2 rounded-full ring-4 ring-paper-2 ${
+          active ? "bg-mint" : "bg-paper-3"
         }`}
       />
-      <div className="paper-card p-5">{children}</div>
+      <div className="paper-card p-6">{children}</div>
     </motion.div>
   );
 }

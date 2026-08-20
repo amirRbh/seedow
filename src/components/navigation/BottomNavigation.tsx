@@ -38,7 +38,7 @@ export function BottomNavigation() {
       <EthiFab />
       <nav
         aria-label={t("bottom_nav.aria")}
-        className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-paper border-t border-ink safe-area-bottom"
+        className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-paper border-t border-paper-3 safe-area-bottom"
       >
         <div className="flex items-stretch justify-around max-w-lg mx-auto px-2">
           {NAV_ITEMS.map((item) => {
@@ -62,7 +62,7 @@ export function BottomNavigation() {
                 {isActive && (
                   <span
                     aria-hidden="true"
-                    className="absolute top-0 left-1/2 -translate-x-1/2 h-[2px] w-10 bg-ink"
+                    className="absolute top-0 left-1/2 -translate-x-1/2 h-[2px] w-10 rounded-full bg-ink"
                   />
                 )}
               </Link>
@@ -77,12 +77,12 @@ export function BottomNavigation() {
 function NavIcon({ type }: { type: IconKey }) {
   const common = {
     viewBox: "0 0 24 24",
-    className: "w-[18px] h-[18px]",
+    className: "w-[22px] h-[22px]",
     fill: "none",
     stroke: "currentColor",
-    strokeWidth: 1.25,
-    strokeLinecap: "butt" as const,
-    strokeLinejoin: "miter" as const,
+    strokeWidth: 2,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
   };
   switch (type) {
     case "home":

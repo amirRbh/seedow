@@ -1091,6 +1091,7 @@ const dataProvenanceFr = {
   // Le statut n'est jamais porté par la seule couleur : il s'écrit.
   coverage: "couverture {{pct}} %",
   no_source: "source non renseignée",
+  status_verified: "vérifié",
   status_modelled: "estimation Seedow",
   status_disputed: "contesté par la source",
   status_unknown: "non vérifié",
@@ -1102,6 +1103,7 @@ const dataProvenanceEn = {
     "The share of your portfolio for which we have a real, measured data point. The rest isn't measured yet — and it isn't estimated either.",
   coverage: "{{pct}}% coverage",
   no_source: "source not recorded",
+  status_verified: "verified",
   status_modelled: "Seedow estimate",
   status_disputed: "disputed by the source",
   status_unknown: "unverified",

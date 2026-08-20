@@ -187,11 +187,7 @@ function Dashboard() {
               }
             />
           </h2>
-          <div
-            className={`inline-flex items-center gap-1.5 mt-3.5 font-value text-body ${
-              isGrowing ? "text-ink" : "text-alert-ink"
-            }`}
-          >
+          <div className={`chip mt-4 ${isGrowing ? "chip--up" : "chip--down"}`}>
             <svg
               viewBox="0 0 16 16"
               className="w-3 h-3"
@@ -253,7 +249,7 @@ function Dashboard() {
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
-                    <div className="mt-3 border-t border-ink pt-3 text-body-sm text-ink-2 leading-relaxed space-y-1.5">
+                    <div className="mt-3 paper-card p-4 text-body-sm text-ink-2 leading-relaxed space-y-1.5">
                       <p>
                         {t("dashboard.why_assets", { count: holdings.length })}{" "}
                         {t("dashboard.why_moves")}
@@ -269,9 +265,7 @@ function Dashboard() {
                               })
                             : t("dashboard.why_flat")}
                       </p>
-                      <p className="stamp normal-case tracking-[0.06em]">
-                        {t("dashboard.why_virtual")}
-                      </p>
+                      <p className="stamp">{t("dashboard.why_virtual")}</p>
                     </div>
                   </motion.div>
                 )}
@@ -316,9 +310,9 @@ function Dashboard() {
               ))}
             </div>
           ) : holdings.length === 0 ? (
-            /* État vide : pas de pictogramme décoratif (DA V2 §4.10) — un
-               feuillet vide, réglé, qui dit ce qui manque et où aller. */
-            <div className="border-t border-ink pt-5">
+            /* État vide : pas de pictogramme décoratif — une carte qui dit ce
+               qui manque et où aller. */
+            <div className="paper-card p-6">
               <p className="stamp">{t("dashboard.total_value")}</p>
               <p className="mt-3 text-body text-ink-2 max-w-[42ch] leading-relaxed">
                 {t("dashboard.empty_portfolio")}
@@ -326,7 +320,7 @@ function Dashboard() {
               <Link
                 to="/onboarding"
                 search={{ new: undefined }}
-                className="mt-5 inline-flex h-11 items-center rounded-[--radius] border border-ink bg-ink px-5 text-body font-medium text-paper transition-colors hover:bg-transparent hover:text-ink"
+                className="mt-6 inline-flex h-12 items-center rounded-full bg-ink px-6 text-body-lg font-semibold text-paper transition-opacity hover:opacity-85"
               >
                 {t("dashboard.first_investment")}
               </Link>
@@ -355,13 +349,11 @@ function Dashboard() {
         >
           <Link
             to="/portfolio"
-            className="w-full flex items-center justify-between gap-4 border-t border-ink py-4 hover:bg-paper-2 transition-colors"
+            className="w-full flex items-center justify-between gap-4 paper-card p-5 hover:bg-paper-inset transition-colors"
           >
             <div className="text-left">
               <p className="text-body font-medium text-ink">{t("dashboard.see_detail")}</p>
-              <p className="stamp mt-1 normal-case tracking-[0.06em]">
-                {t("dashboard.see_detail_desc")}
-              </p>
+              <p className="stamp mt-1">{t("dashboard.see_detail_desc")}</p>
             </div>
             <svg
               viewBox="0 0 24 24"

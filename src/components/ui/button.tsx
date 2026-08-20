@@ -5,37 +5,41 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 /**
- * Boutons — DA V2 « Preuve » (docs/DA-V2-PREUVE.md §4.6).
- * Coins vifs (radius 2px), aucune ombre, aucun `transform` au survol : un
- * bouton s'inverse ou change d'épaisseur de filet, il ne bouge pas et ne
- * grossit pas. Plus jamais de `border-radius: 980px` sur une action — les
- * pills sont réservées aux statuts de donnée (`.stamp-tag`).
+ * Boutons — DA V3 (docs/DA-V3.md §Boutons).
+ *
+ * Pill 999, hauteur 48px (38px en `sm`) : la convention du marché premium,
+ * et la cible tactile minimale. Aucune ombre, aucun `transform` au survol —
+ * l'état se joue sur l'opacité et le fond.
  */
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[--radius] font-sans text-body font-medium transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-paper disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-sans font-semibold transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-paper-2 disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        /** Action principale — aplat encre, s'inverse au survol. */
-        default: "border border-ink bg-ink btn-on-ink hover:bg-transparent hover:text-ink",
-        destructive: "border border-alert bg-alert btn-on-ink hover:opacity-90",
-        outline: "border border-paper-3 bg-transparent text-ink hover:border-ink",
-        secondary: "border border-paper-3 bg-paper-2 text-ink hover:border-ink",
+        /** Action principale — encre pleine. */
+        default: "bg-ink btn-on-ink hover:opacity-85",
+        destructive: "bg-alert btn-on-ink hover:opacity-85",
+        /** Contour discret sur fond clair. */
+        outline: "bg-transparent text-ink ring-1 ring-inset ring-paper-3 hover:ring-ink",
+        /** Tertiaire — aplat doux, sans contour. */
+        secondary: "bg-paper-2 text-ink hover:bg-paper-inset",
         ghost: "text-ink-2 hover:text-ink hover:bg-paper-2",
-        /** Lien : toujours souligné, jamais un bleu nu. */
-        link: "text-ice-ink underline underline-offset-4 hover:no-underline",
-        /** Action vérifiée / de confirmation — bleu de signature. */
-        accent: "border border-ice bg-ice btn-on-ink hover:bg-transparent hover:text-ice-ink",
-        /** Filet encre, s'inverse en plein au survol. */
-        "outline-ink": "border border-ink bg-transparent btn-on-paper hover:bg-ink",
+        link: "text-mint-ink underline underline-offset-4 hover:no-underline",
+        /** Accent de marque — vert-pétrole profond. */
+        accent: "bg-mint btn-on-ink hover:opacity-85",
+        /** Sur bande sombre : blanc plein. */
+        "on-dark": "bg-paper text-ink hover:opacity-85",
+        /** Sur bande sombre : contour clair. */
+        "outline-ink":
+          "bg-transparent text-ink ring-1 ring-inset ring-paper-3 hover:ring-ink hover:bg-paper-2",
       },
       size: {
-        default: "h-10 px-4",
-        sm: "h-8 px-3 text-body-sm",
-        lg: "h-12 px-6",
-        icon: "h-10 w-10",
-        /** CTA plein format — hauteur de tap confortable, coins vifs. */
-        pill: "h-11 px-6 text-body-lg",
+        default: "h-12 px-6 text-body-lg",
+        sm: "h-[38px] px-[18px] text-body",
+        lg: "h-14 px-8 text-body-xl",
+        icon: "h-12 w-12",
+        /** Alias historique du CTA plein format. */
+        pill: "h-12 px-7 text-body-lg",
       },
     },
     defaultVariants: {

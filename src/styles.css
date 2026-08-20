@@ -6,39 +6,43 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ═══════════════════════════════════════════════════════════════
-   SEEDOW — DA V2 « PREUVE »  (spec complète : docs/DA-V2-PREUVE.md)
+   SEEDOW — DA V3  (spec : docs/DA-V3.md)
 
-   Thèse : l'interface est construite en preuves. Chaque chiffre porte
-   sa provenance à l'écran comme élément typographique de premier plan.
+   Principe : les mécaniques d'interface sont celles, éprouvées, du
+   marché premium (Revolut, Trade Republic). On n'invente que là où
+   Seedow a réellement quelque chose à dire — l'état de preuve.
 
-   Trois signes de reconnaissance à 2 secondes :
-     1. papier d'archive chaud (#FAF8F3), ni blanc pur ni gris système ;
-     2. les chiffres en chasse fixe — y compris le solde du portefeuille ;
-     3. le crochet de provenance « ├ » sous chaque donnée.
+   Les quatre mécaniques empruntées, et pourquoi :
+     1. PROFONDEUR PAR APLAT, jamais par ombre. Une carte blanche posée
+        sur --paper-2 EST une élévation ; une bande --deep qui percute
+        une bande blanche fait le reste. Zéro box-shadow dans tout le
+        système (hors calques flottants : dialog, sheet, popover).
+     2. RAYONS GÉNÉREUX : 8 (chips) · 14 (champs) · 20 (cartes) ·
+        28 (feuilles, chrome) · 999 (boutons). La V2 était à 2px : ça ne
+        produisait pas de la rigueur, ça produisait un fil de fer.
+     3. CIBLES TACTILES : boutons 48px, champs 56px.
+     4. RESPIRATION : 88px entre sections, 24–28px dans les cartes.
 
-   Trois voix typographiques, trois métiers :
-     Fraunces      → éditorial (titres, hero)
-     Inter         → interface et prose
-     IBM Plex Mono → TOUT ce qui est mesurable (chiffres, labels, sources)
+   Ce qui reste propre à Seedow : l'ÉTAT DE PREUVE de chaque chiffre
+   (vérifié / estimé / contesté), exprimé en pastille et en fiche —
+   pas en crochet ASCII sous chaque nombre (CLAUDE.md §1.2).
 
-   La couleur est un STATUT DE PREUVE, jamais une décoration :
-     ice   = vérifié / actionnable      mint  = impact positif prouvé
-     solar = estimé / modélisé          alert = négatif réel
-     volt  = pédagogie (rare)
+   Typographie : Manrope pour tout (400→800, chiffres tabulaires,
+   tracking serré sur les grandes valeurs). IBM Plex Mono uniquement
+   pour les tickers et les lignes de source.
 ═══════════════════════════════════════════════════════════════ */
 
 @theme inline {
-  --radius-sm: 1px;
-  --radius-md: var(--radius);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 2px);
-  --radius-2xl: calc(var(--radius) + 2px);
-  --radius-3xl: calc(var(--radius) + 4px);
+  --radius-sm: 8px; /* chips, tags */
+  --radius-md: 14px; /* champs, petites tuiles */
+  --radius-lg: var(--radius); /* cartes — 20px */
+  --radius-xl: 24px;
+  --radius-2xl: 28px; /* feuilles, chrome d'écran */
+  --radius-3xl: 32px;
 
-  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
-  /* « value » = une valeur mesurée → chasse fixe. Geste signature de la DA V2. */
-  --font-value: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
-  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Manrope", system-ui, -apple-system, sans-serif;
+  --font-value: "Manrope", system-ui, sans-serif;
+  --font-display: "Manrope", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
 
   --color-background: var(--background);
@@ -65,6 +69,8 @@
   --color-paper-2: var(--paper-2);
   --color-paper-3: var(--paper-3);
   --color-paper-inset: var(--paper-inset);
+  --color-deep: var(--deep);
+  --color-deep-2: var(--deep-2);
 
   --color-ink: var(--ink);
   --color-ink-2: var(--ink-2);
@@ -109,10 +115,9 @@
   --shadow-flat-2: var(--shadow-flat-2);
   --shadow-flat-3: var(--shadow-flat-3);
 
-  /* Motion « instrument » : le tracé et le comptage. Rien d'autre. */
-  --animate-trace-x: trace-x 0.42s var(--ease-instr) both;
-  --animate-fade-in-up: rise 0.4s var(--ease-instr) both;
-  --animate-reveal-scale: trace-y 0.42s var(--ease-instr) both;
+  --animate-fade-in-up: rise 0.42s var(--ease-out) both;
+  --animate-trace-x: trace-x 0.5s var(--ease-out) both;
+  --animate-reveal-scale: rise 0.42s var(--ease-out) both;
   --animate-breathe: none;
 
   @keyframes trace-x {
@@ -123,18 +128,10 @@
       transform: scaleX(1);
     }
   }
-  @keyframes trace-y {
-    from {
-      transform: scaleY(0);
-    }
-    to {
-      transform: scaleY(1);
-    }
-  }
   @keyframes rise {
     from {
       opacity: 0;
-      transform: translateY(6px);
+      transform: translateY(8px);
     }
     to {
       opacity: 1;
@@ -144,61 +141,59 @@
 }
 
 :root {
-  /* Documents : coins vifs. Le passage 14px → 2px est ce qui fait quitter
-     à lui seul le registre « carte SaaS générique ». */
-  --radius: 2px;
+  /* Rayon des cartes. Toute l'échelle en découle (voir @theme ci-dessus). */
+  --radius: 20px;
 
   /* Accessibilité — multiplicateur de taille de texte piloté par useFontScale. */
   --font-scale: 1;
 
-  /* Courbe unique de la DA. */
-  --ease-instr: cubic-bezier(0.2, 0, 0, 1);
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
 
-  /* Surfaces — papier d'archive chaud, jamais du gris système */
-  --paper: #faf8f3;
-  --paper-2: #f1ede4;
-  --paper-3: #d6d0bf; /* filets : usage n°1 de ce token */
-  --paper-inset: #ebe6d9;
+  /* ── Surfaces ─────────────────────────────────────────────────
+     Trois niveaux suffisent, et ils remplacent les ombres :
+       --paper    blanc pur, la carte
+       --paper-2  neutre chaud, le fond sur lequel la carte s'élève
+       --deep     la bande sombre, pour le récit et les moments forts */
+  --paper: #ffffff;
+  --paper-2: #f5f4f1;
+  --paper-3: #dddad3; /* hairline */
+  --paper-inset: #edebe6;
+  --deep: #0e0f10;
+  --deep-2: #1b1d1f;
 
-  /* Encre — noir chaud */
-  --ink: #121210; /* 17.67:1 sur --paper */
-  --ink-2: #56564e; /* 6.97:1 — texte secondaire */
-  --ink-3: #68685f; /* 5.30:1 sur --paper, 4.81:1 sur --paper-2 — le crochet
-                       de provenance porte de l'information, il doit tenir AA
-                       sur les DEUX surfaces, pas seulement sur le papier. */
+  --ink: #16181a; /* 16.4:1 sur --paper */
+  --ink-2: #5d6167; /* 6.4:1  — texte secondaire */
+  --ink-3: #6c7075; /* 5.3:1  — métadonnées ; tient AA sur les DEUX papiers */
 
-  /* Échelle de mise en avant interactive (focus rings, états actifs) */
-  --highlight-1: #121210;
-  --highlight-2: #2b2b26;
-  --highlight-3: #707066;
-  --highlight-4: #d6d0bf;
-  --highlight-5: #f1ede4;
+  --highlight-1: #16181a;
+  --highlight-2: #2a2d30;
+  --highlight-3: #6c7075;
+  --highlight-4: #dddad3;
+  --highlight-5: #f5f4f1;
 
-  /* ── Signaux : la couleur encode un STATUT DE PREUVE ──────────
-     ice   #1B3BD8  vérifié / actionnable (bleu de signature)
-     mint  #0B5138  impact positif prouvé (forêt profond, pas un vert vif)
-     alert #B32718  négatif réel (vermillon d'imprimerie) — rare, donc fort
-     solar #8A6410  estimé / modélisé — marque tout ce qui n'est pas mesuré
-     volt  #5B3FA8  pédagogie (cours, méthode) — usage rare
-     Règle : aucun élément ne prend une couleur pour être joli. Les variantes
-     `--*-ink` sont obligatoires dès qu'un accent porte du TEXTE (AA vérifié
-     par src/lib/a11y/__tests__/contrast.test.ts). */
-  --ice: #1b3bd8;
-  --mint: #0b5138;
-  --alert: #b32718;
-  --solar: #8a6410;
-  --volt: #5b3fa8;
-  --ice-ink: #1b3bd8;
-  --mint-ink: #0b5138;
-  --alert-ink: #a32215;
-  --solar-ink: #7a5809;
-  --volt-ink: #54399e;
+  /* ── Accent : un seul, et il occupe moins de 5 % de la surface ──
+     --mint  #0E4F45  marque, impact prouvé, état vérifié.
+       Un vert-pétrole assez profond pour se lire comme une encre
+       teintée, jamais comme un vert écolo (§ « pas de cliché green »).
+     --solar #A16207  estimé / modélisé.
+     --alert #C2372A  négatif réel.
+     --ice   #1F5FB8  information neutre, lien. Usage rare.
+     --volt  #5B4B9E  pédagogie (cours, méthode). Usage rare.
+     Les variantes `--*-ink` restent obligatoires dès qu'un accent porte
+     du TEXTE (AA vérifié par src/lib/a11y/__tests__/contrast.test.ts). */
+  --mint: #0e4f45;
+  --ice: #1f5fb8;
+  --alert: #c2372a;
+  --solar: #a16207;
+  --volt: #5b4b9e;
+  --mint-ink: #0e4f45;
+  --ice-ink: #1b5299;
+  --alert-ink: #b23124;
+  --solar-ink: #8a5406;
+  --volt-ink: #544593;
 
-  /* Accent de section — surchargé par .accent-* ; défaut = encre (neutre).
-     En V2 la section n'a pas d'accent décoratif par défaut : elle en prend un
-     seulement quand la donnée le justifie. */
-  --section-accent: var(--ink);
-  --section-accent-ink: var(--ink);
+  --section-accent: var(--mint);
+  --section-accent-ink: var(--mint-ink);
 
   /* Aliases legacy (composants pas encore migrés) */
   --rust: var(--alert);
@@ -209,18 +204,18 @@
   --peach: var(--solar);
   --glacier: var(--ice);
 
-  /* Fonds teintés — teintes papier, pas des pastels saturés */
-  --alert-tint: #fbeae6;
-  --alert-tint-border: #eab6ac;
-  --solar-tint: #f8f0dc;
-  --solar-tint-border: #e0c88c;
-  --bloom-tint: #f0ecfa;
-  --bloom-tint-border: #c6b9e8;
-  --sky-tint: #e9edfc;
-  --sky-tint-border: #afbcf0;
+  /* Fonds teintés — très désaturés, ils portent des pastilles */
+  --alert-tint: #fbeeec;
+  --alert-tint-border: #eebdb6;
+  --solar-tint: #fbf3e3;
+  --solar-tint-border: #e7ce92;
+  --bloom-tint: #f1effa;
+  --bloom-tint-border: #c5bde6;
+  --sky-tint: #eaf0fa;
+  --sky-tint-border: #b3c7e8;
 
   /* shadcn mapping */
-  --background: var(--paper);
+  --background: var(--paper-2);
   --foreground: var(--ink);
   --card: var(--paper);
   --card-foreground: var(--ink);
@@ -240,110 +235,101 @@
   --input: var(--paper-3);
   --ring: var(--ink);
 
-  /* Ombres : AUCUNE sur le contenu. La profondeur vient des filets, de la
-     graisse et de l'échelle. Une seule ombre existe, pour les calques
-     flottants (dialog / sheet / popover) : --shadow-layer. */
+  /* Aucune ombre sur le contenu — la profondeur vient des aplats.
+     Une seule ombre existe : les calques flottants. */
   --shadow-flat-1: 0 0 0 0 transparent;
   --shadow-flat-2: 0 0 0 0 transparent;
   --shadow-flat-3: 0 0 0 0 transparent;
-  --shadow-layer: 0 24px 60px -30px rgb(18 18 16 / 0.45);
-
-  /* Grain papier — texture d'archive, discrète */
-  --paper-grain-url: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.17  0 0 0 0 0.15  0 0 0 0 0.10  0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
+  --shadow-layer: 0 24px 64px -32px rgb(14 15 16 / 0.36);
 }
 
-/* Sombre = papier carbone / microfilm, pas un « dark mode » néon. */
 .dark {
-  --paper: #100f0d;
-  --paper-2: #191814;
-  --paper-3: #33312b;
-  --paper-inset: #221f1a;
-  --ink: #f4f1e9;
-  --ink-2: #a9a69c;
-  --ink-3: #8a877e;
-  --highlight-1: #f4f1e9;
-  --highlight-2: #33312b;
-  --highlight-3: #8a877e;
-  --highlight-4: #33312b;
-  --highlight-5: #191814;
-  --ice: #7e9bff;
-  --mint: #4fc493;
-  --alert: #ff7a62;
-  --solar: #dfb35a;
-  --volt: #a98ef0;
-  --ice-ink: #93abff;
-  --mint-ink: #63d2a2;
-  --alert-ink: #ff8e79;
-  --solar-ink: #e7c077;
-  --volt-ink: #b79ef5;
-  --alert-tint: #2e1712;
-  --alert-tint-border: #5a2c22;
-  --solar-tint: #2c2410;
-  --solar-tint-border: #584a22;
-  --bloom-tint: #211c33;
-  --bloom-tint-border: #3e3560;
-  --sky-tint: #151c33;
-  --sky-tint-border: #2c3a63;
+  --paper: #0e0f10;
+  --paper-2: #1b1d1f;
+  --paper-3: #33363a;
+  --paper-inset: #232629;
+  --deep: #000000;
+  --deep-2: #1b1d1f;
+  --ink: #f4f4f2;
+  --ink-2: #a9adb3;
+  --ink-3: #909499;
+  --highlight-1: #f4f4f2;
+  --highlight-2: #33363a;
+  --highlight-3: #909499;
+  --highlight-4: #33363a;
+  --highlight-5: #1b1d1f;
+  --mint: #4ed0ae;
+  --ice: #7faef5;
+  --alert: #ff9a8a;
+  --solar: #e0b45e;
+  --volt: #a996ee;
+  --mint-ink: #63dabc;
+  --ice-ink: #93bcf8;
+  --alert-ink: #ffaa9c;
+  --solar-ink: #e8c27c;
+  --volt-ink: #b7a7f2;
+  --alert-tint: #2c1714;
+  --alert-tint-border: #57302a;
+  --solar-tint: #2b2412;
+  --solar-tint-border: #564922;
+  --bloom-tint: #1f1c2e;
+  --bloom-tint-border: #3b3558;
+  --sky-tint: #141b29;
+  --sky-tint-border: #2a3a55;
   --background: var(--paper);
   --foreground: var(--ink);
-  --card: var(--paper);
+  --card: var(--paper-2);
   --card-foreground: var(--ink);
+  --popover: var(--paper-2);
+  --popover-foreground: var(--ink);
   --border: var(--paper-3);
   --input: var(--paper-3);
-  --shadow-layer: 0 24px 60px -30px rgb(0 0 0 / 0.8);
+  --shadow-layer: 0 24px 64px -32px rgb(0 0 0 / 0.8);
 }
 
 /* ─────────────────────────────────────────────────────────
- * Échelle d'espacement (paliers Tailwind par défaut, formalisés) :
- *   gap-1 / p-1   (4px)  — écart minimal dans un même groupe
- *   gap-2 / p-2   (8px)  — espacement serré
- *   gap-3 / p-3   (12px) — espacement interne d'un composant
- *   gap-4 / p-4   (16px) — padding standard d'un feuillet
- *   gap-6 / p-6   (24px) — séparation entre blocs d'un écran
- *   gap-8 / p-8   (32px) — séparation majeure entre sections
+ * Échelle d'espacement (paliers Tailwind, formalisés) :
+ *   gap-1 (4px) · gap-2 (8px) · gap-3 (12px) · gap-4 (16px)
+ *   gap-6 (24px) — padding interne d'une carte
+ *   gap-8 (32px) — séparation entre blocs
+ *   py-16 / py-20 (64–80px) — séparation entre sections d'une page
  * ───────────────────────────────────────────────────────── */
 
-/* ─────────────────────────────────────────────────────────
- * Échelle typographique. Toutes les tailles suivent --font-scale.
- * Plancher DA : jamais sous 13px pour une information financière
- * porteuse dans l'app (CLAUDE.md §4).
- * ───────────────────────────────────────────────────────── */
 @utility text-tag {
-  font-size: calc(10px * var(--font-scale));
-}
-@utility text-caption {
   font-size: calc(11px * var(--font-scale));
 }
-@utility text-label {
+@utility text-caption {
   font-size: calc(12px * var(--font-scale));
 }
-@utility text-body-sm {
+@utility text-label {
   font-size: calc(13px * var(--font-scale));
 }
-@utility text-body {
-  font-size: calc(14px * var(--font-scale));
+@utility text-body-sm {
+  font-size: calc(13.5px * var(--font-scale));
 }
-@utility text-body-lg {
+@utility text-body {
   font-size: calc(15px * var(--font-scale));
 }
+@utility text-body-lg {
+  font-size: calc(16px * var(--font-scale));
+}
 @utility text-body-xl {
-  font-size: calc(17px * var(--font-scale));
+  font-size: calc(18px * var(--font-scale));
 }
-/* Titre de page partagé (AppHeader) — Fraunces. */
 @utility text-h1-page {
-  font-size: calc(34px * var(--font-scale));
-  line-height: 1.06;
-  letter-spacing: -0.02em;
+  font-size: calc(30px * var(--font-scale));
+  line-height: 1.12;
+  letter-spacing: -0.028em;
+  font-weight: 800;
 }
-/* Chiffre héros (solde, montant simulé) — chasse fixe, tabulaire.
-   Personne ne compose un solde de portefeuille en monospace : c'est
-   précisément pour ça qu'on le fait. */
+/* Chiffre héros — grotesque, gras, chiffres tabulaires, tracking très
+   serré. C'est la convention du marché (Revolut : 136px / −0,02em) ;
+   la V2 le composait en monospace, ce qui lisait « outil de dev ». */
 @utility text-figure-hero {
-  font-family: var(--font-mono);
-  font-weight: 500;
-  font-size: clamp(calc(2.5rem * var(--font-scale)), 11vw, calc(4.25rem * var(--font-scale)));
-  line-height: 1;
-  letter-spacing: -0.04em;
+  font-size: clamp(calc(2.5rem * var(--font-scale)), 11vw, calc(3.5rem * var(--font-scale)));
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  font-weight: 800;
   font-variant-numeric: tabular-nums lining-nums;
 }
 
@@ -362,25 +348,18 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
-    font-feature-settings: "tnum", "ss01";
     font-size: calc(16px * var(--font-scale));
-    line-height: 1.6;
-    letter-spacing: -0.005em;
+    line-height: 1.55;
+    letter-spacing: -0.011em;
     font-weight: 400;
+    font-variant-numeric: tabular-nums;
     text-rendering: optimizeLegibility;
   }
 
   p {
-    line-height: 1.65;
-  }
-  small,
-  .text-xs {
     line-height: 1.55;
   }
 
-  /* Transitions : uniquement des propriétés qui ne déplacent rien.
-     Pas de `transform` global — en V2 le survol change l'épaisseur d'un
-     filet ou fait apparaître un ergot, il ne bouge jamais un élément. */
   a,
   button,
   [role="button"],
@@ -389,10 +368,9 @@
   textarea,
   summary,
   .paper-card,
-  .paper-card-inset,
-  .sheet {
+  .paper-card-inset {
     transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow;
-    transition-timing-function: var(--ease-instr);
+    transition-timing-function: var(--ease-out);
     transition-duration: 180ms;
   }
 
@@ -406,78 +384,63 @@
     }
   }
 
-  /* Toute valeur mesurée : chasse fixe tabulaire. */
+  /* Toute valeur mesurée : tabulaire et serrée. */
   .font-value {
     font-family: var(--font-value);
-    font-weight: 500;
-    letter-spacing: -0.03em;
-    font-feature-settings: "zero" 1;
+    font-weight: 700;
+    letter-spacing: -0.028em;
     font-variant-numeric: tabular-nums lining-nums;
   }
 
   .font-display {
     font-family: var(--font-display);
-    font-weight: 600;
-    letter-spacing: -0.015em;
-    font-variation-settings:
-      "SOFT" 0,
-      "WONK" 0;
+    font-weight: 800;
+    letter-spacing: -0.03em;
   }
 
-  /* Échelle éditoriale — Fraunces */
   .display-xl {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: clamp(3rem, 8vw, 6.5rem);
-    line-height: 1.02;
-    letter-spacing: -0.028em;
-    text-transform: none;
+    font-weight: 800;
+    font-size: clamp(2.5rem, 6.4vw, 4.75rem);
+    line-height: 1.03;
+    letter-spacing: -0.038em;
   }
 
   .display-lg {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: clamp(2.25rem, 5vw, 3.75rem);
+    font-weight: 800;
+    font-size: clamp(2rem, 4.4vw, 3.25rem);
     line-height: 1.06;
-    letter-spacing: -0.024em;
-    text-transform: none;
+    letter-spacing: -0.034em;
   }
 
   h1 {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: clamp(2rem, 4.5vw, 3rem);
+    font-weight: 800;
+    font-size: clamp(1.875rem, 4vw, 2.75rem);
     line-height: 1.08;
-    letter-spacing: -0.022em;
-    text-transform: none;
+    letter-spacing: -0.032em;
     color: var(--color-ink);
   }
   h2 {
-    font-family: var(--font-display);
-    font-weight: 600;
+    font-weight: 800;
     font-size: clamp(1.5rem, 3vw, 2rem);
-    line-height: 1.14;
-    letter-spacing: -0.02em;
-    text-transform: none;
+    line-height: 1.12;
+    letter-spacing: -0.03em;
     color: var(--color-ink);
   }
   h3 {
-    font-family: var(--font-sans);
-    font-weight: 600;
+    font-weight: 700;
     font-size: clamp(1.0625rem, 2vw, 1.25rem);
     line-height: 1.25;
-    letter-spacing: -0.012em;
-    text-transform: none;
+    letter-spacing: -0.022em;
     color: var(--color-ink);
   }
 
-  /* Eyebrow = tampon documentaire : mono, capitales, tracking large. */
+  /* Libellé de section — 13px semi-gras gris. Plus de capitales mono
+     à tracking large partout : c'était le principal bruit visuel de la V2. */
   .eyebrow {
-    font-family: var(--font-mono);
-    font-size: calc(10px * var(--font-scale));
+    font-size: calc(13px * var(--font-scale));
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
+    letter-spacing: -0.006em;
+    text-transform: none;
     color: var(--color-ink-3);
   }
   .eyebrow--accent {
@@ -496,8 +459,6 @@
     color: var(--color-alert-ink);
   }
 
-  /* Accent de section — un seul accent par section, et seulement si la
-     donnée le justifie (statut de preuve, pas décoration). */
   .accent-mint {
     --section-accent: var(--mint);
     --section-accent-ink: var(--mint-ink);
@@ -519,145 +480,51 @@
     --section-accent-ink: var(--alert-ink);
   }
 
-  /* Données — chasse fixe tabulaire */
   .data-xl {
-    font-family: var(--font-mono);
-    font-weight: 500;
-    font-size: clamp(2rem, 5vw, 3.25rem);
-    line-height: 1;
-    letter-spacing: -0.04em;
+    font-weight: 800;
+    font-size: clamp(2rem, 4.6vw, 3rem);
+    line-height: 1.04;
+    letter-spacing: -0.035em;
     color: var(--color-ink);
     font-variant-numeric: tabular-nums lining-nums;
   }
   .data-lg {
-    font-family: var(--font-mono);
-    font-weight: 500;
-    font-size: clamp(1.5rem, 3vw, 2.25rem);
-    line-height: 1;
-    letter-spacing: -0.035em;
+    font-weight: 800;
+    font-size: clamp(1.5rem, 3vw, 2.125rem);
+    line-height: 1.06;
+    letter-spacing: -0.032em;
     color: var(--color-ink);
     font-variant-numeric: tabular-nums lining-nums;
   }
 }
 
 @layer components {
-  /* ── Filets : le principal outil de composition de la DA ──────── */
-  .rule {
-    height: 1px;
-    background-color: var(--color-paper-3);
+  /* ── Cartes : blanc sur --paper-2 = élévation 1, sans ombre ───── */
+  .paper-card {
+    background-color: var(--color-card);
+    border: 0;
+    border-radius: var(--radius);
+    box-shadow: none;
   }
-  .rule-ink {
-    height: 1px;
-    background-color: var(--color-ink);
+  .paper-card-inset {
+    background-color: var(--color-paper-2);
+    border: 0;
+    border-radius: var(--radius);
+    box-shadow: none;
   }
-  .rule-chapter {
-    height: 2px;
-    background-color: var(--color-ink);
-  }
-  /* Alias historiques */
-  .gold-rule,
-  .gold-rule-solid {
-    height: 1px;
-    background-color: var(--color-ink);
-    opacity: 1;
-  }
-
-  /* ── Tampon : label de donnée, mono capitales ─────────────────── */
-  .stamp {
-    font-family: var(--font-mono);
-    font-size: calc(10px * var(--font-scale));
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--color-ink-3);
-    font-variant-numeric: tabular-nums;
-  }
-  /* Pill : réservée aux STATUTS, jamais à un bouton. */
-  .stamp-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    border: 1px solid var(--color-paper-3);
-    border-radius: 999px;
-    padding: 3px 10px;
-    font-family: var(--font-mono);
-    font-size: calc(10px * var(--font-scale));
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-ink-2);
-    white-space: nowrap;
-  }
-  .stamp-tag--verified {
-    border-color: color-mix(in srgb, var(--ice) 40%, transparent);
-    color: var(--color-ice-ink);
-  }
-  .stamp-tag--modelled {
-    border-color: color-mix(in srgb, var(--solar) 45%, transparent);
-    color: var(--color-solar-ink);
-  }
-  .stamp-tag--flag {
-    border-color: color-mix(in srgb, var(--alert) 40%, transparent);
-    color: var(--color-alert-ink);
-  }
-  .stamp-tag--proof {
-    border-color: color-mix(in srgb, var(--mint) 40%, transparent);
-    color: var(--color-mint-ink);
+  /* Variante cerclée, pour une carte posée sur du blanc (où l'aplat
+     seul ne créerait aucune séparation). */
+  .paper-card-line {
+    background-color: var(--color-paper);
+    border-radius: var(--radius);
+    box-shadow: inset 0 0 0 1px var(--color-paper-3);
   }
 
-  /* ── LE CROCHET DE PROVENANCE — motif signature de Seedow ──────
-     Chaque chiffre porte sa source, sa date et sa couverture, à
-     l'écran, en élément de premier plan (CLAUDE.md §1.2). Un filet
-     vertical + un ergot horizontal : « ├ ». Discipline : une
-     attestation par BLOC de données, pas une par ligne. */
-  .provenance {
-    position: relative;
-    padding-left: 11px;
-    border-left: 1px solid var(--color-paper-3);
-    font-family: var(--font-mono);
-    font-size: calc(11px * var(--font-scale));
-    line-height: 1.5;
-    color: var(--color-ink-3);
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0;
-  }
-  .provenance::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0.6em;
-    width: 6px;
-    height: 1px;
-    background-color: var(--color-paper-3);
-  }
-  /* Donnée tierce, sourcée et datée. */
-  .provenance--verified {
-    border-left-color: var(--color-ice);
-  }
-  .provenance--verified::before {
-    background-color: var(--color-ice);
-  }
-  /* Estimation / modélisation Seedow — filet pointillé : la règle
-     « pas de sur-promesse » (§1.3) devient visible. */
-  .provenance--modelled {
-    border-left-style: dashed;
-    border-left-color: var(--color-solar);
-  }
-  .provenance--modelled::before {
-    background-color: var(--color-solar);
-  }
-  /* La source conteste le chiffre — affiché sur le support principal. */
-  .provenance--disputed {
-    border-left-color: var(--color-alert);
-  }
-  .provenance--disputed::before {
-    background-color: var(--color-alert);
-  }
-
-  /* ── Feuillet : remplace la carte. Filet, pas de boîte. ───────── */
+  /* Bloc de section — un simple groupe, séparé par de l'espace et non
+     par un filet d'encre. Les écrans migrés en V2 l'utilisent déjà. */
   .sheet {
     background-color: transparent;
-    border-top: 1px solid var(--color-ink);
+    border-top: 1px solid var(--color-paper-3);
     border-radius: 0;
     box-shadow: none;
   }
@@ -668,44 +535,18 @@
     box-shadow: none;
   }
 
-  /* Conteneur encadré, pour les grilles où un feuillet sans bord se
-     lirait mal. Filet haut encre = en-tête de document. */
-  .paper-card {
-    background-color: var(--color-paper);
-    border: 1px solid var(--color-paper-3);
-    border-top: 1px solid var(--color-ink);
-    border-radius: var(--radius);
-    box-shadow: none;
-  }
-  .paper-card-inset {
-    background-color: var(--color-paper-2);
-    border: 1px solid var(--color-paper-3);
-    border-radius: var(--radius);
-    box-shadow: none;
-  }
-
-  /* ── Hachures : le seul « remplissage » autorisé. Lisible en
-     daltonisme et à l'impression, contrairement à un aplat. ────── */
-  .hatch {
-    background-image: repeating-linear-gradient(45deg, currentColor 0 1px, transparent 1px 5px);
-  }
-
-  /* Section encre — contraste maximal (hero, CTA, chiffre clé) */
+  /* ── Bande sombre : le second niveau de profondeur ────────────── */
   .ink-section {
-    background-color: var(--color-ink);
-    color: var(--color-paper);
-    border-radius: var(--radius);
-    --ink-3: #9c998f;
-    --mint-ink: #63d2a2;
-    --ice-ink: #93abff;
-    --volt-ink: #b79ef5;
-    --alert-ink: #ff8e79;
-    --solar-ink: #e7c077;
-    --paper-3: #3a3833;
-  }
-  .ink-section .eyebrow,
-  .ink-section .stamp {
-    color: #9c998f;
+    background-color: var(--color-deep);
+    color: #ffffff;
+    border-radius: var(--radius-2xl);
+    --ink-3: rgba(255, 255, 255, 0.56);
+    --paper-3: rgba(255, 255, 255, 0.1);
+    --mint-ink: #4ed0ae;
+    --ice-ink: #93bcf8;
+    --volt-ink: #b7a7f2;
+    --alert-ink: #ff9a8a;
+    --solar-ink: #e8c27c;
   }
   .ink-section h1,
   .ink-section h2,
@@ -715,44 +556,141 @@
   .ink-section .kpi-figure,
   .ink-section .data-xl,
   .ink-section .data-lg {
-    color: var(--color-paper);
+    color: #ffffff;
   }
-  .ink-section .rule,
-  .ink-section .rule-ink,
-  .ink-section .rule-chapter {
-    background-color: #3a3833;
+  .ink-section .eyebrow,
+  .ink-section .stamp {
+    color: rgba(255, 255, 255, 0.56);
   }
 
-  /* Survol : on épaissit le filet, on ne déplace rien. */
-  .hover-border {
-    transition:
-      border-color 180ms var(--ease-instr),
-      background-color 180ms var(--ease-instr);
+  /* ── Libellés ─────────────────────────────────────────────────── */
+  .stamp {
+    font-size: calc(13px * var(--font-scale));
+    font-weight: 600;
+    letter-spacing: -0.006em;
+    text-transform: none;
+    color: var(--color-ink-3);
   }
+  /* Ticker, ISIN, ligne de source : le seul territoire du monospace. */
+  .mono-meta {
+    font-family: var(--font-mono);
+    font-size: calc(12px * var(--font-scale));
+    letter-spacing: 0;
+    color: var(--color-ink-3);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── Pastilles d'état ─────────────────────────────────────────
+     L'état de preuve d'un chiffre : c'est la seule chose que Seedow
+     affiche et qu'aucun concurrent ne peut copier sans avoir les
+     données. Le libellé est TOUJOURS écrit — jamais porté par la
+     seule couleur (CLAUDE.md §4). */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 28px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background-color: var(--color-paper-2);
+    color: var(--color-ink-2);
+    font-size: calc(13px * var(--font-scale));
+    font-weight: 600;
+    letter-spacing: -0.006em;
+    white-space: nowrap;
+  }
+  .chip--verified {
+    background-color: color-mix(in srgb, var(--mint) 10%, transparent);
+    color: var(--color-mint-ink);
+  }
+  .chip--modelled {
+    background-color: color-mix(in srgb, var(--solar) 13%, transparent);
+    color: var(--color-solar-ink);
+  }
+  .chip--disputed {
+    background-color: color-mix(in srgb, var(--alert) 11%, transparent);
+    color: var(--color-alert-ink);
+  }
+  .chip--up {
+    background-color: color-mix(in srgb, var(--mint) 10%, transparent);
+    color: var(--color-mint-ink);
+  }
+  .chip--down {
+    background-color: color-mix(in srgb, var(--alert) 11%, transparent);
+    color: var(--color-alert-ink);
+  }
+  .ink-section .chip {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  /* Ligne de provenance — discrète, sous le bloc de données.
+     La V2 la dessinait avec un crochet « ├ » : trop bruyant, répété
+     partout. Ici c'est une ligne grise ; le STATUT vit dans la pastille. */
+  .provenance {
+    font-size: calc(12.5px * var(--font-scale));
+    line-height: 1.5;
+    color: var(--color-ink-3);
+    font-variant-numeric: tabular-nums;
+  }
+  .provenance--modelled {
+    color: var(--color-solar-ink);
+  }
+  .provenance--disputed {
+    color: var(--color-alert-ink);
+  }
+
+  /* ── Sélecteur segmenté (périodes, onglets courts) ────────────── */
+  .segmented {
+    display: inline-flex;
+    background-color: var(--color-paper-2);
+    border-radius: 999px;
+    padding: 3px;
+  }
+  .segmented > * {
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: calc(13px * var(--font-scale));
+    font-weight: 700;
+    color: var(--color-ink-3);
+    transition: background-color 180ms var(--ease-out);
+  }
+  .segmented > [data-active="true"] {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  /* ── Filets ───────────────────────────────────────────────────── */
+  .rule,
+  .rule-ink,
+  .rule-chapter,
+  .gold-rule,
+  .gold-rule-solid {
+    height: 1px;
+    background-color: var(--color-paper-3);
+  }
+
   .hover-border:hover {
-    border-color: var(--color-ink);
+    border-color: var(--color-ink-3);
   }
 
   .btn-on-ink {
-    color: var(--color-paper);
+    color: #ffffff;
   }
   .btn-on-paper {
     color: var(--color-ink);
   }
-  .btn-on-paper:hover {
-    color: var(--color-paper);
-  }
 
-  /* Champ : registre formulaire administratif — filet bas encre au
-     focus, pas de ring bleu SaaS. */
+  /* ── Champ : 56px, rayon 14, focus par anneau discret ─────────── */
   .field {
     background-color: var(--color-paper);
     border: 1px solid var(--color-paper-3);
-    border-radius: var(--radius);
+    border-radius: var(--radius-md);
     color: var(--color-ink);
-    padding: 12px 14px;
+    min-height: 56px;
+    padding: 14px 16px;
     font-family: var(--font-sans);
-    font-size: calc(15px * var(--font-scale));
+    font-size: calc(16px * var(--font-scale));
     outline: none;
     width: 100%;
   }
@@ -761,95 +699,55 @@
   }
   .field:focus {
     border-color: var(--color-ink);
-    box-shadow: inset 0 -2px 0 0 var(--color-ink);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink) 10%, transparent);
   }
 
   .bubble-ethi {
     background-color: var(--color-paper-2);
     color: var(--color-ink);
-    border-left: 2px solid var(--color-ink);
-    border-radius: 0;
-    padding: 12px 16px;
+    border: 0;
+    border-radius: var(--radius);
+    padding: 14px 18px;
     line-height: 1.55;
-    font-size: calc(14px * var(--font-scale));
+    font-size: calc(15px * var(--font-scale));
   }
 
-  /* KPI — chasse fixe tabulaire */
   .kpi-figure {
-    font-family: var(--font-mono);
-    font-weight: 500;
-    letter-spacing: -0.04em;
-    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -0.032em;
+    line-height: 1.04;
     color: var(--color-ink);
     font-variant-numeric: tabular-nums lining-nums;
   }
 
-  /* Grain papier — texture d'archive */
-  .paper-grain {
-    position: relative;
-  }
-  .paper-grain::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: var(--paper-grain-url);
-    background-size: 200px 200px;
-    opacity: 0.09;
-    mix-blend-mode: multiply;
-    pointer-events: none;
-    z-index: 0;
-  }
-  .paper-grain > * {
-    position: relative;
-    z-index: 1;
-  }
+  /* Vestiges V1/V2 neutralisés — plus de grain, plus de contour, plus
+     de shimmer : la profondeur vient des aplats. */
+  .paper-grain::before,
   .ink-grain::before {
-    mix-blend-mode: screen;
-    opacity: 0.05;
+    content: none;
   }
-
-  /* Chiffres géants en contour — vestige V1, réaccordé à l'encre. */
   .outline-number {
-    font-family: var(--font-display);
-    font-weight: 400;
-    -webkit-text-stroke: 1px var(--color-ink);
-    color: transparent;
-    letter-spacing: 0;
-    line-height: 0.85;
+    font-weight: 800;
+    color: var(--color-paper-3);
+    letter-spacing: -0.03em;
+    line-height: 0.9;
+  }
+  .gold-shimmer {
+    background-image: none;
+    animation: none;
+  }
+  .hatch {
+    background-image: none;
   }
 
-  /* ── Motion : deux primitives, pas une de plus ────────────────── */
-  .trace {
-    transform-origin: left;
-    animation: trace-x 0.42s var(--ease-instr) both;
-  }
-  .trace-up {
-    transform-origin: bottom;
-    animation: trace-y 0.42s var(--ease-instr) both;
-  }
-  /* Apparition au scroll : un fondu de 6px, pas une cascade. */
-  .reveal {
-    opacity: 0;
-    transform: translateY(6px);
-    transition:
-      opacity 0.42s var(--ease-instr),
-      transform 0.42s var(--ease-instr);
-  }
-  .reveal.in-view,
-  .reveal.is-in {
-    opacity: 1;
-    transform: none;
-  }
-
-  /* Seul pulse conservé : « données en cours de rafraîchissement ».
-     Opacité uniquement — pas de halo qui grossit. */
+  /* Point d'état « données en direct » — opacité seule. */
   .live-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 1px; /* un carré, pas un rond */
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
     background-color: var(--color-mint);
     flex: none;
-    animation: live-blink 2.4s var(--ease-instr) infinite;
+    animation: live-blink 2.4s var(--ease-out) infinite;
   }
   @keyframes live-blink {
     0%,
@@ -861,12 +759,25 @@
     }
   }
   .gold-pulse {
-    animation: live-blink 3.2s var(--ease-instr) infinite;
+    animation: live-blink 3.2s var(--ease-out) infinite;
     display: inline-block;
   }
-  .gold-shimmer {
-    background-image: none;
-    animation: none;
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity 0.5s var(--ease-out),
+      transform 0.5s var(--ease-out);
+  }
+  .reveal.in-view,
+  .reveal.is-in {
+    opacity: 1;
+    transform: none;
+  }
+  .trace {
+    transform-origin: left;
+    animation: trace-x 0.5s var(--ease-out) both;
   }
 
   .safe-area-bottom {
@@ -875,7 +786,6 @@
   .safe-area-top {
     padding-top: env(safe-area-inset-top, 0);
   }
-
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
@@ -886,7 +796,6 @@
 
   @media (prefers-reduced-motion: reduce) {
     .trace,
-    .trace-up,
     .live-dot,
     .gold-pulse {
       animation: none !important;
@@ -902,109 +811,85 @@
 
 /* ═══════════════════════════════════════════════════════════════
    COUCHE DE COMPATIBILITÉ — anciennes classes `.apple-*` / `.rv-*`
-
-   La V1 portait un second design system, nommé d'après Apple, sur la
-   landing et quelques pages marketing (tarifs, aide, vote). La V2
-   supprime ce système en tant que système : les classes survivent
-   uniquement comme ALIAS réaccordés à la DA « Preuve », le temps que
-   les pages restantes soient migrées écran par écran.
-
-   → Ne PAS écrire de nouvelle interface avec ces classes.
-   → Toute page migrée doit les remplacer par les primitives ci-dessus.
+   utilisées par les pages marketing pas encore migrées (tarifs, aide,
+   vote). Réaccordées à la V3. Ne pas écrire de nouvelle interface avec.
 ═══════════════════════════════════════════════════════════════ */
 .apple-landing {
   --apple-bg: var(--paper);
   --apple-surface: var(--paper-2);
   --apple-text: var(--ink);
   --apple-text-2: var(--ink-2);
-  --apple-dark: var(--ink);
-  --apple-dark-2: #2b2b26;
-  background-color: var(--paper);
+  --apple-dark: var(--deep);
+  --apple-dark-2: var(--deep-2);
+  background-color: var(--paper-2);
   color: var(--ink);
   font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
 }
-
 .apple-title {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(2.5rem, 7vw, 5rem);
+  font-weight: 800;
+  font-size: clamp(2.25rem, 5.6vw, 4rem);
   line-height: 1.04;
-  letter-spacing: -0.026em;
+  letter-spacing: -0.036em;
   color: var(--ink);
 }
 .apple-title-lg {
-  font-size: clamp(3rem, 8.5vw, 6.5rem);
-  line-height: 1.01;
-  letter-spacing: -0.03em;
+  font-size: clamp(2.75rem, 7vw, 5rem);
+  letter-spacing: -0.04em;
 }
 .apple-subtitle {
-  font-family: var(--font-sans);
   font-weight: 400;
-  font-size: clamp(16px, 1.6vw, 19px);
+  font-size: clamp(16px, 1.6vw, 18px);
   line-height: 1.55;
   color: var(--ink-2);
-  letter-spacing: -0.008em;
 }
 .apple-eyebrow {
-  font-family: var(--font-mono);
   font-weight: 600;
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-size: 13px;
   color: var(--ink-3);
 }
-.apple-btn-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--ink);
-  color: var(--paper);
-  font-family: var(--font-sans);
-  font-weight: 500;
-  font-size: 15px;
-  letter-spacing: -0.006em;
-  height: 44px;
-  padding: 0 22px;
-  border-radius: var(--radius);
-  border: 1px solid var(--ink);
-  cursor: pointer;
-}
-.apple-btn-primary--sm {
-  height: 32px;
-  padding: 0 14px;
-  font-size: 13px;
-}
-.apple-btn-primary:hover {
-  background-color: transparent;
-  color: var(--ink);
-}
+.apple-btn-primary,
 .apple-btn-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: transparent;
-  color: var(--ink);
-  font-family: var(--font-sans);
-  font-weight: 500;
-  font-size: 15px;
-  height: 44px;
-  padding: 0 22px;
-  border-radius: var(--radius);
-  border: 1px solid var(--paper-3);
+  height: 48px;
+  padding: 0 26px;
+  border-radius: 999px;
+  border: 0;
   cursor: pointer;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 16px;
+  transition: opacity 180ms var(--ease-out);
+}
+.apple-btn-primary {
+  background-color: var(--ink);
+  color: #ffffff;
+}
+.apple-btn-primary:hover {
+  opacity: 0.86;
+}
+.apple-btn-primary--sm {
+  height: 38px;
+  padding: 0 18px;
+  font-size: 14.5px;
+}
+.apple-btn-secondary {
+  background-color: var(--paper-2);
+  color: var(--ink);
 }
 .apple-btn-secondary:hover {
-  border-color: var(--ink);
+  opacity: 0.86;
 }
 .apple-link {
-  color: var(--ice-ink);
-  font-weight: 500;
-  font-size: 15px;
-  letter-spacing: -0.006em;
+  color: var(--mint-ink);
+  font-weight: 600;
+  font-size: 16px;
   display: inline-flex;
   align-items: center;
   gap: 4px;
+}
+.apple-link:hover {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -1016,21 +901,18 @@
 .apple-input {
   background-color: var(--paper);
   border: 1px solid var(--paper-3);
-  border-radius: var(--radius);
-  padding: 12px 14px;
-  font-size: 15px;
+  border-radius: var(--radius-md);
+  min-height: 56px;
+  padding: 14px 16px;
+  font-size: 16px;
   font-family: var(--font-sans);
   color: var(--ink);
   outline: none;
 }
 .apple-input:focus {
   border-color: var(--ink);
-  box-shadow: inset 0 -2px 0 0 var(--ink);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink) 10%, transparent);
 }
-.apple-input::placeholder {
-  color: var(--ink-3);
-}
-/* Halos, auras et lift au survol : supprimés (« premium » artificiel). */
 .apple-aura,
 .rv-hero-glow,
 .hero-live-bg {
@@ -1046,37 +928,32 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-2);
-  background-color: transparent;
-  border: 1px solid var(--paper-3);
+  height: 28px;
+  padding: 0 12px;
   border-radius: 999px;
-  padding: 5px 12px;
+  background-color: var(--paper-2);
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 600;
 }
 .apple-live {
-  width: 6px;
-  height: 6px;
-  border-radius: 1px;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
   background-color: var(--mint);
   flex: none;
-  animation: live-blink 2.4s var(--ease-instr) infinite;
+  animation: live-blink 2.4s var(--ease-out) infinite;
 }
 .apple-stat-src {
   margin-top: 10px;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12.5px;
   color: var(--ink-3);
-  font-variant-numeric: tabular-nums;
 }
 .rv-hero {
   position: relative;
   overflow: hidden;
   background-color: var(--paper);
   color: var(--ink);
-  border-bottom: 1px solid var(--paper-3);
   border-radius: 0;
 }
 .rv-proof {
@@ -1090,45 +967,40 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-variant-numeric: tabular-nums;
-  color: var(--ink-2);
-  background-color: transparent;
-  border: 1px solid var(--paper-3);
+  height: 32px;
+  padding: 0 14px;
   border-radius: 999px;
-  padding: 6px 12px;
+  background-color: var(--paper);
+  color: var(--ink-2);
+  font-size: 13.5px;
+  font-weight: 500;
   white-space: nowrap;
 }
 .rv-proof-item b {
   color: var(--ink);
-  font-weight: 600;
+  font-weight: 700;
 }
 .rv-card {
   position: relative;
   overflow: hidden;
   border-radius: var(--radius);
   background-color: var(--paper);
-  border: 1px solid var(--paper-3);
-  border-top: 1px solid var(--ink);
-  padding: clamp(24px, 3.5vw, 48px);
+  border: 0;
+  padding: clamp(24px, 3.5vw, 44px);
 }
 .rv-card--ink {
-  background-color: var(--ink);
-  border-color: var(--ink);
-  color: var(--paper);
+  background-color: var(--deep);
+  color: #ffffff;
 }
 .rv-card--ink .apple-title,
 .rv-card--ink h2,
 .rv-card--ink h3,
 .rv-card--ink .rv-card-title,
 .rv-card--ink .rv-section-title {
-  color: var(--paper);
+  color: #ffffff;
 }
 .rv-card--ink .apple-subtitle {
-  color: #b4b1a8;
+  color: rgba(255, 255, 255, 0.66);
 }
 .rv-card--plain {
   background-color: var(--paper);
@@ -1137,47 +1009,42 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
   color: var(--section-accent-ink);
 }
 .rv-card--ink .rv-card-eyebrow {
-  color: #b4b1a8;
+  color: rgba(255, 255, 255, 0.56);
 }
 .rv-card-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 1px;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
   background-color: var(--section-accent);
   flex: none;
 }
 .rv-card--ink .rv-card-dot {
-  background-color: var(--paper);
+  background-color: #ffffff;
 }
 .rv-card-title {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(26px, 3.4vw, 40px);
-  line-height: 1.08;
-  letter-spacing: -0.022em;
+  font-weight: 800;
+  font-size: clamp(24px, 3.2vw, 36px);
+  line-height: 1.1;
+  letter-spacing: -0.032em;
   color: inherit;
 }
 .rv-section-title {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(32px, 4.6vw, 56px);
-  line-height: 1.04;
-  letter-spacing: -0.026em;
+  font-weight: 800;
+  font-size: clamp(30px, 4.4vw, 52px);
+  line-height: 1.05;
+  letter-spacing: -0.036em;
 }
 .rv-reveal {
   opacity: 0;
-  transform: translateY(6px);
+  transform: translateY(8px);
   transition:
-    opacity 0.42s var(--ease-instr),
-    transform 0.42s var(--ease-instr);
+    opacity 0.5s var(--ease-out),
+    transform 0.5s var(--ease-out);
 }
 .rv-reveal.is-in {
   opacity: 1;

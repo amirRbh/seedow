@@ -2936,7 +2936,8 @@
     "status_modelled": "estimation Seedow",
     "status_disputed": "contesté par la source",
     "status_unknown": "non vérifié",
-    "live": "données en direct"
+    "live": "données en direct",
+    "status_verified": "vérifié"
   },
   "simulation_ack": {
     "title": "Avant d'enregistrer",

@@ -88,7 +88,7 @@ export function AllocationList({
       </div>
 
       {/* Réglure d'allocation — densités d'encre + hachures, coins vifs. */}
-      <div className="flex w-full h-[10px] overflow-hidden bg-paper-2 border-y border-paper-3 mb-3.5">
+      <div className="flex w-full h-2.5 gap-0.5 overflow-hidden rounded-full bg-paper-2 mb-4">
         {sorted.map((h, i) => (
           <motion.div
             key={h.id}
@@ -121,7 +121,7 @@ export function AllocationList({
           >
             <span
               aria-hidden
-              className="w-2.5 h-2.5 flex-shrink-0 border border-paper-3 overflow-hidden"
+              className="w-2.5 h-2.5 flex-shrink-0 rounded-full overflow-hidden"
               style={{ backgroundColor: colorFor(holding.category) }}
             >
               {inkFor(holding.category).hatch && (
@@ -159,7 +159,7 @@ export function AllocationList({
 
         <li
           onClick={() => (onEmptySlotClick ? onEmptySlotClick() : navigate({ to: "/discover" }))}
-          className="pt-2.5 mt-1.5 border-t border-ink cursor-pointer text-ink-3 hover:text-ink transition-colors flex items-center justify-between"
+          className="pt-3 mt-2 border-t border-paper-3 cursor-pointer text-ink-3 hover:text-ink transition-colors flex items-center justify-between"
         >
           <span className="text-body-sm">{t("allocation_list.add_position")}</span>
           <span className="stamp">{t("allocation_list.explore")}</span>

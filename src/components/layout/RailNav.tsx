@@ -80,9 +80,11 @@ export function RailNav() {
         aria-label={t("rail_nav.seedow_home")}
         className="flex items-center justify-center w-10 h-10 mb-2 outline-none rounded-sm focus-visible:ring-2 focus-visible:ring-highlight-1"
       >
-        <span className="font-display text-body-xl text-ink leading-none">s</span>
+        <span className="text-[20px] font-extrabold tracking-[-0.03em] text-ink leading-none">
+          s
+        </span>
       </Link>
-      <div className="h-px w-6 bg-ink my-2" />
+      <div className="h-px w-6 bg-paper-3 my-2" />
 
       <nav className="flex flex-col items-center gap-1 flex-1 mt-2">
         {PRIMARY.map((item) => (
@@ -109,7 +111,7 @@ function RailLink({ item, active }: { item: NavItem; active: boolean }) {
           aria-current={active ? "page" : undefined}
           aria-label={item.label}
           className={cn(
-            "relative flex items-center justify-center w-10 h-10 rounded-[--radius] transition-colors duration-150",
+            "relative flex items-center justify-center w-11 h-11 rounded-full transition-colors duration-150",
             "outline-none focus-visible:ring-2 focus-visible:ring-ink",
             active ? "text-ink bg-paper-2" : "text-ink-3 hover:text-ink hover:bg-paper-2",
           )}
@@ -118,7 +120,7 @@ function RailLink({ item, active }: { item: NavItem; active: boolean }) {
           {active && (
             <span
               aria-hidden="true"
-              className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-[2px] bg-ink"
+              className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-[2px] rounded-full bg-ink"
             />
           )}
         </Link>
@@ -139,9 +141,9 @@ function NavIcon({ type }: { type: IconKey }) {
     className: "w-[18px] h-[18px]",
     fill: "none",
     stroke: "currentColor",
-    strokeWidth: 1.25,
-    strokeLinecap: "butt" as const,
-    strokeLinejoin: "miter" as const,
+    strokeWidth: 2,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
   };
   switch (type) {
     case "home":

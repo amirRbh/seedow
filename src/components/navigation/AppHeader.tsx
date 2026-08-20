@@ -43,13 +43,15 @@ export function AppHeader({
   const { t } = useTranslation();
   return (
     <header className="px-5 pt-6 pb-5">
-      <div className="md:hidden flex items-center justify-between border-b border-paper-3 pb-3">
+      <div className="md:hidden flex items-center justify-between pb-3">
         <Link
           to="/le-fil"
           aria-label={t("rail_nav.seedow_home")}
           className="inline-flex items-center outline-none rounded-sm focus-visible:ring-2 focus-visible:ring-highlight-1"
         >
-          <span className="font-display text-[19px] text-ink">seedow</span>
+          <span className="text-[21px] font-extrabold tracking-[-0.03em] text-ink">
+            seedow<span className="text-mint">.</span>
+          </span>
         </Link>
         <div className="flex items-center gap-2">
           <LanguageToggle />
@@ -58,8 +60,8 @@ export function AppHeader({
             to="/profil"
             aria-label={t("rail_nav.investor_profile")}
             className={cn(
-              "flex items-center justify-center w-11 h-11 rounded-[--radius] border border-paper-3 text-ink-2",
-              "transition-colors duration-150 hover:text-ink hover:border-ink-3",
+              "flex items-center justify-center w-11 h-11 rounded-full bg-paper text-ink-2",
+              "transition-colors duration-150 hover:text-ink hover:bg-paper-inset",
               "outline-none focus-visible:ring-2 focus-visible:ring-highlight-1",
             )}
           >
@@ -70,8 +72,8 @@ export function AppHeader({
               to="/reglages"
               aria-label={t("nav.open_settings")}
               className={cn(
-                "flex items-center justify-center w-11 h-11 rounded-[--radius] border border-paper-3 text-ink-2",
-                "transition-colors duration-150 hover:text-ink hover:border-ink-3",
+                "flex items-center justify-center w-11 h-11 rounded-full bg-paper text-ink-2",
+                "transition-colors duration-150 hover:text-ink hover:bg-paper-inset",
                 "outline-none focus-visible:ring-2 focus-visible:ring-highlight-1",
               )}
             >
@@ -89,7 +91,7 @@ export function AppHeader({
         )}
         <div className="min-w-0 flex-1">
           {eyebrow && <p className="stamp mb-2.5">{eyebrow}</p>}
-          <h1 className="font-display text-h1-page text-ink truncate">{title}</h1>
+          <h1 className="text-h1-page text-ink truncate">{title}</h1>
           {subtitle && (
             <p className="text-body text-ink-2 mt-2.5 max-w-[52ch] leading-relaxed">{subtitle}</p>
           )}
@@ -112,9 +114,9 @@ function ProfileIcon() {
       className="w-[18px] h-[18px]"
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.25}
-      strokeLinecap="butt"
-      strokeLinejoin="miter"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
       aria-hidden="true"
     >
       <circle cx="12" cy="8" r="4" />
@@ -130,9 +132,9 @@ function SettingsIcon() {
       className="w-[18px] h-[18px]"
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.25}
-      strokeLinecap="butt"
-      strokeLinejoin="miter"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
       aria-hidden="true"
     >
       <circle cx="12" cy="12" r="3" />

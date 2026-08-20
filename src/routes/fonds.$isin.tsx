@@ -66,8 +66,8 @@ function FundAuthorityPage() {
   const { t } = useTranslation();
 
   return (
-    <div className="min-h-screen bg-paper text-ink">
-      <header className="max-w-3xl mx-auto px-6 pt-8 pb-5 border-b border-ink flex items-center justify-between">
+    <div className="min-h-screen bg-paper-2 text-ink">
+      <header className="max-w-3xl mx-auto px-6 pt-8 pb-5 flex items-center justify-between">
         <Link to="/comprendre" className="stamp hover:text-ink transition-colors">
           {t("fonds_page.back")}
         </Link>
@@ -100,7 +100,7 @@ function FundAuthorityPage() {
         </div>
 
         {fund.seedow_score != null && (
-          <section className="border-t-2 border-ink pt-5">
+          <section className="paper-card p-7">
             <div className="flex items-end justify-between gap-6 flex-wrap">
               <div>
                 <p className="stamp">{t("fonds_page.seedow_score_title")}</p>
@@ -129,8 +129,8 @@ function FundAuthorityPage() {
           </section>
         )}
 
-        <section>
-          <p className="stamp mb-4">{t("fonds_page.metric_esg")}</p>
+        <section className="paper-card p-7">
+          <p className="stamp mb-5">{t("fonds_page.metric_esg")}</p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-7">
             <Metric label={t("fonds_page.metric_esg")} value={`${fund.esg.toFixed(1)}/10`} />
             <Metric
@@ -163,7 +163,7 @@ function FundAuthorityPage() {
           />
         </section>
 
-        <section className="border-t-2 border-ink pt-5">
+        <section className="paper-card p-7">
           <p className="stamp">{t("fonds_page.risk_title")}</p>
           <p className="font-display text-[22px] mt-2.5">{t(RISK_LABEL[fund.greenwashing_risk])}</p>
           {fund.greenwashing_reasons.length > 0 && (
@@ -189,7 +189,7 @@ function FundAuthorityPage() {
         </section>
 
         {fund.excluded_sectors.length > 0 && (
-          <section className="border-t border-paper-3 pt-5">
+          <section className="paper-card p-7">
             <p className="stamp">{t("fonds_page.exclusions_title")}</p>
             <p className="text-body text-ink-2 mt-2.5 leading-relaxed">
               {fund.excluded_sectors.join(" · ")}
@@ -198,7 +198,7 @@ function FundAuthorityPage() {
         )}
 
         {fund.themes.length > 0 && (
-          <section className="border-t border-paper-3 pt-5">
+          <section className="paper-card p-7">
             <p className="stamp mb-1">{t("fonds_page.themes_title")}</p>
             <ul>
               {fund.themes.map((th) => (
@@ -214,7 +214,7 @@ function FundAuthorityPage() {
           </section>
         )}
 
-        <footer className="border-t-2 border-ink pt-4">
+        <footer className="pt-2">
           <p className="stamp">
             {t("fonds_page.source_line", {
               source: fund.source ?? t("fonds_page.source_unknown"),
@@ -229,7 +229,7 @@ function FundAuthorityPage() {
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="border-t border-ink pt-2.5">
+    <div>
       <p className="stamp">{label}</p>
       <p className="font-value text-[24px] leading-none text-ink mt-2.5">{value}</p>
     </div>
