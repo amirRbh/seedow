@@ -1,0 +1,26 @@
+# PROBE read-only : découverte du catalogue produit iShares (mécanisme ISIN → URL
+# de KID, verrou restant de la piste KID émetteur — cf. docs/esg-sources.md). Teste
+# des endpoints publics du « product screener » et imprime leur structure. N'écrit
+# RIEN, ne devine aucune URL de KID. Manuel uniquement.
+name: Probe iShares catalog
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.11"
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Probe iShares catalog
+        run: bun run scripts/probe-ishares-catalog.ts
