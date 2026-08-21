@@ -209,3 +209,42 @@ licenciée reste le repli si la résolution d'URL s'avère trop fragile.
 
 _Mesuré le 2026-08-20 via `.github/workflows/probe-issuer-kid.yml` (run #1, read-only,
 racine + robots.txt uniquement — aucune URL de KID devinée, rien écrit)._
+
+---
+
+# iShares — découverte du mécanisme ISIN → URL de KID (mesuré 2026-08-20)
+
+Premier émetteur attaqué (le plus gros). Probe read-only `scripts/probe-ishares-catalog.ts`
+(workflow `probe-ishares-catalog.yml`), en lisant les références réelles du site (aucune
+URL devinée). Chaîne mesurée sur 4 runs :
+
+1. **Endpoints devinés** (`/product-screener/…v3.1.jsn?dcrPath=…`) → **404/500**.
+2. **Découverte depuis la page ETF** (HTTP 200) → le site déclare son propre `url_map` :
+   - `cwpScreenerApi` = `https://www.ishares.com/uk/individual/en/product-data.jsn`
+   - `compareEsgApi` = `esg-product-data.jsn`
+   - `downloadExcelApi` = `product-screener/product-screener-v3.jsn`
+   - (fait notable : `brokerApi` du site pointe vers `extraetf.com` — iShares agrège
+     lui-même un tiers.)
+3. **Test des endpoints déclarés** :
+   - `product-data.jsn` → **HTTP 200 JSON** mais **`data` vide** (81 o) : endpoint **vivant
+     mais paramétré** — il exige des paramètres (assemblés côté JS) pour renvoyer les fonds.
+   - `esg-product-data.jsn`, `product-screener-v3.jsn` (à cette base) → 404.
+
+## Verrou restant (mesuré, précis)
+
+L'API de données iShares (`product-data.jsn`) est **vivante et joignable**, mais **pilotée
+par des paramètres construits côté client (JS)**, absents du HTML statique. Un simple `fetch`
+ne suffit donc pas. Deux voies, chacune une **décision** (pas un simple problème de code) :
+
+- **A. Navigateur sans tête** (Playwright, présent sur le runner) : charger la page,
+  laisser son JS faire l'appel réel, capturer l'ISIN → URL de KID. Robuste, mais **piloter
+  la SPA d'un tiers pour moissonner des données est une posture ToS plus lourde** que
+  consommer une API déclarée — à acter explicitement.
+- **B. Rétro-ingénierie des paramètres** de `product-data.jsn` (quelques itérations de plus).
+- **Repli. Flux EET/SFDR licencié** — fiable et redistribuable, à défaut de A/B.
+
+Le pipeline reste prêt et le gate souverain : aucune donnée n'est exposée tant qu'un de ces
+chemins n'aboutit pas. Zéro donnée devinée à ce stade (§1).
+
+_Mesuré via `.github/workflows/probe-ishares-catalog.yml` (runs #1–#4, read-only ; aucune
+URL de KID devinée, rien écrit)._
