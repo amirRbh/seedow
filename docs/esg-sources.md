@@ -246,5 +246,32 @@ ne suffit donc pas. Deux voies, chacune une **décision** (pas un simple problè
 Le pipeline reste prêt et le gate souverain : aucune donnée n'est exposée tant qu'un de ces
 chemins n'aboutit pas. Zéro donnée devinée à ce stade (§1).
 
-_Mesuré via `.github/workflows/probe-ishares-catalog.yml` (runs #1–#4, read-only ; aucune
+## Rétro-ingénierie des paramètres (runs #4–#5) — conclusion : voie HTTP simple épuisée
+
+On a poussé la voie **B** (HTTP simple, sans navigateur) :
+
+- `product-data.jsn` avec le `dcrPath` documenté (`/templatedata/config/product-screener-v3/…`)
+  **et** avec `productPageId` → **toujours HTTP 200 mais `data` vide** (81 o).
+- Le **scan du JS** de la page (bundle `main.*.js`) révèle le mécanisme :
+  `getDcrPath(){return this.localConfig.dcrPath||""}` — le `dcrPath` **et** la configuration de
+  filtres proviennent d'un objet `localConfig` **assemblé au runtime par la SPA**, pas d'une
+  valeur statique. L'appel de données exige ce payload construit côté JS.
+
+**Conclusion mesurée** : `product-data.jsn` est un endpoint **piloté par une configuration
+runtime** ; en HTTP simple il renvoie une coquille vide. La voie B (fetch statique) est
+**épuisée** pour iShares — ce n'est pas un problème de code, mais la nature SPA de la source.
+
+Il ne reste donc, pour moissonner iShares, que :
+
+- **A. Navigateur sans tête** (Playwright) — laisser le JS assembler `localConfig` et faire
+  l'appel réel. **Posture ToS plus lourde** (piloter la SPA d'un tiers), à acter explicitement.
+- **Repli EET/SFDR licencié** — la voie fiable et redistribuable pour une couverture large
+  IE/LU.
+
+Recommandation : **basculer vers l'EET licencié** pour une couverture de production, et ne
+réserver le navigateur sans tête que si un accord/posture ToS le permet. Le pipeline
+(resolver → extracteur → parser → preuve → gate) est prêt à consommer l'une ou l'autre source
+sans modification du cœur.
+
+_Mesuré via `.github/workflows/probe-ishares-catalog.yml` (runs #1–#5, read-only ; aucune
 URL de KID devinée, rien écrit)._
