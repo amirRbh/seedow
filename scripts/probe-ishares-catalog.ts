@@ -5,13 +5,14 @@
  * consomme : s'il contient nos ISIN IE + une URL de document par fonds, il devient
  * la brique de résolution d'URL de l'`IsharesResolver`.
  *
- * Deux passes :
- *   A. DÉCOUVERTE DEPUIS LA PAGE (principal) — récupère la page de liste ETF (HTTP
- *      200 confirmé) et EXTRAIT les références d'endpoint que le site utilise
- *      lui-même (`.jsn`, `dcrPath`, `product-screener`, URLs de produits). On lit
- *      les références réelles du site, on ne devine pas.
- *   B. TEST d'endpoints candidats (secondaire) — mesure quelques URLs de screener
- *      (les premières essayées ont répondu 404/500).
+ * Trois passes :
+ *   A. DÉCOUVERTE DEPUIS LA PAGE — extrait les références d'endpoint que le site
+ *      utilise lui-même (`.jsn`, `dcrPath`, `templatedata`, `url_map`).
+ *   B. TEST PARAMÉTRÉ — combine les fichiers découverts (`product-data.jsn`,
+ *      `product-screener-v3.jsn`) avec la convention `dcrPath` de la plateforme CWP
+ *      BlackRock, pour trouver le paramètre qui déclenche le catalogue.
+ *   C. SCAN DES SCRIPTS — lit le JS de la page pour retrouver la construction EXACTE
+ *      des paramètres (dcrPath/productPageId), au cas où B ne suffirait pas.
  *
  * IMPRIME statut HTTP, taille, présence de nos ISIN de test, et la structure JSON.
  * N'écrit rien, n'ingère rien, ne devine aucune URL de KID.
@@ -60,16 +61,30 @@ function contextAround(html: string, needle: string, span = 160): string | null 
     .trim();
 }
 
-// Endpoints DÉCLARÉS par le site lui-même (extraits de son `url_map` / `urlMap` au
-// run précédent) — on teste ce que iShares annonce, on ne devine plus.
+// `product-data.jsn` répond 200 mais `data` vide sans paramètres. On combine les
+// FICHIERS découverts (url_map du site) avec la convention `dcrPath` documentée de
+// la plateforme CWP BlackRock (chemin /templatedata/...). Toujours pas d'URL de KID
+// devinée : on cherche le paramètre qui déclenche le catalogue.
+const DCR = "dcrPath=/templatedata/config/product-screener-v3/data/en/uk-retail/product-screener";
 const CANDIDATES: { label: string; url: string }[] = [
-  { label: "cwpScreenerApi", url: "https://www.ishares.com/uk/individual/en/product-data.jsn" },
-  { label: "compareEsgApi", url: "https://www.ishares.com/uk/individual/en/esg-product-data.jsn" },
   {
-    label: "downloadExcelApi(v3)",
-    url: "https://www.ishares.com/uk/individual/en/product-screener/product-screener-v3.jsn",
+    label: "screener-v3+dcrPath",
+    url: `https://www.ishares.com/uk/individual/en/product-screener/product-screener-v3.jsn?${DCR}&siteEntryPassthrough=true`,
+  },
+  {
+    label: "product-data+dcrPath",
+    url: `https://www.ishares.com/uk/individual/en/product-data.jsn?${DCR}&siteEntryPassthrough=true`,
+  },
+  {
+    label: "product-data+productPageId",
+    url: "https://www.ishares.com/uk/individual/en/product-data.jsn?productPageId=&siteEntryPassthrough=true",
   },
 ];
+
+// Scripts de la page ETF à scanner pour retrouver la construction EXACTE du dcrPath
+// / des paramètres (lit le JS du site, ne devine rien).
+const SCRIPT_SCAN_HINTS =
+  /dcrPath|templatedata|productPageId|product-data\.jsn|siteEntryPassthrough/gi;
 
 /** Aplati les clés de premier et second niveau d'un objet JSON, pour révéler la forme. */
 function structureHint(json: unknown): string {
@@ -161,6 +176,39 @@ async function discoverFromPage(label: string, url: string): Promise<void> {
   }
 }
 
+/** Passe C : scanne les scripts de la page pour la construction EXACTE des params. */
+async function scanScripts(pageUrl: string): Promise<void> {
+  let html = "";
+  try {
+    html = await (await fetch(pageUrl, { headers: { "User-Agent": UA } })).text();
+  } catch (e) {
+    console.log(`      fetch page error: ${e instanceof Error ? e.message : String(e)}`);
+    return;
+  }
+  // Résout les <script src> (relatifs → absolus), garde ceux au nom parlant.
+  const srcs = [...html.matchAll(/<script[^>]+src=["']([^"']+)["']/gi)]
+    .map((m) => m[1])
+    .filter((s) => /screener|product|main|app|bundle|chunk|vendor/i.test(s))
+    .map((s) => new URL(s, pageUrl).toString());
+  const uniq = [...new Set(srcs)].slice(0, 8);
+  console.log(`      ${uniq.length} script(s) candidat(s) scanné(s)`);
+  for (const src of uniq) {
+    try {
+      const js = await (await fetch(src, { headers: { "User-Agent": UA } })).text();
+      const hits = [...new Set([...js.matchAll(SCRIPT_SCAN_HINTS)].map((m) => m[0]))];
+      if (hits.length) {
+        // Extrait un peu de contexte autour du 1er dcrPath/param trouvé.
+        const idx = js.search(/dcrPath|product-data\.jsn|productPageId/i);
+        const ctx = idx >= 0 ? js.slice(Math.max(0, idx - 80), idx + 160).replace(/\s+/g, " ") : "";
+        console.log(`      [${src.slice(-48)}] hits: ${hits.join(",")}${ctx ? ` · …${ctx}…` : ""}`);
+      }
+      await new Promise((r) => setTimeout(r, 200));
+    } catch {
+      /* ignore un script injoignable */
+    }
+  }
+}
+
 async function main(): Promise<void> {
   console.log(
     `[ishares-probe] read-only · découverte catalogue · ISIN test: ${TEST_ISINS.join(", ")}`,
@@ -171,12 +219,14 @@ async function main(): Promise<void> {
     await discoverFromPage(p.label, p.url);
     await new Promise((r) => setTimeout(r, DELAY_MS));
   }
-  console.log("[ishares-probe] === Passe B : endpoints DÉCLARÉS par le site (url_map) ===");
+  console.log("[ishares-probe] === Passe B : fichiers découverts + convention dcrPath ===");
   for (const c of CANDIDATES) {
-    console.log(`[ishares-probe] ${c.label}: ${c.url.slice(0, 90)}…`);
+    console.log(`[ishares-probe] ${c.label}: ${c.url.slice(0, 110)}…`);
     await probeOne(c.url);
     await new Promise((r) => setTimeout(r, DELAY_MS));
   }
+  console.log("[ishares-probe] === Passe C : scan des scripts pour la construction des params ===");
+  await scanScripts(PAGES[0].url);
   console.log(
     "[ishares-probe] (mesure seule — rien écrit, aucune URL de KID devinée ; sert à écrire le mapper)",
   );
