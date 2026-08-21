@@ -351,7 +351,7 @@
 
 @layer base {
   * {
-    border-color: var(--color-border);
+    border-color: var(--border);
   }
 
   html {
@@ -361,8 +361,8 @@
   }
 
   body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
+    background-color: var(--background);
+    color: var(--foreground);
     font-family: var(--font-sans);
     font-size: calc(16px * var(--font-scale));
     line-height: 1.55;
@@ -433,21 +433,21 @@
     font-size: clamp(1.875rem, 4vw, 2.75rem);
     line-height: 1.08;
     letter-spacing: -0.032em;
-    color: var(--color-ink);
+    color: var(--ink);
   }
   h2 {
     font-weight: 800;
     font-size: clamp(1.5rem, 3vw, 2rem);
     line-height: 1.12;
     letter-spacing: -0.03em;
-    color: var(--color-ink);
+    color: var(--ink);
   }
   h3 {
     font-weight: 700;
     font-size: clamp(1.0625rem, 2vw, 1.25rem);
     line-height: 1.25;
     letter-spacing: -0.022em;
-    color: var(--color-ink);
+    color: var(--ink);
   }
 
   /* Libellé de section — 13px semi-gras gris. Plus de capitales mono
@@ -457,22 +457,22 @@
     font-weight: 600;
     letter-spacing: -0.006em;
     text-transform: none;
-    color: var(--color-ink-3);
+    color: var(--ink-3);
   }
   .eyebrow--accent {
-    color: var(--color-mint-ink);
+    color: var(--mint-ink);
   }
   .eyebrow--ice {
-    color: var(--color-ice-ink);
+    color: var(--ice-ink);
   }
   .eyebrow--volt {
-    color: var(--color-volt-ink);
+    color: var(--volt-ink);
   }
   .eyebrow--solar {
-    color: var(--color-solar-ink);
+    color: var(--solar-ink);
   }
   .eyebrow--alert {
-    color: var(--color-alert-ink);
+    color: var(--alert-ink);
   }
 
   .accent-mint {
@@ -501,7 +501,7 @@
     font-size: clamp(2rem, 4.6vw, 3rem);
     line-height: 1.04;
     letter-spacing: -0.035em;
-    color: var(--color-ink);
+    color: var(--ink);
     font-variant-numeric: tabular-nums lining-nums;
   }
   .data-lg {
@@ -509,7 +509,7 @@
     font-size: clamp(1.5rem, 3vw, 2.125rem);
     line-height: 1.06;
     letter-spacing: -0.032em;
-    color: var(--color-ink);
+    color: var(--ink);
     font-variant-numeric: tabular-nums lining-nums;
   }
 }
@@ -517,13 +517,13 @@
 @layer components {
   /* ── Cartes : blanc sur --paper-2 = élévation 1, sans ombre ───── */
   .paper-card {
-    background-color: var(--color-card);
+    background-color: var(--card);
     border: 0;
     border-radius: var(--radius);
     box-shadow: none;
   }
   .paper-card-inset {
-    background-color: var(--color-paper-2);
+    background-color: var(--paper-2);
     border: 0;
     border-radius: var(--radius);
     box-shadow: none;
@@ -532,27 +532,27 @@
      y est trop faible pour porter seul la séparation. */
   .dark .paper-card,
   .on-deep .paper-card {
-    box-shadow: inset 0 0 0 1px var(--color-paper-3);
+    box-shadow: inset 0 0 0 1px var(--paper-3);
   }
   /* Variante cerclée, pour une carte posée sur du blanc (où l'aplat
      seul ne créerait aucune séparation). */
   .paper-card-line {
-    background-color: var(--color-paper);
+    background-color: var(--paper);
     border-radius: var(--radius);
-    box-shadow: inset 0 0 0 1px var(--color-paper-3);
+    box-shadow: inset 0 0 0 1px var(--paper-3);
   }
 
   /* Bloc de section — un simple groupe, séparé par de l'espace et non
      par un filet d'encre. Les écrans migrés en V2 l'utilisent déjà. */
   .sheet {
     background-color: transparent;
-    border-top: 1px solid var(--color-paper-3);
+    border-top: 1px solid var(--paper-3);
     border-radius: 0;
     box-shadow: none;
   }
   .sheet-soft {
     background-color: transparent;
-    border-top: 1px solid var(--color-paper-3);
+    border-top: 1px solid var(--paper-3);
     border-radius: 0;
     box-shadow: none;
   }
@@ -566,7 +566,7 @@
      `.ink-section` = la même chose, encartée et arrondie. */
   .on-deep,
   .ink-section {
-    background-color: var(--color-deep);
+    background-color: var(--deep);
     color: var(--on-deep);
     --ink: var(--on-deep);
     --ink-2: var(--on-deep-2);
@@ -606,14 +606,14 @@
     font-weight: 600;
     letter-spacing: -0.006em;
     text-transform: none;
-    color: var(--color-ink-3);
+    color: var(--ink-3);
   }
   /* Ticker, ISIN, ligne de source : le seul territoire du monospace. */
   .mono-meta {
     font-family: var(--font-mono);
     font-size: calc(12px * var(--font-scale));
     letter-spacing: 0;
-    color: var(--color-ink-3);
+    color: var(--ink-3);
     font-variant-numeric: tabular-nums;
   }
 
@@ -629,8 +629,8 @@
     height: 28px;
     padding: 0 12px;
     border-radius: 999px;
-    background-color: var(--color-paper-2);
-    color: var(--color-ink-2);
+    background-color: var(--paper-2);
+    color: var(--ink-2);
     font-size: calc(13px * var(--font-scale));
     font-weight: 600;
     letter-spacing: -0.006em;
@@ -638,31 +638,31 @@
   }
   .chip--verified {
     background-color: color-mix(in srgb, var(--mint) 10%, transparent);
-    color: var(--color-mint-ink);
+    color: var(--mint-ink);
   }
   .chip--modelled {
     background-color: color-mix(in srgb, var(--solar) 13%, transparent);
-    color: var(--color-solar-ink);
+    color: var(--solar-ink);
   }
   .chip--disputed {
     background-color: color-mix(in srgb, var(--alert) 11%, transparent);
-    color: var(--color-alert-ink);
+    color: var(--alert-ink);
   }
   .chip--ice {
     background-color: color-mix(in srgb, var(--ice) 11%, transparent);
-    color: var(--color-ice-ink);
+    color: var(--ice-ink);
   }
   .chip--volt {
     background-color: color-mix(in srgb, var(--volt) 11%, transparent);
-    color: var(--color-volt-ink);
+    color: var(--volt-ink);
   }
   .chip--up {
     background-color: color-mix(in srgb, var(--mint) 10%, transparent);
-    color: var(--color-mint-ink);
+    color: var(--mint-ink);
   }
   .chip--down {
     background-color: color-mix(in srgb, var(--alert) 11%, transparent);
-    color: var(--color-alert-ink);
+    color: var(--alert-ink);
   }
   .ink-section .chip {
     background-color: rgba(255, 255, 255, 0.1);
@@ -675,20 +675,20 @@
   .provenance {
     font-size: calc(12.5px * var(--font-scale));
     line-height: 1.5;
-    color: var(--color-ink-3);
+    color: var(--ink-3);
     font-variant-numeric: tabular-nums;
   }
   .provenance--modelled {
-    color: var(--color-solar-ink);
+    color: var(--solar-ink);
   }
   .provenance--disputed {
-    color: var(--color-alert-ink);
+    color: var(--alert-ink);
   }
 
   /* ── Sélecteur segmenté (périodes, onglets courts) ────────────── */
   .segmented {
     display: inline-flex;
-    background-color: var(--color-paper-2);
+    background-color: var(--paper-2);
     border-radius: 999px;
     padding: 3px;
   }
@@ -697,12 +697,12 @@
     border-radius: 999px;
     font-size: calc(13px * var(--font-scale));
     font-weight: 700;
-    color: var(--color-ink-3);
+    color: var(--ink-3);
     transition: background-color 180ms var(--ease-out);
   }
   .segmented > [data-active="true"] {
-    background-color: var(--color-paper);
-    color: var(--color-ink);
+    background-color: var(--paper);
+    color: var(--ink);
   }
 
   /* ── Filets ───────────────────────────────────────────────────── */
@@ -712,11 +712,11 @@
   .gold-rule,
   .gold-rule-solid {
     height: 1px;
-    background-color: var(--color-paper-3);
+    background-color: var(--paper-3);
   }
 
   .hover-border:hover {
-    border-color: var(--color-ink-3);
+    border-color: var(--ink-3);
   }
 
   /* ── Couleur de texte des boutons ─────────────────────────────
@@ -730,30 +730,30 @@
     color: #ffffff;
   }
   .btn-on-paper {
-    color: var(--color-ink);
+    color: var(--ink);
   }
   .btn-ink {
-    color: var(--color-ink);
+    color: var(--ink);
   }
   .btn-ink-2 {
-    color: var(--color-ink-2);
+    color: var(--ink-2);
   }
   .btn-ink-2:hover {
-    color: var(--color-ink);
+    color: var(--ink);
   }
   .btn-on-deep {
     color: var(--deep);
   }
   .btn-mint {
-    color: var(--color-mint-ink);
+    color: var(--mint-ink);
   }
 
   /* ── Champ : 56px, rayon 14, focus par anneau discret ─────────── */
   .field {
-    background-color: var(--color-paper);
-    border: 1px solid var(--color-paper-3);
+    background-color: var(--paper);
+    border: 1px solid var(--paper-3);
     border-radius: var(--radius-md);
-    color: var(--color-ink);
+    color: var(--ink);
     min-height: 56px;
     padding: 14px 16px;
     font-family: var(--font-sans);
@@ -762,16 +762,16 @@
     width: 100%;
   }
   .field::placeholder {
-    color: var(--color-ink-3);
+    color: var(--ink-3);
   }
   .field:focus {
-    border-color: var(--color-ink);
+    border-color: var(--ink);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink) 10%, transparent);
   }
 
   .bubble-ethi {
-    background-color: var(--color-paper-2);
-    color: var(--color-ink);
+    background-color: var(--paper-2);
+    color: var(--ink);
     border: 0;
     border-radius: var(--radius);
     padding: 14px 18px;
@@ -783,7 +783,7 @@
     font-weight: 800;
     letter-spacing: -0.032em;
     line-height: 1.04;
-    color: var(--color-ink);
+    color: var(--ink);
     font-variant-numeric: tabular-nums lining-nums;
   }
 
@@ -795,7 +795,7 @@
   }
   .outline-number {
     font-weight: 800;
-    color: var(--color-paper-3);
+    color: var(--paper-3);
     letter-spacing: -0.03em;
     line-height: 0.9;
   }
@@ -812,7 +812,7 @@
     width: 7px;
     height: 7px;
     border-radius: 999px;
-    background-color: var(--color-mint);
+    background-color: var(--mint);
     flex: none;
     animation: live-blink 2.4s var(--ease-out) infinite;
   }
