@@ -6,7 +6,11 @@
 
 ## 1. Vision & principes non négociables
 
-**Mission.** Seedow est une application d'investissement éthique et durable. Elle structure un portefeuille selon les convictions de l'utilisateur (climat, biodiversité, droits humains…), avec des données de marché réelles, et un assistant conversationnel — **Ethi** — qui explique chaque choix sans jamais rien vendre.
+**Mission.** Seedow est une couche d'**intelligence d'investissement personnelle** (_Personal Investment Intelligence_). Elle analyse l'univers investissable, le filtre et le classe selon ce qui compte pour l'utilisateur (climat, biodiversité, droits humains…), à partir de données réelles et sourcées, avec un assistant conversationnel — **Ethi** — qui explique chaque choix sans jamais rien vendre.
+
+**North star.** _Seedow doesn't tell you what to buy. Seedow helps you understand what you could own, what your money would do, and which choices best match what matters to you._ Le portefeuille n'est plus le produit principal : il est le **résultat éventuel** des décisions de l'utilisateur.
+
+**Pivot en cours — Personal Investment Universe (PIU).** Le produit évolue d'un modèle _portfolio-first_ (profil → optimiseur → portefeuille généré) vers un modèle _universe-first_ (valeurs pondérées → univers personnel classé → collection → analyse d'impact → décision). Le parcours cible : **EXPLORE → UNDERSTAND → SELECT → ANALYZE → IMPROVE → INVEST**. Les capacités d'optimisation existantes (`src/lib/portfolio/`) ne sont **pas supprimées** — elles deviennent une fonctionnalité en aval de la collection. La source de vérité complète de ce pivot (audit, gap analysis, méthodologie de matching, risques réglementaires, plan d'exécution) est **`docs/ARCHITECTURE-PIU.md`** : en cas de doute sur la direction produit, on y revient avant de trancher.
 
 **Signature de marque** (issue de la DA des carousels, à respecter dans toute communication produit) :
 
@@ -64,18 +68,25 @@ src/
 │   ├── onboarding.tsx           # questionnaire → simulation → compte
 │   ├── auth.tsx · waitlist.tsx  # connexion / liste d'attente bêta
 │   ├── dashboard.tsx · discover.tsx · portfolio.tsx · comparatif.tsx
-│   ├── certificat.tsx · objectifs.tsx · objectifs.$goalId.tsx
+│   ├── construire.tsx · certificat.tsx · objectifs.tsx · objectifs.$goalId.tsx
+│   ├── fonds.$isin.tsx          # page actif par ISIN (embryon d'Asset Detail Page, §PIU)
 │   ├── ethi.tsx                 # chat Ethi (UI)
 │   ├── comprendre.tsx · methodologie.tsx    # pédagogie & méthode
 │   ├── cours.tsx · cours.index.tsx · cours.$slug.tsx   # cours
-│   ├── communaute.tsx · profil.tsx · reglages.tsx
+│   ├── communaute.tsx · profil.tsx · reglages.tsx · aide.tsx
+│   ├── le-fil.tsx · reveil.tsx · wrapped.tsx   # rétention (« ton argent a changé »)
+│   ├── observatoire.tsx · vote.tsx · vote.$resolutionId.tsx   # autorité & gouvernance
+│   ├── tarifs.tsx               # paliers (Free/Premium/Invest — cf. §business model PIU)
 │   ├── cgu.tsx · confidentialite.tsx · mentions-legales.tsx  # légal
 │   ├── _authenticated/          # layout + garde d'auth (route.tsx, admin.beta.tsx)
 │   ├── api.ethi.ts              # endpoint IA (server), pas une route UI
 │   ├── api.public.esg-preview.ts            # aperçu ESG public (server)
+│   ├── sitemap[.]xml.ts         # sitemap SEO (server)
 │   ├── hooks/                   # endpoints cron (pas des routes UI)
 │   │   ├── refresh-market-data.ts           # ingestion horaire Yahoo Finance
-│   │   └── recompute-risk-model.ts          # recalcul du modèle de risque
+│   │   ├── recompute-risk-model.ts          # recalcul du modèle de risque
+│   │   ├── ingest-holdings.ts · discover-funds.ts · recompute-ingestion-plan.ts  # data engine
+│   │   └── recompute-carbon-estimates.ts · dispatch-notifications.ts
 │   ├── mcp.ts · [.mcp]/         # serveur MCP (list-tools, invoke-tool)
 │   └── [.well-known]/ · [.]lovable.oauth.consent.tsx   # OAuth
 ├── components/                  # organisés par domaine, pas par type
@@ -204,9 +215,25 @@ Ethi est l'assistant conversationnel du produit (Lovable AI Gateway, Gemini/GPT-
 - Ingestion de données de marché horaire (Yahoo Finance) + recalcul du modèle de risque
 - Serveur MCP (exposition d'outils Seedow via le protocole MCP)
 
-**Next** — _(à compléter par l'équipe produit)_
+**Next (P0 — pivot PIU, non bloqué par la décision données/juridique).** Détail et critères de done : `docs/ARCHITECTURE-PIU.md` §16-17.
 
-**Later** — _(à compléter par l'équipe produit)_
+- **Préférences de 1re classe** — poids par dimension, pondérés et versionnés (`user_preferences`), au lieu de préférences figées dans la ligne `portfolios`. _(en cours)_
+- **Qualification de l'univers** — rendre `available_eu` / `share_class_of` opérants (éligibilité + dédup des share-classes), sans jamais inventer de valeur (§1.3). _(en cours)_
+- **Provenance ESG visible partout** — « estimé » ≠ « mesuré » sur chaque score affiché (finir N1).
+- **Asset Matching Engine** — `lib/matching/` : dimensions séparées, satisfaction, couverture, agrégation aux poids de l'utilisateur, explication décomposée. Pur + testé, sans UI. Le Match Score n'est **pas** un score de Seedow : les pondérations appartiennent à l'utilisateur.
+- **Collections** — liste pondérée, nommée, versionnée (`collections` / `collection_items`), migration de `watchlists`. Fonctionne sans optimisation.
+- **Explore = PIU** — `discover` reclassé par correspondance, avec le « pourquoi » décomposé.
+
+**Décisions préalables (P0, hors code — §17 Étape 0).**
+
+- Acquisition des holdings (`fund_holdings` vide, voie iShares épuisée) : EET/SFDR licencié vs navigateur sans tête. **Chemin critique** de tout le look-through.
+- Avis juridique : Match Score (recommandation personnalisée MiFID II), statut réglementaire, licence de redistribution des données, RGPD art. 9 (les préférences de valeurs peuvent révéler des convictions).
+
+**Later (P1/P2 — après déblocage des holdings et validation).**
+
+- Look-through réconcilié (`securities`, `asset_exposures`), Asset Detail Page complète (« ce que ton argent finance »), Collection Impact (agrégation par titre sous-jacent), overlap/concentration branché.
+- What-if (substitution + trade-offs bidirectionnels), change feed (« ton argent a changé »), refonte IA (4 destinations), portefeuille repositionné en aval de la collection.
+- Extension multi-classes (souverains & green bonds d'abord — données ouvertes ; puis actions, corporate, SLB), Premium (historique, rapports), B2B (Impact Intelligence API sur la base du serveur MCP), Invest (partenaire) une fois le cadre réglementaire posé.
 
 ---
 
