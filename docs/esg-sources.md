@@ -275,3 +275,40 @@ sans modification du cœur.
 
 _Mesuré via `.github/workflows/probe-ishares-catalog.yml` (runs #1–#5, read-only ; aucune
 URL de KID devinée, rien écrit)._
+
+> ⚠️ **Cette recommandation est périmée depuis le 2026-08-21.** La conclusion
+> ci-dessus (« voie HTTP simple épuisée », « basculer vers l'EET licencié ») visait
+> le bon constat sur le **mauvais endpoint** : les runs #1–#5 testaient
+> `product-data.jsn` (API du screener), alors que la page produit déclare aussi une
+> **seconde API REST**, `product_data_api`, jamais testée — et qui répond en simple
+> GET. La chaîne complète **sitemap → portfolioId → ISIN → holdings datées** a été
+> mesurée et franchie sans navigateur.
+>
+> **Le verrou n'est plus technique mais contractuel** (les ToS d'iShares limitent le
+> site à un usage personnel non commercial). Et sur l'ESG, la stratégie recommandée
+> change : ne plus chercher à **acheter** une notation de fonds, mais la **calculer
+> par transparisation** à partir de sources primaires gratuites au niveau entreprise.
+>
+> → **Lire `docs/esg-holdings-beta.md`**, qui remplace cette recommandation.
+
+---
+
+# Correction du 2026-08-21 — ce qui reste vrai de ce document
+
+Les mesures de ce document **restent valables** et ne sont pas à refaire :
+
+| Constat                                                           | Toujours vrai ? |
+| ----------------------------------------------------------------- | --------------- |
+| Yahoo `esgScores` → 0/80, rejet HTTP uniforme                     | ✅ oui          |
+| GECO n'indexe pas les UCITS IE/LU (POC 0/100)                     | ✅ oui          |
+| extraETF écarté pour ses conditions d'utilisation                 | ✅ oui          |
+| 8/8 émetteurs joignables depuis Actions, robots permissifs        | ✅ oui          |
+| `product-data.jsn` (screener) inexploitable en HTTP simple        | ✅ oui          |
+| « **Aucune source gratuite + programmatique pour les holdings** » | ❌ **infirmé**  |
+| « Voie HTTP simple épuisée pour iShares »                         | ❌ **infirmé**  |
+
+Enseignement de méthode, à appliquer aux prochains cadrages : **un endpoint mort
+n'est pas une source morte**, et un constat de blocage doit être re-mesuré avant
+d'être capitalisé — c'est la deuxième fois dans ce document qu'une conclusion
+négative non re-vérifiée (« 403 depuis Actions », puis « voie épuisée ») a orienté
+la stratégie vers une option payante.

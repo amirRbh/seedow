@@ -140,6 +140,121 @@ export function parseISharesHoldingsCsv(text: string): ParsedHoldings {
   return { asOf, holdings };
 }
 
+/** `20260820` → « 2026-08-20 », sinon null. */
+export function compactDateToIso(raw: unknown): string | null {
+  const s = typeof raw === "number" ? String(raw) : typeof raw === "string" ? raw.trim() : "";
+  const m = s.match(/^(\d{4})(\d{2})(\d{2})$/);
+  if (!m) return null;
+  const [, y, mm, dd] = m;
+  if (Number(mm) < 1 || Number(mm) > 12 || Number(dd) < 1 || Number(dd) > 31) return null;
+  return `${y}-${mm}-${dd}`;
+}
+
+/** « 20/Aug/2026 » → « 2026-08-20 », sinon null. */
+export function dayMonthYearToIso(raw: unknown): string | null {
+  if (typeof raw !== "string") return null;
+  const m = raw.match(/^(\d{1,2})[/\s-]([A-Za-z]{3})[a-z]*[/\s-](\d{4})$/);
+  if (!m) return null;
+  const mm = MONTHS[m[2].toLowerCase()];
+  if (!mm) return null;
+  return `${m[3]}-${mm}-${m[1].padStart(2, "0")}`;
+}
+
+/**
+ * Un « datapoint » de l'API produit iShares : les colonnes du tableau de
+ * composition y arrivent en tableaux parallèles (une entrée par position).
+ * `value` porte la donnée brute (nombre non arrondi) ; `formattedValue` la
+ * version affichée. On préfère `value`, on retombe sur `formattedValue`.
+ */
+interface ProductDataPoint {
+  value?: unknown;
+  formattedValue?: unknown;
+}
+
+function columnOf(dp: ProductDataPoint | undefined): unknown[] | null {
+  if (!dp) return null;
+  if (Array.isArray(dp.value)) return dp.value;
+  if (Array.isArray(dp.formattedValue)) return dp.formattedValue;
+  return null;
+}
+
+function cellText(col: unknown[] | null, i: number): string | null {
+  if (!col) return null;
+  const v = col[i];
+  if (v == null) return null;
+  const s = String(v).trim();
+  return s === "" || s === "-" ? null : s;
+}
+
+function cellNumber(col: unknown[] | null, i: number): number | null {
+  if (!col) return null;
+  const v = col[i];
+  if (typeof v === "number") return Number.isFinite(v) ? v : null;
+  const s = cellText(col, i);
+  if (s == null) return null;
+  const n = Number(s.replace(/[",%\s]/g, ""));
+  return Number.isFinite(n) ? n : null;
+}
+
+function pickHoldingsDataPoints(json: unknown): Record<string, ProductDataPoint> | null {
+  if (typeof json !== "object" || json === null) return null;
+  const components = (json as Record<string, unknown>).componentsByNameMap;
+  if (typeof components !== "object" || components === null) return null;
+  const holdings = (components as Record<string, unknown>).holdings;
+  if (typeof holdings !== "object" || holdings === null) return null;
+  const containers = (holdings as Record<string, unknown>).containersByNameMap;
+  if (typeof containers !== "object" || containers === null) return null;
+  const all = (containers as Record<string, unknown>).all;
+  if (typeof all !== "object" || all === null) return null;
+  const dp = (all as Record<string, unknown>).dataPointsByNameMap;
+  if (typeof dp !== "object" || dp === null) return null;
+  return dp as Record<string, ProductDataPoint>;
+}
+
+/**
+ * Parse la réponse JSON de l'API produit iShares
+ * (`.../product-data/api/v2/get-product-data?component=holdings`) — source
+ * primaire de l'émetteur, mêmes données que le CSV de composition mais en un
+ * simple GET, sans navigateur (cf. `docs/esg-holdings-beta.md`).
+ *
+ * Les colonnes arrivent en tableaux parallèles ; la longueur de référence est
+ * celle de `issueName` (le libellé du titre, seul champ obligatoire). Une
+ * position sans libellé est ignorée ; un champ absent reste `null` — rien n'est
+ * complété ni deviné (§1.3).
+ */
+export function parseISharesProductDataHoldings(json: unknown): ParsedHoldings {
+  const dp = pickHoldingsDataPoints(json);
+  if (!dp) return { asOf: null, holdings: [] };
+
+  const asOfRaw = dp.asOfDate;
+  const asOf =
+    compactDateToIso(asOfRaw?.value) ?? dayMonthYearToIso(asOfRaw?.formattedValue) ?? null;
+
+  const names = columnOf(dp.issueName);
+  if (!names) return { asOf, holdings: [] };
+
+  const tickers = columnOf(dp.ticker);
+  const sectors = columnOf(dp.sectorName);
+  const countries = columnOf(dp.countryOfRisk);
+  const isins = columnOf(dp.isin);
+  const weights = columnOf(dp.holdingPercent);
+
+  const holdings: ParsedHolding[] = [];
+  for (let i = 0; i < names.length; i++) {
+    const name = cellText(names, i);
+    if (!name) continue;
+    holdings.push({
+      ticker: cellText(tickers, i),
+      name,
+      sector: cellText(sectors, i),
+      country: cellText(countries, i),
+      isin: cellText(isins, i),
+      weightPct: cellNumber(weights, i),
+    });
+  }
+  return { asOf, holdings };
+}
+
 /** Ligne prête à insérer dans `fund_holdings`. */
 export interface HoldingRow {
   asset_id: string;
