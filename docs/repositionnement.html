@@ -1,0 +1,1947 @@
+<title>Le mur avant la vision</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#FFFFFF; --paper-2:#F5F5F7; --paper-3:#D2D2D7; --paper-4:#EDEDF0;
+  --ink:#1D1D1F; --ink-2:#64646a;
+  --mint:#146a4a; --mint-soft:#E4F0EA;
+  --alert:#E11D48; --alert-soft:#FCE7EC;
+  --solar:#B7791F; --solar-soft:#FAF0DD;
+  --ice:#0071E3;
+  --rule:#D2D2D7;
+  --shadow:0 1px 2px rgba(29,29,31,.05);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#131315; --paper-2:#1B1B1E; --paper-3:#33333A; --paper-4:#232328;
+    --ink:#F2F2F4; --ink-2:#9C9CA6;
+    --mint:#3FBE86; --mint-soft:#16301F;
+    --alert:#FF6182; --alert-soft:#3A1520;
+    --solar:#D79B3C; --solar-soft:#332512;
+    --ice:#5AA9FF;
+    --rule:#2E2E34;
+    --shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#131315; --paper-2:#1B1B1E; --paper-3:#33333A; --paper-4:#232328;
+  --ink:#F2F2F4; --ink-2:#9C9CA6;
+  --mint:#3FBE86; --mint-soft:#16301F;
+  --alert:#FF6182; --alert-soft:#3A1520;
+  --solar:#D79B3C; --solar-soft:#332512;
+  --ice:#5AA9FF;
+  --rule:#2E2E34;
+  --shadow:0 1px 2px rgba(0,0,0,.4);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:2rem}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:16.5px; line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+  font-feature-settings:"kern" 1;
+}
+
+/* ── masthead ─────────────────────────────────────────────── */
+.mast{border-bottom:1px solid var(--rule); background:var(--paper-2)}
+.mast-in{max-width:1180px;margin:0 auto;padding:56px 32px 44px}
+.eyebrow{
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11px; font-weight:500;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--mint); margin:0 0 18px;
+}
+.mast h1{
+  font-size:clamp(34px,5.2vw,58px); font-weight:800; letter-spacing:-.03em;
+  line-height:1.04; margin:0; max-width:16ch; text-wrap:balance;
+}
+.standfirst{
+  margin:22px 0 0; max-width:60ch; font-size:19px; line-height:1.55;
+  color:var(--ink-2); font-weight:400;
+}
+.standfirst strong{color:var(--ink);font-weight:600}
+.meta{
+  display:flex;flex-wrap:wrap;gap:8px 26px;margin-top:30px;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;
+  letter-spacing:.04em;color:var(--ink-2);
+}
+.meta b{color:var(--ink);font-weight:500}
+
+/* ── shell ────────────────────────────────────────────────── */
+.shell{max-width:1180px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:232px minmax(0,1fr);gap:56px;align-items:start}
+nav.toc{position:sticky;top:0;max-height:100vh;overflow-y:auto;padding:44px 0 60px;display:flex;flex-direction:column;gap:1px;border-right:1px solid var(--rule);margin-right:-24px;padding-right:24px}
+nav.toc a{
+  display:block;text-decoration:none;color:var(--ink-2);font-size:13px;line-height:1.4;
+  padding:5px 8px;border-radius:6px;transition:background .12s,color .12s;
+}
+nav.toc a:hover{background:var(--paper-2);color:var(--ink)}
+nav.toc a:focus-visible{outline:2px solid var(--mint);outline-offset:1px}
+nav.toc a.toc-l1{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--ink);
+  margin-top:20px;padding-top:12px;border-top:1px solid var(--rule);border-radius:0;
+}
+nav.toc a.toc-l1:first-child{margin-top:0;border-top:none;padding-top:0}
+.toc-k{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.88em;color:var(--mint);margin-right:.45em;font-weight:500}
+
+main{padding:44px 0 120px;min-width:0;max-width:74ch}
+
+/* ── prose ────────────────────────────────────────────────── */
+h1,h2,h3,h4{text-wrap:balance;letter-spacing:-.022em;scroll-margin-top:28px}
+main h1{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:13px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--mint);margin:88px 0 26px;padding-bottom:14px;border-bottom:2px solid var(--ink);
+}
+main > h1:first-child{margin-top:8px}
+main h2{font-size:clamp(23px,3vw,30px);font-weight:700;margin:60px 0 18px;line-height:1.18}
+main h3{font-size:19px;font-weight:650;margin:40px 0 12px;line-height:1.3}
+main h4{font-size:16px;font-weight:650;margin:28px 0 8px;color:var(--ink-2)}
+p{margin:0 0 17px;max-width:68ch}
+strong{font-weight:650}
+a{color:var(--ink);text-decoration-color:var(--paper-3);text-underline-offset:3px}
+a:hover{text-decoration-color:var(--mint)}
+a:focus-visible{outline:2px solid var(--mint);outline-offset:2px;border-radius:2px}
+.anchor{
+  float:left;margin-left:-1.15em;width:1.15em;text-decoration:none;color:var(--paper-3);
+  font-family:"IBM Plex Mono",monospace;font-weight:400;opacity:0;transition:opacity .12s;
+}
+h1:hover .anchor,h2:hover .anchor{opacity:1}
+@media (max-width:900px){.anchor{display:none}}
+
+ul,ol{margin:0 0 18px;padding-left:1.3em;max-width:68ch}
+li{margin:0 0 7px}
+li::marker{color:var(--ink-2)}
+hr{border:none;border-top:1px solid var(--rule);margin:56px 0}
+
+blockquote{
+  margin:24px 0;padding:16px 22px;background:var(--paper-2);
+  border-left:3px solid var(--mint);border-radius:0 14px 14px 0;
+}
+blockquote p{margin:0 0 10px}
+blockquote p:last-child{margin:0}
+
+code{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.87em;
+  background:var(--paper-4);padding:.12em .4em;border-radius:5px;
+}
+pre{
+  background:var(--paper-2);border:1px solid var(--rule);border-radius:14px;
+  padding:20px 22px;overflow-x:auto;margin:24px 0;line-height:1.5;
+}
+pre code{background:none;padding:0;font-size:12.6px;white-space:pre}
+
+/* ── tables ───────────────────────────────────────────────── */
+.tw{overflow-x:auto;margin:26px 0;border:1px solid var(--rule);border-radius:14px;background:var(--paper)}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:520px}
+th,td{padding:11px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+thead th{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);
+  background:var(--paper-2);white-space:nowrap;
+}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--paper-2)}
+td{font-variant-numeric:tabular-nums}
+td strong{font-weight:600}
+
+/* ── chips & verdicts (never colour alone) ────────────────── */
+.chip,.v{
+  display:inline-block;font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:10.5px;font-weight:600;letter-spacing:.07em;
+  padding:2px 8px;border-radius:100px;white-space:nowrap;border:1px solid transparent;
+}
+.chip-p0{background:var(--alert-soft);color:var(--alert);border-color:var(--alert)}
+.chip-p1{background:var(--solar-soft);color:var(--solar);border-color:var(--solar)}
+.chip-p2{background:var(--paper-4);color:var(--ink-2);border-color:var(--paper-3)}
+.v-yes{background:var(--mint-soft);color:var(--mint)}
+.v-warn{background:var(--solar-soft);color:var(--solar)}
+.v-no{background:var(--alert-soft);color:var(--alert)}
+
+@media (max-width:1000px){
+  .shell{grid-template-columns:1fr;gap:0;padding:0 22px}
+  nav.toc{position:static;max-height:none;border-right:none;border-bottom:1px solid var(--rule);margin:0;padding:26px 0}
+  .mast-in{padding:40px 22px 34px}
+  main{padding-top:32px}
+  body{font-size:16px}
+}
+</style>
+<header class="mast">
+  <div class="mast-in">
+    <p class="eyebrow">Document de décision · Audit + Gap analysis + Spec</p>
+    <h1>Le mur avant la vision</h1>
+    <p class="standfirst">La vision « Seedow te dit ce que fait ton argent » est bonne. Elle bute sur cinq murs que le brief ne voit pas — et le premier est que <strong>Seedow ne sait pas ce que l'utilisateur possède.</strong> La bonne nouvelle : la moitié difficile du repositionnement est déjà dans le code.</p>
+    <div class="meta">
+      <span>Repo <b>amirRbh/seedow</b></span>
+      <span>Base <b>main @ 057616a</b></span>
+      <span>Audité le <b>2026-08-21</b></span>
+      <span>Code modifié <b>aucun</b></span>
+    </div>
+  </div>
+</header>
+<div class="shell">
+  <nav class="toc" aria-label="Sommaire">
+<a class="toc-l2" href="#s1"><span class="toc-k">0.</span> Verdict en une page</a>
+<a class="toc-l1" href="#s2"><span class="toc-k">PHASE 1</span></a>
+<a class="toc-l2" href="#s3"><span class="toc-k">1.1</span> Architecture réelle</a>
+<a class="toc-l2" href="#s4"><span class="toc-k">1.2</span> Les données</a>
+<a class="toc-l2" href="#s5"><span class="toc-k">1.3</span> Le point de bascule de tout le dossier</a>
+<a class="toc-l1" href="#s6"><span class="toc-k">PHASE 2</span></a>
+<a class="toc-l1" href="#s7"><span class="toc-k">PHASE 3</span></a>
+<a class="toc-l2" href="#s8"><span class="toc-k">A.</span> New Seedow Vision</a>
+<a class="toc-l2" href="#s9"><span class="toc-k">B.</span> New Product Positioning</a>
+<a class="toc-l2" href="#s10"><span class="toc-k">C.</span> Business Model</a>
+<a class="toc-l2" href="#s11"><span class="toc-k">D.</span> Impact Engine</a>
+<a class="toc-l2" href="#s12"><span class="toc-k">E.</span> Méthodologie par classe d&#39;actifs</a>
+<a class="toc-l2" href="#s13"><span class="toc-k">F.</span> User Alignment</a>
+<a class="toc-l2" href="#s14"><span class="toc-k">G.</span> Impact Profile</a>
+<a class="toc-l2" href="#s15"><span class="toc-k">H.</span> What-if engine</a>
+<a class="toc-l2" href="#s16"><span class="toc-k">I.</span> Monthly retention loop</a>
+<a class="toc-l1" href="#s17"><span class="toc-k">PHASE 4</span></a>
+<a class="toc-l2" href="#s18"><span class="toc-k">J.</span> UX architecture</a>
+<a class="toc-l2" href="#s19"><span class="toc-k">K.</span> Data architecture</a>
+<a class="toc-l2" href="#s20"><span class="toc-k">L.</span> Architecture technique</a>
+<a class="toc-l1" href="#s21"><span class="toc-k">PHASE 5</span></a>
+<a class="toc-l2" href="#s22"><span class="toc-k">M.</span> Monétisation</a>
+<a class="toc-l2" href="#s23"><span class="toc-k">N.</span> Unit economics</a>
+<a class="toc-l2" href="#s24"><span class="toc-k">O.</span> Roadmap</a>
+<a class="toc-l2" href="#s25"><span class="toc-k">P.</span> Keep / Change / Remove / Build / Reposition</a>
+<a class="toc-l2" href="#s26"><span class="toc-k">Q.</span> Risques et faiblesses méthodologiques</a>
+<a class="toc-l2" href="#s27"><span class="toc-k">R.</span> Séquence d&#39;implémentation recommandée</a>
+<a class="toc-l2" href="#s28">Annexe</a>
+  </nav>
+  <main>
+<blockquote>
+<p><strong>Statut</strong> : document de décision. Phase 1 (audit) + Phase 2 (gap analysis) sont
+factuelles, ancrées sur le code réel. Phases 3–5 sont des propositions à valider.
+<strong>Aucun code n&#39;a été modifié.</strong></p>
+<p>Convention de lecture, reprise du reste du dossier :
+<strong>FACT</strong> = vérifié dans le repo · <strong>HYP</strong> = hypothèse à valider · <strong>DÉCISION</strong> = à trancher par l&#39;équipe.</p>
+<p><em>Rédigé le 2026-08-21, sur <code>main</code> @ <code>057616a</code>.</em></p>
+</blockquote>
+<hr>
+<h2 id="s1"><a class="anchor" href="#s1" aria-label="Lien vers cette section">§</a>0. Verdict en une page — ce qui compte avant tout le reste</h2>
+<p>Le brief demande de repositionner Seedow de « app ESG » vers
+<strong>« Seedow tells you what your money does — and shows you how to make it do better »</strong>.</p>
+<p><strong>La vision est bonne. Mais elle bute sur cinq murs que le brief ne voit pas.</strong>
+Les voici en clair, du plus grave au moins grave.</p>
+<h3>Mur n°1 — Seedow ne sait pas ce que l&#39;utilisateur possède. (bloquant absolu)</h3>
+<blockquote>
+<p><em>« Where does MY money actually go? »</em> — aujourd&#39;hui, la réponse honnête est : <strong>Seedow ne le sait pas.</strong></p>
+</blockquote>
+<p><strong>FACT.</strong> Un <code>portfolio</code> dans la base n&#39;est pas un portefeuille détenu : c&#39;est le
+<strong>résultat d&#39;un optimiseur</strong> (<code>lib/portfolio/engine.ts</code> → Markowitz sous contraintes),
+généré à partir de 4 questions d&#39;onboarding (<code>values</code>, <code>exclusions</code>, <code>objective</code>,
+<code>amount</code>). Le montant est déclaratif (<code>portfolios.initial_amount</code>). La table <code>deposits</code>
+existe mais n&#39;alimente qu&#39;une valorisation simulée (<code>portfolio_holdings_valued</code>).
+<code>real_investment_intents</code> est un <strong>formulaire de lead</strong>, pas une position.
+<strong>FACT.</strong> Aucune fonction d&#39;import : <code>grep</code> sur <code>csv import | broker | open banking | Trade Republic | DEGIRO | Boursorama | Powens | Plaid</code> ne remonte <strong>rien</strong> dans <code>src/</code>.</p>
+<p>Conséquence : toute la chaîne UNDERSTAND → MEASURE s&#39;applique à un portefeuille que
+<strong>Seedow a lui-même fabriqué</strong>. C&#39;est circulaire. « Voici ce que ton argent finance »
+sur une allocation que l&#39;app a inventée, ce n&#39;est pas de l&#39;intelligence, c&#39;est une
+démo. Et c&#39;est très exactement ce que le §1.3 du CLAUDE.md interdit : la sur-promesse.</p>
+<p><strong>Le P0 du repositionnement n&#39;est ni l&#39;Impact Engine ni le What-if. C&#39;est
+l&#39;ingestion d&#39;un portefeuille réel.</strong> Tant qu&#39;il n&#39;existe pas, tout le reste est
+un simulateur mieux habillé.</p>
+<h3>Mur n°2 — La donnée ESG par instrument n&#39;est toujours pas sourcée. (bloquant produit, déjà documenté)</h3>
+<p><strong>FACT</strong> (<code>docs/esg-sources.md</code>, <code>docs/roadmap.md</code> §3) : le repo a <strong>démontré</strong> qu&#39;aucune
+source ESG/SFDR par ISIN n&#39;est aujourd&#39;hui branchée. Yahoo : probe 0/80. KID émetteurs :
+mécanisme ISIN → URL non résolu (iShares : endpoint vivant mais paramétré côté JS).
+extraETF : bloqué par les ToS. Conclusion écrite du repo : <strong>il faut un flux licencié.</strong></p>
+<p>Le brief §6 demande un Impact Profile à 8 dimensions (Climate, Environment, Social,
+Governance, Controversies, Sustainable activity exposure, User alignment, Transition).
+<strong>Sur ces 8, 3 sont calculables aujourd&#39;hui, 2 exigent le flux licencié, 3 exigent
+une donnée que Seedow n&#39;a jamais eue et ne peut pas dériver</strong> (détail en §G).</p>
+<p>Afficher les 8 quand même = inventer 3 chiffres = violation frontale du non-négociable
+§1.2/§1.3. <strong>Il faut donc soit trancher la décision d&#39;achat de données, soit livrer un
+Impact Profile à 4 dimensions assumées.</strong> Pas de troisième voie honnête.</p>
+<h3>Mur n°3 — « IMPROVE » est une activité réglementée si on le conçoit comme demandé.</h3>
+<p>Le brief §1/§8 demande : <em>« proposer des alternatives »</em>, <em>« Ton portefeuille obtient X,
+voici ce qui pourrait être amélioré »</em>. Présenter à <strong>cet utilisateur</strong>, au vu de <strong>son</strong>
+portefeuille, un instrument financier nommé et présenté comme <em>meilleur pour lui</em>, c&#39;est
+la définition de la <strong>recommandation personnalisée</strong> — donc du conseil en investissement
+(MiFID II art. 4(1)(4) ; en France statut CIF, contrôle AMF/ORIAS). Cela contredit
+directement le non-négociable §1.1 du CLAUDE.md et la règle Ethi §5.2.</p>
+<p>Ce n&#39;est <strong>pas</strong> une raison d&#39;abandonner IMPROVE. C&#39;est une raison de le concevoir
+autrement dès le départ (§H) : <strong>comparateur symétrique piloté par l&#39;utilisateur</strong>, pas
+moteur de suggestion poussée. La nuance est fine mais elle décide du statut réglementaire
+de toute l&#39;entreprise. Se tromper ici est le risque le plus cher du document.</p>
+<h3>Mur n°4 — Le brief se contredit sur le score global.</h3>
+<p>§6 dit : « Nous ne voulons plus réduire Seedow à un simple ESG Score 0–100 »… puis
+propose « <strong>Overall profile : 81</strong> ». C&#39;est le même objet. Un composite de 8 dimensions
+hétérogènes (dont un % d&#39;exposition et un niveau qualitatif) en un entier sur 100
+n&#39;a pas de sens méthodologique et c&#39;est précisément ce qui rend les scores ESG
+critiquables. <strong>Recommandation : supprimer l&#39;Overall profile.</strong> Garder un seul chiffre
+en tête d&#39;écran, mais que ce soit <strong>User Alignment</strong> — le seul dont la définition tienne
+(« à quel point ceci correspond à ce que TU as demandé », §F) et le seul qu&#39;un
+concurrent ne puisse pas copier.</p>
+<h3>Mur n°5 — La surface produit est déjà trop large pour l&#39;équipe.</h3>
+<p><strong>FACT.</strong> 40 entrées dans <code>src/routes</code> (52 fichiers), dont <code>vote</code>, <code>wrapped</code>, <code>communaute</code>, <code>certificat</code>, <code>cours</code>,
+<code>le-fil</code>, <code>reveil</code>, <code>observatoire</code>, <code>comparatif</code>, <code>objectifs</code>, <code>construire</code>, <code>discover</code>.
+~10 600 lignes de routes. Un repositionnement qui <strong>ajoute</strong> Impact Engine + What-if +
+Monthly Loop + import de portefeuille sans <strong>retirer</strong> produira une app incohérente et
+un backlog ingérable. §P liste ce qui doit sauter.</p>
+<h3>Ce qui est excellent et qu&#39;il ne faut surtout pas toucher</h3>
+<p>Le brief §15 craint qu&#39;on casse le travail existant. La crainte est justifiée, mais
+l&#39;audit montre mieux que ça : <strong>la moitié difficile du repositionnement est déjà faite.</strong></p>
+<ul>
+<li><code>data_observations</code> (§K) est un <strong>vrai ledger de lineage au champ</strong> : <code>field</code>, <code>source_id</code>,
+<code>source_url</code>, <code>reference_date</code>, <code>retrieved_at</code>, <code>confidence</code>, <code>method</code>, <code>validation_status</code>.
+Le brief §3.2 demande exactement ça. <strong>C&#39;est déjà en base.</strong> C&#39;est rare et c&#39;est un actif.</li>
+<li><code>lib/esg/sustainability-classification.ts</code> : classification durable <strong>explicitement
+découplée de SFDR</strong>, avec SFDR relégué au rang de simple <em>driver corroborant</em>. Le
+brief §4 exige précisément cette séparation. <strong>Déjà fait, et fait proprement.</strong></li>
+<li><code>lib/portfolio/overlap.ts</code> : overlap look-through <strong>avec <code>coverage</code> retourné</strong> — refuse
+de présenter un chiffre complet quand la couverture est partielle. C&#39;est le brief §5-ETF.</li>
+<li><code>lib/esg/transparency.ts</code> : greenwashing avec bande de tolérance, raisons explicites,
+et robustesse aux données corrompues. Pas un verdict, un drapeau motivé.</li>
+<li><code>lib/portfolio/tradeoffs.functions.ts</code> + <code>consequences.ts</code> + <code>impact/lever.ts</code> : <strong>le
+What-if existe déjà à 60 %</strong>, sur les leviers d&#39;exclusion et de risque.</li>
+</ul>
+<p><strong>Diagnostic global : le brief demande de construire une couche d&#39;intelligence. Le moteur
+est là. Ce qui manque, c&#39;est (a) l&#39;input réel de l&#39;utilisateur, (b) la donnée ESG licenciée,
+(c) le récit produit qui relie les deux.</strong> Ce n&#39;est pas un chantier de refonte. C&#39;est un
+chantier d&#39;<strong>entrée de données + repositionnement narratif</strong>, avec beaucoup moins de code
+à écrire que le brief ne le suppose — et une décision d&#39;achat à prendre.</p>
+<hr>
+<h1 id="s2"><a class="anchor" href="#s2" aria-label="Lien vers cette section">§</a>PHASE 1 — AUDIT DU REPOSITORY (FACT)</h1>
+<h2 id="s3"><a class="anchor" href="#s3" aria-label="Lien vers cette section">§</a>1.1 Architecture réelle</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Couche</th>
+<th>État</th>
+<th>Fichiers de référence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Framework</td>
+<td>TanStack Start v1, React 19, SSR Cloudflare Workers, Vite 7</td>
+<td><code>package.json</code>, <code>vite.config.ts</code></td>
+</tr>
+<tr>
+<td>Backend</td>
+<td>Supabase managé (Lovable Cloud) — 45 tables, RLS partout</td>
+<td><code>supabase/migrations/*</code> (78 migrations)</td>
+</tr>
+<tr>
+<td>Optimiseur</td>
+<td>Markowitz QP (<code>quadprog</code>) + risk-parity ERC + repli equal-weight borné</td>
+<td><code>lib/portfolio/{engine,markowitz,riskparity}.ts</code></td>
+</tr>
+<tr>
+<td>Données de marché</td>
+<td>Yahoo Finance, cron horaire → <code>asset_quotes</code> / <code>asset_prices</code></td>
+<td><code>lib/market/yahoo.server.ts</code>, <code>routes/hooks/</code></td>
+</tr>
+<tr>
+<td>Modèle de risque</td>
+<td>Recalcul μ/σ + covariance, avec palier de qualité (<code>full</code>/<code>partial</code>/<code>insufficient</code>)</td>
+<td><code>lib/market/risk-model.ts</code>, <code>lib/portfolio/data-quality.ts</code></td>
+</tr>
+<tr>
+<td>Data Engine</td>
+<td>Registry de sources priorisées 1–4, runner, qualité, complétude, dédup ISIN, connecteurs</td>
+<td><code>lib/data-engine/*</code> (56 fichiers)</td>
+</tr>
+<tr>
+<td>Catalogue</td>
+<td>Adanos (MIT) → <code>catalog_instruments</code>, 61 692 instruments, refresh hebdo</td>
+<td><code>docs/adanos-catalog.md</code></td>
+</tr>
+<tr>
+<td>ESG</td>
+<td>Classification durable SFDR-indépendante, greenwashing, carbone bottom-up PCAF</td>
+<td><code>lib/esg/*</code></td>
+</tr>
+<tr>
+<td>Impact</td>
+<td>Empreinte carbone honnête + équivalences ADEME sourcées + levier climat</td>
+<td><code>lib/impact/*</code></td>
+</tr>
+<tr>
+<td>IA</td>
+<td>Ethi via Lovable AI Gateway, avec module <code>compliance.ts</code></td>
+<td><code>lib/ethi/*</code>, <code>routes/api.ethi.ts</code></td>
+</tr>
+<tr>
+<td>MCP</td>
+<td>Serveur MCP exposant 4 outils Seedow</td>
+<td><code>lib/mcp/*</code></td>
+</tr>
+<tr>
+<td>Tests</td>
+<td>82 fichiers de test (vitest), concentrés sur <code>lib/</code></td>
+<td><code>src/lib/**/__tests__</code></td>
+</tr>
+</tbody></table></div>
+<h2 id="s4"><a class="anchor" href="#s4" aria-label="Lien vers cette section">§</a>1.2 Les données — ce qui est réellement en base</h2>
+<p><strong>Univers moteur (<code>assets</code>)</strong> — ~112 fonds actifs (<code>is_active=true</code>), enrichis.
+Colonnes ESG : <code>esg_score</code>, <code>env_score</code>, <code>social_score</code>, <code>governance_score</code>,
+<code>msci_esg_quality_score</code>, <code>waci_tco2e_per_musd_sales</code>, <code>implied_temp_rise</code>,
+<code>sfdr_article</code>, <code>carbon_intensity_*</code>, <code>cause_exposure</code> (jsonb), <code>excluded_sectors</code>,
+plus la traçabilité <code>esg_score_source</code> / <code>esg_data_asof</code> / <code>esg_score_fetched_at</code>.</p>
+<p><strong>Catalogue (<code>catalog_instruments</code>)</strong> — 61 692 instruments (16 530 ETF / 45 162 actions),
+ISIN à 98 %. 10 789 ETF promus dans <code>assets</code> mais <strong>tous <code>is_active=false</code></strong> : le gate
+<code>activation.ts</code> refuse d&#39;activer un fonds sans ESG sourcé. <strong>C&#39;est une bonne décision
+d&#39;ingénierie qui expose crûment le mur n°2</strong> : l&#39;univers réellement exposable reste ~112.</p>
+<p><strong>Lineage (<code>data_observations</code>, <code>data_sources</code>, <code>fund_documents</code>, <code>ingestion_jobs</code>,
+<code>ingestion_errors</code>)</strong> — schéma complet et RLS. Le brief §3.2 (source / date de collecte /
+date d&#39;effet / méthodologie / confiance / fraîcheur) est <strong>intégralement couvert par le
+schéma</strong>. Reste à en propager l&#39;usage de bout en bout jusqu&#39;à l&#39;UI.</p>
+<p><strong>Look-through (<code>fund_holdings</code>, <code>securities</code>)</strong> — historisé par <code>as_of</code>, avec vue
+<code>fund_latest_holdings</code>. Alimenté par le connecteur iShares. Couverture réelle : partielle.</p>
+<p><strong>Carbone (<code>carbon_estimates</code>, <code>issuer_emissions</code>, <code>sector_carbon_intensity</code>,
+<code>carbon_equivalences</code>)</strong> — moteur d&#39;estimation bottom-up holdings → émetteur, avec
+<code>sourced_coverage</code> distinct de <code>coverage</code> (mesuré vs estimé). Méthodologiquement solide.</p>
+<p><strong>Utilisateur</strong> — <code>portfolios</code> (préférences + poids + métriques), <code>financial_goals</code>,
+<code>watchlists</code>, <code>alerts</code>, <code>asset_score_history</code>, <code>decision_events</code>, <code>tradeoff_decisions</code>,
+<code>preference_events</code>, <code>app_events</code>, <code>notification_preferences</code>, <code>resolution_votes</code>.</p>
+<h2 id="s5"><a class="anchor" href="#s5" aria-label="Lien vers cette section">§</a>1.3 Le point de bascule de tout le dossier</h2>
+<p>Les préférences utilisateur (<code>causes</code>, <code>cause_intensity</code>, <code>exclusions</code>, <code>risk_target</code>,
+<code>horizon_years</code>) <strong>vivent sur la table <code>portfolios</code>, pas sur <code>profiles</code></strong>.
+<code>profiles</code> ne contient que de l&#39;affichage (<code>theme</code>, <code>font_scale</code>, <code>view_mode</code>, <code>display_name</code>).</p>
+<p>C&#39;est cohérent avec le produit actuel (« un portefeuille = un jeu de convictions ») et
+<strong>structurellement incompatible avec la vision cible</strong>, où <em>User Alignment</em> doit être une
+propriété de la <strong>personne</strong>, applicable à n&#39;importe quel portefeuille, actif ou ETF
+qu&#39;elle regarde. C&#39;est le premier changement de schéma à faire (§K).</p>
+<hr>
+<h1 id="s6"><a class="anchor" href="#s6" aria-label="Lien vers cette section">§</a>PHASE 2 — GAP ANALYSIS</h1>
+<p>Priorité : <span class="chip chip-p0">P0</span> (indispensable) · <span class="chip chip-p1">P1</span> (important) · <span class="chip chip-p2">P2</span> (plus tard).
+« Effort » : S ≤ 3 j · M ≤ 2 sem · L ≤ 1 mois · XL &gt; 1 mois ou décision externe.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Current (FACT)</th>
+<th>Target</th>
+<th>Gap</th>
+<th>Prio</th>
+<th>Effort</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Portefeuille réel</strong></td>
+<td>Généré par l&#39;optimiseur ; montant déclaratif ; aucun import</td>
+<td>L&#39;utilisateur déclare/importe ce qu&#39;il possède déjà</td>
+<td><strong>Tout.</strong> Table <code>user_holdings</code>, saisie manuelle, import CSV, plus tard agrégation</td>
+<td><span class="chip chip-p0">P0</span></td>
+<td>M (manuel+CSV) / XL (agrégation)</td>
+</tr>
+<tr>
+<td><strong>Préférences = propriété de la personne</strong></td>
+<td>Sur <code>portfolios</code> uniquement</td>
+<td>Sur <code>profiles</code>, versionnées</td>
+<td>Migration + rétrocompat</td>
+<td><span class="chip chip-p0">P0</span></td>
+<td>S</td>
+</tr>
+<tr>
+<td><strong>User Alignment</strong></td>
+<td>N&#39;existe pas ; les préférences ne servent qu&#39;à <em>générer</em></td>
+<td>Score explicite « ce portefeuille vs ce que TU as demandé », explicable ligne à ligne</td>
+<td>Module <code>lib/alignment/</code> complet</td>
+<td><span class="chip chip-p0">P0</span></td>
+<td>M</td>
+</tr>
+<tr>
+<td><strong>Look-through ETF</strong></td>
+<td><code>overlap.ts</code> + <code>holdings-adapter.ts</code> (moteur prêt), couverture partielle</td>
+<td>« Cet ETF contient X entreprises, ton exposition à Y est de Z % »</td>
+<td>Couverture holdings + <strong>agrégation d&#39;exposition par activité</strong> (n&#39;existe pas)</td>
+<td><span class="chip chip-p0">P0</span></td>
+<td>M + XL (données)</td>
+</tr>
+<tr>
+<td><strong>Exposition par activité économique</strong></td>
+<td><code>cause_exposure</code> (jsonb déclaratif, 6 thèmes) au niveau <strong>fonds</strong></td>
+<td>Exposition dérivée <strong>bottom-up des holdings</strong> (secteur/activité/revenus)</td>
+<td>La brique manque entièrement ; <code>securities.sector</code>/<code>industry</code> existe mais peu peuplée</td>
+<td><span class="chip chip-p0">P0</span></td>
+<td>L</td>
+</tr>
+<tr>
+<td><strong>Exposition fossile</strong></td>
+<td>Approximée par <code>excluded_sectors</code> (déclaratif du fonds)</td>
+<td>% réel du portefeuille exposé aux activités fossiles, look-through</td>
+<td>Manque : classification d&#39;activité par titre</td>
+<td><span class="chip chip-p0">P0</span></td>
+<td>L</td>
+</tr>
+<tr>
+<td><strong>Source ESG par ISIN</strong></td>
+<td>Aucune branchée (probes documentés, gate actif)</td>
+<td>Flux licencié EET/SFDR ou résolveur KID</td>
+<td><strong>Décision d&#39;achat non prise.</strong> Bloque 6 chantiers</td>
+<td><span class="chip chip-p0">P0</span></td>
+<td>XL (décision)</td>
+</tr>
+<tr>
+<td><strong>Controverses</strong></td>
+<td>N&#39;existe pas (aucune table, aucun champ)</td>
+<td>Niveau + liste sourcée</td>
+<td>Tout. Donnée exclusivement licenciée (Sustainalytics/RepRisk/MSCI)</td>
+<td><span class="chip chip-p1">P1</span></td>
+<td>XL (achat)</td>
+</tr>
+<tr>
+<td><strong>Taxonomie UE / activité durable %</strong></td>
+<td>N&#39;existe pas</td>
+<td>% d&#39;alignement taxonomie</td>
+<td>Tout. Donnée EET (champs SFDR/PAI) — vient avec le flux licencié</td>
+<td><span class="chip chip-p1">P1</span></td>
+<td>XL (achat)</td>
+</tr>
+<tr>
+<td><strong>Impact Profile multi-dimensions</strong></td>
+<td>1 score (<code>esg_score</code> 0–100) + score Seedow v1.0 (3 piliers) + tier durabilité</td>
+<td>4 dimensions défendables + alignement (§G)</td>
+<td>Restructuration UI + module de composition</td>
+<td><span class="chip chip-p0">P0</span></td>
+<td>M</td>
+</tr>
+<tr>
+<td><strong>What-if</strong></td>
+<td><code>tradeoffs.functions.ts</code> (leviers exclusion/risque), <code>lever.ts</code> (curseur climat), <code>consequences.ts</code> (édition d&#39;allocation)</td>
+<td>Comparaison A→B avec before/after et arbitrage explicite</td>
+<td><strong>Repositionner + généraliser</strong> à une substitution d&#39;actif ; ≠ construire</td>
+<td><span class="chip chip-p1">P1</span></td>
+<td>M</td>
+</tr>
+<tr>
+<td><strong>Comparaison 2 actifs / 2 ETF</strong></td>
+<td><code>comparatif.tsx</code> = portefeuille vs MSCI World uniquement</td>
+<td>Comparateur symétrique actif↔actif, ETF↔ETF</td>
+<td>Écran + server fn ; le calcul existe</td>
+<td><span class="chip chip-p1">P1</span></td>
+<td>S-M</td>
+</tr>
+<tr>
+<td><strong>Monthly Impact / « Your money changed »</strong></td>
+<td><code>asset_score_history</code>, <code>alerts</code>, <code>esg-alert.ts</code>, <code>notifications/digest.ts</code>, <code>le-fil</code>, <code>reveil</code>, <code>wrapped</code></td>
+<td>Snapshot mensuel + explication causale des deltas</td>
+<td>Manque <code>portfolio_impact_snapshots</code> + <strong>attribution de cause</strong> (le point dur)</td>
+<td><span class="chip chip-p1">P1</span></td>
+<td>M</td>
+</tr>
+<tr>
+<td><strong>Attribution de cause d&#39;un delta</strong></td>
+<td>N&#39;existe pas</td>
+<td>Distinguer : donnée changée / exposition changée / méthodologie changée / activité réelle changée</td>
+<td>Brique neuve, mais <strong>le lineage existant la rend possible</strong> — c&#39;est notre avantage</td>
+<td><span class="chip chip-p1">P1</span></td>
+<td>M</td>
+</tr>
+<tr>
+<td><strong>Obligations (méthodo par classe)</strong></td>
+<td>Classes <code>green_bond</code>/<code>social_bond</code>/<code>sov_bond</code>/<code>corporate_bond</code> existent dans l&#39;enum ; <strong>traitées comme des actions par le scoring</strong></td>
+<td>Méthodo distincte par type (use of proceeds, KPI, émetteur souverain)</td>
+<td>3 086 Fixed Income non classifiés (roadmap §2.3) ; aucune logique dédiée</td>
+<td><span class="chip chip-p1">P1</span></td>
+<td>L</td>
+</tr>
+<tr>
+<td><strong>Actions individuelles</strong></td>
+<td><code>catalog_instruments</code> en contient 45 162 ; <strong>aucune n&#39;est investissable ni notée</strong></td>
+<td>Analyse par entreprise (activité, revenus, émissions, controverses)</td>
+<td>Univers entier non adressé</td>
+<td><span class="chip chip-p2">P2</span></td>
+<td>XL</td>
+</tr>
+<tr>
+<td><strong>Monétisation</strong></td>
+<td>0 € ; <code>tarifs.future</code> = placeholder ; aucun code de paiement</td>
+<td>Free / Premium / Invest / B2B</td>
+<td>Tout : plans, paywall, facturation, <code>entitlements</code></td>
+<td><span class="chip chip-p1">P1</span></td>
+<td>M</td>
+</tr>
+<tr>
+<td><strong>Investir réellement</strong></td>
+<td><code>real_investment_intents</code> = formulaire de lead</td>
+<td>Passerelle courtier partenaire</td>
+<td>Tout : partenariat + parcours + statut réglementaire</td>
+<td><span class="chip chip-p2">P2</span></td>
+<td>XL</td>
+</tr>
+<tr>
+<td><strong>Explainability</strong></td>
+<td>Excellente dans <code>lib/</code> (drivers, raisons, coverage), <strong>inégalement remontée à l&#39;UI</strong></td>
+<td>Chaque chiffre cliquable → preuve</td>
+<td>Composant transverse « Pourquoi ? »</td>
+<td><span class="chip chip-p1">P1</span></td>
+<td>M</td>
+</tr>
+<tr>
+<td><strong>Surface produit</strong></td>
+<td>40 routes, features de rétention concurrentes</td>
+<td>IA resserrée (§J)</td>
+<td>Suppression/fusion de 6–8 routes</td>
+<td><span class="chip chip-p1">P1</span></td>
+<td>M</td>
+</tr>
+</tbody></table></div>
+<hr>
+<h1 id="s7"><a class="anchor" href="#s7" aria-label="Lien vers cette section">§</a>PHASE 3 — PRODUCT SPEC</h1>
+<h2 id="s8"><a class="anchor" href="#s8" aria-label="Lien vers cette section">§</a>A. New Seedow Vision</h2>
+<blockquote>
+<p><strong>Seedow te dit ce que fait ton argent — et te montre comment lui faire faire mieux.</strong></p>
+</blockquote>
+<p>Formulation produit retenue, en français, dans le ton de la marque :</p>
+<blockquote>
+<p><strong>« Ton argent fait déjà quelque chose. Sache quoi. »</strong></p>
+</blockquote>
+<p>C&#39;est la déclinaison directe de la signature de marque (« Ce n&#39;est pas une fatalité.
+C&#39;est un choix. Le tien aussi. ») : l&#39;argent agit <strong>déjà</strong>, avec ou sans l&#39;utilisateur.
+Seedow ne propose pas de « faire le bien », il <strong>lève l&#39;aveuglement</strong>. Ce cadrage évite
+le piège moralisateur du §14 du brief et il est vrai même pour un Livret A.</p>
+<p><strong>Les 4 temps, avec ce qu&#39;ils exigent réellement :</strong></p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Temps</th>
+<th>Promesse</th>
+<th>Pré-requis dur</th>
+<th>Statut</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>UNDERSTAND</strong></td>
+<td>« Où va mon argent ? »</td>
+<td>Connaître ce que l&#39;utilisateur possède + look-through</td>
+<td><span class="v v-no">NON</span> bloqué (mur n°1)</td>
+</tr>
+<tr>
+<td><strong>MEASURE</strong></td>
+<td>« Quel est le profil de mon argent ? »</td>
+<td>Donnée ESG par instrument</td>
+<td><span class="v v-warn">NUANCE</span> partiel (mur n°2)</td>
+</tr>
+<tr>
+<td><strong>IMPROVE</strong></td>
+<td>« Comment faire mieux ? »</td>
+<td>Cadre non-conseil (§H)</td>
+<td><span class="v v-warn">NUANCE</span> à re-concevoir (mur n°3)</td>
+</tr>
+<tr>
+<td><strong>INVEST</strong></td>
+<td>« Passe à l&#39;acte »</td>
+<td>Courtier partenaire</td>
+<td><span class="v v-no">NON</span> non commencé</td>
+</tr>
+<tr>
+<td><strong>MONITOR</strong></td>
+<td>« Ton argent a changé »</td>
+<td>Snapshots + attribution</td>
+<td><span class="v v-warn">NUANCE</span> briques éparses</td>
+</tr>
+</tbody></table></div>
+<p><strong>Correction de fond apportée à la vision du brief.</strong> Le brief place INVEST en bout de
+chaîne, « à terme ». C&#39;est juste sur le plan réglementaire, mais dangereux sur le plan
+business : <strong>sans INVEST, Seedow n&#39;a aucune boucle de valeur mesurable</strong> — on ne sait
+jamais si l&#39;utilisateur a agi, donc jamais si le produit sert à quelque chose. Il faut
+donc, dès la V1, une <strong>preuve d&#39;action même sans exécution</strong> : « j&#39;ai fait le changement »
+déclaratif, qui met à jour le portefeuille réel de l&#39;utilisateur. C&#39;est gratuit à
+construire, non réglementé, et ça transforme MONITOR en boucle fermée.</p>
+<h2 id="s9"><a class="anchor" href="#s9" aria-label="Lien vers cette section">§</a>B. New Product Positioning</h2>
+<p><strong>Ce que Seedow devient :</strong> la <strong>couche de lecture indépendante de l&#39;argent des
+particuliers européens</strong>. On lit ce que l&#39;utilisateur possède <strong>déjà, ailleurs</strong>, on
+en explique le contenu réel, et on lui donne les moyens de comparer.</p>
+<p><strong>La phrase de positionnement interne (pas marketing) :</strong></p>
+<blockquote>
+<p>Seedow est le seul acteur qui peut dire ce que vaut un fonds <strong>sans avoir intérêt à
+ce que tu l&#39;achètes.</strong></p>
+</blockquote>
+<p>C&#39;est le seul angle qu&#39;aucun incumbent ne peut occuper : une banque, un courtier, un
+robo-advisor et un émetteur d&#39;ETF ont tous un produit à placer. C&#39;est aussi ce que dit
+déjà le <code>MOAT_BLUEPRINT.md</code> (« l&#39;Autorité ») — le repositionnement ne le contredit pas,
+il le <strong>généralise du fonds vers le portefeuille</strong>.</p>
+<p><strong>Ce que Seedow refuse d&#39;être</strong> (repris du brief, validé) : banque, courtier, screener
+ETF, base ESG, robo-advisor, app de scoring. <strong>À ajouter à la liste : « app de finance
+personnelle »</strong> — pas d&#39;agrégation de comptes courants, pas de catégorisation de
+dépenses. Le périmètre est l&#39;<strong>épargne investie</strong>, et rien d&#39;autre.</p>
+<p><strong>Cible.</strong> Le brief dit 20–35 ans. Les personas du CLAUDE.md (Léa 27, Karim 34, Inès 31,
+Thomas 40) sont plus larges et plus justes. <strong>Point de tension à trancher (DÉCISION) :</strong>
+un utilisateur de 20–27 ans a rarement un portefeuille à analyser — donc le mur n°1 le
+laisse dehors. <strong>Le cœur de cible réel du repositionnement est Karim/Thomas (32–45 ans,
+épargne déjà investie, méfiance envers l&#39;intermédiaire).</strong> Léa reste servie par
+l&#39;onboarding/simulation existant, mais elle n&#39;est plus le centre de gravité. Assumer ce
+glissement explicitement, sinon le produit servira mal les deux.</p>
+<h2 id="s10"><a class="anchor" href="#s10" aria-label="Lien vers cette section">§</a>C. Business Model — voir §M (fusionné pour éviter le doublon).</h2>
+<h2 id="s11"><a class="anchor" href="#s11" aria-label="Lien vers cette section">§</a>D. Impact Engine — architecture</h2>
+<p>Le point clé du brief §4 est juste et doit devenir une <strong>contrainte de type</strong>, pas une
+intention : <em>ESG Risk</em>, <em>Impact</em>, <em>User Alignment</em>, <em>SFDR</em>, <em>Activity exposure</em> sont des
+objets différents et ne doivent jamais transiter dans la même variable.</p>
+<pre><code>                       ┌──────────────────────────────────────────┐
+   USER                │  UserPreferenceProfile (profiles)        │
+   ─────────────────▶  │  causes · intensités · exclusions        │
+                       │  risque · horizon · versionné            │
+                       └──────────────────┬───────────────────────┘
+                                          │
+   POSITIONS RÉELLES                      │
+   ─────────────────▶  user_holdings ─────┤
+   (saisie / CSV / agrégation)            │
+                                          ▼
+   INSTRUMENTS         ┌──────────────────────────────────────────┐
+   ─────────────────▶  │            IMPACT ENGINE                 │
+   assets              │                                          │
+   fund_holdings ────▶ │  1. Résolution (ISIN → instrument)       │
+   securities          │  2. Look-through (fonds → titres)        │
+   data_observations   │  3. Agrégation pondérée                  │
+   carbon_estimates    │  4. Couverture &amp; confiance (jamais       │
+                       │     d&#39;extrapolation silencieuse)         │
+                       │  5. Composition en dimensions            │
+                       └──────────────────┬───────────────────────┘
+                                          ▼
+        ┌──────────────┬──────────────────┬──────────────────┬──────────────┐
+        ▼              ▼                  ▼                  ▼              ▼
+  ExposureProfile  ClimateProfile   ESGRiskProfile   RegulatoryFacts  AlignmentProfile
+  (ce que ça       (carbone, ITR,   (score tiers,    (SFDR, PAI —     (vs CE
+   finance)         vs benchmark)    controverses)    jamais un score)  utilisateur)
+        └──────────────┴──────────────────┴──────────────────┴──────────────┘
+                                          ▼
+                          Explication + preuve (data_observations)
+                                          ▼
+                              Comparaison / What-if / Monitoring
+</code></pre>
+<p><strong>Cinq règles d&#39;architecture non négociables :</strong></p>
+<ol>
+<li><strong>Aucune dimension ne se compose avec une autre en un chiffre unique</strong>, sauf
+<code>AlignmentProfile</code> (qui est par construction un composite pondéré par l&#39;utilisateur).</li>
+<li><strong>Toute sortie porte sa <code>coverage</code> (0..1) et sa <code>confidence</code>.</strong> C&#39;est déjà la
+convention de <code>overlap.ts</code> et <code>carbon.ts</code> — la généraliser à tout le moteur.</li>
+<li><strong><code>RegulatoryFacts</code> est un conteneur de faits, jamais un score.</strong> L&#39;article SFDR y est
+affiché comme une déclaration de l&#39;émetteur, avec sa date. Le brief §4 est catégorique
+là-dessus et il a raison : Article 9 ≠ meilleur. Le code respecte déjà ce principe
+(<code>sustainability-classification.ts</code>) ; il faut que <strong>l&#39;UI le respecte aussi</strong>.</li>
+<li><strong>Une dimension sans donnée ne s&#39;affiche pas « 0 » ni « n/a » discret : elle s&#39;affiche
+comme un trou explicite, avec ce qu&#39;il faudrait pour le combler.</strong> C&#39;est un
+différenciateur de confiance, pas une faiblesse à cacher.</li>
+<li><strong>Fonctions pures dans <code>lib/</code>, I/O au bord.</strong> Convention déjà en place, à tenir.</li>
+</ol>
+<h2 id="s12"><a class="anchor" href="#s12" aria-label="Lien vers cette section">§</a>E. Méthodologie par classe d&#39;actifs</h2>
+<p>Le brief §5 a raison sur le fond : traiter un ETF comme une entreprise est faux.
+Voici ce qui est <strong>faisable aujourd&#39;hui</strong> vs ce qui exige une donnée absente.</p>
+<h3>E.1 ETF / fonds (le cœur — 100 % de l&#39;univers actif actuel)</h3>
+<pre><code>ETF ──▶ fund_holdings (as_of le plus récent)
+     ──▶ securities (ISIN → secteur / activité / pays)
+     ──▶ pondération par poids
+     ──▶ ExposureProfile + ClimateProfile, chacun avec coverage
+</code></pre>
+<p><strong>Faisable maintenant :</strong> overlap look-through (<code>overlap.ts</code> <span class="v v-yes">OUI</span>), carbone bottom-up
+(<code>carbon-engine.ts</code> <span class="v v-yes">OUI</span>), nombre de titres, top holdings, concentration réelle.
+<strong>Manque :</strong> la table de correspondance <strong>titre → activité économique</strong>. C&#39;est le chaînon
+qui permet la phrase cible du brief (« ton exposition indirecte à telle activité est de
+Y % »). <code>securities.sector</code>/<code>industry</code> existe mais est peu peuplée et trop grossière
+(un secteur GICS « Energy » ne distingue pas pétrole amont et renouvelable).</p>
+<p><strong>Recommandation (DÉCISION) :</strong> ne pas viser une classification d&#39;activité universelle.
+Viser <strong>une seule classification, binaire et défendable, sur les activités qui décident
+réellement de la conviction</strong> : fossile amont, charbon, armement controversé, tabac,
+énergies renouvelables. 5 axes, sourcés, plutôt que 20 approximatifs. C&#39;est ce que
+l&#39;utilisateur demande réellement, et c&#39;est atteignable.</p>
+<p><strong>Point de fraîcheur à assumer :</strong> les compositions d&#39;ETF sont publiées avec 1 à 3 mois
+de retard. Toute exposition look-through doit afficher son <code>as_of</code>. Ne jamais présenter
+une exposition comme « actuelle ».</p>
+<h3>E.2 Obligations</h3>
+<p>Le brief §5 demande la distinction. Elle est <strong>méthodologiquement juste et
+opérationnellement hors de portée à court terme</strong>. Verdict par type :</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Analyse cible</th>
+<th>Donnée requise</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Corporate bond</strong></td>
+<td>Exposition à l&#39;émetteur (mêmes signaux que l&#39;action)</td>
+<td>Émetteur → ESG. Le lien existe via <code>securities</code></td>
+<td><span class="chip chip-p1">P1</span>, faisable</td>
+</tr>
+<tr>
+<td><strong>Green bond</strong></td>
+<td><em>Use of proceeds</em> : à quoi sert l&#39;argent levé</td>
+<td>Documentation d&#39;émission, non structurée, pas de source gratuite par ISIN</td>
+<td><span class="chip chip-p2">P2</span>, <strong>XL</strong></td>
+</tr>
+<tr>
+<td><strong>Sustainability-linked bond</strong></td>
+<td>KPI / SPT + pénalité de coupon</td>
+<td>Idem, encore plus rare</td>
+<td><span class="chip chip-p2">P2</span> — <strong>recommandation : ne pas le faire.</strong> Volume marginal en portefeuille retail, coût de données disproportionné</td>
+</tr>
+<tr>
+<td><strong>Sovereign bond</strong></td>
+<td>Signaux pays (émissions, trajectoire, gouvernance, droits)</td>
+<td>Données publiques (Banque mondiale, UNFCCC, indices de gouvernance) — <strong>gratuites et exploitables</strong></td>
+<td><span class="chip chip-p1">P1</span>, faisable et sous-estimé par le brief</td>
+</tr>
+</tbody></table></div>
+<p><strong>Franchise nécessaire :</strong> le repo classe déjà <code>green_bond</code> / <code>social_bond</code> comme classes
+d&#39;actifs, mais <strong>ne les analyse pas différemment</strong>. Un green bond hérite aujourd&#39;hui du
+scoring générique. <strong>C&#39;est une faiblesse méthodologique réelle qu&#39;il faut soit corriger,
+soit cesser d&#39;afficher comme une distinction.</strong> Afficher « green bond » sans analyser
+le use of proceeds, c&#39;est relayer l&#39;étiquette de l&#39;émetteur — exactement le
+greenwashing que l&#39;<code>Observatoire</code> dénonce. <strong>Cohérence exigée.</strong></p>
+<h3>E.3 Actions individuelles</h3>
+<p>45 162 en catalogue, 0 investissable. Le brief §5 demande une analyse complète
+(activité, revenus, émissions, climat, transition, controverses, social, gouvernance).
+<strong>Verdict : ne pas l&#39;ouvrir maintenant.</strong> Raisons : (a) coût de données par entreprise
+supérieur à celui des fonds, (b) l&#39;action individuelle est un produit à risque plus élevé
+qui pousserait Seedow vers un terrain de conseil, (c) le look-through fonds sert déjà à
+répondre « quelles entreprises je finance ». <strong>L&#39;action entre par la porte des holdings,
+pas par la porte du catalogue.</strong></p>
+<h3>E.4 Cash / fonds monétaire</h3>
+<p>Pertinent et bon marché : l&#39;utilisateur qui a 8 000 € sur un Livret A finance quelque
+chose (crédits d&#39;État et logement social via la Caisse des Dépôts — <strong>information
+publique et sourçable</strong>). C&#39;est le meilleur point d&#39;entrée UNDERSTAND pour Léa/Karim,
+qui n&#39;ont souvent que ça. <strong><span class="chip chip-p1">P1</span>, effort S, valeur narrative très élevée.</strong></p>
+<h2 id="s13"><a class="anchor" href="#s13" aria-label="Lien vers cette section">§</a>F. User Alignment — méthodologie</h2>
+<p><strong>La seule métrique vraiment propriétaire du dossier.</strong> Un score ESG se copie ; un
+alignement dépend de préférences qu&#39;un concurrent n&#39;a pas.</p>
+<h3>Définition</h3>
+<blockquote>
+<p><strong>User Alignment = dans quelle mesure ce portefeuille respecte les contraintes et
+priorités que CET utilisateur a exprimées.</strong></p>
+</blockquote>
+<p>Ce n&#39;est <strong>ni</strong> une note de qualité, <strong>ni</strong> une mesure d&#39;impact, <strong>ni</strong> un score ESG.
+Deux utilisateurs regardant le même ETF doivent voir deux alignements différents — sinon
+la métrique ne sert à rien.</p>
+<h3>Composition proposée</h3>
+<p>Trois blocs, aux statuts logiques distincts :</p>
+<p><strong>1. Contraintes dures (booléen, non négociable, non pondéré)</strong>
+Les <code>exclusions</code> de l&#39;utilisateur. Une violation n&#39;abaisse pas le score : elle
+<strong>produit un drapeau nommé</strong>. « Ton portefeuille contient 2,1 % d&#39;exposition fossile
+alors que tu as exclu les fossiles » est infiniment plus utile que « -8 points ».</p>
+<blockquote>
+<p><strong>Décision méthodologique clé : ne jamais noyer une violation d&#39;exclusion dans un score.</strong></p>
+</blockquote>
+<p><strong>2. Priorités déclarées (pondéré, 0..100)</strong>
+Les <code>causes</code> + <code>cause_intensity</code>. Mesure : exposition réelle du portefeuille aux thèmes
+priorisés, rapportée à ce que l&#39;utilisateur a demandé. Réutilise <code>themeBreakdown.ts</code> et
+<code>causeToPillarWeights()</code> qui existent déjà.</p>
+<p><strong>3. Contraintes de forme (pondéré)</strong>
+<code>risk_target</code> vs volatilité réelle, <code>horizon_years</code> vs profil, et — ajout recommandé —
+frais (TER) et diversification look-through réelle. Ce bloc évite l&#39;écueil d&#39;un
+alignement purement moral qui validerait un portefeuille aligné mais absurde
+financièrement.</p>
+<h3>Règles</h3>
+<ul>
+<li><strong>Renormalisation sur les blocs mesurables</strong>, jamais de valeur neutre inventée pour un
+bloc manquant (règle déjà appliquée dans <code>computeSeedowScore</code> — la réutiliser).</li>
+<li><strong><code>coverage</code> obligatoire.</strong> Un alignement à 92 % calculé sur 40 % du portefeuille
+s&#39;affiche « 92 % · sur 40 % de ton portefeuille mesuré ».</li>
+<li><strong>Décomposable ligne à ligne.</strong> « Cette ligne tire ton alignement vers le bas parce
+que X » doit être une propriété du calcul, pas un texte reconstruit après coup.</li>
+<li><strong>Versionné</strong> (<code>ALIGNMENT_VERSION</code>), comme <code>SEEDOW_SCORE_VERSION</code> et
+<code>METHODOLOGY_VERSION</code> le sont déjà. Un utilisateur doit pouvoir comprendre qu&#39;un
+changement de score vient d&#39;un changement de méthode — c&#39;est le pré-requis de §I.</li>
+</ul>
+<h3>Faiblesse à assumer publiquement</h3>
+<p>L&#39;alignement mesure la <strong>conformité aux préférences déclarées</strong>, pas l&#39;impact réel dans
+le monde. Un portefeuille aligné à 95 % ne réduit aucune émission par lui-même
+(l&#39;achat sur le marché secondaire ne finance pas directement l&#39;entreprise). <strong>Cette limite
+doit être écrite sur <code>/methodologie</code> et dans l&#39;UI, pas enterrée.</strong> C&#39;est précisément le
+genre d&#39;honnêteté qui construit l&#39;Autorité du <code>MOAT_BLUEPRINT</code>.</p>
+<h2 id="s14"><a class="anchor" href="#s14" aria-label="Lien vers cette section">§</a>G. Impact Profile — audit métrique par métrique</h2>
+<p>Le brief §6 demande explicitement l&#39;audit. Voici le verdict, sans complaisance.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Métrique proposée</th>
+<th>Défendable ?</th>
+<th>Donnée disponible ?</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Overall profile (81)</strong></td>
+<td><span class="v v-no">NON</span> Non</td>
+<td>—</td>
+<td><strong>SUPPRIMER.</strong> Composite de dimensions non commensurables ; contredit le brief §6 lui-même. Remplacé en tête d&#39;écran par User Alignment</td>
+</tr>
+<tr>
+<td><strong>Climate (82)</strong></td>
+<td><span class="v v-yes">OUI</span> Oui</td>
+<td><span class="v v-yes">OUI</span> WACI + ITR + carbone bottom-up, avec coverage</td>
+<td><strong>GARDER</strong>, calculé. Le mieux outillé du lot</td>
+</tr>
+<tr>
+<td><strong>Environment (79)</strong></td>
+<td><span class="v v-warn">NUANCE</span> Redondant</td>
+<td><code>env_score</code> existe mais recouvre le climat à 80 %</td>
+<td><strong>FUSIONNER dans Climate.</strong> Deux chiffres proches côte à côte détruisent la lisibilité sans rien apporter</td>
+</tr>
+<tr>
+<td><strong>Social (76)</strong></td>
+<td><span class="v v-warn">NUANCE</span> Faible</td>
+<td><code>social_score</code> = pilier d&#39;un score tiers, non décomposable</td>
+<td><strong>AFFICHER COMME DONNÉE EXTERNE</strong>, avec le nom du fournisseur et sa date. Ne pas le recalculer, ne pas prétendre que c&#39;est du Seedow</td>
+</tr>
+<tr>
+<td><strong>Governance (81)</strong></td>
+<td><span class="v v-warn">NUANCE</span> Faible</td>
+<td>idem</td>
+<td><strong>Idem Social.</strong> Regrouper Social+Governance en un bloc « Notation externe » assumé comme relayé</td>
+</tr>
+<tr>
+<td><strong>Controversies (Low)</strong></td>
+<td><span class="v v-yes">OUI</span> Très pertinent</td>
+<td><span class="v v-no">NON</span> <strong>Aucune donnée. Aucune table. Aucune source gratuite</strong></td>
+<td><strong>NE PAS AFFICHER</strong> tant que non licencié. C&#39;est la métrique la plus demandée par Thomas (persona) et la plus chère. Candidat n°1 d&#39;un achat de données</td>
+</tr>
+<tr>
+<td><strong>Sustainable activity exposure (18 %)</strong></td>
+<td><span class="v v-yes">OUI</span> Oui</td>
+<td><span class="v v-no">NON</span> Taxonomie UE : champs EET, non disponibles</td>
+<td><strong>REPORTER.</strong> Arrive avec le flux licencié</td>
+</tr>
+<tr>
+<td><strong>User alignment (92 %)</strong></td>
+<td><span class="v v-yes">OUI ++</span> Oui, le meilleur</td>
+<td><span class="v v-yes">OUI</span> Préférences + expositions déjà en base</td>
+<td><strong>CONSTRUIRE — priorité n°1 (§F)</strong></td>
+</tr>
+<tr>
+<td><strong>Transition / Climate alignment</strong></td>
+<td><span class="v v-warn">NUANCE</span></td>
+<td>ITR partiellement présent (<code>implied_temp_rise</code>)</td>
+<td><strong>Intégrer dans Climate comme sous-signal</strong>, pas comme dimension autonome</td>
+</tr>
+<tr>
+<td><strong>Fossil exposure %</strong> <em>(ajout)</em></td>
+<td><span class="v v-yes">OUI ++</span></td>
+<td><span class="v v-warn">NUANCE</span> Approximable, exact seulement en look-through</td>
+<td><strong>AJOUTER.</strong> C&#39;est le chiffre que l&#39;utilisateur comprend immédiatement, bien plus qu&#39;un score</td>
+</tr>
+<tr>
+<td><strong>Frais réels (TER) en €/an</strong> <em>(ajout)</em></td>
+<td><span class="v v-yes">OUI ++</span></td>
+<td><span class="v v-yes">OUI</span> Disponible</td>
+<td><strong>AJOUTER.</strong> Non-ESG, mais c&#39;est la donnée qui prouve le plus vite que Seedow est de son côté</td>
+</tr>
+</tbody></table></div>
+<h3>Impact Profile retenu</h3>
+<pre><code>TON ALIGNEMENT                                92 %
+   sur 78 % de ton portefeuille mesuré
+   ⚠ 2 lignes contredisent une exclusion que tu as posée
+
+CE QUE TON ARGENT FINANCE
+   Solutions climat            18 %
+   Énergies fossiles            3,4 %      ← tu as exclu ce secteur
+   Santé                       11 %
+   Technologie                 21 %
+   Non classé                  17 %        ← honnêteté, pas un trou caché
+
+CLIMAT
+   Intensité carbone   62 tCO₂e/M$   ·  46 % sous l&#39;indice mondial
+   Trajectoire         2,1 °C        ·  source MSCI, au 30/06/2026
+
+COÛT
+   Frais annuels       0,24 %  =  11,60 € sur 4 820 €
+
+NOTATION EXTERNE  (relayée, non calculée par Seedow)
+   Social 76  ·  Gouvernance 81      —  fournisseur X, au 30/06/2026
+
+FAITS RÉGLEMENTAIRES  (déclaratif de l&#39;émetteur, ce n&#39;est pas une note)
+   SFDR Article 8  ·  3 exclusions formelles
+</code></pre>
+<p><strong>Cinq dimensions au lieu de huit, aucune inventée, chacune avec sa source et sa
+couverture.</strong> C&#39;est moins spectaculaire que le brief et beaucoup plus crédible — et c&#39;est
+le seul format compatible avec les non-négociables §1.2/§1.3.</p>
+<h2 id="s15"><a class="anchor" href="#s15" aria-label="Lien vers cette section">§</a>H. What-if engine — et le mur réglementaire</h2>
+<h3>Le problème, énoncé sans détour</h3>
+<p>Le brief §8 décrit : l&#39;utilisateur possède ETF A, <strong>Seedow propose ETF B</strong>. Ce verbe
+« propose » fait basculer l&#39;activité dans la recommandation personnalisée. Ajouter un
+disclaimer ne change rien : le régulateur regarde la substance, pas la clause.</p>
+<h3>La conception qui préserve la fonction sans le statut</h3>
+<p><strong>Inverser l&#39;initiative.</strong> Ce n&#39;est pas Seedow qui propose B ; c&#39;est l&#39;utilisateur qui
+choisit B dans un univers qu&#39;il explore, et Seedow qui <strong>calcule les conséquences</strong>.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th><span class="v v-no">NON</span> Interdit (recommandation)</th>
+<th><span class="v v-yes">OUI</span> Autorisé (outil de comparaison)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>« Voici une meilleure alternative à ton ETF »</td>
+<td>« Compare ton ETF à n&#39;importe quel autre »</td>
+</tr>
+<tr>
+<td>Classement de « fonds recommandés pour toi »</td>
+<td>Filtres/tri <strong>que l&#39;utilisateur pilote</strong>, appliqués à tout l&#39;univers</td>
+</tr>
+<tr>
+<td>« Tu devrais passer de A à B »</td>
+<td>« Si tu passais de A à B : voici ce qui change, dans les deux sens »</td>
+</tr>
+<tr>
+<td>Un seul candidat mis en avant</td>
+<td>Comparaison symétrique, gains <strong>et</strong> pertes affichés avec le même poids</td>
+</tr>
+<tr>
+<td>« Optimiser mon portefeuille » (bouton)</td>
+<td>« Simuler un changement » (bouton)</td>
+</tr>
+</tbody></table></div>
+<p><strong>Deux garde-fous à coder, pas seulement à écrire dans les CGU :</strong></p>
+<ol>
+<li><strong>Symétrie obligatoire.</strong> Un résultat What-if qui n&#39;affiche que des améliorations est
+un résultat invalide. Si la comparaison ne produit aucun coût, l&#39;écran dit
+explicitement « aucun coût détecté sur les dimensions mesurées » — ce qui est une
+affirmation de couverture, pas une approbation.</li>
+<li><strong>Aucun tri par défaut sur une notion de « meilleur ».</strong> Le tri par défaut est neutre
+(encours, nom, ou ordre de l&#39;univers). L&#39;utilisateur choisit son critère.</li>
+</ol>
+<h3>Ce qui existe déjà</h3>
+<p><code>tradeoffs.functions.ts</code> fait tourner le moteur sur des variantes de paramètres et
+retourne <code>costBps</code> / <code>esgDelta</code> / volatilité — <strong>et il affiche déjà le coût des leviers</strong>.
+C&#39;est-à-dire que <strong>le principe de symétrie est déjà implémenté dans le repo.</strong> Le What-if
+du brief est une généralisation de ce module de « levier de paramètre » vers
+« substitution de ligne ». <strong>Effort M, pas L.</strong></p>
+<h3>Ce qu&#39;il faut ajouter à l&#39;écran BEFORE/AFTER du brief</h3>
+<p>Le brief liste : Impact profile, Fossil exposure, Green activity, Diversification, Cost.
+<strong>Il manque trois lignes indispensables :</strong></p>
+<ul>
+<li><strong>Couverture de la comparaison</strong> — comparer un fonds mesuré à 90 % avec un fonds mesuré
+à 30 % n&#39;est pas une comparaison. Sans cette ligne, l&#39;écran ment par omission.</li>
+<li><strong>Fiscalité et frais de transaction</strong> — vendre A pour acheter B a un coût réel
+(plus-value, courtage, spread) qui peut annuler tout le gain d&#39;impact. <strong>Ne pas
+l&#39;afficher est la faiblesse la plus grave du What-if tel que décrit dans le brief.</strong></li>
+<li><strong>Date des données comparées</strong> — deux fonds dont les compositions ont 4 mois d&#39;écart
+ne se comparent pas au même instant.</li>
+</ul>
+<h2 id="s16"><a class="anchor" href="#s16" aria-label="Lien vers cette section">§</a>I. Monthly retention loop — « Ton argent a changé »</h2>
+<p>Bonne idée, <strong>et le repo a déjà l&#39;ingrédient rare</strong> : <code>data_observations</code> avec
+<code>reference_date</code> <strong>et</strong> <code>retrieved_at</code> séparées. Cette séparation — qu&#39;aucun agrégateur
+grand public ne fait — permet exactement la distinction que le brief §9 exige.</p>
+<h3>Les quatre causes d&#39;un delta, et comment on les distingue</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Signature dans les données</th>
+<th>Message</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>La donnée a changé</strong></td>
+<td>Même <code>reference_date</code>, nouveau <code>retrieved_at</code>, valeur différente</td>
+<td>« Le fournisseur a corrigé sa donnée »</td>
+</tr>
+<tr>
+<td><strong>L&#39;exposition a changé</strong></td>
+<td>Poids du portefeuille modifiés, données instruments inchangées</td>
+<td>« Tu as changé ton portefeuille » / « le marché a bougé les poids »</td>
+</tr>
+<tr>
+<td><strong>La méthodologie a changé</strong></td>
+<td><code>ALIGNMENT_VERSION</code> / <code>SEEDOW_SCORE_VERSION</code> différent entre snapshots</td>
+<td>« Nous avons changé notre méthode — voici quoi et pourquoi »</td>
+</tr>
+<tr>
+<td><strong>L&#39;activité réelle a changé</strong></td>
+<td>Nouvelle <code>reference_date</code> avec un <code>as_of</code> plus récent</td>
+<td>« L&#39;entreprise/le fonds a réellement changé »</td>
+</tr>
+</tbody></table></div>
+<p><strong>Règle absolue, que le brief énonce et qu&#39;il faut coder :</strong> si le moteur ne peut pas
+attribuer un delta à une cause, il affiche « cause indéterminée » — jamais la cause la
+plus flatteuse. Un score qui monte parce que le fournisseur a corrigé une erreur n&#39;est
+pas une bonne nouvelle, et le dire renforce la confiance plus que l&#39;inverse.</p>
+<h3>Cadence — désaccord avec le brief</h3>
+<p>Le brief dit « chaque mois ». <strong>Le mensuel est trop lent pour créer une habitude et trop
+rapide pour que les données ESG bougent</strong> (compositions trimestrielles, notations
+semestrielles). Recommandation :</p>
+<ul>
+<li><strong>Événementiel</strong> (<code>alerts</code> existe déjà, <code>esg-alert.ts</code> aussi) : une controverse, un
+changement de composition significatif, une exclusion violée → notification immédiate.
+C&#39;est ce qui crée le réflexe.</li>
+<li><strong>Trimestriel</strong> pour le bilan complet, aligné sur la vraie fréquence des données.</li>
+<li><strong>Annuel</strong> pour <code>wrapped</code> (qui existe déjà).</li>
+</ul>
+<p>Le mensuel produirait, 9 mois sur 12, un message « rien n&#39;a changé » — le pire signal
+de rétention possible.</p>
+<h3>Attention : trois features de rétention concurrentes existent déjà</h3>
+<p><code>le-fil</code>, <code>reveil</code>, et <code>wrapped</code> occupent chacune une partie de ce terrain, sans qu&#39;aucune
+ne soit la boucle canonique. <strong>Il faut en choisir une et absorber les autres</strong> (§P),
+sinon la « Monthly loop » sera la quatrième.</p>
+<hr>
+<h1 id="s17"><a class="anchor" href="#s17" aria-label="Lien vers cette section">§</a>PHASE 4 — ARCHITECTURE TECHNIQUE</h1>
+<h2 id="s18"><a class="anchor" href="#s18" aria-label="Lien vers cette section">§</a>J. UX architecture — Information Architecture</h2>
+<p>Le brief §13 propose 7 sections. <strong>C&#39;est deux de trop</strong>, et une manque.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Section du brief</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>HOME « Your money »</td>
+<td><span class="v v-yes">OUI</span> Garder — devient l&#39;écran d&#39;entrée</td>
+</tr>
+<tr>
+<td>PORTFOLIO « What you own »</td>
+<td><span class="v v-warn">NUANCE</span> <strong>Fusionner avec HOME.</strong> Séparer « ton argent » de « ce que tu possèdes » est une distinction d&#39;ingénieur, pas d&#39;utilisateur</td>
+</tr>
+<tr>
+<td>IMPACT « What your money does »</td>
+<td><span class="v v-yes">OUI</span> <strong>C&#39;est le cœur du repositionnement.</strong> Garder, nommer clairement</td>
+</tr>
+<tr>
+<td>EXPLORE « What you could own »</td>
+<td><span class="v v-yes">OUI</span> Garder (= <code>discover</code> existant)</td>
+</tr>
+<tr>
+<td>IMPROVE « How to make it better »</td>
+<td><span class="v v-warn">NUANCE</span> <strong>Ne pas en faire une section de navigation.</strong> Une entrée permanente « améliore ton portefeuille » ressemble à une incitation commerciale. En faire une <strong>action contextuelle</strong> depuis n&#39;importe quelle ligne</td>
+</tr>
+<tr>
+<td>INVEST « Take action »</td>
+<td><span class="v v-warn">NUANCE</span> Pas une section tant qu&#39;il n&#39;y a pas de courtier. Une action en fin de parcours</td>
+</tr>
+<tr>
+<td>PROFILE « What matters to you »</td>
+<td><span class="v v-yes">OUI ++</span> Garder, et <strong>le promouvoir</strong> : c&#39;est là que vivent les préférences qui pilotent l&#39;alignement. Aujourd&#39;hui elles sont enterrées dans l&#39;onboarding</td>
+</tr>
+</tbody></table></div>
+<h3>IA recommandée — 4 onglets</h3>
+<pre><code>┌──────────┬──────────┬──────────┬──────────┐
+│ TON      │ CE QUE   │ EXPLORER │ TOI      │
+│ ARGENT   │ ÇA FAIT  │          │          │
+└──────────┴──────────┴──────────┴──────────┘
+   ▲            ▲          ▲          ▲
+   │            │          │          │
+positions   Impact      univers   préférences
+valeur      Profile     comparer  (pilotent
+frais       preuves     fiches     l&#39;alignement)
+alertes     évolution
+   │
+   └── &quot;simuler un changement&quot; (What-if) accessible depuis toute ligne,
+       jamais depuis la barre de navigation
+</code></pre>
+<p><strong>Quatre onglets contre les 8+ destinations actuelles.</strong> Chaque route supprimée est
+listée en §P.</p>
+<h3>Principes de visualisation (brief §7 — validé et précisé)</h3>
+<blockquote>
+<p><strong>Ne montre pas de la donnée ESG. Explique ce que la donnée signifie pour l&#39;argent de la personne.</strong></p>
+</blockquote>
+<ul>
+<li><strong>Toujours en euros d&#39;abord, en pourcentage ensuite.</strong> « 164 € de ton argent financent
+des activités fossiles » bat « 3,4 % d&#39;exposition fossile ». Le brief le fait déjà
+intuitivement (« €4,820 invested »), il faut l&#39;ériger en règle.</li>
+<li><strong>Un chiffre par écran a le droit d&#39;être gros.</strong> Le reste est du corps de texte.</li>
+<li><strong>Chaque chiffre est cliquable et mène à sa preuve</strong> (source, date, méthode, couverture)
+— le lineage existe en base, il faut le remonter.</li>
+<li><strong>Le trou de données est un élément de design de premier plan</strong>, pas un <code>—</code> gris.</li>
+<li><strong>Zéro jauge circulaire, zéro feuille verte, zéro badge gamifié</strong> (brief §14, validé).</li>
+<li><strong>La typo mono (IBM Plex Mono) porte les chiffres</strong>, l&#39;Inter porte le sens (DA §4,
+déjà en place). Ce contraste <strong>est</strong> l&#39;argument visuel « factuel, pas militant ».</li>
+</ul>
+<h2 id="s19"><a class="anchor" href="#s19" aria-label="Lien vers cette section">§</a>K. Data architecture</h2>
+<h3>Tables à créer</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Table</th>
+<th>Rôle</th>
+<th>Prio</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>user_holdings</code></td>
+<td>Ce que l&#39;utilisateur possède réellement : <code>user_id</code>, <code>isin</code>/<code>asset_id</code>, <code>quantity</code>, <code>avg_price</code>, <code>currency</code>, <code>account_label</code>, <code>source</code> (<code>manual</code>/<code>csv</code>/<code>aggregator</code>), <code>as_of</code>. <strong>RLS obligatoire</strong></td>
+<td><span class="chip chip-p0">P0</span></td>
+</tr>
+<tr>
+<td><code>user_preference_profile</code></td>
+<td>Préférences au niveau <strong>personne</strong> (aujourd&#39;hui sur <code>portfolios</code>), versionnées : <code>causes</code>, <code>cause_intensity</code>, <code>exclusions</code>, <code>risk_target</code>, <code>horizon_years</code>, <code>version</code>, <code>updated_at</code>. <strong>RLS</strong></td>
+<td><span class="chip chip-p0">P0</span></td>
+</tr>
+<tr>
+<td><code>security_activities</code></td>
+<td>Titre → activité économique, avec source et part de revenus quand disponible. Les 5 axes de §E.1</td>
+<td><span class="chip chip-p0">P0</span></td>
+</tr>
+<tr>
+<td><code>portfolio_impact_snapshots</code></td>
+<td>Photo horodatée d&#39;un profil d&#39;impact + versions de méthodologie, pour §I. <strong>RLS</strong></td>
+<td><span class="chip chip-p1">P1</span></td>
+</tr>
+<tr>
+<td><code>impact_deltas</code></td>
+<td>Deltas attribués à une cause (§I), dérivés de deux snapshots</td>
+<td><span class="chip chip-p1">P1</span></td>
+</tr>
+<tr>
+<td><code>entitlements</code></td>
+<td>Droits d&#39;accès (free/premium), pour la monétisation. <strong>RLS</strong></td>
+<td><span class="chip chip-p1">P1</span></td>
+</tr>
+<tr>
+<td><code>issuer_controversies</code></td>
+<td>Controverses par émetteur — <strong>à ne créer qu&#39;une fois la source licenciée</strong></td>
+<td><span class="chip chip-p2">P2</span></td>
+</tr>
+</tbody></table></div>
+<h3>Tables à étendre (jamais casser — brief §15)</h3>
+<ul>
+<li><code>assets</code> : <code>taxonomy_aligned_pct</code>, <code>controversy_level</code> — <strong>colonnes nullable, laissées
+vides tant que non sourcées.</strong> Le gate <code>activation.ts</code> continue de protéger l&#39;exposition.</li>
+<li><code>securities</code> : peupler <code>sector</code>/<code>industry</code>/<code>country</code>, ajouter <code>activity_tags[]</code>.</li>
+<li><code>profiles</code> : rien — les préférences vont dans leur propre table versionnée, parce
+qu&#39;un historique de préférences est nécessaire pour §I (distinguer « la donnée a changé »
+de « tu as changé d&#39;avis »).</li>
+</ul>
+<h3>Tables à ne surtout pas toucher</h3>
+<p><code>data_observations</code>, <code>data_sources</code>, <code>fund_documents</code>, <code>fund_holdings</code>, <code>securities</code>,
+<code>catalog_instruments</code>, <code>catalog_imports</code>, <code>ingestion_jobs</code>, <code>ingestion_errors</code>,
+<code>carbon_estimates</code>, <code>issuer_emissions</code>, <code>assets</code>, <code>asset_prices</code>, <code>asset_quotes</code>.
+<strong>Ce sont les actifs du moat. Ils s&#39;étendent, ils ne se refactorisent pas.</strong></p>
+<h3>Règle de lineage à généraliser</h3>
+<p>Toute valeur affichée à l&#39;écran doit pouvoir répondre : <em>quelle source, quelle date
+d&#39;effet, quelle date de collecte, quelle méthode, quelle confiance, quelle fraîcheur</em>.
+<code>data_observations</code> le permet déjà <strong>par construction</strong>. Le gap est d&#39;usage, pas de
+schéma : il faut (a) écrire systématiquement dans ce ledger, (b) un composant UI unique
+« Pourquoi ? » qui le lit.</p>
+<h2 id="s20"><a class="anchor" href="#s20" aria-label="Lien vers cette section">§</a>L. Architecture technique — modules</h2>
+<pre><code>src/lib/
+├── holdings/          <span class="chip chip-p0">P0</span> NOUVEAU — positions réelles
+│   ├── parse-csv.ts          (formats courtiers FR/EU, tolérant)
+│   ├── resolve.ts            (ISIN → assets, réutilise data-engine/isin.ts)
+│   └── holdings.functions.ts (server fn, RLS)
+├── alignment/         <span class="chip chip-p0">P0</span> NOUVEAU — §F
+│   ├── constraints.ts        (exclusions = drapeaux, pas de points)
+│   ├── priorities.ts         (causes vs exposition réelle)
+│   ├── shape.ts              (risque, horizon, frais, diversification)
+│   └── alignment.ts          (composition + coverage + décomposition par ligne)
+├── exposure/          <span class="chip chip-p0">P0</span> NOUVEAU — « ce que ton argent finance »
+│   ├── activities.ts         (les 5 axes, look-through)
+│   └── aggregate.ts          (pondération + coverage, réutilise holdings-adapter)
+├── whatif/            <span class="chip chip-p1">P1</span> NOUVEAU — §H (généralise tradeoffs.functions.ts)
+│   ├── substitute.ts         (A→B, symétrique par construction)
+│   └── frictions.ts          (fiscalité, courtage, spread)
+├── monitoring/        <span class="chip chip-p1">P1</span> NOUVEAU — §I
+│   ├── snapshot.ts
+│   └── attribution.ts        (les 4 causes)
+├── impact-profile/    <span class="chip chip-p0">P0</span> NOUVEAU — composition des 5 dimensions (§G)
+│
+├── portfolio/  <span class="v v-yes">OUI</span> INCHANGÉ (engine, markowitz, metrics, overlap, tradeoffs…)
+├── esg/        <span class="v v-yes">OUI</span> INCHANGÉ (classification, transparency, carbon-engine…)
+├── data-engine/<span class="v v-yes">OUI</span> INCHANGÉ (registry, connecteurs, quality, isin…)
+├── impact/     <span class="v v-warn">NUANCE</span> à recentrer : `portfolioImpact.ts` devient un consommateur
+│                  d&#39;impact-profile plutôt que la source de vérité carbone
+└── discover/   <span class="v v-warn">NUANCE</span> `impact.ts` (4 niveaux) à réconcilier avec le nouveau profil
+</code></pre>
+<p><strong>Zéro suppression dans <code>lib/</code>.</strong> Tout le nouveau est additif ; deux modules sont
+recentrés. C&#39;est la garantie demandée par le brief §15, tenue au niveau du plan.</p>
+<h3>Contraintes techniques à surveiller</h3>
+<ul>
+<li><strong>Taille du bundle Edge</strong> (Cloudflare Workers, limite dure). Le parsing CSV et
+l&#39;agrégation d&#39;exposition doivent rester côté serveur, jamais dans le bundle client.</li>
+<li><strong>Coût du look-through.</strong> Agréger l&#39;exposition sur un portefeuille de 12 lignes × 500
+holdings = 6 000 jointures par calcul. <strong>À matérialiser</strong> (table ou vue matérialisée),
+pas à calculer à chaque affichage.</li>
+<li><strong><code>types.ts</code> auto-généré</strong> : les nouvelles colonnes n&#39;apparaissent qu&#39;après
+régénération. Le repo a déjà la convention du cast localisé (<code>universe.server.ts</code>) —
+la suivre, ne pas éditer <code>types.ts</code>.</li>
+<li><strong>Tests</strong> : <code>lib/alignment/</code>, <code>lib/exposure/</code>, <code>lib/whatif/</code> sont de la logique métier →
+couverture obligatoire (CLAUDE.md §8).</li>
+</ul>
+<hr>
+<h1 id="s21"><a class="anchor" href="#s21" aria-label="Lien vers cette section">§</a>PHASE 5 — BUSINESS &amp; EXÉCUTION</h1>
+<h2 id="s22"><a class="anchor" href="#s22" aria-label="Lien vers cette section">§</a>M. Monétisation</h2>
+<h3>Le fait qui commande tout</h3>
+<p><strong>Le coût dominant de Seedow n&#39;est ni le serveur ni le développement : c&#39;est la donnée.</strong>
+Un flux EET/SFDR licencié par ISIN, plus les controverses, est un coût <strong>fixe annuel</strong>,
+largement indépendant du nombre d&#39;utilisateurs. <strong>HYP à valider par devis :</strong> ordre de
+grandeur <strong>15–60 k€/an</strong> pour un périmètre UCITS européen en entrée de gamme, avec
+une clause de redistribution qui coûte plus cher que l&#39;usage interne.</p>
+<p>Cette structure de coûts a trois conséquences directes :</p>
+<ol>
+<li><strong>Le point mort est un nombre d&#39;abonnés, pas un taux de marge.</strong> À 5 €/mois net,
+30 k€ de données = <strong>~600 abonnés payants</strong> juste pour la donnée.</li>
+<li><strong>Le B2B n&#39;est pas un « plus tard », c&#39;est ce qui amortit la donnée.</strong> Un seul contrat
+B2B à 30–80 k€/an couvre le coût fixe et rend le B2C structurellement rentable.</li>
+<li><strong><span class="v v-warn">NUANCE</span> Piège juridique majeur : la plupart des licences ESG interdisent la
+redistribution.</strong> Vendre une API construite sur un flux licencié <strong>sans droit de
+redistribution est une rupture de contrat</strong>, pas une zone grise. <strong>DÉCISION : négocier
+le droit de redistribution dès le premier contrat de données</strong>, même s&#39;il coûte plus
+cher — ou construire le B2B <strong>exclusivement sur les couches propriétaires Seedow</strong>
+(look-through calculé depuis des documents publics, score Seedow, drapeaux
+greenwashing, alignement), qui, elles, sont redistribuables.</li>
+</ol>
+<h3>Les quatre couches</h3>
+<p><strong>FREE — UNDERSTAND.</strong> <span class="v v-yes">OUI</span> Validé, et le brief a raison : ne pas mettre la donnée
+fondamentale derrière un paywall. C&#39;est cohérent avec l&#39;Autorité du <code>MOAT_BLUEPRINT</code>, ça
+alimente le SEO (<code>observatoire</code>, <code>fonds/$isin</code> sont déjà publics), et ça fait la
+différence avec un incumbent. Contenu : portefeuille, Impact Profile complet, alignement,
+expositions principales, fiches fonds sourcées.</p>
+<p><strong>PREMIUM — IMPROVE.</strong> <span class="v v-warn">NUANCE</span> <strong>Le prix de 4–7 €/mois est probablement mal calibré.</strong>
+Arguments contre le bas de fourchette :</p>
+<ul>
+<li>L&#39;utilisateur qui a 20 k€ investis et paie 0,3 % de frais dépense 60 €/an sans y penser.
+Un outil qui lui montre qu&#39;il paie 40 € de trop se vend plus cher que 4 €/mois.</li>
+<li>Un prix bas attire les curieux (churn élevé) et exclut le prix de la donnée.</li>
+<li>Un prix bas sur un produit d&#39;analyse financière signale « pas sérieux ».</li>
+</ul>
+<p><strong>Recommandation : 8–12 €/mois, ou 79–99 €/an</strong> (l&#39;annuel comme offre mise en avant :
+il résout le churn mensuel, qui est la vraie menace d&#39;un produit consulté 4× par an).
+<strong>Et un test de prix dès les 100 premiers payants</strong> — pas une décision a priori.</p>
+<p>Contenu premium (aligné sur la valeur, pas sur la friction) : What-if illimité,
+historique complet et attribution des deltas, alertes personnalisées, comparaisons
+multiples, rapports exportables, multi-portefeuilles/multi-comptes.
+<strong>Contenu qui ne doit JAMAIS être premium</strong> : la révélation d&#39;un problème. Si le
+portefeuille de l&#39;utilisateur viole une exclusion qu&#39;il a posée, il l&#39;apprend en gratuit.
+Facturer l&#39;alerte serait un dark pattern (§1.5).</p>
+<p><strong>INVEST — ACT.</strong> <span class="v v-yes">OUI</span> Validé sur le principe (courtier partenaire, pas de custody).
+<span class="v v-warn">NUANCE</span> Mais <strong>l&#39;affiliation courtier crée un conflit d&#39;intérêts</strong> avec « sans jamais rien
+vendre ». Si Seedow touche une commission quand l&#39;utilisateur ouvre un compte chez le
+courtier X, Seedow a un intérêt à orienter vers X. <strong>DÉCISION à trancher franchement :</strong>
+soit passerelle <strong>non rémunérée</strong> (pure valeur d&#39;usage, cohérence maximale), soit
+rémunération <strong>publiée à l&#39;écran</strong> (« Seedow perçoit N € si tu ouvres ce compte »).
+La troisième option — commission silencieuse — est incompatible avec le §1.1 du CLAUDE.md
+et détruirait l&#39;actif le plus précieux : la crédibilité.</p>
+<p><strong>B2B — POWER.</strong> <span class="v v-yes">OUI ++</span> <strong>C&#39;est le meilleur modèle du dossier et il est sous-estimé dans le
+brief.</strong> Marge logicielle, coût marginal quasi nul, amortit la donnée, et vend une chose
+qu&#39;aucun client B2B ne veut construire (le look-through + la traçabilité). Clients :
+néobanques, courtiers en ligne, assureurs-vie/PER, conseillers en gestion de patrimoine,
+CSE/épargne salariale. Sous réserve de la clause de redistribution ci-dessus.</p>
+<h2 id="s23"><a class="anchor" href="#s23" aria-label="Lien vers cette section">§</a>N. Unit economics</h2>
+<blockquote>
+<p><strong>Tous les chiffres ci-dessous sont des HYP.</strong> Traction réelle = UNKNOWN (bêta
+gratuite, aucun revenu — FACT <code>tarifs.tsx</code>). Ce modèle sert à identifier les
+<strong>seuils de bascule</strong>, pas à prévoir un chiffre d&#39;affaires.</p>
+</blockquote>
+<h3>Hypothèses de base</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Paramètre</th>
+<th>Bear</th>
+<th>Base</th>
+<th>Bull</th>
+<th>Commentaire</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Conversion Free → Premium</td>
+<td>1,5 %</td>
+<td>3 %</td>
+<td>6 %</td>
+<td>3 % est la médiane fintech B2C ; &gt;6 % suppose un problème très douloureux</td>
+</tr>
+<tr>
+<td>ARPU premium (mensuel effectif)</td>
+<td>5 €</td>
+<td>8 €</td>
+<td>11 €</td>
+<td>après mix annuel/mensuel</td>
+</tr>
+<tr>
+<td>Churn mensuel</td>
+<td>8 %</td>
+<td>5 %</td>
+<td>3 %</td>
+<td><strong>le vrai risque</strong> : produit consulté 4×/an</td>
+</tr>
+<tr>
+<td>Durée de vie (1/churn)</td>
+<td>12,5 mois</td>
+<td>20 mois</td>
+<td>33 mois</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>LTV</strong></td>
+<td><strong>63 €</strong></td>
+<td><strong>160 €</strong></td>
+<td><strong>363 €</strong></td>
+<td>hors coûts variables</td>
+</tr>
+<tr>
+<td>CAC (organique + contenu)</td>
+<td>40 €</td>
+<td>20 €</td>
+<td>8 €</td>
+<td>l&#39;Observatoire/SEO est le levier</td>
+</tr>
+<tr>
+<td><strong>LTV/CAC</strong></td>
+<td><strong>1,6</strong></td>
+<td><strong>8,0</strong></td>
+<td><strong>45</strong></td>
+<td>&lt;3 = non viable</td>
+</tr>
+<tr>
+<td>Coût données (fixe/an)</td>
+<td>60 k€</td>
+<td>30 k€</td>
+<td>15 k€</td>
+<td>dominant</td>
+</tr>
+<tr>
+<td>Infra/user/an</td>
+<td>1,20 €</td>
+<td>0,60 €</td>
+<td>0,30 €</td>
+<td>Workers + Supabase, faible</td>
+</tr>
+<tr>
+<td>Coût IA (Ethi)/user actif/an</td>
+<td>6 €</td>
+<td>3 €</td>
+<td>1,50 €</td>
+<td><strong>à surveiller</strong> : peut dépasser l&#39;ARPU sur un utilisateur bavard → plafond d&#39;usage nécessaire (<code>ethi_rate_limits</code> existe déjà <span class="v v-yes">OUI</span>)</td>
+</tr>
+</tbody></table></div>
+<h3>Scénarios</h3>
+<p><strong>1 000 utilisateurs</strong></p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th></th>
+<th>Bear</th>
+<th>Base</th>
+<th>Bull</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Payants</td>
+<td>15</td>
+<td>30</td>
+<td>60</td>
+</tr>
+<tr>
+<td>Revenu annuel</td>
+<td>900 €</td>
+<td>2 880 €</td>
+<td>7 920 €</td>
+</tr>
+<tr>
+<td>Coût données</td>
+<td>60 k€</td>
+<td>30 k€</td>
+<td>15 k€</td>
+</tr>
+<tr>
+<td><strong>Résultat</strong></td>
+<td><strong>−60 k€</strong></td>
+<td><strong>−28 k€</strong></td>
+<td><strong>−8 k€</strong></td>
+</tr>
+</tbody></table></div>
+<blockquote>
+<p><strong>Verdict : à 1 000 utilisateurs, le B2C ne finance rien, quel que soit le scénario.</strong>
+C&#39;est structurel, pas un problème d&#39;exécution. <strong>Ce palier doit être financé
+autrement : subvention/levée, ou premier contrat B2B.</strong> Toute stratégie qui suppose
+l&#39;autofinancement à ce stade est fausse.</p>
+</blockquote>
+<p><strong>10 000 utilisateurs</strong></p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th></th>
+<th>Bear</th>
+<th>Base</th>
+<th>Bull</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Payants</td>
+<td>150</td>
+<td>300</td>
+<td>600</td>
+</tr>
+<tr>
+<td>Revenu B2C</td>
+<td>9 k€</td>
+<td>28,8 k€</td>
+<td>79,2 k€</td>
+</tr>
+<tr>
+<td>+ 1 contrat B2B</td>
+<td>0</td>
+<td>40 k€</td>
+<td>80 k€</td>
+</tr>
+<tr>
+<td>Coûts (données + infra + IA)</td>
+<td>78 k€</td>
+<td>42 k€</td>
+<td>24 k€</td>
+</tr>
+<tr>
+<td><strong>Résultat</strong></td>
+<td><strong>−69 k€</strong></td>
+<td><strong>+27 k€</strong></td>
+<td><strong>+135 k€</strong></td>
+</tr>
+</tbody></table></div>
+<blockquote>
+<p><strong>Verdict : c&#39;est ici que tout se joue, et le facteur décisif n&#39;est pas le B2C —
+c&#39;est le premier contrat B2B.</strong> Le scénario Base est rentable <em>uniquement</em> grâce à lui.
+<strong>Conséquence stratégique : commencer la prospection B2B bien avant 10 k utilisateurs.</strong>
+Le brief place le B2B en 4ᵉ couche ; il devrait être en 2ᵉ.</p>
+</blockquote>
+<p><strong>100 000 utilisateurs</strong></p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th></th>
+<th>Bear</th>
+<th>Base</th>
+<th>Bull</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Payants</td>
+<td>1 500</td>
+<td>3 000</td>
+<td>6 000</td>
+</tr>
+<tr>
+<td>Revenu B2C</td>
+<td>90 k€</td>
+<td>288 k€</td>
+<td>792 k€</td>
+</tr>
+<tr>
+<td>B2B (1 / 3 / 6 contrats)</td>
+<td>40 k€</td>
+<td>150 k€</td>
+<td>400 k€</td>
+</tr>
+<tr>
+<td>Revenu passerelle courtier</td>
+<td>0</td>
+<td>30 k€</td>
+<td>100 k€</td>
+</tr>
+<tr>
+<td>Coûts (données étendues + infra + IA + support)</td>
+<td>200 k€</td>
+<td>180 k€</td>
+<td>170 k€</td>
+</tr>
+<tr>
+<td><strong>Résultat</strong></td>
+<td><strong>−70 k€</strong></td>
+<td><strong>+288 k€</strong></td>
+<td><strong>+1 122 k€</strong></td>
+</tr>
+</tbody></table></div>
+<blockquote>
+<p><strong>Verdict : même à 100 k utilisateurs, le scénario Bear perd de l&#39;argent.</strong> Un churn à
+8 % avec un ARPU à 5 € ne devient jamais rentable, quelle que soit l&#39;échelle. <strong>Le
+churn est la variable la plus importante du modèle — plus que la conversion, plus que
+le CAC.</strong> D&#39;où la priorité absolue de §I (boucle de rétention) et de l&#39;offre annuelle.</p>
+</blockquote>
+<h3>Les trois chiffres à surveiller en priorité</h3>
+<ol>
+<li><strong>Churn mensuel.</strong> Au-dessus de 6 %, le modèle ne fonctionne à aucune échelle.</li>
+<li><strong>Date du premier contrat B2B.</strong> C&#39;est ce qui décide de la rentabilité à 10 k.</li>
+<li><strong>Coût IA par utilisateur actif.</strong> Peut silencieusement dépasser l&#39;ARPU.</li>
+</ol>
+<h3>Sur INVEST (encours)</h3>
+<p>Revenu potentiel : 0,2–0,5 %/an d&#39;encours en apport d&#39;affaires ; 0,5–1 % en gestion —
+<strong>mais la gestion exige l&#39;agrément (PSI/CIF, MiFID, KYC/LCB-FT)</strong>, un coût de conformité
+récurrent à six chiffres et une équipe dédiée. <strong>Recommandation : ne pas y aller avant
+une levée dédiée.</strong> L&#39;apport d&#39;affaires reste accessible et suffit à prouver l&#39;activation.</p>
+<h2 id="s24"><a class="anchor" href="#s24" aria-label="Lien vers cette section">§</a>O. Roadmap</h2>
+<h3>Horizon 1 — « Seedow lit ton argent » (T1–T2)</h3>
+<p>Objectif : <strong>franchir le mur n°1.</strong> Sans lui, rien d&#39;autre ne compte.</p>
+<ul>
+<li><code>user_holdings</code> + saisie manuelle + import CSV</li>
+<li>Préférences au niveau personne (<code>user_preference_profile</code>)</li>
+<li><strong>User Alignment v1</strong> (§F) — le premier chiffre vraiment propriétaire</li>
+<li>Impact Profile 5 dimensions (§G), avec trous assumés</li>
+<li>Composant transverse « Pourquoi ? » branché sur <code>data_observations</code></li>
+<li>IA resserrée à 4 onglets (§J) + suppressions (§P)</li>
+<li><strong>DÉCISION en parallèle : achat du flux ESG</strong> (le blocage est commercial, pas technique)</li>
+</ul>
+<h3>Horizon 2 — « Seedow te montre les conséquences » (T3)</h3>
+<ul>
+<li>Exposition par activité (les 5 axes) en look-through</li>
+<li>What-if v1 : substitution A→B symétrique, avec frictions (§H)</li>
+<li>Comparateur symétrique actif↔actif</li>
+<li>Premium + <code>entitlements</code> + facturation</li>
+<li><strong>Démarrage de la prospection B2B</strong> (voir §N : c&#39;est en avance sur le calendrier du brief)</li>
+</ul>
+<h3>Horizon 3 — « Seedow suit ton argent » (T4)</h3>
+<ul>
+<li>Snapshots + attribution des deltas (§I)</li>
+<li>Alertes événementielles + bilan trimestriel</li>
+<li>Méthodologie obligataire (corporate + souverain — §E.2)</li>
+<li>Passerelle courtier (décision de rémunération tranchée)</li>
+</ul>
+<h3>Horizon 4 — « Seedow équipe les autres » (année 2)</h3>
+<ul>
+<li>API Impact Intelligence (sous réserve des droits de redistribution)</li>
+<li>Controverses + taxonomie (si licenciées)</li>
+<li>Extension de l&#39;univers activable</li>
+</ul>
+<h2 id="s25"><a class="anchor" href="#s25" aria-label="Lien vers cette section">§</a>P. Keep / Change / Remove / Build / Reposition</h2>
+<h3>KEEP — ne pas toucher</h3>
+<p><code>data_observations</code> &amp; tout le lineage · <code>data-engine/*</code> (registry, connecteurs, quality,
+isin, activation gate) · <code>sustainability-classification.ts</code> (découplage SFDR) ·
+<code>transparency.ts</code> (greenwashing) · <code>carbon-engine.ts</code> + <code>carbon.ts</code> (PCAF, coverage) ·
+<code>overlap.ts</code> (look-through) · <code>portfolio/engine.ts</code> &amp; optimiseur · <code>catalog_instruments</code> ·
+<code>observatoire</code> + <code>fonds/$isin</code> (l&#39;Autorité, et le seul SEO du produit) ·
+<code>methodologie.tsx</code> · la DA (Inter/IBM Plex Mono, tokens) · les tests.</p>
+<h3>CHANGE</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Quoi</th>
+<th>Vers quoi</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>portfolios</code> = simulation</td>
+<td>Coexistence : <strong>portefeuille réel</strong> (analysé) + <strong>simulation</strong> (explicitement étiquetée)</td>
+</tr>
+<tr>
+<td>Préférences sur <code>portfolios</code></td>
+<td>Préférences sur la <strong>personne</strong>, versionnées</td>
+</tr>
+<tr>
+<td><code>esg_score</code> unique 0–100 en tête d&#39;écran</td>
+<td><strong>User Alignment</strong> en tête, dimensions en dessous</td>
+</tr>
+<tr>
+<td><code>discover/impact.ts</code> (4 niveaux qualitatifs)</td>
+<td>Réconcilié avec l&#39;Impact Profile — une seule échelle dans toute l&#39;app</td>
+</tr>
+<tr>
+<td><code>comparatif.tsx</code> (vs MSCI World uniquement)</td>
+<td>Comparateur symétrique universel</td>
+</tr>
+<tr>
+<td><code>certificat.tsx</code></td>
+<td>Rapport d&#39;impact partageable, sourcé — ou supprimé (voir REMOVE)</td>
+</tr>
+<tr>
+<td><code>tarifs.tsx</code> (placeholder)</td>
+<td>Vraie grille Free/Premium</td>
+</tr>
+<tr>
+<td>Ethi : assistant généraliste</td>
+<td><strong>Explicateur du portefeuille de l&#39;utilisateur</strong> — c&#39;est son avantage unique, et c&#39;est aussi ce qui borne son coût</td>
+</tr>
+</tbody></table></div>
+<h3>REMOVE ou FUSIONNER — la surface est trop large</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Route</th>
+<th>Verdict</th>
+<th>Raison</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>vote.tsx</code> + <code>vote.$resolutionId.tsx</code> + <code>agm_resolutions</code> + <code>resolution_votes</code></td>
+<td><strong><span class="v v-warn">NUANCE</span> Supprimer ou sortir du produit</strong></td>
+<td>Le vote en AG suppose une détention directe et des droits de vote que Seedow ne peut pas exercer. Feature la plus éloignée de la vision, et la plus coûteuse à maintenir</td>
+</tr>
+<tr>
+<td><code>wrapped.tsx</code></td>
+<td><strong>Fusionner</strong> dans le bilan annuel de §I</td>
+<td>Sinon 4ᵉ boucle de rétention concurrente</td>
+</tr>
+<tr>
+<td><code>communaute.tsx</code> + <code>portfolio_shares</code></td>
+<td><strong>Geler</strong></td>
+<td>Partage social de portefeuille = risque de recommandation entre pairs + zéro preuve de rétention</td>
+</tr>
+<tr>
+<td><code>le-fil.tsx</code> + <code>reveil.tsx</code></td>
+<td><strong>Fusionner en une seule</strong> boucle « Ton argent a changé »</td>
+<td>Deux features occupant le même terrain</td>
+</tr>
+<tr>
+<td><code>construire.tsx</code></td>
+<td><strong>Fusionner</strong> avec onboarding/simulation</td>
+<td>Redondant</td>
+</tr>
+<tr>
+<td><code>certificat.tsx</code></td>
+<td><strong>Décision</strong> : garder seulement s&#39;il devient le rapport sourcé de §I</td>
+<td>Aujourd&#39;hui c&#39;est un objet de partage, pas d&#39;information</td>
+</tr>
+<tr>
+<td><code>cours/*</code></td>
+<td><strong>Garder mais figer</strong></td>
+<td>Bon pour Léa et le SEO, mais aucun développement nouveau</td>
+</tr>
+</tbody></table></div>
+<blockquote>
+<p><strong>~8 routes en moins. C&#39;est ce qui rend le reste finançable en temps de développement.</strong>
+Le brief demande de construire 5 gros modules ; sans coupe, l&#39;équipe n&#39;en livrera aucun.</p>
+</blockquote>
+<h3>BUILD</h3>
+<p><code>lib/holdings/</code> · <code>lib/alignment/</code> · <code>lib/exposure/</code> · <code>lib/impact-profile/</code> ·
+<code>lib/whatif/</code> · <code>lib/monitoring/</code> · composant « Pourquoi ? » · <code>entitlements</code> + paywall.</p>
+<h3>REPOSITION — existe, mal raconté</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Ce qui existe</th>
+<th>Ce que ça devient</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>tradeoffs.functions.ts</code></td>
+<td>Le <strong>What-if</strong>, avec la symétrie déjà intégrée</td>
+</tr>
+<tr>
+<td><code>overlap.ts</code></td>
+<td>La preuve « tes 3 ETF, c&#39;est en fait les mêmes 400 entreprises » — <strong>l&#39;argument le plus frappant du produit, aujourd&#39;hui invisible</strong></td>
+</tr>
+<tr>
+<td><code>transparency.ts</code> + <code>observatoire</code></td>
+<td>L&#39;<strong>Autorité</strong> : le contenu qui amène le trafic gratuit</td>
+</tr>
+<tr>
+<td><code>carbon-engine.ts</code> + <code>sourced_coverage</code></td>
+<td>La preuve de sérieux méthodologique : « on distingue ce qu&#39;on mesure de ce qu&#39;on estime »</td>
+</tr>
+<tr>
+<td><code>data_observations</code></td>
+<td><strong>« Pourquoi ? »</strong> — le geste signature du produit</td>
+</tr>
+<tr>
+<td><code>esg-alert.ts</code> + <code>alerts</code></td>
+<td>Le déclencheur de la boucle de rétention</td>
+</tr>
+</tbody></table></div>
+<h2 id="s26"><a class="anchor" href="#s26" aria-label="Lien vers cette section">§</a>Q. Risques et faiblesses méthodologiques</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Risque</th>
+<th>Gravité</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><strong>Requalification en conseil en investissement</strong> (IMPROVE, What-if)</td>
+<td><span class="chip chip-p0">Critique</span></td>
+<td>Conception §H : initiative à l&#39;utilisateur, symétrie codée, aucun tri par « meilleur ». <strong>Faire valider par un avocat AMF avant de livrer What-if</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Absence de source ESG licenciée</strong></td>
+<td><span class="chip chip-p0">Critique</span></td>
+<td>Décision d&#39;achat. Sans elle : Impact Profile à 4 dimensions assumées, pas 8</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Le portefeuille n&#39;est pas réel</strong></td>
+<td><span class="chip chip-p0">Critique</span></td>
+<td>P0 absolu : <code>user_holdings</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Fraîcheur des compositions</strong> (1–3 mois de retard)</td>
+<td><span class="chip chip-p1">Élevé</span></td>
+<td><code>as_of</code> affiché systématiquement ; jamais « actuel »</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Confusion impact / alignement</strong> — un portefeuille aligné ne réduit aucune émission</td>
+<td><span class="chip chip-p1">Élevé</span></td>
+<td>Écrit sur <code>/methodologie</code> <strong>et</strong> dans l&#39;UI. Ne jamais dire « ton impact » là où on mesure une exposition</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Couverture partielle présentée comme complète</strong></td>
+<td><span class="chip chip-p1">Élevé</span></td>
+<td><code>coverage</code> obligatoire dans chaque type de retour. Déjà la convention du repo</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>Droits de redistribution B2B</strong></td>
+<td><span class="chip chip-p1">Élevé</span></td>
+<td>Négocier dès le 1ᵉʳ contrat, ou B2B sur les seules couches propriétaires</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>Churn &gt; 6 %</strong> → modèle non viable à toute échelle</td>
+<td><span class="chip chip-p1">Élevé</span></td>
+<td>Offre annuelle mise en avant + boucle événementielle §I</td>
+</tr>
+<tr>
+<td>9</td>
+<td><strong>Green/social bonds affichés mais non analysés</strong></td>
+<td><span class="chip chip-p1">Élevé</span></td>
+<td>Corriger (§E.2) ou cesser d&#39;afficher la distinction. Incohérence avec l&#39;Observatoire</td>
+</tr>
+<tr>
+<td>10</td>
+<td><strong>Coût IA &gt; ARPU</strong> sur un utilisateur intensif</td>
+<td><span class="chip chip-p2">Moyen</span></td>
+<td><code>ethi_rate_limits</code> existe <span class="v v-yes">OUI</span> ; ajouter un plafond par palier</td>
+</tr>
+<tr>
+<td>11</td>
+<td><strong>Sur-promesse du What-if</strong> (« +6 points d&#39;impact ») ignorant fiscalité et frais</td>
+<td><span class="chip chip-p2">Moyen</span></td>
+<td>Frictions obligatoires à l&#39;écran (§H)</td>
+</tr>
+<tr>
+<td>12</td>
+<td><strong>Copiabilité</strong> : un concurrent bien financé achète le même flux ESG</td>
+<td><span class="chip chip-p2">Moyen</span></td>
+<td>Le moat n&#39;est pas la donnée achetée, c&#39;est <strong>holdings look-through + lineage + alignement + Autorité</strong>. Ne jamais positionner Seedow sur « on a de la donnée ESG »</td>
+</tr>
+<tr>
+<td>13</td>
+<td><strong>Conflit d&#39;intérêts de l&#39;affiliation courtier</strong></td>
+<td><span class="chip chip-p2">Moyen</span></td>
+<td>Non rémunéré, ou rémunération publiée à l&#39;écran</td>
+</tr>
+<tr>
+<td>14</td>
+<td><strong>Surface produit ingérable</strong></td>
+<td><span class="chip chip-p2">Moyen</span></td>
+<td>Coupes du §P, à faire <strong>avant</strong> de construire</td>
+</tr>
+<tr>
+<td>15</td>
+<td><strong>Le score Seedow devient une cible de critique publique</strong> (comme tous les scores ESG)</td>
+<td><span class="chip chip-p2">Moyen</span></td>
+<td>Méthodologie versionnée et publiée <span class="v v-yes">OUI</span> déjà fait ; ajouter un droit de réponse comme sur l&#39;Observatoire</td>
+</tr>
+</tbody></table></div>
+<h2 id="s27"><a class="anchor" href="#s27" aria-label="Lien vers cette section">§</a>R. Séquence d&#39;implémentation recommandée</h2>
+<h3><span class="chip chip-p0">P0</span> — sans ça, rien n&#39;a de sens</h3>
+<ol>
+<li><strong>DÉCISION : achat du flux ESG/SFDR</strong> — lancer les devis cette semaine. Le blocage
+n&#39;est pas technique, il est commercial, et il conditionne 6 chantiers. C&#39;est l&#39;action
+à plus fort effet de levier du document.</li>
+<li><strong><code>user_holdings</code> + saisie manuelle</strong> — le plus petit chemin vers un portefeuille réel
+(12 lignes saisies à la main valent mieux qu&#39;un agrégateur parfait dans 6 mois).</li>
+<li><strong><code>user_preference_profile</code></strong> — préférences au niveau personne, versionnées.</li>
+<li><strong><code>lib/alignment/</code> + User Alignment v1</strong> — le premier chiffre que personne ne peut copier.</li>
+<li><strong>Impact Profile 5 dimensions</strong> (§G) — remplacer le score unique en tête d&#39;écran.</li>
+<li><strong>Composant « Pourquoi ? »</strong> — rendre visible le lineage qui existe déjà. Peu de code,
+effet maximal sur la crédibilité.</li>
+<li><strong>Import CSV</strong> — les formats des 4-5 courtiers dominants en France.</li>
+<li><strong>Coupes du §P</strong> — avant, pas après.</li>
+</ol>
+<h3><span class="chip chip-p1">P1</span> — ce qui fait la différence concurrentielle</h3>
+<ol start="9">
+<li><code>security_activities</code> + exposition par activité (les 5 axes)</li>
+<li>What-if v1 avec frictions et symétrie — <strong>après validation juridique</strong></li>
+<li>Comparateur symétrique actif↔actif</li>
+<li>Snapshots + attribution des deltas</li>
+<li>Alertes événementielles (fusion <code>le-fil</code>/<code>reveil</code>)</li>
+<li>Premium + <code>entitlements</code> + facturation</li>
+<li><strong>Prospection B2B</strong> (décisif pour la rentabilité à 10 k — cf. §N)</li>
+<li>Méthodologie obligataire : corporate + souverain</li>
+<li>Fonds monétaire / Livret A (§E.4) — fort effet narratif, coût faible</li>
+</ol>
+<h3><span class="chip chip-p2">P2</span> — plus tard, ou seulement si financé</h3>
+<ol start="18">
+<li>Agrégation de comptes (Powens/Bridge — coût récurrent, à arbitrer contre le CSV)</li>
+<li>Controverses (si licenciées)</li>
+<li>Taxonomie UE / exposition activité durable (si licenciée)</li>
+<li>Passerelle courtier</li>
+<li>API B2B publique</li>
+<li>Green bonds (use of proceeds) — <strong>et non, pas les sustainability-linked bonds</strong></li>
+<li>Actions individuelles</li>
+</ol>
+<hr>
+<h2 id="s28"><a class="anchor" href="#s28" aria-label="Lien vers cette section">§</a>Annexe — Réponse directe aux points du brief</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Point du brief</th>
+<th>Verdict</th>
+<th>Où</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Vision UNDERSTAND→MEASURE→IMPROVE→INVEST</td>
+<td><span class="v v-yes">OUI</span> Adoptée, + MONITOR, + preuve d&#39;action déclarative</td>
+<td>§A</td>
+</tr>
+<tr>
+<td>« Personalized Money Impact Intelligence »</td>
+<td><span class="v v-yes">OUI</span> Adopté, précisé : <em>couche de lecture indépendante</em></td>
+<td>§B</td>
+</tr>
+<tr>
+<td>Moat en 7 points</td>
+<td><span class="v v-yes">OUI</span> 5 sur 7 déjà en place ; le vrai moat est holdings + lineage + alignement</td>
+<td>§0, §Q-12</td>
+</tr>
+<tr>
+<td>Ne pas confondre ESG Risk / Impact / Alignement / SFDR</td>
+<td><span class="v v-yes">OUI ++</span> Le repo le fait déjà mieux que le brief ne l&#39;imagine</td>
+<td>§D</td>
+</tr>
+<tr>
+<td>ETF ≠ entreprise, look-through</td>
+<td><span class="v v-yes">OUI</span> Moteur prêt (<code>overlap.ts</code>) ; manque la classification d&#39;activité</td>
+<td>§E.1</td>
+</tr>
+<tr>
+<td>Obligations : 4 types distincts</td>
+<td><span class="v v-warn">NUANCE</span> Corporate + souverain oui ; green bonds P2 ; <strong>SLB : ne pas faire</strong></td>
+<td>§E.2</td>
+</tr>
+<tr>
+<td>Impact Profile 8 dimensions</td>
+<td><span class="v v-no">NON</span> <strong>5 dimensions.</strong> 3 des 8 sont non sourçables aujourd&#39;hui</td>
+<td>§G</td>
+</tr>
+<tr>
+<td>« Overall profile : 81 »</td>
+<td><span class="v v-no">NON</span> <strong>Supprimer</strong> — contredit le brief lui-même</td>
+<td>§0 mur n°4, §G</td>
+</tr>
+<tr>
+<td>What-if « Seedow propose ETF B »</td>
+<td><span class="v v-warn">NUANCE</span> <strong>Re-concevoir</strong> : l&#39;utilisateur choisit, Seedow calcule</td>
+<td>§H</td>
+</tr>
+<tr>
+<td>Monthly Impact</td>
+<td><span class="v v-warn">NUANCE</span> <strong>Événementiel + trimestriel</strong>, pas mensuel</td>
+<td>§I</td>
+</tr>
+<tr>
+<td>IA en 7 sections</td>
+<td><span class="v v-warn">NUANCE</span> <strong>4 onglets</strong> ; IMPROVE et INVEST sont des actions, pas des sections</td>
+<td>§J</td>
+</tr>
+<tr>
+<td>Premium 4–7 €/mois</td>
+<td><span class="v v-warn">NUANCE</span> <strong>8–12 €/mois ou 79–99 €/an</strong>, à tester</td>
+<td>§M</td>
+</tr>
+<tr>
+<td>B2B en 4ᵉ couche</td>
+<td><span class="v v-no">NON</span> <strong>En 2ᵉ.</strong> C&#39;est lui qui amortit la donnée et décide de la rentabilité</td>
+<td>§M, §N</td>
+</tr>
+<tr>
+<td>Ne rien casser</td>
+<td><span class="v v-yes">OUI</span> Tenu : zéro suppression dans <code>lib/</code>, deux modules recentrés</td>
+<td>§L</td>
+</tr>
+</tbody></table></div>
+
+  </main>
+</div>

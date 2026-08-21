@@ -9,3 +9,5 @@ routeTree.gen.ts
 src/integrations/supabase/types.ts
 src/integrations/supabase/client.ts
 .lovable/
+
+docs/repositionnement.html
