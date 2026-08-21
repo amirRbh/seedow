@@ -11,9 +11,12 @@
 #
 # Secrets requis (Settings → Secrets and variables → Actions) :
 #   SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY   (écriture service_role, bypass RLS)
-#   ISHARES_PRODUCT_URLS                       JSON { "<ISIN>": "<url page produit>" }
-# Sans SEEDOW_PERSIST=1 (défaut du dispatch), le run est un DRY-RUN qui parse et
-# rapporte sans rien écrire.
+# Secrets OPTIONNELS (la découverte du catalogue est automatique — voir le script) :
+#   ISHARES_LIST_URLS      JSON string[] de pages catalogue (défaut fourni)
+#   ISHARES_PRODUCT_URLS   JSON { "<ISIN>": "<url>" } pour ÉPINGLER un cas particulier
+# Le harvester découvre seul (ISIN → page produit) en interceptant le screener
+# iShares, puis croise avec notre univers `assets`. Sans SEEDOW_PERSIST=1 (défaut
+# du dispatch), le run est un DRY-RUN qui parse et rapporte sans rien écrire.
 name: Harvest iShares holdings
 
 on:
@@ -58,6 +61,8 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          # Optionnels — la découverte du catalogue est automatique.
+          ISHARES_LIST_URLS: ${{ secrets.ISHARES_LIST_URLS }}
           ISHARES_PRODUCT_URLS: ${{ secrets.ISHARES_PRODUCT_URLS }}
           # Le dispatch manuel décide ; le cron persiste par défaut (true).
           SEEDOW_PERSIST: ${{ (github.event_name == 'schedule' || inputs.persist) && '1' || '0' }}

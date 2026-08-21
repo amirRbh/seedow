@@ -287,16 +287,23 @@ de composition réellement rendu par la page, plutôt que de licencier un flux E
 posture plus lourde qu'un flux déclaré. Elle est **actée explicitement** ici. Garde-fous :
 UA identifiable (`SeedowBot`), débit poli (séquentiel + délai entre fonds), seules des
 **compositions de fonds publiques** (divulgations réglementaires) sont visées, et **aucune
-URL n'est devinée** — la table `ISHARES_PRODUCT_URLS` (secret) fournit les pages produit
-curées, et seul le lien de CSV réellement présent dans le DOM est suivi (`pickHoldingsCsvUrl`,
-pur et testé). Un fonds sans lien → `no_source`, rien n'est écrit (§1.3).
+URL n'est devinée** : on lit ce que le site expose. Un fonds sans lien de CSV dans le DOM
+→ `no_csv`, rien n'est écrit (§1.3).
+
+**Entièrement automatique — aucune liste d'ISIN à curer.** Le harvester DÉCOUVRE le
+catalogue seul : il charge la page catalogue iShares, intercepte le « product screener »
+JSON que la SPA consomme, en extrait les couples (ISIN, page produit), puis les croise avec
+notre univers `assets` par ISIN. `ISHARES_PRODUCT_URLS` n'est plus qu'un **override
+optionnel** (épingler un cas particulier) ; `ISHARES_LIST_URLS` (optionnel) surcharge les
+pages catalogue de départ.
 
 **Implémentation** (réutilise le pipeline existant, §23 — rien de réécrit) :
 
 | Brique                                              | Fichier                                                       | Statut   |
 | --------------------------------------------------- | ------------------------------------------------------------- | -------- |
+| Découverte catalogue ISIN→URL (pure, testée)        | `src/lib/data-engine/ishares-catalog.ts`                      | neuf     |
 | Sélection d'URL de CSV depuis le DOM (pure, testée) | `src/lib/data-engine/ishares-holdings-url.ts`                 | neuf     |
-| Harvester navigateur                                | `scripts/harvest-ishares-holdings.ts`                         | neuf     |
+| Harvester navigateur (découverte + moissonnage)     | `scripts/harvest-ishares-holdings.ts`                         | neuf     |
 | Parsing CSV iShares                                 | `src/lib/data-engine/holdings.ts` (`parseISharesHoldingsCsv`) | existant |
 | Contrôle qualité                                    | `src/lib/data-engine/holdings-quality.ts`                     | existant |
 | Persistance datée + sourcée                         | `holdings.ts` (`persistHoldings`) + `holdings.supabase.ts`    | existant |
@@ -308,9 +315,13 @@ avec l'Edge Cloudflare). Playwright est installé de façon **transitoire** (`np
 source unique et n'est pas modifié. **DRY-RUN par défaut** (parse + rapport, aucune
 écriture) ; `SEEDOW_PERSIST=1` (ou le cron hebdomadaire) écrit réellement.
 
-**Reste à faire au premier run réel** (non vérifiable hors CI / hors egress iShares) :
-peupler le secret `ISHARES_PRODUCT_URLS` avec les pages produit des fonds iShares de
-l'univers, lancer un dry-run, et **ajuster les sélecteurs du bandeau de consentement** si
-la structure de la page diffère (le harvester tente plusieurs sélecteurs en best-effort).
-Une fois `fund_holdings` peuplée, les Étapes 7/9/10 (Asset Intelligence, Collection Impact,
-overlap) se débloquent — le moteur carbone PCAF et `overlap.ts` sont déjà prêts à la consommer.
+**Seuls secrets à poser** : `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY`. Puis lancer un
+dry-run (Actions → _Harvest iShares holdings_). La logique de découverte et de sélection
+d'URL est pure et testée ; ce qui ne peut se vérifier qu'en CI (egress iShares bloqué en
+sandbox, comme les probes #1-#5) est le **glue navigateur** : forme exacte du screener
+intercepté et sélecteurs du bandeau de consentement. Le parseur de screener est **tolérant
+à la structure** (parcours récursif, ISIN validé par checksum) pour absorber les variantes ;
+si le premier dry-run ne découvre rien, le rapport le montre (0 découvert) et on ajuste les
+sélecteurs ou `ISHARES_LIST_URLS`. Une fois `fund_holdings` peuplée, les Étapes 7/9/10
+(Asset Intelligence, Collection Impact, overlap) se débloquent — le moteur carbone PCAF et
+`overlap.ts` sont déjà prêts à la consommer.
