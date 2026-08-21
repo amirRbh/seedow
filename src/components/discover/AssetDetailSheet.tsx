@@ -16,18 +16,23 @@ import {
 } from "@/components/discover/TransparencyBadges";
 import { ImpactBadge } from "@/components/discover/ImpactBadge";
 import { useWatchlist } from "@/hooks/useWatchlist";
+import { useCollections } from "@/hooks/useCollections";
+import { MatchBadge, MatchWhy } from "@/components/discover/MatchBadge";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
 import { relativeIntensityVsBenchmark } from "@/lib/esg/carbon";
 import { ACWI_WACI_TCO2E_PER_MUSD, ACWI_WACI_SOURCE, ACWI_WACI_ASOF } from "@/lib/esg/benchmark";
 import type { DiscoverAsset } from "@/lib/discover/types";
+import type { MatchResult } from "@/lib/matching/types";
 
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   asset: DiscoverAsset | null;
+  /** Correspondance PIU de cet actif (facultative). */
+  match?: MatchResult | null;
 }
 
-export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
+export function AssetDetailSheet({ open, onOpenChange, asset, match }: Props) {
   const { t } = useTranslation();
   const { lang } = useLang();
 
@@ -43,6 +48,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
 
   const [detailsOpen, setDetailsOpen] = useState(false);
   const { isWatched, toggle } = useWatchlist();
+  const { isInAnyCollection, addToDefault, removeEverywhere } = useCollections();
   // Libellé SFDR adapté au niveau de détail (jargon en Expert, clair en Simple).
   const sfdrLabel = useTermLabel("SFDR");
 
@@ -53,6 +59,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
 
   if (!asset) return null;
   const watched = isWatched(asset.id);
+  const collected = isInAnyCollection(asset.id);
 
   const risk = asset.risk_level ?? 4;
   const riskInfo = RISK_LABELS[risk];
@@ -102,6 +109,36 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
         </div>
 
         <div className="px-5 py-5 space-y-6">
+          {/* Correspondance PIU — « pourquoi cet actif matche CE QUE TU AS DIT »
+              (§6/§11). Décomposé, points faibles compris, et honnête sur ce qui
+              n'a pas pu être mesuré. Ce n'est pas un jugement de Seedow. */}
+          {match && match.band !== "not_scored" ? (
+            <section className="rounded-xl border border-paper-3 bg-paper p-3.5">
+              <div className="mb-2.5 flex items-center justify-between gap-2">
+                <p className="font-mono text-tag uppercase tracking-[0.18em] text-ink-3">
+                  {t("match.section_title", "Ta correspondance")}
+                </p>
+                <MatchBadge match={match} />
+              </div>
+              <MatchWhy match={match} />
+            </section>
+          ) : match && match.missing.length > 0 ? (
+            <section className="rounded-xl border border-paper-3 bg-paper p-3.5">
+              <p className="mb-1 font-mono text-tag uppercase tracking-[0.18em] text-ink-3">
+                {t("match.section_title", "Ta correspondance")}
+              </p>
+              <p className="text-body-sm text-ink-2">
+                {t(
+                  "match.not_scorable",
+                  "Pas assez de données pour évaluer cet actif selon tes critères.",
+                )}
+              </p>
+              <div className="mt-2">
+                <MatchWhy match={match} />
+              </div>
+            </section>
+          ) : null}
+
           {/* « En clair » — pédagogie contextuelle (analyse UX §08/§14 étapes 1-2).
               Un débutant ne sait pas si « equity_dev » ou « green_bond » est une
               entreprise, un panier, un prêt ou de l'immobilier. On le lui dit en
@@ -417,6 +454,44 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
             />
             <span className="hidden sm:inline">
               {watched ? t("watchlist.following") : t("watchlist.follow")}
+            </span>
+          </button>
+          {/* SELECT du parcours PIU : ajouter à sa collection (l'utilisateur
+              décide, aucune optimisation). */}
+          <button
+            type="button"
+            onClick={() =>
+              collected ? removeEverywhere(asset.id) : addToDefault(asset.id, asset.name)
+            }
+            aria-pressed={collected}
+            aria-label={
+              collected
+                ? t("collections.in_collection", "Dans ta collection")
+                : t("collections.add", "Ajouter à ma collection")
+            }
+            className={`h-11 px-4 rounded-full border text-label font-semibold flex items-center gap-1.5 transition-colors ${
+              collected
+                ? "bg-mint/15 border-mint text-ink"
+                : "bg-paper-2 border-paper-3 text-ink-2 hover:border-mint/50"
+            }`}
+          >
+            <svg
+              viewBox="0 0 16 16"
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2.2}
+            >
+              {collected ? (
+                <path d="M3.5 8.5l3 3 6-7" strokeLinecap="round" strokeLinejoin="round" />
+              ) : (
+                <path d="M8 3v10M3 8h10" strokeLinecap="round" />
+              )}
+            </svg>
+            <span className="hidden sm:inline">
+              {collected
+                ? t("collections.in_collection", "Dans ta collection")
+                : t("collections.add", "Ajouter")}
             </span>
           </button>
           <InvestDialog

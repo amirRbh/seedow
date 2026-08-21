@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion } from "framer-motion";
 import { useServerFn } from "@tanstack/react-start";
@@ -20,6 +20,7 @@ import {
   type SortKey,
 } from "@/lib/discover/filters";
 import { useAssetUniverse } from "@/hooks/useAssetUniverse";
+import { usePersonalUniverse } from "@/hooks/usePersonalUniverse";
 import { triggerMarketRefresh } from "@/lib/market/refresh.functions";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
 import type { DiscoverAsset } from "@/lib/discover/types";
@@ -62,8 +63,37 @@ export function AssetScreener({ initialThemes }: { initialThemes?: string[] } = 
   };
 
   const categories = useMemo(() => uniqueCategories(assets), [assets]);
-  const results = useMemo(() => applyFilters(assets, filters), [assets, filters]);
+  const filteredResults = useMemo(() => applyFilters(assets, filters), [assets, filters]);
   const activeCount = activeFilterCount(filters);
+
+  // Personal Investment Universe : classement par CORRESPONDANCE avec les
+  // préférences pondérées de l'utilisateur (§6). C'est le cœur du pivot — la liste
+  // n'est plus la même pour tout le monde.
+  const personal = usePersonalUniverse(assets);
+
+  // Ordonne par correspondance (scorables d'abord, meilleurs devant ; non
+  // scorables ensuite). Appliqué au tri « par défaut » ET au tri explicite
+  // « ma correspondance » ; les autres tris (frais, prix…) restent inchangés.
+  const orderByMatch = useCallback(
+    (list: DiscoverAsset[]): DiscoverAsset[] => {
+      const scoreOf = (a: DiscoverAsset): number => {
+        const m = personal.matchOf(a.id);
+        return m?.scorable ? (m.score ?? 0) : -1;
+      };
+      return [...list]
+        .map((a, i) => ({ a, i, s: scoreOf(a) }))
+        .sort((x, y) => y.s - x.s || x.i - y.i) // score desc, ordre d'origine stable
+        .map((x) => x.a);
+    },
+    [personal],
+  );
+
+  const results = useMemo(() => {
+    if (filters.sort === "default" || filters.sort === "match_desc") {
+      return orderByMatch(filteredResults);
+    }
+    return filteredResults;
+  }, [filteredResults, filters.sort, orderByMatch]);
 
   // Événement funnel "première recherche de fonds" — débouncé pour ne tracer
   // qu'une recherche stabilisée, pas chaque frappe.
@@ -94,10 +124,9 @@ export function AssetScreener({ initialThemes }: { initialThemes?: string[] } = 
   // « Les mieux notés » : top 5 par score d'impact, montrés seuls tant que
   // l'utilisateur n'a ni cherché, ni filtré, ni demandé « Voir tout ».
   const TOP_N = 5;
-  const topRated = useMemo(
-    () => [...results].sort((a, b) => b.overall_esg_score - a.overall_esg_score).slice(0, TOP_N),
-    [results],
-  );
+  // « Les mieux notés POUR TOI » : top de la correspondance personnelle (§21),
+  // pas un classement ESG universel.
+  const topRated = useMemo(() => orderByMatch(results).slice(0, TOP_N), [results, orderByMatch]);
   const curatedView =
     activeCount === 0 && searchTerm.length === 0 && !showAll && results.length > TOP_N;
 
@@ -131,6 +160,7 @@ export function AssetScreener({ initialThemes }: { initialThemes?: string[] } = 
 
   const sortOptions: { value: SortKey; label: string }[] = [
     { value: "default", label: t("discover.sort.default") },
+    { value: "match_desc", label: t("discover.sort.match_desc", "Ma correspondance") },
     { value: "esg_desc", label: t("discover.sort.esg_desc") },
     { value: "ter_asc", label: t("discover.sort.ter_asc") },
     { value: "price_asc", label: t("discover.sort.price_asc") },
@@ -411,10 +441,27 @@ export function AssetScreener({ initialThemes }: { initialThemes?: string[] } = 
         ) : curatedView ? (
           <>
             <p className="text-tag uppercase tracking-[0.16em] text-ink-3 font-mono pt-1">
-              {t("discover.top_rated")}
+              {t("discover.top_rated_for_you", "Les mieux notés pour toi")}
+            </p>
+            {/* Dénominateur honnête (§5.4) : jamais un compte sans sa base. */}
+            <p className="text-caption text-ink-3 -mt-1">
+              {t(
+                "discover.match_denominator",
+                "{{scored}} correspondent · sur {{total}} analysés",
+                {
+                  scored: personal.scoredCount,
+                  total: personal.analyzedCount,
+                },
+              )}
             </p>
             {topRated.map((asset, i) => (
-              <AssetRow key={asset.id} asset={asset} index={i} onOpen={() => setDetail(asset)} />
+              <AssetRow
+                key={asset.id}
+                asset={asset}
+                index={i}
+                match={personal.matchOf(asset.id)}
+                onOpen={() => setDetail(asset)}
+              />
             ))}
             <button
               type="button"
@@ -427,7 +474,13 @@ export function AssetScreener({ initialThemes }: { initialThemes?: string[] } = 
         ) : (
           <>
             {visibleResults.map((asset, i) => (
-              <AssetRow key={asset.id} asset={asset} index={i} onOpen={() => setDetail(asset)} />
+              <AssetRow
+                key={asset.id}
+                asset={asset}
+                index={i}
+                match={personal.matchOf(asset.id)}
+                onOpen={() => setDetail(asset)}
+              />
             ))}
             {visibleCount < results.length && <div ref={sentinelRef} aria-hidden className="h-1" />}
           </>
@@ -438,6 +491,7 @@ export function AssetScreener({ initialThemes }: { initialThemes?: string[] } = 
         open={detail !== null}
         onOpenChange={(o) => !o && setDetail(null)}
         asset={detail}
+        match={detail ? personal.matchOf(detail.id) : null}
       />
     </div>
   );

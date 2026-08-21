@@ -3,12 +3,16 @@ import { useTranslation } from "react-i18next";
 import { useLang } from "@/hooks/useLang";
 import { formatCurrency } from "@/lib/format";
 import type { DiscoverAsset } from "@/lib/discover/types";
+import type { MatchResult } from "@/lib/matching/types";
 import { ImpactBadge } from "./ImpactBadge";
+import { MatchBadge } from "./MatchBadge";
 
 interface Props {
   asset: DiscoverAsset;
   index: number;
   onOpen: () => void;
+  /** Correspondance PIU (facultative) — « à quel point ça matche TES critères ». */
+  match?: MatchResult | null;
 }
 
 /**
@@ -18,7 +22,7 @@ interface Props {
  * la liste de méta que le débutant ne sait pas encore lire (progressive
  * disclosure, priorité mobile).
  */
-export function AssetRow({ asset, index, onOpen }: Props) {
+export function AssetRow({ asset, index, onOpen, match }: Props) {
   const { t } = useTranslation();
   const { lang } = useLang();
 
@@ -58,6 +62,7 @@ export function AssetRow({ asset, index, onOpen }: Props) {
             : t("discover.row.price_unavailable")}
         </p>
         <ImpactBadge score={asset.overall_esg_score} />
+        {match && match.band !== "not_scored" && <MatchBadge match={match} />}
       </div>
     </motion.button>
   );

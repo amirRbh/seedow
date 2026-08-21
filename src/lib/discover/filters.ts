@@ -1,6 +1,13 @@
 import type { DiscoverAsset } from "@/lib/discover/types";
 
-export type SortKey = "default" | "esg_desc" | "ter_asc" | "price_asc" | "price_desc" | "name_asc";
+export type SortKey =
+  | "default"
+  | "match_desc" // correspondance PIU décroissante — trié dans le composant (a besoin des poids)
+  | "esg_desc"
+  | "ter_asc"
+  | "price_asc"
+  | "price_desc"
+  | "name_asc";
 
 export interface ScreenerFilters {
   search: string;
