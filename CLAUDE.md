@@ -226,7 +226,7 @@ Ethi est l'assistant conversationnel du produit (Lovable AI Gateway, Gemini/GPT-
 
 **Décisions préalables (P0, hors code — §17 Étape 0).**
 
-- Acquisition des holdings (`fund_holdings` vide, voie iShares épuisée) : EET/SFDR licencié vs navigateur sans tête. **Chemin critique** de tout le look-through.
+- **Acquisition des holdings — DÉCIDÉE le 2026-08-21 : option B (navigateur sans tête).** `fund_holdings` était vide, voie HTTP iShares épuisée. On pilote la SPA iShares avec Playwright pour lire le CSV de composition réellement rendu, puis on réutilise le pipeline existant (parse → QC → persist). Implémentation : `scripts/harvest-ishares-holdings.ts` + `.github/workflows/harvest-ishares-holdings.yml` (tourne en GitHub Actions, pas sur l'Edge). Posture ToS plus lourde (piloter le site d'un tiers) **actée explicitement** ; UA identifiable, débit poli, seules des compositions publiques visées, aucune URL devinée (`ISHARES_PRODUCT_URLS` curée). Détail : `docs/esg-sources.md`. **Chemin critique** de tout le look-through (Étapes 7/9/10).
 - Avis juridique : Match Score (recommandation personnalisée MiFID II), statut réglementaire, licence de redistribution des données, RGPD art. 9 (les préférences de valeurs peuvent révéler des convictions).
 
 **Later (P1/P2 — après déblocage des holdings et validation).**

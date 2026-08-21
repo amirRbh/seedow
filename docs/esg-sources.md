@@ -275,3 +275,42 @@ sans modification du cœur.
 
 _Mesuré via `.github/workflows/probe-ishares-catalog.yml` (runs #1–#5, read-only ; aucune
 URL de KID devinée, rien écrit)._
+
+## Décision holdings — 2026-08-21 : option B (navigateur sans tête)
+
+Après épuisement de la voie HTTP simple (runs #1–#5, endpoint `product-data.jsn`
+piloté par une config runtime SPA), le porteur du produit tranche **l'option B :
+piloter la SPA iShares avec un navigateur sans tête** (Playwright) pour lire le CSV
+de composition réellement rendu par la page, plutôt que de licencier un flux EET.
+
+**Posture ToS** : conduire le site d'un tiers pour moissonner ses données est une
+posture plus lourde qu'un flux déclaré. Elle est **actée explicitement** ici. Garde-fous :
+UA identifiable (`SeedowBot`), débit poli (séquentiel + délai entre fonds), seules des
+**compositions de fonds publiques** (divulgations réglementaires) sont visées, et **aucune
+URL n'est devinée** — la table `ISHARES_PRODUCT_URLS` (secret) fournit les pages produit
+curées, et seul le lien de CSV réellement présent dans le DOM est suivi (`pickHoldingsCsvUrl`,
+pur et testé). Un fonds sans lien → `no_source`, rien n'est écrit (§1.3).
+
+**Implémentation** (réutilise le pipeline existant, §23 — rien de réécrit) :
+
+| Brique                                              | Fichier                                                       | Statut   |
+| --------------------------------------------------- | ------------------------------------------------------------- | -------- |
+| Sélection d'URL de CSV depuis le DOM (pure, testée) | `src/lib/data-engine/ishares-holdings-url.ts`                 | neuf     |
+| Harvester navigateur                                | `scripts/harvest-ishares-holdings.ts`                         | neuf     |
+| Parsing CSV iShares                                 | `src/lib/data-engine/holdings.ts` (`parseISharesHoldingsCsv`) | existant |
+| Contrôle qualité                                    | `src/lib/data-engine/holdings-quality.ts`                     | existant |
+| Persistance datée + sourcée                         | `holdings.ts` (`persistHoldings`) + `holdings.supabase.ts`    | existant |
+| Orchestration CI                                    | `.github/workflows/harvest-ishares-holdings.yml`              | neuf     |
+
+**Exécution** : GitHub Actions (Playwright a besoin d'un vrai navigateur, incompatible
+avec l'Edge Cloudflare). Playwright est installé de façon **transitoire** (`npm install
+--no-save`) après le `bun install --frozen-lockfile` : le lockfile Bun versionné reste la
+source unique et n'est pas modifié. **DRY-RUN par défaut** (parse + rapport, aucune
+écriture) ; `SEEDOW_PERSIST=1` (ou le cron hebdomadaire) écrit réellement.
+
+**Reste à faire au premier run réel** (non vérifiable hors CI / hors egress iShares) :
+peupler le secret `ISHARES_PRODUCT_URLS` avec les pages produit des fonds iShares de
+l'univers, lancer un dry-run, et **ajuster les sélecteurs du bandeau de consentement** si
+la structure de la page diffère (le harvester tente plusieurs sélecteurs en best-effort).
+Une fois `fund_holdings` peuplée, les Étapes 7/9/10 (Asset Intelligence, Collection Impact,
+overlap) se débloquent — le moteur carbone PCAF et `overlap.ts` sont déjà prêts à la consommer.

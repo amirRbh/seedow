@@ -1,0 +1,64 @@
+# HARVEST iShares holdings — navigateur sans tête (décision « holdings : option B »,
+# cf. docs/esg-sources.md et CLAUDE.md §7). Récupère la composition officielle des
+# fonds iShares (JS-rendered) et la persiste, datée et sourcée, dans `fund_holdings`.
+#
+# S'exécute ICI (GitHub Actions) et non sur l'Edge Cloudflare : Playwright a besoin
+# d'un vrai navigateur, incompatible avec les Workers. Manuel + planifié (hebdo).
+#
+# Playwright est installé de façon TRANSITOIRE (`npm install --no-save`) APRÈS le
+# `bun install --frozen-lockfile` : le lockfile Bun versionné reste la source unique
+# et n'est pas modifié (CLAUDE.md §6 — pas de second lockfile dans le repo).
+#
+# Secrets requis (Settings → Secrets and variables → Actions) :
+#   SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY   (écriture service_role, bypass RLS)
+#   ISHARES_PRODUCT_URLS                       JSON { "<ISIN>": "<url page produit>" }
+# Sans SEEDOW_PERSIST=1 (défaut du dispatch), le run est un DRY-RUN qui parse et
+# rapporte sans rien écrire.
+name: Harvest iShares holdings
+
+on:
+  workflow_dispatch:
+    inputs:
+      persist:
+        description: "Écrire réellement dans fund_holdings (sinon dry-run)"
+        type: boolean
+        default: false
+  schedule:
+    # Hebdomadaire, lundi 04:12 UTC (heure creuse ; les compositions bougent peu).
+    - cron: "12 4 * * 1"
+
+# Une exécution à la fois : pas de moissonnage concurrent.
+concurrency:
+  group: harvest-ishares-holdings
+  cancel-in-progress: false
+
+jobs:
+  harvest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.11"
+
+      - name: Install dependencies (frozen)
+        run: bun install --frozen-lockfile
+
+      # Transitoire : n'écrit ni package.json ni un second lockfile.
+      - name: Install Playwright (transient)
+        run: npm install --no-save playwright@1.49.1
+
+      - name: Install Chromium + system deps
+        run: bunx playwright install --with-deps chromium
+
+      - name: Harvest
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          ISHARES_PRODUCT_URLS: ${{ secrets.ISHARES_PRODUCT_URLS }}
+          # Le dispatch manuel décide ; le cron persiste par défaut (true).
+          SEEDOW_PERSIST: ${{ (github.event_name == 'schedule' || inputs.persist) && '1' || '0' }}
+        run: bun run scripts/harvest-ishares-holdings.ts
