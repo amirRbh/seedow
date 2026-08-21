@@ -199,6 +199,7 @@ function Landing() {
                 title={t("landing.paths.beginner_title")}
                 desc={t("landing.paths.beginner_desc")}
                 cta={t("landing.paths.beginner_cta")}
+                tone="mint"
                 to="/onboarding"
                 search={{ guest: true }}
                 onClick={onCta("path_beginner", "preview")}
@@ -208,6 +209,7 @@ function Landing() {
                 title={t("landing.paths.learn_title")}
                 desc={t("landing.paths.learn_desc")}
                 cta={t("landing.paths.learn_cta")}
+                tone="ice"
                 to="/comprendre"
                 onClick={onCta("path_learn", "preview")}
               />
@@ -216,6 +218,7 @@ function Landing() {
                 title={t("landing.paths.investor_title")}
                 desc={t("landing.paths.investor_desc")}
                 cta={t("landing.paths.investor_cta")}
+                tone="volt"
                 to="/auth"
                 search={{ redirect: "/portfolio", mode: "login" }}
                 onClick={onCta("path_investor", "login")}
@@ -500,10 +503,15 @@ function Section({
 }
 
 function ProofTile({ children }: { children: React.ReactNode }) {
+  // `h-full` + centrage : un <p> posé directement en grid item ne s'étirait
+  // pas, d'où des tuiles de hauteurs inégales dès qu'un libellé passait sur
+  // deux lignes.
   return (
-    <p className="paper-card px-5 py-5 text-body-sm leading-relaxed text-ink-2 [&_b]:text-ink [&_b]:font-bold">
-      {children}
-    </p>
+    <div className="paper-card flex h-full items-center justify-center px-5 py-6">
+      <p className="text-center text-body-sm leading-relaxed text-ink-2 [&_b]:text-ink [&_b]:font-bold">
+        {children}
+      </p>
+    </div>
   );
 }
 
@@ -515,6 +523,7 @@ function PathCard({
   to,
   search,
   onClick,
+  tone,
 }: {
   eyebrow: string;
   title: string;
@@ -523,18 +532,25 @@ function PathCard({
   to: string;
   search?: Record<string, unknown>;
   onClick?: () => void;
+  /** Chaque parcours porte sa couleur : elle DISTINGUE les trois entrées,
+   *  elle n'est donc pas décorative. */
+  tone: "mint" | "ice" | "volt";
 }) {
+  const chipTone = { mint: "chip--verified", ice: "chip--ice", volt: "chip--volt" }[tone];
+  const linkTone = { mint: "text-mint-ink", ice: "text-ice-ink", volt: "text-volt-ink" }[tone];
   return (
     <Link
       to={to}
       search={search}
       onClick={onClick}
-      className="paper-card group flex flex-col p-7 outline-none transition-colors hover:bg-paper-inset focus-visible:ring-2 focus-visible:ring-ink"
+      className="paper-card group flex h-full flex-col p-7 outline-none transition-colors hover:bg-paper-inset focus-visible:ring-2 focus-visible:ring-ink"
     >
-      <span className="chip">{eyebrow}</span>
+      <span className={`chip ${chipTone}`}>{eyebrow}</span>
       <h3 className="mt-4">{title}</h3>
       <p className="mt-2.5 text-body-sm leading-relaxed text-ink-2">{desc}</p>
-      <span className="mt-auto pt-6 text-body font-semibold text-mint-ink inline-flex items-center gap-1.5">
+      <span
+        className={`mt-auto pt-6 text-body font-semibold ${linkTone} inline-flex items-center gap-1.5`}
+      >
         {cta}
         <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
           →
@@ -549,10 +565,13 @@ function PathCard({
  * Ce n'est pas une capture décorative : c'est la démonstration du titre.
  */
 function HeroProof({ t }: { t: (key: string, opts?: Record<string, unknown>) => string }) {
+  // Trois convictions, trois couleurs : la barre est le seul endroit du bloc
+  // où la couleur porte une distinction. Tout en mint, elles se lisaient comme
+  // une seule et même série.
   const convictions = [
-    { label: t("landing.hero2.preview.conv_climate"), weight: 42 },
-    { label: t("landing.hero2.preview.conv_biodiversity"), weight: 33 },
-    { label: t("landing.hero2.preview.conv_social"), weight: 25 },
+    { label: t("landing.hero2.preview.conv_climate"), weight: 42, bar: "bg-mint" },
+    { label: t("landing.hero2.preview.conv_biodiversity"), weight: 33, bar: "bg-ice" },
+    { label: t("landing.hero2.preview.conv_social"), weight: 25, bar: "bg-volt" },
   ];
 
   return (
@@ -571,7 +590,7 @@ function HeroProof({ t }: { t: (key: string, opts?: Record<string, unknown>) => 
             </div>
             <div className="mt-2 h-1.5 rounded-full bg-paper-2 overflow-hidden">
               <div
-                className="h-full rounded-full bg-mint trace"
+                className={`h-full rounded-full ${c.bar} trace`}
                 style={{ width: `${c.weight}%`, animationDelay: `${0.15 + i * 0.08}s` }}
               />
             </div>
