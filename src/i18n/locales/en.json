@@ -244,8 +244,8 @@
       "step1_title": "Answer 4 questions",
       "step1_desc": "Your causes, your horizon, your risk tolerance. Two minutes, no account needed.",
       "step2_num": "02",
-      "step2_title": "Get a simulated portfolio",
-      "step2_desc": "Optimized allocation, impact score, comparison to a classic World ETF — all visible instantly.",
+      "step2_title": "Compose from a targeted pool",
+      "step2_desc": "A pool of assets matching your criteria, ranked by relevance — with impact score and comparison to a World ETF. You compose it; Seedow imposes no allocation.",
       "step3_num": "03",
       "step3_title": "Understand every number",
       "step3_desc": "Ethi explains the portfolio in plain language, and the full methodology is public.",
@@ -1275,10 +1275,8 @@
     "block_engine_version": "Engine version",
     "engine_version_desc": "Methodology v1.1 · E/S/G pillars weighted by causes, real carbon intensity, source traceability. Reviewed quarterly.",
     "status_saving": "Recalculating…",
-    "status_saved": "Changes saved",
+    "status_saved": "Preview updated",
     "status_error": "Recalculation error",
-    "preview_esg": "ESG",
-    "preview_ter": "TER",
     "methodology": {
       "market_data": {
         "title": "Market data",
@@ -1366,14 +1364,16 @@
     "notif_alerts": "Email alerts (ESG score, greenwashing)",
     "notif_alerts_hint": "Get an email when an asset you follow degrades (ESG score drop, SFDR change). Off by default — your choice, and you can turn it off anytime.",
     "notif_alerts_on": "Email alerts enabled.",
-    "notif_alerts_off": "Email alerts disabled."
+    "notif_alerts_off": "Email alerts disabled.",
+    "preview_pool_note": "{{excluded}} excluded of {{universe}} · ranked by relevance. Recompose to apply.",
+    "preview_recompose_cta": "Recompose my portfolio"
   },
   "methodologie": {
     "title": "Methodology",
     "meta_title": "Methodology — Portfolio Construction",
     "meta_desc": "Portfolio construction pipeline: exclusions, best-in-class, constrained Markowitz optimization, conviction tilts.",
     "back_dashboard": "← Dashboard",
-    "intro": "Five transparent and reproducible steps. Adjust the parameters at the bottom of the page to see the portfolio recomposed live.",
+    "intro": "Five transparent and reproducible steps. Adjust the parameters at the bottom of the page to see the asset pool re-rank live — Seedow imposes no allocation, you compose it.",
     "version_title": "Version history",
     "version_1_1_note": "Introduced the Seedow Score (weighted composite of ESG/climate/exclusions), published below and on fund pages — never based on the SFDR article.",
     "version_1_0_note": "Version tracking introduced for this page: any future change to weights, thresholds, or exclusions will be logged here, dated.",
@@ -1435,11 +1435,11 @@
       "2_name": "Universe",
       "2_desc": "~40 multi-class assets: equities, green bonds, thematics, REITs, money market.",
       "3_name": "Filters",
-      "3_desc": "Hard sector exclusions, then best-in-class ESG (top 50% per class — median).",
-      "4_name": "Convictions",
-      "4_desc": "Linear adjustment of expected returns according to your causes (≤ +1.5% per cause). No full Black-Litterman.",
-      "5_name": "Optimization",
-      "5_desc": "Constrained Markowitz: max return / variance, bounds per class and composite ESG floor weighted E/S/G according to your causes."
+      "3_desc": "A single hard filter: the sector exclusions you choose. ESG quality and performance don't filter the universe — they surface through the relevance ranking (next step).",
+      "4_name": "Relevance",
+      "4_desc": "Pool ranking: risk-adjusted performance (real Sharpe), Seedow ESG score, and alignment with your causes — renormalized over available signals only, never a made-up figure.",
+      "5_name": "Composition",
+      "5_desc": "You compose your portfolio from the ranked pool. Seedow sets no weights — the allocation is your choice."
     },
     "causes": {
       "climat": "Climate",
@@ -1482,9 +1482,9 @@
     "tips": {
       "stage_1": "Your personal preferences. The raw material for everything else.",
       "stage_2": "The toolkit: the list of financial products we can pick from (equities, bonds, real estate…).",
-      "stage_3": "First we remove what you refuse (e.g. weapons), then we only keep the top performers of each category on ESG criteria.",
-      "stage_4": "We slightly increase the expected weight of assets aligned with your priority causes. A nudge, not a sledgehammer.",
-      "stage_5": "A mathematical calculation that combines the remaining assets to target the best possible return at the risk level you chose.",
+      "stage_3": "We only remove what you refuse (e.g. weapons). We don't discard the \"lower\" ones: the ranking simply sends them down.",
+      "stage_4": "We rank the retained assets by \"relevance\": those that perform (risk-adjusted), are ESG-solid and match your causes rise to the top. An asset without history stays \"pending\", never scored at random.",
+      "stage_5": "You choose your amounts yourself. Seedow assists (diversification, concentration, impact in plain language) but never decides for you.",
       "causes": "The topics your money should push forward (climate, biodiversity…). The higher the intensity, the more the portfolio leans towards these topics.",
       "exclusions": "The sectors you refuse to finance. Ticked = strictly excluded from the portfolio.",
       "risk": "How much the portfolio value can move from one year to the next. The higher, the more it can rise… and fall.",
@@ -1509,7 +1509,16 @@
     "proprietary_notice_body": "Part of the investment universe is rated using Seedow's proprietary rating (v1), not MSCI. It applies while third-party data feeds are being connected — the exact source (MSCI, Seedow, or Yahoo Finance) is shown on every asset sheet.",
     "details_pipeline_toggle": "Show the 5-step detail",
     "details_esg_toggle": "Show ESG score detail (sources, grid, limits)",
-    "source_link_label": "Where does this number come from?"
+    "source_link_label": "Where does this number come from?",
+    "pool_title": "Pool ranked by relevance",
+    "pool_count": "{{count}} assets",
+    "pool_universe_note": "{{excluded}} excluded of {{universe}} · relevance method v{{version}}",
+    "pool_relevance": "{{score}}/100",
+    "pool_pending": "Pending",
+    "pool_sharpe": "Sharpe",
+    "pool_esg": "ESG",
+    "pool_cause": "Causes",
+    "version_2_0_note": "\"Pool over allocation\" shift: Seedow no longer proposes optimized (Markowitz) weights. It ranks a pool of assets by relevance (risk-adjusted performance × Seedow ESG score × alignment with causes) and the user composes it themselves. The optimizer remains an internal analysis/backtest tool, no longer the method for building the user portfolio."
   },
   "seed_card": {
     "id_card": "Identity card"

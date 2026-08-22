@@ -9,7 +9,8 @@ import { toast } from "sonner";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { useAuth } from "@/hooks/useAuth";
-import { generatePortfolio } from "@/lib/portfolio/server.functions";
+import { screenAssetPool } from "@/lib/portfolio/server.functions";
+import { writePoolHandoff } from "@/lib/onboarding/poolHandoff";
 import { triggerMarketRefresh } from "@/lib/market/refresh.functions";
 import { triggerRiskModelRecompute } from "@/lib/market/risk-model.functions";
 import {
@@ -141,7 +142,8 @@ function PreferencesSection() {
   const { t } = useTranslation();
   const { lang } = useLang();
   const { user } = useAuth();
-  const generate = useServerFn(generatePortfolio);
+  const navigate = useNavigate();
+  const screen = useServerFn(screenAssetPool);
 
   const [loadingInitial, setLoadingInitial] = useState(true);
   const [causes, setCauses] = useState<CauseTag[]>([]);
@@ -156,17 +158,21 @@ function PreferencesSection() {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const firstLoadRef = useRef(true);
 
-  type PreviewLine = {
+  // Aperçu = POOL classé par pertinence (plus d'allocation proposée) : on montre
+  // les actifs qui collent aux préférences, l'utilisateur recompose s'il veut
+  // appliquer. Seedow ne réécrit plus silencieusement un portefeuille pondéré.
+  type PoolLine = {
     id: string;
     ticker: string;
     name: string;
-    asset_class: string;
-    weight: number;
+    esg_score: number;
+    relevance: number | null;
   };
-  type SelectedAsset = { id: string; ticker: string; name: string; asset_class: string };
-  const [preview, setPreview] = useState<{ lines: PreviewLine[]; esg: number; ter: number } | null>(
-    null,
-  );
+  const [preview, setPreview] = useState<{
+    pool: PoolLine[];
+    excluded: number;
+    universe: number;
+  } | null>(null);
 
   // Charger le portefeuille actif
   useEffect(() => {
@@ -209,27 +215,33 @@ function PreferencesSection() {
     setStatus("saving");
     setErrorMsg(null);
     debounceRef.current = setTimeout(() => {
-      callAuthed(generate, {
-        causes,
-        cause_intensity: intensity,
-        exclusions,
-        risk_target: risk,
-        horizon_years: horizon,
-        initial_amount: amount,
+      screen({
+        data: {
+          causes,
+          cause_intensity: intensity,
+          exclusions,
+          risk_target: risk,
+          horizon_years: horizon,
+          initial_amount: amount,
+        },
       })
         .then((res) => {
-          const weights = (res as { weights: Record<string, number> }).weights ?? {};
-          const selected = (res as { selected: SelectedAsset[] }).selected ?? [];
-          const metrics = (res as { metrics: { esg_score: number; ter: number } }).metrics;
-          const lines = selected
-            .map((s) => ({ ...s, weight: weights[s.id] ?? 0 }))
-            .sort((a, b) => b.weight - a.weight)
-            .slice(0, 3);
-          setPreview({ lines, esg: metrics?.esg_score ?? 0, ter: metrics?.ter ?? 0 });
+          const pool = (res.pool ?? []).slice(0, 6).map((p) => ({
+            id: p.id,
+            ticker: p.ticker,
+            name: p.name,
+            esg_score: p.esg_score,
+            relevance: p.relevance,
+          }));
+          setPreview({
+            pool,
+            excluded: res.excluded_count ?? 0,
+            universe: res.universe_size ?? 0,
+          });
           setStatus("saved");
         })
         .catch((err: unknown) => {
-          console.error("[reglages] generate:", err);
+          console.error("[reglages] screen:", err);
           setStatus("error");
           setErrorMsg(err instanceof Error ? err.message : "Erreur de recalcul");
         });
@@ -237,7 +249,21 @@ function PreferencesSection() {
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [causes, intensity, exclusions, risk, horizon, amount, generate, loadingInitial]);
+  }, [causes, intensity, exclusions, risk, horizon, amount, screen, loadingInitial]);
+
+  // Recomposer : applique les préférences en repartant du pool dans le builder
+  // (mode replace = met à jour le portefeuille actif). Seedow ne réécrit rien
+  // tout seul — c'est un choix explicite de l'utilisateur.
+  const recompose = () => {
+    const seed = (preview?.pool ?? []).map((p) => ({
+      id: p.id,
+      ticker: p.ticker,
+      name: p.name,
+      esgScore: p.esg_score,
+    }));
+    writePoolHandoff(seed, { mode: "replace", causes, exclusions });
+    void navigate({ to: "/construire" });
+  };
 
   const toggleCause = (id: CauseTag) => {
     setCauses((prev) => {
@@ -267,44 +293,48 @@ function PreferencesSection() {
 
       {preview && (
         <motion.div
-          key={preview.lines.map((l) => l.id + l.weight.toFixed(3)).join("|")}
+          key={preview.pool.map((l) => l.id).join("|")}
           initial={{ opacity: 0, y: -2 }}
           animate={{ opacity: 1, y: 0 }}
           className="border border-paper-3 rounded-lg p-4 bg-paper-2"
         >
-          <div className="flex items-baseline justify-between mb-3">
+          <div className="flex items-baseline justify-between mb-1">
             <p className="text-tag uppercase tracking-[0.15em] text-ink-3 font-medium">
               {t("reglages.preview_eyebrow")}
             </p>
-            <div className="flex gap-3 text-caption text-ink-3">
-              <span>
-                {t("reglages.preview_esg")}{" "}
-                <span className="text-ink font-value tabular-nums">
-                  {formatNumber(preview.esg, lang, {
-                    maximumFractionDigits: 1,
-                    minimumFractionDigits: 1,
-                  })}
-                </span>
-              </span>
-              <span>
-                {t("reglages.preview_ter")}{" "}
-                <span className="text-ink font-value tabular-nums">
-                  {formatPercent(preview.ter, lang, 2)}
-                </span>
-              </span>
-            </div>
           </div>
+          {/* Aperçu du pool classé (aucune allocation imposée) — l'utilisateur
+              recompose pour appliquer ses préférences à son portefeuille. */}
+          <p className="text-caption text-ink-3 mb-3">
+            {t("reglages.preview_pool_note", {
+              excluded: preview.excluded,
+              universe: preview.universe,
+            })}
+          </p>
           <ul className="space-y-1.5">
-            {preview.lines.map((l) => (
+            {preview.pool.map((l) => (
               <li key={l.id} className="flex items-center gap-3 text-label">
                 <span className="font-value text-ink-2 w-12 tabular-nums shrink-0">{l.ticker}</span>
                 <span className="flex-1 text-ink truncate">{l.name}</span>
-                <span className="font-value tabular-nums text-ink w-12 text-right">
-                  {formatPercent(l.weight, lang, 1)}
-                </span>
+                {l.relevance != null ? (
+                  <span className="font-value tabular-nums text-mint w-14 text-right">
+                    {t("onboarding.pool.relevance_badge", { score: l.relevance })}
+                  </span>
+                ) : (
+                  <span className="text-tag text-ink-3 w-14 text-right">
+                    {t("onboarding.pool.pending_badge")}
+                  </span>
+                )}
               </li>
             ))}
           </ul>
+          <button
+            type="button"
+            onClick={recompose}
+            className="mt-4 w-full h-11 rounded-full bg-ink text-paper text-body-sm font-semibold hover:opacity-90 transition-colors"
+          >
+            {t("reglages.preview_recompose_cta")}
+          </button>
         </motion.div>
       )}
 

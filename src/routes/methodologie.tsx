@@ -5,7 +5,7 @@ import { formatPercent, formatNumber } from "@/lib/format";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useServerFn } from "@tanstack/react-start";
-import { simulatePortfolio } from "@/lib/portfolio/server.functions";
+import { screenAssetPool } from "@/lib/portfolio/server.functions";
 import { reportCaughtError } from "@/lib/monitoring/errorReporter";
 import { EASE_REVEAL } from "@/lib/motion";
 import { LanguageToggle } from "@/components/LanguageToggle";
@@ -27,6 +27,11 @@ import {
  */
 const METHODOLOGY_VERSIONS = [
   {
+    version: "2.0",
+    date: "2026-08-22",
+    noteKey: "methodologie.version_2_0_note",
+  },
+  {
     version: "1.1",
     date: "2026-08-17",
     noteKey: "methodologie.version_1_1_note",
@@ -45,14 +50,14 @@ export const Route = createFileRoute("/methodologie")({
       {
         name: "description",
         content:
-          "Pipeline de construction du portefeuille : exclusions, best-in-class, optimisation Markowitz contrainte, tilts par convictions.",
+          "Méthode Seedow : exclusions, best-in-class ESG, puis classement d'un pool par pertinence (performance ajustée au risque, Score Seedow ESG, alignement aux convictions). Tu composes, Seedow n'impose aucune allocation.",
       },
     ],
   }),
   component: MethodologyPage,
 });
 
-type SimResult = Awaited<ReturnType<typeof simulatePortfolio>>;
+type SimResult = Awaited<ReturnType<typeof screenAssetPool>>;
 
 function MethodologyPage() {
   const { t } = useTranslation();
@@ -121,7 +126,7 @@ function MethodologyPage() {
     cash: t("methodologie.asset_classes.cash"),
   };
 
-  const simulate = useServerFn(simulatePortfolio);
+  const screen = useServerFn(screenAssetPool);
 
   const [causes, setCauses] = useState<CauseTag[]>(["climat", "biodiversite"]);
   const [intensity, setIntensity] = useState<Record<string, number>>({
@@ -140,7 +145,7 @@ function MethodologyPage() {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     setLoading(true);
     debounceRef.current = setTimeout(() => {
-      simulate({
+      screen({
         data: {
           causes,
           cause_intensity: intensity,
@@ -152,15 +157,15 @@ function MethodologyPage() {
       })
         .then((r) => setResult(r))
         .catch((e) => {
-          console.error("simulate", e);
-          reportCaughtError(e, { source: "methodologie_simulate" });
+          console.error("screen", e);
+          reportCaughtError(e, { source: "methodologie_screen" });
         })
         .finally(() => setLoading(false));
     }, 250);
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [causes, intensity, exclusions, risk, horizon, simulate]);
+  }, [causes, intensity, exclusions, risk, horizon, screen]);
 
   const toggleCause = (id: CauseTag) => {
     setCauses((prev) => {
@@ -180,16 +185,7 @@ function MethodologyPage() {
     setExclusions((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   };
 
-  const sortedWeights = useMemo(() => {
-    if (!result) return [];
-    return Object.entries(result.weights)
-      .map(([id, w]) => {
-        const a = result.selected.find((x) => x.id === id);
-        return { id, weight: w, asset: a };
-      })
-      .filter((x) => x.asset)
-      .sort((a, b) => b.weight - a.weight);
-  }, [result]);
+  const pool = useMemo(() => (result?.pool ?? []).slice(0, 20), [result]);
 
   return (
     <div className="min-h-screen bg-paper-2 text-ink">
@@ -425,93 +421,34 @@ function MethodologyPage() {
 
           {/* Result */}
           <div className="lg:sticky lg:top-6 lg:self-start space-y-6">
-            {result?.esg_floor_relaxed && (
-              <div className="border border-rust/30 bg-rust/5 px-4 py-3 text-label text-ink-2 leading-relaxed">
-                <p className="font-value text-body-sm text-rust mb-1">
-                  {t("methodologie.esg_floor_relaxed_title")}
-                </p>
-                {t("methodologie.esg_floor_relaxed_desc")}
-              </div>
-            )}
-            <div className="border-t border-b border-paper-3 divide-y divide-paper-3">
-              <MetricRow
-                label={t("methodologie.metric_return")}
-                id="metric-return"
-                tip={t("methodologie.tips.return")}
-                value={result ? formatPercent(result.metrics.expected_return, lang) : "—"}
-                sub={t("methodologie.metric_return_hint")}
-              />
-              <MetricRow
-                label={t("methodologie.metric_volatility")}
-                id="metric-volatility"
-                tip={t("methodologie.tips.volatility")}
-                value={result ? formatPercent(result.metrics.volatility, lang) : "—"}
-                sub={t("methodologie.metric_volatility_hint")}
-              />
-              <MetricRow
-                label={t("methodologie.metric_sharpe")}
-                id="metric-sharpe"
-                tip={t("methodologie.tips.sharpe")}
-                value={result ? formatNumber(result.metrics.sharpe, lang) : "—"}
-                sub={t("methodologie.metric_sharpe_hint")}
-              />
-              <MetricRow
-                label={t("methodologie.metric_esg")}
-                id="metric-esg"
-                tip={t("methodologie.tips.esg")}
-                value={
-                  result
-                    ? `${formatNumber(result.metrics.esg_score, lang, { maximumFractionDigits: 0 })} / 100`
-                    : "—"
-                }
-                sub={t("methodologie.metric_esg_hint")}
-              />
-              <MetricRow
-                label={t("methodologie.metric_fees")}
-                id="metric-fees"
-                tip={t("methodologie.tips.fees")}
-                value={result ? formatPercent(result.metrics.ter, lang) : "—"}
-                sub={t("methodologie.metric_fees_hint")}
-              />
-              <MetricRow
-                label={t("methodologie.metric_carbon_intensity")}
-                id="metric-carbon-intensity"
-                tip={t("methodologie.tips.carbon_intensity")}
-                value={
-                  result?.metrics.carbon_intensity_gco2e_per_eur != null
-                    ? `${formatNumber(result.metrics.carbon_intensity_gco2e_per_eur, lang, { maximumFractionDigits: 0 })} gCO₂e/€/an`
-                    : t("methodologie.metric_carbon_unavailable")
-                }
-                sub={t("methodologie.metric_carbon_intensity_hint")}
-              />
-            </div>
-
-            <CarbonCoverage
-              coverage={result?.metrics.carbon_intensity_coverage ?? 0}
-              hasRealData={result?.metrics.carbon_intensity_gco2e_per_eur != null}
-              t={t}
-            />
-
-            {result?.impact && <ImpactPanel impact={result.impact} t={t} />}
-
+            {/* Pool classé par pertinence — Seedow ne propose plus d'allocation
+                pondérée ; il classe un pool que l'utilisateur compose. On montre
+                les 3 signaux qui composent la pertinence pour rendre la méthode
+                lisible (rien d'extrapolé). */}
             <div>
               <div className="flex items-baseline justify-between border-b border-paper-3 pb-2">
                 <p className="text-tag uppercase tracking-[0.12em] text-ink-3 font-medium">
-                  <MetricLabel
-                    label={t("methodologie.allocation_title")}
-                    hint={t("methodologie.tips.allocation")}
-                  />
+                  {t("methodologie.pool_title")}
                 </p>
                 <p className="text-tag text-ink-3">
                   {loading
                     ? t("methodologie.loading")
-                    : t("methodologie.positions_count", { count: sortedWeights.length })}
+                    : t("methodologie.pool_count", { count: pool.length })}
                 </p>
               </div>
+              {result && (
+                <p className="text-caption text-ink-3 pt-2">
+                  {t("methodologie.pool_universe_note", {
+                    excluded: result.excluded_count,
+                    universe: result.universe_size,
+                    version: result.screening_version,
+                  })}
+                </p>
+              )}
               <ul className="divide-y divide-paper-3">
-                {sortedWeights.map((row, i) => (
+                {pool.map((a, i) => (
                   <motion.li
-                    key={row.id}
+                    key={a.id}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: i * 0.02 }}
@@ -519,52 +456,45 @@ function MethodologyPage() {
                   >
                     <div className="flex items-baseline justify-between gap-3">
                       <div className="flex items-baseline gap-2 min-w-0">
-                        <span className="font-value text-body-sm text-ink">
-                          {row.asset!.ticker}
-                        </span>
-                        <span className="text-caption text-ink-3 truncate">{row.asset!.name}</span>
+                        <span className="font-value text-body-sm text-ink">{a.ticker}</span>
+                        <span className="text-caption text-ink-3 truncate">{a.name}</span>
                       </div>
-                      <span className="text-label tabular-nums font-medium">
-                        {(row.weight * 100).toFixed(1)}%
-                      </span>
+                      {a.relevance != null ? (
+                        <span className="text-label tabular-nums font-medium text-mint">
+                          {t("methodologie.pool_relevance", { score: a.relevance })}
+                        </span>
+                      ) : (
+                        <span className="text-tag text-ink-3">
+                          {t("methodologie.pool_pending")}
+                        </span>
+                      )}
                     </div>
-                    <div className="mt-1 h-px bg-paper-3 relative">
-                      <div
-                        className="absolute inset-y-0 left-0 bg-ink"
-                        style={{ width: `${row.weight * 100}%`, height: "1px" }}
-                      />
+                    {/* Sous-signaux de pertinence : perf (Sharpe), ESG (Score
+                        Seedow), alignement aux causes. */}
+                    <div className="mt-1 flex flex-wrap gap-x-4 gap-y-0.5 text-tag text-ink-3 tabular-nums">
+                      <span>
+                        {t("methodologie.pool_sharpe")}{" "}
+                        {a.sharpe != null
+                          ? formatNumber(a.sharpe, lang, { maximumFractionDigits: 2 })
+                          : "—"}
+                      </span>
+                      <span>
+                        {t("methodologie.pool_esg")}{" "}
+                        {a.seedow_esg_score != null ? `${a.seedow_esg_score}/100` : "—"}
+                      </span>
+                      <span>
+                        {t("methodologie.pool_cause")} {formatPercent(a.cause_match, lang, 0)}
+                      </span>
                     </div>
                   </motion.li>
                 ))}
-                {!loading && sortedWeights.length === 0 && (
+                {!loading && pool.length === 0 && (
                   <li className="py-6 text-center text-label text-ink-3">
                     {t("methodologie.no_positions")}
                   </li>
                 )}
               </ul>
             </div>
-
-            {result && (
-              <div>
-                <p className="text-tag uppercase tracking-[0.12em] text-ink-3 font-medium border-b border-paper-3 pb-2 mb-3">
-                  <MetricLabel
-                    label={t("methodologie.breakdown_title")}
-                    hint={t("methodologie.tips.breakdown")}
-                  />
-                </p>
-                <ul className="space-y-1.5">
-                  {Object.entries(result.metrics.by_class)
-                    .filter(([, w]) => w > 0.005)
-                    .sort(([, a], [, b]) => b - a)
-                    .map(([cls, w]) => (
-                      <li key={cls} className="flex items-baseline justify-between text-label">
-                        <span className="text-ink-2">{ASSET_CLASS_LABEL[cls] ?? cls}</span>
-                        <span className="tabular-nums">{(w * 100).toFixed(1)}%</span>
-                      </li>
-                    ))}
-                </ul>
-              </div>
-            )}
           </div>
         </div>
       </section>
