@@ -2,15 +2,13 @@ import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { hasGuestSimulation } from "@/lib/beta/guest";
 
 const DISMISS_KEY = "seedow_guest_banner_dismissed";
 
 /**
- * Bandeau « mode invité » : affiché quand l'utilisateur explore sans compte,
- * détecté soit par `?guest=true` (prop `guestParam`), soit par une simulation
- * invité présente dans le navigateur. Sticky en haut, invite à créer un compte
- * pour sauvegarder le portefeuille. Le bouton « Ignorer » masque le bandeau
+ * Bandeau « mode invité » : affiché quand l'utilisateur explore sans compte
+ * (`?guest=true`, prop `guestParam`). Sticky en haut, invite à composer puis à
+ * créer un compte pour sauvegarder. Le bouton « Ignorer » masque le bandeau
  * pour la session courante uniquement (aucun dark pattern : réversible au
  * prochain onglet).
  */
@@ -29,8 +27,7 @@ export function GuestBanner({ guestParam = false }: { guestParam?: boolean }) {
     }
   }, []);
 
-  const isGuest = guestParam || (mounted && hasGuestSimulation());
-  if (!mounted || dismissed || !isGuest) return null;
+  if (!mounted || dismissed || !guestParam) return null;
 
   const dismiss = () => {
     setDismissed(true);
@@ -52,7 +49,7 @@ export function GuestBanner({ guestParam = false }: { guestParam?: boolean }) {
           {t("dashboard.guest_banner.text")}
         </p>
         <Button asChild variant="accent" size="sm" className="rounded-full flex-shrink-0">
-          <Link to="/onboarding" search={{ resume: "guest" }}>
+          <Link to="/onboarding" search={{ guest: true }}>
             {t("dashboard.guest_banner.cta")}
           </Link>
         </Button>
