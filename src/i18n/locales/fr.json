@@ -1126,6 +1126,19 @@
       "save_cta": "Sauvegarder mon portefeuille",
       "save_hint": "Crée un compte gratuit pour le sauvegarder — sans engagement, 10 secondes."
     },
+    "pool": {
+      "loading_eyebrow": "Sélection en cours",
+      "loading_title": "On rassemble tes actifs",
+      "loading_desc": "Filtrage par tes critères, puis classement par pertinence",
+      "eyebrow": "Ta sélection",
+      "title": "Voici tes actifs",
+      "explainer": "{{count}} actifs collent à tes critères ({{excluded}} écartés sur {{universe}}), classés par pertinence. Seedow ne choisit pas ta répartition — tu composes, on t'explique chaque repère.",
+      "relevance_badge": "{{score}}/100",
+      "pending_badge": "En cours",
+      "method_note": "Pertinence = performance ajustée au risque, qualité ESG et alignement à tes causes. « En cours » : historique de marché encore insuffisant — jamais un score inventé.",
+      "compose_cta": "Composer mon portefeuille",
+      "blank_cta": "Partir d'une page blanche"
+    },
     "saving": {
       "title": "Enregistrement de ton portefeuille…"
     },
