@@ -145,6 +145,8 @@ export interface HoldingRow {
   asset_id: string;
   security_isin: string | null;
   security_name: string;
+  security_sector: string | null;
+  security_country: string | null;
   weight_pct: number | null;
   as_of: string;
   source_id: string | null;
@@ -177,6 +179,8 @@ export function buildHoldingRows(
       asset_id: assetId,
       security_isin: h.isin,
       security_name: h.name,
+      security_sector: h.sector,
+      security_country: h.country,
       weight_pct: h.weightPct,
       as_of: parsed.asOf as string,
       source_id: meta.sourceId,

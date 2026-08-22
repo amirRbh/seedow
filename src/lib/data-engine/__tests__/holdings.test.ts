@@ -65,6 +65,9 @@ describe("buildHoldingRows", () => {
     expect(rows[0].as_of).toBe("2026-07-31");
     expect(rows[0].security_isin).toBe("US0378331005");
     expect(rows[0].source_id).toBe("src1");
+    // Secteur/pays du titre conservés depuis le CSV (look-through §7/§9).
+    expect(rows[0].security_sector).toBe("Information Technology");
+    expect(rows[0].security_country).toBe("United States");
     expect(rows.every((r) => r.validation_status === "valid")).toBe(true);
   });
 

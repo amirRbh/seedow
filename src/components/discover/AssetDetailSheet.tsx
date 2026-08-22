@@ -18,6 +18,7 @@ import { ImpactBadge } from "@/components/discover/ImpactBadge";
 import { useWatchlist } from "@/hooks/useWatchlist";
 import { useCollections } from "@/hooks/useCollections";
 import { MatchBadge, MatchWhy } from "@/components/discover/MatchBadge";
+import { LookThroughSection } from "@/components/discover/LookThroughSection";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
 import { relativeIntensityVsBenchmark } from "@/lib/esg/carbon";
 import { ACWI_WACI_TCO2E_PER_MUSD, ACWI_WACI_SOURCE, ACWI_WACI_ASOF } from "@/lib/esg/benchmark";
@@ -138,6 +139,13 @@ export function AssetDetailSheet({ open, onOpenChange, asset, match }: Props) {
               </div>
             </section>
           ) : null}
+
+          {/* « Ce que ton argent finance » — look-through de la composition réelle
+              (§7). Pertinent pour les véhicules paniers (fonds/ETF), pas pour les
+              liquidités. S'affiche « en attente » tant que fund_holdings est vide. */}
+          {asset.asset_class !== "cash" && (
+            <LookThroughSection assetId={asset.id} issuer={asset.issuer} />
+          )}
 
           {/* « En clair » — pédagogie contextuelle (analyse UX §08/§14 étapes 1-2).
               Un débutant ne sait pas si « equity_dev » ou « green_bond » est une
