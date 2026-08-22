@@ -19,6 +19,7 @@ import { useWatchlist } from "@/hooks/useWatchlist";
 import { useCollections } from "@/hooks/useCollections";
 import { MatchBadge, MatchWhy } from "@/components/discover/MatchBadge";
 import { LookThroughSection } from "@/components/discover/LookThroughSection";
+import { WhatIfSection } from "@/components/discover/WhatIfSection";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
 import { relativeIntensityVsBenchmark } from "@/lib/esg/carbon";
 import { ACWI_WACI_TCO2E_PER_MUSD, ACWI_WACI_SOURCE, ACWI_WACI_ASOF } from "@/lib/esg/benchmark";
@@ -146,6 +147,9 @@ export function AssetDetailSheet({ open, onOpenChange, asset, match }: Props) {
           {asset.asset_class !== "cash" && (
             <LookThroughSection assetId={asset.id} issuer={asset.issuer} />
           )}
+
+          {/* What-if — alternatives comparables et leurs compromis (§10). */}
+          <WhatIfSection asset={asset} />
 
           {/* « En clair » — pédagogie contextuelle (analyse UX §08/§14 étapes 1-2).
               Un débutant ne sait pas si « equity_dev » ou « green_bond » est une
