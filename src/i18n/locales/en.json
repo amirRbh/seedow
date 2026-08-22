@@ -1275,10 +1275,8 @@
     "block_engine_version": "Engine version",
     "engine_version_desc": "Methodology v1.1 · E/S/G pillars weighted by causes, real carbon intensity, source traceability. Reviewed quarterly.",
     "status_saving": "Recalculating…",
-    "status_saved": "Changes saved",
+    "status_saved": "Preview updated",
     "status_error": "Recalculation error",
-    "preview_esg": "ESG",
-    "preview_ter": "TER",
     "methodology": {
       "market_data": {
         "title": "Market data",
@@ -1366,7 +1364,9 @@
     "notif_alerts": "Email alerts (ESG score, greenwashing)",
     "notif_alerts_hint": "Get an email when an asset you follow degrades (ESG score drop, SFDR change). Off by default — your choice, and you can turn it off anytime.",
     "notif_alerts_on": "Email alerts enabled.",
-    "notif_alerts_off": "Email alerts disabled."
+    "notif_alerts_off": "Email alerts disabled.",
+    "preview_pool_note": "{{excluded}} excluded of {{universe}} · ranked by relevance. Recompose to apply.",
+    "preview_recompose_cta": "Recompose my portfolio"
   },
   "methodologie": {
     "title": "Methodology",

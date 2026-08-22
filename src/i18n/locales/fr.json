@@ -1198,11 +1198,9 @@
     "tab_notifications": "Notifications",
     "tab_methodology": "Méthodologie",
     "status_saving": "Recalcul…",
-    "status_saved": "Modifications enregistrées",
+    "status_saved": "Aperçu à jour",
     "status_error": "Erreur de recalcul",
     "preview_eyebrow": "Aperçu live",
-    "preview_esg": "ESG",
-    "preview_ter": "TER",
     "block_causes": "Causes & intensité",
     "block_exclusions": "Exclusions sectorielles",
     "block_risk": "Risque cible",
@@ -1366,7 +1364,9 @@
     "pipeline_desc": "Six étapes traçables : profilage, univers investissable, exclusions sectorielles, filtres ESG best-in-class, optimisation de Markowitz sous contraintes (plancher ESG, budget de risque, bornes de poids), puis inclinaison pré-optimisation des rendements attendus selon tes causes. Le simulateur interactif et la documentation détaillée sont sur la page dédiée.",
     "see_methodology": "Lire la méthodologie complète",
     "block_engine_version": "Version du moteur",
-    "engine_version_desc": "Méthodologie v1.1 · piliers E/S/G pondérés par les causes, intensité carbone réelle, traçabilité des sources. Revue chaque trimestre."
+    "engine_version_desc": "Méthodologie v1.1 · piliers E/S/G pondérés par les causes, intensité carbone réelle, traçabilité des sources. Revue chaque trimestre.",
+    "preview_pool_note": "{{excluded}} écartés sur {{universe}} · classés par pertinence. Recompose pour appliquer.",
+    "preview_recompose_cta": "Recomposer mon portefeuille"
   },
   "methodologie": {
     "title": "Méthodologie",
