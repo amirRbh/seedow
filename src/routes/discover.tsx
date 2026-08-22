@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { AssetScreener } from "@/components/discover/AssetScreener";
+import { CollectionView } from "@/components/discover/CollectionView";
 import { CommunityPanel } from "@/components/community/CommunityPanel";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { THEME_OPTIONS } from "@/lib/discover/filters";
@@ -35,9 +36,12 @@ function Discover() {
 
         <div className="px-5 pt-2 pb-3">
           <Tabs defaultValue="explorer">
-            <TabsList className="w-full grid grid-cols-2 h-auto bg-paper-2 p-1">
+            <TabsList className="w-full grid grid-cols-3 h-auto bg-paper-2 p-1">
               <TabsTrigger value="explorer" className="text-caption uppercase tracking-[0.12em]">
                 {t("discover.tab_explore")}
+              </TabsTrigger>
+              <TabsTrigger value="collection" className="text-caption uppercase tracking-[0.12em]">
+                {t("discover.tab_collection", "Ma collection")}
               </TabsTrigger>
               <TabsTrigger value="communaute" className="text-caption uppercase tracking-[0.12em]">
                 {t("discover.tab_community")}
@@ -45,6 +49,9 @@ function Discover() {
             </TabsList>
             <TabsContent value="communaute" className="pt-4">
               <CommunityPanel />
+            </TabsContent>
+            <TabsContent value="collection" className="pt-4">
+              <CollectionView />
             </TabsContent>
             <TabsContent value="explorer" className="pt-2 -mx-5">
               <AssetScreener initialThemes={theme ? [theme] : undefined} />
