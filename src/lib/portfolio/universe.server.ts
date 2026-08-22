@@ -28,20 +28,57 @@ export async function loadUniverse(
     return _cache;
   }
   // Colonnes listées via une variable (string non-littéral) : les colonnes
-  // fournisseur récentes (waci_*, msci_*, esg_data_asof) sont ajoutées par la
-  // migration MSCI et n'apparaissent dans les types Supabase auto-générés
-  // qu'après régénération post-migration. Passer un littéral les ferait rejeter
-  // par le typage strict de select() avant régénération — on lit donc via `r`.
-  const ASSET_COLUMNS: string =
-    "id, ticker, name, asset_class, region, ter, esg_score, env_score, social_score, governance_score, esg_score_source, carbon_intensity_gco2e_per_eur, carbon_intensity_source, carbon_intensity_updated_at, sfdr_article, expected_return, volatility, cause_exposure, excluded_sectors, description, waci_tco2e_per_musd_sales, msci_esg_quality_score, implied_temp_rise, esg_data_asof, stats_observations";
+  // fournisseur récentes (waci_*, msci_*, esg_data_asof, stats_observations)
+  // sont ajoutées par des migrations et n'apparaissent dans les types Supabase
+  // auto-générés qu'après régénération post-migration. Passer un littéral les
+  // ferait rejeter par le typage strict de select() avant régénération — on lit
+  // donc via `r`.
+  //
+  // On distingue le SOCLE (colonnes anciennes et stables, indispensables au
+  // moteur : identité, classe, μ/σ, ESG, exclusions) de l'ENRICHISSEMENT
+  // (colonnes plus récentes qui alimentent le résumé d'impact et le palier de
+  // qualité de données). Le risque concret : une migration d'enrichissement en
+  // retard sur la base live (ex. `stats_observations`, migration N4) fait
+  // rejeter par PostgREST la TOTALITÉ du select (code 42703 « column does not
+  // exist ») — et un seul champ bonus manquant coupait tout l'onboarding, la
+  // simulation ET la génération. On isole donc l'enrichissement : s'il est
+  // rejeté pour colonne inconnue, on retombe sur le socle seul (le moteur
+  // dégrade proprement — cf. classifyDataQuality qui traite un
+  // stats_observations absent comme « insufficient ») plutôt que de tomber en
+  // panne totale.
+  const CORE_ASSET_COLUMNS =
+    "id, ticker, name, asset_class, region, ter, esg_score, env_score, social_score, governance_score, esg_score_source, carbon_intensity_gco2e_per_eur, carbon_intensity_source, carbon_intensity_updated_at, sfdr_article, expected_return, volatility, cause_exposure, excluded_sectors, description";
+  const ENRICHMENT_ASSET_COLUMNS =
+    "waci_tco2e_per_musd_sales, msci_esg_quality_score, implied_temp_rise, esg_data_asof, stats_observations";
+
   // `carbon_estimates_latest` (repli holdings→émetteur quand le fonds ne publie
   // pas sa propre intensité) n'est pas encore dans les types Supabase générés
   // (auto-générés — ne pas éditer à la main) : accès via un cast localisé, comme
   // le reste du Data Engine (cf. holdings.supabase.ts).
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const anyClient = client as any;
+  const loadAssets = async () => {
+    // 1er essai : socle + enrichissement.
+    const full = await client
+      .from("assets")
+      .select(`${CORE_ASSET_COLUMNS}, ${ENRICHMENT_ASSET_COLUMNS}`)
+      .eq("is_active", true);
+    if (!full.error) return full;
+    // 42703 = undefined_column : une colonne d'enrichissement manque sur la base
+    // live (migration en retard). On ne coupe pas le moteur pour un champ bonus :
+    // on recharge le socle seul et on continue en dégradé (loggué bruyamment
+    // pour que la dérive de schéma soit corrigée côté migrations).
+    if (full.error.code === "42703") {
+      console.error(
+        "[loadUniverse] colonne d'enrichissement absente de la base live (migration en retard ?) — repli sur le socle :",
+        full.error.message,
+      );
+      return client.from("assets").select(CORE_ASSET_COLUMNS).eq("is_active", true);
+    }
+    return full;
+  };
   const [assetsRes, covRes, carbonEstimatesRes] = await Promise.all([
-    client.from("assets").select(ASSET_COLUMNS).eq("is_active", true),
+    loadAssets(),
     client.from("asset_covariance").select("asset_a, asset_b, covariance"),
     anyClient
       .from("carbon_estimates_latest")
