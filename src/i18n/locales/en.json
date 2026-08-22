@@ -494,15 +494,11 @@
       "cta": "Complete"
     },
     "guest_dashboard": {
-      "eyebrow": "Your simulation",
-      "value_label": "Simulated amount",
-      "save_title": "Save this portfolio.",
-      "save_cta": "Create my account — free",
-      "save_hint": "No credit card · 30 seconds",
-      "expired_title": "Your simulation has expired or can't be found.",
-      "expired_desc": "Guest simulations live in your browser and don't last. Start a new one in 2 minutes — no data, no account, no commitment.",
-      "expired_secondary": "Or start with the free courses",
-      "expired_cta": "Start a new simulation"
+      "browse_eyebrow": "Guest mode",
+      "browse_title": "Build your portfolio — no account needed to explore.",
+      "browse_desc": "Pick your causes, we gather a pool of assets that fit you, ranked by relevance. You compose it. An account is only needed to save — no card, 30 seconds.",
+      "browse_cta": "Build my portfolio",
+      "browse_secondary": "Or start with the free courses"
     },
     "understand": {
       "eyebrow": "Understand your portfolio",

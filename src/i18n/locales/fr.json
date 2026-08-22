@@ -494,15 +494,11 @@
       "cta": "Compléter"
     },
     "guest_dashboard": {
-      "eyebrow": "Ta simulation",
-      "value_label": "Montant simulé",
-      "save_title": "Sauvegarde ce portefeuille.",
-      "save_cta": "Créer mon compte — gratuit",
-      "save_hint": "Sans carte bancaire · 30 secondes",
-      "expired_title": "Ta simulation a expiré ou est introuvable.",
-      "expired_desc": "Les simulations invité sont stockées dans ton navigateur et ne durent pas. Relance-en une en 2 minutes — aucune donnée, aucun compte, aucun engagement.",
-      "expired_secondary": "Ou commence par les cours gratuits",
-      "expired_cta": "Lancer une nouvelle simulation"
+      "browse_eyebrow": "Mode invité",
+      "browse_title": "Compose ton portefeuille — sans compte pour explorer.",
+      "browse_desc": "Choisis tes causes, on rassemble un pool d'actifs qui te correspondent et classés par pertinence. C'est toi qui composes. Un compte n'est demandé qu'au moment de sauvegarder — sans carte, en 30 secondes.",
+      "browse_cta": "Composer mon portefeuille",
+      "browse_secondary": "Ou commence par les cours gratuits"
     },
     "understand": {
       "eyebrow": "Comprends ton portefeuille",
