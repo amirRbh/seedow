@@ -4,6 +4,7 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { buildPortfolio, type PortfolioParams, type PortfolioResult } from "@/lib/portfolio";
 import { loadUniverse } from "./universe.server";
+import { screenPool } from "./screening";
 
 // ─────────────────────────────────────────────────────────
 // Validation
@@ -27,6 +28,46 @@ const ParamsSchema = z.object({
 // ─────────────────────────────────────────────────────────
 // Server functions
 // ─────────────────────────────────────────────────────────
+
+/**
+ * Sélectionne un POOL d'actifs classé selon les préférences, SANS proposer
+ * d'allocation ni de poids (décision produit : on présente un pool, l'utilisateur
+ * compose). Sert l'onboarding et le simulateur `/methodologie`.
+ */
+export const screenAssetPool = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) => ParamsSchema.parse(input))
+  .handler(async ({ data }) => {
+    const universe = await loadUniverse();
+    const params: PortfolioParams = {
+      causes: data.causes,
+      cause_intensity: data.cause_intensity,
+      exclusions: data.exclusions,
+      risk_target: data.risk_target,
+      horizon_years: data.horizon_years,
+      initial_amount: data.initial_amount,
+    };
+    const result = screenPool(universe.assets, params);
+    // Payload léger pour l'UI : on n'expose pas l'objet Asset complet.
+    return {
+      pool: result.pool.map((s) => ({
+        id: s.asset.id,
+        ticker: s.asset.ticker,
+        name: s.asset.name,
+        asset_class: s.asset.asset_class,
+        esg_score: s.asset.esg_score,
+        esg_score_source: s.asset.esg_score_source,
+        ter: s.asset.ter,
+        relevance: s.relevance,
+        sharpe: s.sharpe,
+        seedow_esg_score: s.seedow_esg_score,
+        cause_match: s.cause_match,
+        data_tier: s.data_tier,
+      })),
+      excluded_count: result.excluded_count,
+      universe_size: result.universe_size,
+      screening_version: result.screening_version,
+    };
+  });
 
 /**
  * Compute a portfolio in-memory without persisting.
