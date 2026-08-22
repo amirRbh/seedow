@@ -11,7 +11,7 @@ import { createCustomPortfolio } from "@/lib/portfolio/customize.functions";
 import { liteSnapshot, CONCENTRATION_ALERT } from "@/lib/portfolio/consequences";
 import { diversificationBand, impactScore } from "@/lib/portfolio/plain-language";
 import { AssetPickerSheet, type PickedAsset } from "./AssetPickerSheet";
-import { readPoolHandoff } from "@/lib/onboarding/poolHandoff";
+import { readPoolHandoff, type PoolHandoffIntent } from "@/lib/onboarding/poolHandoff";
 
 interface Line {
   id: string;
@@ -40,6 +40,9 @@ export function BlankCanvasBuilder() {
   const [lines, setLines] = useState<Line[]>([]);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  // Intention transmise par l'aperçu : mode (premier portefeuille vs ajout),
+  // convictions à conserver, nom. Sans seed → défauts (replace, aucune cause).
+  const [intent, setIntent] = useState<PoolHandoffIntent | null>(null);
 
   // Amorçage depuis le pool de l'aperçu (bascule « pool plutôt qu'allocation ») :
   // le builder démarre pré-rempli des actifs sélectionnés, à 0 % — Seedow ne
@@ -49,10 +52,16 @@ export function BlankCanvasBuilder() {
   useEffect(() => {
     const seed = readPoolHandoff();
     if (!seed) return;
+    setIntent({
+      mode: seed.mode,
+      causes: seed.causes,
+      exclusions: seed.exclusions,
+      name: seed.name,
+    });
     setLines((ls) =>
       ls.length > 0
         ? ls
-        : seed.map((a) => ({
+        : seed.assets.map((a) => ({
             id: a.id,
             ticker: a.ticker,
             name: a.name,
@@ -97,7 +106,17 @@ export function BlankCanvasBuilder() {
 
     setSaving(true);
     try {
-      await create({ data: { weights } });
+      // Intention issue de l'aperçu (mode/convictions/nom) ; défauts sûrs si le
+      // builder a été ouvert directement (replace, aucune cause).
+      await create({
+        data: {
+          weights,
+          mode: intent?.mode ?? "replace",
+          causes: intent?.causes ?? [],
+          exclusions: intent?.exclusions ?? [],
+          ...(intent?.name ? { name: intent.name } : {}),
+        },
+      });
       toast.success(t("blank_builder.saved"), { description: t("blank_builder.saved_desc") });
       await navigate({ to: "/le-fil" });
     } catch (err) {

@@ -18,10 +18,7 @@ import {
   PiggyBank,
   type LucideIcon,
 } from "lucide-react";
-import { useLang } from "@/hooks/useLang";
-import { formatCurrency, formatPercent } from "@/lib/format";
-import { EASE_REVEAL } from "@/lib/motion";
-import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useServerFn } from "@tanstack/react-start";
@@ -30,11 +27,10 @@ import { lovable } from "@/integrations/lovable";
 import { joinWaitlist } from "@/lib/beta/beta.functions";
 import { readGuestSimulation } from "@/lib/beta/guest";
 import { useBetaCapacity } from "@/hooks/useBetaCapacity";
-import { generatePortfolio, screenAssetPool } from "@/lib/portfolio/server.functions";
+import { screenAssetPool } from "@/lib/portfolio/server.functions";
 import { AgencyReveal } from "@/components/onboarding/AgencyReveal";
-import { writePoolHandoff, clearPoolHandoff } from "@/lib/onboarding/poolHandoff";
+import { writePoolHandoff } from "@/lib/onboarding/poolHandoff";
 import { SimulationBadge } from "@/components/common/SimulationBadge";
-import { callAuthed } from "@/lib/authedServerFn";
 import { trackPreference, type PreferenceStep } from "@/lib/preferences/tracking";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
 import type { PortfolioParams } from "@/lib/portfolio/types";
@@ -42,7 +38,6 @@ import {
   answersToParams,
   loadDraft,
   saveDraft,
-  clearDraft,
   type Answers,
   type Phase,
 } from "@/lib/onboarding/params";
@@ -122,7 +117,6 @@ function StepOptionIcon({ icon }: { icon: string | LucideIcon }) {
 
 function Onboarding() {
   const navigate = useNavigate();
-  const router = useRouter();
   const { new: isNew, guest, resume } = Route.useSearch();
   const isAdditive = isNew === 1;
   const isGuest = guest === true;
@@ -176,7 +170,7 @@ function Onboarding() {
     if (phase !== "account") return;
     let cancelled = false;
     const advanceIfAuthed = (hasSession: boolean) => {
-      if (!cancelled && hasSession) setPhase(isAdditive ? "naming" : "saving");
+      if (!cancelled && hasSession) setPhase(isAdditive ? "naming" : "preview");
     };
     void supabase.auth.getSession().then(({ data }) => advanceIfAuthed(Boolean(data.session)));
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) =>
@@ -243,14 +237,22 @@ function Onboarding() {
             }}
           />
         )}
-        {phase === "preview" && <PreviewScene key="preview" params={portfolioParams} />}
+        {phase === "preview" && (
+          <PreviewScene
+            key="preview"
+            params={portfolioParams}
+            mode={isAdditive ? "create" : "replace"}
+            name={portfolioName || undefined}
+          />
+        )}
         {phase === "naming" && (
           <NamePortfolioStep
             key="naming"
             initialName={portfolioName}
             onConfirm={(name) => {
               setPortfolioName(name);
-              setPhase("building");
+              // Plus de génération Markowitz : on montre le pool à composer.
+              setPhase("preview");
             }}
             onBack={() => {
               setStepIndex(STEPS.length - 1);
@@ -261,7 +263,7 @@ function Onboarding() {
         {phase === "account" && (
           <AccountStep
             key="account"
-            onAuthed={() => setPhase(isAdditive ? "naming" : "saving")}
+            onAuthed={() => setPhase(isAdditive ? "naming" : "preview")}
             onBack={() => {
               if (isAdditive) {
                 setStepIndex(STEPS.length - 1);
@@ -269,30 +271,6 @@ function Onboarding() {
               } else {
                 setPhase("preview");
               }
-            }}
-          />
-        )}
-        {phase === "building" && (
-          <BuildingScene
-            key="building"
-            onEnter={async () => {
-              clearDraft();
-              await router.invalidate();
-              navigate({ to: "/le-fil" });
-            }}
-            answers={answers}
-            mode={isAdditive ? "create" : "replace"}
-            name={portfolioName || undefined}
-          />
-        )}
-        {phase === "saving" && (
-          <SavingScene
-            key="saving"
-            params={portfolioParams}
-            onEnter={async () => {
-              clearDraft();
-              await router.invalidate();
-              navigate({ to: "/le-fil" });
             }}
           />
         )}
@@ -986,7 +964,17 @@ interface PoolEntry {
 /** Nombre de lignes affichées dans l'aperçu et seedées dans le builder. */
 const POOL_PREVIEW_LIMIT = 12;
 
-function PreviewScene({ params }: { params: PortfolioParams }) {
+function PreviewScene({
+  params,
+  mode,
+  name,
+}: {
+  params: PortfolioParams;
+  /** "replace" (premier portefeuille) ou "create" (ajout depuis le dashboard). */
+  mode: "replace" | "create";
+  /** Nom éventuel (parcours « ajouter un portefeuille »). */
+  name?: string;
+}) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const screen = useServerFn(screenAssetPool);
@@ -1001,6 +989,16 @@ function PreviewScene({ params }: { params: PortfolioParams }) {
   // (l'utilisateur ajuste les montants). Pour un invité, /construire exige un
   // compte — la création de compte arrive donc au moment de composer/sauvegarder,
   // conformément à « il compose lui-même avant de sauvegarder ».
+  // Intention transmise au builder : mode (replace/create), convictions et nom
+  // à conserver — indépendante des actifs seedés (le parcours « page blanche »
+  // la réutilise avec zéro actif pour garder le bon mode).
+  const handoffIntent = {
+    mode,
+    causes: params.causes,
+    exclusions: params.exclusions,
+    ...(name ? { name } : {}),
+  };
+
   const compose = () => {
     const seed = pool.slice(0, POOL_PREVIEW_LIMIT).map((p) => ({
       id: p.id,
@@ -1008,7 +1006,7 @@ function PreviewScene({ params }: { params: PortfolioParams }) {
       name: p.name,
       esgScore: p.esg_score,
     }));
-    writePoolHandoff(seed);
+    writePoolHandoff(seed, handoffIntent);
     void trackPreference({ step: "pool_compose", payload: { count: seed.length } });
     void navigate({ to: "/construire" });
   };
@@ -1173,7 +1171,9 @@ function PreviewScene({ params }: { params: PortfolioParams }) {
               </button>
               <button
                 onClick={() => {
-                  clearPoolHandoff();
+                  // Page blanche : builder vide mais on conserve le mode/nom
+                  // (create ne doit jamais écraser un portefeuille existant).
+                  writePoolHandoff([], handoffIntent);
                   void navigate({ to: "/construire" });
                 }}
                 className="w-full text-caption text-ink-3 hover:text-ink-2 transition-colors"
@@ -1181,317 +1181,6 @@ function PreviewScene({ params }: { params: PortfolioParams }) {
                 {t("onboarding.pool.blank_cta")}
               </button>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────
-// Saving — persiste le portefeuille une fois le compte créé
-// (ou immédiatement si l'utilisateur était déjà connecté)
-// ─────────────────────────────────────────────────────────
-
-function SavingScene({ params, onEnter }: { params: PortfolioParams; onEnter: () => void }) {
-  const { t } = useTranslation();
-  const generate = useServerFn(generatePortfolio);
-  const [phase, setPhase] = useState<"loading" | "error">("loading");
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [attempt, setAttempt] = useState(0);
-
-  useEffect(() => {
-    let cancelled = false;
-    setPhase("loading");
-    setErrorMsg(null);
-    (async () => {
-      try {
-        await callAuthed(generate, { ...params, mode: "replace" });
-        if (cancelled) return;
-        onEnter();
-      } catch (err) {
-        if (cancelled) return;
-        console.error("[onboarding] save:", err);
-        setErrorMsg(err instanceof Error ? err.message : t("onboarding.building.error_fallback"));
-        setPhase("error");
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [attempt]);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-paper-2 text-ink"
-    >
-      <AnimatePresence mode="wait">
-        {phase === "loading" && (
-          <motion.div
-            key="l"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="flex flex-col items-center"
-          >
-            <div className="w-32 h-px bg-paper-3 relative mb-8 overflow-hidden">
-              <motion.div
-                animate={{ x: ["-100%", "100%"] }}
-                transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute inset-y-0 w-1/2 bg-ink"
-              />
-            </div>
-            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium">
-              {t("onboarding.saving.title")}
-            </p>
-          </motion.div>
-        )}
-
-        {phase === "error" && (
-          <motion.div
-            key="e"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="w-full max-w-md text-center"
-          >
-            <p className="text-tag uppercase tracking-[0.18em] text-rust font-medium">
-              {t("onboarding.building.error_eyebrow")}
-            </p>
-            <h2 className="font-value text-2xl text-ink mt-3">
-              {t("onboarding.building.error_title")}
-            </h2>
-            <p className="text-label text-ink-3 mt-3 break-words">{errorMsg}</p>
-            <button
-              onClick={() => setAttempt((a) => a + 1)}
-              className="mt-6 px-5 py-2.5 text-body-sm font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
-            >
-              {t("common.retry")}
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────
-// Building scene — flux additif (nouveau portefeuille, déjà connecté) :
-// simule ET persiste en une passe, inchangé pour ce cas.
-// ─────────────────────────────────────────────────────────
-
-function BuildingScene({
-  onEnter,
-  answers,
-  mode = "replace",
-  name,
-}: {
-  onEnter: () => void;
-  answers: Answers;
-  mode?: "replace" | "create";
-  name?: string;
-}) {
-  const { t } = useTranslation();
-  const { lang } = useLang();
-  const generate = useServerFn(generatePortfolio);
-  const [phase, setPhase] = useState<"loading" | "reveal" | "error">("loading");
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [selected, setSelected] = useState<SelectedAsset[]>([]);
-  const [weights, setWeights] = useState<Record<string, number>>({});
-  const [initialAmount, setInitialAmount] = useState(0);
-  const [attempt, setAttempt] = useState(0);
-
-  useEffect(() => {
-    let cancelled = false;
-    setPhase("loading");
-    setErrorMsg(null);
-    (async () => {
-      try {
-        const params = answersToParams(answers);
-
-        const result = await callAuthed(generate, {
-          ...params,
-          mode,
-          name,
-        });
-
-        if (cancelled) return;
-        setSelected(result.selected.map((s) => ({ id: s.id, ticker: s.ticker, name: s.name })));
-        setWeights(result.weights as Record<string, number>);
-        setInitialAmount(params.initial_amount);
-        setPhase("reveal");
-        // Tracking : allocation présentée à l'utilisateur
-        void trackPreference({
-          step: "allocation_seen",
-          portfolioId: result.portfolio_id,
-          payload: {
-            position_count: result.selected.length,
-            causes: params.causes,
-            exclusions: params.exclusions,
-            risk_target: params.risk_target,
-            horizon_years: params.horizon_years,
-            initial_amount: params.initial_amount,
-          },
-        });
-      } catch (err) {
-        if (cancelled) return;
-        console.error("[onboarding] generate:", err);
-        setErrorMsg(err instanceof Error ? err.message : t("onboarding.building.error_fallback"));
-        setPhase("error");
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [attempt]);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-paper-2 text-ink"
-    >
-      <AnimatePresence mode="wait">
-        {phase === "loading" && (
-          <motion.div
-            key="l"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="flex flex-col items-center"
-          >
-            <div className="w-32 h-px bg-paper-3 relative mb-8 overflow-hidden">
-              <motion.div
-                animate={{ x: ["-100%", "100%"] }}
-                transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute inset-y-0 w-1/2 bg-ink"
-              />
-            </div>
-            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium">
-              {t("onboarding.building.loading_eyebrow")}
-            </p>
-            <p className="font-value text-2xl text-ink mt-3">
-              {t("onboarding.building.loading_title")}
-            </p>
-            <p className="text-label text-ink-3 mt-2">{t("onboarding.building.loading_desc")}</p>
-          </motion.div>
-        )}
-
-        {phase === "error" && (
-          <motion.div
-            key="e"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="w-full max-w-md text-center"
-          >
-            <p className="text-tag uppercase tracking-[0.18em] text-rust font-medium">
-              {t("onboarding.building.error_eyebrow")}
-            </p>
-            <h2 className="font-value text-2xl text-ink mt-3">
-              {t("onboarding.building.error_title")}
-            </h2>
-            <p className="text-label text-ink-3 mt-3 break-words">{errorMsg}</p>
-            <button
-              onClick={() => setAttempt((a) => a + 1)}
-              className="mt-6 px-5 py-2.5 text-body-sm font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
-            >
-              {t("common.retry")}
-            </button>
-          </motion.div>
-        )}
-
-        {phase === "reveal" && (
-          <motion.div
-            key="r"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="w-full max-w-md"
-          >
-            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium text-center">
-              {t("onboarding.building.reveal_eyebrow")}
-            </p>
-            <p className="font-value text-2xl text-ink text-center mt-2 mb-6">
-              {t("onboarding.building.reveal_title")}
-            </p>
-            <p className="text-caption text-ink-3 text-center mb-6">
-              {t("onboarding.building.reveal_summary", {
-                count: selected.length,
-                amount: formatCurrency(initialAmount, lang),
-              })}
-            </p>
-            <ul className="divide-y divide-paper-3 border-t border-b border-paper-3">
-              {selected
-                .map((a) => ({ ...a, w: (weights[a.id] ?? 0) * 100 }))
-                .filter((a) => a.w > 0.5)
-                .sort((a, b) => b.w - a.w)
-                .slice(0, 8)
-                .map((a, i) => (
-                  <motion.li
-                    key={a.id}
-                    initial={{ opacity: 0, x: -6 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.08, duration: 0.3 }}
-                    className="py-3"
-                  >
-                    {/* Nom lisible d'abord (le débutant ne connaît pas les
-                        tickers) ; le code technique devient une métadonnée. */}
-                    <div className="flex items-baseline justify-between mb-1.5 gap-3">
-                      <span className="font-value text-body-sm text-ink truncate">{a.name}</span>
-                      <span className="text-label text-ink tabular-nums font-medium flex-shrink-0">
-                        {formatPercent(a.w / 100, lang, 1)}
-                      </span>
-                    </div>
-                    <div className="h-px bg-paper-3 relative">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${Math.min(100, a.w * 2.5)}%` }}
-                        transition={{ delay: i * 0.08 + 0.15, duration: 0.6, ease: EASE_REVEAL }}
-                        className="absolute inset-y-0 left-0 bg-ink"
-                      />
-                    </div>
-                    {/* Traduit le % abstrait en argent concret « sur ton montant »
-                        (principe Finary/YNAB) — rend la répartition tangible. */}
-                    <div className="flex items-baseline justify-between gap-3 mt-1">
-                      <span className="text-tag font-mono uppercase tracking-wider text-ink-3 truncate">
-                        {a.ticker}
-                      </span>
-                      <span className="text-tag text-ink-3 tabular-nums flex-shrink-0">
-                        {t("onboarding.building.line_share", {
-                          amount: formatCurrency((initialAmount * a.w) / 100, lang),
-                          total: formatCurrency(initialAmount, lang),
-                        })}
-                      </span>
-                    </div>
-                  </motion.li>
-                ))}
-            </ul>
-            <button
-              onClick={() => {
-                void trackPreference({
-                  step: "allocation_accepted",
-                  payload: { position_count: selected.length },
-                });
-                onEnter();
-              }}
-              className="mt-8 w-full h-14 rounded-full bg-ink text-paper font-semibold text-body-sm hover:bg-highlight-2 transition-colors flex items-center justify-center gap-2"
-            >
-              {t("onboarding.building.dashboard_cta")}
-              <svg
-                viewBox="0 0 24 24"
-                className="w-3.5 h-3.5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              >
-                <path d="M5 12h14M13 5l7 7-7 7" />
-              </svg>
-            </button>
           </motion.div>
         )}
       </AnimatePresence>
