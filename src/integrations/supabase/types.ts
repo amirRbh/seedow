@@ -352,6 +352,8 @@ export type Database = {
       assets: {
         Row: {
           asset_class: Database["public"]["Enums"]["asset_class"]
+          aum_eur: number | null
+          available_eu: boolean | null
           carbon_intensity_gco2e_per_eur: number | null
           carbon_intensity_source: string | null
           carbon_intensity_updated_at: string | null
@@ -372,11 +374,15 @@ export type Database = {
           is_active: boolean
           isin: string | null
           issuer: string | null
+          liquidity_note: string | null
           msci_esg_quality_score: number | null
           name: string
           region: string | null
           sfdr_article: number | null
+          share_class_of: string | null
           social_score: number | null
+          stats_observations: number | null
+          stats_updated_at: string | null
           ter: number
           ticker: string
           updated_at: string
@@ -386,6 +392,8 @@ export type Database = {
         }
         Insert: {
           asset_class: Database["public"]["Enums"]["asset_class"]
+          aum_eur?: number | null
+          available_eu?: boolean | null
           carbon_intensity_gco2e_per_eur?: number | null
           carbon_intensity_source?: string | null
           carbon_intensity_updated_at?: string | null
@@ -406,11 +414,15 @@ export type Database = {
           is_active?: boolean
           isin?: string | null
           issuer?: string | null
+          liquidity_note?: string | null
           msci_esg_quality_score?: number | null
           name: string
           region?: string | null
           sfdr_article?: number | null
+          share_class_of?: string | null
           social_score?: number | null
+          stats_observations?: number | null
+          stats_updated_at?: string | null
           ter?: number
           ticker: string
           updated_at?: string
@@ -420,6 +432,8 @@ export type Database = {
         }
         Update: {
           asset_class?: Database["public"]["Enums"]["asset_class"]
+          aum_eur?: number | null
+          available_eu?: boolean | null
           carbon_intensity_gco2e_per_eur?: number | null
           carbon_intensity_source?: string | null
           carbon_intensity_updated_at?: string | null
@@ -440,11 +454,15 @@ export type Database = {
           is_active?: boolean
           isin?: string | null
           issuer?: string | null
+          liquidity_note?: string | null
           msci_esg_quality_score?: number | null
           name?: string
           region?: string | null
           sfdr_article?: number | null
+          share_class_of?: string | null
           social_score?: number | null
+          stats_observations?: number | null
+          stats_updated_at?: string | null
           ter?: number
           ticker?: string
           updated_at?: string
@@ -452,7 +470,22 @@ export type Database = {
           waci_tco2e_per_musd_sales?: number | null
           yahoo_symbol?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "assets_share_class_of_fkey"
+            columns: ["share_class_of"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assets_share_class_of_fkey"
+            columns: ["share_class_of"]
+            isOneToOne: false
+            referencedRelation: "assets_missing_market_data"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       beta_events: {
         Row: {
@@ -580,6 +613,159 @@ export type Database = {
         }
         Relationships: []
       }
+      data_observations: {
+        Row: {
+          asset_id: string | null
+          confidence: Database["public"]["Enums"]["data_confidence"]
+          created_at: string
+          document_id: string | null
+          evidence_text: string | null
+          field: string
+          id: string
+          method: string | null
+          parser_version: number | null
+          reference_date: string | null
+          retrieved_at: string
+          security_id: string | null
+          source_id: string | null
+          source_url: string | null
+          validation_status: Database["public"]["Enums"]["data_validation_status"]
+          value_json: Json | null
+          value_num: number | null
+          value_text: string | null
+        }
+        Insert: {
+          asset_id?: string | null
+          confidence?: Database["public"]["Enums"]["data_confidence"]
+          created_at?: string
+          document_id?: string | null
+          evidence_text?: string | null
+          field: string
+          id?: string
+          method?: string | null
+          parser_version?: number | null
+          reference_date?: string | null
+          retrieved_at?: string
+          security_id?: string | null
+          source_id?: string | null
+          source_url?: string | null
+          validation_status?: Database["public"]["Enums"]["data_validation_status"]
+          value_json?: Json | null
+          value_num?: number | null
+          value_text?: string | null
+        }
+        Update: {
+          asset_id?: string | null
+          confidence?: Database["public"]["Enums"]["data_confidence"]
+          created_at?: string
+          document_id?: string | null
+          evidence_text?: string | null
+          field?: string
+          id?: string
+          method?: string | null
+          parser_version?: number | null
+          reference_date?: string | null
+          retrieved_at?: string
+          security_id?: string | null
+          source_id?: string | null
+          source_url?: string | null
+          validation_status?: Database["public"]["Enums"]["data_validation_status"]
+          value_json?: Json | null
+          value_num?: number | null
+          value_text?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "data_observations_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "data_observations_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets_missing_market_data"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "data_observations_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "fund_documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "data_observations_security_id_fkey"
+            columns: ["security_id"]
+            isOneToOne: false
+            referencedRelation: "securities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "data_observations_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "data_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      data_sources: {
+        Row: {
+          attribution: string | null
+          automation: string | null
+          created_at: string
+          health: Database["public"]["Enums"]["source_health"]
+          home_url: string | null
+          id: string
+          key: string
+          last_checked_at: string | null
+          name: string
+          notes: string | null
+          priority: number
+          robots_allowed: boolean | null
+          source_type: Database["public"]["Enums"]["data_source_type"]
+          terms_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          attribution?: string | null
+          automation?: string | null
+          created_at?: string
+          health?: Database["public"]["Enums"]["source_health"]
+          home_url?: string | null
+          id?: string
+          key: string
+          last_checked_at?: string | null
+          name: string
+          notes?: string | null
+          priority: number
+          robots_allowed?: boolean | null
+          source_type: Database["public"]["Enums"]["data_source_type"]
+          terms_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          attribution?: string | null
+          automation?: string | null
+          created_at?: string
+          health?: Database["public"]["Enums"]["source_health"]
+          home_url?: string | null
+          id?: string
+          key?: string
+          last_checked_at?: string | null
+          name?: string
+          notes?: string | null
+          priority?: number
+          robots_allowed?: boolean | null
+          source_type?: Database["public"]["Enums"]["data_source_type"]
+          terms_url?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       decision_events: {
         Row: {
           detail: string | null
@@ -688,6 +874,150 @@ export type Database = {
           },
         ]
       }
+      fund_documents: {
+        Row: {
+          asset_id: string
+          checksum: string | null
+          created_at: string
+          doc_type: Database["public"]["Enums"]["fund_document_type"]
+          id: string
+          language: string | null
+          parse_status: Database["public"]["Enums"]["data_validation_status"]
+          published_date: string | null
+          retrieved_at: string
+          source_id: string | null
+          title: string | null
+          url: string
+        }
+        Insert: {
+          asset_id: string
+          checksum?: string | null
+          created_at?: string
+          doc_type: Database["public"]["Enums"]["fund_document_type"]
+          id?: string
+          language?: string | null
+          parse_status?: Database["public"]["Enums"]["data_validation_status"]
+          published_date?: string | null
+          retrieved_at?: string
+          source_id?: string | null
+          title?: string | null
+          url: string
+        }
+        Update: {
+          asset_id?: string
+          checksum?: string | null
+          created_at?: string
+          doc_type?: Database["public"]["Enums"]["fund_document_type"]
+          id?: string
+          language?: string | null
+          parse_status?: Database["public"]["Enums"]["data_validation_status"]
+          published_date?: string | null
+          retrieved_at?: string
+          source_id?: string | null
+          title?: string | null
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fund_documents_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fund_documents_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets_missing_market_data"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fund_documents_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "data_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fund_holdings: {
+        Row: {
+          as_of: string
+          asset_id: string
+          confidence: Database["public"]["Enums"]["data_confidence"]
+          created_at: string
+          id: string
+          retrieved_at: string
+          security_id: string | null
+          security_isin: string | null
+          security_name: string
+          source_id: string | null
+          source_url: string | null
+          validation_status: Database["public"]["Enums"]["data_validation_status"]
+          weight_pct: number | null
+        }
+        Insert: {
+          as_of: string
+          asset_id: string
+          confidence?: Database["public"]["Enums"]["data_confidence"]
+          created_at?: string
+          id?: string
+          retrieved_at?: string
+          security_id?: string | null
+          security_isin?: string | null
+          security_name: string
+          source_id?: string | null
+          source_url?: string | null
+          validation_status?: Database["public"]["Enums"]["data_validation_status"]
+          weight_pct?: number | null
+        }
+        Update: {
+          as_of?: string
+          asset_id?: string
+          confidence?: Database["public"]["Enums"]["data_confidence"]
+          created_at?: string
+          id?: string
+          retrieved_at?: string
+          security_id?: string | null
+          security_isin?: string | null
+          security_name?: string
+          source_id?: string | null
+          source_url?: string | null
+          validation_status?: Database["public"]["Enums"]["data_validation_status"]
+          weight_pct?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fund_holdings_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fund_holdings_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets_missing_market_data"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fund_holdings_security_id_fkey"
+            columns: ["security_id"]
+            isOneToOne: false
+            referencedRelation: "securities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fund_holdings_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "data_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       fund_rejections: {
         Row: {
           asset_id: string
@@ -749,6 +1079,133 @@ export type Database = {
             columns: ["swap_asset_id"]
             isOneToOne: false
             referencedRelation: "assets_missing_market_data"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fund_requests: {
+        Row: {
+          created_at: string
+          id: string
+          isin: string | null
+          matched_asset_id: string | null
+          query: string
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          isin?: string | null
+          matched_asset_id?: string | null
+          query: string
+          status?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          isin?: string | null
+          matched_asset_id?: string | null
+          query?: string
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fund_requests_matched_asset_id_fkey"
+            columns: ["matched_asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fund_requests_matched_asset_id_fkey"
+            columns: ["matched_asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets_missing_market_data"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ingestion_errors: {
+        Row: {
+          created_at: string
+          id: string
+          identifier: string | null
+          job_id: string | null
+          message: string
+          source_key: string | null
+          stage: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          identifier?: string | null
+          job_id?: string | null
+          message: string
+          source_key?: string | null
+          stage?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          identifier?: string | null
+          job_id?: string | null
+          message?: string
+          source_key?: string | null
+          stage?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ingestion_errors_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "ingestion_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ingestion_jobs: {
+        Row: {
+          errors_count: number
+          finished_at: string | null
+          id: string
+          identifier: string | null
+          observations_written: number
+          source_id: string | null
+          source_key: string | null
+          started_at: string
+          status: string
+        }
+        Insert: {
+          errors_count?: number
+          finished_at?: string | null
+          id?: string
+          identifier?: string | null
+          observations_written?: number
+          source_id?: string | null
+          source_key?: string | null
+          started_at?: string
+          status?: string
+        }
+        Update: {
+          errors_count?: number
+          finished_at?: string | null
+          id?: string
+          identifier?: string | null
+          observations_written?: number
+          source_id?: string | null
+          source_key?: string | null
+          started_at?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ingestion_jobs_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "data_sources"
             referencedColumns: ["id"]
           },
         ]
@@ -1106,6 +1563,42 @@ export type Database = {
         }
         Relationships: []
       }
+      securities: {
+        Row: {
+          country: string | null
+          created_at: string
+          id: string
+          industry: string | null
+          isin: string | null
+          name: string
+          sector: string | null
+          ticker: string | null
+          updated_at: string
+        }
+        Insert: {
+          country?: string | null
+          created_at?: string
+          id?: string
+          industry?: string | null
+          isin?: string | null
+          name: string
+          sector?: string | null
+          ticker?: string | null
+          updated_at?: string
+        }
+        Update: {
+          country?: string | null
+          created_at?: string
+          id?: string
+          industry?: string | null
+          isin?: string | null
+          name?: string
+          sector?: string | null
+          ticker?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       tradeoff_decisions: {
         Row: {
           accepted: boolean
@@ -1278,6 +1771,86 @@ export type Database = {
         }
         Relationships: []
       }
+      fund_latest_holdings: {
+        Row: {
+          as_of: string | null
+          asset_id: string | null
+          confidence: Database["public"]["Enums"]["data_confidence"] | null
+          created_at: string | null
+          id: string | null
+          retrieved_at: string | null
+          security_id: string | null
+          security_isin: string | null
+          security_name: string | null
+          source_id: string | null
+          source_url: string | null
+          validation_status:
+            Database["public"]["Enums"]["data_validation_status"] | null
+          weight_pct: number | null
+        }
+        Insert: {
+          as_of?: string | null
+          asset_id?: string | null
+          confidence?: Database["public"]["Enums"]["data_confidence"] | null
+          created_at?: string | null
+          id?: string | null
+          retrieved_at?: string | null
+          security_id?: string | null
+          security_isin?: string | null
+          security_name?: string | null
+          source_id?: string | null
+          source_url?: string | null
+          validation_status?:
+            Database["public"]["Enums"]["data_validation_status"] | null
+          weight_pct?: number | null
+        }
+        Update: {
+          as_of?: string | null
+          asset_id?: string | null
+          confidence?: Database["public"]["Enums"]["data_confidence"] | null
+          created_at?: string | null
+          id?: string | null
+          retrieved_at?: string | null
+          security_id?: string | null
+          security_isin?: string | null
+          security_name?: string | null
+          source_id?: string | null
+          source_url?: string | null
+          validation_status?:
+            Database["public"]["Enums"]["data_validation_status"] | null
+          weight_pct?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fund_holdings_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fund_holdings_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets_missing_market_data"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fund_holdings_security_id_fkey"
+            columns: ["security_id"]
+            isOneToOne: false
+            referencedRelation: "securities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fund_holdings_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "data_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       funnel_daily: {
         Row: {
           account_created: number | null
@@ -1360,13 +1933,18 @@ export type Database = {
         | "cash"
         | "corporate_bond"
       cause_tag:
-        | "climat"
-        | "biodiversite"
-        | "humain"
-        | "egalite"
-        | "tech"
-        | "circulaire"
+        "climat" | "biodiversite" | "humain" | "egalite" | "tech" | "circulaire"
       contribution_frequency: "monthly" | "quarterly"
+      data_confidence: "high" | "medium" | "low"
+      data_source_type:
+        | "official_regulator"
+        | "official_document"
+        | "official_asset_manager"
+        | "public_open_data"
+        | "public_api"
+        | "secondary_financial"
+        | "commercial"
+      data_validation_status: "valid" | "review_required" | "rejected"
       decision_kind:
         | "creation"
         | "cause_added"
@@ -1379,18 +1957,18 @@ export type Database = {
         | "contribution_scheduled"
         | "contribution_paused"
       exclusion_tag:
-        | "fossiles"
-        | "armes"
-        | "tabac"
-        | "jeux"
-        | "animaux"
-        | "fast-fashion"
-      goal_type:
-        | "retirement"
-        | "real_estate"
-        | "studies"
-        | "safety_net"
+        "fossiles" | "armes" | "tabac" | "jeux" | "animaux" | "fast-fashion"
+      fund_document_type:
+        | "kid"
+        | "dici"
+        | "prospectus"
+        | "factsheet"
+        | "annual_report"
+        | "sfdr"
         | "other"
+      goal_type:
+        "retirement" | "real_estate" | "studies" | "safety_net" | "other"
+      source_health: "healthy" | "degraded" | "broken" | "unknown"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1406,12 +1984,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -1433,13 +2011,12 @@ export type Tables<
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+    keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -1458,13 +2035,12 @@ export type TablesInsert<
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+    keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -1483,13 +2059,12 @@ export type TablesUpdate<
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    keyof DefaultSchema["Enums"] | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -1502,11 +2077,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -1550,6 +2125,17 @@ export const Constants = {
         "circulaire",
       ],
       contribution_frequency: ["monthly", "quarterly"],
+      data_confidence: ["high", "medium", "low"],
+      data_source_type: [
+        "official_regulator",
+        "official_document",
+        "official_asset_manager",
+        "public_open_data",
+        "public_api",
+        "secondary_financial",
+        "commercial",
+      ],
+      data_validation_status: ["valid", "review_required", "rejected"],
       decision_kind: [
         "creation",
         "cause_added",
@@ -1570,6 +2156,15 @@ export const Constants = {
         "animaux",
         "fast-fashion",
       ],
+      fund_document_type: [
+        "kid",
+        "dici",
+        "prospectus",
+        "factsheet",
+        "annual_report",
+        "sfdr",
+        "other",
+      ],
       goal_type: [
         "retirement",
         "real_estate",
@@ -1577,6 +2172,7 @@ export const Constants = {
         "safety_net",
         "other",
       ],
+      source_health: ["healthy", "degraded", "broken", "unknown"],
     },
   },
 } as const
