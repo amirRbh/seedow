@@ -27,7 +27,6 @@ import { GuestBanner } from "@/components/dashboard/GuestBanner";
 import { UnderstandPortfolioCard } from "@/components/dashboard/UnderstandPortfolioCard";
 import { GuestDashboard } from "@/components/dashboard/GuestDashboard";
 import { SimulationBadge } from "@/components/common/SimulationBadge";
-import { clearGuestSimulation } from "@/lib/beta/guest";
 import { Provenance } from "@/components/ui/Provenance";
 
 export const Route = createFileRoute("/dashboard")({
@@ -51,11 +50,6 @@ function DashboardEntry() {
   const { user, loading } = useAuth();
   const { guest } = Route.useSearch();
   const navigate = useNavigate();
-
-  // Un compte réel rend la simulation invité caduque : on la purge.
-  useEffect(() => {
-    if (user) clearGuestSimulation();
-  }, [user]);
 
   // Accueil unique (Le Fil) : un utilisateur CONNECTÉ qui atterrit sur l'ancien
   // /dashboard (lien obsolète, URL directe, « Mon espace » historique) est renvoyé

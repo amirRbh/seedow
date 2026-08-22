@@ -25,7 +25,6 @@ import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { joinWaitlist } from "@/lib/beta/beta.functions";
-import { readGuestSimulation } from "@/lib/beta/guest";
 import { useBetaCapacity } from "@/hooks/useBetaCapacity";
 import { screenAssetPool } from "@/lib/portfolio/server.functions";
 import { AgencyReveal } from "@/components/onboarding/AgencyReveal";
@@ -43,15 +42,14 @@ import {
 } from "@/lib/onboarding/params";
 
 export const Route = createFileRoute("/onboarding")({
-  validateSearch: (s: Record<string, unknown>): { new?: 1; guest?: true; resume?: "guest" } => ({
+  validateSearch: (s: Record<string, unknown>): { new?: 1; guest?: true } => ({
     new: s.new === 1 || s.new === "1" ? 1 : undefined,
     guest: s.guest === true || s.guest === "true" ? true : undefined,
-    resume: s.resume === "guest" ? "guest" : undefined,
   }),
   // Pas de guard auth : on laisse l'utilisateur répondre aux questions sans compte,
-  // et on lui montre son allocation simulée (phase "preview", non persistée) avant
-  // tout mur d'inscription. Le compte n'est demandé qu'au moment de sauvegarder
-  // (phase "account", juste avant la persistance en phase "saving").
+  // et on lui montre le pool à composer (phase "preview") avant tout mur
+  // d'inscription. Le compte n'est demandé qu'au moment de composer/sauvegarder
+  // (le builder /construire exige un compte).
   component: Onboarding,
 });
 
@@ -117,35 +115,16 @@ function StepOptionIcon({ icon }: { icon: string | LucideIcon }) {
 
 function Onboarding() {
   const navigate = useNavigate();
-  const { new: isNew, guest, resume } = Route.useSearch();
+  const { new: isNew, guest } = Route.useSearch();
   const isAdditive = isNew === 1;
   const isGuest = guest === true;
-  // Reprise « invité → compte » : l'invité a déjà répondu au questionnaire, on
-  // le mène directement au mur de création de compte (déterministe depuis l'URL,
-  // donc sans écart d'hydratation). Les réponses sont réinjectées côté client.
-  const isGuestResume = resume === "guest";
   // Ne restaure que le brouillon correspondant au même contexte (premier
   // portefeuille vs. portefeuille additionnel) — jamais l'un à la place de l'autre.
   const draft = loadDraft(isAdditive);
-  const [phase, setPhase] = useState<Phase>(isGuestResume ? "account" : (draft?.phase ?? "steps"));
+  const [phase, setPhase] = useState<Phase>(draft?.phase ?? "steps");
   const [stepIndex, setStepIndex] = useState(draft?.stepIndex ?? 0);
   const [answers, setAnswers] = useState<Answers>(draft?.answers ?? {});
   const [portfolioName, setPortfolioName] = useState(draft?.portfolioName ?? "");
-
-  // Réinjecte les réponses de la simulation invité (localStorage, client-only).
-  // Si la simulation a expiré, on repart proprement du questionnaire.
-  useEffect(() => {
-    if (!isGuestResume) return;
-    const sim = readGuestSimulation();
-    if (sim?.answers && Object.keys(sim.answers).length > 0) {
-      setAnswers(sim.answers as Answers);
-    } else {
-      setStepIndex(0);
-      setPhase("steps");
-    }
-    // Au montage uniquement : la reprise ne dépend que de l'URL.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   // Entrée dans l'aperçu : mesuré même sans compte (session anonyme).
   useEffect(() => {
