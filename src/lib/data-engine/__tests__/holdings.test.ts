@@ -1,9 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
   buildHoldingRows,
+  compactDateToIso,
+  dayMonthYearToIso,
   monthDayYearToIso,
   parseCsvLine,
   parseISharesHoldingsCsv,
+  parseISharesProductDataHoldings,
   persistHoldings,
   type HoldingRow,
 } from "../holdings";
@@ -49,6 +52,115 @@ describe("parseISharesHoldingsCsv", () => {
 
   it("CSV sans tableau → vide, pas d'erreur", () => {
     expect(parseISharesHoldingsCsv("rien ici").holdings).toHaveLength(0);
+  });
+});
+
+describe("compactDateToIso / dayMonthYearToIso", () => {
+  it("convertit les deux formats de date de l'API produit", () => {
+    expect(compactDateToIso(20260820)).toBe("2026-08-20");
+    expect(compactDateToIso("20260820")).toBe("2026-08-20");
+    expect(dayMonthYearToIso("20/Aug/2026")).toBe("2026-08-20");
+    expect(dayMonthYearToIso("1/Sep/2026")).toBe("2026-09-01");
+  });
+
+  it("rejette ce qui n'est pas une date, sans lever", () => {
+    expect(compactDateToIso(20261320)).toBeNull(); // mois 13
+    expect(compactDateToIso("2026-08-20")).toBeNull();
+    expect(compactDateToIso(null)).toBeNull();
+    expect(dayMonthYearToIso("20/Foo/2026")).toBeNull();
+    expect(dayMonthYearToIso(42)).toBeNull();
+  });
+});
+
+/**
+ * Extrait réaliste de la réponse `get-product-data?component=holdings` :
+ * colonnes en tableaux parallèles, `value` brut + `formattedValue` arrondi.
+ */
+const PRODUCT_DATA = {
+  productId: 251882,
+  fundName: "iShares Core MSCI World UCITS ETF",
+  componentsByNameMap: {
+    holdings: {
+      containersByNameMap: {
+        all: {
+          dataPointsByNameMap: {
+            asOfDate: { value: 20260820, formattedValue: "20/Aug/2026" },
+            issueName: {
+              value: ["NVIDIA", "APPLE", "USD CASH"],
+              formattedValue: ["NVIDIA", "APPLE", "USD CASH"],
+            },
+            ticker: { value: ["NVDA", "AAPL", "USD"] },
+            isin: { value: ["US67066G1040", "US0378331005", ""] },
+            holdingPercent: {
+              value: [5.4582, 4.9831, 0.1],
+              formattedValue: ["5.46", "4.98", "0.10"],
+            },
+            sectorName: { value: ["Information Technology", "Information Technology", "Cash"] },
+            countryOfRisk: { value: ["United States", "United States", "-"] },
+          },
+        },
+      },
+    },
+  },
+};
+
+describe("parseISharesProductDataHoldings", () => {
+  it("extrait la date et les positions depuis les colonnes parallèles", () => {
+    const p = parseISharesProductDataHoldings(PRODUCT_DATA);
+    expect(p.asOf).toBe("2026-08-20");
+    expect(p.holdings).toHaveLength(3);
+    const nvda = p.holdings[0];
+    expect(nvda.name).toBe("NVIDIA");
+    expect(nvda.ticker).toBe("NVDA");
+    expect(nvda.isin).toBe("US67066G1040");
+    expect(nvda.sector).toBe("Information Technology");
+    expect(nvda.country).toBe("United States");
+  });
+
+  it("préfère la valeur brute à la valeur arrondie affichée", () => {
+    const p = parseISharesProductDataHoldings(PRODUCT_DATA);
+    expect(p.holdings[0].weightPct).toBe(5.4582); // pas 5.46
+  });
+
+  it("ne comble jamais un champ absent : ISIN vide et « - » → null", () => {
+    const cash = parseISharesProductDataHoldings(PRODUCT_DATA).holdings[2];
+    expect(cash.isin).toBeNull();
+    expect(cash.country).toBeNull();
+    expect(cash.weightPct).toBe(0.1);
+  });
+
+  it("retombe sur formattedValue quand value manque", () => {
+    const p = parseISharesProductDataHoldings({
+      componentsByNameMap: {
+        holdings: {
+          containersByNameMap: {
+            all: {
+              dataPointsByNameMap: {
+                asOfDate: { formattedValue: "20/Aug/2026" },
+                issueName: { formattedValue: ["APPLE"] },
+                holdingPercent: { formattedValue: ["4.98"] },
+              },
+            },
+          },
+        },
+      },
+    });
+    expect(p.asOf).toBe("2026-08-20");
+    expect(p.holdings[0].weightPct).toBe(4.98);
+  });
+
+  it("JSON inattendu → vide, pas d'erreur", () => {
+    expect(parseISharesProductDataHoldings(null).holdings).toHaveLength(0);
+    expect(parseISharesProductDataHoldings({ oops: 1 }).holdings).toHaveLength(0);
+    expect(parseISharesProductDataHoldings("<html>").asOf).toBeNull();
+  });
+
+  it("alimente buildHoldingRows sans changer le pipeline aval", () => {
+    const rows = buildHoldingRows("a1", parseISharesProductDataHoldings(PRODUCT_DATA), META);
+    expect(rows).toHaveLength(3);
+    expect(rows[0].as_of).toBe("2026-08-20");
+    expect(rows[0].security_isin).toBe("US67066G1040");
+    expect(rows[2].security_isin).toBeNull();
   });
 });
 
