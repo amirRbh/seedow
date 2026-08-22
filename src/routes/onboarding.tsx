@@ -28,12 +28,11 @@ import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { joinWaitlist } from "@/lib/beta/beta.functions";
-import { writeGuestSimulation, readGuestSimulation, type GuestSimulation } from "@/lib/beta/guest";
+import { readGuestSimulation } from "@/lib/beta/guest";
 import { useBetaCapacity } from "@/hooks/useBetaCapacity";
-import { generatePortfolio, simulatePortfolio } from "@/lib/portfolio/server.functions";
-import { MirrorReveal, type MirrorImpact } from "@/components/onboarding/MirrorReveal";
+import { generatePortfolio, screenAssetPool } from "@/lib/portfolio/server.functions";
 import { AgencyReveal } from "@/components/onboarding/AgencyReveal";
-import { PostSimulationFork } from "@/components/onboarding/PostSimulationFork";
+import { writePoolHandoff, clearPoolHandoff } from "@/lib/onboarding/poolHandoff";
 import { SimulationBadge } from "@/components/common/SimulationBadge";
 import { callAuthed } from "@/lib/authedServerFn";
 import { trackPreference, type PreferenceStep } from "@/lib/preferences/tracking";
@@ -216,33 +215,6 @@ function Onboarding() {
     }
   };
 
-  // Appelé depuis l'écran de preview quand l'utilisateur veut sauvegarder son portefeuille.
-  // `holdings` : l'allocation simulée déjà calculée par la preview.
-  const handleSave = async (holdings: GuestSimulation["allocation"]) => {
-    const { data } = await supabase.auth.getSession();
-    if (data.session) {
-      setPhase("saving");
-      return;
-    }
-    // Mode invité : pas de mur d'inscription. On persiste la simulation côté
-    // navigateur (7 jours) et on ouvre le dashboard invité — la création de
-    // compte est proposée là-bas, sans friction, pour sauvegarder.
-    if (isGuest) {
-      writeGuestSimulation({
-        cause: portfolioParams.causes[0] ?? "climat",
-        amount: portfolioParams.initial_amount,
-        allocation: holdings,
-        // Réponses conservées : si l'invité crée un compte, on reconstruit son
-        // portefeuille sans lui refaire remplir le questionnaire.
-        answers,
-      });
-      clearDraft();
-      void navigate({ to: "/dashboard", search: { guest: true } });
-      return;
-    }
-    setPhase("account");
-  };
-
   return (
     <div className="min-h-screen bg-paper-2 text-ink">
       <AnimatePresence mode="wait">
@@ -271,9 +243,7 @@ function Onboarding() {
             }}
           />
         )}
-        {phase === "preview" && (
-          <PreviewScene key="preview" params={portfolioParams} onSave={handleSave} />
-        )}
+        {phase === "preview" && <PreviewScene key="preview" params={portfolioParams} />}
         {phase === "naming" && (
           <NamePortfolioStep
             key="naming"
@@ -998,55 +968,49 @@ interface SelectedAsset {
 }
 
 // ─────────────────────────────────────────────────────────
-// Preview — simule l'allocation sans compte ni persistance
-// (mur d'inscription repoussé après la preview, pas avant)
+// Preview — présente un POOL d'actifs classé (SANS proposer d'allocation).
+// Seedow ne propose plus de poids : il classe un pool selon les préférences et
+// l'utilisateur compose ses montants lui-même dans le builder (/construire).
 // ─────────────────────────────────────────────────────────
 
-function PreviewScene({
-  params,
-  onSave,
-}: {
-  params: PortfolioParams;
-  onSave: (holdings: GuestSimulation["allocation"]) => void;
-}) {
+/** Une ligne du pool telle que renvoyée par `screenAssetPool` (payload UI). */
+interface PoolEntry {
+  id: string;
+  ticker: string;
+  name: string;
+  esg_score: number;
+  relevance: number | null;
+  data_tier: "full" | "partial" | "insufficient";
+}
+
+/** Nombre de lignes affichées dans l'aperçu et seedées dans le builder. */
+const POOL_PREVIEW_LIMIT = 12;
+
+function PreviewScene({ params }: { params: PortfolioParams }) {
   const { t } = useTranslation();
-  const { lang } = useLang();
   const navigate = useNavigate();
-  const simulate = useServerFn(simulatePortfolio);
+  const screen = useServerFn(screenAssetPool);
   const [phase, setPhase] = useState<"loading" | "reveal" | "error">("loading");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [selected, setSelected] = useState<SelectedAsset[]>([]);
-  const [weights, setWeights] = useState<Record<string, number>>({});
-  const [mirror, setMirror] = useState<{
-    impact: MirrorImpact;
-    excludedCount: number;
-    universeSize: number;
-  } | null>(null);
+  const [pool, setPool] = useState<PoolEntry[]>([]);
+  const [excludedCount, setExcludedCount] = useState(0);
+  const [universeSize, setUniverseSize] = useState(0);
   const [attempt, setAttempt] = useState(0);
 
-  // Accepte la proposition simulée et la sauvegarde. `intent === "customize"`
-  // pose un drapeau que /portfolio consomme pour ouvrir l'ajustement d'emblée.
-  const acceptAndSave = (intent?: "customize") => {
-    void trackPreference({
-      step: "allocation_accepted",
-      payload: { position_count: selected.length },
-    });
-    if (intent === "customize") {
-      try {
-        localStorage.setItem("seedow_post_save_intent", "customize");
-      } catch {
-        /* stockage indisponible : on sauvegarde quand même, sans le raccourci */
-      }
-    }
-    const holdings = selected
-      .map((a) => ({
-        ticker: a.ticker,
-        name: a.name,
-        allocationPct: (weights[a.id] ?? 0) * 100,
-      }))
-      .filter((h) => h.allocationPct > 0.5)
-      .sort((a, b) => b.allocationPct - a.allocationPct);
-    onSave(holdings);
+  // Passe au builder : on amorce la composition avec le haut du pool classé
+  // (l'utilisateur ajuste les montants). Pour un invité, /construire exige un
+  // compte — la création de compte arrive donc au moment de composer/sauvegarder,
+  // conformément à « il compose lui-même avant de sauvegarder ».
+  const compose = () => {
+    const seed = pool.slice(0, POOL_PREVIEW_LIMIT).map((p) => ({
+      id: p.id,
+      ticker: p.ticker,
+      name: p.name,
+      esgScore: p.esg_score,
+    }));
+    writePoolHandoff(seed);
+    void trackPreference({ step: "pool_compose", payload: { count: seed.length } });
+    void navigate({ to: "/construire" });
   };
 
   useEffect(() => {
@@ -1055,25 +1019,16 @@ function PreviewScene({
     setErrorMsg(null);
     (async () => {
       try {
-        const result = await simulate({ data: params });
+        const result = await screen({ data: params });
         if (cancelled) return;
-        setSelected(result.selected.map((s) => ({ id: s.id, ticker: s.ticker, name: s.name })));
-        setWeights(result.weights as Record<string, number>);
-        setMirror({
-          impact: {
-            waci: result.impact?.waci ?? null,
-            waci_coverage: result.impact?.waci_coverage ?? 0,
-            vs_benchmark_delta_pct: result.impact?.vs_benchmark_delta_pct ?? null,
-            benchmark_waci: result.impact?.benchmark_waci ?? null,
-          },
-          excludedCount: result.excluded_count ?? 0,
-          universeSize: result.universe_size ?? 0,
-        });
+        setPool(result.pool as PoolEntry[]);
+        setExcludedCount(result.excluded_count ?? 0);
+        setUniverseSize(result.universe_size ?? 0);
         setPhase("reveal");
         void trackPreference({
-          step: "allocation_seen",
+          step: "pool_seen",
           payload: {
-            position_count: result.selected.length,
+            pool_size: result.pool.length,
             causes: params.causes,
             exclusions: params.exclusions,
             risk_target: params.risk_target,
@@ -1083,7 +1038,7 @@ function PreviewScene({
         });
       } catch (err) {
         if (cancelled) return;
-        console.error("[onboarding] simulate:", err);
+        console.error("[onboarding] screen:", err);
         setErrorMsg(err instanceof Error ? err.message : t("onboarding.building.error_fallback"));
         setPhase("error");
       }
@@ -1118,12 +1073,12 @@ function PreviewScene({
               />
             </div>
             <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium">
-              {t("onboarding.building.loading_eyebrow")}
+              {t("onboarding.pool.loading_eyebrow")}
             </p>
             <p className="font-value text-2xl text-ink mt-3">
-              {t("onboarding.building.loading_title")}
+              {t("onboarding.pool.loading_title")}
             </p>
-            <p className="text-label text-ink-3 mt-2">{t("onboarding.building.loading_desc")}</p>
+            <p className="text-label text-ink-3 mt-2">{t("onboarding.pool.loading_desc")}</p>
           </motion.div>
         )}
 
@@ -1158,78 +1113,73 @@ function PreviewScene({
             className="w-full max-w-md"
           >
             <SimulationBadge center withTagline className="mb-5" />
-            {mirror && (
-              <MirrorReveal
-                impact={mirror.impact}
-                excludedCount={mirror.excludedCount}
-                universeSize={mirror.universeSize}
-                exclusionsCount={params.exclusions.length}
-              />
-            )}
-            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium text-center">
-              {t("onboarding.building.reveal_eyebrow")}
+            <p className="text-tag uppercase tracking-[0.18em] text-mint font-medium text-center">
+              {t("onboarding.pool.eyebrow")}
             </p>
-            <p className="font-value text-2xl text-ink text-center mt-2 mb-6">
-              {t("onboarding.building.reveal_title")}
+            <p className="font-value text-2xl text-ink text-center mt-2 mb-3">
+              {t("onboarding.pool.title")}
             </p>
-            <p className="text-caption text-ink-3 text-center mb-6">
-              {t("onboarding.building.reveal_summary", {
-                count: selected.length,
-                amount: formatCurrency(params.initial_amount, lang),
+            {/* Explication simple et claire du choix (aucune allocation imposée) :
+                on montre des actifs qui collent aux filtres, classés par pertinence,
+                et c'est l'utilisateur qui compose — il ne doit jamais se sentir perdu. */}
+            <p className="text-caption text-ink-2 text-center mb-6 leading-relaxed">
+              {t("onboarding.pool.explainer", {
+                count: pool.length,
+                excluded: excludedCount,
+                universe: universeSize,
               })}
             </p>
             <ul className="divide-y divide-paper-3 border-t border-b border-paper-3">
-              {selected
-                .map((a) => ({ ...a, w: (weights[a.id] ?? 0) * 100 }))
-                .filter((a) => a.w > 0.5)
-                .sort((a, b) => b.w - a.w)
-                .slice(0, 8)
-                .map((a, i) => (
-                  <motion.li
-                    key={a.id}
-                    initial={{ opacity: 0, x: -6 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.08, duration: 0.3 }}
-                    className="py-3"
-                  >
-                    {/* Nom lisible d'abord (le débutant ne connaît pas les
-                        tickers) ; le code technique devient une métadonnée. */}
-                    <div className="flex items-baseline justify-between mb-1.5 gap-3">
-                      <span className="font-value text-body-sm text-ink truncate">{a.name}</span>
-                      <span className="text-label text-ink tabular-nums font-medium flex-shrink-0">
-                        {formatPercent(a.w / 100, lang, 1)}
-                      </span>
-                    </div>
-                    <div className="h-px bg-paper-3 relative">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${Math.min(100, a.w * 2.5)}%` }}
-                        transition={{ delay: i * 0.08 + 0.15, duration: 0.6, ease: EASE_REVEAL }}
-                        className="absolute inset-y-0 left-0 bg-ink"
-                      />
-                    </div>
-                    {/* Traduit le % abstrait en argent concret « sur ton montant »
-                        (principe Finary/YNAB) — rend la répartition tangible. */}
-                    <div className="flex items-baseline justify-between gap-3 mt-1">
-                      <span className="text-tag font-mono uppercase tracking-wider text-ink-3 truncate">
-                        {a.ticker}
-                      </span>
-                      <span className="text-tag text-ink-3 tabular-nums flex-shrink-0">
-                        {t("onboarding.building.line_share", {
-                          amount: formatCurrency((params.initial_amount * a.w) / 100, lang),
-                          total: formatCurrency(params.initial_amount, lang),
-                        })}
-                      </span>
-                    </div>
-                  </motion.li>
-                ))}
+              {pool.slice(0, POOL_PREVIEW_LIMIT).map((a, i) => (
+                <motion.li
+                  key={a.id}
+                  initial={{ opacity: 0, x: -6 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05, duration: 0.3 }}
+                  className="py-3 flex items-baseline justify-between gap-3"
+                >
+                  {/* Nom lisible d'abord ; le ticker devient une métadonnée. */}
+                  <div className="min-w-0">
+                    <span className="font-value text-body-sm text-ink truncate block">
+                      {a.name}
+                    </span>
+                    <span className="text-tag font-mono uppercase tracking-wider text-ink-3">
+                      {a.ticker}
+                    </span>
+                  </div>
+                  {/* Pertinence quand l'actif a un historique réel ; sinon « en cours »
+                      (jamais un chiffre inventé — cf. règle §1.3). */}
+                  {a.relevance != null ? (
+                    <span className="text-label text-mint tabular-nums font-medium flex-shrink-0">
+                      {t("onboarding.pool.relevance_badge", { score: a.relevance })}
+                    </span>
+                  ) : (
+                    <span className="text-tag text-ink-3 flex-shrink-0">
+                      {t("onboarding.pool.pending_badge")}
+                    </span>
+                  )}
+                </motion.li>
+              ))}
             </ul>
-            <div className="mt-8">
-              <PostSimulationFork
-                onGuided={() => acceptAndSave()}
-                onCustomize={() => acceptAndSave("customize")}
-                onBlank={() => navigate({ to: "/construire" })}
-              />
+            <p className="text-tag text-ink-3 text-center mt-3 leading-relaxed">
+              {t("onboarding.pool.method_note")}
+            </p>
+            <div className="mt-8 space-y-3">
+              <button
+                onClick={compose}
+                className="w-full h-14 rounded-full bg-ink text-paper font-semibold text-body-sm hover:opacity-90 transition-colors"
+              >
+                {t("onboarding.pool.compose_cta")}
+              </button>
+              <button
+                onClick={() => {
+                  clearPoolHandoff();
+                  void navigate({ to: "/construire" });
+                }}
+                className="w-full text-caption text-ink-3 hover:text-ink-2 transition-colors"
+              >
+                {t("onboarding.pool.blank_cta")}
+              </button>
             </div>
           </motion.div>
         )}

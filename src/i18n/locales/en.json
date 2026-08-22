@@ -1126,6 +1126,19 @@
       "save_cta": "Save my portfolio",
       "save_hint": "Create a free account to save it — no strings attached, 10 seconds."
     },
+    "pool": {
+      "loading_eyebrow": "Selecting",
+      "loading_title": "Gathering your assets",
+      "loading_desc": "Filtering on your criteria, then ranking by relevance",
+      "eyebrow": "Your selection",
+      "title": "Here are your assets",
+      "explainer": "{{count}} assets match your criteria ({{excluded}} excluded of {{universe}}), ranked by relevance. Seedow doesn't pick your allocation — you compose it, we explain every signal.",
+      "relevance_badge": "{{score}}/100",
+      "pending_badge": "Pending",
+      "method_note": "Relevance = risk-adjusted performance, ESG quality and alignment with your causes. \"Pending\": market history still too thin — never a made-up score.",
+      "compose_cta": "Compose my portfolio",
+      "blank_cta": "Start from a blank canvas"
+    },
     "saving": {
       "title": "Saving your portfolio…"
     },

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useTranslation } from "react-i18next";
@@ -11,6 +11,7 @@ import { createCustomPortfolio } from "@/lib/portfolio/customize.functions";
 import { liteSnapshot, CONCENTRATION_ALERT } from "@/lib/portfolio/consequences";
 import { diversificationBand, impactScore } from "@/lib/portfolio/plain-language";
 import { AssetPickerSheet, type PickedAsset } from "./AssetPickerSheet";
+import { readPoolHandoff } from "@/lib/onboarding/poolHandoff";
 
 interface Line {
   id: string;
@@ -39,6 +40,28 @@ export function BlankCanvasBuilder() {
   const [lines, setLines] = useState<Line[]>([]);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  // Amorçage depuis le pool de l'aperçu (bascule « pool plutôt qu'allocation ») :
+  // le builder démarre pré-rempli des actifs sélectionnés, à 0 % — Seedow ne
+  // propose pas de poids, l'utilisateur alloue lui-même (curseurs). Lecture
+  // client-only (localStorage indisponible en SSR) et à usage unique (le seed
+  // est purgé à la lecture) — sans seed, on reste sur le builder vide habituel.
+  useEffect(() => {
+    const seed = readPoolHandoff();
+    if (!seed) return;
+    setLines((ls) =>
+      ls.length > 0
+        ? ls
+        : seed.map((a) => ({
+            id: a.id,
+            ticker: a.ticker,
+            name: a.name,
+            esgScore: a.esgScore,
+            pct: 0,
+          })),
+    );
+    // Au montage uniquement : le seed est déterministe et à usage unique.
+  }, []);
 
   const active = lines.filter((l) => l.pct > 0);
 

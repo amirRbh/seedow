@@ -68,6 +68,8 @@ export type PreferenceStep =
   | "allocation_seen"
   | "allocation_accepted"
   | "allocation_regenerated"
+  | "pool_seen"
+  | "pool_compose"
   | "fund_rejected"
   | "fund_swapped";
 
