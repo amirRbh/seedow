@@ -11,6 +11,8 @@
  * builder vide.
  */
 
+import type { CauseTag, ExclusionTag } from "@/lib/portfolio/types";
+
 const KEY = "seedow_pool_handoff";
 /** Au-delà, le seed est considéré périmé (l'utilisateur a changé de contexte). */
 const MAX_AGE_MS = 60 * 60 * 1000; // 1 h
@@ -22,8 +24,22 @@ export interface PoolHandoffAsset {
   esgScore: number;
 }
 
-interface StoredHandoff {
+/**
+ * Intention de composition transmise avec le pool : mode (premier portefeuille
+ * « replace » vs ajout « create »), convictions à conserver, nom éventuel.
+ */
+export interface PoolHandoffIntent {
+  mode: "replace" | "create";
+  causes: CauseTag[];
+  exclusions: ExclusionTag[];
+  name?: string;
+}
+
+export interface PoolHandoff extends PoolHandoffIntent {
   assets: PoolHandoffAsset[];
+}
+
+interface StoredHandoff extends PoolHandoff {
   savedAt: number;
 }
 
@@ -36,12 +52,12 @@ function safeStorage(): Pick<Storage, "getItem" | "setItem" | "removeItem"> | nu
   }
 }
 
-/** Mémorise la sélection du pool à composer. Ne lève jamais. */
-export function writePoolHandoff(assets: PoolHandoffAsset[]): void {
+/** Mémorise la sélection du pool + l'intention de composition. Ne lève jamais. */
+export function writePoolHandoff(assets: PoolHandoffAsset[], intent: PoolHandoffIntent): void {
   const storage = safeStorage();
   if (!storage) return;
   try {
-    const payload: StoredHandoff = { assets, savedAt: Date.now() };
+    const payload: StoredHandoff = { assets, ...intent, savedAt: Date.now() };
     storage.setItem(KEY, JSON.stringify(payload));
   } catch {
     // Stockage indisponible (quota, mode privé) : on continue sans seed.
@@ -49,10 +65,10 @@ export function writePoolHandoff(assets: PoolHandoffAsset[]): void {
 }
 
 /**
- * Relit la sélection du pool (et la purge : usage unique). Retourne `null` si
- * absente, périmée ou illisible. Ne lève jamais.
+ * Relit le passe-plat (assets + intention) et le purge (usage unique). Retourne
+ * `null` si absent, périmé ou illisible. Ne lève jamais.
  */
-export function readPoolHandoff(now: number = Date.now()): PoolHandoffAsset[] | null {
+export function readPoolHandoff(now: number = Date.now()): PoolHandoff | null {
   const storage = safeStorage();
   if (!storage) return null;
   let raw: string | null = null;
@@ -87,7 +103,16 @@ export function readPoolHandoff(now: number = Date.now()): PoolHandoffAsset[] | 
         typeof a.name === "string" &&
         typeof a.esgScore === "number",
     );
-    return clean.length > 0 ? clean : null;
+    // On garde l'intention même sans actif (parcours « page blanche » : le
+    // builder démarre vide mais doit connaître le mode — create ne doit jamais
+    // écraser un portefeuille existant).
+    return {
+      assets: clean,
+      mode: parsed.mode === "create" ? "create" : "replace",
+      causes: Array.isArray(parsed.causes) ? parsed.causes : [],
+      exclusions: Array.isArray(parsed.exclusions) ? parsed.exclusions : [],
+      name: typeof parsed.name === "string" ? parsed.name : undefined,
+    };
   } catch {
     return null;
   }

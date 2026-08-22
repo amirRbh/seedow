@@ -24,11 +24,25 @@ const InputSchema = z.object({
   weights: z.record(z.string().uuid(), z.number().min(0).max(1)),
 });
 
+const CauseSchema = z.enum(["climat", "biodiversite", "humain", "egalite", "tech", "circulaire"]);
+const ExclusionSchema = z.enum(["fossiles", "armes", "tabac", "jeux", "animaux", "fast-fashion"]);
+
 const CreateInputSchema = z.object({
   /** { asset_id: poids (0..1) } — au moins une ligne strictement positive. */
   weights: z.record(z.string().uuid(), z.number().min(0).max(1)),
   /** Nom du portefeuille construit à la main. */
   name: z.string().min(1).max(80).optional(),
+  /**
+   * "replace" (défaut) : désactive les portefeuilles actifs existants avant
+   * d'insérer celui-ci (premier portefeuille). "create" : ajoute à côté des
+   * existants (le trigger DB borne à 3 actifs) — parcours « ajouter un
+   * portefeuille » depuis le tableau de bord.
+   */
+  mode: z.enum(["replace", "create"]).default("replace"),
+  /** Convictions de l'onboarding — conservées (pondération des piliers ESG + aval). */
+  causes: z.array(CauseSchema).max(6).default([]),
+  /** Exclusions de l'onboarding — conservées sur le portefeuille. */
+  exclusions: z.array(ExclusionSchema).max(6).default([]),
 });
 
 /**
@@ -160,21 +174,31 @@ export const createCustomPortfolio = createServerFn({ method: "POST" })
 
     const universe = await loadUniverse(userClient as typeof supabaseAdmin);
     const byId = new Map(universe.assets.map((a) => [a.id, a]));
-    // Page blanche : aucune cause déclarée → pondération de piliers ESG par défaut.
-    const { weights, metrics } = normalizeAndMeasure(data.weights, byId, universe.covariance, []);
+    // On conserve les convictions de l'onboarding : pondération des piliers ESG
+    // dérivée des causes (pas de valeur neutre inventée quand elles existent).
+    const { weights, metrics } = normalizeAndMeasure(
+      data.weights,
+      byId,
+      universe.covariance,
+      data.causes,
+    );
 
-    // 1) Désactive les portefeuilles actifs existants (mode replace).
-    const { error: deactivateErr } = await userClient
-      .from("portfolios")
-      .update({ is_active: false })
-      .eq("user_id", userId)
-      .eq("is_active", true)
-      .select("id");
-    if (deactivateErr) {
-      console.error("[createCustomPortfolio] deactivate error:", deactivateErr);
-      throw new Error(
-        "Impossible de désactiver le portefeuille précédent. Réessaie dans un instant.",
-      );
+    // 1) Mode "replace" : désactive les portefeuilles actifs existants avant
+    //    d'insérer. Mode "create" : on garde les existants (ajout d'un
+    //    portefeuille) — le trigger DB borne le nombre d'actifs.
+    if (data.mode === "replace") {
+      const { error: deactivateErr } = await userClient
+        .from("portfolios")
+        .update({ is_active: false })
+        .eq("user_id", userId)
+        .eq("is_active", true)
+        .select("id");
+      if (deactivateErr) {
+        console.error("[createCustomPortfolio] deactivate error:", deactivateErr);
+        throw new Error(
+          "Impossible de désactiver le portefeuille précédent. Réessaie dans un instant.",
+        );
+      }
     }
 
     // 2) Insère le nouveau portefeuille custom comme actif.
@@ -183,9 +207,9 @@ export const createCustomPortfolio = createServerFn({ method: "POST" })
       .insert({
         user_id: userId,
         name: data.name ?? "Mon portefeuille",
-        causes: [],
+        causes: data.causes,
         cause_intensity: {},
-        exclusions: [],
+        exclusions: data.exclusions,
         risk_target: 0.09,
         horizon_years: 10,
         initial_amount: 100,
