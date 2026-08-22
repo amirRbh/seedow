@@ -169,16 +169,16 @@ dont la mission est justement de les diffuser.
 
 ### Sources primaires gratuites — joignabilité mesurée le 2026-08-21
 
-| Source                             | Donnée                                                         | HTTP mesuré           | Statut licence                                                            |
-| ---------------------------------- | -------------------------------------------------------------- | --------------------- | ------------------------------------------------------------------------- |
-| **SEC EDGAR** (`data.sec.gov`)     | dépôts US, XBRL, **N-PORT = holdings de fonds US**             | 200 (UA requis)       | **Domaine public** — usage commercial explicite                           |
-| **GLEIF** (`api.gleif.org`)        | LEI ↔ entité juridique, structure de groupe                    | 200                   | **CC0** — sans restriction                                                |
-| **filings.xbrl.org**               | dépôts **ESEF/CSRD** balisés → émissions Scope 1/2/3 déclarées | 200 (`index.json`)    | Dépôts réglementaires publics                                             |
-| **TPI** (Transition Pathway Init.) | qualité de gouvernance climat + trajectoire carbone            | 200                   | Libre, académique — **à confirmer par écrit**                             |
-| **SBTi**                           | objectifs climat validés (binaire + niveau)                    | 200 (redirection)     | Fichier public, licence **non explicitée** — à confirmer                  |
-| **UN Global Compact**              | adhérents + **radiés** (manquements normatifs)                 | 200                   | Public — à confirmer                                                      |
-| **Urgewald GCEL / GOGEL**          | charbon, expansion pétrole & gaz → **exclusion**               | domaine principal 200 | Gratuit et public, mais **usage commercial soumis à autorisation écrite** |
-| **Banque mondiale**                | contexte macro / pays                                          | 200                   | CC-BY                                                                     |
+| Source                             | Donnée                                                        | HTTP mesuré           | Statut licence                                                            |
+| ---------------------------------- | ------------------------------------------------------------- | --------------------- | ------------------------------------------------------------------------- |
+| **SEC EDGAR** (`data.sec.gov`)     | dépôts US, XBRL, **N-PORT = holdings de fonds US**            | 200 (UA requis)       | **Domaine public** — usage commercial explicite                           |
+| **GLEIF** (`api.gleif.org`)        | LEI ↔ entité juridique, structure de groupe                   | 200                   | **CC0** — sans restriction                                                |
+| ~~**filings.xbrl.org**~~           | ~~émissions Scope 1/2/3 déclarées~~ — **corrigé, cf. §4 bis** | 200 (`index.json`)    | Dépôts réglementaires publics                                             |
+| **TPI** (Transition Pathway Init.) | qualité de gouvernance climat + trajectoire carbone           | 200                   | Libre, académique — **à confirmer par écrit**                             |
+| **SBTi**                           | objectifs climat validés (binaire + niveau)                   | 200 (redirection)     | Fichier public, licence **non explicitée** — à confirmer                  |
+| **UN Global Compact**              | adhérents + **radiés** (manquements normatifs)                | 200                   | Public — à confirmer                                                      |
+| **Urgewald GCEL / GOGEL**          | charbon, expansion pétrole & gaz → **exclusion**              | domaine principal 200 | Gratuit et public, mais **usage commercial soumis à autorisation écrite** |
+| **Banque mondiale**                | contexte macro / pays                                         | 200                   | CC-BY                                                                     |
 
 ⚠️ **« Joignable » ≠ « licite ».** Le tableau mesure la joignabilité ; la colonne
 licence dit ce qui est acquis et ce qui ne l'est pas. Deux sources seulement sont
@@ -186,6 +186,10 @@ licence dit ce qui est acquis et ce qui ne l'est pas. Deux sources seulement son
 confirmation écrite doit précéder la mise en production — même règle que pour
 iShares (§3). Urgewald invite explicitement les acteurs financiers à les
 contacter : c'est une demande à envoyer, pas un obstacle.
+
+⚠️ **Et « joignable » ≠ « contient la donnée annoncée ».** Ce tableau n'a mesuré
+que des codes HTTP. C'est insuffisant, et une ligne s'est révélée fausse à la
+vérification — voir §4 bis, qui la corrige.
 
 ### Pourquoi cette voie est meilleure, pas seulement moins chère
 
@@ -213,18 +217,128 @@ n'est exposé, et 0 % assumé vaut mieux qu'un chiffre inventé (§1.3).
 
 ---
 
+## 4 bis. Lot 1 exécuté — mesures, et une correction (2026-08-22)
+
+Le §4 ci-dessus proposait une stratégie et un tableau de sources dont **seule la
+joignabilité HTTP** avait été mesurée. Le lot 1 a été exécuté ; voici ce que la
+mesure a donné, y compris là où elle contredit le §4.
+
+Reproductible : `bun run scripts/probe-esg-company-signals.ts` (workflow
+`probe-esg-company-signals.yml`, lecture seule).
+
+### Correction : `filings.xbrl.org` ne contient pas les émissions
+
+Le tableau du §4 annonçait « dépôts **ESEF/CSRD** balisés → émissions Scope 1/2/3
+déclarées ». **C'est faux.** La joignabilité (HTTP 200) avait été mesurée, le
+contenu supposé. Mesuré depuis :
+
+| Vérification                     | Résultat                                                                      |
+| -------------------------------- | ----------------------------------------------------------------------------- |
+| Systèmes hébergés (`index.json`) | **ESEF uniquement** (+ UAIFRS via l'API) — **aucun ESRS**                     |
+| Dépôts au total (API)            | 25 675, dont l'essentiel antérieur à 2023                                     |
+| Contenu d'un dépôt ESEF réel     | 329 faits balisés · 111 concepts · taxinomies `ifrs-full` + extension société |
+| **Concepts climat / ESG dedans** | **0**                                                                         |
+
+ESEF est le format des **états financiers** (IFRS). Il ne porte aucune donnée
+d'émissions. Le balisage numérique des états de durabilité ESRS n'y est pas
+hébergé. → **`filings.xbrl.org` est retiré du lot 1** ; ce n'est pas une source
+carbone.
+
+### Climate TRACE : écarté comme signal de portefeuille (mesuré)
+
+Candidat sérieux au remplacement : CC BY 4.0, API v6 vivante, données mensuelles
+récentes, et un jeu de propriété reliant les actifs à leur société mère. Mais
+mesuré sur les 30 premières lignes d'un MSCI World :
+
+- **2 appariements réels sur 30** (Apple, Caterpillar) ;
+- 2 **faux positifs grossiers** : « Johnson & Johnson » → _Johnson Farms - Sebeka_,
+  « Visa » → _Therma Visayas Inc_ ;
+- ExxonMobil et Chevron — des pétroliers — ressortent **absents**.
+
+Raison de fond : Climate TRACE indexe des **actifs** (centrales, gisements, usines)
+rattachés à des **filiales d'exploitation**, et n'expose ni ISIN ni LEI. L'appariement
+ne peut se faire que par nom, ce qui produit les faux positifs ci-dessus.
+
+→ **Écarté comme signal de portefeuille.** Reste pertinent pour une analyse
+sectorielle ciblée (électricité, pétrole & gaz), pas pour noter un indice large.
+
+### GLEIF et SBTi : les deux briques qui tiennent
+
+Mesuré sur le même échantillon (30 premières lignes d'un MSCI World, 38,11 % du
+poids de l'indice) :
+
+| Source                  | Mesure                                                                                     |
+| ----------------------- | ------------------------------------------------------------------------------------------ |
+| **GLEIF**               | **29/30 ISIN résolus (97 %)** en LEI + raison sociale. CC0, sans réserve.                  |
+| **SBTi**                | 15 466 entreprises publiées, dont **4 798 portant un identifiant** (2 963 ISIN, 4 177 LEI) |
+| **SBTi ↔ portefeuille** | **20/30 appariées · 31,11 % de poids couvert sur 38,11 % testés = 81,6 %**                 |
+
+Ventilation obtenue sur la part couverte : `targets_set` 25,11 % · `commitment_removed`
+**6,00 %** · non apparié 7,00 % (jamais imputé).
+
+Deux choses à noter :
+
+1. **Le taux de couverture est bon là où il compte.** 81,6 % du poids testé, parce
+   que ce sont les grandes capitalisations qui portent un identifiant publié.
+2. **Le signal `commitment_removed` est le plus intéressant du lot.** Amazon,
+   Broadcom, Tesla et Palantir apparaissent avec un engagement climat **retiré**.
+   C'est exactement la matière de la détection de greenwashing (§4, point 5) : un
+   fait daté, publié par l'initiative elle-même, qu'aucune note agrégée ne montre.
+   Et l'absence d'ExxonMobil ou Chevron du jeu SBTi est elle-même un signal.
+
+### La leçon de méthode, la même que celle du §1
+
+Le §4 avait mesuré des codes HTTP et supposé des contenus. Deux des sources ainsi
+listées se sont révélées inexploitables à la vérification. C'est la **même erreur**
+que celle reprochée aux cadrages précédents au §1 — capitaliser un constat non
+re-mesuré — commise cette fois dans l'autre sens (un optimisme non vérifié plutôt
+qu'un pessimisme non vérifié).
+
+→ Règle à appliquer aux sources restantes (TPI, UNGC, Urgewald) : **aucune n'entre
+dans un plan tant que son contenu ET sa jointure n'ont pas été mesurés** sur un
+portefeuille réel, pas seulement son code HTTP.
+
+### Ce que le lot 1 livre en code
+
+- `src/lib/esg/company-signals.ts` — index par identifiant, appariement ISIN puis
+  LEI (**jamais par nom** : cf. les faux positifs ci-dessus), agrégation au niveau
+  fonds. Le poids non apparié est isolé, jamais redistribué sur les statuts.
+- `src/lib/esg/xlsx-reader.ts` — lecture .xlsx sans dépendance (§8 : pas de
+  bibliothèque tableur dans le bundle Edge). Un premier lecteur renvoyait
+  silencieusement zéro ligne : les fichiers SBTi sont écrits en flux
+  (`flags=0x808`), leurs en-têtes locaux annoncent une taille nulle, et il faut
+  passer par le répertoire central. Cas couvert par un test de régression.
+- `scripts/probe-esg-company-signals.ts` + workflow — la mesure ci-dessus,
+  rejouable.
+
+**Aucune donnée n'est persistée** : la licence SBTi n'est pas confirmée (lot 2).
+Le code est prêt, l'ingestion attend l'autorisation — même discipline qu'au §3.
+
+---
+
 ## 5. Plan pour la bêta
 
-### Lot 1 — sans attendre aucune autorisation (démarrable tout de suite)
+### Lot 1 — sans attendre aucune autorisation — ✅ **exécuté, cf. §4 bis**
 
-1. **Identité** : GLEIF (CC0) pour l'axe ISIN → LEI → entité. Sans réserve.
-2. **Holdings de fonds US** : SEC EDGAR **N-PORT**, domaine public, usage
-   commercial explicitement permis (UA d'identification + limite de débit).
-   Couvre les ETF de droit américain du catalogue.
-3. **Émissions déclarées** : `filings.xbrl.org` (ESEF/CSRD) → Scope 1/2/3
-   **réellement déclarés et balisés XBRL** par les émetteurs européens. C'est la
-   donnée carbone la plus solide accessible gratuitement, et elle alimente
-   directement `carbon-engine.ts` en bottom-up.
+1. ✅ **Identité** : GLEIF (CC0), ISIN → LEI → entité. **Mesuré 29/30 (97 %)**.
+   Sans réserve de licence.
+2. ✅ **Signal climat entreprise** : SBTi, apparié **par identifiant**.
+   **Mesuré 81,6 % du poids testé.** Code livré ; ingestion suspendue à la
+   licence (lot 2).
+3. ❌ ~~**Émissions déclarées** via `filings.xbrl.org`~~ — **retiré** : ESEF ne
+   contient aucune donnée d'émissions (mesuré, §4 bis). Climate TRACE, évalué en
+   remplacement, est également écarté faute d'identifiant joignable.
+4. ⏳ **Holdings de fonds US** : SEC EDGAR **N-PORT**, domaine public, usage
+   commercial explicitement permis. **Non attaqué** : le catalogue Seedow est
+   IE/LU (l'échantillon du POC SFDR ne comptait aucun ISIN US), donc N-PORT ne
+   couvrirait presque aucun fonds du catalogue. À reprendre seulement si des
+   fonds de droit américain entrent au catalogue.
+
+**Le carbone bottom-up reste sans source gratuite identifiée.** C'est le trou
+ouvert du lot 1, à traiter au lot 2 : les candidats restants (CDP, Urgewald,
+EU ETS/EUTL, TPI) sont soit sous licence à confirmer, soit à couverture
+sectorielle étroite. Aucun ne doit entrer dans un plan avant que **son contenu et
+sa jointure** aient été mesurés (§4 bis).
 
 ### Lot 2 — les e-mails à envoyer cette semaine
 
