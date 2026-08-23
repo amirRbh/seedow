@@ -162,7 +162,7 @@ function QuickCheckRow({ asset, onSelect }: { asset: EsgPreviewAsset; onSelect: 
     <button
       type="button"
       onClick={onSelect}
-      className="apple-card apple-lift w-full p-4 flex items-center gap-4 text-left"
+      className="apple-card lift w-full p-4 flex items-center gap-4 text-left"
       style={{ border: "1px solid var(--paper-3)" }}
     >
       <div className="flex-1 min-w-0">
