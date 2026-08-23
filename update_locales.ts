@@ -1556,7 +1556,7 @@ const methodologiePoolFr = {
   reading_p2:
     "À droite : combien de fonds l'univers contient, combien vos exclusions en écartent, et ceux qui restent — classés par pertinence, avec leur note ESG et leurs frais. Survolez les « ? » pour une explication simple de chaque terme.",
   causes_note:
-    "Une cause activée pèse sur le classement via l'alignement réel de chaque fonds avec elle. Il n'y a pas de curseur d'intensité ici : l'intensité ne rentre pas dans la formule de classement, et nous préférons ne pas afficher un réglage qui n'agit pas.",
+    "Une cause activée pèse sur le classement via l'alignement réel de chaque fonds avec elle : sa présence compte, pas un dosage. Il n'existe donc pas de curseur d'intensité — nulle part dans l'app — plutôt qu'un réglage qui n'agirait sur rien.",
   no_weights_title: "Ce que ce simulateur ne fait pas",
   no_weights_body:
     "Il ne vous propose pas de répartition. Rendement attendu, volatilité, frais et empreinte carbone sont des mesures de PORTEFEUILLE : elles se calculent sur les lignes que vous avez composées, pas sur un pool. Vous les retrouvez sur votre portefeuille, une fois composé.",
@@ -1616,7 +1616,7 @@ const methodologiePoolEn = {
   reading_p2:
     "On the right: how many funds the universe holds, how many your exclusions filter out, and what remains — ranked by relevance, with ESG score and fees. Hover the « ? » for a plain explanation of each term.",
   causes_note:
-    "An active cause weighs on the ranking through each fund's real alignment with it. There is no intensity slider here: intensity does not enter the ranking formula, and we would rather not show a control that does nothing.",
+    "An active cause weighs on the ranking through each fund's real alignment with it: its presence counts, not a dosage. So there is no intensity slider — nowhere in the app — rather than a control that would act on nothing.",
   no_weights_title: "What this simulator does not do",
   no_weights_body:
     "It does not propose an allocation. Expected return, volatility, fees and carbon footprint are PORTFOLIO measures: they are computed on the lines you composed, not on a pool. You find them on your portfolio, once composed.",
@@ -1670,7 +1670,7 @@ const composeSwitchFr = {
     pool_eyebrow: "Ton pool, reclassé",
     pool_summary: "{{count}} fonds retenus · {{excluded}} écartés",
     pool_untouched:
-      "Ta composition reste telle que tu l'as faite : ces réglages ne touchent jamais tes lignes. Seules tes convictions et tes exclusions changent ce classement — l'intensité, le budget de risque et l'horizon suivent ton profil, ils n'entrent pas dans la formule.",
+      "Ta composition reste telle que tu l'as faite : ces réglages ne touchent jamais tes lignes. Seules tes convictions et tes exclusions changent ce classement — le budget de risque et l'horizon décrivent ton objectif, ils n'entrent pas dans la formule.",
     pool_relevance: "{{score}}/100",
     pool_pending: "en cours",
     pool_recompose: "Recomposer mon portefeuille",
@@ -1733,7 +1733,7 @@ const composeSwitchEn = {
     pool_eyebrow: "Your pool, re-ranked",
     pool_summary: "{{count}} funds kept · {{excluded}} filtered out",
     pool_untouched:
-      "Your composition stays exactly as you built it: these settings never touch your lines. Only your convictions and exclusions change this ranking — intensity, risk budget and horizon follow your profile, they do not enter the formula.",
+      "Your composition stays exactly as you built it: these settings never touch your lines. Only your convictions and exclusions change this ranking — risk budget and horizon describe your goal, they do not enter the formula.",
     pool_relevance: "{{score}}/100",
     pool_pending: "pending",
     pool_recompose: "Recompose my portfolio",

@@ -987,7 +987,6 @@ function PreviewScene({
     mode,
     causes: params.causes,
     exclusions: params.exclusions,
-    causeIntensity: params.cause_intensity,
     initialAmount: params.initial_amount,
     riskTarget: params.risk_target,
     horizonYears: params.horizon_years,

@@ -51,8 +51,6 @@ const CreateInputSchema = z.object({
   mode: z.enum(["replace", "create"]).default("replace"),
   /** Convictions de l'onboarding — conservées (pondération des piliers ESG + aval). */
   causes: z.array(CauseSchema).max(6).default([]),
-  /** Intensité par cause (0..1) issue du questionnaire. */
-  cause_intensity: z.record(CauseSchema, z.number().min(0).max(1)).default({}),
   /** Exclusions de l'onboarding — conservées sur le portefeuille. */
   exclusions: z.array(ExclusionSchema).max(6).default([]),
   /**
@@ -228,7 +226,10 @@ export const createCustomPortfolio = createServerFn({ method: "POST" })
         user_id: userId,
         name: data.name ?? "Mon portefeuille",
         causes: data.causes,
-        cause_intensity: data.cause_intensity,
+        // Pas de `cause_intensity` : l'intensité par cause n'entre plus dans
+        // aucune formule (le classement ne connaît que la présence d'une
+        // conviction). On ne l'écrit donc plus — la colonne reste en base pour
+        // les portefeuilles antérieurs.
         exclusions: data.exclusions,
         // Cadre chiffré de l'utilisateur (questionnaire), pas une valeur en dur :
         // « Mon argent » sur Le Fil part du montant qu'il a réellement saisi.
@@ -271,7 +272,6 @@ export const createCustomPortfolio = createServerFn({ method: "POST" })
 
 const PreferencesInputSchema = z.object({
   causes: z.array(CauseSchema).max(6).default([]),
-  cause_intensity: z.record(CauseSchema, z.number().min(0).max(1)).default({}),
   exclusions: z.array(ExclusionSchema).max(6).default([]),
   risk_target: z.number().min(0.02).max(0.3),
   horizon_years: z.number().int().min(1).max(40),
@@ -316,7 +316,6 @@ export const savePortfolioPreferences = createServerFn({ method: "POST" })
 
     const update: Record<string, unknown> = {
       causes: data.causes,
-      cause_intensity: data.cause_intensity,
       exclusions: data.exclusions,
       risk_target: data.risk_target,
       horizon_years: data.horizon_years,

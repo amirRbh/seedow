@@ -84,12 +84,21 @@ aucun portefeuille utilisateur. Repris :
   décrivent le vrai chemin ; les mesures de portefeuille sont annoncées pour ce
   qu'elles sont — calculées sur ce que l'utilisateur a composé.
 
-**À trancher en équipe — l'intensité de cause ne pilote plus rien.** Elle est
-collectée à l'onboarding, stockée sur le portefeuille, réglable dans `/reglages`,
-et lue seulement par le chemin optimiseur (mort). Deux sorties honnêtes : la
-faire entrer dans le classement (changement de méthode → bump de
-`SCREENING_VERSION`), ou retirer le curseur. En attendant, `/reglages` et
-`/methodologie` disent noir sur blanc qu'elle n'entre pas dans la formule.
+**Tranché — l'intensité de cause disparaît de l'interface.** Elle était
+collectée, stockée et réglable, mais n'était plus lue que par le chemin
+optimiseur (mort) : un curseur sans effet. Décision produit : le classement ne
+connaît que la PRÉSENCE d'une conviction, pas un dosage. Le curseur est retiré de
+`/reglages`, l'intensité n'est plus transportée par le passe-plat ni écrite à la
+création d'un portefeuille. La colonne `cause_intensity` reste en base — les
+portefeuilles antérieurs gardent leur valeur, plus personne n'en écrit de
+nouvelle. `PortfolioParams.cause_intensity` subsiste pour le moteur conservé.
+
+**Tranché — la surface optimiseur reste exportée.** `generatePortfolio`
+(+ `persistPortfolio`), `simulatePortfolio` et `rebalancePortfolio` sont
+conservées volontairement : le moteur Markowitz garde sa valeur d'évaluation
+(backtest, comparaison au 1/N). Aucun chemin produit ne les appelle ; la contre-
+partie assumée est qu'un appel à `generatePortfolio` écrirait une allocation
+par-dessus une composition.
 
 **Surface restée en place, à trancher aussi** — plus aucun appelant côté produit,
 mais toujours exportées : `generatePortfolio` (+ `persistPortfolio`, couverte par

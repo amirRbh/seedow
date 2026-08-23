@@ -159,7 +159,6 @@ function PreferencesSection() {
   // réglages classent, et la porte pour composer.
   const [hasPortfolio, setHasPortfolio] = useState(true);
   const [causes, setCauses] = useState<CauseTag[]>([]);
-  const [intensity, setIntensity] = useState<Record<string, number>>({});
   const [exclusions, setExclusions] = useState<ExclusionTag[]>([]);
   const [risk, setRisk] = useState(0.09);
   const [horizon, setHorizon] = useState(10);
@@ -196,7 +195,7 @@ function PreferencesSection() {
     (async () => {
       const { data, error } = await supabase
         .from("portfolios")
-        .select("causes, cause_intensity, exclusions, risk_target, horizon_years, initial_amount")
+        .select("causes, exclusions, risk_target, horizon_years, initial_amount")
         .eq("user_id", user.id)
         .eq("is_active", true)
         // Un compte peut porter jusqu'à 3 portefeuilles actifs : on lit le plus
@@ -212,7 +211,6 @@ function PreferencesSection() {
         setHasPortfolio(false);
       } else {
         setCauses((data.causes ?? []) as CauseTag[]);
-        setIntensity((data.cause_intensity ?? {}) as Record<string, number>);
         setExclusions((data.exclusions ?? []) as ExclusionTag[]);
         setRisk(Number(data.risk_target ?? 0.09));
         setHorizon(Number(data.horizon_years ?? 10));
@@ -239,7 +237,6 @@ function PreferencesSection() {
     debounceRef.current = setTimeout(() => {
       const params = {
         causes,
-        cause_intensity: intensity,
         exclusions,
         risk_target: risk,
         horizon_years: horizon,
@@ -274,31 +271,10 @@ function PreferencesSection() {
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [
-    causes,
-    intensity,
-    exclusions,
-    risk,
-    horizon,
-    amount,
-    screen,
-    savePrefs,
-    hasPortfolio,
-    loadingInitial,
-  ]);
+  }, [causes, exclusions, risk, horizon, amount, screen, savePrefs, hasPortfolio, loadingInitial]);
 
   const toggleCause = (id: CauseTag) => {
-    setCauses((prev) => {
-      if (prev.includes(id)) {
-        const next = prev.filter((x) => x !== id);
-        const newInt = { ...intensity };
-        delete newInt[id];
-        setIntensity(newInt);
-        return next;
-      }
-      setIntensity({ ...intensity, [id]: 0.5 });
-      return [...prev, id];
-    });
+    setCauses((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   };
 
   const toggleExclusion = (id: ExclusionTag) => {
@@ -407,28 +383,9 @@ function PreferencesSection() {
                     </svg>
                   )}
                 </button>
-                <span id={`cause-${c.id}-label`} className="text-body-sm text-ink min-w-[110px]">
+                <span id={`cause-${c.id}-label`} className="text-body-sm text-ink">
                   {c.label}
                 </span>
-                {active && (
-                  <>
-                    <input
-                      type="range"
-                      aria-label={t("a11y.intensity_for", { cause: c.label })}
-                      min={0}
-                      max={1}
-                      step={0.05}
-                      value={intensity[c.id] ?? 0.5}
-                      onChange={(e) =>
-                        setIntensity({ ...intensity, [c.id]: Number(e.target.value) })
-                      }
-                      className="flex-1 accent-ink h-1"
-                    />
-                    <span className="text-caption text-ink-3 tabular-nums w-10 text-right">
-                      {formatPercent(intensity[c.id] ?? 0.5, lang, 0)}
-                    </span>
-                  </>
-                )}
               </div>
             );
           })}
