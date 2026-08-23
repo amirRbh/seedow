@@ -8,8 +8,18 @@ import { LandingTour } from "@/components/landing/LandingTour";
 import { Provenance } from "@/components/ui/Provenance";
 import { Button } from "@/components/ui/button";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
+import { cn } from "@/lib/utils";
 
 const SITE_URL = "https://seedow.life";
+
+/**
+ * Coupure de chapitre du catalogue : un filet d'un pixel, et l'espace au-dessus.
+ * Les sections s'enchaînaient sur le même aplat `--paper-2` séparées par du vide
+ * seul : impossible de voir où une section s'arrêtait, ni quelle démonstration
+ * appartenait à quel titre. Le filet fait la coupure, l'accent du libellé
+ * identifie le chapitre.
+ */
+const SECTION_RULE = "border-t border-paper-3 pt-14 md:pt-16";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -170,7 +180,7 @@ function Landing() {
       </div>
 
       {/* ── CATALOGUE : bande claire ──────────────────────────────── */}
-      <div className="max-w-[1160px] mx-auto px-7 py-20 md:py-24 flex flex-col gap-20 md:gap-24">
+      <div className="max-w-[1160px] mx-auto px-7 py-20 md:py-24 flex flex-col gap-16 md:gap-20">
         {/* Preuves */}
         <Reveal>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -191,7 +201,7 @@ function Landing() {
 
         {/* Parcours */}
         {isAuthed ? null : (
-          <Reveal>
+          <Reveal className={SECTION_RULE}>
             <h2 className="max-w-[16ch]">{t("landing.paths.heading")}</h2>
             <div className="grid md:grid-cols-3 gap-4 mt-10">
               <PathCard
@@ -290,6 +300,7 @@ function Landing() {
           eyebrow={t("landing.rv.cards.courses.eyebrow")}
           title={t("landing.rv.cards.courses.title")}
           desc={t("landing.rv.cards.courses.desc")}
+          accent="volt"
         >
           <LandingCourses embedded />
         </Section>
@@ -299,15 +310,20 @@ function Landing() {
           eyebrow={t("landing.rv.cards.ethi.eyebrow")}
           title={t("landing.rv.cards.ethi.title")}
           desc={t("landing.rv.cards.ethi.desc")}
+          accent="ice"
           side
         >
           <div className="paper-card p-7">
             <p className="stamp">{t("landing.ethi.example_label")}</p>
-            <div className="flex flex-col gap-4 mt-5">
-              <Exchange who="user">{t("landing.ethi.chat_q1")}</Exchange>
-              <Exchange who="ethi">{t("landing.ethi.chat_a1")}</Exchange>
-              <Exchange who="user">{t("landing.ethi.chat_q2")}</Exchange>
-              <Exchange who="ethi">{t("landing.ethi.chat_a2")}</Exchange>
+            <div className="flex flex-col gap-5 mt-5">
+              <Exchange label={t("landing.ethi.speaker_you")}>{t("landing.ethi.chat_q1")}</Exchange>
+              <Exchange who="ethi" label="Ethi">
+                {t("landing.ethi.chat_a1")}
+              </Exchange>
+              <Exchange label={t("landing.ethi.speaker_you")}>{t("landing.ethi.chat_q2")}</Exchange>
+              <Exchange who="ethi" label="Ethi">
+                {t("landing.ethi.chat_a2")}
+              </Exchange>
             </div>
           </div>
         </Section>
@@ -322,6 +338,7 @@ function Landing() {
               <Link to="/methodologie">{t("landing.rv.cards.method.cta")}</Link>
             </Button>
           }
+          accent="volt"
         >
           <EsgQuickCheck embedded />
         </Section>
@@ -439,7 +456,7 @@ function Wordmark({ onDark = false }: { onDark?: boolean }) {
 }
 
 /** Apparition au scroll — un fondu de 8px, pas une cascade différée. */
-function Reveal({ children }: { children: React.ReactNode }) {
+function Reveal({ className, children }: { className?: string; children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -463,19 +480,27 @@ function Reveal({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <div ref={ref} className={visible ? "reveal in-view" : "reveal"}>
+    <div ref={ref} className={cn(visible ? "reveal in-view" : "reveal", className)}>
       {children}
     </div>
   );
 }
 
-/** Section de catalogue : titre à gauche, démonstration à droite ou dessous. */
+/**
+ * Section de catalogue : titre à gauche, démonstration à droite ou dessous.
+ *
+ * En `side`, les deux colonnes s'alignaient sur leur centre : une carte plus
+ * haute que son texte partait chercher le titre de la section suivante. Elles
+ * s'alignent maintenant par le haut, sous un filet qui ferme la section
+ * précédente.
+ */
 function Section({
   eyebrow,
   title,
   desc,
   action,
   side = false,
+  accent = "mint",
   children,
 }: {
   eyebrow: string;
@@ -483,13 +508,19 @@ function Section({
   desc?: string;
   action?: React.ReactNode;
   side?: boolean;
+  /** Couleur du libellé : elle DISTINGUE les chapitres entre eux. Jamais seule
+   *  porteuse d'information — le libellé est toujours écrit (CLAUDE.md §4). */
+  accent?: "mint" | "ice" | "volt";
   children?: React.ReactNode;
 }) {
+  const eyebrowTone = { mint: "eyebrow--accent", ice: "eyebrow--ice", volt: "eyebrow--volt" }[
+    accent
+  ];
   return (
-    <Reveal>
-      <div className={side ? "grid lg:grid-cols-2 gap-12 lg:gap-16 items-center" : ""}>
+    <Reveal className={SECTION_RULE}>
+      <div className={side ? "grid lg:grid-cols-2 gap-10 lg:gap-16 items-start" : ""}>
         <div>
-          <p className="eyebrow">{eyebrow}</p>
+          <p className={`eyebrow ${eyebrowTone}`}>{eyebrow}</p>
           <h2 className="mt-3 max-w-[18ch]">{title}</h2>
           {desc && (
             <p className="mt-5 max-w-[52ch] text-body-lg leading-relaxed text-ink-2">{desc}</p>
@@ -644,22 +675,38 @@ function ImpactProof({ t }: { t: (key: string, opts?: Record<string, unknown>) =
         </div>
       </div>
 
-      <Provenance
-        className="mt-6"
-        status="modelled"
-        source="MSCI ESG"
-        note={t("landing.hero2.preview.note")}
-      />
+      <Provenance className="mt-6" status="modelled" source="MSCI ESG" />
+      {/* La réserve sortait en solar 12,5 px sur toute sa longueur, collée à la
+          ligne de source. Le statut reste coloré, la phrase redevient du texte
+          gris lisible. */}
+      <p className="mt-3 text-body-sm leading-relaxed text-ink-3">
+        {t("landing.hero2.preview.note")}
+      </p>
     </div>
   );
 }
 
-/** Échange avec Ethi — attribution nette, pas une bulle de messagerie. */
-function Exchange({ who, children }: { who: "user" | "ethi"; children: React.ReactNode }) {
+/**
+ * Échange avec Ethi — attribution nette, pas une bulle de messagerie.
+ *
+ * Les quatre tours s'enchaînaient sans séparation, et la question était signée
+ * « — » : on ne voyait ni où finissait une réponse, ni qui parlait. La question
+ * est posée dans un encart, la réponse porte le filet de marque, et le nom de
+ * qui parle est écrit.
+ */
+function Exchange({
+  who = "user",
+  label,
+  children,
+}: {
+  who?: "user" | "ethi";
+  label: string;
+  children: React.ReactNode;
+}) {
   const isUser = who === "user";
   return (
-    <div>
-      <p className="stamp">{isUser ? "—" : "Ethi"}</p>
+    <div className={isUser ? "paper-card-inset px-4 py-3.5" : "border-l-2 border-mint pl-4"}>
+      <p className="stamp">{label}</p>
       <p className={`mt-1 text-body-lg leading-relaxed ${isUser ? "text-ink-2" : "text-ink"}`}>
         {children}
       </p>

@@ -123,7 +123,8 @@
       "chat_a1": "A green bond fund financing energy renovations in Europe. Stable return, low volatility.",
       "chat_q2": "What if I want more direct impact?",
       "chat_a2": "I can suggest 3 alternatives with equivalent risk and a higher climate score. Want to see?",
-      "example_label": "Example conversation"
+      "example_label": "Example conversation",
+      "speaker_you": "You"
     },
     "start": {
       "title": "Two ways to start.",
@@ -171,7 +172,8 @@
       "error": "Data momentarily unavailable. Try again in a moment.",
       "no_results": "No fund found in our universe for this search — we expand it every week.",
       "cta": "See the full analysis — create my space",
-      "disclaimer": "Educational information, not investment advice."
+      "disclaimer": "Educational information, not investment advice.",
+      "field_label": "Test a fund or an ETF"
     },
     "badge_simulation": "Seedow is a simulation tool. No real money is invested here.",
     "learn": {

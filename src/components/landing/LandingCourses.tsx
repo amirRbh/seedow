@@ -46,16 +46,16 @@ export function LandingCourses({ embedded = false }: { embedded?: boolean } = {}
           </div>
         )}
 
-        {resume ? (
+        {resume && (
           <div
-            className="mx-auto max-w-[620px] apple-card p-6 md:p-8 flex flex-col sm:flex-row sm:items-center gap-4"
+            className={`${embedded ? "" : "mx-auto max-w-[620px] "}apple-card p-6 md:p-8 flex flex-col sm:flex-row sm:items-center gap-4`}
             style={{ background: "var(--apple-bg)", border: "1px solid var(--paper-3)" }}
           >
             <div className="flex-1">
               <p className="stamp text-[color:var(--apple-text-2)]">
                 {t("landing.learn.resume_prefix")}
               </p>
-              <p className="apple-eyebrow mt-1" style={{ color: "var(--apple-text)" }}>
+              <p className="mt-1 text-body-lg font-semibold text-[color:var(--apple-text)]">
                 {resume.title}
               </p>
             </div>
@@ -67,37 +67,37 @@ export function LandingCourses({ embedded = false }: { embedded?: boolean } = {}
               {t("landing.learn.resume_cta")}
             </Link>
           </div>
-        ) : (
-          <div className="grid sm:grid-cols-3 gap-4">
-            {starters.map((c) => (
-              <button
-                key={c.slug}
-                type="button"
-                onClick={() => {
-                  setPreviewed(c);
-                  void trackAppEvent("course_preview_opened", { slug: c.slug });
-                }}
-                className="apple-card p-6 flex flex-col gap-3 text-left hover:opacity-95 transition-opacity"
-                style={{ background: "var(--apple-bg)", border: "1px solid var(--paper-3)" }}
-              >
-                <span className="text-caption font-mono tabular-nums text-[color:var(--apple-text-2)]">
-                  N° {String(c.number).padStart(2, "0")} · {c.readingMinutes} min
-                </span>
-                <span className="apple-eyebrow" style={{ color: "var(--apple-text)" }}>
-                  {c.title}
-                </span>
-                <span className="text-body-sm text-[color:var(--apple-text-2)] line-clamp-2">
-                  {c.description}
-                </span>
-                <span className="apple-link text-body-sm mt-1">
-                  {t("landing.learn.preview_cta")} <span aria-hidden>›</span>
-                </span>
-              </button>
-            ))}
-          </div>
         )}
 
-        <div className="text-center mt-10">
+        <div className={resume ? "grid sm:grid-cols-3 gap-4 mt-4" : "grid sm:grid-cols-3 gap-4"}>
+          {starters.map((c) => (
+            <button
+              key={c.slug}
+              type="button"
+              onClick={() => {
+                setPreviewed(c);
+                void trackAppEvent("course_preview_opened", { slug: c.slug });
+              }}
+              className="apple-card p-6 flex flex-col gap-3 text-left hover:opacity-95 transition-opacity"
+              style={{ background: "var(--apple-bg)", border: "1px solid var(--paper-3)" }}
+            >
+              <span className="text-caption font-mono tabular-nums text-[color:var(--apple-text-2)]">
+                N° {String(c.number).padStart(2, "0")} · {c.readingMinutes} min
+              </span>
+              <span className="text-body-lg font-semibold leading-snug text-[color:var(--apple-text)]">
+                {c.title}
+              </span>
+              <span className="text-body-sm text-[color:var(--apple-text-2)] line-clamp-2">
+                {c.description}
+              </span>
+              <span className="apple-link text-body-sm mt-1">
+                {t("landing.learn.preview_cta")} <span aria-hidden>›</span>
+              </span>
+            </button>
+          ))}
+        </div>
+
+        <div className={embedded ? "mt-8" : "text-center mt-10"}>
           <Link to="/cours" className="apple-link">
             {t("landing.learn.see_all", { count: COURSES.length })} <span aria-hidden>›</span>
           </Link>
