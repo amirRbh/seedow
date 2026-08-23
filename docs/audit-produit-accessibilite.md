@@ -1,0 +1,129 @@
+# Audit produit & accessibilité — état du code au 2026-08-23
+
+> Audit statique du repo à `43543f4` (post Phase 2 · slice 3). Chaque constat est ancré sur un `fichier:ligne` vérifiable. Les mesures de contraste ont été **recalculées indépendamment** (implémentation WCAG 2.1 en Python sur `src/styles.css`), pas reprises d'un test existant.
+>
+> **Non exécuté cette session** : `bun install` n'a jamais abouti (réseau), donc ni `lint`, ni `typecheck`, ni `vitest`, ni rendu navigateur. Tout constat exigeant un DOM rendu ou une lecture d'écran réelle est marqué **[live]** et reste à confirmer.
+>
+> Remplace `seedow-company-dossier/03_PRODUCT_UX_AUDIT.md`, écrit avant la refonte du parcours (#170→#173).
+
+---
+
+## 1. Ce qui est solide — et mesuré
+
+Ce n'est pas de la politesse d'introduction : ces points sont au-dessus de ce qu'on voit habituellement à ce stade, et il faut éviter de les casser en corrigeant le reste.
+
+**Palette : AA tenu partout où je l'ai mesuré, dans les deux thèmes.**
+
+| Paire                       | Clair       | Sombre      |
+| --------------------------- | ----------- | ----------- |
+| `--ink` / `--paper`         | 17,80:1 AAA | 14,69:1 AAA |
+| `--ink-2` / `--paper`       | 6,23:1 AA   | 7,67:1 AAA  |
+| `--ink-3` / `--paper`       | 4,99:1 AA   | 5,55:1 AA   |
+| `--mint` / `--paper`        | 5,26:1 AA   | 8,52:1 AAA  |
+| `--alert` / `--paper`       | 5,42:1 AA   | 7,96:1 AAA  |
+| `--solar` / `--paper`       | 4,92:1 AA   | 8,44:1 AAA  |
+| `--on-deep-3` / `--deep-2`  | 5,22:1 AA   | 5,22:1 AA   |
+
+Le commentaire de `styles.css:173-177` documente les ratios *dans le code*, et `src/lib/a11y/__tests__/contrast.test.ts` les verrouille en CI sur ~40 paires, avec des seuils différenciés (texte 4,5 / aplat 3 / filet 1,3). C'est un dispositif rare et il fonctionne — la seule paire qui échoue est justement celle qu'il ne couvre pas (§2, A6).
+
+**Le reste de l'acquis :**
+
+- **`MotionConfig reducedMotion="user"`** au niveau racine (`__root.tsx:204`) : les 42 fichiers qui utilisent framer-motion héritent du respect de `prefers-reduced-motion`, sans avoir à y penser. Doublé de trois blocs CSS dédiés (`styles.css:393`, `864`, `1129`).
+- **Réglage de taille de texte** (`useFontScale.tsx`) : 100 / 115 / 130 %, appliqué via une seule variable `--font-scale` que toute l'échelle typo consomme (`calc(13px * var(--font-scale))`), et restauré avant le premier paint pour éviter le saut. Exposé à l'utilisateur dans `/reglages` avec `role="radiogroup"` + `aria-checked`.
+- **Aucune information par la couleur seule** sur les surfaces financières vérifiées : la performance porte un `+` explicite (`HomeGlance.tsx:29`), le risque un libellé texte, l'impact un `/100`. Les barres décoratives sont bien `aria-hidden`.
+- **Navigation mobile exemplaire** (`BottomNavigation.tsx`) : `aria-label` sur le `<nav>`, `aria-current="page"`, anneau `focus-visible`, cible de 56 px, icône **+** libellé.
+- **Tous les modales et sheets passent par Radix** (`ui/dialog`, `ui/sheet`, `ui/alert-dialog`) — piège de focus, `role="dialog"` et Échap sont donc corrects sans code maison.
+- **Raccourcis clavier correctement gardés** (`AppShell.tsx:47-69`) : `isEditable()` neutralise les raccourcis dans tout `INPUT`/`TEXTAREA`/`contenteditable`.
+- **Zéro `<img>` sans `alt`**, zéro `onClick` sur `<div>`/`<span>`, 160 `aria-hidden` sur les icônes décoratives : l'hygiène de base est là.
+- **Cibles tactiles conformes** : le scan n'a remonté aucune cible réellement < 24 px (WCAG 2.5.8).
+
+---
+
+## 2. Accessibilité — constats
+
+Sévérité : **A** = échec WCAG niveau A · **AA** = échec niveau AA · **R** = risque/qualité sans échec formel.
+
+| #      | Sév. | Constat                                                                                                                                                                                                    | Preuve                                                                                    | Correctif                                                                                                                          | Effort |
+| ------ | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| **A1** | A    | **`<html lang>` reste `fr` en anglais.** Le shell SSR écrit `lang="fr"` en dur ; `lang` n'est mis à jour que dans `setLang()`, donc jamais au chargement. Un utilisateur EN fait lire de l'anglais avec une voix française. | `__root.tsx:117` + `useLang.ts:11` + `i18n/index.ts:22-27`                                  | Dans `i18n/index.ts`, poser `document.documentElement.lang` juste après le `changeLanguage(stored)` du boot.                        | S      |
+| **A2** | A    | **7 routes cœur n'ont aucun `<h1>`** alors qu'elles ont des `<h2>`/`<h3>` : `dashboard`, `le-fil`, `portfolio`, `profil`, `onboarding`, `cours.$slug`, `vote.$resolutionId`. 8 autres (`reglages` — 1 310 lignes —, `construire`, `objectifs`, `discover`, `communaute`, `comparatif`, `vote`, `reveil`) n'ont **aucun titre du tout**. La navigation par titres, principal mode de déplacement au lecteur d'écran, ne donne rien. | scan `src/routes/**`                                                                        | Un `<h1>` par route, même visuellement discret (`sr-only` si la DA ne veut pas de titre visible).                                   | M      |
+| **A3** | A    | **Aucun lien d'évitement.** Sur les routes sous `AppShell`, il faut traverser tout le rail latéral avant d'atteindre le contenu, à chaque navigation.                                                       | absent de `AppShell.tsx`                                                                    | Un « Aller au contenu » en premier enfant du body, visible au focus, ciblant le `<main>`.                                           | S      |
+| **A4** | A    | **`<main>` imbriqués** : `AppShell.tsx:184` pose un `<main>` et trois routes non-*fullBleed* en reposent un dedans → deux repères « main ». À l'inverse `/onboarding` est *fullBleed* : **ni `<main>` ni `<h1>`** sur l'écran pivot du parcours. | `AppShell.tsx:129-135` + `observatoire.tsx:79`, `fonds.$isin.tsx:77`, `comprendre.tsx:117` | Retirer les `<main>` de route pour les routes sous shell ; en ajouter un aux routes *fullBleed*.                                    | S      |
+| **A5** | A    | **11 `<label>` orphelins** — ni `htmlFor`, ni champ à l'intérieur. Le champ n'a alors aucun nom accessible : un curseur « montant envisagé » s'annonce « curseur, 2600 », sans dire de quoi.                | `RealInvestmentInterestCard.tsx:96,116,143` · `FeedbackButton.tsx:97,119,132` · `DeleteAccountDialog.tsx:67` · `reglages.tsx:338,522,525` · `methodologie.tsx:332` | `htmlFor`/`id`. Le patron correct existe déjà dans le repo : `onboarding.tsx:881-890`.                                             | S      |
+| **A6** | AA   | **`--ink-3` sur `--paper-inset` = 4,18:1** en thème clair → sous AA pour du texte normal. `--paper-inset` est le fond de survol des tuiles, et ces tuiles portent un libellé `.stamp` (13 px, `--ink-3`) : le libellé passe sous le seuil **au survol**. Le test de contraste ne couvre ni `--paper-inset` ni les états de survol. | mesuré : `#6c7075` sur `#edebe6` · `HomeGlance.tsx:81`, `dashboard.tsx:350`, `index.tsx:546` | Éclaircir `--paper-inset` ou passer le libellé à `--ink-2` au survol, **et** ajouter la paire au test.                              | S      |
+| **A7** | AA   | **Aucun message de statut n'est annoncé** (WCAG 4.1.3). L'écran pivot du parcours enchaîne chargement → révélation du pool → erreur sans le moindre `aria-live` : au lecteur d'écran, rien ne se passe. L'app entière ne compte que **2** `aria-live`. | `onboarding.tsx:1037` (chargement), `:1062` (erreur), `:1085` (révélation)                  | `role="status"` sur le bloc chargement/révélation, `role="alert"` sur l'erreur. Idem valorisation de portefeuille et soumissions.   | S      |
+| **A8** | AA   | **L'état sélectionné des options d'onboarding n'est pas exposé.** Les options sont des `<button>` nus : la sélection n'est qu'un fond sombre + un SVG décoratif. Ni `aria-pressed`, ni `role="checkbox"`, et le groupe n'a ni `fieldset` ni `role="group"` nommé par la question. Quatre écrans sur quatre. | `onboarding.tsx:823-871`                                                                    | `aria-pressed={isSel}` (multi) / `role="radio"`+`aria-checked` (mono), groupe en `role="group"` + `aria-labelledby` sur la question. | S      |
+| **A9** | AA   | **Contenu focusable sous `aria-hidden`.** En mode focus, `opacity-0 pointer-events-none` masque le rail et la barre haute **sans les sortir de l'ordre de tabulation**, tandis qu'`aria-hidden="true"` les retire de l'arbre d'accessibilité : on tabule dans des éléments invisibles et muets. | `AppShell.tsx:161` et `:178`                                                                | Ajouter `inert` (ou `visibility:hidden`) sur les mêmes conteneurs.                                                                  | S      |
+| A10    | A    | **Raccourcis à caractère unique non désactivables** (WCAG 2.1.4) : `g`, `.`, `?` sont actifs au niveau document. Le garde `isEditable` évite le pire, mais le critère exige de pouvoir les **couper ou remapper** — rien dans `/reglages`.                | `AppShell.tsx:84-160`                                                                       | Un interrupteur « raccourcis clavier » dans `/reglages`.                                                                            | S      |
+| A11    | R    | **Deux `<li>` cliquables non focusables** dans la liste d'allocation — dont « ajouter une position », qui navigue vers `/discover`. Inatteignables au clavier.                                              | `AllocationList.tsx:119` et `:161`                                                          | `<button>` à l'intérieur du `<li>`.                                                                                                 | S      |
+| A12    | R    | **Anneau de focus faible sur 13 champs** : `focus:outline-none` compensé par le seul changement de bordure, et en `--ink-3` dans l'onboarding — le plus discret là où l'enjeu est le plus fort.             | `onboarding.tsx:315,534,544,555` · `auth.tsx:202,212,223` · 6 autres                        | Réutiliser le `focus-visible:ring-2` déjà standard ailleurs dans le repo (52 occurrences).                                          | S      |
+| A13    | R    | **Libellés du sélecteur de langue en dur**, non traduits et hors `update_locales.ts` (§8 CLAUDE.md).                                                                                                        | `LanguageToggle.tsx:22,37`                                                                  | Passer par i18n.                                                                                                                    | S      |
+
+---
+
+## 3. Produit — constats
+
+| #      | Constat                                                                                                                                                                                                                                                                                                                          | Preuve                                                                     | Impact                                                                                                | Correctif                                                                                                        | Effort |
+| ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------ |
+| **P1** | **Le choix de langue n'est jamais sauvegardé.** `i18n/index.ts:23` *lit* `seedow.lang` au démarrage — mais **rien dans le repo n'écrit jamais cette clé**. `setLang()` appelle `changeLanguage()` et ne persiste rien. Passer en anglais tient jusqu'au prochain rechargement, puis retombe en français. Chemin de code mort, pas un arbitrage. | `i18n/index.ts:23` vs `useLang.ts:8-13` — `grep -r "seedow.lang"` : 1 seule occurrence, en lecture | L'anglais est annoncé mais ne tient pas. Combiné à A1, le support EN est cosmétique.                    | Deux lignes dans `setLang()` : écrire `seedow.lang` et poser `documentElement.lang`.                              | S      |
+| **P2** | **Le formulaire d'investissement demande un vrai numéro de carte et un CVC pour une maquette.** Le parcours est honnêtement étiqueté (« Investir (démo) », « aucun débit n'est réalisé »), et rien n'est envoyé nulle part — c'est à porter au crédit de l'équipe. Restent trois choses à corriger : (a) la mention de bas de formulaire affirme « **Données chiffrées, jamais stockées** » alors qu'aucun chiffrement n'existe — une affirmation de sécurité invérifiable, exactement ce que §1.2 interdit ; (b) `await setTimeout(900)` **simule une latence de traitement** ; (c) confettis + toast « Investissement de X enregistré » célèbrent un non-événement, le démenti n'arrivant qu'en sous-titre. | `InvestDialog.tsx:62`, `:71-75` · `fr.json:945`, `:947`                     | Un utilisateur qui tape sa vraie carte croit avoir investi. §1.5 « aucun dark pattern » et §1.3 « pas de sur-promesse » sont en jeu — sur le seul écran où de l'argent est nommé. | Supprimer la saisie carte/CVC/IBAN de la démo (le montant suffit). Retirer la fausse latence et la phrase sur le chiffrement. Titrer le toast « Simulation enregistrée ». | S      |
+| **P3** | **Deux accueils concurrents.** `/le-fil` (récit) et `/dashboard` (379 lignes : tuiles, action du jour, versement, mode invité) coexistent. Les deux navigations pointent vers `/le-fil` — mais **14 liens internes** mènent à `/dashboard` contre **6** vers `/le-fil`. Selon le chemin emprunté, l'utilisateur atterrit sur un « chez lui » différent. | `BottomNavigation.tsx:21`, `RailNav.tsx:47` vs comptage des liens          | Le repère principal est instable ; deux surfaces à maintenir en parallèle.                            | Trancher, rediriger l'autre.                                                                                      | M      |
+| **P4** | **Surface dispersée** : 35 routes, 6 exposées à la navigation. `vote`, `reveil`, `wrapped`, `observatoire`, `communaute`, `construire`, `comparatif`, `certificat`, `objectifs` ne sont atteignables que par des liens contextuels ou l'URL.                                                                                       | `src/routes/` vs `NAV_ITEMS`                                                | Fonctions payées et invisibles ; message dilué. Reconduit de l'audit précédent (P3).                  | Assumer un rayon « labo » explicite, ou couper.                                                                   | M      |
+| P5     | **Sourçage non systématique.** `<Provenance>` est bien posé sur 6 surfaces (`le-fil`, `dashboard`, `index`, `fonds/$isin`, `KPIFigure`, `PortfolioHistoryChart`), mais absent de `portfolio`, `comparatif` et `observatoire`, qui affichent aussi des chiffres. §1.2 veut la source **à l'écran**, sans exception. **[live]** — vérifier si ces écrans sourcent autrement. | usages de `<Provenance`                                                     | Une page non sourcée suffit à entamer la promesse de transparence.                                     | Étendre `<Provenance>` ou justifier l'absence au cas par cas.                                                     | S      |
+| P6     | **Le cap bêta reste un frein d'acquisition.** Le mode invité (`?guest=true`) ouvre bien la simulation sans compte — vrai progrès depuis l'audit précédent. Mais `/construire` exige un compte au moment de composer, soit juste après le pic d'intérêt. **[live]** — mesurer la chute à cette marche. | `onboarding.tsx:975-983`                                                    | Marche d'inscription placée à l'instant précis où l'utilisateur s'engage.                              | Laisser composer en local, demander le compte à la sauvegarde.                                                    | M      |
+
+### Progrès réels depuis l'audit précédent
+
+- **P2 de l'audit précédent (surcharge de l'onboarding) est en grande partie réglé** : on est passé de « 6 causes × intensité + 6 exclusions + risque + horizon » à **4 étapes**, causes plafonnées à 3, intensité et horizon sortis du parcours (`onboarding.tsx:59-104`). La barre de progression est doublée d'un « 1/4 » textuel.
+- **L'allocation imposée a disparu** au profit d'un pool classé que l'utilisateur compose (#170→#173). C'est cohérent avec §1.1 : structurer sans recommander.
+- **Le mode invité existe** — la simulation ne se heurte plus à un mur d'inscription.
+- **`SimulationBadge`** marque explicitement le statut de simulation sur l'écran de révélation.
+
+---
+
+## 4. Écarts entre `CLAUDE.md` et le code
+
+`CLAUDE.md` se termine par « ce fichier n'a de valeur que s'il reste vrai ». Trois endroits où il ne l'est plus :
+
+1. **Le tableau de palette §4 est périmé.** Il annonce `--paper-2: #F5F5F7`, `--ink: #1D1D1F`, `--mint: #146a4a`, `--ink-2: #64646a`. Le code dit `#f5f4f1`, `#16181a`, `#0d7a66`, `#5d6167` (`styles.css:160-200`). Les valeurs réelles sont **meilleures** — mesurées, commentées, testées — mais quiconque suit le tableau réintroduit l'ancienne palette. `MarketingChrome.tsx:15,47` code d'ailleurs `#d2d2d7` en dur : l'ancien `--paper-3`, jamais migré.
+2. **Le plancher de 13 px n'est pas tenu par l'échelle elle-même.** `text-tag` vaut 11 px et `text-caption`/`mono-meta` 12 px (`styles.css:314-319`, `:611`), et `text-tag` porte des libellés d'information (eyebrow d'erreur d'onboarding, étapes du parcours). Le réglage de taille de texte atténue, il ne tranche pas. **À arbitrer** : soit remonter le plancher, soit réécrire la règle §4 pour dire ce qu'on fait vraiment.
+3. **Familles de tokens parallèles.** `--gold: var(--mint)` et `--rust: var(--alert)` (`styles.css:214-215`) donnent deux noms à une même encre ; `--apple-*` (`:891-896`) en donne un troisième jeu, utilisé 130 fois dans les `.tsx`. La sémantique stricte mint/alert du §4 devient difficile à faire respecter en revue quand la même couleur répond à trois noms.
+
+---
+
+## 5. Plan d'action
+
+**Lot 1 — une demi-journée, aucun arbitrage produit requis.** Ce lot ferme 4 échecs WCAG niveau A et un bug produit réel.
+
+- P1 : persister la langue + poser `documentElement.lang` (règle aussi A1).
+- P2 : retirer carte/CVC/IBAN de la démo, la fausse latence et la mention de chiffrement.
+- A3 : lien d'évitement.
+- A5 : 11 `htmlFor`.
+- A9 : `inert` sur les deux conteneurs du mode focus.
+- A6 : corriger la paire `--ink-3`/`--paper-inset` **et l'ajouter au test** — sans quoi la régression reviendra.
+
+**Lot 2 — un à deux jours.**
+
+- A2 : un `<h1>` par route (commencer par `le-fil`, `dashboard`, `portfolio`, `onboarding`).
+- A7 : `role="status"` / `role="alert"` sur le parcours d'onboarding, puis sur la valorisation.
+- A8 : `aria-pressed` / `role="radio"` sur les options d'onboarding.
+- A4 : dénouer les `<main>`.
+- A12 : anneau de focus standard sur les 13 champs.
+
+**Lot 3 — arbitrages produit, pas du code.**
+
+- P3 : quel écran est l'accueil ?
+- P4 : que devient le rayon « labo » ?
+- P6 : où placer la marche du compte ?
+- §4 : trancher le plancher typographique, remettre le tableau de palette à jour.
+
+---
+
+## 6. Ce qui n'a pas été vérifié
+
+À traiter avant de considérer l'audit clos :
+
+- **Aucun test automatisé exécuté** (`bun install` bloqué) : ni `lint`, ni `typecheck`, ni `vitest`. Les mesures de contraste du §1 ont été refaites indépendamment et ne dépendent pas de cette exécution.
+- **Aucun passage au lecteur d'écran** (VoiceOver / NVDA). Les constats A1–A13 sont déduits du code ; leur gravité *ressentie* demande une session réelle.
+- **Aucun parcours navigateur** : ordre de tabulation effectif, rendu à 200 % de zoom, comportement à `font-scale: 1.3` sur les écrans denses (`reglages`, `comparatif`).
+- **Aucune donnée d'usage** : P3, P4 et P6 sont des hypothèses d'expert. Rien dans le repo ne dit où les utilisateurs décrochent réellement — alors que `trackPreference` instrumente déjà finement l'onboarding. Ces événements devraient pouvoir répondre à P6 sans nouveau développement.

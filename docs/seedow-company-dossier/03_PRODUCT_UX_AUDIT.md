@@ -1,5 +1,7 @@
 # 03 — Product & UX Audit
 
+> ⚠️ **Périmé sur la partie produit & accessibilité.** Écrit avant la refonte du parcours (#170→#173 : retrait de l'allocation imposée, onboarding ramené à 4 étapes, mode invité). L'état à jour, ancré sur le code et avec les contrastes mesurés, est dans [`docs/audit-produit-accessibilite.md`](../audit-produit-accessibilite.md). Ce document reste utile pour son cadrage investisseur et la thèse de redesign du §« si on repartait de zéro ».
+
 > Audit à distance : le repo n'a pas été exécuté (consigne : ne pas modifier le produit). Les constats s'appuient sur le code des routes/composants, la DA (CLAUDE.md §4) et l'historique git. Ce qui exige un test live est marqué **à vérifier en session live**.
 
 ## Ce qui est bien fait (FACT, appuyé sur le code)
