@@ -96,7 +96,7 @@ function WrappedPage() {
   return (
     <div className="ink-section paper-grain ink-grain relative flex min-h-screen flex-col overflow-hidden rounded-none">
       <Link
-        to="/dashboard"
+        to="/le-fil"
         aria-label={t("wrapped.close")}
         className="absolute right-5 top-5 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-paper/20 text-paper/70 transition-colors hover:text-paper"
       >

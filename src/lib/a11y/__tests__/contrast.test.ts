@@ -33,7 +33,17 @@ const light = readTokens(css, ":root");
 const dark = readTokens(css, ".dark");
 
 /** Résout un token, en suivant les `var(--x)` éventuels. */
+/**
+ * Composités connus qui n'existent pas comme token : `.on-deep` pose
+ * --paper-inset à `rgb(255 255 255 / 0.16)`, dont le rendu réel dépend du fond
+ * (--deep). On fige ici la couleur résultante pour pouvoir la tester.
+ */
+const COMPUTED: Record<string, string> = {
+  "--deep-inset-computed": "#353536",
+};
+
 function resolveToken(tokens: Record<string, string>, name: string, depth = 0): string {
+  if (COMPUTED[name]) return COMPUTED[name];
   const raw = tokens[name] ?? light[name];
   if (!raw) throw new Error(`Token manquant: ${name}`);
   const varRef = raw.match(/^var\((--[\w-]+)\)$/);
@@ -76,6 +86,12 @@ const TEXT_PAIRS: Array<[string, string]> = [
   // tenir AA comme n'importe quel texte, et pas seulement être perceptible.
   ["--ink-3", "--paper"],
   ["--ink-3", "--paper-2"],
+  // --paper-inset est le fond de SURVOL des tuiles, et ces tuiles portent un
+  // libellé `.stamp` en --ink-3 : l'état de survol doit tenir AA comme l'état
+  // au repos. Cette paire manquait, et --ink-3 y tombait à 4.18:1.
+  ["--ink-3", "--paper-inset"],
+  ["--ink-2", "--paper-inset"],
+  ["--ink", "--paper-inset"],
   // Boutons pleins : `accent` = aplat --ice, `default` = aplat --ink.
   ["--paper", "--ice"],
   ["--paper", "--mint"],
@@ -91,6 +107,12 @@ const TEXT_PAIRS: Array<[string, string]> = [
   ["--on-deep", "--deep-2"],
   ["--on-deep-2", "--deep-2"],
   ["--on-deep-3", "--deep-2"],
+  // `.on-deep` remappe --paper-inset sur du blanc à 16 %, qui se compose en
+  // #353536 sur --deep. Le survol de la bande doit tenir AA comme le reste ;
+  // le token composité est écrit en dur ici, faute de pouvoir le résoudre
+  // depuis le CSS (alpha sur un fond connu, pas une valeur de token).
+  ["--on-deep-3", "--deep-inset-computed"],
+  ["--on-deep-2", "--deep-inset-computed"],
 ];
 
 /** Aplats de marque (grands titres, graphiques, filets) : 3:1 suffit. */

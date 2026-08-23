@@ -29,7 +29,7 @@ export function CommandPalette({ open, onOpenChange }: Props) {
   const navigate = useNavigate();
   const ROUTES = [
     {
-      path: "/dashboard",
+      path: "/le-fil",
       label: t("command_palette.routes.dashboard_label"),
       hint: t("command_palette.routes.dashboard_hint"),
       shortcut: "g d",
@@ -190,7 +190,7 @@ export function CommandPalette({ open, onOpenChange }: Props) {
           <CommandItem
             value="action simulateur objectif"
             onSelect={() => {
-              navigate({ to: "/dashboard" });
+              navigate({ to: "/le-fil" });
               setTimeout(() => {
                 const el = document.querySelector("[data-simulator-root]") as HTMLElement | null;
                 el?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -206,7 +206,7 @@ export function CommandPalette({ open, onOpenChange }: Props) {
           <CommandItem
             value="action stress test krach"
             onSelect={() => {
-              navigate({ to: "/dashboard" });
+              navigate({ to: "/le-fil" });
               setTimeout(() => {
                 const el = document.querySelector("[data-simulator-root]") as HTMLElement | null;
                 el?.scrollIntoView({ behavior: "smooth", block: "start" });

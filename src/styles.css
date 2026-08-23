@@ -170,13 +170,19 @@
   --deep-2: #212427;
   --on-deep: #ffffff; /* 19.2:1 sur --deep */
   --on-deep-2: #b7bbc0; /*  9.9:1 */
-  --on-deep-3: #90969c; /*  6.4:1 */
+  --on-deep-3: #9aa0a6; /*  7.3:1 sur --deep · 5.9:1 sur --deep-2 · 4.6:1 sur le
+                            --paper-inset de la bande (blanc 16 % → #353536),
+                            où #90969c tombait à 4.10:1. */
   --on-deep-line: rgb(255 255 255 / 0.13);
   --on-deep-fill: rgb(255 255 255 / 0.1);
 
-  --ink: #16181a; /* 16.4:1 sur --paper */
-  --ink-2: #5d6167; /* 6.4:1  — texte secondaire */
-  --ink-3: #6c7075; /* 5.3:1  — métadonnées ; tient AA sur les DEUX papiers */
+  /* Ratios vérifiés par src/lib/a11y/__tests__/contrast.test.ts — les tenir à
+     jour en même temps que la couleur : un commentaire faux est pire que pas
+     de commentaire, c'est sur lui que s'appuie la revue. */
+  --ink: #16181a; /* 17.8:1 sur --paper */
+  --ink-2: #5d6167; /* 6.2:1  — texte secondaire */
+  --ink-3: #666a6f; /* 5.5:1  — métadonnées ; AA sur les TROIS papiers, --paper-inset
+                       (le fond de survol) compris : #6c7075 y tombait à 4.18. */
 
   --highlight-1: #16181a;
   --highlight-2: #2a2d30;

@@ -1467,6 +1467,60 @@ const reglagesFr = {
     "Méthodologie v1.1 · piliers E/S/G pondérés par les causes, intensité carbone réelle, traçabilité des sources. Revue chaque trimestre.",
 };
 
+// ── Lot 1 accessibilité + honnêteté de la maquette de versement ──────────
+// A3 : lien d'évitement. A5 : nom accessible des curseurs d'intensité.
+// P2 : la démo ne demande plus de moyen de paiement et n'affirme plus un
+// chiffrement qui n'existe pas.
+const a11yFr = {
+  skip_to_content: "Aller au contenu",
+  intensity_for: "Intensité — {{cause}}",
+};
+const a11yEn = {
+  skip_to_content: "Skip to content",
+  intensity_for: "Intensity — {{cause}}",
+};
+
+const investDialogFr = {
+  description:
+    "Simulation : aucun paiement n'est demandé et aucun débit n'est réalisé. Seul le capital déclaré de ton portefeuille est mis à jour.",
+  simulation_notice:
+    "Seedow ne traite pas de versement réel. On te demande un montant pour faire évoluer la simulation — jamais de carte, jamais d'IBAN.",
+  presets: "Montants prédéfinis",
+  footer_note: "Simulation · aucun moyen de paiement demandé",
+  toast_success: "Simulation mise à jour : {{amount}}",
+  toast_success_desc: "Le capital déclaré du portefeuille a changé. Aucun débit réel.",
+};
+const investDialogEn = {
+  description:
+    "Simulation: no payment is requested and nothing is charged. Only your portfolio's declared capital is updated.",
+  simulation_notice:
+    "Seedow does not process real payments. We ask for an amount to move the simulation forward — never a card, never an IBAN.",
+  presets: "Preset amounts",
+  footer_note: "Simulation · no payment method requested",
+  toast_success: "Simulation updated: {{amount}}",
+  toast_success_desc: "The portfolio's declared capital changed. Nothing was charged.",
+};
+
+// ── Lot 3 — rayon « Labo » assumé dans le hub du profil ──────────────────
+// Vote et Réveil avaient quitté le rail comme « paris non prouvés » sans que
+// ce statut soit visible : ils n'étaient plus atteignables que par ⌘K.
+const profileLabFr = {
+  lab_eyebrow: "Labo",
+  lab_title: "Encore en exploration",
+  lab_desc:
+    "Ces surfaces existent, mais ne sont pas encore stabilisées : elles peuvent changer ou disparaître. On préfère te le dire que les laisser passer pour des fonctions arrêtées.",
+  lab_observatory: "Observatoire",
+};
+const profileLabEn = {
+  lab_eyebrow: "Lab",
+  lab_title: "Still exploratory",
+  lab_desc:
+    "These surfaces exist but are not settled yet: they may change or go away. We would rather say so than let them pass for finished features.",
+  lab_observatory: "Observatory",
+};
+const navCommunityFr = { community: "Communauté" };
+const navCommunityEn = { community: "Community" };
+
 const mergedFr = deepMerge(fr, {
   reglages: reglagesFr,
   le_fil: leFilFr,
@@ -1493,6 +1547,10 @@ const mergedFr = deepMerge(fr, {
   portfolio_customizer: deepMerge(portfolioCustomizerFr, customizerV2Fr),
   // N1 — traçabilité ESG : part des scores réellement mesurés (vs estimés maison).
   portfolio_metrics: { esg_measured: "{{pct}} % mesuré", esg_estimated: "estimé" },
+  a11y: a11yFr,
+  invest_dialog: investDialogFr,
+  profile: profileLabFr,
+  nav: navCommunityFr,
 });
 const mergedEn = deepMerge(en, {
   le_fil: leFilEn,
@@ -1519,6 +1577,10 @@ const mergedEn = deepMerge(en, {
   allocation_refiner: refinerPlainEn,
   // N1 — ESG traceability: share of scores that are actually measured (vs estimated).
   portfolio_metrics: { esg_measured: "{{pct}}% measured", esg_estimated: "estimated" },
+  a11y: a11yEn,
+  invest_dialog: investDialogEn,
+  profile: profileLabEn,
+  nav: navCommunityEn,
 });
 
 writeFileSync("src/i18n/locales/fr.json", JSON.stringify(mergedFr, null, 2) + "\n", "utf-8");

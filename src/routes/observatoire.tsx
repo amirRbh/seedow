@@ -76,7 +76,7 @@ function ObservatoryPage() {
         />
       </header>
 
-      <main className="max-w-4xl mx-auto px-6 py-8">
+      <div className="max-w-4xl mx-auto px-6 py-8">
         <div className="border border-paper-3 rounded-2xl divide-y divide-paper-3">
           {sorted.length === 0 ? (
             <p className="p-4 text-body-sm text-ink-3">{t("observatoire.empty")}</p>
@@ -106,7 +106,7 @@ function ObservatoryPage() {
           )}
         </div>
         <p className="text-caption text-ink-3 mt-3">{t("observatoire.hint")}</p>
-      </main>
+      </div>
     </div>
   );
 }

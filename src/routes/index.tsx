@@ -137,7 +137,7 @@ function Landing() {
               <div className="flex flex-wrap items-center gap-3 mt-10">
                 {isAuthed ? (
                   <Button asChild variant="on-dark">
-                    <Link to="/dashboard">{t("landing.rv.hero.cta_authed")}</Link>
+                    <Link to="/le-fil">{t("landing.rv.hero.cta_authed")}</Link>
                   </Button>
                 ) : (
                   <>
@@ -339,7 +339,7 @@ function Landing() {
             <div className="mt-10 flex flex-col items-center gap-4">
               {isAuthed ? (
                 <Button asChild variant="on-dark">
-                  <Link to="/dashboard">{t("landing.rv.hero.cta_authed")}</Link>
+                  <Link to="/le-fil">{t("landing.rv.hero.cta_authed")}</Link>
                 </Button>
               ) : (
                 <>
@@ -393,7 +393,7 @@ function Landing() {
             ))}
             {isAuthed ? (
               <Link
-                to="/dashboard"
+                to="/le-fil"
                 className="text-body-sm font-medium text-ink-2 hover:text-ink transition-colors"
               >
                 {t("landing.footer.my_space")}

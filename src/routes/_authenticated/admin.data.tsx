@@ -28,7 +28,7 @@ function AdminDataPage() {
     return (
       <div className="max-w-3xl mx-auto px-6 py-12">
         <p className="text-rust text-sm">{error}</p>
-        <Link to="/dashboard" className="text-label underline mt-4 inline-block">
+        <Link to="/le-fil" className="text-label underline mt-4 inline-block">
           {t("admin_data.back_dashboard")}
         </Link>
       </div>
@@ -61,7 +61,7 @@ function AdminDataPage() {
           </p>
           <h1 className="font-display text-3xl text-ink mt-2">{t("admin_data.title")}</h1>
         </div>
-        <Link to="/dashboard" className="text-label underline text-ink-3 hover:text-ink">
+        <Link to="/le-fil" className="text-label underline text-ink-3 hover:text-ink">
           {t("admin_data.back_dashboard")}
         </Link>
       </header>

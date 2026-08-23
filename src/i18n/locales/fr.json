@@ -50,7 +50,8 @@
     "back_to_portfolio": "Seedow — retour à ton portefeuille",
     "open_settings": "Ouvrir tes réglages",
     "search": "Rechercher",
-    "open_command_palette": "Ouvrir la palette de commandes (Cmd+K)"
+    "open_command_palette": "Ouvrir la palette de commandes (Cmd+K)",
+    "community": "Communauté"
   },
   "view_mode": {
     "label": "Niveau de détail",
@@ -782,7 +783,11 @@
     "decisions_desc": "Chaque arbitrage, exclusion ou rééquilibrage laisse une trace.",
     "comparison_eyebrow": "Comparatif",
     "comparison_title_pre": "Ton portefeuille vs",
-    "comparison_desc": "Performance, frais, score d'impact, CO₂ — les chiffres face à face."
+    "comparison_desc": "Performance, frais, score d'impact, CO₂ — les chiffres face à face.",
+    "lab_eyebrow": "Labo",
+    "lab_title": "Encore en exploration",
+    "lab_desc": "Ces surfaces existent, mais ne sont pas encore stabilisées : elles peuvent changer ou disparaître. On préfère te le dire que les laisser passer pour des fonctions arrêtées.",
+    "lab_observatory": "Observatoire"
   },
   "admin_beta": {
     "error_fallback": "Erreur",
@@ -928,24 +933,15 @@
   "invest_dialog": {
     "default_label": "Investir (démo)",
     "eyebrow": "Versement",
-    "description": "Maquette d'expérience — aucun débit n'est réalisé. Le capital déclaré du portefeuille sera mis à jour pour refléter le versement.",
+    "description": "Simulation : aucun paiement n'est demandé et aucun débit n'est réalisé. Seul le capital déclaré de ton portefeuille est mis à jour.",
     "amount": "Montant",
-    "tab_card": "Carte",
-    "tab_applepay": "Apple Pay",
-    "tab_sepa": "Virement",
-    "card_number": "Numéro de carte",
-    "card_exp": "Expiration",
-    "card_cvc": "CVC",
-    "iban": "IBAN",
-    "applepay_eyebrow": "Paiement express",
-    "applepay_desc": "Valide avec Face ID, Touch ID ou ton code après confirmation.",
-    "sepa_note": "Délai de règlement habituel : 1 à 2 jours ouvrés. Maquette uniquement.",
-    "pay": "Payer",
     "confirm": "Confirmer",
-    "footer_note": "Démo sans débit réel · Données chiffrées, jamais stockées",
-    "toast_success": "Investissement de {{amount}} enregistré",
-    "toast_success_desc": "Maquette : aucun débit réel n'a été effectué.",
-    "toast_error": "Impossible d'enregistrer l'investissement"
+    "footer_note": "Simulation · aucun moyen de paiement demandé",
+    "toast_success": "Simulation mise à jour : {{amount}}",
+    "toast_success_desc": "Le capital déclaré du portefeuille a changé. Aucun débit réel.",
+    "toast_error": "Impossible d'enregistrer l'investissement",
+    "simulation_notice": "Seedow ne traite pas de versement réel. On te demande un montant pour faire évoluer la simulation — jamais de carte, jamais d'IBAN.",
+    "presets": "Montants prédéfinis"
   },
   "alerts": {
     "aria": "Alertes",
@@ -3062,5 +3058,9 @@
       "broad_esg": "Orientation ESG, mais sans preuve climat forte. Dérivé des données observées.",
       "insufficient_evidence": "Données trop partielles ou contradictoires pour trancher. On ne surclasse jamais un fonds sans preuve."
     }
+  },
+  "a11y": {
+    "skip_to_content": "Aller au contenu",
+    "intensity_for": "Intensité — {{cause}}"
   }
 }

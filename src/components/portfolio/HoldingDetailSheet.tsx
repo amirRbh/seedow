@@ -230,7 +230,7 @@ function FundRejectionCard({ holding }: { holding: ActiveHolding }) {
           value={detail}
           onChange={(e) => setDetail(e.target.value.slice(0, 280))}
           placeholder="Précise si tu veux (optionnel)…"
-          className="mt-3 w-full px-3 py-2 text-label border border-paper-3 rounded resize-none focus:border-ink focus:outline-none"
+          className="mt-3 w-full px-3 py-2 text-label border border-paper-3 rounded resize-none focus:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-1"
           rows={2}
         />
       )}
