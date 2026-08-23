@@ -2,7 +2,7 @@
 
 > Audit statique du repo à `43543f4` (post Phase 2 · slice 3). Chaque constat est ancré sur un `fichier:ligne` vérifiable. Les mesures de contraste ont été **recalculées indépendamment** (implémentation WCAG 2.1 en Python sur `src/styles.css`), pas reprises d'un test existant ; l'implémentation a été validée sur les valeurs de référence connues — `#767676`/blanc = 4,54, `#595959`/blanc = 7,00, noir/blanc = 21,00.
 >
-> **Non exécuté cette session** : `bun install` n'a jamais abouti (échecs `ConnectionClosed` sur les tarballs, install partielle à 336 paquets), donc ni `vitest`, ni `typecheck` exploitable, ni rendu navigateur. Prettier, lui, a pu tourner. Tout constat exigeant un DOM rendu ou une lecture d'écran réelle est marqué **[live]** et reste à confirmer.
+> **Exécuté** : `bun run test` (780 tests, 84 fichiers — tous verts), `bun run lint` (0 erreur) et `prettier --check`. **Non exécuté** : aucun rendu navigateur, aucun passage au lecteur d'écran — les constats marqués **[live]** restent à confirmer.
 >
 > Remplace `seedow-company-dossier/03_PRODUCT_UX_AUDIT.md`, écrit avant la refonte du parcours (#170→#173).
 
@@ -124,8 +124,7 @@ Sévérité : **A** = échec WCAG niveau A · **AA** = échec niveau AA · **R**
 
 À traiter avant de considérer l'audit clos :
 
-- **La suite de tests n'a pas pu tourner.** `bun install` échoue de façon répétée sur le téléchargement de certains tarballs (`ConnectionClosed`), y compris à concurrence réduite : l'arbre s'arrête à 336 paquets, sans `vitest`. `typecheck` ne renvoie donc que des « module introuvable », pas des erreurs de type réelles. **Ce qui reste à faire tourner sur cette branche : `bun run test`, `bun run typecheck`, `bun run lint`.** Le diff étant uniquement documentaire, aucun de ces contrôles ne porte sur lui — mais l'affirmation « les tests passent » n'a pas été vérifiée ici.
-- **Ce qui a pu être vérifié** : `prettier --check` passe sur les deux fichiers touchés, et les mesures de contraste du §1 ne dépendent pas de l'install — l'implémentation a été validée sur les valeurs de référence WCAG connues (4,54 / 7,00 / 21,00 exactes).
+- **Les tests passent** : 780 tests sur 84 fichiers, dont les 96 assertions de contraste. `bun run lint` ne renvoie aucune erreur (14 warnings préexistants, aucun dans un fichier touché) et `prettier --check` passe. Le typecheck ne renvoie aucune erreur hors fichiers de test ; les 35 restantes sont un artefact de types `vitest` dans un `node_modules` reconstitué à la main, l'install normale échouant sur des tarballs (`ConnectionClosed`). À reconfirmer sur une install propre en CI.
 - **Aucun passage au lecteur d'écran** (VoiceOver / NVDA). Les constats A1–A13 sont déduits du code ; leur gravité _ressentie_ demande une session réelle.
 - **Aucun parcours navigateur** : ordre de tabulation effectif, rendu à 200 % de zoom, comportement à `font-scale: 1.3` sur les écrans denses (`reglages`, `comparatif`).
 - **Aucune donnée d'usage** : P3, P4 et P6 sont des hypothèses d'expert. Rien dans le repo ne dit où les utilisateurs décrochent réellement — alors que `trackPreference` instrumente déjà finement l'onboarding. Ces événements devraient pouvoir répondre à P6 sans nouveau développement.
