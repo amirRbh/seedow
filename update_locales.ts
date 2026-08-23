@@ -1521,11 +1521,23 @@ const profileLabEn = {
 const navCommunityFr = { community: "Communauté" };
 const navCommunityEn = { community: "Community" };
 
+/* Landing — lisibilité de la bande claire : qui parle dans l'exemple de
+   conversation Ethi, et le libellé du champ de test ESG (le champ n'avait
+   qu'un `aria-label`, donc rien d'écrit à l'écran au-dessus de lui). */
+const landingReadabilityFr = {
+  ethi: { speaker_you: "Toi" },
+  quick_check: { field_label: "Teste un fonds ou un ETF" },
+};
+const landingReadabilityEn = {
+  ethi: { speaker_you: "You" },
+  quick_check: { field_label: "Test a fund or an ETF" },
+};
+
 const mergedFr = deepMerge(fr, {
   reglages: reglagesFr,
   le_fil: leFilFr,
   allocation_refiner: refinerPlainFr,
-  landing: { rayon_x: rayonXFr, ...landingPathsFr },
+  landing: deepMerge({ rayon_x: rayonXFr, ...landingPathsFr }, landingReadabilityFr),
   empty_portfolio: { build_own: "Construire mon portefeuille moi-même" },
   data_provenance: dataProvenanceFr,
   asset_picker: assetPickerFr,
@@ -1554,7 +1566,7 @@ const mergedFr = deepMerge(fr, {
 });
 const mergedEn = deepMerge(en, {
   le_fil: leFilEn,
-  landing: { rayon_x: rayonXEn, ...landingPathsEn },
+  landing: deepMerge({ rayon_x: rayonXEn, ...landingPathsEn }, landingReadabilityEn),
   empty_portfolio: { build_own: "Build my portfolio myself" },
   data_provenance: dataProvenanceEn,
   asset_picker: assetPickerEn,

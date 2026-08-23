@@ -123,7 +123,8 @@
       "chat_a1": "Un fonds obligataire vert qui finance des rénovations énergétiques en Europe. Rendement stable, faible volatilité.",
       "chat_q2": "Et si je veux plus d'impact direct ?",
       "chat_a2": "Je peux te proposer 3 alternatives équivalentes en risque, avec un score climat supérieur. Tu veux voir ?",
-      "example_label": "Exemple de conversation"
+      "example_label": "Exemple de conversation",
+      "speaker_you": "Toi"
     },
     "start": {
       "title": "Deux façons de commencer.",
@@ -171,7 +172,8 @@
       "error": "Données momentanément indisponibles. Réessaie dans un instant.",
       "no_results": "Aucun fonds trouvé dans notre univers pour cette recherche — on l'élargit chaque semaine.",
       "cta": "Voir l'analyse complète — créer mon espace",
-      "disclaimer": "Information pédagogique, pas un conseil en investissement."
+      "disclaimer": "Information pédagogique, pas un conseil en investissement.",
+      "field_label": "Teste un fonds ou un ETF"
     },
     "badge_simulation": "Seedow est un outil de simulation. Aucun argent réel n'est investi ici.",
     "learn": {

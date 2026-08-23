@@ -61,6 +61,11 @@ export function EsgQuickCheck({ embedded = false }: { embedded?: boolean } = {})
 
   const showEmpty = status === "ready" && query.trim().length >= 2 && results.length === 0;
 
+  // Embarqué dans la landing, le champ flottait nu sur le fond de page, ses
+  // messages centrés sous un titre de section aligné à gauche : rien ne le
+  // rattachait à quoi que ce soit. Il vit dans une carte, calé à gauche.
+  const align = embedded ? "text-left" : "text-center";
+
   return (
     <section className={embedded ? "" : "px-6 py-24 md:py-32"}>
       <div className={embedded ? "" : "max-w-[760px] mx-auto"}>
@@ -79,30 +84,33 @@ export function EsgQuickCheck({ embedded = false }: { embedded?: boolean } = {})
         {selected ? (
           <RayonXReveal asset={selected} onReset={() => setSelected(null)} />
         ) : (
-          <div className="mt-10">
+          <div className={embedded ? "paper-card p-6 md:p-7" : "mt-10"}>
+            <label htmlFor="esg-quick-check" className="stamp">
+              {t("landing.quick_check.field_label")}
+            </label>
             <input
+              id="esg-quick-check"
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onFocus={load}
               placeholder={t("landing.quick_check.placeholder")}
-              aria-label={t("landing.quick_check.placeholder")}
-              className="apple-input w-full"
+              className="apple-input w-full mt-2.5"
             />
 
             <div className="mt-4 space-y-2.5" aria-live="polite">
               {status === "loading" && query.trim().length >= 2 && (
-                <p className="text-body-sm text-[color:var(--apple-text-2)] text-center py-4">
+                <p className={`text-body-sm text-[color:var(--apple-text-2)] py-4 ${align}`}>
                   {t("landing.quick_check.loading")}
                 </p>
               )}
               {status === "error" && (
-                <p className="text-body-sm text-[color:var(--apple-text-2)] text-center py-4">
+                <p className={`text-body-sm text-[color:var(--apple-text-2)] py-4 ${align}`}>
                   {t("landing.quick_check.error")}
                 </p>
               )}
               {showEmpty && (
-                <p className="text-body-sm text-[color:var(--apple-text-2)] text-center py-4">
+                <p className={`text-body-sm text-[color:var(--apple-text-2)] py-4 ${align}`}>
                   {t("landing.quick_check.no_results")}
                 </p>
               )}
@@ -112,11 +120,11 @@ export function EsgQuickCheck({ embedded = false }: { embedded?: boolean } = {})
             </div>
 
             {results.length > 0 && (
-              <p className="text-caption text-[color:var(--apple-text-2)] mt-4 text-center">
+              <p className={`text-caption text-[color:var(--apple-text-2)] mt-4 ${align}`}>
                 {t("landing.rayon_x.cta_hint")}
               </p>
             )}
-            <p className="text-caption text-[color:var(--apple-text-2)] mt-6 text-center">
+            <p className={`text-body-sm text-[color:var(--apple-text-2)] mt-6 ${align}`}>
               {t("landing.quick_check.disclaimer")}
             </p>
           </div>
