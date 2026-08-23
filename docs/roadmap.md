@@ -66,6 +66,16 @@ parlaient encore l'ancien modèle ont été repris :
 - **Code mort retiré** : `PostSimulationFork`, `MirrorReveal`, phases
   `building`/`saving`.
 
+**Surface restée en place, à trancher en équipe** — plus aucun appelant côté
+produit, mais toujours exportées : `generatePortfolio` (+ `persistPortfolio`,
+couverte par `persist.test.ts`) écrit une allocation optimisée par-dessus le
+portefeuille actif, et `rebalancePortfolio` le rééquilibre sur une « allocation
+cible ». Ce n'est pas une faille (RLS : chacun n'atteint que ses données), c'est
+une porte de l'ancien modèle restée ouverte. La supprimer, c'est renoncer au
+chemin optimiseur persistant ; la garder, c'est accepter qu'il puisse écraser une
+composition. `simulatePortfolio` et `backtestPortfolio`, qui ne persistent rien,
+ne sont pas concernées.
+
 ---
 
 ---
