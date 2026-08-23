@@ -247,8 +247,8 @@
       "step1_title": "Answer 4 questions",
       "step1_desc": "Your causes, your horizon, your risk tolerance. Two minutes, no account needed.",
       "step2_num": "02",
-      "step2_title": "Get a simulated portfolio",
-      "step2_desc": "Optimized allocation, impact score, comparison to a classic World ETF — all visible instantly.",
+      "step2_title": "See the funds that match you",
+      "step2_desc": "Ranked pool, impact score, comparison with a standard World ETF — all visible immediately.",
       "step3_num": "03",
       "step3_title": "Understand every number",
       "step3_desc": "Ethi explains the portfolio in plain language, and the full methodology is public.",
@@ -261,7 +261,7 @@
       "eyebrow": "MSCI ESG data · 112 funds analysed",
       "title_line1": "Your convictions,",
       "title_accent": "turned into a portfolio.",
-      "subtitle": "Pick what you want to fund — and what you refuse to. Seedow builds the matching allocation, with ESG and performance figures to back it.",
+      "subtitle": "Choose what you want to fund — and what you refuse. Seedow ranks the funds that match, with ESG and performance figures to back it. You compose.",
       "beta_slots_one": "{{count}} beta seat left",
       "beta_slots_other": "{{count}} beta seats left",
       "preview": {
@@ -302,7 +302,7 @@
       "see": {
         "tab": "I see",
         "tagline": "A portfolio in numbers, not a promise.",
-        "title": "You see the allocation and its real footprint.",
+        "title": "You see the funds kept and their real footprint.",
         "desc": "ESG score, carbon intensity, breakdown by asset class: the numbers show up right away, each with its source and date.",
         "note": "Real market data, refreshed hourly.",
         "visual_label": "Your preview",
@@ -345,7 +345,7 @@
         "simulate": {
           "eyebrow": "Simulator",
           "title": "Your convictions, turned into a portfolio.",
-          "desc": "You pick what you want to fund and what you refuse. Seedow builds the matching allocation and explains it line by line.",
+          "desc": "You choose what to fund and what to refuse. Seedow ranks the matching funds and explains them line by line.",
           "cta": "Try without an account"
         },
         "impact": {
@@ -1147,7 +1147,7 @@
       "values": "Your convictions steer the selection: we overweight aligned companies, without ever turning a conviction into a return promise.",
       "exclusions": "Excluding a sector means refusing to fund it — a binary, verifiable criterion, not an opinion.",
       "objective": "Your goal sets the horizon, and thus the acceptable level of risk: the further out, the more volatility you can absorb.",
-      "amount": "The simulated amount commits to nothing. It's there to visualize the allocation and the effect of compound interest over time."
+      "amount": "The simulated amount commits you to nothing. It shows what your holdings would represent and how compounding plays out over time."
     },
     "planting": {
       "loading_eyebrow": "Composition in progress",
@@ -1268,7 +1268,7 @@
     "ago_hours": "{{h}}h ago",
     "never": "never",
     "block_pipeline": "Construction pipeline",
-    "pipeline_desc": "Six traceable steps: profiling, investable universe, sector exclusions, best-in-class ESG filters, constrained Markowitz optimization (ESG floor, risk budget, weight bounds), then pre-optimization tilt of expected returns based on your causes. The interactive simulator and detailed documentation are on the dedicated page.",
+    "pipeline_desc": "Traceable stages: profiling, investable universe, sector exclusions, best-in-class ESG filters, then pool ranking by relevance. Seedow stops there — no allocation is imposed: you compose your lines, and the engine measures what you composed. The interactive simulator and detailed documentation are on the dedicated page.",
     "see_methodology": "Read the full methodology",
     "block_engine_version": "Engine version",
     "engine_version_desc": "Methodology v1.1 · E/S/G pillars weighted by causes, real carbon intensity, source traceability. Reviewed quarterly.",
@@ -1308,7 +1308,7 @@
       },
       "pipeline": {
         "title": "Construction pipeline",
-        "desc": "Six traceable steps: profiling, investable universe, sector exclusions, best-in-class ESG filters, constrained Markowitz optimization (ESG floor, risk budget, weight bounds), then pre-optimization tilt of expected returns according to your causes. The interactive simulator and detailed documentation are on the dedicated page.",
+        "desc": "Traceable stages: profiling, investable universe, sector exclusions, best-in-class ESG filters, then pool ranking by relevance. Seedow stops there — no allocation is imposed: you compose your lines, and the engine measures what you composed. The interactive simulator and detailed documentation are on the dedicated page.",
         "link": "Read the full methodology"
       },
       "sources": {
@@ -1364,14 +1364,24 @@
     "notif_alerts": "Email alerts (ESG score, greenwashing)",
     "notif_alerts_hint": "Get an email when an asset you follow degrades (ESG score drop, SFDR change). Off by default — your choice, and you can turn it off anytime.",
     "notif_alerts_on": "Email alerts enabled.",
-    "notif_alerts_off": "Email alerts disabled."
+    "notif_alerts_off": "Email alerts disabled.",
+    "pool_eyebrow": "Your pool, re-ranked",
+    "pool_summary": "{{count}} funds kept · {{excluded}} filtered out",
+    "pool_untouched": "Your composition stays exactly as you built it: these settings change how the pool is ranked, never your lines.",
+    "pool_relevance": "{{score}}/100",
+    "pool_pending": "pending",
+    "pool_recompose": "Recompose my portfolio",
+    "auto_save_note": "Your preferences are saved automatically. They rank the pool and measure your portfolio — they never re-weight your lines for you.",
+    "save_error": "Could not save",
+    "pool_compose_first": "Compose my portfolio",
+    "no_portfolio_notice": "You haven't composed a portfolio yet, so there is nothing to update here. These settings already rank the pool below — they will apply to your portfolio as soon as you compose it."
   },
   "methodologie": {
     "title": "Methodology",
     "meta_title": "Methodology — Portfolio Construction",
-    "meta_desc": "Portfolio construction pipeline: exclusions, best-in-class, constrained Markowitz optimization, conviction tilts.",
+    "meta_desc": "Seedow's method: exclusions, best-in-class ESG, pool ranking by relevance, then measurement of the portfolio you compose.",
     "back_dashboard": "← Dashboard",
-    "intro": "Five transparent and reproducible steps. Adjust the parameters at the bottom of the page to see the portfolio recomposed live.",
+    "intro": "Five transparent, reproducible stages. Adjust the parameters below to watch each criterion take effect live.",
     "version_title": "Version history",
     "version_1_1_note": "Introduced the Seedow Score (weighted composite of ESG/climate/exclusions), published below and on fund pages — never based on the SFDR article.",
     "version_1_0_note": "Version tracking introduced for this page: any future change to weights, thresholds, or exclusions will be logged here, dated.",
@@ -1384,8 +1394,8 @@
     "version_note": "Nothing is rewritten retroactively: every methodology change adds a line, it never replaces the history.",
     "pipeline_title": "Construction Pipeline",
     "simulator_eyebrow": "Interactive Simulator",
-    "simulator_title": "Compose your portfolio",
-    "simulator_desc": "Any modification below recalculates the allocation according to the complete pipeline.",
+    "simulator_title": "Method simulator",
+    "simulator_desc": "This teaching simulator shows what the engine MEASURES on an example composition. In the app, Seedow stops at the ranked pool: you compose your own lines.",
     "causes_title": "Causes & Intensity",
     "exclusions_title": "Sector Exclusions",
     "risk_title": "Target Risk",
@@ -1436,8 +1446,8 @@
       "3_desc": "Hard sector exclusions, then best-in-class ESG (top 50% per class — median).",
       "4_name": "Convictions",
       "4_desc": "Linear adjustment of expected returns according to your causes (≤ +1.5% per cause). No full Black-Litterman.",
-      "5_name": "Optimization",
-      "5_desc": "Constrained Markowitz: max return / variance, bounds per class and composite ESG floor weighted E/S/G according to your causes."
+      "5_name": "Ranking, then measurement",
+      "5_desc": "Seedow proposes no weights: it ranks the pool by relevance (real performance, composite ESG score, alignment with your causes), then measures the portfolio YOU compose — risk, fees, ESG weighted E/S/G according to your causes."
     },
     "causes": {
       "climat": "Climate",
@@ -1614,10 +1624,10 @@
     "welcome": "Welcome, {{name}}",
     "title": "Your portfolio starts here.",
     "choose_desc": "Just tell us where you're at — we'll take you to the right step.",
-    "desc": "Four questions to define your convictions. Ethi then structures an allocation aligned with your criteria.",
+    "desc": "Four questions to set your convictions. Seedow then ranks the funds that match — you do the composing.",
     "beginner_eyebrow": "I'm just starting",
     "beginner_title": "Let's build a simulation",
-    "beginner_desc": "Four questions, two minutes, zero real money. See what your portfolio would look like before deciding anything.",
+    "beginner_desc": "Four questions, two minutes, no real money. You see the funds that match your criteria, and you compose your portfolio yourself.",
     "beginner_cta": "Create my simulation",
     "existing_eyebrow": "I already invest",
     "existing_title": "Add your investments",
@@ -2146,7 +2156,7 @@
   },
   "real_invest_interest": {
     "eyebrow": "Go real",
-    "title": "Want to invest this allocation for real?",
+    "title": "Want to invest this portfolio for real?",
     "description": "Indicate your intent — we'll notify you as soon as real accounts open with our partner broker.",
     "cta": "I want to invest for real",
     "success_title": "Thanks — your intent is recorded.",

@@ -26,13 +26,63 @@ export interface PoolHandoffAsset {
 
 /**
  * Intention de composition transmise avec le pool : mode (premier portefeuille
- * « replace » vs ajout « create »), convictions à conserver, nom éventuel.
+ * « replace » vs ajout « create »), convictions à conserver, nom éventuel, et
+ * le cadre chiffré que l'utilisateur vient de poser dans le questionnaire
+ * (montant, cible de risque et horizon dérivés de son objectif).
+ *
+ * Ce cadre traverse le passe-plat parce que rien d'autre ne le transporte :
+ * sans lui, le portefeuille composé repartait sur des valeurs fabriquées
+ * (100 €, 9 %, 10 ans) et « Mon argent » affichait un montant que l'utilisateur
+ * n'avait jamais saisi (CLAUDE.md §1.3).
  */
 export interface PoolHandoffIntent {
   mode: "replace" | "create";
   causes: CauseTag[];
   exclusions: ExclusionTag[];
   name?: string;
+  /** Montant de départ (€) saisi à l'étape « amount ». */
+  initialAmount?: number;
+  /** Cible de volatilité annualisée dérivée de l'objectif (fraction). */
+  riskTarget?: number;
+  /** Horizon en années dérivé de l'objectif. */
+  horizonYears?: number;
+  /**
+   * Intensité par cause (0..1) telle que calculée au questionnaire. Sans elle,
+   * le portefeuille enregistré repartait sur `{}` : le pool reclassé plus tard
+   * (réglages, aval) ne pondérait plus les causes comme l'aperçu vu à
+   * l'onboarding.
+   */
+  causeIntensity?: Partial<Record<CauseTag, number>>;
+}
+
+/**
+ * Bornes de relecture, alignées sur le schéma serveur (`CreateInputSchema`) :
+ * une valeur hors bornes est ignorée plutôt que transmise, pour ne jamais faire
+ * échouer l'enregistrement sur un seed corrompu ou périmé.
+ */
+const AMOUNT_MAX = 10_000_000;
+const RISK_MIN = 0.02;
+const RISK_MAX = 0.3;
+const HORIZON_MIN = 1;
+const HORIZON_MAX = 40;
+
+/** Ne garde que les intensités exploitables (0..1) ; sinon `undefined`. */
+function cleanIntensity(value: unknown): Partial<Record<CauseTag, number>> | undefined {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
+  const out: Partial<Record<CauseTag, number>> = {};
+  for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+    if (typeof v === "number" && Number.isFinite(v) && v >= 0 && v <= 1) {
+      out[k as CauseTag] = v;
+    }
+  }
+  return Object.keys(out).length > 0 ? out : undefined;
+}
+
+/** Nombre fini dans les bornes, sinon `undefined` (on retombe sur le défaut). */
+function inRange(value: unknown, min: number, max: number): number | undefined {
+  return typeof value === "number" && Number.isFinite(value) && value >= min && value <= max
+    ? value
+    : undefined;
 }
 
 export interface PoolHandoff extends PoolHandoffIntent {
@@ -112,6 +162,10 @@ export function readPoolHandoff(now: number = Date.now()): PoolHandoff | null {
       causes: Array.isArray(parsed.causes) ? parsed.causes : [],
       exclusions: Array.isArray(parsed.exclusions) ? parsed.exclusions : [],
       name: typeof parsed.name === "string" ? parsed.name : undefined,
+      initialAmount: inRange(parsed.initialAmount, 0, AMOUNT_MAX),
+      riskTarget: inRange(parsed.riskTarget, RISK_MIN, RISK_MAX),
+      horizonYears: inRange(parsed.horizonYears, HORIZON_MIN, HORIZON_MAX),
+      causeIntensity: cleanIntensity(parsed.causeIntensity),
     };
   } catch {
     return null;

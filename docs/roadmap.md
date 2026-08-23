@@ -43,6 +43,31 @@
   KID primaires bloqués réseau, extraETF gated par ToS → **conclusion : nécessite un
   flux licencié**. Rien n'est bâti sur une source illicite.
 
+### Bascule « pool plutôt qu'allocation » — alignement de la machinerie
+
+Suite de #170→#173 (le moteur ne propose plus de poids). Les maillons qui
+parlaient encore l'ancien modèle ont été repris :
+
+- **Le questionnaire ne jette plus ses réponses.** Le montant saisi et le couple
+  risque/horizon dérivé de l'objectif traversent le passe-plat `poolHandoff`
+  jusqu'à `createCustomPortfolio` — qui écrivait jusque-là `100 €, 9 %, 10 ans`
+  en dur. « Mon argent » sur Le Fil part donc du montant réel de l'utilisateur
+  (§1.3 : aucun chiffre fabriqué).
+- **`/le-fil` n'est plus un cul-de-sac.** Un compte sans portefeuille y déroulait
+  quatre nœuds à zéro, sans issue ; il reçoit l'entrée à deux intentions déjà
+  utilisée par `/portfolio` (questionnaire ou page blanche).
+- **`/reglages` n'écrase plus la composition.** Bouger un curseur relançait
+  l'optimiseur (`generatePortfolio`) et remplaçait le portefeuille composé à la
+  main 700 ms plus tard. Remplacé par `savePortfolioPreferences` : préférences
+  enregistrées, poids existants re-mesurés (jamais réécrits), aperçu = pool
+  reclassé, recomposition explicite via `/construire`.
+- **Copie produit** : landing, état vide, réglages et méthodologie ne promettent
+  plus « Seedow construit l'allocation correspondante ».
+- **Code mort retiré** : `PostSimulationFork`, `MirrorReveal`, phases
+  `building`/`saving`.
+
+---
+
 ---
 
 ## 2. NOW — prêt côté ingénierie, aucun blocage externe
@@ -57,7 +82,15 @@
 3. **Curer les non-mappés** : classifier les **3 086 Fixed Income** (souverain /
    corporate / green / social) pour les rendre promouvables — aujourd'hui non promus
    faute de clivage fiable. Chantier « une sous-catégorie à la fois », sourcé.
-4. **Dashboard qualité données catalogue** (interne) : exposer les compteurs
+4. **Simulateur `/methodologie` : passer du portefeuille optimisé au pool classé.**
+   La page documente désormais correctement la méthode (elle dit que Seedow
+   s'arrête au classement et que l'utilisateur compose), mais son simulateur
+   appelle toujours `simulatePortfolio` (Markowitz) et affiche une allocation
+   pondérée. `screenAssetPool` fournit déjà tout ce qu'il faut (pertinence,
+   Sharpe réel, ESG, `data_tier`) ; reste à refondre le panneau de résultats,
+   qui porte aussi la démonstration des métriques (risque, frais, carbone) —
+   à traiter dans sa propre PR.
+5. **Dashboard qualité données catalogue** (interne) : exposer les compteurs
    `cron_run_log` (imports, promotions, wiring, identité) — visibilité opérationnelle
    sur l'avancement de l'enrichissement.
 

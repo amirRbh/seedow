@@ -56,7 +56,11 @@ export function BlankCanvasBuilder() {
       mode: seed.mode,
       causes: seed.causes,
       exclusions: seed.exclusions,
+      causeIntensity: seed.causeIntensity,
       name: seed.name,
+      initialAmount: seed.initialAmount,
+      riskTarget: seed.riskTarget,
+      horizonYears: seed.horizonYears,
     });
     setLines((ls) =>
       ls.length > 0
@@ -106,8 +110,9 @@ export function BlankCanvasBuilder() {
 
     setSaving(true);
     try {
-      // Intention issue de l'aperçu (mode/convictions/nom) ; défauts sûrs si le
-      // builder a été ouvert directement (replace, aucune cause).
+      // Intention issue de l'aperçu (mode/convictions/nom/cadre chiffré) ;
+      // défauts sûrs si le builder a été ouvert directement (replace, aucune
+      // cause, et côté serveur les défauts documentés du schéma).
       await create({
         data: {
           weights,
@@ -115,6 +120,10 @@ export function BlankCanvasBuilder() {
           causes: intent?.causes ?? [],
           exclusions: intent?.exclusions ?? [],
           ...(intent?.name ? { name: intent.name } : {}),
+          ...(intent?.causeIntensity ? { cause_intensity: intent.causeIntensity } : {}),
+          ...(intent?.initialAmount != null ? { initial_amount: intent.initialAmount } : {}),
+          ...(intent?.riskTarget != null ? { risk_target: intent.riskTarget } : {}),
+          ...(intent?.horizonYears != null ? { horizon_years: intent.horizonYears } : {}),
         },
       });
       toast.success(t("blank_builder.saved"), { description: t("blank_builder.saved_desc") });

@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { HoldingDetailSheet } from "@/components/portfolio/HoldingDetailSheet";
 import { EsgFloorRelaxedNotice } from "@/components/portfolio/EsgFloorRelaxedNotice";
+import { EmptyPortfolioState } from "@/components/portfolio/EmptyPortfolioState";
 import { ShareImpactButton } from "@/components/impact/ShareImpactButton";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { useAuth } from "@/hooks/useAuth";
@@ -45,7 +46,7 @@ function LeFil() {
   const { t } = useTranslation();
   const { user } = useAuth();
   const { lang } = useLang();
-  const { portfolio } = useActivePortfolio();
+  const { portfolio, loading } = useActivePortfolio();
   const valuation = usePortfolioValuation();
 
   const holdings = useMemo(() => portfolio?.holdings ?? [], [portfolio]);
@@ -96,6 +97,20 @@ function LeFil() {
     { key: "le_fil.ethi_challenge", intent: "challenge", primary: false },
     { key: "le_fil.ethi_simulate", intent: "simulate", primary: false },
   ];
+
+  // Personne n'a encore composé : le fil n'a rien à raconter. Depuis que Seedow
+  // ne génère plus d'allocation à la place de l'utilisateur, un compte tout neuf
+  // arrive ici SANS portefeuille — dérouler les quatre nœuds à zéro affichait un
+  // accueil mort, sans issue. On pose la même entrée à deux intentions que
+  // /portfolio (questionnaire ou page blanche), plutôt qu'un second état vide.
+  if (!loading && !portfolio) {
+    return (
+      <div className="min-h-screen bg-paper-2">
+        <EmptyPortfolioState userName={userName} />
+        <BottomNavigation />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-paper-2">

@@ -27,6 +27,16 @@ const InputSchema = z.object({
 const CauseSchema = z.enum(["climat", "biodiversite", "humain", "egalite", "tech", "circulaire"]);
 const ExclusionSchema = z.enum(["fossiles", "armes", "tabac", "jeux", "animaux", "fast-fashion"]);
 
+/**
+ * Défauts du cadre chiffré quand le builder est ouvert sans passer par le
+ * questionnaire (`/construire` en direct) : un montant de départ neutre et le
+ * couple risque/horizon de l'objectif « épargne » (cf. `objectiveToRiskHorizon`).
+ * Ce sont des valeurs de repli assumées, pas une réponse prêtée à l'utilisateur.
+ */
+export const DEFAULT_INITIAL_AMOUNT = 100;
+export const DEFAULT_RISK_TARGET = 0.09;
+export const DEFAULT_HORIZON_YEARS = 10;
+
 const CreateInputSchema = z.object({
   /** { asset_id: poids (0..1) } — au moins une ligne strictement positive. */
   weights: z.record(z.string().uuid(), z.number().min(0).max(1)),
@@ -41,8 +51,18 @@ const CreateInputSchema = z.object({
   mode: z.enum(["replace", "create"]).default("replace"),
   /** Convictions de l'onboarding — conservées (pondération des piliers ESG + aval). */
   causes: z.array(CauseSchema).max(6).default([]),
+  /** Intensité par cause (0..1) issue du questionnaire. */
+  cause_intensity: z.record(CauseSchema, z.number().min(0).max(1)).default({}),
   /** Exclusions de l'onboarding — conservées sur le portefeuille. */
   exclusions: z.array(ExclusionSchema).max(6).default([]),
+  /**
+   * Cadre chiffré posé par l'utilisateur au questionnaire. Absent (builder
+   * ouvert en direct, sans passer par l'aperçu) → défauts déclarés ici, jamais
+   * présentés comme un choix de l'utilisateur.
+   */
+  initial_amount: z.number().min(0).max(10_000_000).default(DEFAULT_INITIAL_AMOUNT),
+  risk_target: z.number().min(0.02).max(0.3).default(DEFAULT_RISK_TARGET),
+  horizon_years: z.number().int().min(1).max(40).default(DEFAULT_HORIZON_YEARS),
 });
 
 /**
@@ -208,11 +228,13 @@ export const createCustomPortfolio = createServerFn({ method: "POST" })
         user_id: userId,
         name: data.name ?? "Mon portefeuille",
         causes: data.causes,
-        cause_intensity: {},
+        cause_intensity: data.cause_intensity,
         exclusions: data.exclusions,
-        risk_target: 0.09,
-        horizon_years: 10,
-        initial_amount: 100,
+        // Cadre chiffré de l'utilisateur (questionnaire), pas une valeur en dur :
+        // « Mon argent » sur Le Fil part du montant qu'il a réellement saisi.
+        risk_target: data.risk_target,
+        horizon_years: data.horizon_years,
+        initial_amount: data.initial_amount,
         weights,
         metrics: metrics as unknown as Record<string, unknown>,
         methodology_version: "custom-v1",
@@ -245,4 +267,95 @@ export const createCustomPortfolio = createServerFn({ method: "POST" })
 
     await userClient.from("profiles").update({ onboarding_completed: true }).eq("id", userId);
     return { portfolio_id: inserted.id, weights, metrics };
+  });
+
+const PreferencesInputSchema = z.object({
+  causes: z.array(CauseSchema).max(6).default([]),
+  cause_intensity: z.record(CauseSchema, z.number().min(0).max(1)).default({}),
+  exclusions: z.array(ExclusionSchema).max(6).default([]),
+  risk_target: z.number().min(0.02).max(0.3),
+  horizon_years: z.number().int().min(1).max(40),
+  initial_amount: z.number().min(0).max(10_000_000),
+});
+
+/**
+ * Enregistre les préférences du portefeuille actif — SANS toucher à sa
+ * composition.
+ *
+ * Auparavant, bouger un curseur dans /reglages relançait l'optimiseur et
+ * remplaçait le portefeuille : l'utilisateur composait ses lignes à la main,
+ * puis les perdait 700 ms après avoir décoché une cause. Depuis que Seedow ne
+ * propose plus d'allocation, la seule chose que /reglages a le droit de faire
+ * est de mettre à jour les préférences et de RE-MESURER honnêtement les poids
+ * existants (le score ESG pondère ses piliers selon les convictions : changer
+ * de conviction change la mesure, pas la composition).
+ *
+ * Les poids ne sont jamais réécrits ici — seulement les métriques qui en
+ * découlent, et uniquement si le portefeuille contient encore des lignes
+ * connues de l'univers.
+ */
+export const savePortfolioPreferences = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) => PreferencesInputSchema.parse(input))
+  .handler(async ({ data, context }) => {
+    const { userId, supabase: userClient } = context;
+
+    const { data: pf, error: pfErr } = await userClient
+      .from("portfolios")
+      .select("id, weights")
+      .eq("user_id", userId)
+      .eq("is_active", true)
+      .order("generated_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (pfErr) {
+      console.error("[savePortfolioPreferences] load error:", pfErr);
+      throw new Error("Impossible de charger ton portefeuille. Réessaie dans un instant.");
+    }
+    if (!pf) throw new Error("Aucun portefeuille actif à mettre à jour.");
+
+    const update: Record<string, unknown> = {
+      causes: data.causes,
+      cause_intensity: data.cause_intensity,
+      exclusions: data.exclusions,
+      risk_target: data.risk_target,
+      horizon_years: data.horizon_years,
+      initial_amount: data.initial_amount,
+    };
+
+    // Re-mesure des poids EXISTANTS avec la nouvelle pondération de piliers.
+    // Best-effort : un portefeuille vide (ou dont les lignes ont quitté
+    // l'univers) garde ses métriques précédentes plutôt que de bloquer
+    // l'enregistrement des préférences.
+    let metrics: PortfolioMetrics | null = null;
+    const existingWeights = (pf.weights ?? {}) as Record<string, number>;
+    if (Object.keys(existingWeights).length > 0) {
+      try {
+        const universe = await loadUniverse(userClient as typeof supabaseAdmin);
+        const byId = new Map(universe.assets.map((a) => [a.id, a]));
+        const measured = normalizeAndMeasure(
+          existingWeights,
+          byId,
+          universe.covariance,
+          data.causes,
+        );
+        metrics = measured.metrics;
+        update.metrics = metrics as unknown as Record<string, unknown>;
+      } catch (err) {
+        console.error("[savePortfolioPreferences] re-measure skipped:", err);
+      }
+    }
+
+    const { error: updErr } = await userClient
+      .from("portfolios")
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .update(update as any)
+      .eq("id", pf.id)
+      .eq("user_id", userId);
+    if (updErr) {
+      console.error("[savePortfolioPreferences] update error:", updErr);
+      throw new Error("Impossible d'enregistrer tes préférences. Réessaie dans un instant.");
+    }
+
+    return { portfolio_id: pf.id, metrics };
   });

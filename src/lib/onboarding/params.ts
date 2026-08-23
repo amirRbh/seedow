@@ -19,7 +19,13 @@ import type { CauseTag, ExclusionTag, PortfolioParams } from "@/lib/portfolio/ty
 
 /** IDs d'étape — alignés sur les enums DB. */
 export type StepId = "values" | "exclusions" | "objective" | "amount" | "risk";
-export type Phase = "steps" | "agency" | "preview" | "account" | "naming" | "building" | "saving";
+/**
+ * Phases du tunnel. « building » / « saving » ont disparu avec la génération
+ * d'allocation : Seedow ne fabrique plus de portefeuille pendant que
+ * l'utilisateur attend — l'aperçu montre un pool classé (`preview`) et la
+ * composition se fait ensuite dans le builder (`/construire`).
+ */
+export type Phase = "steps" | "agency" | "preview" | "account" | "naming";
 export type Answers = Partial<Record<StepId, string[]>>;
 
 export const DRAFT_KEY = "seedow_onboarding_draft";
