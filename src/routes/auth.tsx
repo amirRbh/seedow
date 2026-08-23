@@ -199,7 +199,7 @@ function AuthPage() {
               placeholder={t("auth.name_placeholder")}
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              className="w-full px-3 py-2.5 rounded border border-paper-3 bg-paper text-body-sm text-ink placeholder-ink-3 focus:border-ink focus:outline-none transition-colors"
+              className="w-full px-3 py-2.5 rounded border border-paper-3 bg-paper text-body-sm text-ink placeholder-ink-3 focus:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-1 transition-colors"
             />
           )}
           <input
@@ -209,7 +209,7 @@ function AuthPage() {
             onChange={(e) => setEmail(e.target.value)}
             required
             autoComplete="email"
-            className="w-full px-3 py-2.5 rounded border border-paper-3 bg-paper text-body-sm text-ink placeholder-ink-3 focus:border-ink focus:outline-none transition-colors"
+            className="w-full px-3 py-2.5 rounded border border-paper-3 bg-paper text-body-sm text-ink placeholder-ink-3 focus:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-1 transition-colors"
           />
           {!magic && (
             <input
@@ -220,7 +220,7 @@ function AuthPage() {
               required
               minLength={8}
               autoComplete={mode === "signup" ? "new-password" : "current-password"}
-              className="w-full px-3 py-2.5 rounded border border-paper-3 bg-paper text-body-sm text-ink placeholder-ink-3 focus:border-ink focus:outline-none transition-colors"
+              className="w-full px-3 py-2.5 rounded border border-paper-3 bg-paper text-body-sm text-ink placeholder-ink-3 focus:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-1 transition-colors"
             />
           )}
 

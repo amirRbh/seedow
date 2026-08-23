@@ -114,7 +114,7 @@ function ComprendrePage() {
         </nav>
       </header>
 
-      <main className="flex-1 flex items-center">
+      <div className="flex-1 flex items-center">
         <div className="max-w-2xl mx-auto w-full px-6 py-12 md:py-20">
           {/* Progression */}
           <div className="flex items-center gap-2 mb-10" aria-hidden="true">
@@ -193,7 +193,7 @@ function ComprendrePage() {
             )}
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

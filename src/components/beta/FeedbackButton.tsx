@@ -136,7 +136,7 @@ export function FeedbackButton() {
                     onChange={(e) => setBlocker(e.target.value)}
                     rows={2}
                     maxLength={2000}
-                    className="w-full mt-2 px-3 py-2 rounded border border-paper-3 bg-paper text-body-sm focus:border-ink focus:outline-none resize-none"
+                    className="w-full mt-2 px-3 py-2 rounded border border-paper-3 bg-paper text-body-sm focus:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-1 resize-none"
                   />
                 </div>
 
@@ -153,7 +153,7 @@ export function FeedbackButton() {
                     onChange={(e) => setWish(e.target.value)}
                     rows={2}
                     maxLength={2000}
-                    className="w-full mt-2 px-3 py-2 rounded border border-paper-3 bg-paper text-body-sm focus:border-ink focus:outline-none resize-none"
+                    className="w-full mt-2 px-3 py-2 rounded border border-paper-3 bg-paper text-body-sm focus:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-1 resize-none"
                   />
                 </div>
               </div>

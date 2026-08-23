@@ -189,7 +189,7 @@ function Onboarding() {
   };
 
   return (
-    <div className="min-h-screen bg-paper-2 text-ink">
+    <main className="min-h-screen bg-paper-2 text-ink">
       <AnimatePresence mode="wait">
         {phase === "steps" && (
           <Step
@@ -254,7 +254,7 @@ function Onboarding() {
           />
         )}
       </AnimatePresence>
-    </div>
+    </main>
   );
 }
 
@@ -299,7 +299,7 @@ function NamePortfolioStep({
         </span>
       </div>
       <div className="px-6 pt-12 pb-12 max-w-md mx-auto w-full flex-1">
-        <h2 className="font-value text-3xl text-ink">{t("onboarding.naming.question")}</h2>
+        <h1 className="font-value text-3xl text-ink">{t("onboarding.naming.question")}</h1>
         <p className="text-body-sm text-ink-2 mt-2">
           <Trans i18nKey="onboarding.naming.description">
             Donne-lui un nom qui te parle — par exemple <em>Climat</em>, <em>Retraite</em>,{" "}
@@ -312,7 +312,7 @@ function NamePortfolioStep({
           onChange={(e) => setName(e.target.value.slice(0, 40))}
           placeholder={t("onboarding.naming.placeholder")}
           autoFocus
-          className="mt-8 w-full px-4 py-4 rounded-2xl border border-paper-3 bg-paper-2 text-ink text-[16px] placeholder-ink-3 focus:border-ink-3 focus:outline-none transition-colors"
+          className="mt-8 w-full px-4 py-4 rounded-2xl border border-paper-3 bg-paper-2 text-ink text-[16px] placeholder-ink-3 focus:border-ink-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-1 transition-colors"
         />
         <p className="mt-2 text-tag text-ink-3 text-right">{name.length}/40</p>
 
@@ -471,7 +471,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
           </div>
         ) : (
           <>
-            <h2 className="font-value text-2xl text-ink pt-8">
+            <h1 className="font-value text-2xl text-ink pt-8">
               {waitlistDone !== null
                 ? t("onboarding.account.title_waitlisted")
                 : mode === "login"
@@ -479,7 +479,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
                   : betaFull
                     ? t("onboarding.account.title_beta_full")
                     : t("onboarding.account.title_signup")}
-            </h2>
+            </h1>
             <p className="text-label text-ink-2 mt-1.5">
               {waitlistDone !== null
                 ? t("onboarding.account.desc_waitlisted", { position: waitlistDone })
@@ -531,7 +531,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
                     placeholder={t("onboarding.account.firstname_placeholder")}
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
-                    className="w-full px-3.5 py-3 rounded-xl border border-paper-3 bg-paper-2 text-body-sm text-ink placeholder-ink-3 focus:border-ink-3 focus:outline-none transition-colors"
+                    className="w-full px-3.5 py-3 rounded-xl border border-paper-3 bg-paper-2 text-body-sm text-ink placeholder-ink-3 focus:border-ink-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-1 transition-colors"
                   />
                 )}
                 <input
@@ -541,7 +541,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   autoComplete="email"
-                  className="w-full px-3.5 py-3 rounded-xl border border-paper-3 bg-paper-2 text-body-sm text-ink placeholder-ink-3 focus:border-ink-3 focus:outline-none transition-colors"
+                  className="w-full px-3.5 py-3 rounded-xl border border-paper-3 bg-paper-2 text-body-sm text-ink placeholder-ink-3 focus:border-ink-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-1 transition-colors"
                 />
                 {!betaFull && (
                   <input
@@ -552,7 +552,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
                     required
                     minLength={8}
                     autoComplete={mode === "signup" ? "new-password" : "current-password"}
-                    className="w-full px-3.5 py-3 rounded-xl border border-paper-3 bg-paper-2 text-body-sm text-ink placeholder-ink-3 focus:border-ink-3 focus:outline-none transition-colors"
+                    className="w-full px-3.5 py-3 rounded-xl border border-paper-3 bg-paper-2 text-body-sm text-ink placeholder-ink-3 focus:border-ink-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-1 transition-colors"
                   />
                 )}
 
@@ -786,17 +786,19 @@ function Step({
           </div>
         </motion.div>
 
-        <motion.h2
+        <motion.h1
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
+          id="onboarding-step-question"
           className="font-value text-2xl text-ink pt-8"
         >
           {t(`onboarding.steps.${step.id}.question`)}
-        </motion.h2>
+        </motion.h1>
 
         {isValues && (
           <p
+            role="status"
             className={`mt-2 text-caption font-semibold ${
               selected.length >= MAX_VALUES ? "text-ink" : "text-ink-3"
             }`}
@@ -815,7 +817,11 @@ function Step({
 
         <StepExplainer stepId={step.id} />
 
-        <div className="pt-5 pb-32 space-y-2.5">
+        <div
+          role={step.multi ? "group" : "radiogroup"}
+          aria-labelledby="onboarding-step-question"
+          className="pt-5 pb-32 space-y-2.5"
+        >
           {step.options.map((option, i) => {
             const isSel = selected.includes(option.id);
             const isLocked = isValues && !isSel && selected.length >= MAX_VALUES;
@@ -828,6 +834,8 @@ function Step({
                 onClick={() => toggle(option.id)}
                 disabled={isLocked}
                 aria-disabled={isLocked}
+                role={step.multi ? "checkbox" : "radio"}
+                aria-checked={isSel}
                 className={`w-full flex items-center gap-3 p-3.5 rounded-2xl border text-left transition-all ${
                   isSel
                     ? "bg-ink text-paper border-ink"
@@ -1040,6 +1048,7 @@ function PreviewScene({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            role="status"
             className="flex flex-col items-center"
           >
             <div className="w-32 h-px bg-paper-3 relative mb-8 overflow-hidden">
@@ -1064,14 +1073,15 @@ function PreviewScene({
             key="e"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
+            role="alert"
             className="w-full max-w-md text-center"
           >
             <p className="text-tag uppercase tracking-[0.18em] text-rust font-medium">
               {t("onboarding.building.error_eyebrow")}
             </p>
-            <h2 className="font-value text-2xl text-ink mt-3">
+            <h1 className="font-value text-2xl text-ink mt-3">
               {t("onboarding.building.error_title")}
-            </h2>
+            </h1>
             <p className="text-label text-ink-3 mt-3 break-words">{errorMsg}</p>
             <button
               onClick={() => setAttempt((a) => a + 1)}
@@ -1087,15 +1097,16 @@ function PreviewScene({
             key="r"
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
+            role="status"
             className="w-full max-w-md"
           >
             <SimulationBadge center withTagline className="mb-5" />
             <p className="text-tag uppercase tracking-[0.18em] text-mint font-medium text-center">
               {t("onboarding.pool.eyebrow")}
             </p>
-            <p className="font-value text-2xl text-ink text-center mt-2 mb-3">
+            <h1 className="font-value text-2xl text-ink text-center mt-2 mb-3">
               {t("onboarding.pool.title")}
-            </p>
+            </h1>
             {/* Explication simple et claire du choix (aucune allocation imposée) :
                 on montre des actifs qui collent aux filtres, classés par pertinence,
                 et c'est l'utilisateur qui compose — il ne doit jamais se sentir perdu. */}

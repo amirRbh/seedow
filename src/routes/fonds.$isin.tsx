@@ -74,7 +74,7 @@ function FundAuthorityPage() {
         <LanguageToggle />
       </header>
 
-      <main className="max-w-3xl mx-auto px-6 py-10 space-y-8">
+      <div className="max-w-3xl mx-auto px-6 py-10 space-y-8">
         <div>
           <p className="stamp">
             {fund.isin ?? fund.ticker} · {fund.issuer ?? "—"}
@@ -222,7 +222,7 @@ function FundAuthorityPage() {
             })}
           </p>
         </footer>
-      </main>
+      </div>
     </div>
   );
 }
