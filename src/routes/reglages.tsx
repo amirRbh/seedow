@@ -316,6 +316,9 @@ function PreferencesSection() {
               <div key={c.id} className="flex items-center gap-3">
                 <button
                   type="button"
+                  role="checkbox"
+                  aria-checked={active}
+                  aria-labelledby={`cause-${c.id}-label`}
                   onClick={() => toggleCause(c.id)}
                   className={`w-4 h-4 rounded-sm border flex items-center justify-center flex-shrink-0 transition-colors ${
                     active ? "bg-ink border-ink" : "bg-paper border-paper-3 hover:border-ink"
@@ -335,11 +338,14 @@ function PreferencesSection() {
                     </svg>
                   )}
                 </button>
-                <label className="text-body-sm text-ink min-w-[110px]">{c.label}</label>
+                <span id={`cause-${c.id}-label`} className="text-body-sm text-ink min-w-[110px]">
+                  {c.label}
+                </span>
                 {active && (
                   <>
                     <input
                       type="range"
+                      aria-label={t("a11y.intensity_for", { cause: c.label })}
                       min={0}
                       max={1}
                       step={0.05}
@@ -519,14 +525,15 @@ function ProfileSection({ email, onSignOut }: { email: string; onSignOut: () => 
       </div>
 
       <Block title={t("reglages.block_identity")}>
-        <label className="text-caption text-ink-3 block mb-1">{t("reglages.email_label")}</label>
+        <p className="text-caption text-ink-3 block mb-1">{t("reglages.email_label")}</p>
         <p className="text-body-sm text-ink mb-4">{email}</p>
 
-        <label className="text-caption text-ink-3 block mb-1">
+        <label htmlFor="reglages-display-name" className="text-caption text-ink-3 block mb-1">
           {t("reglages.display_name_label")}
         </label>
         <div className="flex gap-2">
           <input
+            id="reglages-display-name"
             type="text"
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}

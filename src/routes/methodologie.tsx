@@ -311,6 +311,9 @@ function MethodologyPage() {
                     <div key={c.id} className="flex items-center gap-3">
                       <button
                         type="button"
+                        role="checkbox"
+                        aria-checked={active}
+                        aria-labelledby={`cause-${c.id}-label`}
                         onClick={() => toggleCause(c.id)}
                         className={`w-4 h-4 rounded-sm border flex items-center justify-center flex-shrink-0 transition-colors ${
                           active ? "bg-ink border-ink" : "bg-paper border-paper-3 hover:border-ink"
@@ -329,10 +332,16 @@ function MethodologyPage() {
                           </svg>
                         )}
                       </button>
-                      <label className="text-body-sm text-ink min-w-[140px]">{c.label}</label>
+                      <span
+                        id={`cause-${c.id}-label`}
+                        className="text-body-sm text-ink min-w-[140px]"
+                      >
+                        {c.label}
+                      </span>
                       {active && (
                         <input
                           type="range"
+                          aria-label={t("a11y.intensity_for", { cause: c.label })}
                           min={0}
                           max={1}
                           step={0.05}

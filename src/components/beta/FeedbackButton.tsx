@@ -94,15 +94,23 @@ export function FeedbackButton() {
               </DialogHeader>
               <div className="space-y-5 py-2">
                 <div>
-                  <label className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono">
+                  <p
+                    id="feedback-nps-label"
+                    className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono"
+                  >
                     {t("beta.feedback_nps_label")}
-                  </label>
-                  <div className="grid grid-cols-11 gap-1 mt-2">
+                  </p>
+                  <div
+                    role="group"
+                    aria-labelledby="feedback-nps-label"
+                    className="grid grid-cols-11 gap-1 mt-2"
+                  >
                     {Array.from({ length: 11 }).map((_, i) => (
                       <button
                         key={i}
                         type="button"
                         onClick={() => setNps(i)}
+                        aria-pressed={nps === i}
                         className={`py-1.5 rounded text-caption font-semibold border transition-colors ${
                           nps === i
                             ? "border-ink bg-ink text-paper"
@@ -116,10 +124,14 @@ export function FeedbackButton() {
                 </div>
 
                 <div>
-                  <label className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono">
+                  <label
+                    htmlFor="feedback-blocker"
+                    className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono"
+                  >
                     {t("beta.feedback_blocker")}
                   </label>
                   <textarea
+                    id="feedback-blocker"
                     value={blocker}
                     onChange={(e) => setBlocker(e.target.value)}
                     rows={2}
@@ -129,10 +141,14 @@ export function FeedbackButton() {
                 </div>
 
                 <div>
-                  <label className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono">
+                  <label
+                    htmlFor="feedback-wish"
+                    className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono"
+                  >
                     {t("beta.feedback_wish")}
                   </label>
                   <textarea
+                    id="feedback-wish"
                     value={wish}
                     onChange={(e) => setWish(e.target.value)}
                     rows={2}

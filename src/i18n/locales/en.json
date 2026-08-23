@@ -928,24 +928,15 @@
   "invest_dialog": {
     "default_label": "Invest (demo)",
     "eyebrow": "Deposit",
-    "description": "Demo experience — no charge is made. The portfolio's declared capital will be updated to reflect the deposit.",
+    "description": "Simulation: no payment is requested and nothing is charged. Only your portfolio's declared capital is updated.",
     "amount": "Amount",
-    "tab_card": "Card",
-    "tab_applepay": "Apple Pay",
-    "tab_sepa": "Transfer",
-    "card_number": "Card number",
-    "card_exp": "Expiration",
-    "card_cvc": "CVC",
-    "iban": "IBAN",
-    "applepay_eyebrow": "Express checkout",
-    "applepay_desc": "Confirm with Face ID, Touch ID or your passcode.",
-    "sepa_note": "Usual settlement time: 1 to 2 business days. Demo only.",
-    "pay": "Pay",
     "confirm": "Confirm",
-    "footer_note": "Demo with no real charge · Data encrypted, never stored",
-    "toast_success": "Investment of {{amount}} recorded",
-    "toast_success_desc": "Demo: no real charge was made.",
-    "toast_error": "Could not record the investment"
+    "footer_note": "Simulation · no payment method requested",
+    "toast_success": "Simulation updated: {{amount}}",
+    "toast_success_desc": "The portfolio's declared capital changed. Nothing was charged.",
+    "toast_error": "Could not record the investment",
+    "simulation_notice": "Seedow does not process real payments. We ask for an amount to move the simulation forward — never a card, never an IBAN.",
+    "presets": "Preset amounts"
   },
   "alerts": {
     "aria": "Alerts",
@@ -3062,5 +3053,9 @@
       "broad_esg": "ESG orientation, but no strong climate proof. Derived from observed data.",
       "insufficient_evidence": "Data too partial or contradictory to decide. We never upgrade a fund without evidence."
     }
+  },
+  "a11y": {
+    "skip_to_content": "Skip to content",
+    "intensity_for": "Intensity — {{cause}}"
   }
 }

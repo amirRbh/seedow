@@ -64,10 +64,11 @@ export function DeleteAccountDialog() {
           <AlertDialogDescription>{t("reglages.delete_account_warning")}</AlertDialogDescription>
         </AlertDialogHeader>
         <div className="py-2">
-          <label className="text-caption text-ink-3 font-medium">
+          <label htmlFor="delete-account-confirm" className="text-caption text-ink-3 font-medium">
             {t("reglages.delete_account_confirm_label", { email: expected })}
           </label>
           <input
+            id="delete-account-confirm"
             type="text"
             value={confirmText}
             onChange={(e) => setConfirmText(e.target.value)}

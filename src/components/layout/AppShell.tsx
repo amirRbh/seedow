@@ -148,6 +148,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-paper-2">
+      <SkipLink />
       {showBanner ? <BetaBanner /> : null}
       <div
         className={cn(
@@ -159,6 +160,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             : "md:opacity-100 md:translate-x-0",
         )}
         aria-hidden={focus ? "true" : undefined}
+        inert={focus}
       >
         <RailNav />
       </div>
@@ -176,16 +178,34 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             focus ? "md:grid-rows-[0fr] md:opacity-0" : "md:grid-rows-[1fr] md:opacity-100",
           )}
           aria-hidden={focus ? "true" : undefined}
+          inert={focus}
         >
           <div className="overflow-hidden min-h-0">
             <TopBar onOpenCommand={openPalette} />
           </div>
         </div>
-        <main>{children}</main>
+        <main id="main-content">{children}</main>
       </div>
       <FocusToggle focus={focus} onToggle={toggleFocus} />
       <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} />
     </div>
+  );
+}
+
+/**
+ * Lien d'évitement (WCAG 2.4.1) : sans lui, chaque navigation impose de
+ * traverser tout le rail latéral avant d'atteindre le contenu. Invisible
+ * jusqu'au focus clavier, où il devient une cible pleine.
+ */
+function SkipLink() {
+  const { t } = useTranslation();
+  return (
+    <a
+      href="#main-content"
+      className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:border focus:border-ink focus:bg-paper focus:px-4 focus:py-2.5 focus:text-body-sm focus:font-semibold focus:text-ink focus:outline-none focus:ring-2 focus:ring-ink focus:ring-offset-2"
+    >
+      {t("a11y.skip_to_content")}
+    </a>
   );
 }
 

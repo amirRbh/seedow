@@ -93,11 +93,15 @@ export function RealInvestmentInterestCard() {
                 </DialogHeader>
                 <div className="space-y-5 py-2">
                   <div>
-                    <label className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono">
+                    <label
+                      htmlFor="rii-amount"
+                      className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono"
+                    >
                       {t("real_invest_interest.envisaged_amount")}
                     </label>
                     <div className="flex items-center gap-3 mt-2">
                       <input
+                        id="rii-amount"
                         type="range"
                         min={100}
                         max={10000}
@@ -113,10 +117,17 @@ export function RealInvestmentInterestCard() {
                   </div>
 
                   <div>
-                    <label className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono">
+                    <p
+                      id="rii-frequency-label"
+                      className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono"
+                    >
                       {t("real_invest_interest.frequency")}
-                    </label>
-                    <div className="grid grid-cols-2 gap-2 mt-2">
+                    </p>
+                    <div
+                      role="group"
+                      aria-labelledby="rii-frequency-label"
+                      className="grid grid-cols-2 gap-2 mt-2"
+                    >
                       {(
                         [
                           { v: "one_shot", l: t("real_invest_interest.one_shot") },
@@ -127,6 +138,7 @@ export function RealInvestmentInterestCard() {
                           key={opt.v}
                           type="button"
                           onClick={() => setFrequency(opt.v)}
+                          aria-pressed={frequency === opt.v}
                           className={`py-2.5 rounded border text-body-sm transition-colors ${
                             frequency === opt.v
                               ? "border-ink bg-ink text-paper"
@@ -140,10 +152,14 @@ export function RealInvestmentInterestCard() {
                   </div>
 
                   <div>
-                    <label className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono">
+                    <label
+                      htmlFor="rii-contact-email"
+                      className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono"
+                    >
                       {t("real_invest_interest.contact_email")}
                     </label>
                     <input
+                      id="rii-contact-email"
                       type="email"
                       value={contactEmail}
                       onChange={(e) => setContactEmail(e.target.value)}
