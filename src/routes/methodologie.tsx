@@ -196,7 +196,7 @@ function MethodologyPage() {
       <header className="max-w-6xl mx-auto px-6 pt-10 pb-8 border-b border-paper-3">
         <div className="flex items-center justify-between">
           <Link
-            to="/dashboard"
+            to="/le-fil"
             className="text-tag uppercase tracking-[0.18em] text-ink-3 hover:text-ink transition-colors"
           >
             {t("methodologie.back_dashboard")}

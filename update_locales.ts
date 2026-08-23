@@ -1501,6 +1501,26 @@ const investDialogEn = {
   toast_success_desc: "The portfolio's declared capital changed. Nothing was charged.",
 };
 
+// ── Lot 3 — rayon « Labo » assumé dans le hub du profil ──────────────────
+// Vote et Réveil avaient quitté le rail comme « paris non prouvés » sans que
+// ce statut soit visible : ils n'étaient plus atteignables que par ⌘K.
+const profileLabFr = {
+  lab_eyebrow: "Labo",
+  lab_title: "Encore en exploration",
+  lab_desc:
+    "Ces surfaces existent, mais ne sont pas encore stabilisées : elles peuvent changer ou disparaître. On préfère te le dire que les laisser passer pour des fonctions arrêtées.",
+  lab_observatory: "Observatoire",
+};
+const profileLabEn = {
+  lab_eyebrow: "Lab",
+  lab_title: "Still exploratory",
+  lab_desc:
+    "These surfaces exist but are not settled yet: they may change or go away. We would rather say so than let them pass for finished features.",
+  lab_observatory: "Observatory",
+};
+const navCommunityFr = { community: "Communauté" };
+const navCommunityEn = { community: "Community" };
+
 const mergedFr = deepMerge(fr, {
   reglages: reglagesFr,
   le_fil: leFilFr,
@@ -1529,6 +1549,8 @@ const mergedFr = deepMerge(fr, {
   portfolio_metrics: { esg_measured: "{{pct}} % mesuré", esg_estimated: "estimé" },
   a11y: a11yFr,
   invest_dialog: investDialogFr,
+  profile: profileLabFr,
+  nav: navCommunityFr,
 });
 const mergedEn = deepMerge(en, {
   le_fil: leFilEn,
@@ -1557,6 +1579,8 @@ const mergedEn = deepMerge(en, {
   portfolio_metrics: { esg_measured: "{{pct}}% measured", esg_estimated: "estimated" },
   a11y: a11yEn,
   invest_dialog: investDialogEn,
+  profile: profileLabEn,
+  nav: navCommunityEn,
 });
 
 writeFileSync("src/i18n/locales/fr.json", JSON.stringify(mergedFr, null, 2) + "\n", "utf-8");

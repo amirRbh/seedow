@@ -50,7 +50,8 @@
     "back_to_portfolio": "Seedow — back to your portfolio",
     "open_settings": "Open your settings",
     "search": "Search",
-    "open_command_palette": "Open command palette (Cmd+K)"
+    "open_command_palette": "Open command palette (Cmd+K)",
+    "community": "Community"
   },
   "view_mode": {
     "label": "Detail level",
@@ -782,7 +783,11 @@
     "decisions_desc": "Every trade, exclusion or rebalance leaves a trace.",
     "comparison_eyebrow": "Comparison",
     "comparison_title_pre": "Your portfolio vs",
-    "comparison_desc": "Performance, fees, impact score, CO₂ — figures side by side."
+    "comparison_desc": "Performance, fees, impact score, CO₂ — figures side by side.",
+    "lab_eyebrow": "Lab",
+    "lab_title": "Still exploratory",
+    "lab_desc": "These surfaces exist but are not settled yet: they may change or go away. We would rather say so than let them pass for finished features.",
+    "lab_observatory": "Observatory"
   },
   "admin_beta": {
     "error_fallback": "Error",

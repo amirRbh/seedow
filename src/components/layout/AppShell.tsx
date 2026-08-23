@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 
 /** Routes affichant des montants/valorisations réelles → bandeau bêta requis. */
 const MONEY_ROUTES = [
+  "/le-fil",
   "/dashboard",
   "/portfolio",
   "/objectifs",

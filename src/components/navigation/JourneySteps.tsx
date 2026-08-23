@@ -17,7 +17,7 @@ export function JourneySteps({ active, compact = false }: Props) {
   const STEPS: { key: JourneyStepKey; label: string; to: string; n: string }[] = [
     { key: "values", label: t("journey_steps.values"), to: "/profil", n: "01" },
     { key: "portfolio", label: t("journey_steps.portfolio"), to: "/portfolio", n: "02" },
-    { key: "tracking", label: t("journey_steps.tracking"), to: "/dashboard", n: "03" },
+    { key: "tracking", label: t("journey_steps.tracking"), to: "/le-fil", n: "03" },
   ];
 
   return (

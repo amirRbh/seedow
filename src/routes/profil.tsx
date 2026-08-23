@@ -196,6 +196,27 @@ function ProfilPage() {
           </nav>
         </section>
 
+        {/* Labo — les surfaces encore exploratoires. Vote et Réveil avaient
+            quitté le rail comme « paris non prouvés » sans que ce statut soit
+            visible nulle part : elles n'étaient plus atteignables que par ⌘K.
+            Les nommer vaut mieux que les laisser dériver ou les couper. */}
+        <section className="px-5 pt-10">
+          <div className="gold-rule mb-5" />
+          <p className="text-tag uppercase tracking-[0.22em] text-gold font-mono mb-3">
+            {t("profile.lab_eyebrow")}
+          </p>
+          <h2 className="font-value text-2xl text-ink leading-tight">{t("profile.lab_title")}</h2>
+          <p className="mt-2 text-body-sm text-ink-2 max-w-[52ch] leading-relaxed">
+            {t("profile.lab_desc")}
+          </p>
+          <nav className="mt-5 grid grid-cols-2 gap-2" aria-label={t("profile.lab_title")}>
+            <HubLink to="/vote" label={t("rail_nav.vote")} />
+            <HubLink to="/reveil" label={t("rail_nav.reveil")} />
+            <HubLink to="/communaute" label={t("nav.community")} />
+            <HubLink to="/observatoire" label={t("profile.lab_observatory")} />
+          </nav>
+        </section>
+
         {/* Tes valeurs */}
         <section className="px-5 pt-10">
           <div className="gold-rule mb-5" />

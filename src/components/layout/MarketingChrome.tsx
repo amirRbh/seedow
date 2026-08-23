@@ -12,7 +12,7 @@ export function MarketingNav() {
   return (
     <nav
       className="sticky top-0 z-50 backdrop-blur-xl"
-      style={{ background: "rgba(255,255,255,0.72)", borderBottom: "1px solid #d2d2d7" }}
+      style={{ background: "rgba(255,255,255,0.72)", borderBottom: "1px solid var(--paper-3)" }}
     >
       <div className="max-w-[1024px] mx-auto px-6 h-12 flex items-center justify-between">
         <Link
@@ -44,7 +44,7 @@ export function MarketingFooter() {
   return (
     <footer
       className="px-6 py-10 text-label text-[color:var(--apple-text-2)]"
-      style={{ background: "var(--apple-surface)", borderTop: "1px solid #d2d2d7" }}
+      style={{ background: "var(--apple-surface)", borderTop: "1px solid var(--paper-3)" }}
     >
       <div className="max-w-[1024px] mx-auto flex flex-wrap gap-x-6 gap-y-2 justify-center">
         <Link to="/" className="hover:text-[color:var(--apple-text)]">

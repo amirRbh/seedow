@@ -122,18 +122,25 @@ Direction artistique extraite des supports de contenu (`seedow_carousel_duel.htm
 
 ### Palette (design tokens, identiques sur tous les supports — à porter tels quels dans `styles.css`)
 
-| Token       | Valeur    | Usage                                                                                                       |
-| ----------- | --------- | ----------------------------------------------------------------------------------------------------------- |
-| `--paper`   | `#FFFFFF` | Fond neutre principal                                                                                       |
-| `--paper-2` | `#F5F5F7` | Fond secondaire / page                                                                                      |
-| `--paper-3` | `#D2D2D7` | Bordures, séparateurs                                                                                       |
-| `--ink`     | `#1D1D1F` | Texte principal, fonds sombres                                                                              |
-| `--ink-2`   | `#64646a` | Texte secondaire, métadonnées (assombri vs `#86868B` d'origine pour passer WCAG AA, ~5.9:1 sur `--paper`)   |
-| `--mint`    | `#146a4a` | **Positif** — bonne nouvelle, chiffre favorable, CTA de marque (assombri vs `#1D8348` pour le contraste AA) |
-| `--ice`     | `#0071E3` | Information neutre / lien                                                                                   |
-| `--volt`    | `#6E56CF` | Accent secondaire (usage rare, à ne pas banaliser)                                                          |
-| `--alert`   | `#E11D48` | **Négatif** — chiffre défavorable, alerte, danger réel (pas de sur-usage : perd son sens si trop fréquent)  |
-| `--solar`   | `#B7791F` | Nuance d'avertissement doux (usage rare)                                                                    |
+| Token           | Valeur    | Usage                                                                           |
+| --------------- | --------- | ------------------------------------------------------------------------------- |
+| `--paper`       | `#FFFFFF` | Fond neutre principal, la carte                                                 |
+| `--paper-2`     | `#F5F4F1` | Neutre chaud, le fond sur lequel la carte s'élève                               |
+| `--paper-3`     | `#DDDAD3` | Filet, bordure, séparateur                                                      |
+| `--paper-inset` | `#EDEBE6` | Fond de survol des tuiles                                                       |
+| `--ink`         | `#16181A` | Texte principal — 17,8:1 sur `--paper`                                          |
+| `--ink-2`       | `#5D6167` | Texte secondaire — 6,2:1                                                        |
+| `--ink-3`       | `#666A6F` | Métadonnées — 5,5:1, et AA sur les trois papiers, `--paper-inset` compris       |
+| `--deep`        | `#0E0F10` | Bande sombre — token FIXE, ne s'inverse jamais entre thèmes (avec `--on-deep*`) |
+| `--mint`        | `#0D7A66` | **Positif** — impact prouvé, état vérifié, CTA de marque                        |
+| `--ice`         | `#1F5FB8` | Information neutre / lien. Usage rare                                           |
+| `--volt`        | `#5B4B9E` | Pédagogie (cours, méthode). Usage rare                                          |
+| `--alert`       | `#C2372A` | **Négatif** — chiffre défavorable, danger réel. Pas de sur-usage                |
+| `--solar`       | `#A16207` | Estimé / modélisé, avertissement doux                                           |
+
+> Ces valeurs sont la copie du `:root` de `src/styles.css`, thème clair — **la source de vérité reste le fichier**. Les ratios sont mesurés et verrouillés en CI par `src/lib/a11y/__tests__/contrast.test.ts` (96 assertions, deux thèmes). Toucher une encre sans mettre à jour le commentaire de ratio qui l'accompagne dans `styles.css` est un bug en soi : c'est sur ce commentaire que s'appuie la revue.
+>
+> Dès qu'un accent porte du **texte**, utiliser sa variante `--*-ink` (`--mint-ink`, `--alert-ink`…), pas l'accent brut. `--gold`, `--rust` et la famille `--apple-*` sont des alias historiques des mêmes encres : ne pas en introduire de nouveaux.
 
 **Sémantique stricte à respecter** : mint = positif/marque, alert = négatif réel — ne jamais inverser ces deux couleurs, l'utilisateur les lit comme un code binaire (l'exemple type est l'enchaînement mint/alert dans le format « Le Duel »).
 
@@ -146,7 +153,7 @@ Direction artistique extraite des supports de contenu (`seedow_carousel_duel.htm
 ### Accessibilité
 
 - Contraste : `--ink` sur `--paper`/`--paper-2` et blanc sur `--ink`/`--mint`/`--alert` sont les paires validées — ne pas créer de nouvelles combinaisons texte/fond sans vérifier le contraste (WCAG AA minimum, AAA visé sur le texte de decision financière).
-- Le texte secondaire (`--ink-2`, souvent en 7-9px sur les supports de contenu) est acceptable en légende marketing mais **jamais en dessous de 13px dans l'app produit** pour un texte porteur d'information financière — la lisibilité prime sur la densité visuelle une fois dans l'outil réel.
+- **Plancher typographique, tel que l'échelle le tient réellement** : `text-label` (13px), `text-body-sm` (13,5px) et au-dessus pour tout texte porteur d'**information financière** — chiffre, libellé de métrique, montant, statut de portefeuille. `text-tag` (11px) et `text-caption`/`.mono-meta` (12px) restent réservés aux **métadonnées et eyebrows** : source, date, ticker, ISIN, libellé de section. Un chiffre ou un libellé dont dépend une décision ne descend jamais sous 13px. Toute l'échelle est multipliée par `--font-scale`, que l'utilisateur porte à 115 % ou 130 % dans `/reglages` — ce réglage atténue, il ne dispense pas de la règle.
 - Aucune information (positif/négatif, statut) ne doit reposer sur la couleur seule dans l'app — toujours doubler d'un label ou d'une icône pour les daltoniens.
 
 ---

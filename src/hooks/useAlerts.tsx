@@ -134,7 +134,7 @@ export function deriveCandidates(args: {
         title: "Pense au versement régulier",
         body: "Ajouter ne serait-ce que 50 €/mois change radicalement le capital projeté à 10 ans. Le simulateur sur ton dashboard te montre l'effet.",
         ctaLabel: "Simuler",
-        ctaHref: "/dashboard",
+        ctaHref: "/le-fil",
         dedupKey: `dca-suggest:${portfolio.id}`,
       });
     }

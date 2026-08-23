@@ -201,7 +201,7 @@ function Onboarding() {
             onBack={() =>
               stepIndex > 0
                 ? setStepIndex(stepIndex - 1)
-                : navigate({ to: isAdditive ? "/dashboard" : "/" })
+                : navigate({ to: isAdditive ? "/le-fil" : "/" })
             }
           />
         )}

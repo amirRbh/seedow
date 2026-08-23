@@ -50,7 +50,8 @@
     "back_to_portfolio": "Seedow — retour à ton portefeuille",
     "open_settings": "Ouvrir tes réglages",
     "search": "Rechercher",
-    "open_command_palette": "Ouvrir la palette de commandes (Cmd+K)"
+    "open_command_palette": "Ouvrir la palette de commandes (Cmd+K)",
+    "community": "Communauté"
   },
   "view_mode": {
     "label": "Niveau de détail",
@@ -782,7 +783,11 @@
     "decisions_desc": "Chaque arbitrage, exclusion ou rééquilibrage laisse une trace.",
     "comparison_eyebrow": "Comparatif",
     "comparison_title_pre": "Ton portefeuille vs",
-    "comparison_desc": "Performance, frais, score d'impact, CO₂ — les chiffres face à face."
+    "comparison_desc": "Performance, frais, score d'impact, CO₂ — les chiffres face à face.",
+    "lab_eyebrow": "Labo",
+    "lab_title": "Encore en exploration",
+    "lab_desc": "Ces surfaces existent, mais ne sont pas encore stabilisées : elles peuvent changer ou disparaître. On préfère te le dire que les laisser passer pour des fonctions arrêtées.",
+    "lab_observatory": "Observatoire"
   },
   "admin_beta": {
     "error_fallback": "Erreur",

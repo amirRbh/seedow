@@ -77,7 +77,7 @@ function ComprendrePage() {
 
   const isLast = step === STEPS.length - 1;
   const current = STEPS[step];
-  const destination = user ? "/dashboard" : "/discover";
+  const destination = user ? "/le-fil" : "/discover";
 
   const finish = () => {
     markIntroDone();

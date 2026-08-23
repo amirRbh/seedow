@@ -117,7 +117,7 @@ function CoursesIndex() {
             </Link>
             {isAuthed ? (
               <Link
-                to="/dashboard"
+                to="/le-fil"
                 className="bg-ink text-paper px-5 py-3 hover:bg-ink-2 transition-colors"
               >
                 Mon espace
