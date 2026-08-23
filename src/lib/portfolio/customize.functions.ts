@@ -271,6 +271,13 @@ export const createCustomPortfolio = createServerFn({ method: "POST" })
   });
 
 const PreferencesInputSchema = z.object({
+  /**
+   * Portefeuille visé — celui que l'application affiche (`useUserPortfolios`,
+   * choix mémorisé côté navigateur). Sans lui, on retombait sur « le plus
+   * récent actif », qui n'est pas celui que l'utilisateur a sous les yeux dès
+   * qu'il en a plusieurs : ses réglages partaient sur un autre portefeuille.
+   */
+  portfolio_id: z.string().uuid().optional(),
   causes: z.array(CauseSchema).max(6).default([]),
   exclusions: z.array(ExclusionSchema).max(6).default([]),
   risk_target: z.number().min(0.02).max(0.3),
@@ -300,14 +307,18 @@ export const savePortfolioPreferences = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { userId, supabase: userClient } = context;
 
-    const { data: pf, error: pfErr } = await userClient
+    // Portefeuille explicitement visé, sinon repli sur le plus ancien actif —
+    // c'est la convention de `useUserPortfolios` (liste triée par ancienneté,
+    // premier élément), donc le même que l'application montre par défaut.
+    let query = userClient
       .from("portfolios")
       .select("id, weights")
       .eq("user_id", userId)
-      .eq("is_active", true)
-      .order("generated_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
+      .eq("is_active", true);
+    query = data.portfolio_id
+      ? query.eq("id", data.portfolio_id)
+      : query.order("generated_at", { ascending: true }).limit(1);
+    const { data: pf, error: pfErr } = await query.maybeSingle();
     if (pfErr) {
       console.error("[savePortfolioPreferences] load error:", pfErr);
       throw new Error("Impossible de charger ton portefeuille. Réessaie dans un instant.");

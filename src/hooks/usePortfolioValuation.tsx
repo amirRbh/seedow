@@ -63,17 +63,26 @@ interface ViewRow {
   quote_fetched_at: string | null;
 }
 
-async function fetchValuationRows(userId: string, activeId: string | null): Promise<ViewRow[]> {
-  let query = supabase
+/**
+ * Valorise UN portefeuille, jamais un agrégat.
+ *
+ * La vue `portfolio_holdings_valued` ne filtre pas `is_active` : sans clause
+ * `portfolio_id`, elle rend les lignes de TOUS les portefeuilles de
+ * l'utilisateur, y compris ceux qu'il a désactivés en recomposant. Le filtre
+ * était conditionnel — quand l'id actif n'était pas encore résolu, l'écran
+ * additionnait des portefeuilles étrangers à celui qu'il affichait, et « Mon
+ * argent » annonçait une valeur qui n'appartenait pas au portefeuille montré à
+ * côté (jusqu'à un montant en euros sur un portefeuille vide). L'id est
+ * désormais requis : pas d'id, pas de valorisation.
+ */
+async function fetchValuationRows(userId: string, portfolioId: string): Promise<ViewRow[]> {
+  const { data, error } = await supabase
     .from("portfolio_holdings_valued" as never)
     .select(
       "portfolio_id, user_id, asset_id, ticker, name, asset_class, weight, total_invested, invested_in_holding, current_price, entry_price, current_value, quote_fetched_at",
     )
-    .eq("user_id", userId);
-  if (activeId) {
-    query = query.eq("portfolio_id", activeId);
-  }
-  const { data, error } = await query;
+    .eq("user_id", userId)
+    .eq("portfolio_id", portfolioId);
   if (error) throw new Error(error.message);
   return (data ?? []) as unknown as ViewRow[];
 }
@@ -93,8 +102,10 @@ export function usePortfolioValuation(): PortfolioValuation {
     // InvestDialog...) — previously each call site fetched independently, so a
     // single page load could fire the same query 3-4 times in parallel.
     queryKey: ["portfolio-valuation", user?.id, activeId],
-    queryFn: () => fetchValuationRows(user!.id, activeId),
-    enabled: ready,
+    queryFn: () => fetchValuationRows(user!.id, activeId!),
+    // Sans portefeuille actif résolu, il n'y a rien d'honnête à valoriser :
+    // on ne lance pas la requête plutôt que de sommer tous les portefeuilles.
+    enabled: ready && !!activeId,
     staleTime: 30_000,
   });
 

@@ -53,6 +53,17 @@ function LeFil() {
   const totalInvested = valuation.totalInvested || (portfolio?.initial_amount ?? 0);
   const totalValue = valuation.currentValue || totalInvested;
 
+  // Couverture RÉELLE des cours : part du portefeuille (en poids) dont la ligne
+  // porte un cours. Le 100 % en dur affirmait une couverture totale même quand
+  // une partie des lignes n'était pas cotée.
+  const quoteCoverage = useMemo(() => {
+    const lines = valuation.holdings;
+    const total = lines.reduce((s, h) => s + h.weight, 0);
+    if (total <= 0) return 0;
+    const quoted = lines.reduce((s, h) => s + (h.quoteAt ? h.weight : 0), 0);
+    return Math.round((quoted / total) * 100);
+  }, [valuation.holdings]);
+
   // « Mon argent » : le montant ET le pourcentage dérivent du même couple
   // (investi, valeur du jour), donc ils racontent forcément la même histoire.
   const money = useMemo(
@@ -153,23 +164,30 @@ function LeFil() {
               )}
               {/* La valorisation porte sa provenance : source, heure de cours,
                   couverture (CLAUDE.md §1.2). L'horodatage garde la précision
-                  à la minute — c'est la fraîcheur du cours qui compte ici. */}
-              <Provenance
-                className="mt-4"
-                status="verified"
-                source="Yahoo Finance"
-                asOf={
-                  valuation.latestQuoteAt
-                    ? formatDate(valuation.latestQuoteAt, lang, {
-                        day: "numeric",
-                        month: "short",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })
-                    : t("le_fil.money_updated_pending")
-                }
-                coverage={100}
-              />
+                  à la minute — c'est la fraîcheur du cours qui compte ici.
+                  Sans aucun cours derrière le chiffre, on ne signe pas
+                  « vérifié · Yahoo Finance · couverture 100 % » : le montant
+                  est alors ce que l'utilisateur a déclaré, et on le dit. */}
+              {valuation.hasQuotes ? (
+                <Provenance
+                  className="mt-4"
+                  status="verified"
+                  source="Yahoo Finance"
+                  asOf={
+                    valuation.latestQuoteAt
+                      ? formatDate(valuation.latestQuoteAt, lang, {
+                          day: "numeric",
+                          month: "short",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })
+                      : t("le_fil.money_updated_pending")
+                  }
+                  coverage={quoteCoverage}
+                />
+              ) : (
+                <Provenance className="mt-4" status="unknown" note={t("le_fil.money_declared")} />
+              )}
 
               {/* Convictions rattachées au solde (moins de scroll : un seul nœud
                   « 3 secondes » = combien j'ai + ce que ça finance). Les codes

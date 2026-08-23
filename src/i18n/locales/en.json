@@ -3072,7 +3072,8 @@
         "label": "Other",
         "hint": "The rest of your portfolio."
       }
-    }
+    },
+    "money_declared": "The amount you declared: no priced holding backs it yet. Compose your portfolio so it gets valued at today's prices."
   },
   "sustainability": {
     "tier": {

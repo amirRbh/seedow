@@ -3072,7 +3072,8 @@
         "label": "Autres",
         "hint": "Le reste de ton portefeuille."
       }
-    }
+    },
+    "money_declared": "Montant que tu as déclaré : aucune ligne cotée ne le soutient pour l'instant. Compose ton portefeuille pour qu'il soit valorisé aux cours du jour."
   },
   "sustainability": {
     "tier": {
