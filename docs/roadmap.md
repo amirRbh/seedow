@@ -66,15 +66,40 @@ parlaient encore l'ancien modèle ont été repris :
 - **Code mort retiré** : `PostSimulationFork`, `MirrorReveal`, phases
   `building`/`saving`.
 
-**Surface restée en place, à trancher en équipe** — plus aucun appelant côté
-produit, mais toujours exportées : `generatePortfolio` (+ `persistPortfolio`,
-couverte par `persist.test.ts`) écrit une allocation optimisée par-dessus le
-portefeuille actif, et `rebalancePortfolio` le rééquilibre sur une « allocation
-cible ». Ce n'est pas une faille (RLS : chacun n'atteint que ses données), c'est
-une porte de l'ancien modèle restée ouverte. La supprimer, c'est renoncer au
-chemin optimiseur persistant ; la garder, c'est accepter qu'il puisse écraser une
-composition. `simulatePortfolio` et `backtestPortfolio`, qui ne persistent rien,
-ne sont pas concernées.
+### `/methodologie` — la page publie enfin la méthode qui tourne
+
+Le simulateur appelait encore `simulatePortfolio` (Markowitz) et affichait une
+allocation pondérée ; le pipeline publié décrivait un best-in-class, un plancher
+ESG à 70 et des tilts d'optimiseur — trois mécanismes qui ne s'appliquent plus à
+aucun portefeuille utilisateur. Repris :
+
+- Simulateur = `screenAssetPool` : entonnoir (univers → écartés → retenus), pool
+  classé par pertinence avec ESG, frais et fiabilité de la donnée, répartition du
+  pool par classe **en nombre de fonds** (il n'y a plus de poids à montrer).
+- **Curseurs supprimés** : budget de risque, horizon et intensité de cause
+  n'entrent dans aucune formule de `screenPool` — les afficher faisait bouger une
+  aiguille immobile. Le contrat de `screenPool` est désormais `ScreeningParams`
+  (causes + exclusions), pour que le code dise la même chose que l'écran.
+- Les cinq étapes publiées et le bloc « comment la note est construite »
+  décrivent le vrai chemin ; les mesures de portefeuille sont annoncées pour ce
+  qu'elles sont — calculées sur ce que l'utilisateur a composé.
+
+**À trancher en équipe — l'intensité de cause ne pilote plus rien.** Elle est
+collectée à l'onboarding, stockée sur le portefeuille, réglable dans `/reglages`,
+et lue seulement par le chemin optimiseur (mort). Deux sorties honnêtes : la
+faire entrer dans le classement (changement de méthode → bump de
+`SCREENING_VERSION`), ou retirer le curseur. En attendant, `/reglages` et
+`/methodologie` disent noir sur blanc qu'elle n'entre pas dans la formule.
+
+**Surface restée en place, à trancher aussi** — plus aucun appelant côté produit,
+mais toujours exportées : `generatePortfolio` (+ `persistPortfolio`, couverte par
+`persist.test.ts`) écrit une allocation optimisée par-dessus le portefeuille
+actif, et `simulatePortfolio` en calcule une sans la persister (son dernier
+appelant était le simulateur). `rebalancePortfolio` garde un appelant,
+`EthiBriefing`, mais dans le Dashboard authentifié devenu inatteignable. Ce n'est
+pas une faille (RLS : chacun n'atteint que ses données), c'est une porte de
+l'ancien modèle restée ouverte. La supprimer, c'est renoncer au chemin optimiseur
+persistant ; la garder, c'est accepter qu'il puisse écraser une composition.
 
 ---
 
@@ -92,15 +117,7 @@ ne sont pas concernées.
 3. **Curer les non-mappés** : classifier les **3 086 Fixed Income** (souverain /
    corporate / green / social) pour les rendre promouvables — aujourd'hui non promus
    faute de clivage fiable. Chantier « une sous-catégorie à la fois », sourcé.
-4. **Simulateur `/methodologie` : passer du portefeuille optimisé au pool classé.**
-   La page documente désormais correctement la méthode (elle dit que Seedow
-   s'arrête au classement et que l'utilisateur compose), mais son simulateur
-   appelle toujours `simulatePortfolio` (Markowitz) et affiche une allocation
-   pondérée. `screenAssetPool` fournit déjà tout ce qu'il faut (pertinence,
-   Sharpe réel, ESG, `data_tier`) ; reste à refondre le panneau de résultats,
-   qui porte aussi la démonstration des métriques (risque, frais, carbone) —
-   à traiter dans sa propre PR.
-5. **Dashboard qualité données catalogue** (interne) : exposer les compteurs
+4. **Dashboard qualité données catalogue** (interne) : exposer les compteurs
    `cron_run_log` (imports, promotions, wiring, identité) — visibilité opérationnelle
    sur l'avancement de l'enrichissement.
 

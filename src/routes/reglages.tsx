@@ -251,7 +251,7 @@ function PreferencesSection() {
       // 2) On montre comment le pool se reclasse — lecture seule, rien n'est
       //    appliqué au portefeuille tant que l'utilisateur ne recompose pas.
       Promise.resolve(hasPortfolio ? callAuthed(savePrefs, params) : null)
-        .then(() => screen({ data: params }))
+        .then(() => screen({ data: { causes, exclusions } }))
         .then((res) => {
           setPreview({
             lines: res.pool.slice(0, 3).map((p) => ({

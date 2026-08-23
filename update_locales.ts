@@ -1540,12 +1540,137 @@ const landingReadabilityEn = {
  * désormais ce que le produit fait réellement — filtrer, classer, expliquer,
  * pendant que l'utilisateur compose.
  */
+/**
+ * Refonte du simulateur /methodologie — la page publiait un pipeline qui ne
+ * tourne plus (best-in-class, plancher ESG, optimisation Markowitz, tilts).
+ * Ce que le moteur fait réellement : filtrer sur les exclusions, classer par
+ * pertinence, puis MESURER le portefeuille que l'utilisateur compose.
+ */
+const methodologiePoolFr = {
+  simulator_eyebrow: "Simulateur interactif",
+  simulator_title: "Le classement, en direct",
+  simulator_desc:
+    "Bougez vos convictions et vos exclusions : le pool se refiltre et se reclasse sous vos yeux. Seedow s'arrête ici — il ne propose aucun poids, c'est vous qui composez.",
+  reading_p1:
+    "Vous choisissez ce qui compte pour vous (causes) et ce que vous refusez (exclusions). Vos exclusions retirent des fonds du pool ; vos causes pèsent sur son classement.",
+  reading_p2:
+    "À droite : combien de fonds l'univers contient, combien vos exclusions en écartent, et ceux qui restent — classés par pertinence, avec leur note ESG et leurs frais. Survolez les « ? » pour une explication simple de chaque terme.",
+  causes_note:
+    "Une cause activée pèse sur le classement via l'alignement réel de chaque fonds avec elle. Il n'y a pas de curseur d'intensité ici : l'intensité ne rentre pas dans la formule de classement, et nous préférons ne pas afficher un réglage qui n'agit pas.",
+  no_weights_title: "Ce que ce simulateur ne fait pas",
+  no_weights_body:
+    "Il ne vous propose pas de répartition. Rendement attendu, volatilité, frais et empreinte carbone sont des mesures de PORTEFEUILLE : elles se calculent sur les lignes que vous avez composées, pas sur un pool. Vous les retrouvez sur votre portefeuille, une fois composé.",
+  no_weights_cta: "Composer un portefeuille",
+  funnel_universe: "Univers",
+  funnel_excluded: "Écartés",
+  funnel_kept: "Retenus",
+  pool_title: "Pool classé",
+  pool_shown: "{{shown}} affichés sur {{total}}",
+  pool_relevance: "{{score}}/100",
+  pool_pending: "données en cours",
+  pool_esg: "ESG {{score}}/100",
+  pool_ter: "frais {{ter}}",
+  breakdown_title: "Le pool par classe d'actif",
+  breakdown_count_one: "{{count}} fonds",
+  breakdown_count_other: "{{count}} fonds",
+  no_positions: "Aucun fonds ne passe ces exclusions.",
+  loading: "Reclassement…",
+  screening_version: "Méthode de classement v{{version}} — publiée et versionnée.",
+  glossary: {
+    pool: "Pool : la liste des fonds qui passent vos filtres, classés par pertinence. Seedow s'arrête là — vous composez.",
+    relevance:
+      "Pertinence : note 0–100 combinant performance réelle, score ESG et alignement avec vos causes. Un pilier absent est retiré du calcul, jamais remplacé par une valeur inventée.",
+  },
+  stages: {
+    "1_name": "Profilage",
+    "1_desc": "Vos causes et vos exclusions — les deux seules entrées du classement.",
+    "2_name": "Univers",
+    "2_desc":
+      "Les actifs investissables, tous notés : un fonds sans score ESG sourcé n'y entre pas. Le compteur du simulateur affiche sa taille réelle.",
+    "3_name": "Exclusions",
+    "3_desc":
+      "Filtre binaire et dur : un fonds touché par une de vos exclusions sort du pool, sans compromis ni pondération.",
+    "4_name": "Classement",
+    "4_desc":
+      "Pertinence 0–100 : performance réelle (Sharpe, uniquement si l'historique le permet), score ESG composite, alignement avec vos causes. Sans historique, le fonds reste « en cours » plutôt que noté au jugé.",
+    "5_name": "Composition, puis mesure",
+    "5_desc":
+      "Vous composez vos lignes. Le moteur mesure ensuite ce que VOUS avez composé — risque, frais, ESG pondéré E/S/G selon vos causes, empreinte carbone.",
+  },
+  tips: {
+    pool: "Les fonds qui passent vos filtres, du plus pertinent au moins pertinent. Aucun poids : la répartition, c'est vous qui la faites.",
+    breakdown:
+      "Combien de fonds retenus dans chaque grande famille (actions, obligations, immobilier…). C'est la composition du pool, pas d'un portefeuille.",
+    stage_5:
+      "Seedow mesure le portefeuille que vous avez composé : il ne le compose pas à votre place.",
+  },
+};
+
+const methodologiePoolEn = {
+  simulator_eyebrow: "Interactive simulator",
+  simulator_title: "The ranking, live",
+  simulator_desc:
+    "Move your convictions and exclusions: the pool re-filters and re-ranks in front of you. Seedow stops here — it proposes no weights, you do the composing.",
+  reading_p1:
+    "You choose what matters to you (causes) and what you refuse (exclusions). Your exclusions remove funds from the pool; your causes weigh on its ranking.",
+  reading_p2:
+    "On the right: how many funds the universe holds, how many your exclusions filter out, and what remains — ranked by relevance, with ESG score and fees. Hover the « ? » for a plain explanation of each term.",
+  causes_note:
+    "An active cause weighs on the ranking through each fund's real alignment with it. There is no intensity slider here: intensity does not enter the ranking formula, and we would rather not show a control that does nothing.",
+  no_weights_title: "What this simulator does not do",
+  no_weights_body:
+    "It does not propose an allocation. Expected return, volatility, fees and carbon footprint are PORTFOLIO measures: they are computed on the lines you composed, not on a pool. You find them on your portfolio, once composed.",
+  no_weights_cta: "Compose a portfolio",
+  funnel_universe: "Universe",
+  funnel_excluded: "Filtered out",
+  funnel_kept: "Kept",
+  pool_title: "Ranked pool",
+  pool_shown: "{{shown}} shown of {{total}}",
+  pool_relevance: "{{score}}/100",
+  pool_pending: "data pending",
+  pool_esg: "ESG {{score}}/100",
+  pool_ter: "fees {{ter}}",
+  breakdown_title: "The pool by asset class",
+  breakdown_count_one: "{{count}} fund",
+  breakdown_count_other: "{{count}} funds",
+  no_positions: "No fund passes these exclusions.",
+  loading: "Re-ranking…",
+  screening_version: "Ranking method v{{version}} — published and versioned.",
+  glossary: {
+    pool: "Pool: the funds that pass your filters, ranked by relevance. Seedow stops there — you compose.",
+    relevance:
+      "Relevance: a 0–100 score combining real performance, ESG score and alignment with your causes. A missing pillar is dropped from the calculation, never replaced by an invented value.",
+  },
+  stages: {
+    "1_name": "Profiling",
+    "1_desc": "Your causes and your exclusions — the only two inputs to the ranking.",
+    "2_name": "Universe",
+    "2_desc":
+      "The investable assets, all rated: a fund without a sourced ESG score never enters. The simulator's counter shows its real size.",
+    "3_name": "Exclusions",
+    "3_desc":
+      "A hard, binary filter: a fund hit by one of your exclusions leaves the pool, with no compromise and no weighting.",
+    "4_name": "Ranking",
+    "4_desc":
+      "Relevance 0–100: real performance (Sharpe, only where history allows), composite ESG score, alignment with your causes. Without history, a fund stays « pending » rather than being rated on a guess.",
+    "5_name": "Composition, then measurement",
+    "5_desc":
+      "You compose your lines. The engine then measures what YOU composed — risk, fees, ESG weighted E/S/G by your causes, carbon footprint.",
+  },
+  tips: {
+    pool: "The funds that pass your filters, most relevant first. No weights: the split is yours to make.",
+    breakdown:
+      "How many kept funds sit in each broad family (equities, bonds, real estate…). This is the pool's make-up, not a portfolio's.",
+    stage_5: "Seedow measures the portfolio you composed: it does not compose it for you.",
+  },
+};
+
 const composeSwitchFr = {
   reglages: {
     pool_eyebrow: "Ton pool, reclassé",
     pool_summary: "{{count}} fonds retenus · {{excluded}} écartés",
     pool_untouched:
-      "Ta composition reste telle que tu l'as faite : ces réglages changent le classement du pool, jamais tes lignes.",
+      "Ta composition reste telle que tu l'as faite : ces réglages ne touchent jamais tes lignes. Seules tes convictions et tes exclusions changent ce classement — l'intensité, le budget de risque et l'horizon suivent ton profil, ils n'entrent pas dans la formule.",
     pool_relevance: "{{score}}/100",
     pool_pending: "en cours",
     pool_recompose: "Recomposer mon portefeuille",
@@ -1564,18 +1689,11 @@ const composeSwitchFr = {
     },
   },
   methodologie: {
-    simulator_title: "Simulateur de méthode",
-    simulator_desc:
-      "Ce simulateur pédagogique montre ce que le moteur MESURE sur une composition d'exemple. Dans l'app, Seedow s'arrête au pool classé : c'est vous qui composez vos lignes.",
+    ...methodologiePoolFr,
     meta_desc:
-      "Méthode Seedow : exclusions, best-in-class ESG, classement du pool par pertinence, puis mesure du portefeuille que vous composez.",
+      "Méthode Seedow : univers noté, exclusions dures, classement du pool par pertinence, puis mesure du portefeuille que vous composez.",
     intro:
-      "Cinq étapes, transparentes et reproductibles. Ajustez les paramètres en bas de page pour observer l'effet de chaque critère en direct.",
-    stages: {
-      "5_name": "Classement, puis mesure",
-      "5_desc":
-        "Seedow ne propose aucun poids : il classe le pool par pertinence (performance réelle, score ESG composite, alignement avec vos causes), puis mesure le portefeuille que VOUS composez — risque, frais, ESG pondéré E/S/G selon vos causes.",
-    },
+      "Cinq étapes, transparentes et reproductibles. Ajustez vos convictions et vos exclusions en bas de page pour voir le pool se reclasser en direct.",
   },
   empty_portfolio: {
     beginner_desc:
@@ -1615,7 +1733,7 @@ const composeSwitchEn = {
     pool_eyebrow: "Your pool, re-ranked",
     pool_summary: "{{count}} funds kept · {{excluded}} filtered out",
     pool_untouched:
-      "Your composition stays exactly as you built it: these settings change how the pool is ranked, never your lines.",
+      "Your composition stays exactly as you built it: these settings never touch your lines. Only your convictions and exclusions change this ranking — intensity, risk budget and horizon follow your profile, they do not enter the formula.",
     pool_relevance: "{{score}}/100",
     pool_pending: "pending",
     pool_recompose: "Recompose my portfolio",
@@ -1634,18 +1752,11 @@ const composeSwitchEn = {
     },
   },
   methodologie: {
-    simulator_title: "Method simulator",
-    simulator_desc:
-      "This teaching simulator shows what the engine MEASURES on an example composition. In the app, Seedow stops at the ranked pool: you compose your own lines.",
+    ...methodologiePoolEn,
     meta_desc:
-      "Seedow's method: exclusions, best-in-class ESG, pool ranking by relevance, then measurement of the portfolio you compose.",
+      "Seedow's method: a rated universe, hard exclusions, pool ranking by relevance, then measurement of the portfolio you compose.",
     intro:
-      "Five transparent, reproducible stages. Adjust the parameters below to watch each criterion take effect live.",
-    stages: {
-      "5_name": "Ranking, then measurement",
-      "5_desc":
-        "Seedow proposes no weights: it ranks the pool by relevance (real performance, composite ESG score, alignment with your causes), then measures the portfolio YOU compose — risk, fees, ESG weighted E/S/G according to your causes.",
-    },
+      "Five transparent, reproducible stages. Adjust your convictions and exclusions below to watch the pool re-rank live.",
   },
   empty_portfolio: {
     beginner_desc:

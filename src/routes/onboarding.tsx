@@ -1012,7 +1012,12 @@ function PreviewScene({
     setErrorMsg(null);
     (async () => {
       try {
-        const result = await screen({ data: params });
+        // Seules les convictions et les exclusions classent le pool — le reste
+        // du paramétrage (montant, risque, horizon) suit le portefeuille, pas
+        // le screening.
+        const result = await screen({
+          data: { causes: params.causes, exclusions: params.exclusions },
+        });
         if (cancelled) return;
         setPool(result.pool as PoolEntry[]);
         setExcludedCount(result.excluded_count ?? 0);

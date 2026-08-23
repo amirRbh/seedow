@@ -61,6 +61,16 @@ export interface ScoredAsset {
   data_tier: DataQualityTier;
 }
 
+/**
+ * Entrées RÉELLES du classement — volontairement plus étroites que
+ * `PortfolioParams`. Le budget de risque, l'horizon et le montant ne rentrent
+ * dans aucune des trois formules ci-dessus : les accepter en paramètre laissait
+ * croire, à l'écran comme au code, qu'ils déplaçaient le classement. Ils
+ * restent des données du portefeuille (objectifs, comparatif) — pas du
+ * screening.
+ */
+export type ScreeningParams = Pick<PortfolioParams, "causes" | "exclusions">;
+
 export interface PoolResult {
   /** Actifs retenus, classés par pertinence décroissante ; les non classés (« en cours ») en fin. */
   pool: ScoredAsset[];
@@ -142,7 +152,7 @@ function relevance(perf: number | null, esg: number | null, cause: number | null
  * Construit le pool classé à partir de l'univers réel et des préférences.
  * Aucune allocation, aucun poids : uniquement une sélection ordonnée.
  */
-export function screenPool(universe: Asset[], params: PortfolioParams): PoolResult {
+export function screenPool(universe: Asset[], params: ScreeningParams): PoolResult {
   const universeSize = universe.length;
 
   // 1. Filtre dur — exclusions de l'utilisateur.
