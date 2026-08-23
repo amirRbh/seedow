@@ -1726,6 +1726,10 @@ const composeSwitchFr = {
     },
   },
   real_invest_interest: { title: "Tu veux investir ce portefeuille pour de vrai ?" },
+  le_fil: {
+    money_declared:
+      "Montant que tu as déclaré : aucune ligne cotée ne le soutient pour l'instant. Compose ton portefeuille pour qu'il soit valorisé aux cours du jour.",
+  },
 };
 
 const composeSwitchEn = {
@@ -1789,6 +1793,10 @@ const composeSwitchEn = {
     },
   },
   real_invest_interest: { title: "Want to invest this portfolio for real?" },
+  le_fil: {
+    money_declared:
+      "The amount you declared: no priced holding backs it yet. Compose your portfolio so it gets valued at today's prices.",
+  },
 };
 
 const mergedFr = deepMerge(fr, {

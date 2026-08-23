@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { useAuth } from "@/hooks/useAuth";
+import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 import { screenAssetPool } from "@/lib/portfolio/server.functions";
 import { savePortfolioPreferences } from "@/lib/portfolio/customize.functions";
 import { triggerMarketRefresh } from "@/lib/market/refresh.functions";
@@ -150,6 +151,9 @@ function PreferencesSection() {
   const { t } = useTranslation();
   const { lang } = useLang();
   const { user } = useAuth();
+  // Même portefeuille que partout ailleurs dans l'app (choix mémorisé), pas
+  // « le plus récent actif » : un compte peut en porter trois.
+  const { activeId, loading: pfListLoading } = useUserPortfolios();
   const screen = useServerFn(screenAssetPool);
   const savePrefs = useServerFn(savePortfolioPreferences);
 
@@ -190,7 +194,15 @@ function PreferencesSection() {
 
   // Charger le portefeuille actif
   useEffect(() => {
-    if (!user) return;
+    if (!user || pfListLoading) return;
+    // Liste résolue et aucun portefeuille actif : rien à charger, et surtout
+    // il ne faut pas rester bloqué sur l'état « chargement ».
+    if (!activeId) {
+      setHasPortfolio(false);
+      setLoadingInitial(false);
+      return;
+    }
+    const portfolioId = activeId;
     let cancelled = false;
     (async () => {
       const { data, error } = await supabase
@@ -198,11 +210,11 @@ function PreferencesSection() {
         .select("causes, exclusions, risk_target, horizon_years, initial_amount")
         .eq("user_id", user.id)
         .eq("is_active", true)
-        // Un compte peut porter jusqu'à 3 portefeuilles actifs : on lit le plus
-        // récent, exactement celui que `savePortfolioPreferences` met à jour
-        // (`maybeSingle()` seul échouait dès qu'il y en avait deux).
-        .order("generated_at", { ascending: false })
-        .limit(1)
+        // Un compte peut porter jusqu'à 3 portefeuilles actifs : on lit celui
+        // que l'app affiche (`activeId`), exactement celui que
+        // `savePortfolioPreferences` mettra à jour. `maybeSingle()` seul
+        // échouait dès qu'il y en avait deux.
+        .eq("id", portfolioId)
         .maybeSingle();
       if (cancelled) return;
       if (error) {
@@ -221,7 +233,7 @@ function PreferencesSection() {
     return () => {
       cancelled = true;
     };
-  }, [user]);
+  }, [user, activeId, pfListLoading]);
 
   // Enregistrement auto debouncé — préférences seulement, jamais les poids.
   useEffect(() => {
@@ -247,7 +259,9 @@ function PreferencesSection() {
       //    portefeuille, il n'y a rien à enregistrer : on saute cette étape.
       // 2) On montre comment le pool se reclasse — lecture seule, rien n'est
       //    appliqué au portefeuille tant que l'utilisateur ne recompose pas.
-      Promise.resolve(hasPortfolio ? callAuthed(savePrefs, params) : null)
+      Promise.resolve(
+        hasPortfolio ? callAuthed(savePrefs, { ...params, portfolio_id: activeId }) : null,
+      )
         .then(() => screen({ data: { causes, exclusions } }))
         .then((res) => {
           setPreview({
