@@ -46,13 +46,6 @@ export interface PoolHandoffIntent {
   riskTarget?: number;
   /** Horizon en années dérivé de l'objectif. */
   horizonYears?: number;
-  /**
-   * Intensité par cause (0..1) telle que calculée au questionnaire. Sans elle,
-   * le portefeuille enregistré repartait sur `{}` : le pool reclassé plus tard
-   * (réglages, aval) ne pondérait plus les causes comme l'aperçu vu à
-   * l'onboarding.
-   */
-  causeIntensity?: Partial<Record<CauseTag, number>>;
 }
 
 /**
@@ -65,18 +58,6 @@ const RISK_MIN = 0.02;
 const RISK_MAX = 0.3;
 const HORIZON_MIN = 1;
 const HORIZON_MAX = 40;
-
-/** Ne garde que les intensités exploitables (0..1) ; sinon `undefined`. */
-function cleanIntensity(value: unknown): Partial<Record<CauseTag, number>> | undefined {
-  if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
-  const out: Partial<Record<CauseTag, number>> = {};
-  for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
-    if (typeof v === "number" && Number.isFinite(v) && v >= 0 && v <= 1) {
-      out[k as CauseTag] = v;
-    }
-  }
-  return Object.keys(out).length > 0 ? out : undefined;
-}
 
 /** Nombre fini dans les bornes, sinon `undefined` (on retombe sur le défaut). */
 function inRange(value: unknown, min: number, max: number): number | undefined {
@@ -165,7 +146,6 @@ export function readPoolHandoff(now: number = Date.now()): PoolHandoff | null {
       initialAmount: inRange(parsed.initialAmount, 0, AMOUNT_MAX),
       riskTarget: inRange(parsed.riskTarget, RISK_MIN, RISK_MAX),
       horizonYears: inRange(parsed.horizonYears, HORIZON_MIN, HORIZON_MAX),
-      causeIntensity: cleanIntensity(parsed.causeIntensity),
     };
   } catch {
     return null;

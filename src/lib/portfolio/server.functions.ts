@@ -30,23 +30,28 @@ const ParamsSchema = z.object({
 // ─────────────────────────────────────────────────────────
 
 /**
+ * Entrées du classement — strictement celles que `screenPool` lit. Les appels
+ * historiques envoient encore le paramétrage complet du portefeuille : zod
+ * écarte silencieusement le surplus, personne ne casse.
+ */
+const ScreenParamsSchema = z.object({
+  causes: z.array(CauseSchema).max(6),
+  exclusions: z.array(ExclusionSchema).max(6),
+});
+
+/**
  * Sélectionne un POOL d'actifs classé selon les préférences, SANS proposer
  * d'allocation ni de poids (décision produit : on présente un pool, l'utilisateur
- * compose). Sert l'onboarding et le simulateur `/methodologie`.
+ * compose). Sert l'onboarding, les réglages et le simulateur `/methodologie`.
  */
 export const screenAssetPool = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => ParamsSchema.parse(input))
+  .inputValidator((input: unknown) => ScreenParamsSchema.parse(input))
   .handler(async ({ data }) => {
     const universe = await loadUniverse();
-    const params: PortfolioParams = {
+    const result = screenPool(universe.assets, {
       causes: data.causes,
-      cause_intensity: data.cause_intensity,
       exclusions: data.exclusions,
-      risk_target: data.risk_target,
-      horizon_years: data.horizon_years,
-      initial_amount: data.initial_amount,
-    };
-    const result = screenPool(universe.assets, params);
+    });
     // Payload léger pour l'UI : on n'expose pas l'objet Asset complet.
     return {
       pool: result.pool.map((s) => ({

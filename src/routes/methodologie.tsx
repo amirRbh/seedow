@@ -5,16 +5,14 @@ import { formatPercent, formatNumber } from "@/lib/format";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useServerFn } from "@tanstack/react-start";
-import { simulatePortfolio } from "@/lib/portfolio/server.functions";
+import { screenAssetPool } from "@/lib/portfolio/server.functions";
 import { reportCaughtError } from "@/lib/monitoring/errorReporter";
-import { EASE_REVEAL } from "@/lib/motion";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { LearnTabs } from "@/components/courses/LearnTabs";
 import { MetricLabel } from "@/components/ui/MetricLabel";
 import { GlossaryTerm } from "@/components/common/GlossaryTerm";
 import {
   DEFAULT_PILLAR_WEIGHTS,
-  MIN_PORTFOLIO_ESG,
   causeToPillarWeights,
   type CauseTag,
   type ExclusionTag,
@@ -41,18 +39,21 @@ const METHODOLOGY_VERSIONS = [
 export const Route = createFileRoute("/methodologie")({
   head: () => ({
     meta: [
-      { title: "Méthodologie — Construction de portefeuille" },
+      { title: "Méthodologie — Comment Seedow classe les fonds" },
       {
         name: "description",
         content:
-          "Pipeline de construction du portefeuille : exclusions, best-in-class, optimisation Markowitz contrainte, tilts par convictions.",
+          "La méthode Seedow : univers noté, exclusions dures, classement du pool par pertinence, puis mesure du portefeuille que vous composez. Aucune allocation imposée.",
       },
     ],
   }),
   component: MethodologyPage,
 });
 
-type SimResult = Awaited<ReturnType<typeof simulatePortfolio>>;
+type PoolPayload = Awaited<ReturnType<typeof screenAssetPool>>;
+
+/** Lignes du pool affichées dans le simulateur (le pool complet est plus long). */
+const POOL_PREVIEW_ROWS = 20;
 
 function MethodologyPage() {
   const { t } = useTranslation();
@@ -121,18 +122,12 @@ function MethodologyPage() {
     cash: t("methodologie.asset_classes.cash"),
   };
 
-  const simulate = useServerFn(simulatePortfolio);
+  const screen = useServerFn(screenAssetPool);
 
   const [causes, setCauses] = useState<CauseTag[]>(["climat", "biodiversite"]);
-  const [intensity, setIntensity] = useState<Record<string, number>>({
-    climat: 0.7,
-    biodiversite: 0.5,
-  });
   const [exclusions, setExclusions] = useState<ExclusionTag[]>(["fossiles", "armes"]);
-  const [risk, setRisk] = useState(0.09);
-  const [horizon, setHorizon] = useState(10);
 
-  const [result, setResult] = useState<SimResult | null>(null);
+  const [pool, setPool] = useState<PoolPayload | null>(null);
   const [loading, setLoading] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -140,56 +135,41 @@ function MethodologyPage() {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     setLoading(true);
     debounceRef.current = setTimeout(() => {
-      simulate({
-        data: {
-          causes,
-          cause_intensity: intensity,
-          exclusions,
-          risk_target: risk,
-          horizon_years: horizon,
-          initial_amount: 1000,
-        },
-      })
-        .then((r) => setResult(r))
+      screen({ data: { causes, exclusions } })
+        .then((r) => setPool(r))
         .catch((e) => {
-          console.error("simulate", e);
-          reportCaughtError(e, { source: "methodologie_simulate" });
+          console.error("screen", e);
+          reportCaughtError(e, { source: "methodologie_screen" });
         })
         .finally(() => setLoading(false));
     }, 250);
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [causes, intensity, exclusions, risk, horizon, simulate]);
+  }, [causes, exclusions, screen]);
 
   const toggleCause = (id: CauseTag) => {
-    setCauses((prev) => {
-      if (prev.includes(id)) {
-        const next = prev.filter((x) => x !== id);
-        const newInt = { ...intensity };
-        delete newInt[id];
-        setIntensity(newInt);
-        return next;
-      }
-      setIntensity({ ...intensity, [id]: 0.5 });
-      return [...prev, id];
-    });
+    setCauses((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   };
 
   const toggleExclusion = (id: ExclusionTag) => {
     setExclusions((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   };
 
-  const sortedWeights = useMemo(() => {
-    if (!result) return [];
-    return Object.entries(result.weights)
-      .map(([id, w]) => {
-        const a = result.selected.find((x) => x.id === id);
-        return { id, weight: w, asset: a };
-      })
-      .filter((x) => x.asset)
-      .sort((a, b) => b.weight - a.weight);
-  }, [result]);
+  /**
+   * Le pool complet peut compter des dizaines de lignes : on en montre le haut,
+   * en disant combien il en reste — plutôt qu'un mur ou un silence.
+   */
+  const shownPool = useMemo(() => pool?.pool.slice(0, POOL_PREVIEW_ROWS) ?? [], [pool]);
+
+  /** Répartition du pool par classe d'actif, en NOMBRE de fonds retenus (pas en
+   *  poids : il n'y a pas de poids à montrer). */
+  const poolByClass = useMemo(() => {
+    if (!pool) return [] as [string, number][];
+    const counts = new Map<string, number>();
+    for (const a of pool.pool) counts.set(a.asset_class, (counts.get(a.asset_class) ?? 0) + 1);
+    return [...counts.entries()].sort((a, b) => b[1] - a[1]);
+  }, [pool]);
 
   return (
     <div className="min-h-screen bg-paper-2 text-ink">
@@ -246,12 +226,11 @@ function MethodologyPage() {
             <p>{t("methodologie.reading_p2")}</p>
             <div className="pt-3 border-t border-paper-3 grid sm:grid-cols-2 gap-x-6 gap-y-2 text-label">
               <p>
-                <span className="font-value text-ink">·</span>{" "}
-                {t("methodologie.glossary.markowitz")}
+                <span className="font-value text-ink">·</span> {t("methodologie.glossary.pool")}
               </p>
               <p>
                 <span className="font-value text-ink">·</span>{" "}
-                {t("methodologie.glossary.best_in_class")}
+                {t("methodologie.glossary.relevance")}
               </p>
               <p>
                 <span className="font-value text-ink">·</span> {t("methodologie.glossary.ter")}
@@ -301,7 +280,10 @@ function MethodologyPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-10 mt-10">
-          {/* Controls */}
+          {/* Contrôles — uniquement ce qui entre RÉELLEMENT dans le classement.
+              Le budget de risque, l'horizon et l'intensité d'une cause ne
+              figurent dans aucune des trois formules de `screenPool` : les
+              exposer ici faisait bouger une aiguille qui, elle, ne bougeait pas. */}
           <div className="space-y-8">
             <Block title={t("methodologie.causes_title")} tip={t("methodologie.tips.causes")}>
               <div className="space-y-3">
@@ -332,35 +314,16 @@ function MethodologyPage() {
                           </svg>
                         )}
                       </button>
-                      <span
-                        id={`cause-${c.id}-label`}
-                        className="text-body-sm text-ink min-w-[140px]"
-                      >
+                      <span id={`cause-${c.id}-label`} className="text-body-sm text-ink">
                         {c.label}
                       </span>
-                      {active && (
-                        <input
-                          type="range"
-                          aria-label={t("a11y.intensity_for", { cause: c.label })}
-                          min={0}
-                          max={1}
-                          step={0.05}
-                          value={intensity[c.id] ?? 0.5}
-                          onChange={(e) =>
-                            setIntensity({ ...intensity, [c.id]: Number(e.target.value) })
-                          }
-                          className="flex-1 accent-ink h-1"
-                        />
-                      )}
-                      {active && (
-                        <span className="text-caption text-ink-3 tabular-nums w-10 text-right">
-                          {Math.round((intensity[c.id] ?? 0.5) * 100)}%
-                        </span>
-                      )}
                     </div>
                   );
                 })}
               </div>
+              <p className="text-caption text-ink-3 leading-relaxed mt-4">
+                {t("methodologie.causes_note")}
+              </p>
             </Block>
 
             <Block
@@ -390,135 +353,57 @@ function MethodologyPage() {
               </div>
             </Block>
 
-            <Block title={t("methodologie.risk_title")} tip={t("methodologie.tips.risk")}>
-              <div className="flex items-baseline justify-between mb-2">
-                <span className="text-label text-ink-2">{t("methodologie.volatility_label")}</span>
-                <span className="text-body-sm font-medium tabular-nums">
-                  {(risk * 100).toFixed(1)}%
-                </span>
-              </div>
-              <input
-                type="range"
-                min={0.04}
-                max={0.18}
-                step={0.005}
-                value={risk}
-                onChange={(e) => setRisk(Number(e.target.value))}
-                className="w-full accent-ink"
-              />
-              <div className="flex justify-between text-tag text-ink-3 mt-1">
-                <span>{t("methodologie.risk_prudent")}</span>
-                <span>{t("methodologie.risk_balanced")}</span>
-                <span>{t("methodologie.risk_dynamic")}</span>
-              </div>
-            </Block>
-
-            <Block title={t("methodologie.horizon_title")} tip={t("methodologie.tips.horizon")}>
-              <div className="flex items-baseline justify-between mb-2">
-                <span className="text-label text-ink-2">{t("methodologie.horizon_label")}</span>
-                <span className="text-body-sm font-medium tabular-nums">
-                  {t("methodologie.horizon_years", { count: horizon })}
-                </span>
-              </div>
-              <input
-                type="range"
-                min={1}
-                max={30}
-                step={1}
-                value={horizon}
-                onChange={(e) => setHorizon(Number(e.target.value))}
-                className="w-full accent-ink"
-              />
+            {/* Ce que ce simulateur ne fait PAS — écrit ici, pas en petits caractères. */}
+            <Block title={t("methodologie.no_weights_title")}>
+              <p className="text-body-sm text-ink-2 leading-relaxed">
+                {t("methodologie.no_weights_body")}
+              </p>
+              <Link
+                to="/construire"
+                className="mt-3 inline-block text-body-sm font-semibold text-mint-ink hover:underline underline-offset-4"
+              >
+                {t("methodologie.no_weights_cta")} →
+              </Link>
             </Block>
           </div>
 
-          {/* Result */}
+          {/* Résultat — l'entonnoir, puis le pool classé. Aucun poids. */}
           <div className="lg:sticky lg:top-6 lg:self-start space-y-6">
-            {result?.esg_floor_relaxed && (
-              <div className="border border-rust/30 bg-rust/5 px-4 py-3 text-label text-ink-2 leading-relaxed">
-                <p className="font-value text-body-sm text-rust mb-1">
-                  {t("methodologie.esg_floor_relaxed_title")}
-                </p>
-                {t("methodologie.esg_floor_relaxed_desc")}
-              </div>
-            )}
-            <div className="border-t border-b border-paper-3 divide-y divide-paper-3">
-              <MetricRow
-                label={t("methodologie.metric_return")}
-                id="metric-return"
-                tip={t("methodologie.tips.return")}
-                value={result ? formatPercent(result.metrics.expected_return, lang) : "—"}
-                sub={t("methodologie.metric_return_hint")}
+            <div className="grid grid-cols-3 gap-px bg-paper-3 border border-paper-3">
+              <FunnelCell
+                label={t("methodologie.funnel_universe")}
+                value={pool ? formatNumber(pool.universe_size, lang) : "—"}
               />
-              <MetricRow
-                label={t("methodologie.metric_volatility")}
-                id="metric-volatility"
-                tip={t("methodologie.tips.volatility")}
-                value={result ? formatPercent(result.metrics.volatility, lang) : "—"}
-                sub={t("methodologie.metric_volatility_hint")}
+              <FunnelCell
+                label={t("methodologie.funnel_excluded")}
+                value={pool ? formatNumber(pool.excluded_count, lang) : "—"}
               />
-              <MetricRow
-                label={t("methodologie.metric_sharpe")}
-                id="metric-sharpe"
-                tip={t("methodologie.tips.sharpe")}
-                value={result ? formatNumber(result.metrics.sharpe, lang) : "—"}
-                sub={t("methodologie.metric_sharpe_hint")}
-              />
-              <MetricRow
-                label={t("methodologie.metric_esg")}
-                id="metric-esg"
-                tip={t("methodologie.tips.esg")}
-                value={
-                  result
-                    ? `${formatNumber(result.metrics.esg_score, lang, { maximumFractionDigits: 0 })} / 100`
-                    : "—"
-                }
-                sub={t("methodologie.metric_esg_hint")}
-              />
-              <MetricRow
-                label={t("methodologie.metric_fees")}
-                id="metric-fees"
-                tip={t("methodologie.tips.fees")}
-                value={result ? formatPercent(result.metrics.ter, lang) : "—"}
-                sub={t("methodologie.metric_fees_hint")}
-              />
-              <MetricRow
-                label={t("methodologie.metric_carbon_intensity")}
-                id="metric-carbon-intensity"
-                tip={t("methodologie.tips.carbon_intensity")}
-                value={
-                  result?.metrics.carbon_intensity_gco2e_per_eur != null
-                    ? `${formatNumber(result.metrics.carbon_intensity_gco2e_per_eur, lang, { maximumFractionDigits: 0 })} gCO₂e/€/an`
-                    : t("methodologie.metric_carbon_unavailable")
-                }
-                sub={t("methodologie.metric_carbon_intensity_hint")}
+              <FunnelCell
+                label={t("methodologie.funnel_kept")}
+                value={pool ? formatNumber(pool.pool.length, lang) : "—"}
+                strong
               />
             </div>
-
-            <CarbonCoverage
-              coverage={result?.metrics.carbon_intensity_coverage ?? 0}
-              hasRealData={result?.metrics.carbon_intensity_gco2e_per_eur != null}
-              t={t}
-            />
-
-            {result?.impact && <ImpactPanel impact={result.impact} t={t} />}
 
             <div>
               <div className="flex items-baseline justify-between border-b border-paper-3 pb-2">
                 <p className="text-tag uppercase tracking-[0.12em] text-ink-3 font-medium">
                   <MetricLabel
-                    label={t("methodologie.allocation_title")}
-                    hint={t("methodologie.tips.allocation")}
+                    label={t("methodologie.pool_title")}
+                    hint={t("methodologie.tips.pool")}
                   />
                 </p>
                 <p className="text-tag text-ink-3">
                   {loading
                     ? t("methodologie.loading")
-                    : t("methodologie.positions_count", { count: sortedWeights.length })}
+                    : t("methodologie.pool_shown", {
+                        shown: shownPool.length,
+                        total: pool?.pool.length ?? 0,
+                      })}
                 </p>
               </div>
               <ul className="divide-y divide-paper-3">
-                {sortedWeights.map((row, i) => (
+                {shownPool.map((row, i) => (
                   <motion.li
                     key={row.id}
                     initial={{ opacity: 0 }}
@@ -528,24 +413,37 @@ function MethodologyPage() {
                   >
                     <div className="flex items-baseline justify-between gap-3">
                       <div className="flex items-baseline gap-2 min-w-0">
-                        <span className="font-value text-body-sm text-ink">
-                          {row.asset!.ticker}
-                        </span>
-                        <span className="text-caption text-ink-3 truncate">{row.asset!.name}</span>
+                        <span className="font-value text-body-sm text-ink">{row.ticker}</span>
+                        <span className="text-caption text-ink-3 truncate">{row.name}</span>
                       </div>
-                      <span className="text-label tabular-nums font-medium">
-                        {(row.weight * 100).toFixed(1)}%
-                      </span>
+                      {/* Jamais de classement fabriqué : sans historique réel,
+                          l'actif est présenté « en cours », pas noté (§1.3). */}
+                      {row.relevance != null ? (
+                        <span className="text-label tabular-nums font-medium shrink-0">
+                          {t("methodologie.pool_relevance", { score: row.relevance })}
+                        </span>
+                      ) : (
+                        <span className="text-tag text-ink-3 shrink-0">
+                          {t("methodologie.pool_pending")}
+                        </span>
+                      )}
                     </div>
-                    <div className="mt-1 h-px bg-paper-3 relative">
-                      <div
-                        className="absolute inset-y-0 left-0 bg-ink"
-                        style={{ width: `${row.weight * 100}%`, height: "1px" }}
-                      />
-                    </div>
+                    <p className="mt-0.5 text-tag text-ink-3">
+                      {ASSET_CLASS_LABEL[row.asset_class] ?? row.asset_class} ·{" "}
+                      {t("methodologie.pool_esg", { score: Math.round(row.esg_score) })} ·{" "}
+                      {t("methodologie.pool_ter", { ter: formatPercent(row.ter, lang, 2) })}
+                    </p>
+                    {row.relevance != null && (
+                      <div className="mt-1 h-px bg-paper-3 relative">
+                        <div
+                          className="absolute inset-y-0 left-0 bg-ink"
+                          style={{ width: `${row.relevance}%`, height: "1px" }}
+                        />
+                      </div>
+                    )}
                   </motion.li>
                 ))}
-                {!loading && sortedWeights.length === 0 && (
+                {!loading && (pool?.pool.length ?? 0) === 0 && (
                   <li className="py-6 text-center text-label text-ink-3">
                     {t("methodologie.no_positions")}
                   </li>
@@ -553,7 +451,7 @@ function MethodologyPage() {
               </ul>
             </div>
 
-            {result && (
+            {poolByClass.length > 0 && (
               <div>
                 <p className="text-tag uppercase tracking-[0.12em] text-ink-3 font-medium border-b border-paper-3 pb-2 mb-3">
                   <MetricLabel
@@ -562,17 +460,22 @@ function MethodologyPage() {
                   />
                 </p>
                 <ul className="space-y-1.5">
-                  {Object.entries(result.metrics.by_class)
-                    .filter(([, w]) => w > 0.005)
-                    .sort(([, a], [, b]) => b - a)
-                    .map(([cls, w]) => (
-                      <li key={cls} className="flex items-baseline justify-between text-label">
-                        <span className="text-ink-2">{ASSET_CLASS_LABEL[cls] ?? cls}</span>
-                        <span className="tabular-nums">{(w * 100).toFixed(1)}%</span>
-                      </li>
-                    ))}
+                  {poolByClass.map(([cls, count]) => (
+                    <li key={cls} className="flex items-baseline justify-between text-label">
+                      <span className="text-ink-2">{ASSET_CLASS_LABEL[cls] ?? cls}</span>
+                      <span className="tabular-nums">
+                        {t("methodologie.breakdown_count", { count })}
+                      </span>
+                    </li>
+                  ))}
                 </ul>
               </div>
+            )}
+
+            {pool && (
+              <p className="text-tag text-ink-3 leading-relaxed">
+                {t("methodologie.screening_version", { version: pool.screening_version })}
+              </p>
             )}
           </div>
         </div>
@@ -815,22 +718,21 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
               possible.
             </li>
             <li>
-              <span className="font-value text-ink">Best-in-class.</span> Dans chaque classe
-              d'actifs, on ne garde que la moitié la mieux notée (au-dessus de la médiane) sur le
-              score composite pondéré par vos causes. Une classe de 3 actifs ou moins est conservée
-              entière pour ne pas l'assécher.
+              <span className="font-value text-ink">La note classe, elle ne filtre pas.</span> Le
+              score composite pondéré par vos causes sert à ORDONNER le pool, pas à en retirer des
+              fonds : aucun actif n'est écarté au nom d'une note. Seules vos exclusions en retirent.
             </li>
             <li>
-              <span className="font-value text-ink">Plancher portefeuille.</span> Score ESG moyen
-              pondéré ≥ <span className="tabular-nums font-value">{MIN_PORTFOLIO_ESG}/100</span>. Si
-              l'optimiseur ne l'atteint pas sous vos contraintes, on lève le plancher et on
-              l'affiche honnêtement.
+              <span className="font-value text-ink">Univers noté d'office.</span> Un fonds sans
+              score ESG sourcé n'entre pas dans l'univers investissable — le pool ne contient donc
+              que des actifs notés, sans qu'un plancher ait à être imposé après coup.
             </li>
             <li>
-              <span className="font-value text-ink">Tilts par conviction.</span> Activer une cause
-              réajuste les poids des piliers E/S/G (voir grille ci-dessus). Son intensité (0–100 %)
-              oriente en plus l'optimiseur vers les actifs exposés à cette cause — un tilt borné,
-              qui n'entre pas dans le rendement attendu affiché.
+              <span className="font-value text-ink">Convictions.</span> Activer une cause réajuste
+              les poids des piliers E/S/G (voir grille ci-dessus) et pèse dans le classement, via
+              l'alignement de chaque actif avec cette cause. Son intensité (0–100 %) reste attachée
+              à votre profil : elle n'entre pas dans le classement, et nous le disons plutôt que de
+              laisser croire qu'un curseur agit.
             </li>
           </ol>
         </div>
@@ -917,146 +819,26 @@ function Block({
   );
 }
 
-function MetricRow({
+/** Une case de l'entonnoir : combien d'actifs à cette étape, et ce que c'est. */
+function FunnelCell({
   label,
   value,
-  sub,
-  tip,
-  id,
+  strong = false,
 }: {
   label: string;
   value: string;
-  sub?: string;
-  tip?: string;
-  id?: string;
+  strong?: boolean;
 }) {
   return (
-    <div id={id} className="flex items-baseline justify-between py-2.5">
-      <div>
-        <p className="text-label text-ink">
-          <MetricLabel label={label} hint={tip} />
-        </p>
-        {sub && <p className="text-tag text-ink-3 mt-0.5">{sub}</p>}
-      </div>
-      <span className="font-value text-body-lg tabular-nums">{value}</span>
-    </div>
-  );
-}
-
-function ImpactPanel({
-  impact,
-  t,
-}: {
-  impact: {
-    msci_coverage: number;
-    msci_quality?: number | null;
-    waci: number | null;
-    waci_coverage: number;
-    vs_benchmark_delta_pct?: number | null;
-  };
-  t: (k: string, opts?: Record<string, unknown>) => string;
-}) {
-  const msciPct = Math.round(Math.max(0, Math.min(1, impact.msci_coverage)) * 100);
-  const waciPct = Math.round(Math.max(0, Math.min(1, impact.waci_coverage)) * 100);
-  const delta = impact.vs_benchmark_delta_pct;
-  const quality = impact.msci_quality;
-  return (
-    <div className="border border-paper-3 p-4">
-      <p className="text-tag uppercase tracking-[0.12em] text-ink-3 font-medium">
-        {t("methodologie.impact_title")}
+    <div className="bg-paper p-4">
+      <p className="text-tag uppercase tracking-[0.12em] text-ink-3 font-medium">{label}</p>
+      <p
+        className={`font-value tabular-nums mt-1 ${
+          strong ? "text-2xl text-ink" : "text-xl text-ink-2"
+        }`}
+      >
+        {value}
       </p>
-      <div className="mt-3 flex items-baseline justify-between">
-        <span className="text-label text-ink-2">{t("methodologie.impact_msci_coverage")}</span>
-        <span className="font-value text-body tabular-nums">{msciPct}%</span>
-      </div>
-      {quality != null && (
-        <div className="mt-2 flex items-baseline justify-between">
-          <span className="text-label text-ink-2">{t("methodologie.impact_msci_quality")}</span>
-          <span className="font-value text-body tabular-nums">{quality.toFixed(1)} / 10</span>
-        </div>
-      )}
-      {impact.waci != null ? (
-        <div className="mt-2 flex items-baseline justify-between">
-          <span className="text-label text-ink-2">{t("methodologie.impact_waci")}</span>
-          <span className="font-value text-body tabular-nums">
-            {Math.round(impact.waci)} tCO₂e/M$ · {waciPct}%
-          </span>
-        </div>
-      ) : (
-        <p className="text-caption text-ink-3 mt-2 leading-relaxed">
-          {t("methodologie.impact_waci_none")}
-        </p>
-      )}
-      {delta != null && (
-        <div className="mt-2 flex items-baseline justify-between">
-          <span className="text-label text-ink-2">{t("methodologie.impact_vs_benchmark")}</span>
-          <span
-            className={`font-value text-body tabular-nums ${delta >= 0 ? "text-highlight-2" : "text-rust"}`}
-          >
-            {delta >= 0 ? "−" : "+"}
-            {Math.abs(Math.round(delta * 100))}%
-          </span>
-        </div>
-      )}
-      <p className="text-caption text-ink-3 mt-3 leading-relaxed">
-        {t("methodologie.impact_note")}
-      </p>
-    </div>
-  );
-}
-
-function CarbonCoverage({
-  coverage,
-  hasRealData,
-  t,
-}: {
-  coverage: number;
-  hasRealData: boolean;
-  t: (k: string, opts?: Record<string, unknown>) => string;
-}) {
-  const pct = Math.round(Math.max(0, Math.min(1, coverage)) * 100);
-
-  let tone: "low" | "partial" | "good";
-  if (pct >= 70) tone = "good";
-  else if (pct >= 30) tone = "partial";
-  else tone = "low";
-
-  const barColor = tone === "good" ? "bg-highlight-2" : tone === "partial" ? "bg-ink" : "bg-rust";
-
-  const advice =
-    !hasRealData || pct === 0
-      ? t("methodologie.carbon_coverage_advice_none")
-      : pct < 30
-        ? t("methodologie.carbon_coverage_advice_low")
-        : pct < 70
-          ? t("methodologie.carbon_coverage_advice_mid")
-          : t("methodologie.carbon_coverage_advice_high");
-
-  return (
-    <div className="border border-paper-3 p-4">
-      <div className="flex items-baseline justify-between">
-        <p className="text-tag uppercase tracking-[0.12em] text-ink-3 font-medium">
-          <MetricLabel
-            label={t("methodologie.carbon_coverage_title")}
-            hint={t("methodologie.tips.carbon_coverage")}
-          />
-        </p>
-        <span className="font-value text-body tabular-nums">{pct}%</span>
-      </div>
-      <div className="mt-3 h-1.5 bg-paper-3 rounded-full overflow-hidden">
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: `${pct}%` }}
-          transition={{ duration: 0.5, ease: EASE_REVEAL }}
-          className={`h-full ${barColor}`}
-        />
-      </div>
-      <div className="flex justify-between text-tag text-ink-3 mt-1.5 tabular-nums">
-        <span>0%</span>
-        <span>50%</span>
-        <span>100%</span>
-      </div>
-      <p className="text-caption text-ink-2 mt-3 leading-relaxed">{advice}</p>
     </div>
   );
 }
