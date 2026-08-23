@@ -175,12 +175,13 @@ function Onboarding() {
     }
     // Dernière question terminée
     if (isAdditive) {
-      // Mode "nouveau portefeuille" : utilisateur déjà connecté, on demande le nom puis on génère.
+      // Mode "nouveau portefeuille" : utilisateur déjà connecté, on demande le
+      // nom puis on lui montre le pool à composer (plus aucune génération).
       const { data } = await supabase.auth.getSession();
       if (data.session) setPhase("naming");
       else setPhase("account");
     } else {
-      // Premier portefeuille : avant l'aperçu d'allocation, le moment « Ta voix »
+      // Premier portefeuille : avant l'aperçu du pool, le moment « Ta voix »
       // relie ses convictions à un vrai vote d'AG (jamais en première scène — il
       // arrive après le questionnaire). La scène s'auto-saute si aucune résolution
       // n'est ouverte. La création de compte reste repoussée au moment de sauvegarder.
@@ -976,13 +977,20 @@ function PreviewScene({
   // (l'utilisateur ajuste les montants). Pour un invité, /construire exige un
   // compte — la création de compte arrive donc au moment de composer/sauvegarder,
   // conformément à « il compose lui-même avant de sauvegarder ».
-  // Intention transmise au builder : mode (replace/create), convictions et nom
-  // à conserver — indépendante des actifs seedés (le parcours « page blanche »
-  // la réutilise avec zéro actif pour garder le bon mode).
+  // Intention transmise au builder : mode (replace/create), convictions, nom et
+  // le cadre chiffré du questionnaire (montant saisi, risque/horizon dérivés de
+  // l'objectif) — indépendante des actifs seedés (le parcours « page blanche »
+  // la réutilise avec zéro actif pour garder le bon mode). Sans ce transport,
+  // le montant que l'utilisateur vient de saisir était perdu au profit d'une
+  // valeur en dur côté serveur.
   const handoffIntent = {
     mode,
     causes: params.causes,
     exclusions: params.exclusions,
+    causeIntensity: params.cause_intensity,
+    initialAmount: params.initial_amount,
+    riskTarget: params.risk_target,
+    horizonYears: params.horizon_years,
     ...(name ? { name } : {}),
   };
 

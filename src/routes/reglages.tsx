@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { useLang } from "@/hooks/useLang";
-import { formatCurrency, formatNumber, formatPercent } from "@/lib/format";
+import { formatCurrency, formatPercent } from "@/lib/format";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useServerFn } from "@tanstack/react-start";
@@ -9,7 +9,8 @@ import { toast } from "sonner";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { useAuth } from "@/hooks/useAuth";
-import { generatePortfolio } from "@/lib/portfolio/server.functions";
+import { screenAssetPool } from "@/lib/portfolio/server.functions";
+import { savePortfolioPreferences } from "@/lib/portfolio/customize.functions";
 import { triggerMarketRefresh } from "@/lib/market/refresh.functions";
 import { triggerRiskModelRecompute } from "@/lib/market/risk-model.functions";
 import {
@@ -134,16 +135,29 @@ function ReglagesPage() {
 }
 
 // ─────────────────────────────────────────────────────────
-// Préférences portefeuille (recalcul auto debouncé)
+// Préférences portefeuille (enregistrement auto debouncé)
+//
+// Ces réglages décrivent les CONVICTIONS de l'utilisateur — ils ne recomposent
+// rien. Jusqu'ici, bouger un curseur ici relançait l'optimiseur et remplaçait le
+// portefeuille : quelqu'un qui avait composé ses lignes à la main les perdait
+// 700 ms après avoir décoché une cause. Depuis que Seedow ne propose plus
+// d'allocation, on enregistre les préférences, on re-mesure honnêtement les
+// poids existants, et on montre comment le POOL se reclasse — la recomposition
+// reste un geste explicite de l'utilisateur (/construire).
 // ─────────────────────────────────────────────────────────
 
 function PreferencesSection() {
   const { t } = useTranslation();
   const { lang } = useLang();
   const { user } = useAuth();
-  const generate = useServerFn(generatePortfolio);
+  const screen = useServerFn(screenAssetPool);
+  const savePrefs = useServerFn(savePortfolioPreferences);
 
   const [loadingInitial, setLoadingInitial] = useState(true);
+  // Un compte peut arriver ici sans avoir encore composé : il n'y a alors rien à
+  // mettre à jour. On ne lui sert pas une erreur — on lui montre le pool que ses
+  // réglages classent, et la porte pour composer.
+  const [hasPortfolio, setHasPortfolio] = useState(true);
   const [causes, setCauses] = useState<CauseTag[]>([]);
   const [intensity, setIntensity] = useState<Record<string, number>>({});
   const [exclusions, setExclusions] = useState<ExclusionTag[]>([]);
@@ -155,18 +169,25 @@ function PreferencesSection() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const firstLoadRef = useRef(true);
+  // `t` change d'identité à chaque bascule de langue : le garder dans les
+  // dépendances de l'effet déclencherait un enregistrement inutile à ce
+  // moment-là. On le lit par référence, uniquement pour un message d'erreur.
+  const tRef = useRef(t);
+  tRef.current = t;
 
-  type PreviewLine = {
+  /** Une ligne du pool reclassé — aucun poids : Seedow n'en propose plus. */
+  type PoolLine = {
     id: string;
     ticker: string;
     name: string;
-    asset_class: string;
-    weight: number;
+    /** Pertinence 0..100, ou null quand l'historique est insuffisant (« en cours »). */
+    relevance: number | null;
   };
-  type SelectedAsset = { id: string; ticker: string; name: string; asset_class: string };
-  const [preview, setPreview] = useState<{ lines: PreviewLine[]; esg: number; ter: number } | null>(
-    null,
-  );
+  const [preview, setPreview] = useState<{
+    lines: PoolLine[];
+    poolSize: number;
+    excluded: number;
+  } | null>(null);
 
   // Charger le portefeuille actif
   useEffect(() => {
@@ -178,11 +199,18 @@ function PreferencesSection() {
         .select("causes, cause_intensity, exclusions, risk_target, horizon_years, initial_amount")
         .eq("user_id", user.id)
         .eq("is_active", true)
+        // Un compte peut porter jusqu'à 3 portefeuilles actifs : on lit le plus
+        // récent, exactement celui que `savePortfolioPreferences` met à jour
+        // (`maybeSingle()` seul échouait dès qu'il y en avait deux).
+        .order("generated_at", { ascending: false })
+        .limit(1)
         .maybeSingle();
       if (cancelled) return;
       if (error) {
         console.error("[reglages] load portfolio:", error);
-      } else if (data) {
+      } else if (!data) {
+        setHasPortfolio(false);
+      } else {
         setCauses((data.causes ?? []) as CauseTag[]);
         setIntensity((data.cause_intensity ?? {}) as Record<string, number>);
         setExclusions((data.exclusions ?? []) as ExclusionTag[]);
@@ -197,7 +225,7 @@ function PreferencesSection() {
     };
   }, [user]);
 
-  // Recalcul auto debouncé
+  // Enregistrement auto debouncé — préférences seulement, jamais les poids.
   useEffect(() => {
     if (loadingInitial) return;
     // Skip the first run after loading completes — état restauré, pas un changement
@@ -209,35 +237,55 @@ function PreferencesSection() {
     setStatus("saving");
     setErrorMsg(null);
     debounceRef.current = setTimeout(() => {
-      callAuthed(generate, {
+      const params = {
         causes,
         cause_intensity: intensity,
         exclusions,
         risk_target: risk,
         horizon_years: horizon,
         initial_amount: amount,
-      })
+      };
+      // 1) On enregistre les préférences (et on re-mesure les poids EXISTANTS) ;
+      //    la composition de l'utilisateur n'est jamais réécrite. Sans
+      //    portefeuille, il n'y a rien à enregistrer : on saute cette étape.
+      // 2) On montre comment le pool se reclasse — lecture seule, rien n'est
+      //    appliqué au portefeuille tant que l'utilisateur ne recompose pas.
+      Promise.resolve(hasPortfolio ? callAuthed(savePrefs, params) : null)
+        .then(() => screen({ data: params }))
         .then((res) => {
-          const weights = (res as { weights: Record<string, number> }).weights ?? {};
-          const selected = (res as { selected: SelectedAsset[] }).selected ?? [];
-          const metrics = (res as { metrics: { esg_score: number; ter: number } }).metrics;
-          const lines = selected
-            .map((s) => ({ ...s, weight: weights[s.id] ?? 0 }))
-            .sort((a, b) => b.weight - a.weight)
-            .slice(0, 3);
-          setPreview({ lines, esg: metrics?.esg_score ?? 0, ter: metrics?.ter ?? 0 });
+          setPreview({
+            lines: res.pool.slice(0, 3).map((p) => ({
+              id: p.id,
+              ticker: p.ticker,
+              name: p.name,
+              relevance: p.relevance,
+            })),
+            poolSize: res.pool.length,
+            excluded: res.excluded_count ?? 0,
+          });
           setStatus("saved");
         })
         .catch((err: unknown) => {
-          console.error("[reglages] generate:", err);
+          console.error("[reglages] save preferences:", err);
           setStatus("error");
-          setErrorMsg(err instanceof Error ? err.message : "Erreur de recalcul");
+          setErrorMsg(err instanceof Error ? err.message : tRef.current("reglages.save_error"));
         });
     }, 700);
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [causes, intensity, exclusions, risk, horizon, amount, generate, loadingInitial]);
+  }, [
+    causes,
+    intensity,
+    exclusions,
+    risk,
+    horizon,
+    amount,
+    screen,
+    savePrefs,
+    hasPortfolio,
+    loadingInitial,
+  ]);
 
   const toggleCause = (id: CauseTag) => {
     setCauses((prev) => {
@@ -263,48 +311,69 @@ function PreferencesSection() {
 
   return (
     <div className="space-y-6">
-      <StatusBanner status={status} errorMsg={errorMsg} />
+      {hasPortfolio ? (
+        <StatusBanner status={status} errorMsg={errorMsg} />
+      ) : (
+        <div className="border border-paper-3 rounded-lg p-4 bg-paper-2">
+          <p className="text-body-sm text-ink leading-relaxed">
+            {t("reglages.no_portfolio_notice")}
+          </p>
+          <Link
+            to="/onboarding"
+            className="mt-2 inline-block text-body-sm font-semibold text-mint-ink hover:underline underline-offset-4"
+          >
+            {t("reglages.pool_compose_first")} →
+          </Link>
+        </div>
+      )}
 
       {preview && (
         <motion.div
-          key={preview.lines.map((l) => l.id + l.weight.toFixed(3)).join("|")}
+          key={preview.lines.map((l) => l.id).join("|")}
           initial={{ opacity: 0, y: -2 }}
           animate={{ opacity: 1, y: 0 }}
           className="border border-paper-3 rounded-lg p-4 bg-paper-2"
         >
-          <div className="flex items-baseline justify-between mb-3">
+          <div className="flex items-baseline justify-between gap-3 mb-1">
             <p className="text-tag uppercase tracking-[0.15em] text-ink-3 font-medium">
-              {t("reglages.preview_eyebrow")}
+              {t("reglages.pool_eyebrow")}
             </p>
-            <div className="flex gap-3 text-caption text-ink-3">
-              <span>
-                {t("reglages.preview_esg")}{" "}
-                <span className="text-ink font-value tabular-nums">
-                  {formatNumber(preview.esg, lang, {
-                    maximumFractionDigits: 1,
-                    minimumFractionDigits: 1,
-                  })}
-                </span>
-              </span>
-              <span>
-                {t("reglages.preview_ter")}{" "}
-                <span className="text-ink font-value tabular-nums">
-                  {formatPercent(preview.ter, lang, 2)}
-                </span>
-              </span>
-            </div>
+            <span className="text-caption text-ink-3">
+              {t("reglages.pool_summary", {
+                count: preview.poolSize,
+                excluded: preview.excluded,
+              })}
+            </span>
           </div>
+          {/* Le pool se reclasse, la composition ne bouge pas : on l'écrit, pour
+              que personne ne prenne cet aperçu pour un portefeuille appliqué. */}
+          <p className="text-caption text-ink-2 leading-relaxed mb-3">
+            {t("reglages.pool_untouched")}
+          </p>
           <ul className="space-y-1.5">
             {preview.lines.map((l) => (
               <li key={l.id} className="flex items-center gap-3 text-label">
                 <span className="font-value text-ink-2 w-12 tabular-nums shrink-0">{l.ticker}</span>
                 <span className="flex-1 text-ink truncate">{l.name}</span>
-                <span className="font-value tabular-nums text-ink w-12 text-right">
-                  {formatPercent(l.weight, lang, 1)}
-                </span>
+                {/* Jamais de chiffre inventé : sans historique réel, « en cours ». */}
+                {l.relevance != null ? (
+                  <span className="font-value tabular-nums text-ink w-16 text-right">
+                    {t("reglages.pool_relevance", { score: l.relevance })}
+                  </span>
+                ) : (
+                  <span className="text-tag text-ink-3 w-16 text-right">
+                    {t("reglages.pool_pending")}
+                  </span>
+                )}
               </li>
             ))}
           </ul>
+          <Link
+            to="/construire"
+            className="mt-3 inline-block text-body-sm font-semibold text-mint-ink hover:underline underline-offset-4"
+          >
+            {hasPortfolio ? t("reglages.pool_recompose") : t("reglages.pool_compose_first")} →
+          </Link>
         </motion.div>
       )}
 
@@ -449,7 +518,7 @@ function PreferencesSection() {
         />
       </Block>
 
-      <p className="text-caption text-ink-3 leading-relaxed">{t("reglages.auto_recalc_note")}</p>
+      <p className="text-caption text-ink-3 leading-relaxed">{t("reglages.auto_save_note")}</p>
     </div>
   );
 }

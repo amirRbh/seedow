@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
  * that uses `requireSupabaseAuth`.
  *
  * Usage:
- *   const result = await callAuthed(generatePortfolio, { causes, ... });
+ *   const result = await callAuthed(savePortfolioPreferences, { causes, ... });
  */
 export async function callAuthed<TArgs, TResult>(
   fn: (opts: { data: TArgs; headers?: Record<string, string> }) => Promise<TResult>,

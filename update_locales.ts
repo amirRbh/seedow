@@ -1533,6 +1533,153 @@ const landingReadabilityEn = {
   quick_check: { field_label: "Test a fund or an ETF" },
 };
 
+/**
+ * Bascule produit « pool plutôt qu'allocation » — Seedow ne compose plus à la
+ * place de l'utilisateur. Les chaînes ci-dessous étaient restées sur l'ancienne
+ * promesse (« Seedow construit l'allocation correspondante ») : elles décrivent
+ * désormais ce que le produit fait réellement — filtrer, classer, expliquer,
+ * pendant que l'utilisateur compose.
+ */
+const composeSwitchFr = {
+  reglages: {
+    pool_eyebrow: "Ton pool, reclassé",
+    pool_summary: "{{count}} fonds retenus · {{excluded}} écartés",
+    pool_untouched:
+      "Ta composition reste telle que tu l'as faite : ces réglages changent le classement du pool, jamais tes lignes.",
+    pool_relevance: "{{score}}/100",
+    pool_pending: "en cours",
+    pool_recompose: "Recomposer mon portefeuille",
+    pool_compose_first: "Composer mon portefeuille",
+    no_portfolio_notice:
+      "Tu n'as pas encore composé de portefeuille : il n'y a rien à mettre à jour ici. Ces réglages classent déjà le pool ci-dessous — ils s'appliqueront à ton portefeuille dès que tu l'auras composé.",
+    auto_save_note:
+      "Tes préférences sont enregistrées automatiquement. Elles servent à classer le pool et à mesurer ton portefeuille — elles ne repondèrent jamais tes lignes à ta place.",
+    save_error: "Enregistrement impossible",
+    pipeline_desc:
+      "Étapes traçables : profilage, univers investissable, exclusions sectorielles, filtres ESG best-in-class, puis classement du pool par pertinence. Seedow s'arrête là — aucune allocation n'est imposée : tu composes tes lignes, et le moteur mesure ce que tu as composé. Le simulateur interactif et la documentation détaillée sont sur la page dédiée.",
+    methodology: {
+      pipeline: {
+        desc: "Étapes traçables : profilage, univers investissable, exclusions sectorielles, filtres best-in-class ESG, puis classement du pool par pertinence. Seedow s'arrête là — aucune allocation n'est imposée : vous composez vos lignes, et le moteur mesure ce que vous avez composé. Le simulateur interactif et la documentation détaillée sont sur la page dédiée.",
+      },
+    },
+  },
+  methodologie: {
+    simulator_title: "Simulateur de méthode",
+    simulator_desc:
+      "Ce simulateur pédagogique montre ce que le moteur MESURE sur une composition d'exemple. Dans l'app, Seedow s'arrête au pool classé : c'est vous qui composez vos lignes.",
+    meta_desc:
+      "Méthode Seedow : exclusions, best-in-class ESG, classement du pool par pertinence, puis mesure du portefeuille que vous composez.",
+    intro:
+      "Cinq étapes, transparentes et reproductibles. Ajustez les paramètres en bas de page pour observer l'effet de chaque critère en direct.",
+    stages: {
+      "5_name": "Classement, puis mesure",
+      "5_desc":
+        "Seedow ne propose aucun poids : il classe le pool par pertinence (performance réelle, score ESG composite, alignement avec vos causes), puis mesure le portefeuille que VOUS composez — risque, frais, ESG pondéré E/S/G selon vos causes.",
+    },
+  },
+  empty_portfolio: {
+    beginner_desc:
+      "Quatre questions, deux minutes, zéro argent réel. Tu vois les fonds qui collent à tes critères, et tu composes ton portefeuille toi-même.",
+    desc: "Quatre questions pour poser tes convictions. Seedow classe ensuite les fonds qui y répondent — c'est toi qui composes.",
+  },
+  onboarding: {
+    explainer: {
+      amount:
+        "Le montant simulé n'engage rien. Il sert à visualiser ce que représenteraient tes parts et l'effet des intérêts composés dans le temps.",
+    },
+  },
+  landing: {
+    hero2: {
+      subtitle:
+        "Choisissez ce que vous voulez financer — et ce que vous refusez. Seedow classe les fonds qui y répondent, chiffres ESG et performance à l'appui. Vous composez.",
+    },
+    how: {
+      step2_title: "Vois les fonds qui te correspondent",
+      step2_desc:
+        "Pool classé, score d'impact, comparaison à un ETF Monde classique — tout est visible immédiatement.",
+    },
+    tour: { see: { title: "Tu vois les fonds retenus et leur empreinte réelle." } },
+    rv: {
+      cards: {
+        simulate: {
+          desc: "Tu choisis ce que tu veux financer et ce que tu refuses. Seedow classe les fonds correspondants et les explique ligne par ligne.",
+        },
+      },
+    },
+  },
+  real_invest_interest: { title: "Tu veux investir ce portefeuille pour de vrai ?" },
+};
+
+const composeSwitchEn = {
+  reglages: {
+    pool_eyebrow: "Your pool, re-ranked",
+    pool_summary: "{{count}} funds kept · {{excluded}} filtered out",
+    pool_untouched:
+      "Your composition stays exactly as you built it: these settings change how the pool is ranked, never your lines.",
+    pool_relevance: "{{score}}/100",
+    pool_pending: "pending",
+    pool_recompose: "Recompose my portfolio",
+    pool_compose_first: "Compose my portfolio",
+    no_portfolio_notice:
+      "You haven't composed a portfolio yet, so there is nothing to update here. These settings already rank the pool below — they will apply to your portfolio as soon as you compose it.",
+    auto_save_note:
+      "Your preferences are saved automatically. They rank the pool and measure your portfolio — they never re-weight your lines for you.",
+    save_error: "Could not save",
+    pipeline_desc:
+      "Traceable stages: profiling, investable universe, sector exclusions, best-in-class ESG filters, then pool ranking by relevance. Seedow stops there — no allocation is imposed: you compose your lines, and the engine measures what you composed. The interactive simulator and detailed documentation are on the dedicated page.",
+    methodology: {
+      pipeline: {
+        desc: "Traceable stages: profiling, investable universe, sector exclusions, best-in-class ESG filters, then pool ranking by relevance. Seedow stops there — no allocation is imposed: you compose your lines, and the engine measures what you composed. The interactive simulator and detailed documentation are on the dedicated page.",
+      },
+    },
+  },
+  methodologie: {
+    simulator_title: "Method simulator",
+    simulator_desc:
+      "This teaching simulator shows what the engine MEASURES on an example composition. In the app, Seedow stops at the ranked pool: you compose your own lines.",
+    meta_desc:
+      "Seedow's method: exclusions, best-in-class ESG, pool ranking by relevance, then measurement of the portfolio you compose.",
+    intro:
+      "Five transparent, reproducible stages. Adjust the parameters below to watch each criterion take effect live.",
+    stages: {
+      "5_name": "Ranking, then measurement",
+      "5_desc":
+        "Seedow proposes no weights: it ranks the pool by relevance (real performance, composite ESG score, alignment with your causes), then measures the portfolio YOU compose — risk, fees, ESG weighted E/S/G according to your causes.",
+    },
+  },
+  empty_portfolio: {
+    beginner_desc:
+      "Four questions, two minutes, no real money. You see the funds that match your criteria, and you compose your portfolio yourself.",
+    desc: "Four questions to set your convictions. Seedow then ranks the funds that match — you do the composing.",
+  },
+  onboarding: {
+    explainer: {
+      amount:
+        "The simulated amount commits you to nothing. It shows what your holdings would represent and how compounding plays out over time.",
+    },
+  },
+  landing: {
+    hero2: {
+      subtitle:
+        "Choose what you want to fund — and what you refuse. Seedow ranks the funds that match, with ESG and performance figures to back it. You compose.",
+    },
+    how: {
+      step2_title: "See the funds that match you",
+      step2_desc:
+        "Ranked pool, impact score, comparison with a standard World ETF — all visible immediately.",
+    },
+    tour: { see: { title: "You see the funds kept and their real footprint." } },
+    rv: {
+      cards: {
+        simulate: {
+          desc: "You choose what to fund and what to refuse. Seedow ranks the matching funds and explains them line by line.",
+        },
+      },
+    },
+  },
+  real_invest_interest: { title: "Want to invest this portfolio for real?" },
+};
+
 const mergedFr = deepMerge(fr, {
   reglages: reglagesFr,
   le_fil: leFilFr,
@@ -1595,5 +1742,13 @@ const mergedEn = deepMerge(en, {
   nav: navCommunityEn,
 });
 
-writeFileSync("src/i18n/locales/fr.json", JSON.stringify(mergedFr, null, 2) + "\n", "utf-8");
-writeFileSync("src/i18n/locales/en.json", JSON.stringify(mergedEn, null, 2) + "\n", "utf-8");
+writeFileSync(
+  "src/i18n/locales/fr.json",
+  JSON.stringify(deepMerge(mergedFr, composeSwitchFr), null, 2) + "\n",
+  "utf-8",
+);
+writeFileSync(
+  "src/i18n/locales/en.json",
+  JSON.stringify(deepMerge(mergedEn, composeSwitchEn), null, 2) + "\n",
+  "utf-8",
+);

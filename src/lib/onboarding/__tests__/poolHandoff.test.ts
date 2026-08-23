@@ -68,6 +68,47 @@ describe("poolHandoff", () => {
     expect(got!.causes).toEqual([]);
   });
 
+  it("transporte le cadre chiffré du questionnaire (montant, risque, horizon)", () => {
+    writePoolHandoff(assets, {
+      mode: "replace",
+      causes: [],
+      exclusions: [],
+      initialAmount: 500,
+      riskTarget: 0.13,
+      horizonYears: 25,
+      causeIntensity: { climat: 0.7 },
+    });
+    const got = readPoolHandoff();
+    expect(got!.initialAmount).toBe(500);
+    expect(got!.riskTarget).toBe(0.13);
+    expect(got!.horizonYears).toBe(25);
+    expect(got!.causeIntensity).toEqual({ climat: 0.7 });
+  });
+
+  it("ignore un cadre chiffré hors bornes ou corrompu plutôt que de le transmettre", () => {
+    globalThis.localStorage.setItem(
+      "seedow_pool_handoff",
+      JSON.stringify({
+        assets,
+        mode: "replace",
+        causes: [],
+        exclusions: [],
+        initialAmount: 99_000_000, // > plafond serveur
+        riskTarget: "0.13", // pas un nombre
+        horizonYears: 120, // > 40 ans
+        causeIntensity: { climat: 4, humain: 0.6 }, // 4 hors [0,1] : écartée
+        savedAt: Date.now(),
+      }),
+    );
+    const got = readPoolHandoff();
+    // Repli sur les défauts serveur : l'enregistrement n'échoue jamais sur un seed corrompu.
+    expect(got!.initialAmount).toBeUndefined();
+    expect(got!.riskTarget).toBeUndefined();
+    expect(got!.horizonYears).toBeUndefined();
+    // Les intensités valides survivent, les aberrantes sont écartées.
+    expect(got!.causeIntensity).toEqual({ humain: 0.6 });
+  });
+
   it("expire au-delà du TTL", () => {
     writePoolHandoff(assets, { mode: "replace", causes: [], exclusions: [] });
     // 1 h + 1 min plus tard.
