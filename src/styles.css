@@ -725,6 +725,51 @@
     border-color: var(--ink-3);
   }
 
+  /* ── Chapitre de landing ──────────────────────────────────────
+     Le filet gris seul disait « ça change » sans dire « quoi » : la
+     bande claire restait un seul long bloc. Le filet porte maintenant
+     un segment d'accent, et le libellé de section devient une pastille
+     teintée. La couleur annonce le chapitre — le libellé reste écrit,
+     elle ne porte jamais l'information seule (CLAUDE.md §4).
+     Un aplat, pas un dégradé : la DA V3 n'a ni ombre ni halo. */
+  .section-rule {
+    position: relative;
+    border-top: 1px solid var(--paper-3);
+  }
+  .section-rule::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 64px;
+    height: 3px;
+    border-radius: 999px;
+    background-color: var(--section-accent, var(--mint));
+  }
+  .chip--accent {
+    background-color: color-mix(in srgb, var(--section-accent, var(--mint)) 12%, transparent);
+    color: var(--section-accent-ink, var(--mint-ink));
+  }
+
+  /* Élévation au survol — 1,03 et la courbe de la marque (CLAUDE.md §4).
+     `.apple-lift` était neutralisée : plus rien ne réagissait au curseur
+     sur toute la bande claire. */
+  .lift {
+    transition:
+      transform 240ms cubic-bezier(0.32, 0.72, 0, 1),
+      background-color 240ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  .lift:hover {
+    transform: scale(1.03);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lift,
+    .lift:hover {
+      transition: none;
+      transform: none;
+    }
+  }
+
   /* ── Couleur de texte des boutons ─────────────────────────────
      À passer par une CLASSE, jamais par `text-ink` / `text-deep` :
      tailwind-merge range les couleurs de thème qu'il ne connaît pas dans

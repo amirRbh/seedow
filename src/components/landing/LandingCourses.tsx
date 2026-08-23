@@ -78,11 +78,14 @@ export function LandingCourses({ embedded = false }: { embedded?: boolean } = {}
                 setPreviewed(c);
                 void trackAppEvent("course_preview_opened", { slug: c.slug });
               }}
-              className="apple-card p-6 flex flex-col gap-3 text-left hover:opacity-95 transition-opacity"
+              className="apple-card lift p-6 flex flex-col gap-3 text-left"
               style={{ background: "var(--apple-bg)", border: "1px solid var(--paper-3)" }}
             >
-              <span className="text-caption font-mono tabular-nums text-[color:var(--apple-text-2)]">
-                N° {String(c.number).padStart(2, "0")} · {c.readingMinutes} min
+              <span className="flex items-center gap-2">
+                <span className="chip chip--volt font-mono tabular-nums">
+                  N° {String(c.number).padStart(2, "0")}
+                </span>
+                <span className="mono-meta">{c.readingMinutes} min</span>
               </span>
               <span className="text-body-lg font-semibold leading-snug text-[color:var(--apple-text)]">
                 {c.title}

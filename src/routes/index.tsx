@@ -19,7 +19,7 @@ const SITE_URL = "https://seedow.life";
  * appartenait à quel titre. Le filet fait la coupure, l'accent du libellé
  * identifie le chapitre.
  */
-const SECTION_RULE = "border-t border-paper-3 pt-14 md:pt-16";
+const SECTION_RULE = "section-rule pt-14 md:pt-16";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -201,7 +201,7 @@ function Landing() {
 
         {/* Parcours */}
         {isAuthed ? null : (
-          <Reveal className={SECTION_RULE}>
+          <Reveal className={`accent-mint ${SECTION_RULE}`}>
             <h2 className="max-w-[16ch]">{t("landing.paths.heading")}</h2>
             <div className="grid md:grid-cols-3 gap-4 mt-10">
               <PathCard
@@ -513,15 +513,12 @@ function Section({
   accent?: "mint" | "ice" | "volt";
   children?: React.ReactNode;
 }) {
-  const eyebrowTone = { mint: "eyebrow--accent", ice: "eyebrow--ice", volt: "eyebrow--volt" }[
-    accent
-  ];
   return (
-    <Reveal className={SECTION_RULE}>
+    <Reveal className={`accent-${accent} ${SECTION_RULE}`}>
       <div className={side ? "grid lg:grid-cols-2 gap-10 lg:gap-16 items-start" : ""}>
         <div>
-          <p className={`eyebrow ${eyebrowTone}`}>{eyebrow}</p>
-          <h2 className="mt-3 max-w-[18ch]">{title}</h2>
+          <span className="chip chip--accent">{eyebrow}</span>
+          <h2 className="mt-4 max-w-[18ch]">{title}</h2>
           {desc && (
             <p className="mt-5 max-w-[52ch] text-body-lg leading-relaxed text-ink-2">{desc}</p>
           )}
@@ -538,7 +535,7 @@ function ProofTile({ children }: { children: React.ReactNode }) {
   // pas, d'où des tuiles de hauteurs inégales dès qu'un libellé passait sur
   // deux lignes.
   return (
-    <div className="paper-card flex h-full items-center justify-center px-5 py-6">
+    <div className="paper-card lift flex h-full items-center justify-center px-5 py-6">
       <p className="text-center text-body-sm leading-relaxed text-ink-2 [&_b]:text-ink [&_b]:font-bold">
         {children}
       </p>
@@ -574,7 +571,7 @@ function PathCard({
       to={to}
       search={search}
       onClick={onClick}
-      className="paper-card group flex h-full flex-col p-7 outline-none transition-colors hover:bg-paper-inset focus-visible:ring-2 focus-visible:ring-ink"
+      className="paper-card lift group flex h-full flex-col p-7 outline-none hover:bg-paper-inset focus-visible:ring-2 focus-visible:ring-ink"
     >
       <span className={`chip ${chipTone}`}>{eyebrow}</span>
       <h3 className="mt-4">{title}</h3>
@@ -656,10 +653,16 @@ function ImpactProof({ t }: { t: (key: string, opts?: Record<string, unknown>) =
   return (
     <div className="paper-card p-8">
       <p className="stamp">{t("comparatif_panel.impact_score")}</p>
-      <p className="font-value text-[clamp(48px,7vw,68px)] leading-none mt-3 text-ink">
+      <p className="font-value text-[clamp(48px,7vw,68px)] leading-none mt-3 text-mint-ink">
         74
         <span className="text-ink-3 text-[0.38em] ml-2">/ 100</span>
       </p>
+      {/* Le score sortait en noir, indistinct des deux mesures en dessous.
+          Il porte le mint de marque et sa barre : 74/100 se lit d'un coup
+          d'œil, sans comparer le chiffre à l'échelle écrite. */}
+      <div className="mt-4 h-2 rounded-full bg-paper-2 overflow-hidden">
+        <div className="h-full rounded-full bg-mint trace" style={{ width: "74%" }} />
+      </div>
 
       <div className="mt-8 pt-6 border-t border-paper-3 grid grid-cols-2 gap-6">
         <div>
@@ -706,7 +709,10 @@ function Exchange({
   const isUser = who === "user";
   return (
     <div className={isUser ? "paper-card-inset px-4 py-3.5" : "border-l-2 border-mint pl-4"}>
-      <p className="stamp">{label}</p>
+      <p className="stamp inline-flex items-center gap-2">
+        {!isUser && <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-mint" />}
+        {label}
+      </p>
       <p className={`mt-1 text-body-lg leading-relaxed ${isUser ? "text-ink-2" : "text-ink"}`}>
         {children}
       </p>
