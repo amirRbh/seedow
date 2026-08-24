@@ -1,8 +1,8 @@
 // quadprog has no types but we type the call signature locally
 // @ts-expect-error - no published types
 import quadprog from "quadprog";
-import type { Asset, PortfolioParams, PortfolioWeights } from "./types";
-import { getClassBounds, MAX_SINGLE_WEIGHT, MIN_PORTFOLIO_ESG } from "./types";
+import type { Asset, PortfolioParams, PortfolioWeights } from "../types";
+import { getClassBounds, MAX_SINGLE_WEIGHT, MIN_PORTFOLIO_ESG } from "../types";
 
 interface QPResult {
   solution: number[];

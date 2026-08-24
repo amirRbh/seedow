@@ -5,8 +5,8 @@ import {
   applyBlackLittermanViews,
   applyCarbonPreference,
 } from "../markowitz";
-import { MAX_SINGLE_WEIGHT } from "../types";
-import { defaultParams, diagonalCovariance, makeAsset } from "./fixtures";
+import { MAX_SINGLE_WEIGHT } from "../../types";
+import { defaultParams, diagonalCovariance, makeAsset } from "../../__tests__/fixtures";
 
 describe("optimizeMarkowitz", () => {
   it("returns an empty result when n=0", () => {

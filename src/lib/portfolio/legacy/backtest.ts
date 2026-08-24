@@ -17,7 +17,7 @@
  * Fonctions pures, sans dépendance DB/UI : testables et réutilisables côté
  * serveur (server function dédiée) comme dans un script d'évaluation.
  */
-import type { Asset, PortfolioParams } from "./types";
+import type { Asset, PortfolioParams } from "../types";
 import { buildPortfolio } from "./engine";
 import { buildRiskModel, type PricePoint } from "@/lib/market/risk-model";
 

@@ -30,6 +30,10 @@ export interface ValuationConsistency {
 
 export interface PortfolioValuation {
   totalInvested: number;
+  /** Part du montant déclaré réellement placée (0..1). Le reste est du liquide. */
+  allocatedShare: number;
+  /** Montant déclaré non attribué (€) — il ne bouge pas avec les cours. */
+  unallocatedCash: number;
   currentValue: number;
   pnl: number;
   returnPct: number;
@@ -153,7 +157,21 @@ export function usePortfolioValuation(): PortfolioValuation {
     };
   });
 
-  const currentValue = holdings.reduce((s, h) => s + h.currentValue, 0) || totalInvested;
+  // Part réellement placée : depuis que la composition est enregistrée telle que
+  // l'utilisateur l'a saisie, les poids ne somment plus forcément à 1. Ce qui n'est
+  // pas placé reste du liquide : il garde sa valeur nominale au lieu de disparaître
+  // du total (sinon composer à 80 % afficherait une perte de 20 % qui n'existe pas).
+  const allocatedShare = Math.min(
+    1,
+    Math.max(
+      0,
+      holdings.reduce((s, h) => s + h.weight, 0),
+    ),
+  );
+  const unallocatedCash = totalInvested * (1 - allocatedShare);
+
+  const investedValue = holdings.reduce((s, h) => s + h.currentValue, 0);
+  const currentValue = holdings.length > 0 ? investedValue + unallocatedCash : totalInvested;
   const pnl = currentValue - totalInvested;
   const returnPct = totalInvested > 0 ? (pnl / totalInvested) * 100 : 0;
 
@@ -192,6 +210,8 @@ export function usePortfolioValuation(): PortfolioValuation {
 
   return {
     totalInvested,
+    allocatedShare,
+    unallocatedCash,
     currentValue,
     pnl,
     returnPct,

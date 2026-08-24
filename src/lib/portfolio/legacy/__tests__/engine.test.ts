@@ -1,7 +1,12 @@
 import { describe, it, expect } from "vitest";
 import { buildPortfolio, applyCarbonBestInClass } from "../engine";
-import { MAX_SINGLE_WEIGHT, MIN_PORTFOLIO_ESG } from "../types";
-import { balancedUniverse, defaultParams, diagonalCovMap, makeAsset } from "./fixtures";
+import { MAX_SINGLE_WEIGHT, MIN_PORTFOLIO_ESG } from "../../types";
+import {
+  balancedUniverse,
+  defaultParams,
+  diagonalCovMap,
+  makeAsset,
+} from "../../__tests__/fixtures";
 
 describe("buildPortfolio", () => {
   it("returns an empty result on an empty universe without throwing", () => {

@@ -1726,7 +1726,18 @@ const composeSwitchFr = {
     },
   },
   real_invest_interest: { title: "Tu veux investir ce portefeuille pour de vrai ?" },
+  blank_builder: {
+    copilot_title: "Ce que ce choix change",
+    copilot_moved: "{{name}} : {{from}} → {{to}}",
+    glance_allocated: "attribués",
+    glance_unallocated: "{{pct}} non attribués",
+    glance_over:
+      "Tu as attribué {{pct}} % de plus que ton montant. Retire ce surplus avant d'enregistrer.",
+    over_allocated: "Retire {{pct}} % : tu ne peux pas placer plus que ton montant.",
+  },
   le_fil: {
+    money_unallocated:
+      "Dont {{amount}} non attribués — cette part n'est placée sur aucune ligne, elle ne bouge pas avec les cours.",
     money_declared:
       "Montant que tu as déclaré : aucune ligne cotée ne le soutient pour l'instant. Compose ton portefeuille pour qu'il soit valorisé aux cours du jour.",
   },
@@ -1793,7 +1804,17 @@ const composeSwitchEn = {
     },
   },
   real_invest_interest: { title: "Want to invest this portfolio for real?" },
+  blank_builder: {
+    copilot_title: "What this choice changes",
+    copilot_moved: "{{name}}: {{from}} → {{to}}",
+    glance_allocated: "allocated",
+    glance_unallocated: "{{pct}} unallocated",
+    glance_over: "You allocated {{pct}}% more than your amount. Remove the surplus before saving.",
+    over_allocated: "Remove {{pct}}%: you cannot allocate more than your amount.",
+  },
   le_fil: {
+    money_unallocated:
+      "Including {{amount}} unallocated — this share sits on no holding, it does not move with prices.",
     money_declared:
       "The amount you declared: no priced holding backs it yet. Compose your portfolio so it gets valued at today's prices.",
   },

@@ -1,14 +1,13 @@
 /**
- * Parcours « Personnaliser » — persistance des pondérations éditées à la main.
+ * Persistance des compositions faites à la main.
  *
- * L'utilisateur part de la proposition Seedow et l'ajuste (retirer, repondérer).
- * On recalcule alors les métriques RÉELLES côté serveur (volatilité, frais, ESG,
- * diversification) via le même `computeMetrics` que le moteur, puis on sauvegarde
- * les poids + métriques et on marque le portefeuille `is_custom = true` pour ne
- * pas l'écraser silencieusement.
+ * L'utilisateur pose ses parts ; Seedow les enregistre TELLES QUELLES et calcule
+ * les métriques réelles qui en découlent (volatilité, frais, ESG, diversification)
+ * via le même `computeMetrics` que le moteur. Le portefeuille est marqué
+ * `is_custom = true` pour ne jamais être écrasé en silence.
  *
- * On ne réoptimise pas : ce sont les choix de l'utilisateur qui priment. On se
- * contente de mesurer honnêtement leur portefeuille.
+ * Deux règles, non négociables : on ne réoptimise pas, et on ne renormalise pas.
+ * Une composition à 80 % reste à 80 % — voir `./weights`.
  */
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
@@ -17,6 +16,7 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { computeMetrics } from "./metrics";
 import { causeToPillarWeights, type Asset, type CauseTag, type PortfolioMetrics } from "./types";
 import { loadUniverse } from "./universe.server";
+import { isOverAllocated, sanitizeWeights, sumWeights } from "./weights";
 
 const InputSchema = z.object({
   portfolio_id: z.string().uuid(),
@@ -64,32 +64,35 @@ const CreateInputSchema = z.object({
 });
 
 /**
- * Normalise des poids bruts et recalcule les métriques RÉELLES pour ces poids
- * (pas de réoptimisation), avec la pondération de piliers ESG fournie. Partagé
- * par la sauvegarde (Personnaliser) et la création (Page blanche).
+ * Mesure les poids de l'utilisateur — SANS les réécrire.
+ *
+ * Les parts sont conservées telles qu'elles ont été saisies : une composition à
+ * 80 % reste une composition à 80 %, et les 20 % restants sont du liquide non
+ * attribué. Seul le bruit est écarté (lignes ≤ 0, actifs hors univers), et une
+ * somme supérieure à 100 % est refusée plutôt que rattrapée en silence — c'est
+ * un état impossible, pas une préférence.
+ *
+ * Aucune réoptimisation : on se contente de mesurer honnêtement ce choix.
+ * Partagé par la sauvegarde (Personnaliser) et la création (Page blanche).
  */
-function normalizeAndMeasure(
+function measureComposition(
   rawWeights: Record<string, number>,
   byId: Map<string, Asset>,
   covariance: Map<string, number>,
   causes: CauseTag[],
 ): { weights: Record<string, number>; metrics: PortfolioMetrics; pool: Asset[] } {
-  const kept: { id: string; weight: number }[] = [];
-  let total = 0;
-  for (const id in rawWeights) {
-    const w = rawWeights[id];
-    if (w > 0 && byId.has(id)) {
-      kept.push({ id, weight: w });
-      total += w;
-    }
-  }
-  if (kept.length === 0 || total <= 0) {
+  const weights = sanitizeWeights(rawWeights, (id) => byId.has(id));
+  if (sumWeights(weights) <= 0) {
     throw new Error("Votre portefeuille doit contenir au moins un investissement.");
   }
-  const weights: Record<string, number> = {};
-  for (const k of kept) weights[k.id] = k.weight / total;
+  if (isOverAllocated(weights)) {
+    const pct = Math.round(sumWeights(weights) * 100);
+    throw new Error(
+      `Vous avez attribué ${pct} % de votre montant. Retirez ${pct - 100} % avant d'enregistrer.`,
+    );
+  }
 
-  const pool = kept.map((k) => byId.get(k.id)!);
+  const pool = Object.keys(weights).map((id) => byId.get(id)!);
   const cov = buildCovariance(pool, covariance);
   const expectedReturns = pool.map((a) => a.expected_return);
   const pillarWeights = causeToPillarWeights(causes);
@@ -132,33 +135,17 @@ export const saveCustomPortfolio = createServerFn({ method: "POST" })
       .maybeSingle();
     if (pfErr || !pf) throw new Error("Portefeuille introuvable.");
 
-    // 2) Normalise les poids et ne garde que les lignes réellement présentes dans l'univers.
+    // 2) Garde les poids de l'utilisateur tels quels et mesure ce choix.
     const universe = await loadUniverse(userClient as typeof supabaseAdmin);
     const byId = new Map(universe.assets.map((a) => [a.id, a]));
-    const kept: { id: string; weight: number }[] = [];
-    let total = 0;
-    for (const id in data.weights) {
-      const w = data.weights[id];
-      if (w > 0 && byId.has(id)) {
-        kept.push({ id, weight: w });
-        total += w;
-      }
-    }
-    if (kept.length === 0 || total <= 0) {
-      throw new Error("Votre portefeuille doit contenir au moins un investissement.");
-    }
+    const { weights, metrics } = measureComposition(
+      data.weights,
+      byId,
+      universe.covariance,
+      (pf.causes ?? []) as CauseTag[],
+    );
 
-    const weights: Record<string, number> = {};
-    for (const k of kept) weights[k.id] = k.weight / total;
-
-    // 3) Recalcule les métriques réelles pour CES poids (pas de réoptimisation).
-    const pool = kept.map((k) => byId.get(k.id)!);
-    const cov = buildCovariance(pool, universe.covariance);
-    const expectedReturns = pool.map((a) => a.expected_return);
-    const pillarWeights = causeToPillarWeights((pf.causes ?? []) as CauseTag[]);
-    const metrics = computeMetrics(pool, weights, cov, expectedReturns, pillarWeights);
-
-    // 4) Sauvegarde : poids + métriques + marqueur custom.
+    // 3) Sauvegarde : poids + métriques + marqueur custom.
     const { error: updErr } = await userClient
       .from("portfolios")
       .update({
@@ -194,7 +181,7 @@ export const createCustomPortfolio = createServerFn({ method: "POST" })
     const byId = new Map(universe.assets.map((a) => [a.id, a]));
     // On conserve les convictions de l'onboarding : pondération des piliers ESG
     // dérivée des causes (pas de valeur neutre inventée quand elles existent).
-    const { weights, metrics } = normalizeAndMeasure(
+    const { weights, metrics } = measureComposition(
       data.weights,
       byId,
       universe.covariance,
@@ -343,7 +330,7 @@ export const savePortfolioPreferences = createServerFn({ method: "POST" })
       try {
         const universe = await loadUniverse(userClient as typeof supabaseAdmin);
         const byId = new Map(universe.assets.map((a) => [a.id, a]));
-        const measured = normalizeAndMeasure(
+        const measured = measureComposition(
           existingWeights,
           byId,
           universe.covariance,

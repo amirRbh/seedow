@@ -12,11 +12,11 @@ describe("computeMetrics", () => {
     expect(m.sharpe).toBe(0);
     expect(m.esg_score).toBe(0);
     expect(m.ter).toBe(0);
-    // NOTE — current behaviour: diversification = 1 - HHI, and HHI = 0 on empty
-    // weights → diversification = 1. Arguably diversification should be 0 (or
-    // undefined) when there is no portfolio. Captured here as documentation;
-    // do not silently patch — see instructions.
-    expect(m.diversification).toBe(1);
+    // La réserve notée ici (« diversification devrait valoir 0 sur un portefeuille
+    // vide, pas 1 ») est levée : depuis que les poids ne somment plus forcément à
+    // 1, la diversification se lit sur la part allouée. Rien d'alloué → 0.
+    expect(m.diversification).toBe(0);
+    expect(m.allocated_share).toBe(0);
     expect(m.carbon_intensity_gco2e_per_eur).toBeNull();
     expect(m.carbon_intensity_coverage).toBe(0);
     expect(Number.isFinite(m.sharpe)).toBe(true);
@@ -161,5 +161,63 @@ describe("causeToPillarWeights", () => {
     // raw: env=0.4, social=0.4, gov=0.25 → sum=1.05
     expect(w.governance).toBeCloseTo(0.25 / 1.05, 12);
     expect(w.env + w.social + w.governance).toBeCloseTo(1, 12);
+  });
+
+  describe("composition partielle — 80 % reste 80 %", () => {
+    const cov = [
+      [0.04, 0],
+      [0, 0.09],
+    ];
+
+    it("expose la part allouée telle quelle", () => {
+      const a = makeAsset({ id: "a", esg_score: 80 });
+      const b = makeAsset({ id: "b", esg_score: 40 });
+      const m = computeMetrics([a, b], { a: 0.5, b: 0.3 }, cov, [
+        a.expected_return,
+        b.expected_return,
+      ]);
+      expect(m.allocated_share).toBeCloseTo(0.8, 9);
+    });
+
+    it("lit le score ESG sur la part allouée, sans prêter un 0 au liquide", () => {
+      const a = makeAsset({ id: "a", esg_score: 80 });
+      const b = makeAsset({ id: "b", esg_score: 40 });
+      const partial = computeMetrics([a, b], { a: 0.5, b: 0.3 }, cov, [
+        a.expected_return,
+        b.expected_return,
+      ]);
+      // Moyenne pondérée sur 0,8 : (0,5×80 + 0,3×40) / 0,8 = 65.
+      expect(partial.esg_score).toBeCloseTo(65, 6);
+      // Les mêmes proportions à 100 % donnent exactement le même score : la part
+      // non attribuée ne dégrade pas l'impact mesuré.
+      const full = computeMetrics([a, b], { a: 0.625, b: 0.375 }, cov, [
+        a.expected_return,
+        b.expected_return,
+      ]);
+      expect(full.esg_score).toBeCloseTo(partial.esg_score, 6);
+    });
+
+    it("ne récompense pas le fait de laisser de l'argent de côté", () => {
+      const a = makeAsset({ id: "a" });
+      // Une seule ligne à 10 % : concentration maximale sur la part allouée.
+      const m = computeMetrics([a], { a: 0.1 }, [[0.04]], [a.expected_return]);
+      expect(m.diversification).toBeCloseTo(0, 9);
+    });
+
+    it("garde les montants proportionnels : rendement et frais suivent la part placée", () => {
+      const a = makeAsset({ id: "a", ter: 0.002, expected_return: 0.06 });
+      const half = computeMetrics([a], { a: 0.5 }, [[0.04]], [0.06]);
+      const full = computeMetrics([a], { a: 1 }, [[0.04]], [0.06]);
+      expect(half.ter).toBeCloseTo(full.ter / 2, 9);
+      expect(half.expected_return).toBeCloseTo(full.expected_return / 2, 9);
+      // La volatilité aussi : la part non placée ne bouge pas.
+      expect(half.volatility).toBeCloseTo(full.volatility / 2, 9);
+    });
+
+    it("laisse by_class refléter la part réelle du montant, pas un total forcé à 1", () => {
+      const a = makeAsset({ id: "a", asset_class: "equity_dev" });
+      const m = computeMetrics([a], { a: 0.4 }, [[0.04]], [a.expected_return]);
+      expect(m.by_class.equity_dev).toBeCloseTo(0.4, 9);
+    });
   });
 });

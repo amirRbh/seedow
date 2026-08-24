@@ -5,8 +5,13 @@
  */
 import { describe, it, expect } from "vitest";
 import { buildPortfolio, capAndRedistribute } from "../engine";
-import { MAX_SINGLE_WEIGHT } from "../types";
-import { makeAsset, defaultParams, balancedUniverse, diagonalCovMap } from "./fixtures";
+import { MAX_SINGLE_WEIGHT } from "../../types";
+import {
+  makeAsset,
+  defaultParams,
+  balancedUniverse,
+  diagonalCovMap,
+} from "../../__tests__/fixtures";
 
 const sum = (w: Record<string, number>) => Object.values(w).reduce((s, x) => s + x, 0);
 

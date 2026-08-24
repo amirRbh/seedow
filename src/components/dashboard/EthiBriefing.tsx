@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { computeBriefing, type BriefingSignal } from "@/lib/portfolio/signals";
-import { rebalancePortfolio } from "@/lib/portfolio/server.functions";
+import { rebalancePortfolio } from "@/lib/portfolio/legacy/server.functions";
 import { EASE_REVEAL } from "@/lib/motion";
 import { callAuthed } from "@/lib/authedServerFn";
 import { GoldRuleReveal } from "@/components/ui/GoldRuleReveal";

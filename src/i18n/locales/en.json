@@ -2960,7 +2960,13 @@
     "glance_impact": "Impact {{score}}/100",
     "glance_riskfees_note": "Exact risk and fees are computed when you save.",
     "simulation_note": "Educational simulation — no real transaction. You decide.",
-    "need_one": "Add at least one investment to save."
+    "need_one": "Add at least one investment to save.",
+    "glance_allocated": "allocated",
+    "glance_unallocated": "{{pct}} unallocated",
+    "glance_over": "You allocated {{pct}}% more than your amount. Remove the surplus before saving.",
+    "over_allocated": "Remove {{pct}}%: you cannot allocate more than your amount.",
+    "copilot_title": "What this choice changes",
+    "copilot_moved": "{{name}}: {{from}} → {{to}}"
   },
   "data_provenance": {
     "coverage_label": "What does coverage mean?",
@@ -3073,7 +3079,8 @@
         "hint": "The rest of your portfolio."
       }
     },
-    "money_declared": "The amount you declared: no priced holding backs it yet. Compose your portfolio so it gets valued at today's prices."
+    "money_declared": "The amount you declared: no priced holding backs it yet. Compose your portfolio so it gets valued at today's prices.",
+    "money_unallocated": "Including {{amount}} unallocated — this share sits on no holding, it does not move with prices."
   },
   "sustainability": {
     "tier": {

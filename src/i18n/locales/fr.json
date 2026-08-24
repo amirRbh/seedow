@@ -2960,7 +2960,13 @@
     "glance_impact": "Impact {{score}}/100",
     "glance_riskfees_note": "Risque et frais précis calculés à l'enregistrement.",
     "simulation_note": "Simulation à but pédagogique — aucune transaction réelle. Vous décidez.",
-    "need_one": "Ajoutez au moins un investissement pour enregistrer."
+    "need_one": "Ajoutez au moins un investissement pour enregistrer.",
+    "glance_allocated": "attribués",
+    "glance_unallocated": "{{pct}} non attribués",
+    "glance_over": "Tu as attribué {{pct}} % de plus que ton montant. Retire ce surplus avant d'enregistrer.",
+    "over_allocated": "Retire {{pct}} % : tu ne peux pas placer plus que ton montant.",
+    "copilot_title": "Ce que ce choix change",
+    "copilot_moved": "{{name}} : {{from}} → {{to}}"
   },
   "data_provenance": {
     "coverage_label": "Que signifie la couverture ?",
@@ -3073,7 +3079,8 @@
         "hint": "Le reste de ton portefeuille."
       }
     },
-    "money_declared": "Montant que tu as déclaré : aucune ligne cotée ne le soutient pour l'instant. Compose ton portefeuille pour qu'il soit valorisé aux cours du jour."
+    "money_declared": "Montant que tu as déclaré : aucune ligne cotée ne le soutient pour l'instant. Compose ton portefeuille pour qu'il soit valorisé aux cours du jour.",
+    "money_unallocated": "Dont {{amount}} non attribués — cette part n'est placée sur aucune ligne, elle ne bouge pas avec les cours."
   },
   "sustainability": {
     "tier": {
