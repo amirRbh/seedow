@@ -249,89 +249,52 @@ function LeFil() {
               </div>
             </Node>
 
-            {/* NŒUD 2 — MES INVESTISSEMENTS */}
+            {/* NŒUD 2 — MON IMPACT — remonté juste après l'argent : c'est
+                la raison d'être du produit, pas une métrique reléguée en bas.
+                Le chiffre mis en avant est l'écart carbone RÉEL quand il existe ;
+                la note ESG reste affichée, mais nommée pour ce qu'elle est. */}
             <Node index={2} active {...reveal(2)}>
-              <div className="flex items-baseline justify-between gap-3">
-                <SectionLabel>{t("le_fil.investments")}</SectionLabel>
-                {holdings.length > 0 && (
-                  <Link
-                    to="/portfolio"
-                    className="stamp text-ice-ink underline underline-offset-4 hover:no-underline"
-                  >
-                    {t("le_fil.see_all")} →
-                  </Link>
-                )}
-              </div>
-              {topHoldings.length > 0 ? (
-                <ul className="mt-1 flex flex-col divide-y divide-paper-3/70">
-                  {topHoldings.map((h) => (
-                    <li key={h.id} className="group flex items-center gap-3 py-3">
-                      <button
-                        type="button"
-                        onClick={() => setSelectedHolding(h)}
-                        aria-label={t("le_fil.asset_detail", { name: h.name })}
-                        className="min-w-0 flex-1 rounded-sm text-left outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
-                      >
-                        <p className="truncate text-body font-semibold text-ink">{h.name}</p>
-                        {/* `allocationPct` est en POINTS (0..100) : le passer
-                            tel quel à `formatPercent` affichait « 6 200 % »
-                            pour une ligne à 62 %. */}
-                        <p className="mt-0.5 text-body-sm text-ink-3">
-                          {classCopy.label(h.category ?? "other")} ·{" "}
-                          {formatPercentPoints(h.allocationPct ?? 0, lang, 0)}
-                        </p>
-                      </button>
-                      <span className="font-value text-body text-ink">
-                        {formatCurrency(((h.allocationPct ?? 0) / 100) * totalValue, lang)}
-                      </span>
-                      <Link
-                        to="/ethi"
-                        search={{ intent: "why", q: h.ticker }}
-                        aria-label={t("le_fil.why_asset", { name: h.name })}
-                        className="shrink-0 stamp opacity-70 transition-opacity hover:text-ice-ink focus-visible:opacity-100 group-hover:opacity-100"
-                      >
-                        {t("le_fil.why")}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="mt-2 text-sm text-ink-3">{t("le_fil.empty_holdings")}</p>
-              )}
-            </Node>
+              <p className="stamp">{t("le_fil.impact")}</p>
 
-            {/* NŒUD 3 — MON IMPACT */}
-            <Node index={3} active {...reveal(3)}>
-              <SectionLabel>{t("le_fil.impact")}</SectionLabel>
-              <div className="mt-3 flex items-center gap-4">
-                <ImpactRing score={impactScore} />
-                <div className="text-sm leading-snug text-ink-2">
-                  {impactScore !== null ? (
-                    <>
-                      {t("le_fil.impact_weighted")}
-                      {carbonDelta != null && (
-                        <>
-                          {" "}
-                          {t("le_fil.carbon_prefix")}{" "}
-                          <span className="text-mint-ink font-value">
-                            −{formatPercent(carbonDelta, lang, 0)}
-                          </span>{" "}
-                          {t("le_fil.carbon_suffix")}
-                        </>
-                      )}
-                      <br />
-                      <Link
-                        to="/certificat"
-                        className="text-ice-ink underline underline-offset-4 hover:no-underline"
-                      >
-                        {t("le_fil.impact_link")} →
-                      </Link>
-                    </>
-                  ) : (
-                    t("le_fil.impact_empty")
-                  )}
+              {/* Le chiffre de tête est l'écart carbone MESURÉ, pas la moyenne
+                  ESG : c'est le seul des deux qui décrit un effet sur le monde.
+                  Quand il n'est pas mesurable, on le dit au lieu de mettre la
+                  note ESG à sa place — un score n'est pas un impact. */}
+              {carbonDelta != null ? (
+                <>
+                  <p className="mt-1.5 text-body-sm text-ink-2">{t("le_fil.impact_carbon_lead")}</p>
+                  <h2 className="mt-1 text-figure-hero leading-none text-mint-ink">
+                    −{formatPercent(carbonDelta, lang, 0)}
+                  </h2>
+                  <p className="mt-2 text-body-sm leading-snug text-ink-2">
+                    {t("le_fil.impact_carbon_desc")}
+                  </p>
+                </>
+              ) : (
+                <p className="mt-1.5 text-body-sm leading-snug text-ink-2">
+                  {impactScore !== null
+                    ? t("le_fil.impact_carbon_pending")
+                    : t("le_fil.impact_empty")}
+                </p>
+              )}
+
+              {/* La note ESG reste — nommée pour ce qu'elle est : une moyenne
+                  des notes de tes lignes, pas une mesure d'impact. */}
+              {impactScore !== null && (
+                <div className="mt-4 flex items-center gap-4 border-t border-paper-3 pt-4">
+                  <ImpactRing score={impactScore} />
+                  <div className="text-body-sm leading-snug text-ink-2">
+                    {t("le_fil.esg_average_desc")}
+                    <br />
+                    <Link
+                      to="/certificat"
+                      className="text-ice-ink underline underline-offset-4 hover:no-underline"
+                    >
+                      {t("le_fil.impact_link")} →
+                    </Link>
+                  </div>
                 </div>
-              </div>
+              )}
               {carbonDelta != null && (
                 <Provenance
                   className="mt-3"
@@ -405,6 +368,57 @@ function LeFil() {
                     )}
                   </div>
                 )
+              )}
+            </Node>
+
+            {/* NŒUD 3 — MES INVESTISSEMENTS */}
+            <Node index={3} active {...reveal(3)}>
+              <div className="flex items-baseline justify-between gap-3">
+                <SectionLabel>{t("le_fil.investments")}</SectionLabel>
+                {holdings.length > 0 && (
+                  <Link
+                    to="/portfolio"
+                    className="stamp text-ice-ink underline underline-offset-4 hover:no-underline"
+                  >
+                    {t("le_fil.see_all")} →
+                  </Link>
+                )}
+              </div>
+              {topHoldings.length > 0 ? (
+                <ul className="mt-1 flex flex-col divide-y divide-paper-3/70">
+                  {topHoldings.map((h) => (
+                    <li key={h.id} className="group flex items-center gap-3 py-3">
+                      <button
+                        type="button"
+                        onClick={() => setSelectedHolding(h)}
+                        aria-label={t("le_fil.asset_detail", { name: h.name })}
+                        className="min-w-0 flex-1 rounded-sm text-left outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
+                      >
+                        <p className="truncate text-body font-semibold text-ink">{h.name}</p>
+                        {/* `allocationPct` est en POINTS (0..100) : le passer
+                            tel quel à `formatPercent` affichait « 6 200 % »
+                            pour une ligne à 62 %. */}
+                        <p className="mt-0.5 text-body-sm text-ink-3">
+                          {classCopy.label(h.category ?? "other")} ·{" "}
+                          {formatPercentPoints(h.allocationPct ?? 0, lang, 0)}
+                        </p>
+                      </button>
+                      <span className="font-value text-body text-ink">
+                        {formatCurrency(((h.allocationPct ?? 0) / 100) * totalValue, lang)}
+                      </span>
+                      <Link
+                        to="/ethi"
+                        search={{ intent: "why", q: h.ticker }}
+                        aria-label={t("le_fil.why_asset", { name: h.name })}
+                        className="shrink-0 stamp opacity-70 transition-opacity hover:text-ice-ink focus-visible:opacity-100 group-hover:opacity-100"
+                      >
+                        {t("le_fil.why")}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="mt-2 text-sm text-ink-3">{t("le_fil.empty_holdings")}</p>
               )}
             </Node>
 

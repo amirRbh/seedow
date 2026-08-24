@@ -1873,6 +1873,106 @@ const assetLayersEn = {
   },
 };
 
+/**
+ * Onboarding relu POUR UN DÉBUTANT.
+ *
+ * Trois défauts corrigés ici, tous relevés en lisant l'écran comme quelqu'un qui
+ * n'a jamais investi :
+ *
+ *  1. Deux étapes sur quatre ne posaient pas de question. « Ces secteurs seront
+ *     totalement exclus » et « Ton objectif principal » sont des étiquettes de
+ *     formulaire ; on ne sait pas ce qu'on doit faire.
+ *  2. La dernière étape parlait de « ton premier dépôt » et demandait « combien
+ *     veux-tu investir » — alors que rien n'est réel et qu'aucun argent ne bouge.
+ *     C'était à la fois faux et intimidant.
+ *  3. Les montants étaient qualifiés d'« engagement sérieux » ou de « démarrage
+ *     ambitieux » : une pression à la hausse déguisée en description, sur une
+ *     simulation. Les libellés redeviennent neutres (§5, aucun dark pattern).
+ */
+const onboardingClarityFr = {
+  steps: {
+    values: {
+      ethiMessage:
+        "Salut, moi c'est Ethi ✨ On va composer un portefeuille ensemble. Première question, la plus simple : qu'est-ce qui compte pour toi ?",
+      question: "Qu'est-ce que tu veux financer ?",
+    },
+    exclusions: {
+      ethiMessage: "Bien noté 💚 Et à l'inverse ?",
+      question: "Qu'est-ce que tu refuses de financer ?",
+    },
+    objective: {
+      ethiMessage: "Compris. Maintenant, parlons de toi plutôt que des fonds.",
+      question: "Pour quoi mets-tu cet argent de côté ?",
+    },
+    amount: {
+      ethiMessage:
+        "Dernière question. Aucun argent ne bouge ici : c'est une simulation, tu choisis un montant juste pour voir ce que ça donne.",
+      question: "Avec quel montant veux-tu essayer ?",
+      "10_desc": "Pour voir",
+      "50_desc": "Un petit montant",
+      "100_desc": "Un montant rond",
+      "500_desc": "Un montant plus large",
+      sim_hint:
+        "Tu pourras le changer à tout moment. Rien n'est prélevé, rien n'est engagé — ce montant sert seulement à rendre les chiffres concrets.",
+    },
+  },
+  explainer: {
+    values:
+      "Tes convictions servent à CLASSER les fonds : ceux qui y correspondent remontent en tête. Elles ne promettent aucun rendement, et elles n'écartent personne — seules tes exclusions le font.",
+    exclusions:
+      "Exclure un secteur, c'est refuser de le financer. C'est un filtre net : un fonds concerné disparaît de la liste, il n'est pas juste mal noté.",
+    objective:
+      "Ton objectif ne change pas les fonds proposés. Il sert ensuite à dire si ta composition tient la route sur la durée que tu vises.",
+  },
+  pool: {
+    title: "Les fonds qui collent à tes critères",
+    compose_cta: "Composer mon portefeuille",
+    blank_cta: "Choisir moi-même depuis zéro",
+  },
+};
+
+const onboardingClarityEn = {
+  steps: {
+    values: {
+      ethiMessage:
+        "Hi, I'm Ethi ✨ We're going to build a portfolio together. First question, the simplest one: what matters to you?",
+      question: "What do you want to fund?",
+    },
+    exclusions: {
+      ethiMessage: "Noted 💚 And the other way round?",
+      question: "What do you refuse to fund?",
+    },
+    objective: {
+      ethiMessage: "Got it. Now let's talk about you rather than the funds.",
+      question: "What are you setting this money aside for?",
+    },
+    amount: {
+      ethiMessage:
+        "Last question. No money moves here: this is a simulation, you pick an amount just to see what it looks like.",
+      question: "What amount do you want to try with?",
+      "10_desc": "Just to see",
+      "50_desc": "A small amount",
+      "100_desc": "A round amount",
+      "500_desc": "A larger amount",
+      sim_hint:
+        "You can change it any time. Nothing is charged, nothing is committed — this amount only makes the figures concrete.",
+    },
+  },
+  explainer: {
+    values:
+      "Your convictions RANK the funds: the matching ones rise to the top. They promise no return, and they exclude no one — only your exclusions do that.",
+    exclusions:
+      "Excluding a sector means refusing to fund it. It is a clean filter: an affected fund disappears from the list, it is not merely marked down.",
+    objective:
+      "Your goal does not change which funds appear. It is used afterwards to say whether your composition holds up over the horizon you have in mind.",
+  },
+  pool: {
+    title: "The funds that match your criteria",
+    compose_cta: "Compose my portfolio",
+    blank_cta: "Pick everything myself",
+  },
+};
+
 const composeSwitchFr = {
   reglages: {
     pool_eyebrow: "Ton pool, reclassé",
@@ -1935,8 +2035,19 @@ const composeSwitchFr = {
   },
   real_invest_interest: { title: "Tu veux investir ce portefeuille pour de vrai ?" },
   analysis: analysisFr,
+  onboarding: onboardingClarityFr,
   asset_layers: assetLayersFr,
   blank_builder: {
+    total_label: "Montant à répartir",
+    remaining: "Il te reste {{amount}} à placer.",
+    all_placed: "Tout est placé.",
+    over_by: "Tu as placé {{amount}} de plus que ton montant.",
+    over_hint: "Retire ce surplus, ou augmente ton montant à répartir.",
+    over_allocated: "Retire {{amount}} : tu ne peux pas placer plus que ton montant.",
+    amount_of: "Montant placé sur {{name}}",
+    share_of_total: "soit {{pct}} de ton montant",
+    the_rest: "le reste ({{amount}})",
+    copilot_moved: "{{name}} : {{from}} → {{to}}",
     analysis_title: "Ce que dit cette composition",
     analysis_loading: "Analyse en cours…",
     copilot_title: "Ce que ce choix change",
@@ -1948,6 +2059,13 @@ const composeSwitchFr = {
     over_allocated: "Retire {{pct}} % : tu ne peux pas placer plus que ton montant.",
   },
   le_fil: {
+    impact_carbon_lead: "Ce que ton portefeuille émet, comparé à un ETF Monde classique",
+    impact_carbon_desc:
+      "d'intensité carbone en moins. C'est une mesure, pas une note : elle vient des émissions déclarées par les entreprises que tu détiens.",
+    impact_carbon_pending:
+      "L'empreinte carbone de tes lignes n'est pas encore mesurable : trop peu d'émetteurs publient la leur. On ne met pas un score à la place — il arrivera quand la donnée sera là.",
+    esg_average_desc:
+      "Note ESG moyenne de tes lignes, pondérée par leur poids. C'est une note de fournisseur, pas un effet sur le monde.",
     understand: "Comprendre",
     understand_hint: "Ce que ta composition implique — Seedow explique, il ne corrige pas.",
     understand_loading: "Analyse en cours…",
@@ -2020,8 +2138,19 @@ const composeSwitchEn = {
   },
   real_invest_interest: { title: "Want to invest this portfolio for real?" },
   analysis: analysisEn,
+  onboarding: onboardingClarityEn,
   asset_layers: assetLayersEn,
   blank_builder: {
+    total_label: "Amount to allocate",
+    remaining: "You have {{amount}} left to place.",
+    all_placed: "Everything is placed.",
+    over_by: "You placed {{amount}} more than your amount.",
+    over_hint: "Remove the surplus, or raise the amount you are allocating.",
+    over_allocated: "Remove {{amount}}: you cannot place more than your amount.",
+    amount_of: "Amount placed on {{name}}",
+    share_of_total: "i.e. {{pct}} of your amount",
+    the_rest: "the rest ({{amount}})",
+    copilot_moved: "{{name}}: {{from}} → {{to}}",
     analysis_title: "What this composition says",
     analysis_loading: "Analysing…",
     copilot_title: "What this choice changes",
@@ -2032,6 +2161,13 @@ const composeSwitchEn = {
     over_allocated: "Remove {{pct}}%: you cannot allocate more than your amount.",
   },
   le_fil: {
+    impact_carbon_lead: "What your portfolio emits, compared with a standard World ETF",
+    impact_carbon_desc:
+      "less carbon intensity. This is a measurement, not a rating: it comes from the emissions disclosed by the companies you hold.",
+    impact_carbon_pending:
+      "Your holdings' carbon footprint is not measurable yet: too few issuers disclose theirs. We do not put a score in its place — it will come when the data does.",
+    esg_average_desc:
+      "Weighted average ESG rating of your holdings. That is a provider's rating, not an effect on the world.",
     understand: "Understand",
     understand_hint: "What your composition implies — Seedow explains, it does not correct.",
     understand_loading: "Analysing…",
