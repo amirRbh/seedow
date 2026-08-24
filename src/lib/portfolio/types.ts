@@ -185,7 +185,13 @@ export interface PortfolioMetrics {
   carbon_data_quality?: CarbonDataQuality | null;
   by_class: Record<AssetClass, number>;
   by_region: Record<string, number>;
-  diversification: number; // 1 - HHI
+  diversification: number; // 1 - HHI, lu sur la part allouée
+  /**
+   * Somme des poids (0..1+). Depuis que la composition est enregistrée telle
+   * que l'utilisateur la saisit, elle ne vaut plus forcément 1 : `1 - allocated_share`
+   * est la part non attribuée. Optionnel — absent des métriques persistées avant.
+   */
+  allocated_share?: number;
 }
 
 /** Résumé de qualité de données du portefeuille (voir data-quality.ts). */

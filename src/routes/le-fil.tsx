@@ -153,6 +153,15 @@ function LeFil() {
 
               <MoneyDelta money={money} lang={lang} />
 
+              {/* Part non attribuée : un choix valide de l'utilisateur, donc une
+                  information à donner — jamais un défaut à corriger pour lui. */}
+              {valuation.unallocatedCash > 0.005 && (
+                <p className="mt-2 text-body-sm leading-snug text-ink-2">
+                  {t("le_fil.money_unallocated", {
+                    amount: formatCurrency(valuation.unallocatedCash, lang),
+                  })}
+                </p>
+              )}
               {totalInvested > 0 ? (
                 <p className="mt-3 text-body-sm leading-snug text-ink-2">
                   {t("le_fil.money_since", { invested: formatCurrency(totalInvested, lang) })}

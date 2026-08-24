@@ -1,5 +1,6 @@
 import type { Asset, PortfolioWeights, PortfolioMetrics, AssetClass, PillarWeights } from "./types";
 import { DEFAULT_PILLAR_WEIGHTS, compositeEsgScore, isEsgSourced } from "./types";
+import { sumWeights } from "./weights";
 import { CARBON_QUALITY_RANK, type CarbonDataQuality } from "@/lib/esg/carbon-engine";
 
 export function computeMetrics(
@@ -105,9 +106,24 @@ export function computeMetrics(
     byRegion[r] = (byRegion[r] ?? 0) + weights[id];
   }
 
+  // Part réellement placée : les poids ne somment plus forcément à 1 depuis que
+  // Seedow enregistre la composition telle qu'elle est saisie. Ce qui reste est
+  // du liquide non attribué.
+  const allocated = sumWeights(weights);
+
+  // Diversification et score ESG sont des MOYENNES : elles se lisent sur la part
+  // allouée, pas sur le montant total. Sans cette normalisation, ne placer que
+  // 10 % sur une seule ligne passerait pour un portefeuille parfaitement
+  // diversifié, et la part non attribuée pèserait un score ESG de 0 qu'aucune
+  // donnée ne justifie. À 100 % alloué, le calcul est inchangé.
   let hhi = 0;
-  for (const id in weights) hhi += weights[id] * weights[id];
-  const diversification = 1 - hhi;
+  if (allocated > 0) {
+    for (const id in weights) {
+      const share = weights[id] / allocated;
+      hhi += share * share;
+    }
+  }
+  const diversification = allocated > 0 ? 1 - hhi : 0;
 
   // Rescale carbon to per-€ figure on covered assets only (intensive measure).
   const realCarbon = carbonCoverage > 0 ? carbonNumerator / carbonCoverage : null;
@@ -117,7 +133,7 @@ export function computeMetrics(
     expected_return: portfolioReturn,
     volatility: vol,
     sharpe,
-    esg_score: portfolioESG,
+    esg_score: esgTotalWeight > 0 ? portfolioESG / esgTotalWeight : 0,
     esg_sourced_share: esgTotalWeight > 0 ? esgSourcedWeight / esgTotalWeight : null,
     ter: portfolioTER,
     carbon_intensity_gco2e_per_eur: realCarbon,
@@ -129,5 +145,6 @@ export function computeMetrics(
     by_class: byClass,
     by_region: byRegion,
     diversification,
+    allocated_share: allocated,
   };
 }
