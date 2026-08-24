@@ -2966,7 +2966,9 @@
     "glance_over": "You allocated {{pct}}% more than your amount. Remove the surplus before saving.",
     "over_allocated": "Remove {{pct}}%: you cannot allocate more than your amount.",
     "copilot_title": "What this choice changes",
-    "copilot_moved": "{{name}}: {{from}} → {{to}}"
+    "copilot_moved": "{{name}}: {{from}} → {{to}}",
+    "analysis_title": "What this composition says",
+    "analysis_loading": "Analysing…"
   },
   "data_provenance": {
     "coverage_label": "What does coverage mean?",
@@ -3080,7 +3082,10 @@
       }
     },
     "money_declared": "The amount you declared: no priced holding backs it yet. Compose your portfolio so it gets valued at today's prices.",
-    "money_unallocated": "Including {{amount}} unallocated — this share sits on no holding, it does not move with prices."
+    "money_unallocated": "Including {{amount}} unallocated — this share sits on no holding, it does not move with prices.",
+    "understand": "Understand",
+    "understand_hint": "What your composition implies — Seedow explains, it does not correct.",
+    "understand_loading": "Analysing…"
   },
   "sustainability": {
     "tier": {
@@ -3099,5 +3104,71 @@
   "a11y": {
     "skip_to_content": "Skip to content",
     "intensity_for": "Intensity — {{cause}}"
+  },
+  "analysis": {
+    "unknown": "Unknown",
+    "score_100": "{{score}}/100",
+    "volatility": "volatility {{pct}}",
+    "horizon_years_one": "{{count}} year",
+    "horizon_years_other": "{{count}} years",
+    "largest_position": "largest holding {{pct}}",
+    "esg_sourced": "{{pct}} sourced scores",
+    "exclusions_ok": "Respected",
+    "exclusions_breached_one": "{{count}} breached",
+    "exclusions_breached_other": "{{count}} breached",
+    "tradeoffs_title": "What this implies",
+    "row": {
+      "alignment": "Alignment with your convictions",
+      "exclusions": "Your exclusions",
+      "risk": "Risk level",
+      "horizon": "Fit with your horizon",
+      "diversification": "Concentration",
+      "data": "Data quality"
+    },
+    "severity": {
+      "critical": "to fix",
+      "warning": "heads-up",
+      "info": "info"
+    },
+    "risk": {
+      "low": "Cautious",
+      "moderate": "Moderate",
+      "high": "Dynamic",
+      "unknown": "Not measurable yet"
+    },
+    "horizon": {
+      "good": "Consistent",
+      "acceptable": "Acceptable",
+      "weak": "Tight",
+      "unknown": "No horizon set"
+    },
+    "concentration": {
+      "low": "Well spread",
+      "moderate": "Moderate",
+      "high": "Strong",
+      "unknown": "No position"
+    },
+    "data": {
+      "high": "Solid",
+      "medium": "Partial",
+      "low": "Limited",
+      "unknown": "No data"
+    },
+    "alignment": {
+      "measured": "measured on your holdings' real exposure",
+      "no_causes": "no conviction declared",
+      "no_exposure_data": "no exposure data on your holdings",
+      "exclusions_ok": "none of your exclusions is touched",
+      "exclusions_breached": "at least one holding touches a sector you refuse",
+      "no_exclusions": "no exclusion declared"
+    },
+    "tradeoff": {
+      "exclusion_breached_one": "One of your holdings touches a sector you excluded. It is the only point contradicting a choice you made.",
+      "exclusion_breached_other": "{{count}} of your exclusions are touched by your holdings. These are the only points contradicting choices you made.",
+      "concentration": "One holding weighs {{pct}} of what you allocated. Your outcome will depend heavily on it.",
+      "horizon_weak": "This risk level asks for more time than the horizon you set. Neither good nor bad — worth knowing.",
+      "data_low": "A large share of your holdings has no sufficient market history yet: risk and fees are class estimates, not measurements.",
+      "unallocated": "{{pct}} of your amount sits on no holding."
+    }
   }
 }

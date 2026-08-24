@@ -1665,6 +1665,137 @@ const methodologiePoolEn = {
   },
 };
 
+/**
+ * Libellés de l'analyse explicable. `analyzePortfolio` rend des CODES stables
+ * (`risk.low`, `tradeoff.concentration`…) ; le texte vit ici, pour que le moteur
+ * reste testable sans dépendre d'une langue.
+ */
+const analysisFr = {
+  unknown: "Inconnu",
+  score_100: "{{score}}/100",
+  volatility: "volatilité {{pct}}",
+  horizon_years_one: "{{count}} an",
+  horizon_years_other: "{{count}} ans",
+  largest_position: "plus grosse ligne {{pct}}",
+  esg_sourced: "{{pct}} de scores sourcés",
+  exclusions_ok: "Respectées",
+  exclusions_breached_one: "{{count}} non respectée",
+  exclusions_breached_other: "{{count}} non respectées",
+  tradeoffs_title: "Ce que ça implique",
+  row: {
+    alignment: "Alignement avec tes convictions",
+    exclusions: "Tes exclusions",
+    risk: "Niveau de risque",
+    horizon: "Cohérence avec ton horizon",
+    diversification: "Concentration",
+    data: "Qualité des données",
+  },
+  severity: { critical: "à corriger", warning: "attention", info: "info" },
+  risk: {
+    low: "Prudent",
+    moderate: "Modéré",
+    high: "Dynamique",
+    unknown: "Pas encore mesurable",
+  },
+  horizon: {
+    good: "Cohérent",
+    acceptable: "Acceptable",
+    weak: "Tendu",
+    unknown: "Horizon non renseigné",
+  },
+  concentration: {
+    low: "Bien répartie",
+    moderate: "Modérée",
+    high: "Forte",
+    unknown: "Pas de position",
+  },
+  data: {
+    high: "Solide",
+    medium: "Partielle",
+    low: "Limitée",
+    unknown: "Pas de donnée",
+  },
+  alignment: {
+    measured: "mesuré sur l'exposition réelle de tes lignes",
+    no_causes: "aucune conviction déclarée",
+    no_exposure_data: "aucune donnée d'exposition sur tes lignes",
+    exclusions_ok: "aucune de tes exclusions n'est touchée",
+    exclusions_breached: "au moins une ligne touche un secteur que tu refuses",
+    no_exclusions: "aucune exclusion déclarée",
+  },
+  tradeoff: {
+    exclusion_breached_one:
+      "Une de tes lignes touche un secteur que tu as exclu. C'est le seul point qui contredit un choix que tu as posé.",
+    exclusion_breached_other:
+      "{{count}} de tes exclusions sont touchées par tes lignes. Ce sont les seuls points qui contredisent des choix que tu as posés.",
+    concentration:
+      "Une ligne pèse {{pct}} de ce que tu as placé. Ton résultat dépendra beaucoup d'elle.",
+    horizon_weak:
+      "Ce niveau de risque demande plus de temps que l'horizon que tu as indiqué. Ni bon ni mauvais — à savoir.",
+    data_low:
+      "Une grande partie de tes lignes n'a pas encore d'historique de marché suffisant : risque et frais sont des estimations de classe, pas des mesures.",
+    unallocated: "{{pct}} de ton montant ne sont placés sur aucune ligne.",
+  },
+};
+
+const analysisEn = {
+  unknown: "Unknown",
+  score_100: "{{score}}/100",
+  volatility: "volatility {{pct}}",
+  horizon_years_one: "{{count}} year",
+  horizon_years_other: "{{count}} years",
+  largest_position: "largest holding {{pct}}",
+  esg_sourced: "{{pct}} sourced scores",
+  exclusions_ok: "Respected",
+  exclusions_breached_one: "{{count}} breached",
+  exclusions_breached_other: "{{count}} breached",
+  tradeoffs_title: "What this implies",
+  row: {
+    alignment: "Alignment with your convictions",
+    exclusions: "Your exclusions",
+    risk: "Risk level",
+    horizon: "Fit with your horizon",
+    diversification: "Concentration",
+    data: "Data quality",
+  },
+  severity: { critical: "to fix", warning: "heads-up", info: "info" },
+  risk: { low: "Cautious", moderate: "Moderate", high: "Dynamic", unknown: "Not measurable yet" },
+  horizon: {
+    good: "Consistent",
+    acceptable: "Acceptable",
+    weak: "Tight",
+    unknown: "No horizon set",
+  },
+  concentration: {
+    low: "Well spread",
+    moderate: "Moderate",
+    high: "Strong",
+    unknown: "No position",
+  },
+  data: { high: "Solid", medium: "Partial", low: "Limited", unknown: "No data" },
+  alignment: {
+    measured: "measured on your holdings' real exposure",
+    no_causes: "no conviction declared",
+    no_exposure_data: "no exposure data on your holdings",
+    exclusions_ok: "none of your exclusions is touched",
+    exclusions_breached: "at least one holding touches a sector you refuse",
+    no_exclusions: "no exclusion declared",
+  },
+  tradeoff: {
+    exclusion_breached_one:
+      "One of your holdings touches a sector you excluded. It is the only point contradicting a choice you made.",
+    exclusion_breached_other:
+      "{{count}} of your exclusions are touched by your holdings. These are the only points contradicting choices you made.",
+    concentration:
+      "One holding weighs {{pct}} of what you allocated. Your outcome will depend heavily on it.",
+    horizon_weak:
+      "This risk level asks for more time than the horizon you set. Neither good nor bad — worth knowing.",
+    data_low:
+      "A large share of your holdings has no sufficient market history yet: risk and fees are class estimates, not measurements.",
+    unallocated: "{{pct}} of your amount sits on no holding.",
+  },
+};
+
 const composeSwitchFr = {
   reglages: {
     pool_eyebrow: "Ton pool, reclassé",
@@ -1726,7 +1857,10 @@ const composeSwitchFr = {
     },
   },
   real_invest_interest: { title: "Tu veux investir ce portefeuille pour de vrai ?" },
+  analysis: analysisFr,
   blank_builder: {
+    analysis_title: "Ce que dit cette composition",
+    analysis_loading: "Analyse en cours…",
     copilot_title: "Ce que ce choix change",
     copilot_moved: "{{name}} : {{from}} → {{to}}",
     glance_allocated: "attribués",
@@ -1736,6 +1870,9 @@ const composeSwitchFr = {
     over_allocated: "Retire {{pct}} % : tu ne peux pas placer plus que ton montant.",
   },
   le_fil: {
+    understand: "Comprendre",
+    understand_hint: "Ce que ta composition implique — Seedow explique, il ne corrige pas.",
+    understand_loading: "Analyse en cours…",
     money_unallocated:
       "Dont {{amount}} non attribués — cette part n'est placée sur aucune ligne, elle ne bouge pas avec les cours.",
     money_declared:
@@ -1804,7 +1941,10 @@ const composeSwitchEn = {
     },
   },
   real_invest_interest: { title: "Want to invest this portfolio for real?" },
+  analysis: analysisEn,
   blank_builder: {
+    analysis_title: "What this composition says",
+    analysis_loading: "Analysing…",
     copilot_title: "What this choice changes",
     copilot_moved: "{{name}}: {{from}} → {{to}}",
     glance_allocated: "allocated",
@@ -1813,6 +1953,9 @@ const composeSwitchEn = {
     over_allocated: "Remove {{pct}}%: you cannot allocate more than your amount.",
   },
   le_fil: {
+    understand: "Understand",
+    understand_hint: "What your composition implies — Seedow explains, it does not correct.",
+    understand_loading: "Analysing…",
     money_unallocated:
       "Including {{amount}} unallocated — this share sits on no holding, it does not move with prices.",
     money_declared:

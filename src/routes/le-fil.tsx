@@ -26,6 +26,8 @@ import {
 import { assetClassColor } from "@/lib/portfolio/assetClasses";
 import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 import { Provenance } from "@/components/ui/Provenance";
+import { PortfolioAnalysisPanel } from "@/components/portfolio/PortfolioAnalysisPanel";
+import { usePortfolioAnalysis } from "@/hooks/usePortfolioAnalysis";
 
 // Référence de comparaison : ETF MSCI World (IWDA / EUNL). Rendement et
 // volatilité annualisés (mêmes conventions que le comparatif détaillé).
@@ -63,6 +65,19 @@ function LeFil() {
     const quoted = lines.reduce((s, h) => s + (h.quoteAt ? h.weight : 0), 0);
     return Math.round((quoted / total) * 100);
   }, [valuation.holdings]);
+
+  // Analyse explicable du portefeuille affiché. Les poids repartent tels qu'ils
+  // sont stockés (allocationPct est en points) — aucune renormalisation.
+  const analysisInput = useMemo(
+    () => ({
+      weights: Object.fromEntries(holdings.map((h) => [h.id, (h.allocationPct ?? 0) / 100])),
+      causes: portfolio?.causes ?? [],
+      exclusions: portfolio?.exclusions ?? [],
+      horizonYears: portfolio?.horizon_years ?? null,
+    }),
+    [holdings, portfolio],
+  );
+  const { analysis, loading: analysisLoading } = usePortfolioAnalysis(analysisInput);
 
   // « Mon argent » : le montant ET le pourcentage dérivent du même couple
   // (investi, valeur du jour), donc ils racontent forcément la même histoire.
@@ -393,9 +408,29 @@ function LeFil() {
               )}
             </Node>
 
-            {/* NŒUD 4 — ALLER PLUS LOIN : comparaison + monde réel, repliés par
+            {/* NŒUD 4 — COMPRENDRE : ce que cette composition implique.
+                Seedow explique les conséquences, il ne corrige pas les choix. */}
+            {(analysis || analysisLoading) && (
+              <Node index={4} active {...reveal(4)}>
+                <SectionLabel>{t("le_fil.understand")}</SectionLabel>
+                {analysis ? (
+                  <>
+                    <p className="mt-1 text-body-sm leading-snug text-ink-2">
+                      {t("le_fil.understand_hint")}
+                    </p>
+                    <PortfolioAnalysisPanel className="mt-3" analysis={analysis} />
+                  </>
+                ) : (
+                  <p role="status" className="mt-2 text-sm text-ink-3">
+                    {t("le_fil.understand_loading")}
+                  </p>
+                )}
+              </Node>
+            )}
+
+            {/* NŒUD 5 — ALLER PLUS LOIN : comparaison + monde réel, repliés par
                 défaut pour limiter le scroll (divulgation progressive, Règle 2). */}
-            <Node index={4} active={false} {...reveal(4)}>
+            <Node index={5} active={false} {...reveal(5)}>
               <details className="group">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
                   <span className="stamp">{t("le_fil.more")}</span>

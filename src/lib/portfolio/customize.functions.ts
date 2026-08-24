@@ -13,6 +13,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { buildCovariance } from "./covariance";
 import { computeMetrics } from "./metrics";
 import { causeToPillarWeights, type Asset, type CauseTag, type PortfolioMetrics } from "./types";
 import { loadUniverse } from "./universe.server";
@@ -98,26 +99,6 @@ function measureComposition(
   const pillarWeights = causeToPillarWeights(causes);
   const metrics = computeMetrics(pool, weights, cov, expectedReturns, pillarWeights);
   return { weights, metrics, pool };
-}
-
-/**
- * Construit la sous-matrice de covariance pour un sous-ensemble d'actifs, avec
- * la même règle de repli que le moteur : diagonale manquante → volatility²
- * (jamais 0), hors-diagonale manquante → 0 (non-corrélé).
- */
-function buildCovariance(assets: Asset[], covMap: Map<string, number>): number[][] {
-  const n = assets.length;
-  const cov: number[][] = [];
-  for (let i = 0; i < n; i++) {
-    const row: number[] = [];
-    for (let j = 0; j < n; j++) {
-      const key = `${assets[i].id}|${assets[j].id}`;
-      const fallback = i === j ? assets[i].volatility ** 2 : 0;
-      row.push(covMap.get(key) ?? fallback);
-    }
-    cov.push(row);
-  }
-  return cov;
 }
 
 export const saveCustomPortfolio = createServerFn({ method: "POST" })
