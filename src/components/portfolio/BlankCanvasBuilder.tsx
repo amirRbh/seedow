@@ -18,6 +18,8 @@ import {
 import { WEIGHT_EPSILON } from "@/lib/portfolio/weights";
 import { diversificationBand, impactScore } from "@/lib/portfolio/plain-language";
 import { AssetPickerSheet, type PickedAsset } from "./AssetPickerSheet";
+import { PortfolioAnalysisPanel } from "./PortfolioAnalysisPanel";
+import { usePortfolioAnalysis } from "@/hooks/usePortfolioAnalysis";
 import { readPoolHandoff, type PoolHandoffIntent } from "@/lib/onboarding/poolHandoff";
 
 interface Line {
@@ -152,6 +154,16 @@ export function BlankCanvasBuilder() {
   const snapshot = liteSnapshot(
     active.map((l) => ({ id: l.id, esgScore: l.esgScore, weight: l.pct })),
   );
+  // Analyse complète, débouncée : le copilote donne le ressenti immédiat du
+  // geste, celle-ci donne la lecture de fond (alignement, exclusions, horizon,
+  // qualité des données) — elle ne touche à aucun poids.
+  const { analysis, loading: analysisLoading } = usePortfolioAnalysis({
+    weights: Object.fromEntries(active.map((l) => [l.id, l.pct / 100])),
+    causes: intent?.causes ?? [],
+    exclusions: intent?.exclusions ?? [],
+    horizonYears: intent?.horizonYears ?? null,
+  });
+
   const divBand = diversificationBand(snapshot.diversification).band;
   const concentrated = snapshot.maxWeight > CONCENTRATION_ALERT;
   const impact = impactScore(snapshot.impact).score;
@@ -303,6 +315,22 @@ export function BlankCanvasBuilder() {
               {t("blank_builder.glance_riskfees_note")}
             </p>
           </div>
+
+          {/* Lecture de fond — ce que cette composition implique. */}
+          {(analysis || analysisLoading) && (
+            <div className="rounded-2xl border border-paper-3 bg-paper p-4">
+              <p className="text-tag uppercase tracking-[0.14em] font-mono text-ink-3">
+                {t("blank_builder.analysis_title")}
+              </p>
+              {analysis ? (
+                <PortfolioAnalysisPanel className="mt-3" analysis={analysis} />
+              ) : (
+                <p role="status" className="mt-2 text-body-sm text-ink-3">
+                  {t("blank_builder.analysis_loading")}
+                </p>
+              )}
+            </div>
+          )}
 
           {/* Lignes éditables — chaque curseur est indépendant */}
           <ul className="space-y-4">

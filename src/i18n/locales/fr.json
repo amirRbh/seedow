@@ -2966,7 +2966,9 @@
     "glance_over": "Tu as attribué {{pct}} % de plus que ton montant. Retire ce surplus avant d'enregistrer.",
     "over_allocated": "Retire {{pct}} % : tu ne peux pas placer plus que ton montant.",
     "copilot_title": "Ce que ce choix change",
-    "copilot_moved": "{{name}} : {{from}} → {{to}}"
+    "copilot_moved": "{{name}} : {{from}} → {{to}}",
+    "analysis_title": "Ce que dit cette composition",
+    "analysis_loading": "Analyse en cours…"
   },
   "data_provenance": {
     "coverage_label": "Que signifie la couverture ?",
@@ -3080,7 +3082,10 @@
       }
     },
     "money_declared": "Montant que tu as déclaré : aucune ligne cotée ne le soutient pour l'instant. Compose ton portefeuille pour qu'il soit valorisé aux cours du jour.",
-    "money_unallocated": "Dont {{amount}} non attribués — cette part n'est placée sur aucune ligne, elle ne bouge pas avec les cours."
+    "money_unallocated": "Dont {{amount}} non attribués — cette part n'est placée sur aucune ligne, elle ne bouge pas avec les cours.",
+    "understand": "Comprendre",
+    "understand_hint": "Ce que ta composition implique — Seedow explique, il ne corrige pas.",
+    "understand_loading": "Analyse en cours…"
   },
   "sustainability": {
     "tier": {
@@ -3099,5 +3104,71 @@
   "a11y": {
     "skip_to_content": "Aller au contenu",
     "intensity_for": "Intensité — {{cause}}"
+  },
+  "analysis": {
+    "unknown": "Inconnu",
+    "score_100": "{{score}}/100",
+    "volatility": "volatilité {{pct}}",
+    "horizon_years_one": "{{count}} an",
+    "horizon_years_other": "{{count}} ans",
+    "largest_position": "plus grosse ligne {{pct}}",
+    "esg_sourced": "{{pct}} de scores sourcés",
+    "exclusions_ok": "Respectées",
+    "exclusions_breached_one": "{{count}} non respectée",
+    "exclusions_breached_other": "{{count}} non respectées",
+    "tradeoffs_title": "Ce que ça implique",
+    "row": {
+      "alignment": "Alignement avec tes convictions",
+      "exclusions": "Tes exclusions",
+      "risk": "Niveau de risque",
+      "horizon": "Cohérence avec ton horizon",
+      "diversification": "Concentration",
+      "data": "Qualité des données"
+    },
+    "severity": {
+      "critical": "à corriger",
+      "warning": "attention",
+      "info": "info"
+    },
+    "risk": {
+      "low": "Prudent",
+      "moderate": "Modéré",
+      "high": "Dynamique",
+      "unknown": "Pas encore mesurable"
+    },
+    "horizon": {
+      "good": "Cohérent",
+      "acceptable": "Acceptable",
+      "weak": "Tendu",
+      "unknown": "Horizon non renseigné"
+    },
+    "concentration": {
+      "low": "Bien répartie",
+      "moderate": "Modérée",
+      "high": "Forte",
+      "unknown": "Pas de position"
+    },
+    "data": {
+      "high": "Solide",
+      "medium": "Partielle",
+      "low": "Limitée",
+      "unknown": "Pas de donnée"
+    },
+    "alignment": {
+      "measured": "mesuré sur l'exposition réelle de tes lignes",
+      "no_causes": "aucune conviction déclarée",
+      "no_exposure_data": "aucune donnée d'exposition sur tes lignes",
+      "exclusions_ok": "aucune de tes exclusions n'est touchée",
+      "exclusions_breached": "au moins une ligne touche un secteur que tu refuses",
+      "no_exclusions": "aucune exclusion déclarée"
+    },
+    "tradeoff": {
+      "exclusion_breached_one": "Une de tes lignes touche un secteur que tu as exclu. C'est le seul point qui contredit un choix que tu as posé.",
+      "exclusion_breached_other": "{{count}} de tes exclusions sont touchées par tes lignes. Ce sont les seuls points qui contredisent des choix que tu as posés.",
+      "concentration": "Une ligne pèse {{pct}} de ce que tu as placé. Ton résultat dépendra beaucoup d'elle.",
+      "horizon_weak": "Ce niveau de risque demande plus de temps que l'horizon que tu as indiqué. Ni bon ni mauvais — à savoir.",
+      "data_low": "Une grande partie de tes lignes n'a pas encore d'historique de marché suffisant : risque et frais sont des estimations de classe, pas des mesures.",
+      "unallocated": "{{pct}} de ton montant ne sont placés sur aucune ligne."
+    }
   }
 }
