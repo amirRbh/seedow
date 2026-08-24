@@ -14,12 +14,13 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
-import {
-  buildPortfolio,
-  type CauseTag,
-  type ExclusionTag,
-  type PortfolioParams,
-} from "@/lib/portfolio";
+// Ce simulateur est adossé à l'OPTIMISEUR : chaque variante est une allocation
+// recalculée. Il ne l'applique jamais — il compare, pour chiffrer ce que coûte
+// un levier ("si tu retirais cette exclusion, voici le delta"). L'import pointe
+// explicitement vers `legacy/` pour que cette dépendance reste visible, plutôt
+// que dissimulée derrière le barrel du chemin produit.
+import { buildPortfolio } from "./legacy/engine";
+import type { CauseTag, ExclusionTag, PortfolioParams } from "./types";
 import { loadUniverse } from "./universe.server";
 
 const InputSchema = z.object({ portfolioId: z.string().uuid() });

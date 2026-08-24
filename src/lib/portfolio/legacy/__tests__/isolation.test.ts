@@ -20,6 +20,15 @@ import { join, relative } from "node:path";
 const SRC = join(process.cwd(), "src");
 const LEGACY_DIR = join(SRC, "lib", "portfolio", "legacy");
 
+/** Symboles qui ne doivent jamais transiter par le barrel du chemin produit. */
+const LEGACY_SYMBOLS = [
+  "buildPortfolio",
+  "capAndRedistribute",
+  "optimizeMarkowitz",
+  "riskParityWeights",
+  "normalizeTo100",
+];
+
 /** Modules réservés au chemin d'évaluation. */
 const LEGACY_MODULES = [
   "engine",
@@ -55,21 +64,36 @@ describe("isolation du moteur d'optimisation", () => {
       .filter((f) => LEGACY_IMPORT.test(readFileSync(f, "utf-8")))
       .map((f) => relative(SRC, f));
 
-    // `EthiBriefing` est l'exception connue et documentée : il vit dans le
-    // Dashboard authentifié devenu inatteignable depuis que /le-fil est
-    // l'accueil. Son sort est une décision produit ouverte (docs/roadmap.md) ;
-    // tant qu'il existe, il est nommé ici plutôt que toléré en silence.
-    expect(offenders).toEqual(["components/dashboard/EthiBriefing.tsx"]);
+    // Deux exceptions connues, nommées plutôt que tolérées en silence :
+    //
+    //  - `EthiBriefing` vit dans le Dashboard authentifié devenu inatteignable
+    //    depuis que /le-fil est l'accueil ; son sort est une décision produit
+    //    ouverte (docs/roadmap.md).
+    //  - `tradeoffs.functions` est le simulateur « affine ton allocation » : il
+    //    recalcule des variantes pour chiffrer ce que coûte un levier, sans
+    //    jamais les appliquer. Adossé à l'optimiseur, donc listé ici — que ce
+    //    comparateur doive rester adossé à Markowitz est une question produit.
+    //
+    // Toute nouvelle entrée dans cette liste est un choix à assumer, pas un
+    // ajustement de test.
+    expect(offenders.sort()).toEqual([
+      "components/dashboard/EthiBriefing.tsx",
+      "lib/portfolio/tradeoffs.functions.ts",
+    ]);
   });
 
-  it("le barrel du chemin produit n'expose aucun module legacy", () => {
+  it("le barrel du chemin produit n'expose aucun module ni symbole legacy", () => {
     const barrel = readFileSync(join(SRC, "lib", "portfolio", "index.ts"), "utf-8");
     for (const mod of LEGACY_MODULES) {
       expect(barrel).not.toContain(`"./${mod}"`);
     }
-    // On vise l'export réel, pas la simple présence du mot : le commentaire du
-    // barrel explique justement pourquoi `buildPortfolio` n'y est plus.
-    expect(barrel).not.toMatch(/export\s*\{[^}]*buildPortfolio/);
+    // Le ré-export est l'angle mort qui a coûté un build : un fichier du chemin
+    // produit peut importer l'optimiseur SANS jamais nommer `legacy/`, si le
+    // barrel le lui sert. On vise donc les symboles, pas seulement les chemins —
+    // et l'export réel, pas la simple présence du mot dans un commentaire.
+    for (const symbol of LEGACY_SYMBOLS) {
+      expect(barrel).not.toMatch(new RegExp(`export\\s*\\{[^}]*\\b${symbol}\\b`, "s"));
+    }
   });
 
   it("les modules legacy existent bien là où on les attend", () => {
