@@ -1727,6 +1727,8 @@ const composeSwitchFr = {
   },
   real_invest_interest: { title: "Tu veux investir ce portefeuille pour de vrai ?" },
   blank_builder: {
+    copilot_title: "Ce que ce choix change",
+    copilot_moved: "{{name}} : {{from}} → {{to}}",
     glance_allocated: "attribués",
     glance_unallocated: "{{pct}} non attribués",
     glance_over:
@@ -1803,6 +1805,8 @@ const composeSwitchEn = {
   },
   real_invest_interest: { title: "Want to invest this portfolio for real?" },
   blank_builder: {
+    copilot_title: "What this choice changes",
+    copilot_moved: "{{name}}: {{from}} → {{to}}",
     glance_allocated: "allocated",
     glance_unallocated: "{{pct}} unallocated",
     glance_over: "You allocated {{pct}}% more than your amount. Remove the surplus before saving.",

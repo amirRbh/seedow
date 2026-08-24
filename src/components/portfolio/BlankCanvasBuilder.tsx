@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useTranslation } from "react-i18next";
@@ -8,7 +8,13 @@ import { Slider } from "@/components/ui/slider";
 import { useLang } from "@/hooks/useLang";
 import { formatPercent } from "@/lib/format";
 import { createCustomPortfolio } from "@/lib/portfolio/customize.functions";
-import { liteSnapshot, CONCENTRATION_ALERT } from "@/lib/portfolio/consequences";
+import {
+  liteSnapshot,
+  describeConsequences,
+  CONCENTRATION_ALERT,
+  type Consequence,
+  type LiteSnapshot,
+} from "@/lib/portfolio/consequences";
 import { WEIGHT_EPSILON } from "@/lib/portfolio/weights";
 import { diversificationBand, impactScore } from "@/lib/portfolio/plain-language";
 import { AssetPickerSheet, type PickedAsset } from "./AssetPickerSheet";
@@ -77,25 +83,67 @@ export function BlankCanvasBuilder() {
     // Au montage uniquement : le seed est déterministe et à usage unique.
   }, []);
 
+  // ── Copilote ───────────────────────────────────────────────────────────
+  // Après chaque geste TERMINÉ (curseur relâché, ligne ajoutée ou retirée), on
+  // compare l'avant et l'après pour dire ce que le choix a changé. Purement
+  // analytique : aucun poids n'est modifié ici, jamais.
+  const committed = useRef<{ snapshot: LiteSnapshot; pct: Record<string, number> } | null>(null);
+  const [changed, setChanged] = useState<{
+    name: string;
+    from: number;
+    to: number;
+    consequences: Consequence[];
+  } | null>(null);
+
+  const snapshotOf = (ls: Line[]): LiteSnapshot =>
+    liteSnapshot(
+      ls.filter((l) => l.pct > 0).map((l) => ({ id: l.id, esgScore: l.esgScore, weight: l.pct })),
+    );
+
+  /** À appeler une fois le geste terminé, avec l'état résultant. */
+  const commit = (next: Line[], movedId?: string) => {
+    const snapshot = snapshotOf(next);
+    const pct = Object.fromEntries(next.map((l) => [l.id, l.pct]));
+    const before = committed.current;
+    if (before && movedId) {
+      const from = before.pct[movedId] ?? 0;
+      const to = pct[movedId] ?? 0;
+      const moved = next.find((l) => l.id === movedId);
+      const consequences = describeConsequences(before.snapshot, snapshot);
+      setChanged(from !== to && moved ? { name: moved.name, from, to, consequences } : null);
+    } else {
+      setChanged(null);
+    }
+    committed.current = { snapshot, pct };
+  };
+
+  // Curseurs indépendants : ajouter pose une part de départ, bouger une ligne
+  // ne touche pas les autres, retirer enlève simplement la ligne. Les mutateurs
+  // restent purs — le bilan est déclenché à part, une fois le geste terminé.
+  const addAsset = (a: PickedAsset) => {
+    if (lines.some((l) => l.id === a.id)) return;
+    const next = [
+      ...lines,
+      { id: a.id, ticker: a.ticker, name: a.name, esgScore: a.esgScore, pct: 10 },
+    ];
+    setLines(next);
+    commit(next);
+  };
+  // Pendant le glissement, on ne fait que suivre le doigt : le bilan attend que
+  // le geste soit terminé (`onValueCommit`), sinon il clignoterait à chaque pixel.
+  const setWeight = (id: string, pct: number) =>
+    setLines((ls) => ls.map((l) => (l.id === id ? { ...l, pct: clampPct(pct) } : l)));
+  const commitWeight = (id: string) => commit(lines, id);
+  const removeLine = (id: string) => {
+    const next = lines.filter((l) => l.id !== id);
+    setLines(next);
+    commit(next);
+  };
+
   const active = lines.filter((l) => l.pct > 0);
 
   // Curseurs indépendants : ajouter pose une part de départ, bouger une ligne
   // ne touche pas les autres, retirer enlève simplement la ligne.
-  const addAsset = (a: PickedAsset) =>
-    setLines((ls) =>
-      ls.some((l) => l.id === a.id)
-        ? ls
-        : [...ls, { id: a.id, ticker: a.ticker, name: a.name, esgScore: a.esgScore, pct: 10 }],
-    );
-  const setWeight = (id: string, pct: number) =>
-    setLines((ls) => ls.map((l) => (l.id === id ? { ...l, pct: clampPct(pct) } : l)));
-  const removeLine = (id: string) => setLines((ls) => ls.filter((l) => l.id !== id));
-
-  // Ce que l'utilisateur a réellement placé. Seedow l'affiche, il ne le corrige pas.
-  const allocatedPct = active.reduce((sum, l) => sum + l.pct, 0);
-  const unallocatedPct = Math.max(0, 100 - allocatedPct);
-  const overAllocated = allocatedPct > 100 + WEIGHT_EPSILON;
-
   const snapshot = liteSnapshot(
     active.map((l) => ({ id: l.id, esgScore: l.esgScore, weight: l.pct })),
   );
@@ -174,6 +222,43 @@ export function BlankCanvasBuilder() {
         </div>
       ) : (
         <>
+          {/* Copilote — ce que le DERNIER geste a changé. Purement analytique :
+              il nomme les conséquences, il ne repondère jamais à la place. */}
+          {changed && changed.consequences.length > 0 && (
+            <div role="status" className="rounded-2xl border border-paper-3 bg-paper p-4">
+              <p className="text-tag uppercase tracking-[0.14em] font-mono text-ink-3">
+                {t("blank_builder.copilot_title")}
+              </p>
+              <p className="mt-1.5 text-body-sm text-ink leading-relaxed">
+                {t("blank_builder.copilot_moved", {
+                  name: changed.name,
+                  from: formatPercent(changed.from / 100, lang, 0),
+                  to: formatPercent(changed.to / 100, lang, 0),
+                })}
+              </p>
+              <ul className="mt-2.5 space-y-1.5">
+                {changed.consequences.map((c) => (
+                  <li key={c.key} className="flex items-start gap-2 text-body-sm text-ink-2">
+                    {/* La direction est doublée d'un mot : jamais la couleur seule (§4). */}
+                    <span
+                      aria-hidden
+                      className={
+                        c.dir === "up"
+                          ? "text-mint-ink"
+                          : c.dir === "down"
+                            ? "text-solar-ink"
+                            : "text-ink-3"
+                      }
+                    >
+                      {c.dir === "up" ? "↑" : c.dir === "down" ? "↓" : "="}
+                    </span>
+                    <span>{t(c.key, c.vars)}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {/* Coup d'œil copilote — accompagne sans décider ni rappeler un « 100 % » */}
           <div className="rounded-2xl border border-paper-3 bg-paper-2 p-4 space-y-1.5">
             {/* La part attribuée est un CONSTAT, pas un objectif à atteindre :
@@ -244,6 +329,7 @@ export function BlankCanvasBuilder() {
                   max={100}
                   step={1}
                   onValueChange={(v) => setWeight(l.id, v[0])}
+                  onValueCommit={() => commitWeight(l.id)}
                   aria-label={t("blank_builder.weight_of", { name: l.name })}
                 />
               </li>
