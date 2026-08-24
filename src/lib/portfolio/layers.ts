@@ -29,7 +29,33 @@
  * Module PUR : aucune requête, aucun effet de bord.
  */
 
-import type { Asset } from "./types";
+/**
+ * Source des couches — volontairement PLUS LARGE que `Asset`.
+ *
+ * Tous les champs sont optionnels, et c'est le sens du module : un champ non
+ * fourni ressort `unknown`, pas `absent`. N'importe quel modèle de vue peut donc
+ * être décrit honnêtement, y compris quand il ne charge qu'une partie des
+ * colonnes. Un `Asset` complet satisfait ce type sans conversion.
+ */
+export interface AssetLayerSource {
+  name?: string | null;
+  ter?: number | null;
+  asset_class?: string | null;
+  region?: string | null;
+  cause_exposure?: Record<string, number> | null;
+  excluded_sectors?: readonly string[] | null;
+  esg_score?: number | null;
+  esg_score_source?: string | null;
+  env_score?: number | null;
+  social_score?: number | null;
+  governance_score?: number | null;
+  sfdr_article?: number | null;
+  carbon_intensity_gco2e_per_eur?: number | null;
+  waci_tco2e_per_musd_sales?: number | null;
+  expected_return?: number | null;
+  volatility?: number | null;
+  stats_observations?: number | null;
+}
 
 export type LayerId = "identity" | "structure" | "values" | "market";
 export type FieldState = "present" | "absent" | "unknown";
@@ -63,7 +89,7 @@ export interface AssetLayers {
  * n'est pas fourni ressort `unknown`, jamais `absent`.
  */
 export interface AssetLayerInput {
-  asset: Asset;
+  asset: AssetLayerSource;
   /** Colonnes d'identité de `assets`, si elles ont été chargées. */
   identity?: {
     isin?: string | null;
@@ -137,14 +163,26 @@ export function describeAssetLayers(input: AssetLayerInput): AssetLayers {
     ],
   ]);
 
-  // Un score ESG à 0 sans source n'est pas une note : c'est l'absence de note.
-  const hasSourcedEsg = a.esg_score_source != null && a.esg_score_source.trim() !== "";
+  // Un score ESG à 0 SANS source n'est pas une note basse : c'est l'absence de
+  // note. Et si la source n'a même pas été chargée, on ne sait pas — on ne
+  // conclut ni à une note, ni à son absence.
+  const esgScore =
+    a.esg_score_source === undefined
+      ? undefined
+      : a.esg_score_source !== null && a.esg_score_source.trim() !== ""
+        ? a.esg_score
+        : null;
   const values = buildLayer("values", [
-    ["esg_score", hasSourcedEsg ? a.esg_score : null],
-    ["esg_pillars", a.env_score ?? a.social_score ?? a.governance_score ?? null],
+    ["esg_score", esgScore],
+    [
+      "esg_pillars",
+      a.env_score === undefined && a.social_score === undefined && a.governance_score === undefined
+        ? undefined
+        : (a.env_score ?? a.social_score ?? a.governance_score ?? null),
+    ],
     ["sfdr_article", a.sfdr_article],
     ["carbon_intensity", a.carbon_intensity_gco2e_per_eur],
-    ["waci", a.waci_tco2e_per_musd_sales ?? null],
+    ["waci", a.waci_tco2e_per_musd_sales],
   ]);
 
   const market = buildLayer("market", [
@@ -152,7 +190,14 @@ export function describeAssetLayers(input: AssetLayerInput): AssetLayers {
     ["volatility", a.volatility],
     // Sans observation de cours, le couple rendement/volatilité est un a priori
     // de classe, pas une mesure — la couche marché est alors vide.
-    ["price_history", (a.stats_observations ?? 0) > 0 ? a.stats_observations : null],
+    [
+      "price_history",
+      a.stats_observations === undefined
+        ? undefined
+        : (a.stats_observations ?? 0) > 0
+          ? a.stats_observations
+          : null,
+    ],
   ]);
 
   const layers = { identity, structure, values, market };

@@ -83,6 +83,51 @@ describe("couches d'actif", () => {
     expect(l.layers.values.missing.length).toBeGreaterThan(0);
   });
 
+  describe("source partielle — un modèle de vue n'est pas un Asset", () => {
+    it("ne conclut ni à une note ni à son absence quand la source n'est pas chargée", () => {
+      const l = describeAssetLayers({ asset: { name: "ETF X", ter: 0.002, volatility: 0.15 } });
+      expect(l.layers.values.unknown).toContain("esg_score");
+      expect(l.layers.values.missing).not.toContain("esg_score");
+      expect(l.layers.market.unknown).toContain("price_history");
+    });
+
+    it("accepte un Asset complet sans conversion", () => {
+      const l = describeAssetLayers({
+        asset: makeAsset({ id: "a", esg_score: 72, esg_score_source: "MSCI" }),
+      });
+      expect(l.layers.values.status).not.toBe("unknown");
+    });
+
+    it("un fonds non noté reste présentable, avec ses manques nommés", () => {
+      const l = describeAssetLayers({
+        asset: {
+          name: "ETF Catalogue",
+          ter: 0.0025,
+          asset_class: "equity_dev",
+          region: null,
+          excluded_sectors: [],
+          cause_exposure: {},
+          esg_score: 0,
+          esg_score_source: null,
+          env_score: null,
+          social_score: null,
+          governance_score: null,
+          sfdr_article: null,
+          carbon_intensity_gco2e_per_eur: null,
+          waci_tco2e_per_musd_sales: null,
+          expected_return: 0.05,
+          volatility: 0.16,
+          stats_observations: 0,
+        },
+        identity: { isin: "LU1234567890", issuer: "Amundi", currency: "EUR", domicile: null },
+      });
+      expect(isPresentable(l)).toBe(true);
+      expect(l.layers.values.status).toBe("missing");
+      expect(l.layers.values.missing).toContain("esg_score");
+      expect(l.layers.identity.missing).toEqual(["domicile"]);
+    });
+  });
+
   it("liste les couches exploitables", () => {
     const l = describeAssetLayers({ asset: makeAsset({ id: "a" }) });
     expect(l.usable).toContain("structure");

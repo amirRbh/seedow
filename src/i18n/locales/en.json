@@ -3170,5 +3170,46 @@
       "data_low": "A large share of your holdings has no sufficient market history yet: risk and fees are class estimates, not measurements.",
       "unallocated": "{{pct}} of your amount sits on no holding."
     }
+  },
+  "asset_layers": {
+    "title": "What we know about this fund",
+    "hint": "The state of our data, not a judgement on the fund. A poorly documented fund is not a bad fund — it is a fund we know less about.",
+    "gaps": "Missing: {{fields}}",
+    "sources_one": "1 attributed figure · source: {{sources}}",
+    "sources_other": "{{count}} attributed figures · sources: {{sources}}",
+    "no_source": "None of this fund's figures is attributable to a source yet — so we do not present them as measured.",
+    "layer": {
+      "identity": "Identity",
+      "structure": "Structure",
+      "values": "Values",
+      "market": "Market"
+    },
+    "status": {
+      "complete": "complete",
+      "partial": "partial",
+      "missing": "absent",
+      "unknown": "not fetched"
+    },
+    "field": {
+      "isin": "ISIN",
+      "name": "name",
+      "issuer": "issuer",
+      "domicile": "domicile",
+      "currency": "currency",
+      "ter": "fees",
+      "asset_class": "asset class",
+      "region": "region",
+      "cause_exposure": "exposures",
+      "excluded_sectors": "excluded sectors",
+      "holdings": "holdings",
+      "esg_score": "sourced ESG score",
+      "esg_pillars": "E/S/G pillars",
+      "sfdr_article": "SFDR article",
+      "carbon_intensity": "carbon intensity",
+      "waci": "WACI",
+      "expected_return": "expected return",
+      "volatility": "volatility",
+      "price_history": "price history"
+    }
   }
 }

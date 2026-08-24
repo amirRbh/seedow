@@ -20,6 +20,7 @@ import { trackAppEvent } from "@/lib/analytics/appEvents";
 import { relativeIntensityVsBenchmark } from "@/lib/esg/carbon";
 import { ACWI_WACI_TCO2E_PER_MUSD, ACWI_WACI_SOURCE, ACWI_WACI_ASOF } from "@/lib/esg/benchmark";
 import type { DiscoverAsset } from "@/lib/discover/types";
+import { AssetLayersBlock } from "./AssetLayersBlock";
 
 interface Props {
   open: boolean;
@@ -440,6 +441,10 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
               </button>
             }
           />
+
+          {/* Ce qu'on sait de ce fonds — et ce qui manque. Placé après les
+              chiffres : on montre d'abord, on qualifie ensuite. */}
+          <AssetLayersBlock asset={asset} />
         </div>
       </SheetContent>
     </Sheet>

@@ -1796,6 +1796,83 @@ const analysisEn = {
   },
 };
 
+/** « Ce qu'on sait de ce fonds » — les couches et leurs manques, sur la fiche actif. */
+const assetLayersFr = {
+  title: "Ce qu'on sait de ce fonds",
+  hint: "L'état de nos données, pas un jugement sur le fonds. Un fonds mal documenté n'est pas un mauvais fonds — c'est un fonds sur lequel nous savons moins de choses.",
+  gaps: "Manque : {{fields}}",
+  sources_one: "1 chiffre attribué · source : {{sources}}",
+  sources_other: "{{count}} chiffres attribués · sources : {{sources}}",
+  no_source:
+    "Aucun chiffre de ce fonds n'est encore attribuable à une source — nous ne les présentons donc pas comme mesurés.",
+  layer: {
+    identity: "Identité",
+    structure: "Structure",
+    values: "Valeurs",
+    market: "Marché",
+  },
+  status: {
+    complete: "complète",
+    partial: "partielle",
+    missing: "absente",
+    unknown: "non consultée",
+  },
+  field: {
+    isin: "ISIN",
+    name: "nom",
+    issuer: "émetteur",
+    domicile: "domicile",
+    currency: "devise",
+    ter: "frais",
+    asset_class: "classe d'actif",
+    region: "région",
+    cause_exposure: "expositions",
+    excluded_sectors: "secteurs exclus",
+    holdings: "composition",
+    esg_score: "score ESG sourcé",
+    esg_pillars: "piliers E/S/G",
+    sfdr_article: "article SFDR",
+    carbon_intensity: "intensité carbone",
+    waci: "WACI",
+    expected_return: "rendement attendu",
+    volatility: "volatilité",
+    price_history: "historique de cours",
+  },
+};
+
+const assetLayersEn = {
+  title: "What we know about this fund",
+  hint: "The state of our data, not a judgement on the fund. A poorly documented fund is not a bad fund — it is a fund we know less about.",
+  gaps: "Missing: {{fields}}",
+  sources_one: "1 attributed figure · source: {{sources}}",
+  sources_other: "{{count}} attributed figures · sources: {{sources}}",
+  no_source:
+    "None of this fund's figures is attributable to a source yet — so we do not present them as measured.",
+  layer: { identity: "Identity", structure: "Structure", values: "Values", market: "Market" },
+  status: { complete: "complete", partial: "partial", missing: "absent", unknown: "not fetched" },
+  field: {
+    isin: "ISIN",
+    name: "name",
+    issuer: "issuer",
+    domicile: "domicile",
+    currency: "currency",
+    ter: "fees",
+    asset_class: "asset class",
+    region: "region",
+    cause_exposure: "exposures",
+    excluded_sectors: "excluded sectors",
+    holdings: "holdings",
+    esg_score: "sourced ESG score",
+    esg_pillars: "E/S/G pillars",
+    sfdr_article: "SFDR article",
+    carbon_intensity: "carbon intensity",
+    waci: "WACI",
+    expected_return: "expected return",
+    volatility: "volatility",
+    price_history: "price history",
+  },
+};
+
 const composeSwitchFr = {
   reglages: {
     pool_eyebrow: "Ton pool, reclassé",
@@ -1858,6 +1935,7 @@ const composeSwitchFr = {
   },
   real_invest_interest: { title: "Tu veux investir ce portefeuille pour de vrai ?" },
   analysis: analysisFr,
+  asset_layers: assetLayersFr,
   blank_builder: {
     analysis_title: "Ce que dit cette composition",
     analysis_loading: "Analyse en cours…",
@@ -1942,6 +2020,7 @@ const composeSwitchEn = {
   },
   real_invest_interest: { title: "Want to invest this portfolio for real?" },
   analysis: analysisEn,
+  asset_layers: assetLayersEn,
   blank_builder: {
     analysis_title: "What this composition says",
     analysis_loading: "Analysing…",

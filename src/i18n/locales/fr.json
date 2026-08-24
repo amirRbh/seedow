@@ -3170,5 +3170,46 @@
       "data_low": "Une grande partie de tes lignes n'a pas encore d'historique de marché suffisant : risque et frais sont des estimations de classe, pas des mesures.",
       "unallocated": "{{pct}} de ton montant ne sont placés sur aucune ligne."
     }
+  },
+  "asset_layers": {
+    "title": "Ce qu'on sait de ce fonds",
+    "hint": "L'état de nos données, pas un jugement sur le fonds. Un fonds mal documenté n'est pas un mauvais fonds — c'est un fonds sur lequel nous savons moins de choses.",
+    "gaps": "Manque : {{fields}}",
+    "sources_one": "1 chiffre attribué · source : {{sources}}",
+    "sources_other": "{{count}} chiffres attribués · sources : {{sources}}",
+    "no_source": "Aucun chiffre de ce fonds n'est encore attribuable à une source — nous ne les présentons donc pas comme mesurés.",
+    "layer": {
+      "identity": "Identité",
+      "structure": "Structure",
+      "values": "Valeurs",
+      "market": "Marché"
+    },
+    "status": {
+      "complete": "complète",
+      "partial": "partielle",
+      "missing": "absente",
+      "unknown": "non consultée"
+    },
+    "field": {
+      "isin": "ISIN",
+      "name": "nom",
+      "issuer": "émetteur",
+      "domicile": "domicile",
+      "currency": "devise",
+      "ter": "frais",
+      "asset_class": "classe d'actif",
+      "region": "région",
+      "cause_exposure": "expositions",
+      "excluded_sectors": "secteurs exclus",
+      "holdings": "composition",
+      "esg_score": "score ESG sourcé",
+      "esg_pillars": "piliers E/S/G",
+      "sfdr_article": "article SFDR",
+      "carbon_intensity": "intensité carbone",
+      "waci": "WACI",
+      "expected_return": "rendement attendu",
+      "volatility": "volatilité",
+      "price_history": "historique de cours"
+    }
   }
 }
