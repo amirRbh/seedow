@@ -5,16 +5,16 @@ import type {
   ExclusionTag,
   PortfolioParams,
   PortfolioResult,
-} from "./types";
-import { MAX_SINGLE_WEIGHT, MIN_PORTFOLIO_ESG, causeToPillarWeights } from "./types";
+} from "../types";
+import { MAX_SINGLE_WEIGHT, MIN_PORTFOLIO_ESG, causeToPillarWeights } from "../types";
 import { optimizeMarkowitz, applyConvictionAdjustment, applyCarbonPreference } from "./markowitz";
-import { computeMetrics } from "./metrics";
+import { computeMetrics } from "../metrics";
 import {
   anchorLowConfidenceReturns,
   classifyDataQuality,
   covarianceFallback,
-} from "./data-quality";
-import { buildExplanation } from "./explanation";
+} from "../data-quality";
+import { buildExplanation } from "../explanation";
 import { ACWI_WACI_TCO2E_PER_MUSD } from "@/lib/esg/benchmark";
 
 const METHODOLOGY_VERSION = "v1.4";

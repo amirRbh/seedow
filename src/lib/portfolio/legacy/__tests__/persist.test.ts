@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { persistPortfolio } from "../server.functions";
 import { buildPortfolio } from "../engine";
-import { balancedUniverse, defaultParams, diagonalCovMap } from "./fixtures";
+import { balancedUniverse, defaultParams, diagonalCovMap } from "../../__tests__/fixtures";
 import type { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 /**

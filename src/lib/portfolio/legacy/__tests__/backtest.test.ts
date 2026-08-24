@@ -6,8 +6,8 @@ import {
   type BacktestConfig,
 } from "../backtest";
 import type { PricePoint } from "@/lib/market/risk-model";
-import { makeAsset, defaultParams } from "./fixtures";
-import type { Asset } from "../types";
+import { makeAsset, defaultParams } from "../../__tests__/fixtures";
+import type { Asset } from "../../types";
 
 describe("computeMaxDrawdown", () => {
   it("is zero for a monotonically increasing curve", () => {
