@@ -63,16 +63,22 @@ interface AssetRow {
   region: string | null;
   currency: string | null;
   issuer: string | null;
+  isin: string | null;
   ter: number;
   esg_score: number;
+  esg_score_source: string | null;
+  esg_data_asof: string | null;
   env_score: number | null;
   social_score: number | null;
   governance_score: number | null;
   carbon_intensity_gco2e_per_eur: number | null;
+  carbon_intensity_source: string | null;
   waci_tco2e_per_musd_sales: number | null;
   sfdr_article: number | null;
   implied_temp_rise: string | null;
+  expected_return: number | null;
   volatility: number;
+  stats_observations: number | null;
   cause_exposure: Record<string, number> | null;
   excluded_sectors: ExclusionTag[] | null;
   description: string | null;
@@ -83,7 +89,11 @@ async function fetchAssetUniverse(): Promise<AssetUniverseResult> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (supabase.from("assets") as any)
       .select(
-        "id, ticker, name, asset_class, region, currency, issuer, ter, esg_score, env_score, social_score, governance_score, carbon_intensity_gco2e_per_eur, waci_tco2e_per_musd_sales, sfdr_article, implied_temp_rise, volatility, cause_exposure, excluded_sectors, description",
+        // `isin`, les colonnes de source/date et `stats_observations` servent à
+        // décrire les COUCHES de l'actif sur sa fiche : sans elles, on serait
+        // obligé de répondre « inconnu » à des questions dont la base a la
+        // réponse — ce qui reviendrait à cacher ce qu'on sait.
+        "id, ticker, name, asset_class, region, currency, issuer, isin, ter, esg_score, esg_score_source, esg_data_asof, env_score, social_score, governance_score, carbon_intensity_gco2e_per_eur, carbon_intensity_source, waci_tco2e_per_musd_sales, sfdr_article, implied_temp_rise, expected_return, volatility, stats_observations, cause_exposure, excluded_sectors, description",
       )
       .eq("is_active", true),
     supabase.from("asset_quotes").select("asset_id, price, fetched_at"),
@@ -167,6 +177,14 @@ async function fetchAssetUniverse(): Promise<AssetUniverseResult> {
       description: r.description ?? "",
       issuer: r.issuer,
       currency: r.currency,
+      // Champs bruts — servent aux couches et à la provenance, pas à l'affichage.
+      isin: r.isin,
+      esg_score_source: r.esg_score_source,
+      esg_data_asof: r.esg_data_asof,
+      carbon_intensity_source: r.carbon_intensity_source,
+      expected_return: r.expected_return,
+      volatility: Number(r.volatility),
+      stats_observations: r.stats_observations,
       current_price: price,
       quote_fetched_at: quote?.fetched_at ?? fallback?.price_date ?? null,
       overall_esg_score: esg / 10,

@@ -21,6 +21,18 @@ export interface DiscoverAsset {
   description: string;
   issuer: string | null;
   currency: string | null;
+  /**
+   * Champs BRUTS conservés pour décrire les couches de l'actif (`lib/portfolio/layers`)
+   * et signer ses chiffres (`lib/data-engine/provenance`). Ils ne servent pas à
+   * l'affichage direct : ils servent à dire ce qu'on sait et ce qui manque.
+   */
+  isin: string | null;
+  esg_score_source: string | null;
+  esg_data_asof: string | null;
+  carbon_intensity_source: string | null;
+  expected_return: number | null;
+  volatility: number;
+  stats_observations: number | null;
   current_price: number | null;
   quote_fetched_at: string | null;
   overall_esg_score: number; // 0..10

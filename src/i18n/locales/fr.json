@@ -1013,8 +1013,8 @@
   "onboarding": {
     "steps": {
       "values": {
-        "ethiMessage": "Salut, moi c'est Ethi ✨ Je vais t'aider à composer ton portefeuille aujourd'hui. Dis-moi d'abord : qu'est-ce qui compte vraiment pour toi ?",
-        "question": "Choisis tes causes — tu peux en prendre plusieurs.",
+        "ethiMessage": "Salut, moi c'est Ethi ✨ On va composer un portefeuille ensemble. Première question, la plus simple : qu'est-ce qui compte pour toi ?",
+        "question": "Qu'est-ce que tu veux financer ?",
         "climat": "Climat",
         "climat_desc": "Transition énergétique",
         "biodiversite": "Biodiversité",
@@ -1031,8 +1031,8 @@
         "limit_reached": "Limite atteinte — décoche une cause pour en choisir une autre."
       },
       "exclusions": {
-        "ethiMessage": "Parfait 💚 Et à l'inverse, qu'est-ce que tu refuses absolument de financer ?",
-        "question": "Ces secteurs seront totalement exclus.",
+        "ethiMessage": "Bien noté 💚 Et à l'inverse ?",
+        "question": "Qu'est-ce que tu refuses de financer ?",
         "fossiles": "Énergies fossiles",
         "armes": "Armement",
         "tabac": "Tabac",
@@ -1041,8 +1041,8 @@
         "fast-fashion": "Fast fashion"
       },
       "objective": {
-        "ethiMessage": "Bien noté. Maintenant : pour quel objectif veux-tu faire grandir ce capital ?",
-        "question": "Ton objectif principal",
+        "ethiMessage": "Compris. Maintenant, parlons de toi plutôt que des fonds.",
+        "question": "Pour quoi mets-tu cet argent de côté ?",
         "retraite": "Préparer ma retraite",
         "retraite_desc": "20+ ans",
         "maison": "Acheter une maison",
@@ -1057,15 +1057,15 @@
         "50": "50 €",
         "100": "100 €",
         "500": "500 €",
-        "ethiMessage": "Combien veux-tu investir pour commencer ? On peut commencer petit.",
-        "question": "Ton premier dépôt",
-        "10_desc": "Je teste tranquille",
-        "50_desc": "Un engagement sérieux",
-        "100_desc": "Un vrai démarrage",
-        "500_desc": "Un démarrage ambitieux",
+        "ethiMessage": "Dernière question. Aucun argent ne bouge ici : c'est une simulation, tu choisis un montant juste pour voir ce que ça donne.",
+        "question": "Avec quel montant veux-tu essayer ?",
+        "10_desc": "Pour voir",
+        "50_desc": "Un petit montant",
+        "100_desc": "Un montant rond",
+        "500_desc": "Un montant plus large",
         "custom_label": "Un autre montant",
         "custom_placeholder": "ex. 2 000",
-        "sim_hint": "C'est une simulation — choisis un montant pour voir, tu pourras le changer à tout moment. Aucun versement réel."
+        "sim_hint": "Tu pourras le changer à tout moment. Rien n'est prélevé, rien n'est engagé — ce montant sert seulement à rendre les chiffres concrets."
       }
     },
     "header": {
@@ -1125,13 +1125,13 @@
       "loading_title": "On rassemble tes actifs",
       "loading_desc": "Filtrage par tes critères, puis classement par pertinence",
       "eyebrow": "Ta sélection",
-      "title": "Voici tes actifs",
+      "title": "Les fonds qui collent à tes critères",
       "explainer": "{{count}} actifs collent à tes critères ({{excluded}} écartés sur {{universe}}), classés par pertinence. Seedow ne choisit pas ta répartition — tu composes, on t'explique chaque repère.",
       "relevance_badge": "{{score}}/100",
       "pending_badge": "En cours",
       "method_note": "Pertinence = performance ajustée au risque, qualité ESG et alignement à tes causes. « En cours » : historique de marché encore insuffisant — jamais un score inventé.",
       "compose_cta": "Composer mon portefeuille",
-      "blank_cta": "Partir d'une page blanche"
+      "blank_cta": "Choisir moi-même depuis zéro"
     },
     "saving": {
       "title": "Enregistrement de ton portefeuille…"
@@ -1144,9 +1144,9 @@
     "explainer": {
       "summary": "Pourquoi ça compte ? · 30 s",
       "link": "Lire le cours",
-      "values": "Tes convictions orientent la sélection : on surpondère les entreprises alignées, sans jamais transformer une conviction en promesse de rendement.",
-      "exclusions": "Exclure un secteur, c'est refuser de le financer — un critère binaire et vérifiable, pas un avis.",
-      "objective": "Ton objectif fixe l'horizon, et donc le niveau de risque acceptable : plus l'échéance est lointaine, plus on peut encaisser la volatilité.",
+      "values": "Tes convictions servent à CLASSER les fonds : ceux qui y correspondent remontent en tête. Elles ne promettent aucun rendement, et elles n'écartent personne — seules tes exclusions le font.",
+      "exclusions": "Exclure un secteur, c'est refuser de le financer. C'est un filtre net : un fonds concerné disparaît de la liste, il n'est pas juste mal noté.",
+      "objective": "Ton objectif ne change pas les fonds proposés. Il sert ensuite à dire si ta composition tient la route sur la durée que tu vises.",
       "amount": "Le montant simulé n'engage rien. Il sert à visualiser ce que représenteraient tes parts et l'effet des intérêts composés dans le temps."
     },
     "planting": {
@@ -2968,7 +2968,15 @@
     "copilot_title": "Ce que ce choix change",
     "copilot_moved": "{{name}} : {{from}} → {{to}}",
     "analysis_title": "Ce que dit cette composition",
-    "analysis_loading": "Analyse en cours…"
+    "analysis_loading": "Analyse en cours…",
+    "total_label": "Montant à répartir",
+    "remaining": "Il te reste {{amount}} à placer.",
+    "all_placed": "Tout est placé.",
+    "over_by": "Tu as placé {{amount}} de plus que ton montant.",
+    "over_hint": "Retire ce surplus, ou augmente ton montant à répartir.",
+    "amount_of": "Montant placé sur {{name}}",
+    "share_of_total": "soit {{pct}} de ton montant",
+    "the_rest": "le reste ({{amount}})"
   },
   "data_provenance": {
     "coverage_label": "Que signifie la couverture ?",
@@ -3085,7 +3093,11 @@
     "money_unallocated": "Dont {{amount}} non attribués — cette part n'est placée sur aucune ligne, elle ne bouge pas avec les cours.",
     "understand": "Comprendre",
     "understand_hint": "Ce que ta composition implique — Seedow explique, il ne corrige pas.",
-    "understand_loading": "Analyse en cours…"
+    "understand_loading": "Analyse en cours…",
+    "impact_carbon_lead": "Ce que ton portefeuille émet, comparé à un ETF Monde classique",
+    "impact_carbon_desc": "d'intensité carbone en moins. C'est une mesure, pas une note : elle vient des émissions déclarées par les entreprises que tu détiens.",
+    "impact_carbon_pending": "L'empreinte carbone de tes lignes n'est pas encore mesurable : trop peu d'émetteurs publient la leur. On ne met pas un score à la place — il arrivera quand la donnée sera là.",
+    "esg_average_desc": "Note ESG moyenne de tes lignes, pondérée par leur poids. C'est une note de fournisseur, pas un effet sur le monde."
   },
   "sustainability": {
     "tier": {
@@ -3169,6 +3181,47 @@
       "horizon_weak": "Ce niveau de risque demande plus de temps que l'horizon que tu as indiqué. Ni bon ni mauvais — à savoir.",
       "data_low": "Une grande partie de tes lignes n'a pas encore d'historique de marché suffisant : risque et frais sont des estimations de classe, pas des mesures.",
       "unallocated": "{{pct}} de ton montant ne sont placés sur aucune ligne."
+    }
+  },
+  "asset_layers": {
+    "title": "Ce qu'on sait de ce fonds",
+    "hint": "L'état de nos données, pas un jugement sur le fonds. Un fonds mal documenté n'est pas un mauvais fonds — c'est un fonds sur lequel nous savons moins de choses.",
+    "gaps": "Manque : {{fields}}",
+    "sources_one": "1 chiffre attribué · source : {{sources}}",
+    "sources_other": "{{count}} chiffres attribués · sources : {{sources}}",
+    "no_source": "Aucun chiffre de ce fonds n'est encore attribuable à une source — nous ne les présentons donc pas comme mesurés.",
+    "layer": {
+      "identity": "Identité",
+      "structure": "Structure",
+      "values": "Valeurs",
+      "market": "Marché"
+    },
+    "status": {
+      "complete": "complète",
+      "partial": "partielle",
+      "missing": "absente",
+      "unknown": "non consultée"
+    },
+    "field": {
+      "isin": "ISIN",
+      "name": "nom",
+      "issuer": "émetteur",
+      "domicile": "domicile",
+      "currency": "devise",
+      "ter": "frais",
+      "asset_class": "classe d'actif",
+      "region": "région",
+      "cause_exposure": "expositions",
+      "excluded_sectors": "secteurs exclus",
+      "holdings": "composition",
+      "esg_score": "score ESG sourcé",
+      "esg_pillars": "piliers E/S/G",
+      "sfdr_article": "article SFDR",
+      "carbon_intensity": "intensité carbone",
+      "waci": "WACI",
+      "expected_return": "rendement attendu",
+      "volatility": "volatilité",
+      "price_history": "historique de cours"
     }
   }
 }

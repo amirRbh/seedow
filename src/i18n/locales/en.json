@@ -1013,8 +1013,8 @@
   "onboarding": {
     "steps": {
       "values": {
-        "ethiMessage": "Hi, I'm Ethi ✨ I'll help you build your portfolio today. First, tell me: what really matters to you?",
-        "question": "Choose your causes — you can pick several.",
+        "ethiMessage": "Hi, I'm Ethi ✨ We're going to build a portfolio together. First question, the simplest one: what matters to you?",
+        "question": "What do you want to fund?",
         "climat": "Climate",
         "climat_desc": "Energy transition",
         "biodiversite": "Biodiversity",
@@ -1031,8 +1031,8 @@
         "limit_reached": "Limit reached — unselect a cause to choose another."
       },
       "exclusions": {
-        "ethiMessage": "Perfect 💚 And on the flip side, what do you absolutely refuse to fund?",
-        "question": "These sectors will be fully excluded.",
+        "ethiMessage": "Noted 💚 And the other way round?",
+        "question": "What do you refuse to fund?",
         "fossiles": "Fossil fuels",
         "armes": "Armament",
         "tabac": "Tobacco",
@@ -1041,8 +1041,8 @@
         "fast-fashion": "Fast fashion"
       },
       "objective": {
-        "ethiMessage": "Noted. Now: for what objective do you want to grow this capital?",
-        "question": "Your main goal",
+        "ethiMessage": "Got it. Now let's talk about you rather than the funds.",
+        "question": "What are you setting this money aside for?",
         "retraite": "Prepare for retirement",
         "retraite_desc": "20+ years",
         "maison": "Buy a house",
@@ -1057,15 +1057,15 @@
         "50": "€50",
         "100": "€100",
         "500": "€500",
-        "ethiMessage": "How much do you want to invest to start? We can start small.",
-        "question": "Your first deposit",
-        "10_desc": "Just testing",
-        "50_desc": "A serious commitment",
-        "100_desc": "A real start",
-        "500_desc": "An ambitious start",
+        "ethiMessage": "Last question. No money moves here: this is a simulation, you pick an amount just to see what it looks like.",
+        "question": "What amount do you want to try with?",
+        "10_desc": "Just to see",
+        "50_desc": "A small amount",
+        "100_desc": "A round amount",
+        "500_desc": "A larger amount",
         "custom_label": "A different amount",
         "custom_placeholder": "e.g. 2,000",
-        "sim_hint": "This is a simulation — pick an amount to see it, you can change it anytime. No real deposit."
+        "sim_hint": "You can change it any time. Nothing is charged, nothing is committed — this amount only makes the figures concrete."
       }
     },
     "header": {
@@ -1125,13 +1125,13 @@
       "loading_title": "Gathering your assets",
       "loading_desc": "Filtering on your criteria, then ranking by relevance",
       "eyebrow": "Your selection",
-      "title": "Here are your assets",
+      "title": "The funds that match your criteria",
       "explainer": "{{count}} assets match your criteria ({{excluded}} excluded of {{universe}}), ranked by relevance. Seedow doesn't pick your allocation — you compose it, we explain every signal.",
       "relevance_badge": "{{score}}/100",
       "pending_badge": "Pending",
       "method_note": "Relevance = risk-adjusted performance, ESG quality and alignment with your causes. \"Pending\": market history still too thin — never a made-up score.",
       "compose_cta": "Compose my portfolio",
-      "blank_cta": "Start from a blank canvas"
+      "blank_cta": "Pick everything myself"
     },
     "saving": {
       "title": "Saving your portfolio…"
@@ -1144,9 +1144,9 @@
     "explainer": {
       "summary": "Why does this matter? · 30 s",
       "link": "Read the course",
-      "values": "Your convictions steer the selection: we overweight aligned companies, without ever turning a conviction into a return promise.",
-      "exclusions": "Excluding a sector means refusing to fund it — a binary, verifiable criterion, not an opinion.",
-      "objective": "Your goal sets the horizon, and thus the acceptable level of risk: the further out, the more volatility you can absorb.",
+      "values": "Your convictions RANK the funds: the matching ones rise to the top. They promise no return, and they exclude no one — only your exclusions do that.",
+      "exclusions": "Excluding a sector means refusing to fund it. It is a clean filter: an affected fund disappears from the list, it is not merely marked down.",
+      "objective": "Your goal does not change which funds appear. It is used afterwards to say whether your composition holds up over the horizon you have in mind.",
       "amount": "The simulated amount commits you to nothing. It shows what your holdings would represent and how compounding plays out over time."
     },
     "planting": {
@@ -2968,7 +2968,15 @@
     "copilot_title": "What this choice changes",
     "copilot_moved": "{{name}}: {{from}} → {{to}}",
     "analysis_title": "What this composition says",
-    "analysis_loading": "Analysing…"
+    "analysis_loading": "Analysing…",
+    "total_label": "Amount to allocate",
+    "remaining": "You have {{amount}} left to place.",
+    "all_placed": "Everything is placed.",
+    "over_by": "You placed {{amount}} more than your amount.",
+    "over_hint": "Remove the surplus, or raise the amount you are allocating.",
+    "amount_of": "Amount placed on {{name}}",
+    "share_of_total": "i.e. {{pct}} of your amount",
+    "the_rest": "the rest ({{amount}})"
   },
   "data_provenance": {
     "coverage_label": "What does coverage mean?",
@@ -3085,7 +3093,11 @@
     "money_unallocated": "Including {{amount}} unallocated — this share sits on no holding, it does not move with prices.",
     "understand": "Understand",
     "understand_hint": "What your composition implies — Seedow explains, it does not correct.",
-    "understand_loading": "Analysing…"
+    "understand_loading": "Analysing…",
+    "impact_carbon_lead": "What your portfolio emits, compared with a standard World ETF",
+    "impact_carbon_desc": "less carbon intensity. This is a measurement, not a rating: it comes from the emissions disclosed by the companies you hold.",
+    "impact_carbon_pending": "Your holdings' carbon footprint is not measurable yet: too few issuers disclose theirs. We do not put a score in its place — it will come when the data does.",
+    "esg_average_desc": "Weighted average ESG rating of your holdings. That is a provider's rating, not an effect on the world."
   },
   "sustainability": {
     "tier": {
@@ -3169,6 +3181,47 @@
       "horizon_weak": "This risk level asks for more time than the horizon you set. Neither good nor bad — worth knowing.",
       "data_low": "A large share of your holdings has no sufficient market history yet: risk and fees are class estimates, not measurements.",
       "unallocated": "{{pct}} of your amount sits on no holding."
+    }
+  },
+  "asset_layers": {
+    "title": "What we know about this fund",
+    "hint": "The state of our data, not a judgement on the fund. A poorly documented fund is not a bad fund — it is a fund we know less about.",
+    "gaps": "Missing: {{fields}}",
+    "sources_one": "1 attributed figure · source: {{sources}}",
+    "sources_other": "{{count}} attributed figures · sources: {{sources}}",
+    "no_source": "None of this fund's figures is attributable to a source yet — so we do not present them as measured.",
+    "layer": {
+      "identity": "Identity",
+      "structure": "Structure",
+      "values": "Values",
+      "market": "Market"
+    },
+    "status": {
+      "complete": "complete",
+      "partial": "partial",
+      "missing": "absent",
+      "unknown": "not fetched"
+    },
+    "field": {
+      "isin": "ISIN",
+      "name": "name",
+      "issuer": "issuer",
+      "domicile": "domicile",
+      "currency": "currency",
+      "ter": "fees",
+      "asset_class": "asset class",
+      "region": "region",
+      "cause_exposure": "exposures",
+      "excluded_sectors": "excluded sectors",
+      "holdings": "holdings",
+      "esg_score": "sourced ESG score",
+      "esg_pillars": "E/S/G pillars",
+      "sfdr_article": "SFDR article",
+      "carbon_intensity": "carbon intensity",
+      "waci": "WACI",
+      "expected_return": "expected return",
+      "volatility": "volatility",
+      "price_history": "price history"
     }
   }
 }

@@ -21,7 +21,24 @@
  * jamais une attribution par défaut (CLAUDE.md §1.2).
  */
 
-import type { Asset } from "@/lib/portfolio/types";
+/**
+ * Source de provenance — volontairement plus large qu'un `Asset`, pour la même
+ * raison que `AssetLayerSource` : un modèle de vue qui ne charge qu'une partie
+ * des colonnes doit pouvoir être signé honnêtement, sans conversion forcée. Un
+ * champ non fourni n'a simplement pas de provenance.
+ */
+export interface ProvenanceSource {
+  esg_score?: number | null;
+  esg_score_source?: string | null;
+  esg_data_asof?: string | null;
+  msci_esg_quality_score?: number | null;
+  implied_temp_rise?: string | null;
+  sfdr_article?: number | null;
+  waci_tco2e_per_musd_sales?: number | null;
+  carbon_intensity_gco2e_per_eur?: number | null;
+  carbon_intensity_source?: string | null;
+  carbon_intensity_updated_at?: string | null;
+}
 
 /** Niveaux de l'enum `data_confidence` en base. */
 export type Confidence = "high" | "medium" | "low";
@@ -60,7 +77,7 @@ export type ProvenancedField =
  * l'appelant de les présenter comme estimés.
  */
 export function assetFieldProvenance(
-  asset: Asset,
+  asset: ProvenanceSource,
   field: ProvenancedField,
 ): FieldProvenance | null {
   const esgSource = clean(asset.esg_score_source);
@@ -93,7 +110,7 @@ export function assetFieldProvenance(
 }
 
 /** Toutes les provenances disponibles pour un actif, dans l'ordre des champs. */
-export function assetProvenance(asset: Asset): FieldProvenance[] {
+export function assetProvenance(asset: ProvenanceSource): FieldProvenance[] {
   const fields: ProvenancedField[] = [
     "esg_score",
     "msci_esg_quality_score",
@@ -112,7 +129,10 @@ export function assetProvenance(asset: Asset): FieldProvenance[] {
  * une couverture mesurée plutôt qu'un « vérifié » de façade — null si on n'a
  * rien demandé.
  */
-export function provenanceCoverage(asset: Asset, fields: ProvenancedField[]): number | null {
+export function provenanceCoverage(
+  asset: ProvenanceSource,
+  fields: ProvenancedField[],
+): number | null {
   if (fields.length === 0) return null;
   const covered = fields.filter((f) => assetFieldProvenance(asset, f) !== null).length;
   return covered / fields.length;
