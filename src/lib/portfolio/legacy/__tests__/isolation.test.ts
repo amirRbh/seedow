@@ -97,7 +97,7 @@ describe("isolation du moteur d'optimisation", () => {
   });
 
   it("les modules legacy existent bien là où on les attend", () => {
-    const present = readdirSync(LEGACY_DIR).filter((f) => f.endsWith(".ts"));
+    const present = readdirSync(LEGACY_DIR).filter((f: string) => f.endsWith(".ts"));
     for (const mod of LEGACY_MODULES) {
       expect(present).toContain(`${mod}.ts`);
     }

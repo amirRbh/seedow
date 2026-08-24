@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { analyzePortfolio, type AnalyzedLine } from "../analyzePortfolio";
+import {
+  analyzePortfolio,
+  type AnalyzedLine,
+  type AnalyzePortfolioInput,
+} from "../analyzePortfolio";
 import { makeAsset } from "../../__tests__/fixtures";
 import type { PortfolioMetrics } from "../../types";
 
@@ -31,7 +35,7 @@ describe("analyzePortfolio", () => {
   it("ne modifie jamais le portefeuille qu'il analyse", () => {
     const lines = [line("a", 0.5), line("b", 0.3)];
     const snapshot = lines.map((l) => ({ id: l.asset.id, weight: l.weight }));
-    const input = { lines, causes: [], exclusions: [] } as const;
+    const input: AnalyzePortfolioInput = { lines, causes: [], exclusions: [] };
 
     analyzePortfolio(input);
 

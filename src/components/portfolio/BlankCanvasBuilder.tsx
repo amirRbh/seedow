@@ -142,6 +142,11 @@ export function BlankCanvasBuilder() {
 
   const active = lines.filter((l) => l.pct > 0);
 
+  // Ce que l'utilisateur a réellement placé. Seedow l'affiche, il ne le corrige pas.
+  const allocatedPct = active.reduce((sum, l) => sum + l.pct, 0);
+  const unallocatedPct = Math.max(0, 100 - allocatedPct);
+  const overAllocated = allocatedPct > 100 + WEIGHT_EPSILON;
+
   // Curseurs indépendants : ajouter pose une part de départ, bouger une ligne
   // ne touche pas les autres, retirer enlève simplement la ligne.
   const snapshot = liteSnapshot(
