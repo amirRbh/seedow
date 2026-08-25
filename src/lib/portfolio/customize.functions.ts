@@ -18,6 +18,7 @@ import { computeMetrics } from "./metrics";
 import { causeToPillarWeights, type Asset, type CauseTag, type PortfolioMetrics } from "./types";
 import { loadUniverse } from "./universe.server";
 import { isOverAllocated, sanitizeWeights, sumWeights } from "./weights";
+import { describeSaveError } from "./saveErrors";
 
 const InputSchema = z.object({
   portfolio_id: z.string().uuid(),
@@ -139,7 +140,7 @@ export const saveCustomPortfolio = createServerFn({ method: "POST" })
       .eq("user_id", userId);
     if (updErr) {
       console.error("[saveCustomPortfolio] update error:", updErr);
-      throw new Error("Impossible d'enregistrer vos modifications. Réessaie dans un instant.");
+      throw new Error(describeSaveError(updErr, "enregistrer tes modifications").message);
     }
 
     return { portfolio_id: data.portfolio_id, weights, metrics };
@@ -182,7 +183,7 @@ export const createCustomPortfolio = createServerFn({ method: "POST" })
       if (deactivateErr) {
         console.error("[createCustomPortfolio] deactivate error:", deactivateErr);
         throw new Error(
-          "Impossible de désactiver le portefeuille précédent. Réessaie dans un instant.",
+          describeSaveError(deactivateErr, "remplacer ton portefeuille précédent").message,
         );
       }
     }
@@ -231,7 +232,10 @@ export const createCustomPortfolio = createServerFn({ method: "POST" })
           return { portfolio_id: existing.id, weights, metrics };
         }
       }
-      throw new Error("Impossible d'enregistrer votre portefeuille. Réessaie dans un instant.");
+      // La cause part aussi dans les logs, mais l'utilisateur doit pouvoir agir
+      // sans nous : la limite de portefeuilles actifs, une session expirée ou
+      // une donnée refusée n'appellent pas le même geste (cf. `saveErrors`).
+      throw new Error(describeSaveError(error, "enregistrer ton portefeuille").message);
     }
 
     await userClient.from("profiles").update({ onboarding_completed: true }).eq("id", userId);
@@ -332,7 +336,7 @@ export const savePortfolioPreferences = createServerFn({ method: "POST" })
       .eq("user_id", userId);
     if (updErr) {
       console.error("[savePortfolioPreferences] update error:", updErr);
-      throw new Error("Impossible d'enregistrer tes préférences. Réessaie dans un instant.");
+      throw new Error(describeSaveError(updErr, "enregistrer tes préférences").message);
     }
 
     return { portfolio_id: pf.id, metrics };

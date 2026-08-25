@@ -30,12 +30,25 @@ interface Props {
   reasons: PoolReasons;
   /** Masque le libellé de groupe quand il est déjà rendu par l'en-tête de section. */
   hideGroup?: boolean;
+  /**
+   * Une raison et une réserve au maximum. Dans une liste de 60 fonds, trois
+   * raisons par ligne font un mur : personne ne compare six paragraphes. Le
+   * détail complet reste sur la fiche du fonds, où il y a la place pour lui.
+   */
+  compact?: boolean;
   className?: string;
 }
 
-export function PoolReasonList({ reasons, hideGroup = false, className = "" }: Props) {
+export function PoolReasonList({
+  reasons,
+  hideGroup = false,
+  compact = false,
+  className = "",
+}: Props) {
   const { t } = useTranslation();
-  const { group, reasons: pros, caveats } = reasons;
+  const { group } = reasons;
+  const pros = compact ? reasons.reasons.slice(0, 1) : reasons.reasons;
+  const caveats = compact ? reasons.caveats.slice(0, 1) : reasons.caveats;
 
   return (
     <div className={className}>

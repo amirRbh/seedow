@@ -127,6 +127,7 @@ export function AssetPickerSheet({ open, onOpenChange, excludeIds, onPick, cause
                           cause : on passe les thèmes dominants, et `poolReasons`
                           s'en accommode sans rien inventer. */}
                       <PoolReasonList
+                        compact
                         className="mt-1"
                         reasons={poolReasons({
                           causes: causes ?? [],
