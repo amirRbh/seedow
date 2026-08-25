@@ -2949,7 +2949,10 @@
     "amount_of": "Montant placé sur {{name}}",
     "share_of_total": "soit {{pct}} de ton montant",
     "the_rest": "le reste ({{amount}})",
-    "details_title": "Ce que ça donne"
+    "details_title": "Ce que ça donne",
+    "edit": "Modifier",
+    "edit_total": "Modifier le montant à répartir",
+    "remove_named": "Retirer {{name}}"
   },
   "data_provenance": {
     "coverage_label": "Que signifie la couverture ?",
