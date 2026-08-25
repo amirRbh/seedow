@@ -333,78 +333,6 @@ export function BlankCanvasBuilder() {
             )}
           </div>
 
-          {/* Copilote — ce que le DERNIER geste a changé. Purement analytique :
-              il nomme les conséquences, il ne repondère jamais à la place. */}
-          {changed && changed.consequences.length > 0 && (
-            <div role="status" className="rounded-2xl border border-paper-3 bg-paper p-4">
-              <p className="text-tag uppercase tracking-[0.14em] font-mono text-ink-3">
-                {t("blank_builder.copilot_title")}
-              </p>
-              <p className="mt-1.5 text-body-sm text-ink leading-relaxed">
-                {t("blank_builder.copilot_moved", {
-                  name: changed.name,
-                  from: formatCurrency(changed.from, lang),
-                  to: formatCurrency(changed.to, lang),
-                })}
-              </p>
-              <ul className="mt-2.5 space-y-1.5">
-                {changed.consequences.map((c) => (
-                  <li key={c.key} className="flex items-start gap-2 text-body-sm text-ink-2">
-                    {/* La direction est doublée d'un mot : jamais la couleur seule (§4). */}
-                    <span
-                      aria-hidden
-                      className={
-                        c.dir === "up"
-                          ? "text-mint-ink"
-                          : c.dir === "down"
-                            ? "text-solar-ink"
-                            : "text-ink-3"
-                      }
-                    >
-                      {c.dir === "up" ? "↑" : c.dir === "down" ? "↓" : "="}
-                    </span>
-                    <span>{t(c.key, c.vars)}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* Coup d'œil copilote — accompagne sans décider ni rappeler un « 100 % » */}
-          <div className="rounded-2xl border border-paper-3 bg-paper-2 p-4 space-y-1.5">
-            {/* La part attribuée est un CONSTAT, pas un objectif à atteindre :
-                laisser 20 % de côté est un choix valide, on l'écrit sans le corriger. */}
-            <p className="text-body-sm text-ink leading-relaxed">
-              {t("blank_builder.glance_positions", { count: active.length })}{" "}
-              {t(`blank_builder.glance_div_${divBand}`)}
-            </p>
-            {concentrated && (
-              <p className="text-body-sm text-solar-ink leading-relaxed">
-                {t("blank_builder.glance_concentrated")}
-              </p>
-            )}
-            <p className="text-caption text-ink-3 leading-relaxed">
-              {t("blank_builder.glance_impact", { score: impact })} ·{" "}
-              {t("blank_builder.glance_riskfees_note")}
-            </p>
-          </div>
-
-          {/* Lecture de fond — ce que cette composition implique. */}
-          {(analysis || analysisLoading) && (
-            <div className="rounded-2xl border border-paper-3 bg-paper p-4">
-              <p className="text-tag uppercase tracking-[0.14em] font-mono text-ink-3">
-                {t("blank_builder.analysis_title")}
-              </p>
-              {analysis ? (
-                <PortfolioAnalysisPanel className="mt-3" analysis={analysis} />
-              ) : (
-                <p role="status" className="mt-2 text-body-sm text-ink-3">
-                  {t("blank_builder.analysis_loading")}
-                </p>
-              )}
-            </div>
-          )}
-
           {/* Lignes éditables — chaque curseur est indépendant */}
           <ul className="space-y-4">
             {lines.map((l) => (
@@ -492,6 +420,103 @@ export function BlankCanvasBuilder() {
             <Plus className="w-4 h-4" strokeWidth={2} aria-hidden />
             {t("blank_builder.add")}
           </button>
+
+          {/* Copilote — ce que le DERNIER geste a changé. Purement analytique :
+              il nomme les conséquences, il ne repondère jamais à la place. */}
+          {changed && changed.consequences.length > 0 && (
+            <div role="status" className="rounded-2xl border border-paper-3 bg-paper p-4">
+              <p className="text-tag uppercase tracking-[0.14em] font-mono text-ink-3">
+                {t("blank_builder.copilot_title")}
+              </p>
+              <p className="mt-1.5 text-body-sm text-ink leading-relaxed">
+                {t("blank_builder.copilot_moved", {
+                  name: changed.name,
+                  from: formatCurrency(changed.from, lang),
+                  to: formatCurrency(changed.to, lang),
+                })}
+              </p>
+              <ul className="mt-2.5 space-y-1.5">
+                {changed.consequences.map((c) => (
+                  <li key={c.key} className="flex items-start gap-2 text-body-sm text-ink-2">
+                    {/* La direction est doublée d'un mot : jamais la couleur seule (§4). */}
+                    <span
+                      aria-hidden
+                      className={
+                        c.dir === "up"
+                          ? "text-mint-ink"
+                          : c.dir === "down"
+                            ? "text-solar-ink"
+                            : "text-ink-3"
+                      }
+                    >
+                      {c.dir === "up" ? "↑" : c.dir === "down" ? "↓" : "="}
+                    </span>
+                    <span>{t(c.key, c.vars)}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* TOUT LE RESTE tient derrière un seul dépli.
+              L'écran empilait quatre cartes d'analyse AVANT les lignes de
+              l'utilisateur : le coup d'œil, la lecture de fond, ses six
+              mesures et leurs compromis. Pour quelqu'un qui n'a jamais
+              investi, c'est un mur — et le mur était posé devant la seule
+              chose qu'il était venu faire, répartir son argent.
+
+              Rien n'est retiré (le détail reste complet, un cran plus bas) :
+              c'est l'ORDRE qui change. On compose d'abord, on regarde ce que
+              ça donne quand on le décide. */}
+          <details className="rounded-2xl border border-paper-3 bg-paper-2 group">
+            <summary className="flex items-center justify-between gap-3 p-4 cursor-pointer list-none rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink">
+              <span className="text-body-sm font-semibold text-ink">
+                {t("blank_builder.details_title")}
+              </span>
+              <span
+                aria-hidden
+                className="text-ink-3 transition-transform group-open:rotate-90 shrink-0"
+              >
+                ›
+              </span>
+            </summary>
+            <div className="px-4 pb-4 space-y-4">
+              {/* Coup d'œil copilote — accompagne sans décider ni rappeler un « 100 % » */}
+              <div className="rounded-2xl border border-paper-3 bg-paper-2 p-4 space-y-1.5">
+                {/* La part attribuée est un CONSTAT, pas un objectif à atteindre :
+                  laisser 20 % de côté est un choix valide, on l'écrit sans le corriger. */}
+                <p className="text-body-sm text-ink leading-relaxed">
+                  {t("blank_builder.glance_positions", { count: active.length })}{" "}
+                  {t(`blank_builder.glance_div_${divBand}`)}
+                </p>
+                {concentrated && (
+                  <p className="text-body-sm text-solar-ink leading-relaxed">
+                    {t("blank_builder.glance_concentrated")}
+                  </p>
+                )}
+                <p className="text-caption text-ink-3 leading-relaxed">
+                  {t("blank_builder.glance_impact", { score: impact })} ·{" "}
+                  {t("blank_builder.glance_riskfees_note")}
+                </p>
+              </div>
+
+              {/* Lecture de fond — ce que cette composition implique. */}
+              {(analysis || analysisLoading) && (
+                <div className="rounded-2xl border border-paper-3 bg-paper p-4">
+                  <p className="text-tag uppercase tracking-[0.14em] font-mono text-ink-3">
+                    {t("blank_builder.analysis_title")}
+                  </p>
+                  {analysis ? (
+                    <PortfolioAnalysisPanel className="mt-3" analysis={analysis} />
+                  ) : (
+                    <p role="status" className="mt-2 text-body-sm text-ink-3">
+                      {t("blank_builder.analysis_loading")}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          </details>
 
           <button
             type="button"

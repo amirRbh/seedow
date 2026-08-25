@@ -2948,7 +2948,8 @@
     "over_hint": "Retire ce surplus, ou augmente ton montant à répartir.",
     "amount_of": "Montant placé sur {{name}}",
     "share_of_total": "soit {{pct}} de ton montant",
-    "the_rest": "le reste ({{amount}})"
+    "the_rest": "le reste ({{amount}})",
+    "details_title": "Ce que ça donne"
   },
   "data_provenance": {
     "coverage_label": "Que signifie la couverture ?",
