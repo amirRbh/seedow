@@ -47,7 +47,7 @@ export function WhyThis({ children, label, ariaLabel, className = "" }: Props) {
         aria-expanded={open}
         aria-controls={panelId}
         aria-label={ariaLabel}
-        className="inline-flex items-center gap-1 text-caption text-ink-3 hover:text-ink-2 transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
+        className="inline-flex items-center gap-1 -my-1.5 py-1.5 text-caption text-ink-3 hover:text-ink-2 transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
       >
         <span className="underline decoration-dotted underline-offset-2">
           {label ?? t("why_this.trigger")}

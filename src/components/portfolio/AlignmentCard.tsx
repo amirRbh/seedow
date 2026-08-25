@@ -76,24 +76,30 @@ export function AlignmentCard({ analysis, className = "" }: Props) {
         {t("alignment_card.not_impact")}
       </p>
 
-      {/* PALIER 3 — d'où vient le chiffre, conviction par conviction. */}
+      {/* PALIER 3 — d'où vient le chiffre, conviction par conviction.
+          Libellé et valeur sur une ligne, barre sur toute la largeur en
+          dessous. La première version mettait les trois côte à côte : sur un
+          téléphone il reste 284 px à ce bloc, la barre tombait à 68 px et
+          « Droits humains » se tronquait. Empiler tient sur tous les écrans. */}
       {convictions.length > 0 && (
-        <ul className="mt-4 flex flex-col gap-2.5">
+        <ul className="mt-4 flex flex-col gap-3">
           {convictions.map(([cause, score]) => (
-            <li key={cause} className="flex items-center gap-3">
-              <span className="text-body-sm text-ink w-28 shrink-0 truncate">
-                {t(`onboarding.steps.values.${cause}`, { defaultValue: cause })}
-              </span>
-              <div className="h-1 flex-1 rounded-full bg-paper-inset overflow-hidden" aria-hidden>
+            <li key={cause}>
+              <div className="flex items-baseline justify-between gap-3">
+                <span className="text-body-sm text-ink min-w-0 truncate">
+                  {t(`onboarding.steps.values.${cause}`, { defaultValue: cause })}
+                </span>
+                {/* Le chiffre est écrit : la barre ne porte jamais seule
+                    l'information. « Pas mesurable » n'est pas un zéro. */}
+                <span className="text-tag font-mono tabular-nums text-ink-2 shrink-0">
+                  {score != null
+                    ? formatPercent(score / 100, lang, 0)
+                    : t("alignment_card.unmeasured")}
+                </span>
+              </div>
+              <div className="mt-1.5 h-1 rounded-full bg-paper-inset overflow-hidden" aria-hidden>
                 <div className="h-full rounded-full bg-mint" style={{ width: `${score ?? 0}%` }} />
               </div>
-              {/* Le chiffre est écrit : la barre ne porte jamais seule
-                  l'information. « Pas mesurable » n'est pas un zéro. */}
-              <span className="text-tag font-mono tabular-nums text-ink-2 w-20 text-right shrink-0">
-                {score != null
-                  ? formatPercent(score / 100, lang, 0)
-                  : t("alignment_card.unmeasured")}
-              </span>
             </li>
           ))}
         </ul>

@@ -31,14 +31,14 @@ export function MetricLabel({ label, hint, className = "" }: Props) {
           e.preventDefault();
           setOpen((v) => !v);
         }}
-        className="w-3.5 h-3.5 rounded-full bg-paper-3 text-ink-2 text-tag font-bold flex items-center justify-center hover:bg-highlight-4 hover:text-highlight-1 transition-colors leading-none"
+        className="relative w-3.5 h-3.5 rounded-full bg-paper-3 text-ink-2 text-tag font-bold flex items-center justify-center hover:bg-highlight-4 hover:text-highlight-1 transition-colors leading-none before:absolute before:-inset-3 before:content-['']"
       >
         ?
       </button>
       {open && (
         <span
           role="tooltip"
-          className="absolute z-50 bottom-full left-0 mb-2 w-56 p-2.5 rounded-lg bg-ink text-paper text-caption leading-snug shadow-flat-2 normal-case tracking-normal"
+          className="absolute z-50 bottom-full left-0 mb-2 w-56 max-w-[80vw] p-2.5 rounded-lg bg-ink text-paper text-caption leading-snug shadow-flat-2 normal-case tracking-normal"
           style={{ letterSpacing: "0" }}
         >
           {hint}
