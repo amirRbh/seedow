@@ -4,7 +4,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { trackFundRejection, type FundRejectionReason } from "@/lib/preferences/tracking";
 import type { ActiveHolding } from "@/hooks/useActivePortfolio";
 import type { ValuedHolding } from "@/hooks/usePortfolioValuation";
-import { PortfolioImpactBadge } from "./PortfolioImpactBadge";
+import { PortfolioSustainabilityBadge } from "./PortfolioSustainabilityBadge";
 
 interface Props {
   open: boolean;
@@ -137,7 +137,7 @@ export function HoldingDetailSheet({ open, onClose, holding, valued }: Props) {
             <div>
               <p className="text-tag uppercase tracking-wider text-ink-3">Score d'impact</p>
               <div className="mt-1">
-                <PortfolioImpactBadge esgScore={holding.esgScore} />
+                <PortfolioSustainabilityBadge esgScore={holding.esgScore} />
               </div>
             </div>
           </div>

@@ -32,10 +32,13 @@ export const GLOSSARY = {
     body: "Mesure de la rentabilité ajustée du risque. > 1 = bon, > 2 = excellent. Plus le ratio est élevé, plus chaque unité de risque rapporte.",
   },
   ESG: {
+    // `simple` disait « Score d'impact ». La vulgarisation rendait ici
+    // l'affirmation PLUS fausse : la note évalue des pratiques déclarées, elle
+    // ne mesure aucun effet sur le monde. Le mot simple doit rester vrai.
     title: "Score ESG",
-    simple: "Score d'impact",
+    simple: "Note de durabilité",
     long: "Environnement · Social · Gouvernance",
-    body: "Note synthétique (0–100) qui évalue les pratiques durables d'une entreprise sur trois piliers : impact environnemental, traitement humain, transparence de gouvernance.",
+    body: "Note synthétique (0–100) qui évalue les pratiques durables d'une entreprise sur trois piliers : environnement, traitement humain, transparence de gouvernance. Elle décrit des pratiques notées par un fournisseur — ce n'est pas une mesure de l'effet réel de ton argent sur le monde.",
   },
   Volatilite: {
     title: "Volatilité",

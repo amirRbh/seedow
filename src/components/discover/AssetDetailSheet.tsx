@@ -14,7 +14,7 @@ import {
   SourceLink,
   SustainabilityTierBadge,
 } from "@/components/discover/TransparencyBadges";
-import { ImpactBadge } from "@/components/discover/ImpactBadge";
+import { SustainabilityBadge } from "@/components/discover/SustainabilityBadge";
 import { useWatchlist } from "@/hooks/useWatchlist";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
 import { relativeIntensityVsBenchmark } from "@/lib/esg/carbon";
@@ -150,7 +150,13 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
             {/* Verdict lisible en une seconde (principe Yuka) AVANT le détail
                 carbone dense — progressive disclosure : l'essentiel d'abord. */}
             <div className="mb-3">
-              <ImpactBadge score={asset.overall_esg_score} />
+              <SustainabilityBadge score={asset.overall_esg_score} />
+              {/* Ce que la note EST, dit à côté d'elle et non en fin d'écran :
+                  une notation de pratiques, pas un effet mesuré sur le monde.
+                  Sans cette phrase, le badge se lit comme un impact (§1.3). */}
+              <p className="mt-1.5 text-tag text-ink-3 leading-snug">
+                {t("asset_detail.sustainability_note")}
+              </p>
             </div>
 
             {/* « Pourquoi ce score ? » — réponse Ethi en un clic (§11/§24). */}

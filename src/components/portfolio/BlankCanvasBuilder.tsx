@@ -175,7 +175,6 @@ export function BlankCanvasBuilder() {
   const allocated = active.reduce((sum, l) => sum + l.amount, 0);
   const remaining = Math.max(0, total - allocated);
   const overAllocated = total > 0 && allocated > total * (1 + WEIGHT_EPSILON);
-  const allocatedPct = total > 0 ? (allocated / total) * 100 : 0;
 
   const snapshot = liteSnapshot(
     active.map((l) => ({ id: l.id, esgScore: l.esgScore, weight: l.amount })),
@@ -499,6 +498,9 @@ export function BlankCanvasBuilder() {
         onOpenChange={setPickerOpen}
         excludeIds={lines.map((l) => l.id)}
         onPick={addAsset}
+        // Les convictions du questionnaire suivent jusqu'ici : c'est ce qui
+        // permet à la feuille de dire pourquoi une ligne mérite d'être ajoutée.
+        causes={intent?.causes ?? []}
       />
     </div>
   );

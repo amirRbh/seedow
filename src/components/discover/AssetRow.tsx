@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useLang } from "@/hooks/useLang";
 import { formatCurrency } from "@/lib/format";
 import type { DiscoverAsset } from "@/lib/discover/types";
-import { ImpactBadge } from "./ImpactBadge";
+import { SustainabilityBadge } from "./SustainabilityBadge";
 
 interface Props {
   asset: DiscoverAsset;
@@ -57,7 +57,7 @@ export function AssetRow({ asset, index, onOpen }: Props) {
             ? formatCurrency(asset.current_price, lang)
             : t("discover.row.price_unavailable")}
         </p>
-        <ImpactBadge score={asset.overall_esg_score} />
+        <SustainabilityBadge score={asset.overall_esg_score} />
       </div>
     </motion.button>
   );

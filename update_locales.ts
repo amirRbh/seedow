@@ -2240,13 +2240,202 @@ const mergedEn = deepMerge(en, {
   nav: navCommunityEn,
 });
 
+// ═══════════════════════════════════════════════════════════════════════
+// UX pédagogique — « pourquoi ce fonds ? » et fin du mot « impact » posé sur
+// une note ESG.
+//
+// Deux corrections tiennent tout ce bloc :
+//
+//  1. Le pool cesse d'afficher une pertinence nue. Un « 87/100 » trié par
+//     ordre décroissant se lit comme un palmarès, donc comme une
+//     recommandation. On rend à la place les raisons que le moteur avait déjà
+//     séparées (`lib/portfolio/poolReasons`).
+//  2. Une moyenne de notes ESG n'est pas un impact. Elle décrit des pratiques
+//     notées par un fournisseur, pas un effet mesuré sur le monde. Le mot
+//     « durabilité » dit ce que la donnée porte ; « impact » affirmait plus.
+// ═══════════════════════════════════════════════════════════════════════
+
+const poolReasonsFr = {
+  group: {
+    carries_convictions: "Porte tes convictions",
+    partial_match: "En partie aligné",
+    other_strengths: "D'autres qualités",
+    to_examine: "À examiner",
+  },
+  reason: {
+    carries_causes: "Porte {{count}} de tes {{total}} convictions",
+    sustainability: "Note de durabilité {{score}}/100, attribuée par un fournisseur",
+    low_fees: "Frais bas — {{euros}} € par an pour 1 000 € placés",
+  },
+  caveat: {
+    no_cause_match: "Ne porte aucune des convictions que tu as déclarées",
+    esg_estimated: "Note de durabilité estimée par Seedow, pas par un fournisseur",
+    high_fees: "Frais élevés — {{euros}} € par an pour 1 000 € placés",
+    no_history: "Historique de cours insuffisant pour mesurer son risque",
+  },
+};
+
+const poolReasonsEn = {
+  group: {
+    carries_convictions: "Matches your convictions",
+    partial_match: "Partly aligned",
+    other_strengths: "Other strengths",
+    to_examine: "Worth a look",
+  },
+  reason: {
+    carries_causes: "Carries {{count}} of your {{total}} convictions",
+    sustainability: "Sustainability rating {{score}}/100, from a data provider",
+    low_fees: "Low fees — €{{euros}} a year per €1,000 invested",
+  },
+  caveat: {
+    no_cause_match: "Carries none of the convictions you declared",
+    esg_estimated: "Sustainability rating estimated by Seedow, not by a provider",
+    high_fees: "High fees — €{{euros}} a year per €1,000 invested",
+    no_history: "Not enough price history to measure its risk",
+  },
+};
+
+const pedagogyFr = {
+  why_this: { trigger: "Pourquoi ?" },
+  analysis: {
+    why_aria: "Pourquoi ce niveau — {{row}}",
+    why: {
+      risk: {
+        low: "Tes lignes ont peu varié historiquement. En pratique : moins de secousses, mais aussi moins de progression attendue sur longue durée.",
+        moderate:
+          "Tes lignes varient comme un portefeuille d'actions ordinaire : des baisses de plusieurs pourcents sur quelques mois sont normales, et ne veulent pas dire que quelque chose s'est cassé.",
+        high: "Tes lignes bougent beaucoup. Sur une mauvaise année, la valeur peut baisser fortement — c'est le prix d'une progression potentiellement plus forte sur longue durée.",
+        unknown:
+          "Tes lignes n'ont pas assez d'historique de cours pour qu'on mesure leurs variations. On préfère te le dire plutôt que d'afficher un niveau qu'on n'a pas calculé.",
+      },
+      concentration: {
+        low: "Ton argent est réparti entre plusieurs lignes de poids comparable : aucune ne décide à elle seule de ce qui t'arrive.",
+        moderate:
+          "Une de tes lignes pèse nettement plus que les autres. Ce qui lui arrive se voit sur l'ensemble.",
+        high: "Une seule ligne porte l'essentiel de ton argent. Sa trajectoire devient à peu près la tienne — c'est un choix possible, mais il faut le faire en connaissance de cause.",
+        unknown: "Rien n'est encore placé : il n'y a pas de répartition à décrire.",
+      },
+      data: {
+        high: "L'essentiel de ce que tu vois ici vient de données sourcées et datées, pas d'estimations.",
+        medium:
+          "Une partie de tes lignes est décrite par des données sourcées, l'autre par des estimations Seedow. Les chiffres restent des ordres de grandeur.",
+        low: "Peu de tes lignes portent des données sourcées. Ce qui est affiché reste indicatif — on te le signale plutôt que de le présenter comme mesuré.",
+        unknown: "Aucune donnée de qualité mesurable sur cette composition pour l'instant.",
+      },
+    },
+  },
+
+  pool_reasons: poolReasonsFr,
+  discover: {
+    // « Impact » nommait une note ESG. Elle décrit des pratiques notées, pas un
+    // effet sur le monde : le badge dit désormais ce qu'il mesure.
+    row: { impact: "Durabilité" },
+  },
+  asset_picker: {
+    impact_short: "Durabilité {{score}}/100",
+    desc: "Cherche un fonds. Pour chacun, Seedow dit pourquoi il apparaît et ce qu'il ignore encore.",
+  },
+  asset_detail: {
+    impact_overview: "Durabilité de ce fonds",
+    sustainability_note:
+      "Une note attribuée par des fournisseurs de données sur les pratiques du fonds. Ce n'est pas une mesure de son effet réel sur le monde.",
+    why_score_label: "Pourquoi cette note ?",
+    why_score_q:
+      "Pourquoi Seedow attribue-t-il cette note de durabilité à {{name}} ? Explique-moi simplement ce qui la compose.",
+  },
+  blank_builder: {
+    glance_impact: "Note de durabilité {{score}}/100",
+  },
+  portfolio_customizer: {
+    consequence: {
+      impact_up: "Ta note de durabilité moyenne monte d'environ {{pts}} points sur 100.",
+      impact_down: "Ta note de durabilité moyenne baisse d'environ {{pts}} points sur 100.",
+    },
+  },
+  onboarding: {
+    pool: {
+      why_these: "Pourquoi ces fonds ?",
+      explainer:
+        "{{count}} fonds passent tes filtres ({{excluded}} écartés sur {{universe}}). Pour chacun, on te dit ce qu'il a à voir avec ce que tu as déclaré — et ce qu'on ignore encore de lui.",
+      method_note:
+        "Ces fonds ne sont pas classés du meilleur au pire : Seedow ne désigne pas de gagnant. L'ordre suit la pertinence (performance ajustée au risque, durabilité, alignement à tes causes) ; ce que tu lis à droite, ce sont les raisons derrière cet ordre.",
+    },
+  },
+};
+
+const pedagogyEn = {
+  why_this: { trigger: "Why?" },
+  analysis: {
+    why_aria: "Why this level — {{row}}",
+    why: {
+      risk: {
+        low: "Your lines have moved little historically. In practice: fewer swings, but also less expected growth over the long run.",
+        moderate:
+          "Your lines move like an ordinary stock portfolio: drops of several percent over a few months are normal, and don't mean something broke.",
+        high: "Your lines move a lot. In a bad year the value can fall sharply — that's the price of potentially stronger growth over the long run.",
+        unknown:
+          "Your lines don't have enough price history for us to measure how they move. We'd rather say so than show a level we haven't calculated.",
+      },
+      concentration: {
+        low: "Your money is spread across several lines of comparable weight: none of them alone decides what happens to you.",
+        moderate:
+          "One of your lines weighs noticeably more than the others. What happens to it shows on the whole.",
+        high: "A single line carries most of your money. Its path becomes roughly yours — a valid choice, but one to make knowingly.",
+        unknown: "Nothing is allocated yet: there's no split to describe.",
+      },
+      data: {
+        high: "Most of what you see here comes from sourced, dated data — not estimates.",
+        medium:
+          "Some of your lines are described by sourced data, the rest by Seedow estimates. The figures remain orders of magnitude.",
+        low: "Few of your lines carry sourced data. What's shown is indicative — we flag it rather than present it as measured.",
+        unknown: "No measurable data quality on this composition yet.",
+      },
+    },
+  },
+
+  pool_reasons: poolReasonsEn,
+  discover: {
+    row: { impact: "Sustainability" },
+  },
+  asset_picker: {
+    impact_short: "Sustainability {{score}}/100",
+    desc: "Search for a fund. For each one, Seedow says why it shows up — and what it still doesn't know.",
+  },
+  asset_detail: {
+    impact_overview: "How sustainable this fund is",
+    sustainability_note:
+      "A rating given by data providers on the fund's practices. It is not a measure of its real effect on the world.",
+    why_score_label: "Why this rating?",
+    why_score_q:
+      "Why does Seedow give {{name}} this sustainability rating? Explain simply what goes into it.",
+  },
+  blank_builder: {
+    glance_impact: "Sustainability rating {{score}}/100",
+  },
+  portfolio_customizer: {
+    consequence: {
+      impact_up: "Your average sustainability rating rises by about {{pts}} points out of 100.",
+      impact_down: "Your average sustainability rating falls by about {{pts}} points out of 100.",
+    },
+  },
+  onboarding: {
+    pool: {
+      why_these: "Why these funds?",
+      explainer:
+        "{{count}} funds pass your filters ({{excluded}} ruled out of {{universe}}). For each one, we say what it has to do with what you declared — and what we still don't know about it.",
+      method_note:
+        "These funds are not ranked best to worst: Seedow does not pick a winner. The order follows relevance (risk-adjusted performance, sustainability, alignment with your causes); what you read on the right are the reasons behind that order.",
+    },
+  },
+};
+
 writeFileSync(
   "src/i18n/locales/fr.json",
-  JSON.stringify(deepMerge(mergedFr, composeSwitchFr), null, 2) + "\n",
+  JSON.stringify(deepMerge(deepMerge(mergedFr, composeSwitchFr), pedagogyFr), null, 2) + "\n",
   "utf-8",
 );
 writeFileSync(
   "src/i18n/locales/en.json",
-  JSON.stringify(deepMerge(mergedEn, composeSwitchEn), null, 2) + "\n",
+  JSON.stringify(deepMerge(deepMerge(mergedEn, composeSwitchEn), pedagogyEn), null, 2) + "\n",
   "utf-8",
 );
