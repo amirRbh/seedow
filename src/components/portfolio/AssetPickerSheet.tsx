@@ -9,6 +9,9 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet";
 import { useAssetUniverse } from "@/hooks/useAssetUniverse";
+import { poolReasons } from "@/lib/portfolio/poolReasons";
+import { PoolReasonList } from "@/components/discover/PoolReasonList";
+import type { CauseTag } from "@/lib/portfolio/types";
 
 /** Actif renvoyé au parent, dans la forme attendue par l'éditeur d'allocation. */
 export interface PickedAsset {
@@ -16,7 +19,7 @@ export interface PickedAsset {
   ticker: string;
   name: string;
   asset_class: string;
-  /** Score d'impact sur 0..100. */
+  /** Note de durabilité sur 0..100 (note ESG composite, pas un effet mesuré). */
   esgScore: number;
 }
 
@@ -26,14 +29,28 @@ interface Props {
   /** Ids déjà présents dans le portefeuille en cours — masqués de la liste. */
   excludeIds: string[];
   onPick: (asset: PickedAsset) => void;
+  /**
+   * Convictions déclarées au questionnaire. Sans elles, la feuille reste une
+   * recherche honnête — mais muette : elle ne peut relier aucun fonds à ce que
+   * l'utilisateur a dit vouloir financer.
+   */
+  causes?: CauseTag[];
 }
 
 /**
  * Sélecteur d'investissement partagé (Page blanche + Personnaliser).
- * Recherche simple sur l'univers réel, libellés en langage clair. Un tap ajoute
- * la ligne et referme la feuille — pas de jargon, pas de tableau financier.
+ *
+ * C'est le moment le plus décisif du parcours — celui où l'argent est attribué —
+ * et c'était le seul écran sans la moindre explication : une recherche plate sur
+ * l'univers entier, sans lien avec les convictions déclarées trois écrans plus
+ * tôt. Chaque ligne porte désormais les mêmes raisons que le pool
+ * (`lib/portfolio/poolReasons`), pour que choisir et comprendre soient le même
+ * geste.
+ *
+ * Ce que la feuille NE fait pas : réordonner l'univers selon un score. Elle
+ * explique ce qui est là, elle ne désigne pas un gagnant.
  */
-export function AssetPickerSheet({ open, onOpenChange, excludeIds, onPick }: Props) {
+export function AssetPickerSheet({ open, onOpenChange, excludeIds, onPick, causes }: Props) {
   const { t } = useTranslation();
   const { assets, loading } = useAssetUniverse();
   const [query, setQuery] = useState("");
@@ -98,17 +115,28 @@ export function AssetPickerSheet({ open, onOpenChange, excludeIds, onPick }: Pro
                       });
                       onOpenChange(false);
                     }}
-                    className="w-full flex items-center gap-3 p-3 rounded-2xl border border-paper-3 bg-paper-2 text-left hover:bg-paper-3/40 transition-colors"
+                    className="w-full flex items-start gap-3 p-3 rounded-2xl border border-paper-3 bg-paper-2 text-left hover:bg-paper-3/40 transition-colors"
                   >
                     <div className="flex-1 min-w-0">
                       <p className="text-body-sm font-semibold text-ink truncate">{a.name}</p>
                       <p className="text-tag text-ink-3 truncate">
                         {a.ticker} · {a.category}
-                        {" · "}
-                        {t("asset_picker.impact_short", {
-                          score: Math.round(a.overall_esg_score * 10),
-                        })}
                       </p>
+                      {/* Pourquoi cette ligne, et ce qu'on ignore d'elle. Le
+                          modèle de vue ne porte pas l'exposition chiffrée par
+                          cause : on passe les thèmes dominants, et `poolReasons`
+                          s'en accommode sans rien inventer. */}
+                      <PoolReasonList
+                        className="mt-1"
+                        reasons={poolReasons({
+                          causes: causes ?? [],
+                          themes: a.themes,
+                          sustainability: Math.round(a.overall_esg_score * 10),
+                          esgSource: a.esg_score_source,
+                          ter: a.ter_pct / 100,
+                          statsObservations: a.stats_observations,
+                        })}
+                      />
                     </div>
                     <span className="w-8 h-8 rounded-full bg-ink text-paper flex items-center justify-center flex-shrink-0">
                       <Plus className="w-4 h-4" strokeWidth={2.2} aria-hidden />

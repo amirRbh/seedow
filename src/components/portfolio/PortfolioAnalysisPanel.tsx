@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useLang } from "@/hooks/useLang";
 import { formatPercent } from "@/lib/format";
+import { WhyThis } from "@/components/common/WhyThis";
 import type { PortfolioAnalysis } from "@/lib/portfolio/analysis/analyzePortfolio";
 
 /**
@@ -14,6 +15,13 @@ import type { PortfolioAnalysis } from "@/lib/portfolio/analysis/analyzePortfoli
  *    pas à sa teinte.
  *  - **Une donnée absente s'écrit** : `unknown` / `null` n'est pas masqué, il est
  *    dit. Ne rien afficher laisserait croire que la question ne se pose pas.
+ *
+ * S'y ajoute une troisième règle, celle qui manquait : **chaque ligne dont le
+ * libellé suppose une notion financière doit pouvoir répondre « pourquoi ? »**.
+ * « Risque : modéré » ne veut rien dire pour quelqu'un qui n'a jamais investi
+ * tant qu'on ne lui a pas dit ce que « modéré » recouvre. L'explication est
+ * repliée (`WhyThis`) : elle ne charge pas l'écran, elle est là quand on la
+ * cherche.
  */
 
 interface Props {
@@ -34,7 +42,14 @@ export function PortfolioAnalysisPanel({ analysis, showTradeoffs = true, classNa
   const { t } = useTranslation();
   const { lang } = useLang();
 
-  const rows: Array<{ key: string; label: string; value: string; hint?: string }> = [];
+  const rows: Array<{
+    key: string;
+    label: string;
+    value: string;
+    hint?: string;
+    /** Clé i18n d'une explication en langage clair, dépliable. */
+    why?: string;
+  }> = [];
 
   // A — Compatibilité avec les valeurs.
   rows.push({
@@ -61,6 +76,7 @@ export function PortfolioAnalysisPanel({ analysis, showTradeoffs = true, classNa
     key: "risk",
     label: t("analysis.row.risk"),
     value: t(`analysis.risk.${analysis.risk.level}`),
+    why: `analysis.why.risk.${analysis.risk.level}`,
     hint:
       analysis.risk.volatility != null
         ? t("analysis.volatility", { pct: formatPercent(analysis.risk.volatility, lang, 1) })
@@ -80,6 +96,7 @@ export function PortfolioAnalysisPanel({ analysis, showTradeoffs = true, classNa
     key: "diversification",
     label: t("analysis.row.diversification"),
     value: t(`analysis.concentration.${analysis.diversification.concentration}`),
+    why: `analysis.why.concentration.${analysis.diversification.concentration}`,
     hint:
       analysis.diversification.largestPosition != null
         ? t("analysis.largest_position", {
@@ -93,6 +110,7 @@ export function PortfolioAnalysisPanel({ analysis, showTradeoffs = true, classNa
     key: "data",
     label: t("analysis.row.data"),
     value: t(`analysis.data.${analysis.dataQuality.overall}`),
+    why: `analysis.why.data.${analysis.dataQuality.overall}`,
     hint:
       analysis.dataQuality.esgSourcedShare != null
         ? t("analysis.esg_sourced", {
@@ -105,12 +123,19 @@ export function PortfolioAnalysisPanel({ analysis, showTradeoffs = true, classNa
     <div className={className}>
       <ul className="divide-y divide-paper-3 border-t border-b border-paper-3">
         {rows.map((r) => (
-          <li key={r.key} className="flex items-baseline justify-between gap-3 py-2.5">
-            <span className="text-body-sm text-ink-2">{r.label}</span>
-            <span className="text-right">
-              <span className="text-body-sm font-semibold text-ink">{r.value}</span>
-              {r.hint && <span className="block text-tag text-ink-3">{r.hint}</span>}
-            </span>
+          <li key={r.key} className="py-2.5">
+            <div className="flex items-baseline justify-between gap-3">
+              <span className="text-body-sm text-ink-2">{r.label}</span>
+              <span className="text-right">
+                <span className="text-body-sm font-semibold text-ink">{r.value}</span>
+                {r.hint && <span className="block text-tag text-ink-3">{r.hint}</span>}
+              </span>
+            </div>
+            {r.why && (
+              <WhyThis className="mt-1" ariaLabel={t("analysis.why_aria", { row: r.label })}>
+                {t(r.why)}
+              </WhyThis>
+            )}
           </li>
         ))}
       </ul>

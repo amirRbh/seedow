@@ -53,6 +53,10 @@ export const screenAssetPool = createServerFn({ method: "POST" })
         esg_score: s.asset.esg_score,
         esg_score_source: s.asset.esg_score_source,
         ter: s.asset.ter,
+        // Exposition par cause, telle que portée par l'actif. Elle sert à dire
+        // QUELLES convictions le fonds porte — `cause_match` n'en donne que la
+        // moyenne, dont on ne peut pas déduire la liste (cf. `poolReasons`).
+        cause_exposure: s.asset.cause_exposure,
         relevance: s.relevance,
         sharpe: s.sharpe,
         seedow_esg_score: s.seedow_esg_score,

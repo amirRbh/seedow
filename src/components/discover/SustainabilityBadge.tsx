@@ -9,13 +9,17 @@ const TONE: Record<ImpactTone, { dot: string; text: string }> = {
 };
 
 /**
- * Badge d'impact « lisible en une seconde » (principe Yuka) : une pastille de
- * couleur + un mot qualitatif + le score chiffré. Le mot et le chiffre portent
- * l'information même sans la couleur (DA §4 — jamais de sens par la couleur
- * seule). Réutilisé partout où un débutant croise un score d'impact pour la
- * première fois (liste Découvrir, aperçu d'onboarding).
+ * Badge de DURABILITÉ « lisible en une seconde » (principe Yuka) : une pastille
+ * de couleur + un mot qualitatif + la note chiffrée. Le mot et le chiffre
+ * portent l'information même sans la couleur (DA §4 — jamais de sens par la
+ * couleur seule).
+ *
+ * Il s'est longtemps appelé « badge d'impact ». C'était faux : la note agrège
+ * des PRATIQUES notées par un fournisseur ESG, elle ne mesure aucun effet de
+ * l'argent de l'utilisateur sur le monde. Un composant nommé `ImpactBadge`
+ * réintroduisait la confusion à chaque nouvel appel — d'où le nom actuel.
  */
-export function ImpactBadge({ score, className }: { score: number; className?: string }) {
+export function SustainabilityBadge({ score, className }: { score: number; className?: string }) {
   const { t } = useTranslation();
   const { level, tone } = impactRating(score);
   const c = TONE[tone];

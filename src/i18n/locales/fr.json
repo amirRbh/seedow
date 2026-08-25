@@ -659,7 +659,7 @@
     "row": {
       "risk": "Risque",
       "ter": "Frais",
-      "impact": "Impact",
+      "impact": "Durabilité",
       "price_unavailable": "Cours indisponible"
     },
     "impact_rating": {
@@ -1126,12 +1126,13 @@
       "loading_desc": "Filtrage par tes critères, puis classement par pertinence",
       "eyebrow": "Ta sélection",
       "title": "Les fonds qui collent à tes critères",
-      "explainer": "{{count}} actifs collent à tes critères ({{excluded}} écartés sur {{universe}}), classés par pertinence. Seedow ne choisit pas ta répartition — tu composes, on t'explique chaque repère.",
+      "explainer": "{{count}} fonds passent tes filtres ({{excluded}} écartés sur {{universe}}). Pour chacun, on te dit ce qu'il a à voir avec ce que tu as déclaré — et ce qu'on ignore encore de lui.",
       "relevance_badge": "{{score}}/100",
       "pending_badge": "En cours",
-      "method_note": "Pertinence = performance ajustée au risque, qualité ESG et alignement à tes causes. « En cours » : historique de marché encore insuffisant — jamais un score inventé.",
+      "method_note": "Ces fonds ne sont pas classés du meilleur au pire : Seedow ne désigne pas de gagnant. L'ordre suit la pertinence (performance ajustée au risque, durabilité, alignement à tes causes) ; ce que tu lis à droite, ce sont les raisons derrière cet ordre.",
       "compose_cta": "Composer mon portefeuille",
-      "blank_cta": "Choisir moi-même depuis zéro"
+      "blank_cta": "Choisir moi-même depuis zéro",
+      "why_these": "Pourquoi ces fonds ?"
     },
     "saving": {
       "title": "Enregistrement de ton portefeuille…"
@@ -1571,10 +1572,10 @@
         }
       }
     },
-    "impact_overview": "Ce que ton argent finance",
+    "impact_overview": "Durabilité de ce fonds",
     "carbon_detail": "Détail carbone & piliers ESG",
-    "why_score_label": "Pourquoi ce score ?",
-    "why_score_q": "Pourquoi Seedow attribue-t-il ce score d'impact à {{name}} ? Explique-moi simplement ce qui le compose.",
+    "why_score_label": "Pourquoi cette note ?",
+    "why_score_q": "Pourquoi Seedow attribue-t-il cette note de durabilité à {{name}} ? Explique-moi simplement ce qui la compose.",
     "cost": {
       "title": "Combien ça coûte",
       "per_year": "/ an",
@@ -1623,7 +1624,8 @@
       "thematic_risk_desc": "Secteur concentré et sensible à la réglementation et aux cycles d'innovation."
     },
     "carbon_intensity": "Intensité carbone (WACI)",
-    "risk_scale": "Sur une échelle de 1 (très stable) à 7 (très agité). Un ETF actions monde se situe autour de 4-5."
+    "risk_scale": "Sur une échelle de 1 (très stable) à 7 (très agité). Un ETF actions monde se situe autour de 4-5.",
+    "sustainability_note": "Une note attribuée par des fournisseurs de données sur les pratiques du fonds. Ce n'est pas une mesure de son effet réel sur le monde."
   },
   "theme_filter": {
     "all": "Tout"
@@ -2881,8 +2883,8 @@
       "less_concentrated": "Votre portefeuille est mieux réparti — votre argent dépend de davantage d'investissements.",
       "diversification_up": "Votre diversification s'améliore.",
       "diversification_down": "Votre diversification diminue.",
-      "impact_up": "Votre impact augmente (environ +{{pts}} points sur 100).",
-      "impact_down": "Votre impact baisse (environ −{{pts}} points sur 100).",
+      "impact_up": "Ta note de durabilité moyenne monte d'environ {{pts}} points sur 100.",
+      "impact_down": "Ta note de durabilité moyenne baisse d'environ {{pts}} points sur 100.",
       "risk_up": "Votre portefeuille devient un peu plus sensible aux variations de marché.",
       "risk_down": "Votre portefeuille devient un peu moins sensible aux variations de marché."
     },
@@ -2930,11 +2932,11 @@
   },
   "asset_picker": {
     "title": "Ajouter un investissement",
-    "desc": "Cherchez et ajoutez ce qui vous parle. Vous pourrez ajuster ensuite.",
+    "desc": "Cherche un fonds. Pour chacun, Seedow dit pourquoi il apparaît et ce qu'il ignore encore.",
     "search_placeholder": "Rechercher un investissement…",
     "loading": "Chargement…",
     "empty": "Aucun résultat. Essayez un autre mot.",
-    "impact_short": "Impact {{score}}/100"
+    "impact_short": "Durabilité {{score}}/100"
   },
   "blank_builder": {
     "eyebrow": "Page blanche",
@@ -2957,7 +2959,7 @@
     "glance_div_correcte": "La répartition commence à être correcte.",
     "glance_div_bonne": "Bonne répartition entre vos investissements.",
     "glance_concentrated": "Attention : une ligne pèse une grande partie de votre argent.",
-    "glance_impact": "Impact {{score}}/100",
+    "glance_impact": "Note de durabilité {{score}}/100",
     "glance_riskfees_note": "Risque et frais précis calculés à l'enregistrement.",
     "simulation_note": "Simulation à but pédagogique — aucune transaction réelle. Vous décidez.",
     "need_one": "Ajoutez au moins un investissement pour enregistrer.",
@@ -3181,6 +3183,27 @@
       "horizon_weak": "Ce niveau de risque demande plus de temps que l'horizon que tu as indiqué. Ni bon ni mauvais — à savoir.",
       "data_low": "Une grande partie de tes lignes n'a pas encore d'historique de marché suffisant : risque et frais sont des estimations de classe, pas des mesures.",
       "unallocated": "{{pct}} de ton montant ne sont placés sur aucune ligne."
+    },
+    "why_aria": "Pourquoi ce niveau — {{row}}",
+    "why": {
+      "risk": {
+        "low": "Tes lignes ont peu varié historiquement. En pratique : moins de secousses, mais aussi moins de progression attendue sur longue durée.",
+        "moderate": "Tes lignes varient comme un portefeuille d'actions ordinaire : des baisses de plusieurs pourcents sur quelques mois sont normales, et ne veulent pas dire que quelque chose s'est cassé.",
+        "high": "Tes lignes bougent beaucoup. Sur une mauvaise année, la valeur peut baisser fortement — c'est le prix d'une progression potentiellement plus forte sur longue durée.",
+        "unknown": "Tes lignes n'ont pas assez d'historique de cours pour qu'on mesure leurs variations. On préfère te le dire plutôt que d'afficher un niveau qu'on n'a pas calculé."
+      },
+      "concentration": {
+        "low": "Ton argent est réparti entre plusieurs lignes de poids comparable : aucune ne décide à elle seule de ce qui t'arrive.",
+        "moderate": "Une de tes lignes pèse nettement plus que les autres. Ce qui lui arrive se voit sur l'ensemble.",
+        "high": "Une seule ligne porte l'essentiel de ton argent. Sa trajectoire devient à peu près la tienne — c'est un choix possible, mais il faut le faire en connaissance de cause.",
+        "unknown": "Rien n'est encore placé : il n'y a pas de répartition à décrire."
+      },
+      "data": {
+        "high": "L'essentiel de ce que tu vois ici vient de données sourcées et datées, pas d'estimations.",
+        "medium": "Une partie de tes lignes est décrite par des données sourcées, l'autre par des estimations Seedow. Les chiffres restent des ordres de grandeur.",
+        "low": "Peu de tes lignes portent des données sourcées. Ce qui est affiché reste indicatif — on te le signale plutôt que de le présenter comme mesuré.",
+        "unknown": "Aucune donnée de qualité mesurable sur cette composition pour l'instant."
+      }
     }
   },
   "asset_layers": {
@@ -3222,6 +3245,28 @@
       "expected_return": "rendement attendu",
       "volatility": "volatilité",
       "price_history": "historique de cours"
+    }
+  },
+  "why_this": {
+    "trigger": "Pourquoi ?"
+  },
+  "pool_reasons": {
+    "group": {
+      "carries_convictions": "Porte tes convictions",
+      "partial_match": "En partie aligné",
+      "other_strengths": "D'autres qualités",
+      "to_examine": "À examiner"
+    },
+    "reason": {
+      "carries_causes": "Porte {{count}} de tes {{total}} convictions",
+      "sustainability": "Note de durabilité {{score}}/100, attribuée par un fournisseur",
+      "low_fees": "Frais bas — {{euros}} € par an pour 1 000 € placés"
+    },
+    "caveat": {
+      "no_cause_match": "Ne porte aucune des convictions que tu as déclarées",
+      "esg_estimated": "Note de durabilité estimée par Seedow, pas par un fournisseur",
+      "high_fees": "Frais élevés — {{euros}} € par an pour 1 000 € placés",
+      "no_history": "Historique de cours insuffisant pour mesurer son risque"
     }
   }
 }

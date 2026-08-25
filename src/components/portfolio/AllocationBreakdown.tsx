@@ -4,7 +4,7 @@ import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import type { ActiveHolding } from "@/hooks/useActivePortfolio";
 import type { ValuedHolding } from "@/hooks/usePortfolioValuation";
 import { HoldingDetailSheet } from "./HoldingDetailSheet";
-import { PortfolioImpactBadge } from "./PortfolioImpactBadge";
+import { PortfolioSustainabilityBadge } from "./PortfolioSustainabilityBadge";
 import { EASE_REVEAL } from "@/lib/motion";
 import { assetClassColor } from "@/lib/portfolio/assetClasses";
 
@@ -200,7 +200,10 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
                         {h.region && ` · ${h.region}`}
                       </p>
                       <span className="text-tag text-ink-3 flex-shrink-0">·</span>
-                      <PortfolioImpactBadge esgScore={h.esgScore} className="flex-shrink-0" />
+                      <PortfolioSustainabilityBadge
+                        esgScore={h.esgScore}
+                        className="flex-shrink-0"
+                      />
                     </div>
                     <p className="text-tag text-ink-3 flex-shrink-0">
                       {amount.toLocaleString("fr-FR", {

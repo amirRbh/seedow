@@ -27,6 +27,9 @@ import { lovable } from "@/integrations/lovable";
 import { joinWaitlist } from "@/lib/beta/beta.functions";
 import { useBetaCapacity } from "@/hooks/useBetaCapacity";
 import { screenAssetPool } from "@/lib/portfolio/server.functions";
+import { poolReasons } from "@/lib/portfolio/poolReasons";
+import { PoolReasonList } from "@/components/discover/PoolReasonList";
+import { WhyThis } from "@/components/common/WhyThis";
 import { AgencyReveal } from "@/components/onboarding/AgencyReveal";
 import { writePoolHandoff } from "@/lib/onboarding/poolHandoff";
 import { SimulationBadge } from "@/components/common/SimulationBadge";
@@ -945,7 +948,12 @@ interface PoolEntry {
   ticker: string;
   name: string;
   esg_score: number;
+  esg_score_source: string | null;
+  ter: number;
   relevance: number | null;
+  sharpe: number | null;
+  seedow_esg_score: number | null;
+  cause_exposure: Record<string, number>;
   data_tier: "full" | "partial" | "insufficient";
 }
 
@@ -1136,7 +1144,7 @@ function PreviewScene({
                   initial={{ opacity: 0, x: -6 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.05, duration: 0.3 }}
-                  className="py-3 flex items-baseline justify-between gap-3"
+                  className="py-3"
                 >
                   {/* Nom lisible d'abord ; le ticker devient une métadonnée. */}
                   <div className="min-w-0">
@@ -1147,23 +1155,33 @@ function PreviewScene({
                       {a.ticker}
                     </span>
                   </div>
-                  {/* Pertinence quand l'actif a un historique réel ; sinon « en cours »
-                      (jamais un chiffre inventé — cf. règle §1.3). */}
-                  {a.relevance != null ? (
-                    <span className="text-label text-mint tabular-nums font-medium flex-shrink-0">
-                      {t("onboarding.pool.relevance_badge", { score: a.relevance })}
-                    </span>
-                  ) : (
-                    <span className="text-tag text-ink-3 flex-shrink-0">
-                      {t("onboarding.pool.pending_badge")}
-                    </span>
-                  )}
+                  {/* Les RAISONS, pas le score. Un « 87/100 » trié par ordre
+                      décroissant se lit comme un palmarès — Seedow classe un
+                      pool, il ne désigne pas un gagnant (cf. `poolReasons`).
+                      Elles passent SOUS le nom, sur toute la largeur : serrées
+                      dans une colonne de droite, elles seraient illisibles sur
+                      un téléphone, qui est l'écran de ce parcours. */}
+                  <PoolReasonList
+                    className="mt-1.5"
+                    reasons={poolReasons({
+                      causes: params.causes,
+                      causeExposure: a.cause_exposure,
+                      sustainability: a.seedow_esg_score,
+                      esgSource: a.esg_score_source,
+                      ter: a.ter,
+                      sharpe: a.sharpe,
+                    })}
+                  />
                 </motion.li>
               ))}
             </ul>
-            <p className="text-tag text-ink-3 text-center mt-3 leading-relaxed">
+            {/* La méthode passe derrière « Pourquoi ces fonds ? » : les raisons
+                sont désormais lisibles ligne par ligne au-dessus, et un pavé de
+                petits caractères sous une liste n'est lu par personne. Repliée,
+                pas supprimée — c'est la différence entre alléger et masquer. */}
+            <WhyThis className="mt-3 flex justify-center" label={t("onboarding.pool.why_these")}>
               {t("onboarding.pool.method_note")}
-            </p>
+            </WhyThis>
             <div className="mt-8 space-y-3">
               <button
                 onClick={compose}

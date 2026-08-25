@@ -11,6 +11,7 @@ import { AppHeader } from "@/components/navigation/AppHeader";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 import { screenAssetPool } from "@/lib/portfolio/server.functions";
+import { poolReasons, type PoolGroup } from "@/lib/portfolio/poolReasons";
 import { savePortfolioPreferences } from "@/lib/portfolio/customize.functions";
 import { triggerMarketRefresh } from "@/lib/market/refresh.functions";
 import { triggerRiskModelRecompute } from "@/lib/market/risk-model.functions";
@@ -183,8 +184,8 @@ function PreferencesSection() {
     id: string;
     ticker: string;
     name: string;
-    /** Pertinence 0..100, ou null quand l'historique est insuffisant (« en cours »). */
-    relevance: number | null;
+    /** Le rapport du fonds aux convictions déclarées — pas son rang. */
+    group: PoolGroup;
   };
   const [preview, setPreview] = useState<{
     lines: PoolLine[];
@@ -269,7 +270,17 @@ function PreferencesSection() {
               id: p.id,
               ticker: p.ticker,
               name: p.name,
-              relevance: p.relevance,
+              // Un « 87/100 » en bout de ligne se lit comme un podium. On garde
+              // l'ordre du classement — il reste juste — mais on affiche ce
+              // qu'il signifie pour l'utilisateur (cf. `poolReasons`).
+              group: poolReasons({
+                causes,
+                causeExposure: p.cause_exposure,
+                sustainability: p.seedow_esg_score,
+                esgSource: p.esg_score_source,
+                ter: p.ter,
+                sharpe: p.sharpe,
+              }).group,
             })),
             poolSize: res.pool.length,
             excluded: res.excluded_count ?? 0,
@@ -342,19 +353,20 @@ function PreferencesSection() {
           </p>
           <ul className="space-y-1.5">
             {preview.lines.map((l) => (
-              <li key={l.id} className="flex items-center gap-3 text-label">
-                <span className="font-value text-ink-2 w-12 tabular-nums shrink-0">{l.ticker}</span>
-                <span className="flex-1 text-ink truncate">{l.name}</span>
-                {/* Jamais de chiffre inventé : sans historique réel, « en cours ». */}
-                {l.relevance != null ? (
-                  <span className="font-value tabular-nums text-ink w-16 text-right">
-                    {t("reglages.pool_relevance", { score: l.relevance })}
+              <li key={l.id} className="text-label">
+                <div className="flex items-center gap-3">
+                  <span className="font-value text-ink-2 w-12 tabular-nums shrink-0">
+                    {l.ticker}
                   </span>
-                ) : (
-                  <span className="text-tag text-ink-3 w-16 text-right">
-                    {t("reglages.pool_pending")}
-                  </span>
-                )}
+                  <span className="flex-1 text-ink truncate">{l.name}</span>
+                </div>
+                {/* Le groupe est un mot, pas une note : il dit ce que le fonds a
+                    à voir avec les convictions déclarées. Il passe sous le nom —
+                    un libellé de cette longueur en bout de ligne écraserait le
+                    nom du fonds sur un téléphone. */}
+                <span className="block pl-[3.75rem] text-tag font-mono uppercase tracking-wider text-ink-3">
+                  {t(`pool_reasons.group.${l.group}`)}
+                </span>
               </li>
             ))}
           </ul>

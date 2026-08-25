@@ -4,15 +4,19 @@ import { cn } from "@/lib/utils";
 
 // Échelle portefeuille 0..100 (bandes modéré/solide/fort de `impactScore`),
 // distincte de l'échelle Découvrir 0..10 — d'où un badge dédié. Même principe
-// « lisible en une seconde » : pastille + mot + score, le sens jamais porté par
+// « lisible en une seconde » : pastille + mot + note, le sens jamais porté par
 // la couleur seule (DA §4). Vocabulaire réutilisé de `portfolio_customizer`.
+//
+// Ce badge rend une moyenne pondérée de notes ESG. Il s'appelait
+// « PortfolioImpactBadge » : le mot affirmait un effet sur le monde que la
+// donnée ne porte pas.
 const TONE: Record<string, { dot: string; text: string }> = {
   fort: { dot: "bg-mint", text: "text-mint-ink" },
   solide: { dot: "bg-mint", text: "text-mint-ink" },
   modere: { dot: "bg-ink-3", text: "text-ink-3" },
 };
 
-export function PortfolioImpactBadge({
+export function PortfolioSustainabilityBadge({
   esgScore,
   className,
 }: {

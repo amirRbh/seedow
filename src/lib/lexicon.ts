@@ -49,7 +49,10 @@ export const lexicon = {
     impact_co2: "CO₂ évité",
     impact_trees: "Arbres équivalents",
     impact_energy: "Énergie verte",
-    esg_score: "Score d'impact",
+    // Une moyenne de notes ESG décrit des PRATIQUES notées par un fournisseur.
+    // L'appeler « impact » affirmait un effet sur le monde que la donnée ne
+    // porte pas (CLAUDE.md §1.3).
+    esg_score: "Note de durabilité",
   },
 } as const;
 

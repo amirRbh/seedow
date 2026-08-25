@@ -659,7 +659,7 @@
     "row": {
       "risk": "Risk",
       "ter": "Fees",
-      "impact": "Impact",
+      "impact": "Sustainability",
       "price_unavailable": "Price unavailable"
     },
     "impact_rating": {
@@ -1126,12 +1126,13 @@
       "loading_desc": "Filtering on your criteria, then ranking by relevance",
       "eyebrow": "Your selection",
       "title": "The funds that match your criteria",
-      "explainer": "{{count}} assets match your criteria ({{excluded}} excluded of {{universe}}), ranked by relevance. Seedow doesn't pick your allocation — you compose it, we explain every signal.",
+      "explainer": "{{count}} funds pass your filters ({{excluded}} ruled out of {{universe}}). For each one, we say what it has to do with what you declared — and what we still don't know about it.",
       "relevance_badge": "{{score}}/100",
       "pending_badge": "Pending",
-      "method_note": "Relevance = risk-adjusted performance, ESG quality and alignment with your causes. \"Pending\": market history still too thin — never a made-up score.",
+      "method_note": "These funds are not ranked best to worst: Seedow does not pick a winner. The order follows relevance (risk-adjusted performance, sustainability, alignment with your causes); what you read on the right are the reasons behind that order.",
       "compose_cta": "Compose my portfolio",
-      "blank_cta": "Pick everything myself"
+      "blank_cta": "Pick everything myself",
+      "why_these": "Why these funds?"
     },
     "saving": {
       "title": "Saving your portfolio…"
@@ -1571,10 +1572,10 @@
         }
       }
     },
-    "impact_overview": "What your money funds",
+    "impact_overview": "How sustainable this fund is",
     "carbon_detail": "Carbon detail & ESG pillars",
-    "why_score_label": "Why this score?",
-    "why_score_q": "Why does Seedow give {{name}} this impact score? Explain simply what makes it up.",
+    "why_score_label": "Why this rating?",
+    "why_score_q": "Why does Seedow give {{name}} this sustainability rating? Explain simply what goes into it.",
     "cost": {
       "title": "What it costs",
       "per_year": "/ year",
@@ -1623,7 +1624,8 @@
       "thematic_risk_desc": "Concentrated sector sensitive to regulation and innovation cycles."
     },
     "carbon_intensity": "Carbon intensity (WACI)",
-    "risk_scale": "On a scale of 1 (very stable) to 7 (very turbulent). A world equity ETF sits around 4-5."
+    "risk_scale": "On a scale of 1 (very stable) to 7 (very turbulent). A world equity ETF sits around 4-5.",
+    "sustainability_note": "A rating given by data providers on the fund's practices. It is not a measure of its real effect on the world."
   },
   "theme_filter": {
     "all": "All"
@@ -2881,8 +2883,8 @@
       "less_concentrated": "Your portfolio is better spread out — your money depends on more investments.",
       "diversification_up": "Your diversification improves.",
       "diversification_down": "Your diversification decreases.",
-      "impact_up": "Your impact goes up (about +{{pts}} points out of 100).",
-      "impact_down": "Your impact goes down (about −{{pts}} points out of 100).",
+      "impact_up": "Your average sustainability rating rises by about {{pts}} points out of 100.",
+      "impact_down": "Your average sustainability rating falls by about {{pts}} points out of 100.",
       "risk_up": "Your portfolio becomes a bit more sensitive to market swings.",
       "risk_down": "Your portfolio becomes a bit less sensitive to market swings."
     },
@@ -2930,11 +2932,11 @@
   },
   "asset_picker": {
     "title": "Add an investment",
-    "desc": "Search and add what speaks to you. You can adjust afterwards.",
+    "desc": "Search for a fund. For each one, Seedow says why it shows up — and what it still doesn't know.",
     "search_placeholder": "Search an investment…",
     "loading": "Loading…",
     "empty": "No result. Try another word.",
-    "impact_short": "Impact {{score}}/100"
+    "impact_short": "Sustainability {{score}}/100"
   },
   "blank_builder": {
     "eyebrow": "Blank page",
@@ -2957,7 +2959,7 @@
     "glance_div_correcte": "The spread is starting to look fair.",
     "glance_div_bonne": "Good spread across your investments.",
     "glance_concentrated": "Careful: one holding carries a large share of your money.",
-    "glance_impact": "Impact {{score}}/100",
+    "glance_impact": "Sustainability rating {{score}}/100",
     "glance_riskfees_note": "Exact risk and fees are computed when you save.",
     "simulation_note": "Educational simulation — no real transaction. You decide.",
     "need_one": "Add at least one investment to save.",
@@ -3181,6 +3183,27 @@
       "horizon_weak": "This risk level asks for more time than the horizon you set. Neither good nor bad — worth knowing.",
       "data_low": "A large share of your holdings has no sufficient market history yet: risk and fees are class estimates, not measurements.",
       "unallocated": "{{pct}} of your amount sits on no holding."
+    },
+    "why_aria": "Why this level — {{row}}",
+    "why": {
+      "risk": {
+        "low": "Your lines have moved little historically. In practice: fewer swings, but also less expected growth over the long run.",
+        "moderate": "Your lines move like an ordinary stock portfolio: drops of several percent over a few months are normal, and don't mean something broke.",
+        "high": "Your lines move a lot. In a bad year the value can fall sharply — that's the price of potentially stronger growth over the long run.",
+        "unknown": "Your lines don't have enough price history for us to measure how they move. We'd rather say so than show a level we haven't calculated."
+      },
+      "concentration": {
+        "low": "Your money is spread across several lines of comparable weight: none of them alone decides what happens to you.",
+        "moderate": "One of your lines weighs noticeably more than the others. What happens to it shows on the whole.",
+        "high": "A single line carries most of your money. Its path becomes roughly yours — a valid choice, but one to make knowingly.",
+        "unknown": "Nothing is allocated yet: there's no split to describe."
+      },
+      "data": {
+        "high": "Most of what you see here comes from sourced, dated data — not estimates.",
+        "medium": "Some of your lines are described by sourced data, the rest by Seedow estimates. The figures remain orders of magnitude.",
+        "low": "Few of your lines carry sourced data. What's shown is indicative — we flag it rather than present it as measured.",
+        "unknown": "No measurable data quality on this composition yet."
+      }
     }
   },
   "asset_layers": {
@@ -3222,6 +3245,28 @@
       "expected_return": "expected return",
       "volatility": "volatility",
       "price_history": "price history"
+    }
+  },
+  "why_this": {
+    "trigger": "Why?"
+  },
+  "pool_reasons": {
+    "group": {
+      "carries_convictions": "Matches your convictions",
+      "partial_match": "Partly aligned",
+      "other_strengths": "Other strengths",
+      "to_examine": "Worth a look"
+    },
+    "reason": {
+      "carries_causes": "Carries {{count}} of your {{total}} convictions",
+      "sustainability": "Sustainability rating {{score}}/100, from a data provider",
+      "low_fees": "Low fees — €{{euros}} a year per €1,000 invested"
+    },
+    "caveat": {
+      "no_cause_match": "Carries none of the convictions you declared",
+      "esg_estimated": "Sustainability rating estimated by Seedow, not by a provider",
+      "high_fees": "High fees — €{{euros}} a year per €1,000 invested",
+      "no_history": "Not enough price history to measure its risk"
     }
   }
 }
