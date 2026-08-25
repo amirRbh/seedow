@@ -20,6 +20,7 @@ import { AssetPickerSheet, type PickedAsset } from "./AssetPickerSheet";
 import { PortfolioAnalysisPanel } from "./PortfolioAnalysisPanel";
 import { usePortfolioAnalysis } from "@/hooks/usePortfolioAnalysis";
 import { readPoolHandoff, type PoolHandoffIntent } from "@/lib/onboarding/poolHandoff";
+import { recordComposition } from "@/lib/portfolio/lastChange";
 
 interface Line {
   id: string;
@@ -216,7 +217,7 @@ export function BlankCanvasBuilder() {
       // Intention issue de l'aperçu (mode/convictions/nom/cadre chiffré) ;
       // défauts sûrs si le builder a été ouvert directement (replace, aucune
       // cause, et côté serveur les défauts documentés du schéma).
-      await create({
+      const created = await create({
         data: {
           weights,
           mode: intent?.mode ?? "replace",
@@ -229,6 +230,20 @@ export function BlankCanvasBuilder() {
           ...(intent?.riskTarget != null ? { risk_target: intent.riskTarget } : {}),
           ...(intent?.horizonYears != null ? { horizon_years: intent.horizonYears } : {}),
         },
+      });
+      // Mémoire du geste : Le Fil pourra dire ce que cette composition a changé
+      // par rapport à la précédente. On n'enregistre que ce que l'utilisateur a
+      // réellement saisi — pas de part recalculée (cf. `lib/portfolio/lastChange`).
+      recordComposition({
+        portfolioId: created.portfolio_id,
+        at: new Date().toISOString(),
+        total,
+        lines: active.map((l) => ({
+          id: l.id,
+          name: l.name,
+          amount: l.amount,
+          esgScore: l.esgScore,
+        })),
       });
       toast.success(t("blank_builder.saved"), { description: t("blank_builder.saved_desc") });
       await navigate({ to: "/le-fil" });

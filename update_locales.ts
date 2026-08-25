@@ -2297,6 +2297,19 @@ const poolReasonsEn = {
 
 const pedagogyFr = {
   why_this: { trigger: "Pourquoi ?" },
+  le_fil: {
+    changed: "Ce qui a changé",
+    changed_when: "Depuis ta composition précédente, enregistrée le {{date}}.",
+    changed_effect: "Ce que ça déplace",
+    changed_local:
+      "Comparaison faite sur cet appareil, à partir de tes deux dernières compositions. Sur un autre navigateur, il n'y a pas d'historique à comparer.",
+    change: {
+      added: "Tu as ajouté {{name}} — {{to}}.",
+      removed: "Tu as retiré {{name}}, qui portait {{from}}.",
+      increased: "Tu as renforcé {{name}} : {{from}} → {{to}}.",
+      decreased: "Tu as allégé {{name}} : {{from}} → {{to}}.",
+    },
+  },
   analysis: {
     why_aria: "Pourquoi ce niveau — {{row}}",
     why: {
@@ -2336,6 +2349,7 @@ const pedagogyFr = {
     desc: "Cherche un fonds. Pour chacun, Seedow dit pourquoi il apparaît et ce qu'il ignore encore.",
   },
   asset_detail: {
+    why_for_you: "Pourquoi ce fonds t'est montré",
     impact_overview: "Durabilité de ce fonds",
     sustainability_note:
       "Une note attribuée par des fournisseurs de données sur les pratiques du fonds. Ce n'est pas une mesure de son effet réel sur le monde.",
@@ -2365,6 +2379,19 @@ const pedagogyFr = {
 
 const pedagogyEn = {
   why_this: { trigger: "Why?" },
+  le_fil: {
+    changed: "What changed",
+    changed_when: "Since your previous composition, saved on {{date}}.",
+    changed_effect: "What it shifts",
+    changed_local:
+      "Comparison made on this device, from your last two compositions. On another browser there's no history to compare.",
+    change: {
+      added: "You added {{name}} — {{to}}.",
+      removed: "You removed {{name}}, which held {{from}}.",
+      increased: "You increased {{name}}: {{from}} → {{to}}.",
+      decreased: "You reduced {{name}}: {{from}} → {{to}}.",
+    },
+  },
   analysis: {
     why_aria: "Why this level — {{row}}",
     why: {
@@ -2402,6 +2429,7 @@ const pedagogyEn = {
     desc: "Search for a fund. For each one, Seedow says why it shows up — and what it still doesn't know.",
   },
   asset_detail: {
+    why_for_you: "Why you're seeing this fund",
     impact_overview: "How sustainable this fund is",
     sustainability_note:
       "A rating given by data providers on the fund's practices. It is not a measure of its real effect on the world.",

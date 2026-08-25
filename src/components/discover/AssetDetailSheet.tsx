@@ -15,6 +15,9 @@ import {
   SustainabilityTierBadge,
 } from "@/components/discover/TransparencyBadges";
 import { SustainabilityBadge } from "@/components/discover/SustainabilityBadge";
+import { PoolReasonList } from "@/components/discover/PoolReasonList";
+import { poolReasons } from "@/lib/portfolio/poolReasons";
+import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { useWatchlist } from "@/hooks/useWatchlist";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
 import { relativeIntensityVsBenchmark } from "@/lib/esg/carbon";
@@ -30,6 +33,10 @@ interface Props {
 
 export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
   const { t } = useTranslation();
+  // Les convictions déclarées — c'est ce qui permet de dire « pourquoi POUR TOI »
+  // plutôt que « voici ce fonds ».
+  const { portfolio } = useActivePortfolio();
+  const causes = portfolio?.causes ?? [];
   const { lang } = useLang();
 
   const RISK_LABELS: Record<number, { label: string; tone: string }> = {
@@ -118,6 +125,30 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
               {t(`asset_detail.plain.kinds.${assetKind(asset.asset_class)}.desc`)}
             </p>
           </section>
+
+          {/* POURQUOI POUR TOI — la fiche décrivait le fonds dans l'absolu sans
+              jamais le relier aux convictions déclarées trois écrans plus tôt.
+              Mêmes raisons que le pool, au moment où l'utilisateur décide s'il
+              l'ajoute. Absent quand aucune conviction n'est déclarée : il n'y a
+              alors rien à mettre en rapport (cf. `poolReasons`). */}
+          {causes.length > 0 && (
+            <section className="rounded-xl border border-paper-3 bg-paper-2 p-3.5">
+              <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono">
+                {t("asset_detail.why_for_you")}
+              </p>
+              <PoolReasonList
+                className="mt-2"
+                reasons={poolReasons({
+                  causes,
+                  themes: asset.themes,
+                  sustainability: Math.round(asset.overall_esg_score * 10),
+                  esgSource: asset.esg_score_source,
+                  ter: asset.ter_pct / 100,
+                  statsObservations: asset.stats_observations,
+                })}
+              />
+            </section>
+          )}
 
           {/* {t("asset_detail.summary")} */}
           <section>

@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { HoldingDetailSheet } from "@/components/portfolio/HoldingDetailSheet";
@@ -28,6 +28,8 @@ import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 import { Provenance } from "@/components/ui/Provenance";
 import { PortfolioAnalysisPanel } from "@/components/portfolio/PortfolioAnalysisPanel";
 import { usePortfolioAnalysis } from "@/hooks/usePortfolioAnalysis";
+import { readComposition, diffCompositions, type LineChange } from "@/lib/portfolio/lastChange";
+import { describeConsequences, liteSnapshot } from "@/lib/portfolio/consequences";
 
 // Référence de comparaison : ETF MSCI World (IWDA / EUNL). Rendement et
 // volatilité annualisés (mêmes conventions que le comparatif détaillé).
@@ -108,6 +110,31 @@ function LeFil() {
 
   // Fiche détaillée d'un actif (bottom sheet) — « pourquoi cet actif est là ».
   const [selectedHolding, setSelectedHolding] = useState<ActiveHolding | null>(null);
+
+  // Ce que le dernier geste a changé. Lu APRÈS montage : `localStorage` n'existe
+  // pas au rendu serveur, et une absence de mémoire ne s'invente pas — sans
+  // enregistrement, le nœud ne s'affiche simplement pas.
+  const [lastChange, setLastChange] = useState<{
+    at: string;
+    lines: LineChange[];
+    consequences: ReturnType<typeof describeConsequences>;
+  } | null>(null);
+  useEffect(() => {
+    const id = portfolio?.id;
+    if (!id) return;
+    const stored = readComposition(id);
+    if (!stored?.previous) {
+      setLastChange(null);
+      return;
+    }
+    const toSnapshot = (c: NonNullable<typeof stored.previous>) =>
+      liteSnapshot(c.lines.map((l) => ({ id: l.id, esgScore: l.esgScore, weight: l.amount })));
+    setLastChange({
+      at: stored.current.at,
+      lines: diffCompositions(stored.previous, stored.current),
+      consequences: describeConsequences(toSnapshot(stored.previous), toSnapshot(stored.current)),
+    });
+  }, [portfolio?.id]);
 
   const userName = user?.user_metadata?.name || user?.email?.split("@")[0] || "";
 
@@ -422,10 +449,78 @@ function LeFil() {
               )}
             </Node>
 
-            {/* NŒUD 4 — COMPRENDRE : ce que cette composition implique.
+            {/* CE QUI A CHANGÉ — le geste qui a produit l'état ci-dessus, et ce
+                qu'il a déplacé. Le Fil racontait un état sans jamais dire ce que
+                l'utilisateur avait fait pour y arriver. Absent tant qu'il n'y a
+                pas deux compositions à comparer : on ne fabrique pas d'histoire. */}
+            {lastChange && (lastChange.lines.length > 0 || lastChange.consequences.length > 0) && (
+              <Node index={4} active {...reveal(4)}>
+                <SectionLabel>{t("le_fil.changed")}</SectionLabel>
+                <p className="mt-1 text-body-sm leading-snug text-ink-2">
+                  {t("le_fil.changed_when", {
+                    date: formatDate(lastChange.at, lang, {
+                      day: "numeric",
+                      month: "long",
+                    }),
+                  })}
+                </p>
+
+                {lastChange.lines.length > 0 && (
+                  <ul className="mt-3 flex flex-col gap-1.5">
+                    {lastChange.lines.slice(0, 4).map((c) => (
+                      <li
+                        key={`${c.kind}-${c.name}`}
+                        className="text-body-sm text-ink leading-snug"
+                      >
+                        {t(`le_fil.change.${c.kind}`, {
+                          name: c.name,
+                          from: formatCurrency(c.from, lang),
+                          to: formatCurrency(c.to, lang),
+                        })}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {lastChange.consequences.length > 0 && (
+                  <>
+                    <p className="mt-4 text-tag uppercase tracking-[0.14em] font-mono text-ink-3">
+                      {t("le_fil.changed_effect")}
+                    </p>
+                    <ul className="mt-1.5 flex flex-col gap-1.5">
+                      {lastChange.consequences.map((c) => (
+                        <li
+                          key={c.key}
+                          className="flex items-start gap-2 text-body-sm text-ink-2 leading-snug"
+                        >
+                          {/* La direction est doublée d'un mot : jamais la couleur seule (§4). */}
+                          <span
+                            aria-hidden
+                            className={
+                              c.dir === "up"
+                                ? "text-mint-ink"
+                                : c.dir === "down"
+                                  ? "text-solar-ink"
+                                  : "text-ink-3"
+                            }
+                          >
+                            {c.dir === "up" ? "↑" : c.dir === "down" ? "↓" : "="}
+                          </span>
+                          <span>{t(c.key, c.vars)}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+
+                <Provenance className="mt-3" status="unknown" note={t("le_fil.changed_local")} />
+              </Node>
+            )}
+
+            {/* NŒUD 5 — COMPRENDRE : ce que cette composition implique.
                 Seedow explique les conséquences, il ne corrige pas les choix. */}
             {(analysis || analysisLoading) && (
-              <Node index={4} active {...reveal(4)}>
+              <Node index={5} active {...reveal(5)}>
                 <SectionLabel>{t("le_fil.understand")}</SectionLabel>
                 {analysis ? (
                   <>
@@ -442,9 +537,9 @@ function LeFil() {
               </Node>
             )}
 
-            {/* NŒUD 5 — ALLER PLUS LOIN : comparaison + monde réel, repliés par
+            {/* NŒUD 6 — ALLER PLUS LOIN : comparaison + monde réel, repliés par
                 défaut pour limiter le scroll (divulgation progressive, Règle 2). */}
-            <Node index={5} active={false} {...reveal(5)}>
+            <Node index={6} active={false} {...reveal(6)}>
               <details className="group">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
                   <span className="stamp">{t("le_fil.more")}</span>
