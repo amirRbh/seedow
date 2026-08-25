@@ -17,6 +17,7 @@ import { useLang } from "@/hooks/useLang";
 import { formatPercent } from "@/lib/format";
 import type { ActiveHolding } from "@/hooks/useActivePortfolio";
 import { saveCustomPortfolio } from "@/lib/portfolio/customize.functions";
+import { usePortfolioSync } from "@/hooks/usePortfolioSync";
 import { acknowledgeSimulation, getSimulationAck } from "@/lib/portfolio/disclaimer.functions";
 import {
   Dialog,
@@ -121,6 +122,7 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
   const { t } = useTranslation();
   const { lang } = useLang();
   const save = useServerFn(saveCustomPortfolio);
+  const syncPortfolio = usePortfolioSync();
   const fetchAck = useServerFn(getSimulationAck);
   const sendAck = useServerFn(acknowledgeSimulation);
   const [saving, setSaving] = useState(false);
@@ -215,6 +217,9 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
     setSaving(true);
     try {
       await save({ data: { portfolio_id: portfolioId, weights } });
+      // Les vues dérivées (valorisation, analyse, Le Fil) lisent un cache : sans
+      // invalidation elles resteraient sur les poids d'avant.
+      syncPortfolio(portfolioId);
       toast.success(t("portfolio_customizer.saved"), {
         description: t("portfolio_customizer.saved_desc"),
       });

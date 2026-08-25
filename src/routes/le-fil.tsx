@@ -27,6 +27,8 @@ import { assetClassColor } from "@/lib/portfolio/assetClasses";
 import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
 import { Provenance } from "@/components/ui/Provenance";
 import { PortfolioAnalysisPanel } from "@/components/portfolio/PortfolioAnalysisPanel";
+import { AlignmentCard } from "@/components/portfolio/AlignmentCard";
+import { WatchPoints } from "@/components/portfolio/WatchPoints";
 import { usePortfolioAnalysis } from "@/hooks/usePortfolioAnalysis";
 import { readComposition, diffCompositions, type LineChange } from "@/lib/portfolio/lastChange";
 import { describeConsequences, liteSnapshot } from "@/lib/portfolio/consequences";
@@ -524,10 +526,39 @@ function LeFil() {
                 <SectionLabel>{t("le_fil.understand")}</SectionLabel>
                 {analysis ? (
                   <>
-                    <p className="mt-1 text-body-sm leading-snug text-ink-2">
-                      {t("le_fil.understand_hint")}
-                    </p>
-                    <PortfolioAnalysisPanel className="mt-3" analysis={analysis} />
+                    {/* EST-CE ALIGNÉ AVEC MOI ? — la conclusion d'abord, le
+                        chiffre ensuite, le détail par conviction après. Le
+                        moteur calculait `byConviction` depuis toujours sans
+                        que rien ne l'affiche : l'écran montrait « 76/100 » et
+                        s'arrêtait là. */}
+                    <AlignmentCard className="mt-3" analysis={analysis} />
+
+                    {/* CE QUI MÉRITE TON ATTENTION — exclusion touchée,
+                        concentration, ce qu'on ne sait pas. Un produit qui ne
+                        dit que le positif se lit comme une brochure. */}
+                    <WatchPoints
+                      className="mt-6 border-t border-paper-3 pt-4"
+                      analysis={analysis}
+                    />
+
+                    {/* Le détail chiffré reste accessible, un cran plus bas. */}
+                    <details className="mt-6 border-t border-paper-3 pt-4 group">
+                      <summary className="flex items-center justify-between gap-3 cursor-pointer list-none rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink">
+                        <span className="text-body-sm font-semibold text-ink">
+                          {t("le_fil.understand_detail")}
+                        </span>
+                        <span
+                          aria-hidden
+                          className="text-ink-3 transition-transform group-open:rotate-90 shrink-0"
+                        >
+                          ›
+                        </span>
+                      </summary>
+                      <p className="mt-3 text-body-sm leading-snug text-ink-2">
+                        {t("le_fil.understand_hint")}
+                      </p>
+                      <PortfolioAnalysisPanel className="mt-3" analysis={analysis} />
+                    </details>
                   </>
                 ) : (
                   <p role="status" className="mt-2 text-sm text-ink-3">

@@ -1373,7 +1373,8 @@
     "auto_save_note": "Tes préférences sont enregistrées automatiquement. Elles servent à classer le pool et à mesurer ton portefeuille — elles ne repondèrent jamais tes lignes à ta place.",
     "save_error": "Enregistrement impossible",
     "pool_compose_first": "Composer mon portefeuille",
-    "no_portfolio_notice": "Tu n'as pas encore composé de portefeuille : il n'y a rien à mettre à jour ici. Ces réglages classent déjà le pool ci-dessous — ils s'appliqueront à ton portefeuille dès que tu l'auras composé."
+    "no_portfolio_notice": "Tu n'as pas encore composé de portefeuille : il n'y a rien à mettre à jour ici. Ces réglages classent déjà le pool ci-dessous — ils s'appliqueront à ton portefeuille dès que tu l'auras composé.",
+    "notif_alerts_unavailable": "Cette option n'est pas encore active sur ton compte. On préfère te le dire plutôt que d'enregistrer un consentement qui n'irait nulle part."
   },
   "methodologie": {
     "title": "Méthodologie",
@@ -3083,7 +3084,8 @@
       "removed": "Tu as retiré {{name}}, qui portait {{from}}.",
       "increased": "Tu as renforcé {{name}} : {{from}} → {{to}}.",
       "decreased": "Tu as allégé {{name}} : {{from}} → {{to}}."
-    }
+    },
+    "understand_detail": "Le détail chiffré"
   },
   "sustainability": {
     "tier": {
@@ -3252,5 +3254,36 @@
       "high_fees": "Frais élevés — {{euros}} € par an pour 1 000 € placés",
       "no_history": "Historique de cours insuffisant pour mesurer son risque"
     }
+  },
+  "alignment_card": {
+    "band": {
+      "strong": "Très proche de ce que tu as dit vouloir financer",
+      "partial": "En partie aligné avec tes convictions",
+      "weak": "Assez éloigné de tes convictions",
+      "unknown": "Pas encore mesurable"
+    },
+    "score": "{{score}} sur 100",
+    "not_impact": "Cette note dit à quel point tes fonds correspondent aux critères que tu as choisis. Elle ne mesure pas l'effet de ton argent sur le monde — ce sont deux choses différentes.",
+    "unmeasured": "pas mesurable",
+    "exclusions_ok": "Aucune de tes exclusions n'est touchée.",
+    "exclusions_breached_one": "Une de tes lignes touche un secteur que tu as refusé.",
+    "exclusions_breached_other": "{{count}} de tes lignes touchent un secteur que tu as refusé.",
+    "how": "Comment c'est calculé ?",
+    "how_body": "Pour chaque conviction, on regarde quelle part de ton argent est placée sur des fonds qui y sont exposés, d'après les données d'exposition de chaque fonds. Une conviction dont aucune ligne ne porte de donnée ressort « pas mesurable » — jamais zéro, parce que le manque est le nôtre, pas celui du fonds."
+  },
+  "watch_points": {
+    "title": "Ce qui mérite ton attention",
+    "kind": {
+      "portfolio": "Ta composition",
+      "data": "Ce qu'on ignore"
+    },
+    "exclusions_breached_one": "Une ligne touche un secteur que tu as refusé de financer.",
+    "exclusions_breached_other": "{{count}} lignes touchent un secteur que tu as refusé de financer.",
+    "concentrated": "Une seule ligne porte {{pct}} de ton argent : sa trajectoire devient à peu près la tienne.",
+    "unallocated": "{{pct}} de ton montant n'est placé sur aucune ligne. C'est un choix valide — on le signale, on ne le corrige pas.",
+    "horizon_weak": "Tes lignes bougent beaucoup pour la durée que tu as indiquée : sur un horizon court, une baisse peut ne pas avoir le temps de se rattraper.",
+    "esg_estimated": "{{pct}} de ton portefeuille porte une note de durabilité estimée par Seedow, pas fournie par un fournisseur de données.",
+    "risk_unknown": "Tes lignes n'ont pas assez d'historique de cours pour qu'on mesure leurs variations.",
+    "no_lookthrough": "On ne connaît pas encore les entreprises réellement détenues par tes fonds : les données de composition ne sont pas disponibles. Tout ce qui est affiché porte donc sur les fonds, pas sur ce qu'ils contiennent."
   }
 }

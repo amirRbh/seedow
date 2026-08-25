@@ -1373,7 +1373,8 @@
     "auto_save_note": "Your preferences are saved automatically. They rank the pool and measure your portfolio — they never re-weight your lines for you.",
     "save_error": "Could not save",
     "pool_compose_first": "Compose my portfolio",
-    "no_portfolio_notice": "You haven't composed a portfolio yet, so there is nothing to update here. These settings already rank the pool below — they will apply to your portfolio as soon as you compose it."
+    "no_portfolio_notice": "You haven't composed a portfolio yet, so there is nothing to update here. These settings already rank the pool below — they will apply to your portfolio as soon as you compose it.",
+    "notif_alerts_unavailable": "This option isn't active on your account yet. We'd rather tell you than record a consent that goes nowhere."
   },
   "methodologie": {
     "title": "Methodology",
@@ -3083,7 +3084,8 @@
       "removed": "You removed {{name}}, which held {{from}}.",
       "increased": "You increased {{name}}: {{from}} → {{to}}.",
       "decreased": "You reduced {{name}}: {{from}} → {{to}}."
-    }
+    },
+    "understand_detail": "The detailed figures"
   },
   "sustainability": {
     "tier": {
@@ -3252,5 +3254,36 @@
       "high_fees": "High fees — €{{euros}} a year per €1,000 invested",
       "no_history": "Not enough price history to measure its risk"
     }
+  },
+  "alignment_card": {
+    "band": {
+      "strong": "Very close to what you said you wanted to fund",
+      "partial": "Partly aligned with your convictions",
+      "weak": "Fairly far from your convictions",
+      "unknown": "Not measurable yet"
+    },
+    "score": "{{score}} out of 100",
+    "not_impact": "This rating says how closely your funds match the criteria you chose. It does not measure your money's effect on the world — those are two different things.",
+    "unmeasured": "not measurable",
+    "exclusions_ok": "None of your exclusions are touched.",
+    "exclusions_breached_one": "One of your lines touches a sector you ruled out.",
+    "exclusions_breached_other": "{{count}} of your lines touch a sector you ruled out.",
+    "how": "How is this calculated?",
+    "how_body": "For each conviction, we look at how much of your money sits in funds exposed to it, based on each fund's exposure data. A conviction with no data on any line comes out «not measurable» — never zero, because the gap is ours, not the fund's."
+  },
+  "watch_points": {
+    "title": "Worth your attention",
+    "kind": {
+      "portfolio": "Your composition",
+      "data": "What we don't know"
+    },
+    "exclusions_breached_one": "One line touches a sector you refused to fund.",
+    "exclusions_breached_other": "{{count}} lines touch a sector you refused to fund.",
+    "concentrated": "A single line carries {{pct}} of your money: its path becomes roughly yours.",
+    "unallocated": "{{pct}} of your amount sits on no line. That's a valid choice — we flag it, we don't correct it.",
+    "horizon_weak": "Your lines move a lot for the timeframe you gave: over a short horizon, a drop may not have time to recover.",
+    "esg_estimated": "{{pct}} of your portfolio carries a sustainability rating estimated by Seedow, not supplied by a data provider.",
+    "risk_unknown": "Your lines don't have enough price history for us to measure how they move.",
+    "no_lookthrough": "We don't yet know the companies your funds actually hold: composition data isn't available. Everything shown therefore describes the funds, not what's inside them."
   }
 }
