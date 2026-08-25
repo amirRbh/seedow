@@ -7,6 +7,8 @@ import { HoldingDetailSheet } from "./HoldingDetailSheet";
 import { PortfolioSustainabilityBadge } from "./PortfolioSustainabilityBadge";
 import { EASE_REVEAL } from "@/lib/motion";
 import { assetClassColor } from "@/lib/portfolio/assetClasses";
+import { dominantCategoryWeights } from "@/lib/portfolio/leFilSummary";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   holdings: ActiveHolding[];
@@ -27,9 +29,15 @@ const CLASS_LABELS: Record<string, string> = {
 };
 
 export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: Props) {
+  const { t } = useTranslation();
   const [selected, setSelected] = useState<ActiveHolding | null>(null);
 
   if (holdings.length === 0) return null;
+
+  // Une liste de tickers et de pourcentages ne dit rien à qui débute. La
+  // première ligne doit répondre « où va mon argent ? » en français ; le détail
+  // ligne par ligne reste juste en dessous, inchangé.
+  const dominant = dominantCategoryWeights(holdings, 1)[0];
 
   // Index valued holdings by asset id for quick lookup
   const valuedById = new Map<string, ValuedHolding>();
@@ -52,11 +60,32 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
 
   return (
     <div className="paper-card p-5">
+      {/* OÙ VA MON ARGENT — en français, avant le tableau. Une liste de tickers
+          et de pourcentages ne répond pas à la question ; elle la repousse. */}
+      {dominant && (
+        <p className="mb-4 text-body-lg leading-snug text-ink">
+          {t("allocation.lead", {
+            category: t(`le_fil.classes.${dominant.category}.label`, {
+              defaultValue: t(`asset_class.${dominant.category}`, {
+                defaultValue: dominant.category,
+              }),
+            }),
+            pct: Math.round(dominant.weightPct),
+          })}
+        </p>
+      )}
       <div className="flex items-baseline justify-between mb-4">
         <div>
-          <p className="text-tag uppercase tracking-wider text-ink-3 font-mono">Allocation</p>
+          {/* « Allocation » est le mot du métier ; « Répartition » est le mot
+              de l'utilisateur (§6 du vocabulaire). */}
+          <p className="text-tag uppercase tracking-wider text-ink-3 font-mono">
+            {t("allocation.title")}
+          </p>
           <p className="font-value text-2xl text-ink mt-0.5">
-            {holdings.length} <span className="text-base text-ink-3">positions</span>
+            {holdings.length}{" "}
+            <span className="text-base text-ink-3">
+              {t("allocation.lines", { count: holdings.length })}
+            </span>
           </p>
         </div>
         <p className="text-caption text-ink-3">

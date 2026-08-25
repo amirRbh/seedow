@@ -3269,7 +3269,9 @@
     "exclusions_breached_one": "One of your lines touches a sector you ruled out.",
     "exclusions_breached_other": "{{count}} of your lines touch a sector you ruled out.",
     "how": "How is this calculated?",
-    "how_body": "For each conviction, we look at how much of your money sits in funds exposed to it, based on each fund's exposure data. A conviction with no data on any line comes out «not measurable» — never zero, because the gap is ours, not the fund's."
+    "how_body": "For each conviction, we look at how much of your money sits in funds exposed to it, based on each fund's exposure data. A conviction with no data on any line comes out «not measurable» — never zero, because the gap is ours, not the fund's.",
+    "you_said_one": "You said {{causes}} mattered to you.",
+    "you_said_other": "You said {{causes}} mattered to you."
   },
   "watch_points": {
     "title": "Worth your attention",
@@ -3288,5 +3290,11 @@
   },
   "fund_evidence": {
     "link": "What this fund claims, and what the data shows"
+  },
+  "allocation": {
+    "title": "Breakdown",
+    "lines_one": "line",
+    "lines_other": "lines",
+    "lead": "Your money goes mainly to {{category}} — {{pct}}% of the total."
   }
 }
