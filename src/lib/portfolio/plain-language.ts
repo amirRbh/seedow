@@ -163,3 +163,24 @@ export function portfolioGlance(metrics: GlanceMetrics | null | undefined): Port
     impact: typeof metrics.esg_score === "number" ? impactScore(metrics.esg_score) : null,
   };
 }
+
+/**
+ * Bande d'alignement — la CONCLUSION en langage courant, avant le chiffre.
+ *
+ * « 76/100 » ne répond pas à la question que l'utilisateur se pose, qui est
+ * « et alors ? ». Un score nu appelle une interprétation qu'un débutant n'a
+ * aucun moyen de faire : 76, c'est bien ? mal ? par rapport à quoi ?
+ *
+ * On rend donc d'abord un mot, puis le chiffre le complète. `null` reste
+ * `null` : sans donnée d'exposition, il n'y a pas de conclusion à tirer — et
+ * surtout pas « faiblement aligné », qui accuserait le fonds d'un manque qui
+ * est le nôtre.
+ */
+export type AlignmentBand = "strong" | "partial" | "weak" | "unknown";
+
+export function alignmentBand(overall: number | null): AlignmentBand {
+  if (overall == null || !Number.isFinite(overall)) return "unknown";
+  if (overall >= 70) return "strong";
+  if (overall >= 45) return "partial";
+  return "weak";
+}

@@ -2448,6 +2448,43 @@ const pedagogyEn = {
 // ═══════════════════════════════════════════════════════════════════════
 
 const oneVoiceFr = {
+  alignment_card: {
+    band: {
+      strong: "Très proche de ce que tu as dit vouloir financer",
+      partial: "En partie aligné avec tes convictions",
+      weak: "Assez éloigné de tes convictions",
+      unknown: "Pas encore mesurable",
+    },
+    score: "{{score}} sur 100",
+    not_impact:
+      "Cette note dit à quel point tes fonds correspondent aux critères que tu as choisis. Elle ne mesure pas l'effet de ton argent sur le monde — ce sont deux choses différentes.",
+    unmeasured: "pas mesurable",
+    exclusions_ok: "Aucune de tes exclusions n'est touchée.",
+    exclusions_breached_one: "Une de tes lignes touche un secteur que tu as refusé.",
+    exclusions_breached_other: "{{count}} de tes lignes touchent un secteur que tu as refusé.",
+    how: "Comment c'est calculé ?",
+    how_body:
+      "Pour chaque conviction, on regarde quelle part de ton argent est placée sur des fonds qui y sont exposés, d'après les données d'exposition de chaque fonds. Une conviction dont aucune ligne ne porte de donnée ressort « pas mesurable » — jamais zéro, parce que le manque est le nôtre, pas celui du fonds.",
+  },
+  watch_points: {
+    title: "Ce qui mérite ton attention",
+    kind: { portfolio: "Ta composition", data: "Ce qu'on ignore" },
+    exclusions_breached_one: "Une ligne touche un secteur que tu as refusé de financer.",
+    exclusions_breached_other: "{{count}} lignes touchent un secteur que tu as refusé de financer.",
+    concentrated:
+      "Une seule ligne porte {{pct}} de ton argent : sa trajectoire devient à peu près la tienne.",
+    unallocated:
+      "{{pct}} de ton montant n'est placé sur aucune ligne. C'est un choix valide — on le signale, on ne le corrige pas.",
+    horizon_weak:
+      "Tes lignes bougent beaucoup pour la durée que tu as indiquée : sur un horizon court, une baisse peut ne pas avoir le temps de se rattraper.",
+    esg_estimated:
+      "{{pct}} de ton portefeuille porte une note de durabilité estimée par Seedow, pas fournie par un fournisseur de données.",
+    risk_unknown:
+      "Tes lignes n'ont pas assez d'historique de cours pour qu'on mesure leurs variations.",
+    no_lookthrough:
+      "On ne connaît pas encore les entreprises réellement détenues par tes fonds : les données de composition ne sont pas disponibles. Tout ce qui est affiché porte donc sur les fonds, pas sur ce qu'ils contiennent.",
+  },
+  le_fil: { understand_detail: "Le détail chiffré" },
   impact_xp: { tangible: { footprint_label_estimated: "Ton empreinte estimée" } },
   landing: {
     hero: {
@@ -2626,6 +2663,41 @@ const oneVoiceFr = {
 // L'anglais ne distingue pas tutoiement et vouvoiement : seules les deux
 // corrections de fond s'y appliquent.
 const oneVoiceEn = {
+  alignment_card: {
+    band: {
+      strong: "Very close to what you said you wanted to fund",
+      partial: "Partly aligned with your convictions",
+      weak: "Fairly far from your convictions",
+      unknown: "Not measurable yet",
+    },
+    score: "{{score}} out of 100",
+    not_impact:
+      "This rating says how closely your funds match the criteria you chose. It does not measure your money's effect on the world — those are two different things.",
+    unmeasured: "not measurable",
+    exclusions_ok: "None of your exclusions are touched.",
+    exclusions_breached_one: "One of your lines touches a sector you ruled out.",
+    exclusions_breached_other: "{{count}} of your lines touch a sector you ruled out.",
+    how: "How is this calculated?",
+    how_body:
+      "For each conviction, we look at how much of your money sits in funds exposed to it, based on each fund's exposure data. A conviction with no data on any line comes out «not measurable» — never zero, because the gap is ours, not the fund's.",
+  },
+  watch_points: {
+    title: "Worth your attention",
+    kind: { portfolio: "Your composition", data: "What we don't know" },
+    exclusions_breached_one: "One line touches a sector you refused to fund.",
+    exclusions_breached_other: "{{count}} lines touch a sector you refused to fund.",
+    concentrated: "A single line carries {{pct}} of your money: its path becomes roughly yours.",
+    unallocated:
+      "{{pct}} of your amount sits on no line. That's a valid choice — we flag it, we don't correct it.",
+    horizon_weak:
+      "Your lines move a lot for the timeframe you gave: over a short horizon, a drop may not have time to recover.",
+    esg_estimated:
+      "{{pct}} of your portfolio carries a sustainability rating estimated by Seedow, not supplied by a data provider.",
+    risk_unknown: "Your lines don't have enough price history for us to measure how they move.",
+    no_lookthrough:
+      "We don't yet know the companies your funds actually hold: composition data isn't available. Everything shown therefore describes the funds, not what's inside them.",
+  },
+  le_fil: { understand_detail: "The detailed figures" },
   blank_builder: {
     details_title: "What it comes to",
     edit: "Edit",
