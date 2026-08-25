@@ -315,7 +315,7 @@ export function BlankCanvasBuilder() {
                       }}
                       onBlur={() => setEditingTotal(false)}
                       onKeyDown={(e) => e.key === "Enter" && setEditingTotal(false)}
-                      className="w-40 bg-transparent border-b-2 border-ink text-figure-hero text-ink outline-none"
+                      className="w-full max-w-[6ch] min-w-0 bg-transparent border-b-2 border-ink text-figure-hero text-ink outline-none"
                     />
                     <span className="text-body-lg text-ink-2" aria-hidden>
                       €
@@ -426,7 +426,7 @@ export function BlankCanvasBuilder() {
                         type="button"
                         onClick={() => removeLine(l.id)}
                         aria-label={t("blank_builder.remove_named", { name: l.name })}
-                        className="shrink-0 text-ink-3 hover:text-alert-ink transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
+                        className="shrink-0 -m-2 p-2 text-ink-3 hover:text-alert-ink transition-colors rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
                       >
                         <Trash2 className="w-4 h-4" strokeWidth={1.8} aria-hidden />
                       </button>
@@ -446,7 +446,7 @@ export function BlankCanvasBuilder() {
                               // pastilles avant que le clic n'arrive.
                               onMouseDown={(e) => e.preventDefault()}
                               onClick={() => setAmount(l.id, value)}
-                              className="rounded-full border border-paper-3 px-3 py-1 text-caption text-ink-2 hover:border-ink hover:text-ink transition-colors"
+                              className="rounded-full border border-paper-3 px-3.5 py-2 text-caption text-ink-2 hover:border-ink hover:text-ink transition-colors"
                             >
                               {formatCurrency(value, lang)}
                             </button>
@@ -457,7 +457,7 @@ export function BlankCanvasBuilder() {
                             type="button"
                             onMouseDown={(e) => e.preventDefault()}
                             onClick={() => setAmount(l.id, l.amount + remaining)}
-                            className="rounded-full border border-ink px-3 py-1 text-caption text-ink hover:bg-paper-inset transition-colors"
+                            className="rounded-full border border-ink px-3.5 py-2 text-caption text-ink hover:bg-paper-inset transition-colors"
                           >
                             {t("blank_builder.the_rest", {
                               amount: formatCurrency(remaining, lang),
