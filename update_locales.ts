@@ -790,33 +790,6 @@ const comparatifEn = {
 // ─────────────────────────────────────────────────────────
 // Copilote d'investissement — écran des 3 choix + coup d'œil lisible
 // ─────────────────────────────────────────────────────────
-const postSimForkFr = {
-  title: "Votre portefeuille est prêt 🎉",
-  subtitle:
-    "Seedow vous propose une première version basée sur vos réponses. À vous de choisir la suite.",
-  recommended: "Recommandé",
-  guided_title: "Laissez Seedow vous guider",
-  guided_desc: "Nous gardons la proposition construite pour vous.",
-  customize_title: "Personnaliser",
-  customize_desc: "Partez de notre proposition et ajustez-la à votre main.",
-  blank_title: "Commencer de zéro",
-  blank_desc: "Composez votre portefeuille vous-même, pas à pas.",
-  simulation_note: "Une proposition, pas une recommandation d'achat. Vous décidez.",
-};
-
-const postSimForkEn = {
-  title: "Your portfolio is ready 🎉",
-  subtitle:
-    "Seedow suggests a first version based on your answers. It's up to you what comes next.",
-  recommended: "Recommended",
-  guided_title: "Let Seedow guide you",
-  guided_desc: "We keep the proposal built for you.",
-  customize_title: "Customize",
-  customize_desc: "Start from our proposal and adjust it your way.",
-  blank_title: "Start from scratch",
-  blank_desc: "Build your portfolio yourself, step by step.",
-  simulation_note: "A proposal, not a buy recommendation. You decide.",
-};
 
 const portfolioGlanceFr = {
   eyebrow: "En un coup d'œil",
@@ -2199,7 +2172,6 @@ const mergedFr = deepMerge(fr, {
   wrapped: wrappedFr,
   reveil: reveilFr,
   comparatif_panel: comparatifFr,
-  post_sim_fork: postSimForkFr,
   portfolio_glance: portfolioGlanceFr,
   portfolio_customizer: deepMerge(portfolioCustomizerFr, customizerV2Fr),
   // N1 — traçabilité ESG : part des scores réellement mesurés (vs estimés maison).
@@ -2228,7 +2200,6 @@ const mergedEn = deepMerge(en, {
   wrapped: wrappedEn,
   reveil: reveilEn,
   comparatif_panel: comparatifEn,
-  post_sim_fork: postSimForkEn,
   portfolio_glance: portfolioGlanceEn,
   portfolio_customizer: deepMerge(portfolioCustomizerEn, customizerV2En),
   allocation_refiner: refinerPlainEn,
@@ -2457,13 +2428,229 @@ const pedagogyEn = {
   },
 };
 
+// ═══════════════════════════════════════════════════════════════════════
+// Une seule voix, et deux affirmations qui ne tenaient plus.
+//
+// L'app se tutoie — c'est la convention écrite dans `ui/Glossary.tsx`
+// (« tutoiement systématique »). 102 chaînes vouvoyaient encore, héritées
+// d'écrans plus anciens. Passer de « votre portefeuille » à « ton
+// portefeuille » au milieu d'un même parcours donne l'impression de changer
+// d'interlocuteur ; ce n'est pas cosmétique, c'est de la confiance.
+//
+// Le balayage a fait remonter deux erreurs de fond, corrigées ici :
+//
+//  · /reglages décrivait encore « Optimisation Markowitz contrainte » comme
+//    l'étape en vigueur. Le moteur ne construit plus d'allocation depuis
+//    #183 : la page annonçait au lecteur une méthode qui n'était plus la
+//    sienne (CLAUDE.md §1.2).
+//  · `portfolio_glance` appelait encore « Impact » la moyenne de notes ESG,
+//    résidu de la correction précédente.
+// ═══════════════════════════════════════════════════════════════════════
+
+const oneVoiceFr = {
+  impact_xp: { tangible: { footprint_label_estimated: "Ton empreinte estimée" } },
+  landing: {
+    hero: {
+      title_line1: "Ton argent",
+      subtitle:
+        "Seedow te montre lequel. Investissement ESG, visualisé clairement, expliqué par une IA qui ne te vend rien.",
+    },
+    hero2: {
+      title_line1: "Tes convictions,",
+      subtitle:
+        "Choisis ce que tu veux financer — et ce que tu refuses. Seedow classe les fonds qui y répondent, chiffres ESG et performance à l'appui. Tu composes.",
+    },
+    footer: { copyright: "© 2026 · Ton argent façonne déjà le monde." },
+  },
+  auth: { desc_login: "Accède à ton espace." },
+  portfolio: { badges_disclosure: "Tes jalons" },
+  data_provenance: {
+    coverage_tooltip:
+      "La part de ton portefeuille pour laquelle nous disposons d'une donnée réelle mesurée. Le reste n'est pas encore mesuré — il n'est pas estimé pour autant.",
+  },
+  vote: {
+    section_kicker:
+      "Quand tu possèdes une entreprise, tu as un droit de vote à son assemblée générale. Seul, tu pèses peu. Ensemble, vous formez un bloc. Voici les votes ouverts.",
+    bloc: { you_line: "Vous êtes {{n}} à voter « {{choice}} »." },
+  },
+  reglages: {
+    loading_prefs: "Chargement de tes préférences…",
+    display_name_placeholder: "Ton nom",
+    meta_desc: "Gère ton profil, tes préférences d'investissement et tes notifications.",
+    privacy_desc:
+      "Tes données restent strictement confidentielles. Tu peux exporter ou supprimer l'ensemble de tes informations à tout moment.",
+    methodology: {
+      // La page annonçait une optimisation que le moteur ne fait plus.
+      optimization: {
+        title: "Classement du pool, puis mesure",
+        desc: "Seedow ne construit aucune allocation. Il classe les fonds retenus par pertinence — performance réelle ajustée au risque, note de durabilité composite, alignement avec tes causes — et s'arrête là. C'est toi qui répartis tes montants ; le moteur mesure ensuite ce que tu as composé (risque, frais, durabilité pondérée selon tes causes, empreinte carbone).",
+      },
+      esg_composite: {
+        title: "Score ESG composite, pondéré par tes causes",
+        desc_2:
+          "Au lieu d'une moyenne fixe 40/40/20, les piliers E, S et G sont repondérés en fonction des causes que tu actives dans tes préférences. Le score reflète ainsi ce qui compte vraiment pour toi.",
+        mapping_note:
+          "Sans cause active, on revient à la pondération neutre 40/40/20. Plus tu actives de causes liées à un pilier, plus son poids dans le score composite augmente.",
+      },
+      carbon: {
+        coverage_low:
+          "< 30 % — fie-toi à l'heuristique CO₂ évité, l'intensité réelle n'est pas représentative.",
+      },
+      pipeline: {
+        desc: "Étapes traçables : profilage, univers investissable, exclusions sectorielles, filtres best-in-class ESG, puis classement du pool par pertinence. Seedow s'arrête là — aucune allocation n'est imposée : tu composes tes lignes, et le moteur mesure ce que tu as composé. Le simulateur interactif et la documentation détaillée sont sur la page dédiée.",
+      },
+    },
+  },
+  methodologie: {
+    meta_desc:
+      "Méthode Seedow : univers noté, exclusions dures, classement du pool par pertinence, puis mesure du portefeuille que tu composes.",
+    intro:
+      "Cinq étapes, transparentes et reproductibles. Ajuste tes convictions et tes exclusions en bas de page pour voir le pool se reclasser en direct.",
+    simulator_desc:
+      "Bouge tes convictions et tes exclusions : le pool se refiltre et se reclasse sous tes yeux. Seedow s'arrête ici — il ne propose aucun poids, c'est toi qui composes.",
+    stages: {
+      "1_desc": "Tes causes et tes exclusions — les deux seules entrées du classement.",
+      "3_desc":
+        "Filtre binaire et dur : un fonds touché par une de tes exclusions sort du pool, sans compromis ni pondération.",
+      "4_desc":
+        "Pertinence 0–100 : performance réelle (Sharpe, uniquement si l'historique le permet), score ESG composite, alignement avec tes causes. Sans historique, le fonds reste « en cours » plutôt que noté au jugé.",
+      "5_desc":
+        "Tu composes tes lignes. Le moteur mesure ensuite ce que TU as composé — risque, frais, ESG pondéré E/S/G selon tes causes, empreinte carbone.",
+    },
+    reading_p1:
+      "Tu choisis ce qui compte pour toi (causes) et ce que tu refuses (exclusions). Tes exclusions retirent des fonds du pool ; tes causes pèsent sur son classement.",
+    reading_p2:
+      "À droite : combien de fonds l'univers contient, combien tes exclusions en écartent, et ceux qui restent — classés par pertinence, avec leur note ESG et leurs frais. Survole les « ? » pour une explication simple de chaque terme.",
+    glossary: {
+      pool: "Pool : la liste des fonds qui passent tes filtres, classés par pertinence. Seedow s'arrête là — tu composes.",
+      relevance:
+        "Pertinence : note 0–100 combinant performance réelle, score ESG et alignement avec tes causes. Un pilier absent est retiré du calcul, jamais remplacé par une valeur inventée.",
+    },
+    tips: {
+      stage_1: "Tes préférences personnelles. C'est la matière première de tout le reste.",
+      stage_3:
+        "On retire d'abord ce que tu refuses (ex. armement), puis on ne garde que les meilleurs élèves de chaque catégorie sur les critères ESG.",
+      stage_4:
+        "On augmente légèrement la part attendue des actifs qui collent à tes causes prioritaires. Petit coup de pouce, pas un coup de barre.",
+      stage_5: "Seedow mesure le portefeuille que tu as composé : il ne le compose pas à ta place.",
+      causes:
+        "Les sujets que ton argent doit pousser en priorité (climat, biodiversité…). Plus l'intensité est haute, plus le portefeuille s'oriente vers ces sujets.",
+      exclusions:
+        "Les secteurs que tu refuses de financer. Cochés = strictement écartés du portefeuille.",
+      horizon:
+        "Pendant combien de temps tu comptes laisser cet argent investi. Plus c'est long, plus on peut accepter de variations.",
+      allocation:
+        "La liste précise des produits retenus et le poids de chacun dans ton portefeuille.",
+      pool: "Les fonds qui passent tes filtres, du plus pertinent au moins pertinent. Aucun poids : la répartition, c'est toi qui la fais.",
+    },
+    no_weights_body:
+      "Il ne te propose pas de répartition. Rendement attendu, volatilité, frais et empreinte carbone sont des mesures de PORTEFEUILLE : elles se calculent sur les lignes que tu as composées, pas sur un pool. Tu les retrouves sur ton portefeuille, une fois composé.",
+  },
+  portfolio_glance: {
+    title: "Ton portefeuille",
+    money_title: "Où va ton argent ?",
+    help: {
+      // Résidu de la correction précédente : ce chiffre est une moyenne de
+      // notes ESG, il ne mesure aucun effet sur le monde.
+      impact:
+        "Note de durabilité : la moyenne, pondérée par tes montants, des notes ESG de tes lignes — sur 100. Elle décrit des pratiques notées par un fournisseur, pas l'effet réel de ton argent.",
+      fees: "Frais : ce que tes investissements coûtent chaque année.",
+      diversification:
+        "Diversification : répartir ton argent pour ne pas dépendre d'un seul investissement.",
+    },
+    why: {
+      horizon_long: "Tu prévois d'investir sur le long terme (environ {{years}} ans).",
+      horizon_medium: "Tu prévois d'investir sur plusieurs années (environ {{years}} ans).",
+      horizon_short: "Tu prévois d'investir sur une courte durée (environ {{years}} ans).",
+      risk_prudent:
+        "Tu préfères limiter les fluctuations, quitte à viser une croissance plus douce.",
+      risk_modere: "Tu acceptes des fluctuations modérées pour viser une croissance régulière.",
+      risk_dynamique:
+        "Tu acceptes des fluctuations plus fortes pour viser une croissance plus élevée.",
+      causes:
+        "La sélection privilégie des investissements cohérents avec les valeurs que tu as choisies.",
+      exclusions: "Les secteurs que tu refuses de financer ont été entièrement exclus.",
+    },
+    role: {
+      equity_em: "Ouvre ton portefeuille à des économies en croissance.",
+      thematic: "Cible directement les causes qui te tiennent à cœur.",
+      reit: "Diversifie ton portefeuille via l'immobilier.",
+      cash: "Met une part de ton argent de côté, en sécurité.",
+      generic: "Contribue à équilibrer ton portefeuille.",
+    },
+    simulation_note:
+      "Simulation à but pédagogique — Seedow t'informe, tu gardes le contrôle. Aucune transaction réelle.",
+  },
+  portfolio_customizer: {
+    title: "Ajuste ton portefeuille",
+    desc: "Règle chaque ligne librement. Seedow te montre ta note de durabilité et le potentiel que tu vises — tu gardes la main, il ne réoptimise rien à ta place.",
+    desc_v2:
+      "Renforce ou réduis chaque ligne par petits pas. Seedow rééquilibre le reste et te dit, en français, ce que ça change.",
+    saved_desc: "Tes ajustements ont été enregistrés.",
+    simulation_note:
+      "Simulation à but pédagogique — Seedow t'explique, tu décides. Aucune transaction réelle.",
+    benefit_concentrated:
+      "En misant plus sur quelques lignes, tu vises un potentiel de gain plus élevé — le risque monte aussi.",
+    benefit_balanced:
+      "En répartissant sur plusieurs lignes, tu vises un parcours plus régulier — un potentiel plus posé, un risque plus doux.",
+    consequence: {
+      more_concentrated:
+        "Ton portefeuille est plus concentré — une plus grande partie de ton argent dépend de moins d'investissements.",
+      less_concentrated:
+        "Ton portefeuille est mieux réparti — ton argent dépend de davantage d'investissements.",
+      diversification_up: "Ta diversification s'améliore.",
+      diversification_down: "Ta diversification diminue.",
+      risk_up: "Ton portefeuille devient un peu plus sensible aux variations de marché.",
+      risk_down: "Ton portefeuille devient un peu moins sensible aux variations de marché.",
+    },
+  },
+  blank_builder: {
+    empty_title: "Construisons ton premier portefeuille",
+    empty_desc: "Tu peux commencer simplement : ajoute un premier investissement, on t'accompagne.",
+    discover: "Tu ne sais pas quoi choisir ? Découvrir",
+    saved_desc: "Ton portefeuille est prêt. Tu gardes la main à tout moment.",
+    glance_positions: "Tu as ajouté {{count}} investissement(s).",
+    glance_div_limitee: "Ton argent dépend encore de peu de lignes.",
+    glance_div_bonne: "Bonne répartition entre tes investissements.",
+    glance_concentrated: "Attention : une ligne pèse une grande partie de ton argent.",
+    simulation_note: "Simulation à but pédagogique — aucune transaction réelle. Tu décides.",
+  },
+};
+
+// L'anglais ne distingue pas tutoiement et vouvoiement : seules les deux
+// corrections de fond s'y appliquent.
+const oneVoiceEn = {
+  reglages: {
+    methodology: {
+      optimization: {
+        title: "Pool ranking, then measurement",
+        desc: "Seedow builds no allocation. It ranks the funds that passed your filters by relevance — real risk-adjusted performance, composite sustainability rating, alignment with your causes — and stops there. You allocate the amounts; the engine then measures what you composed (risk, fees, sustainability weighted by your causes, carbon footprint).",
+      },
+    },
+  },
+  portfolio_glance: {
+    help: {
+      impact:
+        "Sustainability rating: the average, weighted by your amounts, of your lines' ESG ratings — out of 100. It describes practices rated by a provider, not the real effect of your money.",
+    },
+  },
+};
+
 writeFileSync(
   "src/i18n/locales/fr.json",
-  JSON.stringify(deepMerge(deepMerge(mergedFr, composeSwitchFr), pedagogyFr), null, 2) + "\n",
+  JSON.stringify(
+    deepMerge(deepMerge(deepMerge(mergedFr, composeSwitchFr), pedagogyFr), oneVoiceFr),
+    null,
+    2,
+  ) + "\n",
   "utf-8",
 );
 writeFileSync(
   "src/i18n/locales/en.json",
-  JSON.stringify(deepMerge(deepMerge(mergedEn, composeSwitchEn), pedagogyEn), null, 2) + "\n",
+  JSON.stringify(
+    deepMerge(deepMerge(deepMerge(mergedEn, composeSwitchEn), pedagogyEn), oneVoiceEn),
+    null,
+    2,
+  ) + "\n",
   "utf-8",
 );

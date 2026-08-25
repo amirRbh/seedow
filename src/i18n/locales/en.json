@@ -1113,7 +1113,6 @@
       "error_title": "Could not generate portfolio",
       "error_fallback": "Error during generation",
       "reveal_eyebrow": "Target allocation",
-      "reveal_title": "Your portfolio",
       "reveal_summary": "{{count}} positions · reference capital {{amount}}",
       "line_share": "≈ {{amount}} of {{total}}",
       "dashboard_cta": "Go to dashboard",
@@ -1158,19 +1157,10 @@
       "error_title": "Could not generate portfolio",
       "error_fallback": "Error during generation",
       "reveal_eyebrow": "Target allocation",
-      "reveal_title": "Your portfolio",
       "reveal_summary": "{{count}} positions · reference capital {{amount}}",
       "line_share": "≈ {{amount}} of {{total}}",
-      "dashboard_cta": "Go to dashboard"
-    },
-    "intro": {
-      "eyebrow": "Allocation Advisor",
-      "title": "Let's build your portfolio.",
-      "description": "Four questions, two minutes. Ethi structures an allocation aligned with your convictions and exclusions.",
-      "step_01": "Your values",
-      "step_02": "Your portfolio",
-      "step_03": "Your tracking",
-      "start": "Start"
+      "dashboard_cta": "Go to dashboard",
+      "reveal_title": "Your portfolio"
     },
     "agency": {
       "eyebrow": "Your voice",
@@ -1182,6 +1172,15 @@
       "without_seedow": "With a classic ETF or your bank, this vote happens without you.",
       "signature": "It's not inevitable. It's a choice. Yours too.",
       "cta": "See my portfolio"
+    },
+    "intro": {
+      "eyebrow": "Allocation Advisor",
+      "title": "Let's build your portfolio.",
+      "description": "Four questions, two minutes. Ethi structures an allocation aligned with your convictions and exclusions.",
+      "step_01": "Your values",
+      "step_02": "Your portfolio",
+      "step_03": "Your tracking",
+      "start": "Start"
     }
   },
   "reglages": {
@@ -1209,7 +1208,6 @@
     "years": "{{n}} years",
     "block_initial": "Initial amount",
     "initial_label": "Reference capital",
-    "auto_recalc_note": "Any change triggers an automatic recalculation of your portfolio through the full pipeline (exclusions → best-in-class → constrained Markowitz optimization → conviction tilts).",
     "block_more": "More",
     "more_investor_profile": "View my investor profile",
     "more_comparatif": "Comparison vs a classic ETF",
@@ -1354,8 +1352,8 @@
         "coverage_link": "See my portfolios coverage"
       },
       "optimization": {
-        "title": "Constrained Markowitz optimization",
-        "desc": "Maximization of mean-variance utility with constraints: sum of weights = 1, weights ≥ 0, floor per asset, ceiling per asset and class, risk budget (target volatility), composite ESG floor. Expected returns are tilted upstream according to your causes (single-tilt pre-optimization) — no double-tilt at the exit to avoid biasing the efficient frontier."
+        "title": "Pool ranking, then measurement",
+        "desc": "Seedow builds no allocation. It ranks the funds that passed your filters by relevance — real risk-adjusted performance, composite sustainability rating, alignment with your causes — and stops there. You allocate the amounts; the engine then measures what you composed (risk, fees, sustainability weighted by your causes, carbon footprint)."
       },
       "version": {
         "title": "Engine version",
@@ -1657,18 +1655,6 @@
     "explore": "Explore investments first",
     "build_own": "Build my portfolio myself",
     "bank_soon": "Automatically connecting your accounts will come later. We start with the simplest path."
-  },
-  "impact_ribbon": {
-    "real_impact": "Real impact",
-    "co2_label": "CO₂ avoided (estimate)",
-    "co2_avoided_desc": "of CO₂ avoided through your investments",
-    "tonnes": "tonnes",
-    "kg": "kg",
-    "trees_label": "Equivalent trees",
-    "energy_label": "Green energy financed",
-    "impact_score": "Impact score",
-    "explainer": "CO₂ avoided is an indicative estimate derived from each holding's ESG score. Not a regulatory figure — a directional measure.",
-    "learn_more": "See methodology"
   },
   "impact_common": {
     "companies_one": "{{count}} company",
@@ -2336,19 +2322,15 @@
   "reglages_inline": {
     "apercu_live": "Live preview",
     "duree_investissement": "Investment duration",
-    "auto_recalc_note": "Any change triggers an automatic recalculation of your portfolio through the full pipeline (exclusions → best-in-class → constrained Markowitz optimization → conviction tilts).",
     "change_password": "Change my password",
     "sign_out": "Sign out",
     "notif_report": "Monthly impact report",
     "cron_loading": "Loading history…",
     "cron_empty": "No logged executions yet. Force a refresh above to start tracking.",
     "last_success": "Last success:",
-    "pipeline_body": "Six traceable steps: profiling, investable universe, sector exclusions, best-in-class ESG filters, constrained Markowitz optimization (ESG floor, risk budget, weight bounds), then pre-optimization tilt of expected returns according to your causes. The interactive simulator and detailed documentation are on the dedicated page.",
     "see_methodology": "Read the full methodology",
-    "esg_desc_1": "The ESG score ranges from 0 to 100. Instead of a fixed 40/40/20 average, the E, S, and G pillars are reweighted based on the causes you activate in your preferences. The score thus reflects what really matters to you.",
     "pillars_title": "1. Three independent pillars",
     "mapping_title": "2. Cause → pillar mapping (hardcoded)",
-    "mapping_note": "Without an active cause, we revert to the neutral 40/40/20 weighting. The more causes you activate related to a pillar, the more its weight in the composite score increases.",
     "portfolio_score_title": "3. Portfolio score",
     "portfolio_score_body": "It is the weighted average of the composite score of each line by its weight. A default ESG floor of 70 is imposed on the optimizer; if it finds no feasible solution, the floor is relaxed and an esg_floor_relaxed flag is raised for transparency.",
     "scale_title": "Reading scale",
@@ -2356,7 +2338,6 @@
     "carbon_desc": "Two indicators deliberately coexist while real data coverage reaches 100% of the portfolio:",
     "coverage_title": "Low coverage? Here's what to do",
     "coverage_link": "See my portfolio's coverage",
-    "optimization_body": "Maximization of mean-variance utility with constraints: sum of weights = 1, weights ≥ 0, floor per asset, ceiling per asset and class, risk budget (target volatility), composite ESG floor. Expected returns are tilted upstream according to your causes (single-tilt pre-optimization) — no double-tilt at the exit to avoid biasing the efficient frontier.",
     "version_body": "Methodology v1.1 · E/S/G pillars weighted by causes, real carbon intensity, source traceability. Revised quarterly.",
     "status_saving": "Recalculating…",
     "status_saved": "Portfolio updated",
@@ -2800,18 +2781,6 @@
     "progress_count": "{{done}} / {{total}} courses completed",
     "progress_all_done": "Well done — you've completed all the courses. 🌱"
   },
-  "post_sim_fork": {
-    "title": "Your portfolio is ready 🎉",
-    "subtitle": "Seedow suggests a first version based on your answers. It's up to you what comes next.",
-    "recommended": "Recommended",
-    "guided_title": "Let Seedow guide you",
-    "guided_desc": "We keep the proposal built for you.",
-    "customize_title": "Customize",
-    "customize_desc": "Start from our proposal and adjust it your way.",
-    "blank_title": "Start from scratch",
-    "blank_desc": "Build your portfolio yourself, step by step.",
-    "simulation_note": "A proposal, not a buy recommendation. You decide."
-  },
   "portfolio_glance": {
     "eyebrow": "At a glance",
     "title": "Your portfolio",
@@ -2834,7 +2803,7 @@
     "fees_suffix": "/ year",
     "help_cta": "What do these words mean?",
     "help": {
-      "impact": "Impact: the environmental, social and governance responsibility of your investments, scored out of 100. It's an average of ESG ratings — a guide, not a guarantee of positive impact.",
+      "impact": "Sustainability rating: the average, weighted by your amounts, of your lines' ESG ratings — out of 100. It describes practices rated by a provider, not the real effect of your money.",
       "risk": "Risk: how much the value can go up or down over time.",
       "fees": "Fees: what your investments cost each year.",
       "diversification": "Diversification: spreading your money so you don't depend on a single investment."
