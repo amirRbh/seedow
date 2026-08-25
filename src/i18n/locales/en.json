@@ -1625,7 +1625,8 @@
     },
     "carbon_intensity": "Carbon intensity (WACI)",
     "risk_scale": "On a scale of 1 (very stable) to 7 (very turbulent). A world equity ETF sits around 4-5.",
-    "sustainability_note": "A rating given by data providers on the fund's practices. It is not a measure of its real effect on the world."
+    "sustainability_note": "A rating given by data providers on the fund's practices. It is not a measure of its real effect on the world.",
+    "why_for_you": "Why you're seeing this fund"
   },
   "theme_filter": {
     "all": "All"
@@ -3099,7 +3100,17 @@
     "impact_carbon_lead": "What your portfolio emits, compared with a standard World ETF",
     "impact_carbon_desc": "less carbon intensity. This is a measurement, not a rating: it comes from the emissions disclosed by the companies you hold.",
     "impact_carbon_pending": "Your holdings' carbon footprint is not measurable yet: too few issuers disclose theirs. We do not put a score in its place — it will come when the data does.",
-    "esg_average_desc": "Weighted average ESG rating of your holdings. That is a provider's rating, not an effect on the world."
+    "esg_average_desc": "Weighted average ESG rating of your holdings. That is a provider's rating, not an effect on the world.",
+    "changed": "What changed",
+    "changed_when": "Since your previous composition, saved on {{date}}.",
+    "changed_effect": "What it shifts",
+    "changed_local": "Comparison made on this device, from your last two compositions. On another browser there's no history to compare.",
+    "change": {
+      "added": "You added {{name}} — {{to}}.",
+      "removed": "You removed {{name}}, which held {{from}}.",
+      "increased": "You increased {{name}}: {{from}} → {{to}}.",
+      "decreased": "You reduced {{name}}: {{from}} → {{to}}."
+    }
   },
   "sustainability": {
     "tier": {

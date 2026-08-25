@@ -1625,7 +1625,8 @@
     },
     "carbon_intensity": "Intensité carbone (WACI)",
     "risk_scale": "Sur une échelle de 1 (très stable) à 7 (très agité). Un ETF actions monde se situe autour de 4-5.",
-    "sustainability_note": "Une note attribuée par des fournisseurs de données sur les pratiques du fonds. Ce n'est pas une mesure de son effet réel sur le monde."
+    "sustainability_note": "Une note attribuée par des fournisseurs de données sur les pratiques du fonds. Ce n'est pas une mesure de son effet réel sur le monde.",
+    "why_for_you": "Pourquoi ce fonds t'est montré"
   },
   "theme_filter": {
     "all": "Tout"
@@ -3099,7 +3100,17 @@
     "impact_carbon_lead": "Ce que ton portefeuille émet, comparé à un ETF Monde classique",
     "impact_carbon_desc": "d'intensité carbone en moins. C'est une mesure, pas une note : elle vient des émissions déclarées par les entreprises que tu détiens.",
     "impact_carbon_pending": "L'empreinte carbone de tes lignes n'est pas encore mesurable : trop peu d'émetteurs publient la leur. On ne met pas un score à la place — il arrivera quand la donnée sera là.",
-    "esg_average_desc": "Note ESG moyenne de tes lignes, pondérée par leur poids. C'est une note de fournisseur, pas un effet sur le monde."
+    "esg_average_desc": "Note ESG moyenne de tes lignes, pondérée par leur poids. C'est une note de fournisseur, pas un effet sur le monde.",
+    "changed": "Ce qui a changé",
+    "changed_when": "Depuis ta composition précédente, enregistrée le {{date}}.",
+    "changed_effect": "Ce que ça déplace",
+    "changed_local": "Comparaison faite sur cet appareil, à partir de tes deux dernières compositions. Sur un autre navigateur, il n'y a pas d'historique à comparer.",
+    "change": {
+      "added": "Tu as ajouté {{name}} — {{to}}.",
+      "removed": "Tu as retiré {{name}}, qui portait {{from}}.",
+      "increased": "Tu as renforcé {{name}} : {{from}} → {{to}}.",
+      "decreased": "Tu as allégé {{name}} : {{from}} → {{to}}."
+    }
   },
   "sustainability": {
     "tier": {
