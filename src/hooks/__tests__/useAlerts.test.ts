@@ -7,6 +7,7 @@ function makeHolding(overrides: Partial<ActiveHolding> = {}): ActiveHolding {
     id: "asset-1",
     ticker: "AST1",
     name: "Asset One",
+    isin: null,
     category: "equity_dev",
     allocationPct: 10,
     esgScore: 75,

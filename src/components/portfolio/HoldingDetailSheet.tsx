@@ -5,6 +5,7 @@ import { trackFundRejection, type FundRejectionReason } from "@/lib/preferences/
 import type { ActiveHolding } from "@/hooks/useActivePortfolio";
 import type { ValuedHolding } from "@/hooks/usePortfolioValuation";
 import { PortfolioSustainabilityBadge } from "./PortfolioSustainabilityBadge";
+import { FundEvidenceLink } from "@/components/discover/FundEvidenceLink";
 
 interface Props {
   open: boolean;
@@ -135,12 +136,23 @@ export function HoldingDetailSheet({ open, onClose, holding, valued }: Props) {
               </p>
             </div>
             <div>
-              <p className="text-tag uppercase tracking-wider text-ink-3">Score d'impact</p>
+              {/* « Score d'impact » nommait ici une moyenne de notes ESG —
+                  dernier résidu de la correction de #185, sur un écran qui
+                  n'est pas passé par l'i18n. */}
+              <p className="text-tag uppercase tracking-wider text-ink-3">Durabilité</p>
               <div className="mt-1">
                 <PortfolioSustainabilityBadge esgScore={holding.esgScore} />
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Ce que le fonds revendique, ce que les données montrent, et les
+            limites. La page sourcée de l'Observatoire n'était atteignable que
+            depuis son index public : la preuve la plus différenciante du
+            produit était rangée à côté du parcours. */}
+        <div className="px-4 pb-2">
+          <FundEvidenceLink isin={holding.isin} />
         </div>
 
         {/* Phase 1.3 — Rejet de fonds (signal de préférence révélée) */}

@@ -2448,6 +2448,7 @@ const pedagogyEn = {
 // ═══════════════════════════════════════════════════════════════════════
 
 const oneVoiceFr = {
+  fund_evidence: { link: "Ce que ce fonds affirme, et ce que montrent les données" },
   alignment_card: {
     band: {
       strong: "Très proche de ce que tu as dit vouloir financer",
@@ -2663,6 +2664,7 @@ const oneVoiceFr = {
 // L'anglais ne distingue pas tutoiement et vouvoiement : seules les deux
 // corrections de fond s'y appliquent.
 const oneVoiceEn = {
+  fund_evidence: { link: "What this fund claims, and what the data shows" },
   alignment_card: {
     band: {
       strong: "Very close to what you said you wanted to fund",
