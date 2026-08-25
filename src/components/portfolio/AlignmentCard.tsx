@@ -57,8 +57,22 @@ export function AlignmentCard({ analysis, className = "" }: Props) {
 
   return (
     <div className={className}>
+      {/* Rappeler ce que l'utilisateur a DÉCLARÉ avant de juger son portefeuille.
+          Sans ça, « aligné » flotte : aligné avec quoi ? Ses préférences ne
+          doivent pas rester enfermées dans un formulaire de réglages. */}
+      {convictions.length > 0 && (
+        <p className="text-caption text-ink-3 leading-relaxed">
+          {t("alignment_card.you_said", {
+            causes: convictions
+              .map(([c]) => t(`onboarding.steps.values.${c}`, { defaultValue: c }))
+              .join(", "),
+            count: convictions.length,
+          })}
+        </p>
+      )}
+
       {/* PALIER 1 — la conclusion. C'est la seule ligne qu'un débutant doit lire. */}
-      <p className={`text-body-lg font-semibold leading-snug ${BAND_TONE[band]}`}>
+      <p className={`mt-1 text-body-lg font-semibold leading-snug ${BAND_TONE[band]}`}>
         {t(`alignment_card.band.${band}`)}
       </p>
 

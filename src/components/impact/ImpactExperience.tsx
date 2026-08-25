@@ -6,6 +6,8 @@ import { useActivePortfolio, type ActiveHolding } from "@/hooks/useActivePortfol
 import type { ExclusionTag } from "@/lib/discover/types";
 import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { useViewMode } from "@/hooks/useViewMode";
+import { usePortfolioAnalysis } from "@/hooks/usePortfolioAnalysis";
+import { WatchPoints } from "@/components/portfolio/WatchPoints";
 import { useLang } from "@/hooks/useLang";
 import { EASE_REVEAL } from "@/lib/motion";
 import { buildThemeBreakdown } from "@/lib/impact/themeBreakdown";
@@ -54,6 +56,17 @@ export function ImpactExperience() {
   const { isSimple } = useViewMode();
   const { portfolio } = useActivePortfolio();
   const valuation = usePortfolioValuation();
+  // « Ce à quoi ton argent reste exposé » : la page ne montrait que ce qu'il
+  // favorise. Une page d'impact qui n'énonce que le positif se lit comme une
+  // brochure — et Seedow perd exactement ce qui le rend croyable.
+  const { analysis } = usePortfolioAnalysis({
+    weights: Object.fromEntries(
+      (portfolio?.holdings ?? []).map((h) => [h.id, (h.allocationPct ?? 0) / 100]),
+    ),
+    causes: portfolio?.causes ?? [],
+    exclusions: portfolio?.exclusions ?? [],
+    horizonYears: portfolio?.horizon_years ?? null,
+  });
   const numLocale = lang === "en" ? "en-US" : "fr-FR";
 
   const model = useMemo(() => {

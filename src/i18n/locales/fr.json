@@ -3269,7 +3269,9 @@
     "exclusions_breached_one": "Une de tes lignes touche un secteur que tu as refusé.",
     "exclusions_breached_other": "{{count}} de tes lignes touchent un secteur que tu as refusé.",
     "how": "Comment c'est calculé ?",
-    "how_body": "Pour chaque conviction, on regarde quelle part de ton argent est placée sur des fonds qui y sont exposés, d'après les données d'exposition de chaque fonds. Une conviction dont aucune ligne ne porte de donnée ressort « pas mesurable » — jamais zéro, parce que le manque est le nôtre, pas celui du fonds."
+    "how_body": "Pour chaque conviction, on regarde quelle part de ton argent est placée sur des fonds qui y sont exposés, d'après les données d'exposition de chaque fonds. Une conviction dont aucune ligne ne porte de donnée ressort « pas mesurable » — jamais zéro, parce que le manque est le nôtre, pas celui du fonds.",
+    "you_said_one": "Tu as indiqué que {{causes}} comptait pour toi.",
+    "you_said_other": "Tu as indiqué que {{causes}} comptaient pour toi."
   },
   "watch_points": {
     "title": "Ce qui mérite ton attention",
@@ -3288,5 +3290,11 @@
   },
   "fund_evidence": {
     "link": "Ce que ce fonds affirme, et ce que montrent les données"
+  },
+  "allocation": {
+    "title": "Répartition",
+    "lines_one": "ligne",
+    "lines_other": "lignes",
+    "lead": "Ton argent va principalement vers {{category}} — {{pct}} % du total."
   }
 }
