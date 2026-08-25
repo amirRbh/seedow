@@ -71,6 +71,8 @@ export function BlankCanvasBuilder() {
   // se lit, il ne doit pas être subi.
   const [total, setTotal] = useState(DEFAULT_TOTAL);
   const [editingTotal, setEditingTotal] = useState(false);
+  // Ligne en cours d'édition : ses raccourcis sont les seuls affichés.
+  const [focusedId, setFocusedId] = useState<string | null>(null);
 
   // Amorçage depuis le pool de l'aperçu (bascule « pool plutôt qu'allocation ») :
   // le builder démarre pré-rempli des actifs sélectionnés, à 0 % — Seedow ne
@@ -284,42 +286,58 @@ export function BlankCanvasBuilder() {
         </div>
       ) : (
         <>
-          {/* La boussole de l'écran : combien il y a à répartir, et combien il
-              reste. Tout le reste se lit par rapport à ces deux chiffres. */}
-          <div className="rounded-2xl border border-paper-3 bg-paper p-4">
-            <div className="flex items-baseline justify-between gap-3">
-              <span className="text-body-sm text-ink-2">{t("blank_builder.total_label")}</span>
-              {editingTotal ? (
-                <span className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    autoFocus
-                    aria-label={t("blank_builder.total_label")}
-                    value={total === 0 ? "" : String(total)}
-                    onChange={(e) => {
-                      const digits = e.target.value.replace(/\D/g, "").slice(0, 7);
-                      setTotal(digits === "" ? 0 : Number(digits));
-                    }}
-                    onBlur={() => setEditingTotal(false)}
-                    onKeyDown={(e) => e.key === "Enter" && setEditingTotal(false)}
-                    className="w-28 rounded-lg border border-paper-3 bg-paper-2 px-2 py-1 text-right font-value text-lg text-ink tabular-nums outline-none focus-visible:ring-2 focus-visible:ring-ink"
-                  />
-                  <span className="text-ink-2" aria-hidden>
-                    €
+          {/* La boussole de l'écran : combien il y a à répartir, combien il
+              reste. Composée comme le nœud « Mon argent » du Fil — chiffre de
+              tête, phrase en dessous — pour que le même montant se lise pareil
+              des deux côtés de la sauvegarde. */}
+          <div className="paper-card p-5">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="stamp">{t("blank_builder.total_label")}</p>
+                {editingTotal ? (
+                  <span className="mt-1 flex items-baseline gap-1.5">
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      autoFocus
+                      aria-label={t("blank_builder.total_label")}
+                      value={total === 0 ? "" : String(total)}
+                      onChange={(e) => {
+                        const digits = e.target.value.replace(/\D/g, "").slice(0, 7);
+                        setTotal(digits === "" ? 0 : Number(digits));
+                      }}
+                      onBlur={() => setEditingTotal(false)}
+                      onKeyDown={(e) => e.key === "Enter" && setEditingTotal(false)}
+                      className="w-40 bg-transparent border-b-2 border-ink text-figure-hero text-ink outline-none"
+                    />
+                    <span className="text-body-lg text-ink-2" aria-hidden>
+                      €
+                    </span>
                   </span>
-                </span>
-              ) : (
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setEditingTotal(true)}
+                    aria-label={t("blank_builder.edit_total")}
+                    className="mt-1 block text-figure-hero text-ink text-left rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
+                  >
+                    {formatCurrency(total, lang)}
+                  </button>
+                )}
+              </div>
+              {!editingTotal && (
                 <button
                   type="button"
                   onClick={() => setEditingTotal(true)}
-                  className="font-value text-2xl text-ink tabular-nums underline decoration-paper-3 underline-offset-4 hover:decoration-ink transition-colors"
+                  className="mt-1 shrink-0 rounded-full border border-paper-3 px-3 py-1 text-tag font-mono uppercase tracking-wider text-ink-3 hover:border-ink hover:text-ink transition-colors"
                 >
-                  {formatCurrency(total, lang)}
+                  {t("blank_builder.edit")}
                 </button>
               )}
             </div>
-            <p className="mt-2 text-body-sm leading-snug text-ink-2">
+
+            {/* Ce qui reste, en euros — jamais « 30 % non attribués ». */}
+            <p className="mt-3 text-body-sm leading-snug text-ink-2">
               {overAllocated
                 ? t("blank_builder.over_by", { amount: formatCurrency(allocated - total, lang) })
                 : remaining > 0
@@ -333,84 +351,119 @@ export function BlankCanvasBuilder() {
             )}
           </div>
 
-          {/* Lignes éditables — chaque curseur est indépendant */}
-          <ul className="space-y-4">
-            {lines.map((l) => (
-              <li key={l.id}>
-                <div className="flex items-baseline justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="text-body-sm font-semibold text-ink truncate">{l.name}</p>
-                    <p className="text-tag text-ink-3 truncate">{l.ticker}</p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => removeLine(l.id)}
-                    aria-label={t("blank_builder.remove")}
-                    className="flex-shrink-0 text-ink-3 hover:text-alert-ink transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4" strokeWidth={1.8} aria-hidden />
-                  </button>
-                </div>
+          {/* TES LIGNES — une seule carte, des filets entre les lignes. Elles
+              flottaient auparavant, chacune avec son champ carré et ses quatre
+              pastilles grises : vingt boutons à l'écran pour cinq lignes, et
+              rien qui dise « ceci est ton portefeuille ». Le motif carte +
+              filets est celui du Fil et de la fiche actif — c'est la langue
+              visuelle de la marque, pas une invention de plus.
 
-                {/* On saisit des EUROS. Le pourcentage suit, en petit — c'est une
-                    conséquence du choix, pas la chose qu'on manipule. */}
-                <div className="mt-2 flex items-baseline gap-2">
-                  <span className="relative">
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      value={l.amount === 0 ? "" : String(l.amount)}
-                      placeholder="0"
-                      aria-label={t("blank_builder.amount_of", { name: l.name })}
-                      onChange={(e) => {
-                        const digits = e.target.value.replace(/\D/g, "").slice(0, 7);
-                        setAmount(l.id, digits === "" ? 0 : Number(digits));
-                      }}
-                      className="w-24 rounded-lg border border-paper-3 bg-paper-2 px-2 py-1.5 text-right font-value text-body text-ink tabular-nums outline-none focus-visible:ring-2 focus-visible:ring-ink"
-                    />
-                  </span>
-                  <span className="text-body text-ink-2" aria-hidden>
-                    €
-                  </span>
-                  {l.amount > 0 && total > 0 && (
-                    <span className="text-tag text-ink-3">
-                      {t("blank_builder.share_of_total", {
-                        pct: formatPercent(l.amount / total, lang, 0),
-                      })}
-                    </span>
-                  )}
-                </div>
+              La barre de proportion n'est pas un curseur : on ne la manipule
+              pas, elle se lit. Elle est doublée du pourcentage écrit — jamais
+              une information portée par la seule forme (§4). */}
+          <div className="paper-card overflow-hidden">
+            <ul className="divide-y divide-paper-3">
+              {lines.map((l) => {
+                const share = total > 0 ? Math.min(1, l.amount / total) : 0;
+                const editing = focusedId === l.id;
+                return (
+                  <li key={l.id} className="p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        <p className="text-body-sm font-semibold text-ink truncate leading-tight">
+                          {l.name}
+                        </p>
+                        <p className="mt-0.5 text-tag font-mono uppercase tracking-wider text-ink-3 truncate">
+                          {l.ticker}
+                        </p>
+                      </div>
 
-                {/* Raccourcis : un débutant n'a pas à calculer un quart de 500. */}
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                  {QUICK_SHARES.map((share) => {
-                    const value = Math.round(total * share);
-                    return (
-                      <button
-                        key={share}
-                        type="button"
-                        onClick={() => setAmount(l.id, value)}
-                        className="rounded-full border border-paper-3 px-3 py-1 text-caption text-ink-2 hover:border-ink hover:text-ink transition-colors"
+                      {/* Le montant est le chiffre de la ligne ; la part suit,
+                          en petit — conséquence du choix, pas la chose qu'on règle. */}
+                      <div className="flex items-baseline gap-1.5 shrink-0">
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          value={l.amount === 0 ? "" : String(l.amount)}
+                          placeholder="0"
+                          aria-label={t("blank_builder.amount_of", { name: l.name })}
+                          onFocus={() => setFocusedId(l.id)}
+                          onBlur={() => setFocusedId((id) => (id === l.id ? null : id))}
+                          onChange={(e) => {
+                            const digits = e.target.value.replace(/\D/g, "").slice(0, 7);
+                            setAmount(l.id, digits === "" ? 0 : Number(digits));
+                          }}
+                          className="w-24 bg-transparent border-b border-paper-3 pb-0.5 text-right font-value text-body-xl text-ink tabular-nums outline-none focus:border-ink transition-colors"
+                        />
+                        <span className="font-value text-body text-ink-2" aria-hidden>
+                          €
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Lecture de la part : barre + pourcentage écrit. */}
+                    <div className="mt-3 flex items-center gap-3">
+                      <div
+                        className="h-1 flex-1 rounded-full bg-paper-inset overflow-hidden"
+                        aria-hidden
                       >
-                        {formatCurrency(value, lang)}
+                        <div
+                          className="h-full rounded-full bg-ink transition-[width] duration-300 ease-out"
+                          style={{ width: `${share * 100}%` }}
+                        />
+                      </div>
+                      <span className="text-tag font-mono tabular-nums text-ink-3 w-10 text-right">
+                        {formatPercent(share, lang, 0)}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => removeLine(l.id)}
+                        aria-label={t("blank_builder.remove_named", { name: l.name })}
+                        className="shrink-0 text-ink-3 hover:text-alert-ink transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
+                      >
+                        <Trash2 className="w-4 h-4" strokeWidth={1.8} aria-hidden />
                       </button>
-                    );
-                  })}
-                  {remaining > 0 && (
-                    <button
-                      type="button"
-                      onClick={() => setAmount(l.id, l.amount + remaining)}
-                      className="rounded-full border border-paper-3 px-3 py-1 text-caption text-ink-2 hover:border-ink hover:text-ink transition-colors"
-                    >
-                      {t("blank_builder.the_rest", {
-                        amount: formatCurrency(remaining, lang),
-                      })}
-                    </button>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
+                    </div>
+
+                    {/* Raccourcis — seulement sur la ligne qu'on édite. Affichés
+                        sur toutes, ils faisaient vingt pastilles à l'écran. */}
+                    {editing && (
+                      <div className="mt-3 flex flex-wrap gap-1.5">
+                        {QUICK_SHARES.map((q) => {
+                          const value = Math.round(total * q);
+                          return (
+                            <button
+                              key={q}
+                              type="button"
+                              // `onMouseDown` : `onBlur` du champ retirerait les
+                              // pastilles avant que le clic n'arrive.
+                              onMouseDown={(e) => e.preventDefault()}
+                              onClick={() => setAmount(l.id, value)}
+                              className="rounded-full border border-paper-3 px-3 py-1 text-caption text-ink-2 hover:border-ink hover:text-ink transition-colors"
+                            >
+                              {formatCurrency(value, lang)}
+                            </button>
+                          );
+                        })}
+                        {remaining > 0 && (
+                          <button
+                            type="button"
+                            onMouseDown={(e) => e.preventDefault()}
+                            onClick={() => setAmount(l.id, l.amount + remaining)}
+                            className="rounded-full border border-ink px-3 py-1 text-caption text-ink hover:bg-paper-inset transition-colors"
+                          >
+                            {t("blank_builder.the_rest", {
+                              amount: formatCurrency(remaining, lang),
+                            })}
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
 
           <button
             type="button"

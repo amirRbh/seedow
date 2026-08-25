@@ -2949,7 +2949,10 @@
     "amount_of": "Amount placed on {{name}}",
     "share_of_total": "i.e. {{pct}} of your amount",
     "the_rest": "the rest ({{amount}})",
-    "details_title": "What it comes to"
+    "details_title": "What it comes to",
+    "edit": "Edit",
+    "edit_total": "Edit the amount to allocate",
+    "remove_named": "Remove {{name}}"
   },
   "data_provenance": {
     "coverage_label": "What does coverage mean?",

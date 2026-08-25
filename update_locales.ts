@@ -2606,6 +2606,9 @@ const oneVoiceFr = {
   },
   blank_builder: {
     details_title: "Ce que ça donne",
+    edit: "Modifier",
+    edit_total: "Modifier le montant à répartir",
+    remove_named: "Retirer {{name}}",
     empty_title: "Construisons ton premier portefeuille",
     empty_desc: "Tu peux commencer simplement : ajoute un premier investissement, on t'accompagne.",
     discover: "Tu ne sais pas quoi choisir ? Découvrir",
@@ -2621,7 +2624,12 @@ const oneVoiceFr = {
 // L'anglais ne distingue pas tutoiement et vouvoiement : seules les deux
 // corrections de fond s'y appliquent.
 const oneVoiceEn = {
-  blank_builder: { details_title: "What it comes to" },
+  blank_builder: {
+    details_title: "What it comes to",
+    edit: "Edit",
+    edit_total: "Edit the amount to allocate",
+    remove_named: "Remove {{name}}",
+  },
   reglages: {
     methodology: {
       optimization: {

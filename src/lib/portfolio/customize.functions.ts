@@ -4,14 +4,31 @@
  * L'utilisateur pose ses parts ; Seedow les enregistre TELLES QUELLES et calcule
  * les métriques réelles qui en découlent (volatilité, frais, ESG, diversification)
  * via le même `computeMetrics` que le moteur. Le portefeuille est marqué
- * `is_custom = true` pour ne jamais être écrasé en silence.
+ * `methodology_version = "custom-v1"` pour ne jamais être écrasé en silence.
  *
  * Deux règles, non négociables : on ne réoptimise pas, et on ne renormalise pas.
  * Une composition à 80 % reste à 80 % — voir `./weights`.
+ *
+ * ── Le marqueur « composé à la main » ────────────────────────────────────
+ *
+ * Il passe par `methodology_version = "custom-v1"`, pas par une colonne
+ * dédiée. Les deux écritures posaient `is_custom: true` — une colonne que la
+ * base ne porte pas : la migration qui l'ajoute (20260807120000) n'a jamais
+ * été appliquée, et `integrations/supabase/types.ts`, généré depuis la base
+ * réelle, ne la connaît pas. PostgREST refusait donc CHAQUE enregistrement
+ * avec un `PGRST204`, et le parcours « composer » était intégralement bloqué.
+ *
+ * Le cast `as any` sur ces écritures avait masqué exactement ce que le typage
+ * aurait signalé. Il disparaît avec la colonne : le schéma généré redevient
+ * la source de vérité de ce qu'on a le droit d'écrire.
+ *
+ * Personne ne lisait `is_custom` — c'était un marqueur écrit et jamais
+ * consulté, qui cassait tout le reste.
  */
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import type { Json } from "@/integrations/supabase/types";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { buildCovariance } from "./covariance";
 import { computeMetrics } from "./metrics";
@@ -132,10 +149,10 @@ export const saveCustomPortfolio = createServerFn({ method: "POST" })
       .from("portfolios")
       .update({
         weights,
-        metrics: metrics as unknown as Record<string, unknown>,
-        is_custom: true,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as any)
+        metrics: metrics as unknown as Json,
+        // Le marqueur « composé à la main », sur une colonne qui existe.
+        methodology_version: "custom-v1",
+      })
       .eq("id", data.portfolio_id)
       .eq("user_id", userId);
     if (updErr) {
@@ -151,7 +168,7 @@ export const saveCustomPortfolio = createServerFn({ method: "POST" })
  * lignes choisies entièrement à la main. Comme Personnaliser, on ne réoptimise
  * pas : on mesure honnêtement les poids de l'utilisateur. Mode « replace » :
  * on désactive les portefeuilles actifs existants (le trigger DB borne à 3
- * actifs), puis on insère celui-ci comme actif et `is_custom`.
+ * actifs), puis on insère celui-ci comme actif, marqué `custom-v1`.
  */
 export const createCustomPortfolio = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -206,12 +223,10 @@ export const createCustomPortfolio = createServerFn({ method: "POST" })
         horizon_years: data.horizon_years,
         initial_amount: data.initial_amount,
         weights,
-        metrics: metrics as unknown as Record<string, unknown>,
+        metrics: metrics as unknown as Json,
         methodology_version: "custom-v1",
-        is_custom: true,
         is_active: true,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as any)
+      })
       .select()
       .single();
 
@@ -322,7 +337,7 @@ export const savePortfolioPreferences = createServerFn({ method: "POST" })
           data.causes,
         );
         metrics = measured.metrics;
-        update.metrics = metrics as unknown as Record<string, unknown>;
+        update.metrics = metrics as unknown as Json;
       } catch (err) {
         console.error("[savePortfolioPreferences] re-measure skipped:", err);
       }
