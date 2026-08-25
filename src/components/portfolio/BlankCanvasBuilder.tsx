@@ -21,6 +21,7 @@ import { PortfolioAnalysisPanel } from "./PortfolioAnalysisPanel";
 import { usePortfolioAnalysis } from "@/hooks/usePortfolioAnalysis";
 import { readPoolHandoff, type PoolHandoffIntent } from "@/lib/onboarding/poolHandoff";
 import { recordComposition } from "@/lib/portfolio/lastChange";
+import { usePortfolioSync } from "@/hooks/usePortfolioSync";
 
 interface Line {
   id: string;
@@ -60,6 +61,7 @@ export function BlankCanvasBuilder() {
   const { lang } = useLang();
   const navigate = useNavigate();
   const create = useServerFn(createCustomPortfolio);
+  const syncPortfolio = usePortfolioSync();
   const [lines, setLines] = useState<Line[]>([]);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -247,6 +249,11 @@ export function BlankCanvasBuilder() {
           esgScore: l.esgScore,
         })),
       });
+      // AVANT de naviguer : l'app doit regarder le portefeuille qu'on vient de
+      // créer. Sans ça, `activeId` pointe encore sur le précédent — que le mode
+      // « replace » vient de désactiver — et Le Fil affiche l'écran des comptes
+      // vides alors que la composition est bien en base.
+      syncPortfolio(created.portfolio_id);
       toast.success(t("blank_builder.saved"), { description: t("blank_builder.saved_desc") });
       await navigate({ to: "/le-fil" });
     } catch (err) {

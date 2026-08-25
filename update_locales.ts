@@ -2474,6 +2474,8 @@ const oneVoiceFr = {
     bloc: { you_line: "Vous êtes {{n}} à voter « {{choice}} »." },
   },
   reglages: {
+    notif_alerts_unavailable:
+      "Cette option n'est pas encore active sur ton compte. On préfère te le dire plutôt que d'enregistrer un consentement qui n'irait nulle part.",
     loading_prefs: "Chargement de tes préférences…",
     display_name_placeholder: "Ton nom",
     meta_desc: "Gère ton profil, tes préférences d'investissement et tes notifications.",
@@ -2631,6 +2633,8 @@ const oneVoiceEn = {
     remove_named: "Remove {{name}}",
   },
   reglages: {
+    notif_alerts_unavailable:
+      "This option isn't active on your account yet. We'd rather tell you than record a consent that goes nowhere.",
     methodology: {
       optimization: {
         title: "Pool ranking, then measurement",

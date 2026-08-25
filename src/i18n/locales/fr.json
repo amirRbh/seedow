@@ -1373,7 +1373,8 @@
     "auto_save_note": "Tes préférences sont enregistrées automatiquement. Elles servent à classer le pool et à mesurer ton portefeuille — elles ne repondèrent jamais tes lignes à ta place.",
     "save_error": "Enregistrement impossible",
     "pool_compose_first": "Composer mon portefeuille",
-    "no_portfolio_notice": "Tu n'as pas encore composé de portefeuille : il n'y a rien à mettre à jour ici. Ces réglages classent déjà le pool ci-dessous — ils s'appliqueront à ton portefeuille dès que tu l'auras composé."
+    "no_portfolio_notice": "Tu n'as pas encore composé de portefeuille : il n'y a rien à mettre à jour ici. Ces réglages classent déjà le pool ci-dessous — ils s'appliqueront à ton portefeuille dès que tu l'auras composé.",
+    "notif_alerts_unavailable": "Cette option n'est pas encore active sur ton compte. On préfère te le dire plutôt que d'enregistrer un consentement qui n'irait nulle part."
   },
   "methodologie": {
     "title": "Méthodologie",

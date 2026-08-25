@@ -1373,7 +1373,8 @@
     "auto_save_note": "Your preferences are saved automatically. They rank the pool and measure your portfolio — they never re-weight your lines for you.",
     "save_error": "Could not save",
     "pool_compose_first": "Compose my portfolio",
-    "no_portfolio_notice": "You haven't composed a portfolio yet, so there is nothing to update here. These settings already rank the pool below — they will apply to your portfolio as soon as you compose it."
+    "no_portfolio_notice": "You haven't composed a portfolio yet, so there is nothing to update here. These settings already rank the pool below — they will apply to your portfolio as soon as you compose it.",
+    "notif_alerts_unavailable": "This option isn't active on your account yet. We'd rather tell you than record a consent that goes nowhere."
   },
   "methodologie": {
     "title": "Methodology",

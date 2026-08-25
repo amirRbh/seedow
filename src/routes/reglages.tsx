@@ -13,6 +13,7 @@ import { useUserPortfolios } from "@/hooks/useUserPortfolios";
 import { screenAssetPool } from "@/lib/portfolio/server.functions";
 import { poolReasons, type PoolGroup } from "@/lib/portfolio/poolReasons";
 import { savePortfolioPreferences } from "@/lib/portfolio/customize.functions";
+import { usePortfolioSync } from "@/hooks/usePortfolioSync";
 import { triggerMarketRefresh } from "@/lib/market/refresh.functions";
 import { triggerRiskModelRecompute } from "@/lib/market/risk-model.functions";
 import {
@@ -157,6 +158,7 @@ function PreferencesSection() {
   const { activeId, loading: pfListLoading } = useUserPortfolios();
   const screen = useServerFn(screenAssetPool);
   const savePrefs = useServerFn(savePortfolioPreferences);
+  const syncPortfolio = usePortfolioSync();
 
   const [loadingInitial, setLoadingInitial] = useState(true);
   // Un compte peut arriver ici sans avoir encore composé : il n'y a alors rien à
@@ -285,6 +287,9 @@ function PreferencesSection() {
             poolSize: res.pool.length,
             excluded: res.excluded_count ?? 0,
           });
+          // Les préférences repondèrent les piliers ESG : les métriques du
+          // portefeuille ont changé côté serveur, les vues doivent le refléter.
+          if (hasPortfolio) syncPortfolio();
           setStatus("saved");
         })
         .catch((err: unknown) => {
@@ -296,6 +301,9 @@ function PreferencesSection() {
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
+    // `syncPortfolio` est stable (useCallback) ; l'inclure relancerait l'effet
+    // à chaque rendu du contexte portefeuilles.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [causes, exclusions, risk, horizon, amount, screen, savePrefs, hasPortfolio, loadingInitial]);
 
   const toggleCause = (id: CauseTag) => {
@@ -754,7 +762,12 @@ function ThemeToggle() {
 function NotificationsSection() {
   const { t } = useTranslation();
   // Alertes email : préférence RÉELLE et persistée (opt-in). Remplace la maquette.
-  const { emailAlerts, setEmailAlerts, loading: prefsLoading } = useNotificationPreferences();
+  const {
+    emailAlerts,
+    setEmailAlerts,
+    loading: prefsLoading,
+    available: prefsAvailable,
+  } = useNotificationPreferences();
   const [savingPref, setSavingPref] = useState(false);
   const [marketAlerts, setMarketAlerts] = useState(false);
   const [reportMonthly, setReportMonthly] = useState(true);
@@ -767,7 +780,15 @@ function NotificationsSection() {
       await setEmailAlerts(v);
       toast.success(v ? t("reglages.notif_alerts_on") : t("reglages.notif_alerts_off"));
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : t("common.error"));
+      // Option non déployée : on le dit franchement plutôt que de rendre une
+      // erreur Postgres, et surtout sans laisser croire au consentement.
+      toast.error(
+        err instanceof Error && err.message === "UNAVAILABLE"
+          ? t("reglages.notif_alerts_unavailable")
+          : err instanceof Error
+            ? err.message
+            : t("common.error"),
+      );
     } finally {
       setSavingPref(false);
     }
@@ -802,10 +823,12 @@ function NotificationsSection() {
           label={t("reglages.notif_alerts")}
           checked={emailAlerts}
           onChange={onToggleEmailAlerts}
-          disabled={prefsLoading || savingPref}
+          disabled={prefsLoading || savingPref || !prefsAvailable}
         />
         <p className="text-tag text-ink-3 mt-1 mb-3 leading-snug">
-          {t("reglages.notif_alerts_hint")}
+          {prefsAvailable
+            ? t("reglages.notif_alerts_hint")
+            : t("reglages.notif_alerts_unavailable")}
         </p>
         {/* Canaux pas encore construits — honnêtement marqués « à venir ». */}
         <ToggleRow
