@@ -16,6 +16,7 @@ import {
 } from "@/components/discover/TransparencyBadges";
 import { SustainabilityBadge } from "@/components/discover/SustainabilityBadge";
 import { PoolReasonList } from "@/components/discover/PoolReasonList";
+import { FundEvidenceLink } from "@/components/discover/FundEvidenceLink";
 import { poolReasons } from "@/lib/portfolio/poolReasons";
 import { useActivePortfolio } from "@/hooks/useActivePortfolio";
 import { useWatchlist } from "@/hooks/useWatchlist";
@@ -188,6 +189,8 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
               <p className="mt-1.5 text-tag text-ink-3 leading-snug">
                 {t("asset_detail.sustainability_note")}
               </p>
+              {/* La page sourcée : revendications du fonds, données, limites. */}
+              <FundEvidenceLink className="mt-2" isin={asset.isin} />
             </div>
 
             {/* « Pourquoi ce score ? » — réponse Ethi en un clic (§11/§24). */}

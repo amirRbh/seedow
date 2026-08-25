@@ -3285,5 +3285,8 @@
     "esg_estimated": "{{pct}} de ton portefeuille porte une note de durabilité estimée par Seedow, pas fournie par un fournisseur de données.",
     "risk_unknown": "Tes lignes n'ont pas assez d'historique de cours pour qu'on mesure leurs variations.",
     "no_lookthrough": "On ne connaît pas encore les entreprises réellement détenues par tes fonds : les données de composition ne sont pas disponibles. Tout ce qui est affiché porte donc sur les fonds, pas sur ce qu'ils contiennent."
+  },
+  "fund_evidence": {
+    "link": "Ce que ce fonds affirme, et ce que montrent les données"
   }
 }

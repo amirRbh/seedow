@@ -3285,5 +3285,8 @@
     "esg_estimated": "{{pct}} of your portfolio carries a sustainability rating estimated by Seedow, not supplied by a data provider.",
     "risk_unknown": "Your lines don't have enough price history for us to measure how they move.",
     "no_lookthrough": "We don't yet know the companies your funds actually hold: composition data isn't available. Everything shown therefore describes the funds, not what's inside them."
+  },
+  "fund_evidence": {
+    "link": "What this fund claims, and what the data shows"
   }
 }

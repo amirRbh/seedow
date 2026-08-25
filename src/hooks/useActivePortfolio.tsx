@@ -10,6 +10,13 @@ export interface ActiveHolding {
   id: string;
   ticker: string;
   name: string;
+  /**
+   * Identifiant du fonds, quand la base le porte. Il ouvre la page sourcée
+   * (`/fonds/$isin`) — ce que le fonds revendique, ce que les données montrent,
+   * et les limites. Sans ISIN, pas de page : le lien ne s'affiche pas plutôt
+   * que de mener à une erreur.
+   */
+  isin: string | null;
   category: string; // asset_class
   allocationPct: number; // 0..100
   esgScore: number;
@@ -109,13 +116,14 @@ async function fetchActivePortfolio(
   if (ids.length > 0) {
     const { data: assets, error: aErr } = await supabase
       .from("assets")
-      .select("id, ticker, name, asset_class, esg_score, region, cause_exposure")
+      .select("id, ticker, name, isin, asset_class, esg_score, region, cause_exposure")
       .in("id", ids);
     if (aErr) throw new Error(aErr.message);
     holdings = (assets ?? []).map((a) => ({
       id: a.id,
       ticker: a.ticker,
       name: a.name,
+      isin: a.isin ?? null,
       category: a.asset_class,
       allocationPct: (weights[a.id] ?? 0) * 100,
       esgScore: Number(a.esg_score),
