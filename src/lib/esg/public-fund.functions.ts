@@ -6,15 +6,31 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { mapPublicFundRow, PUBLIC_FUND_COLUMNS, type PublicFundRow } from "./public-fund";
 
+/**
+ * Fiche publique d'un fonds, par ISIN **ou** par ticker.
+ *
+ * Accepter les deux n'est pas une commodité : c'est ce qui rend la page
+ * atteignable. Aucun actif du catalogue ne porte d'ISIN aujourd'hui — la
+ * colonne existe et elle est vide. L'Observatoire liait donc vers
+ * `/fonds/{ticker}` (son propre repli), pendant que cette fonction cherchait
+ * `isin = "ESGD"`. Résultat : chaque lien de l'Observatoire menait à « fonds
+ * introuvable ».
+ *
+ * On ne devine pas l'ISIN manquant — il ne se dérive de rien. On accepte
+ * simplement l'identifiant que l'application utilise réellement.
+ */
 export const getPublicFundByIsin = createServerFn({ method: "GET" })
   .inputValidator((input: string) => z.string().min(1).parse(input))
-  .handler(async ({ data: isin }) => {
+  .handler(async ({ data: key }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data, error } = await supabaseAdmin
       .from("assets")
-      .select(PUBLIC_FUND_COLUMNS)
+      .select(`${PUBLIC_FUND_COLUMNS}, id`)
       .eq("is_active", true)
-      .eq("isin", isin)
+      // `or` plutôt que deux requêtes : un ticker et un ISIN ne se confondent
+      // pas, la première correspondance est la bonne.
+      .or(`isin.eq.${key},ticker.eq.${key}`)
+      .limit(1)
       .maybeSingle();
     if (error) throw new Error(error.message);
     if (!data) return null;

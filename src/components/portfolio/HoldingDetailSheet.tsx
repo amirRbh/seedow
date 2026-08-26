@@ -152,7 +152,7 @@ export function HoldingDetailSheet({ open, onClose, holding, valued }: Props) {
             depuis son index public : la preuve la plus différenciante du
             produit était rangée à côté du parcours. */}
         <div className="px-4 pb-2">
-          <FundEvidenceLink isin={holding.isin} />
+          <FundEvidenceLink isin={holding.isin} ticker={holding.ticker} />
         </div>
 
         {/* Phase 1.3 — Rejet de fonds (signal de préférence révélée) */}
