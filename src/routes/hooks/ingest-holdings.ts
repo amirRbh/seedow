@@ -1,3 +1,5 @@
+import { resolveISharesPortfolioId } from "@/lib/data-engine/ishares-funds";
+import { iSharesHoldingsUrl, parseISharesHoldings } from "@/lib/data-engine/ishares-holdings";
 import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { httpDownload } from "@/lib/data-engine/download.server";
@@ -47,14 +49,9 @@ export const Route = createFileRoute("/hooks/ingest-holdings")({
         } catch {
           return json({ error: "HOLDINGS_SOURCES is not valid JSON" }, 500);
         }
-        if (Object.keys(sources).length === 0) {
-          return json(
-            {
-              note: "HOLDINGS_SOURCES vide — aucune URL officielle curée fournie, rien à ingérer.",
-            },
-            200,
-          );
-        }
+        // Plus de sortie anticipée quand la table est vide : le registre iShares
+        // vérifié (`ishares-funds`) sert de source par défaut. `HOLDINGS_SOURCES`
+        // reste prioritaire — il permet de corriger un fonds sans redéployer.
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const admin = supabaseAdmin as any;
@@ -81,9 +78,16 @@ export const Route = createFileRoute("/hooks/ingest-holdings")({
         );
 
         const resolveUrl = (asset: HoldingsIngestAsset): ResolvedHoldingsSource | null => {
-          const url = (asset.isin && sources[asset.isin]) || sources[asset.id];
-          if (!url) return null;
-          return { url, sourceId: null }; // source_url fait foi ; source_id liable ultérieurement
+          // 1) Une URL curée l'emporte toujours : c'est la porte de sortie quand
+          //    un fonds demande un traitement particulier.
+          const curated = (asset.isin && sources[asset.isin]) || sources[asset.id];
+          if (curated) return { url: curated, sourceId: null };
+          // 2) Sinon, le registre iShares — chacune de ses entrées a été vérifiée
+          //    par une requête réelle à l'émetteur.
+          const portfolioId = resolveISharesPortfolioId(asset.isin);
+          if (portfolioId) return { url: iSharesHoldingsUrl(portfolioId), sourceId: null };
+          // 3) Aucune source : `no_source`, et l'interface le dira franchement.
+          return null;
         };
 
         const { results, summary } = await ingestHoldingsForAssets(assets, {
@@ -91,11 +95,17 @@ export const Route = createFileRoute("/hooks/ingest-holdings")({
           download: async (url: string) => {
             const raw = await httpDownload("ishares_factsheet", url, {
               kind: "csv",
-              maxBytes: 5_000_000,
+              // Un classeur de fonds obligataire dépasse largement 5 Mo : la
+              // borne précédente rejetait silencieusement les plus gros fonds.
+              maxBytes: 30_000_000,
             });
             if (!raw) throw new Error(`download failed or blocked: ${url}`);
             return raw.content;
           },
+          // BlackRock ne sert plus de CSV : l'ancien endpoint rend la page HTML
+          // du fonds, que le parseur CSV lisait comme « aucune composition ».
+          // Le classeur officiel est du SpreadsheetML.
+          parse: parseISharesHoldings,
           writer: supabaseHoldingWriter(supabaseAdmin),
         });
 
