@@ -1,0 +1,42 @@
+# Ingestion des HOLDINGS — composition officielle des fonds iShares.
+#
+# Job manuel et hors sandbox : il a besoin du réseau vers l'API produit
+# BlackRock, inaccessible depuis l'environnement de développement. La
+# persistance est OPT-IN — un lancement de vérification ne touche jamais la base.
+name: Ingest holdings (fund composition)
+
+on:
+  workflow_dispatch:
+    inputs:
+      isins:
+        description: "ISIN à traiter, séparés par des espaces (vide = tout le registre vérifié)"
+        required: false
+        default: ""
+      persist:
+        description: "Écrire en base (nécessite les secrets Supabase)"
+        type: boolean
+        required: false
+        default: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Ingest
+        env:
+          SEEDOW_PERSIST: ${{ inputs.persist && '1' || '0' }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+        run: bun run scripts/ingest-holdings.ts ${{ inputs.isins }}
