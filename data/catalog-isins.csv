@@ -1,0 +1,16 @@
+# Correspondances ticker → ISIN du catalogue Seedow.
+#
+# Chaque ligne DOIT porter sa source : un identifiant sans origine n'est pas
+# vérifiable, et le script la refuse. Un ISIN ne se dérive ni du ticker ni du
+# nom — il se lit sur une fiche produit, un KID, ou un référentiel.
+#
+# Où les trouver, par ordre de fiabilité :
+#   1. la page produit de l'émetteur (iShares, Amundi, Xtrackers…) ;
+#   2. le KID/DIC du fonds, qui porte l'ISIN en première page ;
+#   3. un référentiel de place.
+#
+# La clé de contrôle est vérifiée avant écriture : une faute de frappe ou un
+# identifiant fabriqué est rejeté, pas corrigé.
+#
+# Format : ticker,isin,source
+ticker,isin,source

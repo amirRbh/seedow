@@ -1,0 +1,34 @@
+# Renseigne les ISIN du catalogue depuis un fichier de correspondances fourni.
+# Aucun ISIN n'est deviné : le fichier vient d'une source, chaque ligne porte
+# son origine, et la clé de contrôle est vérifiée avant écriture.
+name: Fill catalog ISINs
+
+on:
+  workflow_dispatch:
+    inputs:
+      file:
+        description: "Chemin du CSV ticker,isin,source (versionné dans le repo)"
+        required: false
+        default: "data/catalog-isins.csv"
+      persist:
+        description: "Écrire en base (nécessite les secrets Supabase)"
+        type: boolean
+        required: false
+        default: false
+
+jobs:
+  fill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - name: Fill
+        env:
+          SEEDOW_PERSIST: ${{ inputs.persist && '1' || '0' }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: bun run scripts/fill-catalog-isins.ts "${{ inputs.file }}"
