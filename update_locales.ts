@@ -2448,6 +2448,29 @@ const pedagogyEn = {
 // ═══════════════════════════════════════════════════════════════════════
 
 const oneVoiceFr = {
+  holdings: {
+    title: "Ce qu'il y a derrière ton investissement",
+    lead_one: "Ton argent est principalement exposé à {{sectors}}.",
+    lead_other: "Ton argent est principalement exposé à {{sectors}}.",
+    main_companies: "Principales positions",
+    count_one: "{{count}} position publiée",
+    count_other: "{{count}} positions publiées",
+    source: "Source : {{source}}",
+    source_missing: "Source non enregistrée pour cette composition.",
+    source_link: "voir le document",
+    sum_note:
+      "Les poids publiés totalisent {{pct}} — liquidités, dérivés et arrondis compris. Seedow ne les ramène pas à 100 % : ce sont ceux de l'émetteur.",
+    empty: "Les entreprises derrière cet investissement ne sont pas encore disponibles.",
+    empty_why:
+      "Seedow n'a pas récupéré de source de composition suffisamment fiable pour ce fonds. Nous préférons ne rien afficher plutôt que de deviner. Le reste de l'analyse — frais, risque, durabilité — n'en dépend pas.",
+    freshness: {
+      fresh: "Composition publiée le {{date}}.",
+      aging: "Composition publiée le {{date}}, il y a {{days}} jours — à actualiser.",
+      stale:
+        "Composition publiée le {{date}}, il y a {{days}} jours. Elle décrit le passé : à lire avec prudence.",
+      unknown: "Date de publication inconnue pour cette composition.",
+    },
+  },
   allocation: {
     title: "Répartition",
     lines_one: "ligne",
@@ -2672,6 +2695,29 @@ const oneVoiceFr = {
 // L'anglais ne distingue pas tutoiement et vouvoiement : seules les deux
 // corrections de fond s'y appliquent.
 const oneVoiceEn = {
+  holdings: {
+    title: "What's behind this investment",
+    lead_one: "Your money is mainly exposed to {{sectors}}.",
+    lead_other: "Your money is mainly exposed to {{sectors}}.",
+    main_companies: "Largest positions",
+    count_one: "{{count}} published position",
+    count_other: "{{count}} published positions",
+    source: "Source: {{source}}",
+    source_missing: "No source recorded for this composition.",
+    source_link: "view the document",
+    sum_note:
+      "Published weights total {{pct}} — cash, derivatives and rounding included. Seedow does not scale them to 100%: they are the issuer's.",
+    empty: "The companies behind this investment aren't available yet.",
+    empty_why:
+      "Seedow hasn't retrieved a reliable enough composition source for this fund. We'd rather show nothing than guess. The rest of the analysis — fees, risk, sustainability — doesn't depend on it.",
+    freshness: {
+      fresh: "Composition published on {{date}}.",
+      aging: "Composition published on {{date}}, {{days}} days ago — due for a refresh.",
+      stale:
+        "Composition published on {{date}}, {{days}} days ago. It describes the past: read with care.",
+      unknown: "Publication date unknown for this composition.",
+    },
+  },
   allocation: {
     title: "Breakdown",
     lines_one: "line",

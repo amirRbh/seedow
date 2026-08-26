@@ -3296,5 +3296,25 @@
     "lines_one": "line",
     "lines_other": "lines",
     "lead": "Your money goes mainly to {{category}} — {{pct}}% of the total."
+  },
+  "holdings": {
+    "title": "What's behind this investment",
+    "lead_one": "Your money is mainly exposed to {{sectors}}.",
+    "lead_other": "Your money is mainly exposed to {{sectors}}.",
+    "main_companies": "Largest positions",
+    "count_one": "{{count}} published position",
+    "count_other": "{{count}} published positions",
+    "source": "Source: {{source}}",
+    "source_missing": "No source recorded for this composition.",
+    "source_link": "view the document",
+    "sum_note": "Published weights total {{pct}} — cash, derivatives and rounding included. Seedow does not scale them to 100%: they are the issuer's.",
+    "empty": "The companies behind this investment aren't available yet.",
+    "empty_why": "Seedow hasn't retrieved a reliable enough composition source for this fund. We'd rather show nothing than guess. The rest of the analysis — fees, risk, sustainability — doesn't depend on it.",
+    "freshness": {
+      "fresh": "Composition published on {{date}}.",
+      "aging": "Composition published on {{date}}, {{days}} days ago — due for a refresh.",
+      "stale": "Composition published on {{date}}, {{days}} days ago. It describes the past: read with care.",
+      "unknown": "Publication date unknown for this composition."
+    }
   }
 }

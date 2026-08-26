@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { getPublicFundByIsin } from "@/lib/esg/public-fund.functions";
+import { FundHoldingsBlock } from "@/components/discover/FundHoldingsBlock";
 import type { PublicFundAsset } from "@/lib/esg/public-fund";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { Provenance } from "@/components/ui/Provenance";
@@ -196,6 +197,18 @@ function FundAuthorityPage() {
             </p>
           </section>
         )}
+
+        {/* CE QU'IL Y A DERRIÈRE — avant les thèmes déclarés. L'ordre compte :
+            ce que le fonds CONTIENT précède ce qu'il REVENDIQUE. Le bloc gère
+            lui-même l'absence de composition, franchement. */}
+        <section className="paper-card p-7">
+          <FundHoldingsBlock
+            holdings={fund.holdings ?? []}
+            asOf={fund.holdingsAsOf ?? null}
+            source={fund.issuer ?? null}
+            sourceUrl={fund.holdingsSourceUrl ?? null}
+          />
+        </section>
 
         {fund.themes.length > 0 && (
           <section className="paper-card p-7">

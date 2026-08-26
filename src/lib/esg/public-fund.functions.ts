@@ -17,8 +17,50 @@ export const getPublicFundByIsin = createServerFn({ method: "GET" })
       .eq("isin", isin)
       .maybeSingle();
     if (error) throw new Error(error.message);
-    return data ? mapPublicFundRow(data as unknown as PublicFundRow) : null;
+    if (!data) return null;
+    const fund = mapPublicFundRow(data as unknown as PublicFundRow);
+
+    // Composition la plus récente, si elle a été ingérée. Elle est facultative :
+    // la fiche doit se lire entièrement sans elle (frais, risque, durabilité ne
+    // dépendent pas des holdings). Une erreur de lecture n'est donc pas fatale.
+    const assetId = (data as unknown as { id?: string }).id ?? null;
+    let holdings: FundHoldingRow[] = [];
+    let holdingsAsOf: string | null = null;
+    let holdingsSourceUrl: string | null = null;
+    if (assetId) {
+      const { data: rows } = await supabaseAdmin
+        .from("fund_holdings")
+        .select("security_name, security_isin, weight_pct, as_of, source_url")
+        .eq("asset_id", assetId)
+        .order("as_of", { ascending: false })
+        .order("weight_pct", { ascending: false })
+        .limit(400);
+      // Une seule date : mélanger deux publications donnerait une composition
+      // qui n'a jamais existé.
+      const latest = rows?.[0]?.as_of ?? null;
+      const sameDay = (rows ?? []).filter((r) => r.as_of === latest);
+      holdings = sameDay.map((r) => ({
+        name: r.security_name,
+        ticker: null,
+        // Le secteur n'est pas encore persisté par le writer : on le laisse
+        // absent plutôt que d'en inventer un.
+        sector: null,
+        weightPct: r.weight_pct == null ? null : Number(r.weight_pct),
+      }));
+      holdingsAsOf = latest;
+      holdingsSourceUrl = sameDay[0]?.source_url ?? null;
+    }
+
+    return { ...fund, holdings, holdingsAsOf, holdingsSourceUrl };
   });
+
+/** Une position telle que la fiche publique la consomme. */
+export interface FundHoldingRow {
+  name: string;
+  ticker: string | null;
+  sector: string | null;
+  weightPct: number | null;
+}
 
 export const getPublicFundsList = createServerFn({ method: "GET" }).handler(async () => {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
