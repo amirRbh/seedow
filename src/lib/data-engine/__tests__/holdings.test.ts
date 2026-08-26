@@ -6,7 +6,21 @@ import {
   parseISharesHoldingsCsv,
   persistHoldings,
   type HoldingRow,
+  type ParsedHolding,
 } from "../holdings";
+
+/** Une ligne de composition minimale — seuls le nom et le poids varient ici. */
+const line = (name: string, weightPct: number): ParsedHolding => ({
+  name,
+  ticker: null,
+  sector: null,
+  country: null,
+  isin: null,
+  weightPct,
+  maturity: null,
+  couponPct: null,
+  assetClass: null,
+});
 
 // Extrait réaliste d'un CSV de composition iShares (préambule + tableau).
 const CSV = `iShares Core MSCI World UCITS ETF
@@ -73,9 +87,7 @@ describe("buildHoldingRows", () => {
       "a1",
       {
         asOf: null,
-        holdings: [
-          { name: "X", ticker: null, sector: null, country: null, isin: null, weightPct: 1 },
-        ],
+        holdings: [line("X", 1)],
       },
       META,
     );
@@ -85,10 +97,7 @@ describe("buildHoldingRows", () => {
   it("somme > 100 → toutes les lignes en rejected (§11)", () => {
     const parsed = {
       asOf: "2026-07-31",
-      holdings: [
-        { name: "A", ticker: null, sector: null, country: null, isin: null, weightPct: 60 },
-        { name: "B", ticker: null, sector: null, country: null, isin: null, weightPct: 60 },
-      ],
+      holdings: [line("A", 60), line("B", 60)],
     };
     const rows = buildHoldingRows("a1", parsed, META);
     expect(rows.every((r) => r.validation_status === "rejected")).toBe(true);
@@ -118,10 +127,7 @@ describe("persistHoldings", () => {
     };
     const parsed = {
       asOf: "2026-07-31",
-      holdings: [
-        { name: "A", ticker: null, sector: null, country: null, isin: null, weightPct: 80 },
-        { name: "B", ticker: null, sector: null, country: null, isin: null, weightPct: 80 },
-      ],
+      holdings: [line("A", 80), line("B", 80)],
     };
     const r = await persistHoldings(writer, "a1", parsed, META);
     expect(r.inserted).toBe(0);

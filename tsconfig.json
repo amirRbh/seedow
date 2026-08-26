@@ -1,5 +1,29 @@
 {
-  "include": ["src/**/*.ts", "src/**/*.tsx", "vite.config.ts", "eslint.config.js"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "vite.config.ts",
+    "eslint.config.js",
+    "scripts/**/*.ts"
+  ],
+  "//exclude": [
+    "scripts/ était entièrement hors du périmètre de tsc. Le script d'ingestion",
+    "des holdings — un outil d'exploitation qui écrit en base — passait un objet",
+    "writer implémentant une méthode inexistante : son mode par défaut plantait,",
+    "et rien ne le signalait. Le dossier est désormais couvert.",
+    "Les fichiers ci-dessous sont des sondes ponctuelles écrites hors module (mêmes",
+    "noms globaux d'un fichier à l'autre) ou dépendant d'un paquet optionnel absent.",
+    "Elles ne tournent jamais en production ; les corriger est un autre chantier."
+  ],
+  "exclude": [
+    "scripts/probe-ishares-catalog.ts",
+    "scripts/probe-issuer-kid.ts",
+    "scripts/probe-kid-sources.ts",
+    "scripts/probe-yahoo-esg.ts",
+    "scripts/esg-sfdr-poc.ts",
+    "scripts/ingest-fund-data.ts",
+    "scripts/ingest-issuer-esg.ts"
+  ],
   "compilerOptions": {
     "target": "ES2022",
     "jsx": "react-jsx",

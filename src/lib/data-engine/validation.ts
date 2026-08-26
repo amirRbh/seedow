@@ -29,7 +29,17 @@ export function validateTer(terFraction: number | null | undefined): ValidationR
 export function validateWeight(weightPct: number | null | undefined): ValidationResult {
   if (weightPct == null || !Number.isFinite(weightPct))
     return { status: "review_required", reason: "poids absent" };
-  if (weightPct < 0 || weightPct > 100)
+  // Un poids NÉGATIF est légitime et publié : un fonds dont le compte de
+  // liquidités est à découvert publie « USD CASH −0,39 % », une jambe de change
+  // à terme sort en « JPY/GBP −0,04 % ». Cinq des vingt et un fonds iShares
+  // vérifiés en portent une. La borne à zéro les rejetait — et comme les lignes
+  // rejetées ne sont pas persistées, la composition enregistrée n'était plus
+  // celle que l'émetteur avait publiée. C'est précisément ce que Seedow
+  // s'interdit de faire.
+  //
+  // Ce qui reste implausible, c'est qu'une ligne pèse plus que le fonds entier,
+  // dans un sens ou dans l'autre : là, c'est une erreur de lecture.
+  if (weightPct < -100 || weightPct > 100)
     return { status: "rejected", reason: `poids hors bornes (${weightPct}%)` };
   return ok;
 }

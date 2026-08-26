@@ -1,0 +1,203 @@
+<?xml version="1.0"?>
+<ss:Workbook xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+<ss:Table>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">ALPHABET INC</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">0.76</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">All</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data
+ss:Type="String">as of</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">25/Aug/2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Issuer Ticker</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Name</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Sector</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Asset Class</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Market Value</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Weight (%)</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Notional Value</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Nominal</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Par Value</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Duration</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Maturity</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Coupon (%)</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Market Currency</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Effective Date</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">T</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">AT&amp;T INC</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Communications</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Fixed Income</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">USD 1,506,423.64</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">0.03</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">1,506,423.64</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">2,395,000.00</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">2,395,000.00</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">13.76</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">15/Sept/2053</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">3.50</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">USD</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">03/Sept/2021</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">T</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">AT&amp;T INC</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Communications</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Fixed Income</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">USD 1,501,343.61</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">0.03</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">1,501,343.61</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">2,401,000.00</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">2,401,000.00</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">13.99</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">15/Sept/2055</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">3.55</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">USD</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">03/Sept/2021</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">EUR</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">EUR CASH</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Cash and/or Derivatives</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Cash</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">USD -4,120,928.41</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">-0.10</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">-4,120,928.41</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">-3,531,367.00</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">-3,531,367.00</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">0.00</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">-</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">0.00</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">EUR</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">01/Jan/1989</ss:Data>
+</ss:Cell>
+</ss:Row>
+</ss:Table>
+</ss:Workbook>

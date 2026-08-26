@@ -15,7 +15,8 @@
  *   I5. risk_target -2pts ⇒ opposite: alt ER lower (costBps negative), volDelta typically positive.
  *   I6. Numeric coherence: bps rounding, signs and tabular formatting match what the component renders.
  */
-import { buildPortfolio } from "../src/lib/portfolio/engine";
+// `engine` a été déplacé sous `legacy/` : ce script pointait sur un chemin mort.
+import { buildPortfolio } from "../src/lib/portfolio/legacy/engine";
 import type { Asset, PortfolioParams } from "../src/lib/portfolio/types";
 
 // ---- Synthetic universe ----------------------------------------------------

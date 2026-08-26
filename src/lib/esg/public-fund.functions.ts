@@ -44,23 +44,30 @@ export const getPublicFundByIsin = createServerFn({ method: "GET" })
     let holdingsAsOf: string | null = null;
     let holdingsSourceUrl: string | null = null;
     if (assetId) {
-      const { data: rows } = await supabaseAdmin
-        .from("fund_holdings")
-        .select("security_name, security_isin, weight_pct, as_of, source_url")
+      // `security_sector` vient d'être ajoutée (migration
+      // `fund_holdings_real_identity`) et n'est pas encore dans les types
+      // générés par Lovable Cloud — `types.ts` ne s'édite pas à la main (§1.6).
+      // Cast localisé et retypage explicite, comme les autres accès Data Engine
+      // aux colonnes récentes. À retirer à la prochaine régénération.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data: rows } = await (supabaseAdmin.from("fund_holdings") as any)
+        .select("security_name, security_isin, security_sector, weight_pct, as_of, source_url")
         .eq("asset_id", assetId)
         .order("as_of", { ascending: false })
         .order("weight_pct", { ascending: false })
         .limit(400);
       // Une seule date : mélanger deux publications donnerait une composition
       // qui n'a jamais existé.
-      const latest = rows?.[0]?.as_of ?? null;
-      const sameDay = (rows ?? []).filter((r) => r.as_of === latest);
+      const holdingRows = (rows ?? []) as HoldingsQueryRow[];
+      const latest = holdingRows[0]?.as_of ?? null;
+      const sameDay = holdingRows.filter((r) => r.as_of === latest);
       holdings = sameDay.map((r) => ({
         name: r.security_name,
         ticker: null,
-        // Le secteur n'est pas encore persisté par le writer : on le laisse
-        // absent plutôt que d'en inventer un.
-        sector: null,
+        // Le secteur est désormais persisté tel que l'émetteur le publie. Il
+        // était renvoyé `null` en dur faute de colonne, ce qui privait le bloc
+        // de composition de la seule chose par laquelle il sait commencer.
+        sector: r.security_sector ?? null,
         weightPct: r.weight_pct == null ? null : Number(r.weight_pct),
       }));
       holdingsAsOf = latest;
@@ -69,6 +76,16 @@ export const getPublicFundByIsin = createServerFn({ method: "GET" })
 
     return { ...fund, holdings, holdingsAsOf, holdingsSourceUrl };
   });
+
+/** Ligne `fund_holdings` telle que cette requête la lit. */
+interface HoldingsQueryRow {
+  security_name: string;
+  security_isin: string | null;
+  security_sector: string | null;
+  weight_pct: number | string | null;
+  as_of: string;
+  source_url: string | null;
+}
 
 /** Une position telle que la fiche publique la consomme. */
 export interface FundHoldingRow {

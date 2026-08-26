@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<ss:Workbook xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+<ss:Table>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Cash and/or Derivatives</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">0.49</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">CASHD_C</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">All</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data
+ss:Type="String">as of</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">25/Aug/2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Issuer Ticker</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Name</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Sector</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Asset Class</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Market Value</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Weight (%)</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Notional Value</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Nominal</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Market Currency</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">NVDA</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">NVIDIA</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Information Technology</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Equity</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">USD 8,150,802,558.90</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">5.33</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">8,150,802,558.90</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">38,257,698.00</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">USD</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">LISN</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">CHOCOLADEFABRIKEN LINDT &amp; SPRUENGL</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Consumer Staples</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Equity</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">USD 18,340,059.79</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">0.01</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">18,340,059.79</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">159.00</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">CHF</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">LISP</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">CHOCOLADEFABRIKEN LINDT &amp; SPRUENGL</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Consumer Staples</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Equity</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">USD 15,950,205.53</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">0.01</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">15,950,205.53</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">1,411.00</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">CHF</ss:Data>
+</ss:Cell>
+</ss:Row>
+</ss:Table>
+</ss:Workbook>

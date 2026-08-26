@@ -8,6 +8,9 @@ const h = (o: Partial<ParsedHolding> & { name: string }): ParsedHolding => ({
   country: null,
   isin: null,
   weightPct: 10,
+  maturity: null,
+  couponPct: null,
+  assetClass: null,
   ...o,
 });
 

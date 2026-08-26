@@ -18,6 +18,47 @@ export interface ParsedHolding {
   country: string | null;
   isin: string | null;
   weightPct: number | null;
+  /**
+   * Colonnes publiées par l'émetteur pour les fonds obligataires. Elles sont
+   * ce qui DISTINGUE deux lignes portant le même nom : un fonds de crédit
+   * détient quatre-vingts obligations AT&T, toutes libellées « AT&T INC », qui
+   * ne diffèrent que par leur échéance et leur coupon. Les ignorer revenait à
+   * traiter quatre-vingts positions réelles comme un doublon.
+   *
+   * `null` sur un fonds actions : ces colonnes n'existent pas dans son export,
+   * et on ne les fabrique pas.
+   */
+  maturity: string | null;
+  couponPct: number | null;
+  /** « Equity », « Fixed Income », « Cash »… tel que publié. */
+  assetClass: string | null;
+}
+
+/**
+ * Identité d'une ligne de composition, dérivée UNIQUEMENT de ce que l'émetteur
+ * publie.
+ *
+ * Le pipeline identifiait un titre par son seul nom. Contre des fichiers
+ * réels, cette hypothèse s'effondre : dans l'export du iShares Global Corp
+ * Bond, 2 077 noms sur 14 978 lignes sont répétés — « AT&T INC » quatre-vingts
+ * fois, « VERIZON » soixante-quinze fois. Ce ne sont pas des doublons, ce sont
+ * des obligations différentes du même émetteur. Sur un fonds actions, le même
+ * phénomène apparaît en plus petit : « CHOCOLADEFABRIKEN LINDT & SPRUENGL »
+ * paraît deux fois parce que le fonds détient l'action nominative ET le bon de
+ * participation, deux lignes cotées distinctes (LISN et LISP).
+ *
+ * L'identité retenue est donc le n-uplet des champs publiés qui séparent
+ * réellement deux lignes. Rien n'est déduit : si l'émetteur ne publie pas
+ * l'échéance, elle ne participe pas à la clé.
+ */
+export function holdingIdentity(h: ParsedHolding): string {
+  return [
+    h.isin?.trim().toUpperCase() ?? "",
+    h.name.trim().toLowerCase(),
+    h.ticker?.trim().toUpperCase() ?? "",
+    h.maturity?.trim() ?? "",
+    h.couponPct == null ? "" : h.couponPct.toFixed(4),
+  ].join("|");
 }
 
 export interface ParsedHoldings {
@@ -135,6 +176,10 @@ export function parseISharesHoldingsCsv(text: string): ParsedHoldings {
       country: cLocation >= 0 && cells[cLocation] ? cells[cLocation] : null,
       isin: cIsin >= 0 && cells[cIsin] ? cells[cIsin] : null,
       weightPct: cWeight >= 0 ? toNum(cells[cWeight]) : null,
+      // Ce parser CSV lit l'ancien format, qui ne porte pas ces colonnes.
+      maturity: null,
+      couponPct: null,
+      assetClass: null,
     });
   }
   return { asOf, holdings };
@@ -147,6 +192,26 @@ export interface HoldingRow {
   security_name: string;
   weight_pct: number | null;
   as_of: string;
+  /**
+   * Rang de la ligne dans le document publié (0-indexé). C'est la seule clé
+   * qui garantisse de rendre le fichier TEL QUEL.
+   *
+   * L'échéance et le coupon suffisent à séparer quatre-vingts obligations AT&T,
+   * mais pas tout : le même export publie deux tranches HSBC de même échéance
+   * et même coupon, deux sociétés différentes sous le sigle « EQT », et jusqu'à
+   * douze jambes de change « SAR/USD ». L'émetteur lui-même ne les distingue
+   * pas dans ce document. Les fusionner par identité perdrait des positions
+   * réelles ; sommer leurs poids fabriquerait une ligne qu'il n'a pas publiée.
+   * Le rang, lui, est stable pour un fichier donné : ré-ingérer la même date
+   * réécrit les mêmes lignes, et rien ne disparaît.
+   */
+  line_no: number;
+  /** Secteur publié — ce sur quoi l'interface ouvre la composition. */
+  security_sector: string | null;
+  /** Ce qui sépare deux lignes du même émetteur, tel que publié. */
+  security_maturity: string | null;
+  security_coupon_pct: number | null;
+  security_asset_class: string | null;
   source_id: string | null;
   source_url: string | null;
   retrieved_at: string;
@@ -168,7 +233,7 @@ export function buildHoldingRows(
   if (!parsed.asOf || parsed.holdings.length === 0) return [];
   const sumStatus = validateHoldingsSum(parsed.holdings.map((h) => h.weightPct ?? 0)).status;
 
-  return parsed.holdings.map((h) => {
+  return parsed.holdings.map((h, index) => {
     const status = worstOf([
       validateWeight(h.weightPct),
       { status: sumStatus, reason: null },
@@ -179,6 +244,11 @@ export function buildHoldingRows(
       security_name: h.name,
       weight_pct: h.weightPct,
       as_of: parsed.asOf as string,
+      line_no: index,
+      security_sector: h.sector,
+      security_maturity: h.maturity,
+      security_coupon_pct: h.couponPct,
+      security_asset_class: h.assetClass,
       source_id: meta.sourceId,
       source_url: meta.sourceUrl,
       retrieved_at: meta.retrievedAt,
@@ -188,7 +258,7 @@ export function buildHoldingRows(
   });
 }
 
-/** I/O isolée : écriture des holdings (upsert par (asset, security_name, as_of)). */
+/** I/O isolée : écriture des holdings (upsert sur l'identité publiée de la ligne). */
 export interface HoldingWriter {
   insertHoldings(rows: HoldingRow[]): Promise<number>;
 }
