@@ -190,7 +190,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                 {t("asset_detail.sustainability_note")}
               </p>
               {/* La page sourcée : revendications du fonds, données, limites. */}
-              <FundEvidenceLink className="mt-2" isin={asset.isin} />
+              <FundEvidenceLink className="mt-2" isin={asset.isin} ticker={asset.ticker} />
             </div>
 
             {/* « Pourquoi ce score ? » — réponse Ethi en un clic (§11/§24). */}
