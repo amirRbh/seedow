@@ -63,6 +63,32 @@ export interface SustainabilitySignals {
   sfdrArticle: number | null;
 }
 
+/** Les trois piliers du score Seedow, tels qu'ils entrent VRAIMENT dans le calcul. */
+export type ScorePillarId = "esg" | "climate" | "exclusions";
+
+/**
+ * Un pilier du score, avec son poids et sa valeur — ou l'aveu qu'il manque.
+ *
+ * Pourquoi l'exposer : le niveau 2 de lecture (« pourquoi ce score ? ») ne peut
+ * pas afficher les piliers E/S/G alors que le score, lui, est calculé sur
+ * ESG / climat / exclusions. Un « pourquoi » qui ne redonne pas le « combien »
+ * n'explique rien — il déplace la question. Le détail vient donc du calcul
+ * lui-même, pas d'une reconstruction approximative côté interface.
+ *
+ * `value` est `null` quand le signal n'existe pas pour cet actif : le pilier est
+ * alors écarté et les poids restants sont renormalisés (jamais une valeur neutre
+ * inventée). `effectiveWeight` dit la part réelle du pilier dans CE score.
+ */
+export interface ScorePillar {
+  id: ScorePillarId;
+  /** Poids nominal (0..1) tel que la méthodologie le publie. */
+  weight: number;
+  /** Part réelle dans ce score après renormalisation (0..1), 0 si absent. */
+  effectiveWeight: number;
+  /** Sous-score 0..100, ou null si le signal manque pour cet actif. */
+  value: number | null;
+}
+
 export interface SustainabilityProfile {
   tier: SustainabilityTier;
   drivers: SustainabilityDriver[];
@@ -78,6 +104,11 @@ export interface SustainabilityProfile {
    * `null` si aucun pilier n'est exploitable.
    */
   score: number | null;
+  /**
+   * Le détail du composite, pilier par pilier. Toujours présent (même quand
+   * `score` est null : la liste dit alors que rien n'était exploitable).
+   */
+  scoreBreakdown: ScorePillar[];
 }
 
 // ── Seuils nommés (pas de nombre magique). Échelle 0..100 pour ESG/climat. ──
@@ -120,14 +151,18 @@ function carbonSubScore(waci: number | null, benchmarkWaci: number | null): numb
   return Math.round(Math.min(100, Math.max(0, 100 * (1 - ratio / CARBON_SCORE_RATIO_CAP))));
 }
 
-/** Composite pondéré : renormalise sur les piliers réellement exploitables. */
+/**
+ * Composite pondéré : renormalise sur les piliers réellement exploitables.
+ * Renvoie le score ET son détail — c'est le même calcul qui doit répondre à
+ * « combien ? » et à « pourquoi ? », sinon les deux finissent par diverger.
+ */
 function computeSeedowScore(
   esg: number | null,
   tempC: number | null,
   waci: number | null,
   benchmarkWaci: number | null,
   exclusions: number,
-): number | null {
+): { score: number | null; breakdown: ScorePillar[] } {
   const climateParts = [tempSubScore(tempC), carbonSubScore(waci, benchmarkWaci)].filter(
     (v): v is number => v != null,
   );
@@ -136,16 +171,21 @@ function computeSeedowScore(
     : null;
   const exclusionsScore = Math.min(100, (exclusions / EXCLUSIONS_FULL_CREDIT) * 100);
 
-  const pillars: Array<[number, number | null]> = [
-    [W_ESG, esg],
-    [W_CLIMATE, climate],
-    [W_EXCLUSIONS, exclusionsScore],
+  const pillars: Array<[ScorePillarId, number, number | null]> = [
+    ["esg", W_ESG, esg],
+    ["climate", W_CLIMATE, climate],
+    ["exclusions", W_EXCLUSIONS, exclusionsScore],
   ];
-  const present = pillars.filter((p): p is [number, number] => p[1] != null);
-  if (present.length === 0) return null;
-  const totalWeight = present.reduce((acc, [w]) => acc + w, 0);
-  const weighted = present.reduce((acc, [w, v]) => acc + w * v, 0);
-  return Math.round(weighted / totalWeight);
+  const totalWeight = pillars.reduce((acc, [, w, v]) => (v == null ? acc : acc + w), 0);
+  const breakdown: ScorePillar[] = pillars.map(([id, weight, value]) => ({
+    id,
+    weight,
+    effectiveWeight: value == null || totalWeight <= 0 ? 0 : weight / totalWeight,
+    value: value == null ? null : Math.round(value),
+  }));
+  if (totalWeight <= 0) return { score: null, breakdown };
+  const weighted = pillars.reduce((acc, [, w, v]) => (v == null ? acc : acc + w * v), 0);
+  return { score: Math.round(weighted / totalWeight), breakdown };
 }
 
 /** Borne un score dans [0..100], ou null si non exploitable. */
@@ -262,7 +302,53 @@ export function deriveSustainabilityProfile(signals: SustainabilitySignals): Sus
     drivers.push("low_data_coverage");
   }
 
-  const score = computeSeedowScore(esg, tempC, signals.waci, signals.benchmarkWaci, exclusions);
+  const { score, breakdown } = computeSeedowScore(
+    esg,
+    tempC,
+    signals.waci,
+    signals.benchmarkWaci,
+    exclusions,
+  );
 
-  return { tier, drivers, confidence, sfdrIndependent: true, score };
+  return {
+    tier,
+    drivers,
+    confidence,
+    sfdrIndependent: true,
+    score,
+    scoreBreakdown: breakdown,
+  };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Lecture du score : UNE bande, partout.
+// ─────────────────────────────────────────────────────────────────────────────
+//
+// Le produit affichait trois nombres différents pour le même fonds — un score
+// fournisseur sur 10 dans l'explorateur, ce même score ×10 sur la landing avec
+// des libellés d'alignement, et le composite Seedow sur la fiche publique. Un
+// utilisateur qui ouvrait deux surfaces voyait deux vérités. C'est le genre de
+// détail sur lequel un professionnel referme le produit.
+//
+// La bande ci-dessous est donc la SEULE lecture autorisée d'un score Seedow, et
+// elle porte toujours un libellé écrit : la couleur ne fait que l'accompagner
+// (CLAUDE.md §4). Les seuils reprennent ceux du pilier ESG (70 / 55) pour que la
+// méthodologie n'ait qu'un jeu de bornes à publier.
+
+export type ScoreBand = "strong" | "partial" | "weak" | "unrated";
+
+/** Bornes du composite, alignées sur ESG_STRONG / ESG_MODERATE. */
+export const SCORE_BAND_STRONG = ESG_STRONG;
+export const SCORE_BAND_PARTIAL = ESG_MODERATE;
+
+/**
+ * Bande de lecture d'un score Seedow. `null` → `"unrated"` : un actif dont
+ * aucun pilier n'est exploitable n'est pas « mauvais », il n'est pas noté — et
+ * les deux ne se disent pas de la même façon.
+ */
+export function scoreBand(score: number | null): ScoreBand {
+  if (score == null || !Number.isFinite(score)) return "unrated";
+  if (score >= SCORE_BAND_STRONG) return "strong";
+  if (score >= SCORE_BAND_PARTIAL) return "partial";
+  return "weak";
 }

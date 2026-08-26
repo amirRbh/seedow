@@ -12,6 +12,7 @@ import {
 } from "./transparency";
 import {
   deriveSustainabilityProfile,
+  type ScorePillar,
   type SustainabilityTier,
 } from "./sustainability-classification";
 import { ACWI_WACI_TCO2E_PER_MUSD } from "./benchmark";
@@ -66,6 +67,8 @@ export interface PublicFundAsset {
   seedow_score: number | null;
   sustainability_tier: SustainabilityTier;
   sustainability_drivers: string[];
+  /** Le détail du composite — ce qui répond à « pourquoi ce score ? ». */
+  score_breakdown: ScorePillar[];
 }
 
 /** Transforme une ligne `assets` en vue publique — jamais de valeur inventée. */
@@ -126,5 +129,6 @@ export function mapPublicFundRow(r: PublicFundRow): PublicFundAsset {
     seedow_score: profile.score,
     sustainability_tier: profile.tier,
     sustainability_drivers: profile.drivers,
+    score_breakdown: profile.scoreBreakdown,
   };
 }

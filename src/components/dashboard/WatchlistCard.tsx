@@ -85,7 +85,7 @@ export function WatchlistCard() {
                 <p className="text-tag font-mono uppercase tracking-wider text-ink-3 mt-0.5">
                   {asset.ticker}
                 </p>
-                <SustainabilityBadge score={asset.overall_esg_score} className="mt-1" />
+                <SustainabilityBadge score={asset.seedow_score} className="mt-1" />
               </div>
               {asset.greenwashing_risk !== "low" && (
                 <GreenwashingBadge

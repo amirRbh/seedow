@@ -22,6 +22,16 @@ import { useTranslation } from "react-i18next";
  *
  * Le contenu est passé en `children` : ce composant ne formule rien lui-même et
  * ne peut donc affirmer quoi que ce soit que l'appelant n'ait pas mesuré.
+ *
+ * Deux tailles, un seul mécanisme (`variant`) :
+ *
+ *  · `inline` — la note discrète sous un chiffre, telle qu'elle existait ;
+ *  · `section` — le palier de lecture d'un écran (« Pourquoi ce score ? »,
+ *    « D'où viennent ces chiffres ? »). Même composant, parce qu'un deuxième
+ *    mécanisme de dépliage aurait fini par diverger de celui-ci ; taille
+ *    différente, parce qu'un palier de lecture qui ressemble à une note de bas
+ *    de page n'est ouvert par personne, et que c'est précisément ce qui fait
+ *    tenir la règle « simple par défaut, profond à la demande ».
  */
 
 interface Props {
@@ -31,13 +41,16 @@ interface Props {
   label?: string;
   /** Étiquette accessible quand plusieurs « Pourquoi ? » cohabitent sur un écran. */
   ariaLabel?: string;
+  /** `inline` (défaut) : note discrète. `section` : palier de lecture d'un écran. */
+  variant?: "inline" | "section";
   className?: string;
 }
 
-export function WhyThis({ children, label, ariaLabel, className = "" }: Props) {
+export function WhyThis({ children, label, ariaLabel, variant = "inline", className = "" }: Props) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const panelId = useId();
+  const isSection = variant === "section";
 
   return (
     <div className={className}>
@@ -47,20 +60,33 @@ export function WhyThis({ children, label, ariaLabel, className = "" }: Props) {
         aria-expanded={open}
         aria-controls={panelId}
         aria-label={ariaLabel}
-        className="inline-flex items-center gap-1 -my-1.5 py-1.5 text-caption text-ink-3 hover:text-ink-2 transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
+        className={
+          isSection
+            ? // Cible tactile pleine largeur : sur un téléphone, un palier de
+              // lecture ne doit pas se viser au pixel près (min 44px de haut).
+              "flex w-full items-center justify-between gap-3 min-h-[44px] py-2.5 text-left text-body font-semibold text-ink hover:text-ink-2 transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
+            : "inline-flex items-center gap-1 -my-1.5 py-1.5 text-caption text-ink-3 hover:text-ink-2 transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
+        }
       >
-        <span className="underline decoration-dotted underline-offset-2">
+        <span className={isSection ? "" : "underline decoration-dotted underline-offset-2"}>
           {label ?? t("why_this.trigger")}
         </span>
         {/* Le chevron double le mot ; il ne le remplace jamais. */}
-        <span aria-hidden className={`transition-transform ${open ? "rotate-90" : ""}`}>
+        <span
+          aria-hidden
+          className={`transition-transform ${open ? "rotate-90" : ""} ${isSection ? "text-ink-3 text-xl leading-none" : ""}`}
+        >
           ›
         </span>
       </button>
       {open && (
         <div
           id={panelId}
-          className="mt-1.5 text-caption text-ink-2 leading-relaxed border-l-2 border-paper-3 pl-3"
+          className={
+            isSection
+              ? "pb-1 text-body-sm text-ink-2 leading-relaxed"
+              : "mt-1.5 text-caption text-ink-2 leading-relaxed border-l-2 border-paper-3 pl-3"
+          }
         >
           {children}
         </div>

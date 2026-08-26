@@ -1,6 +1,6 @@
 import type { Database } from "@/integrations/supabase/types";
 import type { DataCoverage, GreenwashingReason, GreenwashingRisk } from "@/lib/esg/transparency";
-import type { SustainabilityTier } from "@/lib/esg/sustainability-classification";
+import type { ScorePillar, SustainabilityTier } from "@/lib/esg/sustainability-classification";
 
 export type ExclusionTag = Database["public"]["Enums"]["exclusion_tag"];
 export type AssetClass = Database["public"]["Enums"]["asset_class"];
@@ -58,4 +58,16 @@ export interface DiscoverAsset {
    * durabilité affichée (l'article SFDR devient un simple tag corroborant).
    */
   sustainability_tier: SustainabilityTier;
+  /**
+   * Score Seedow 0..100 — LE même nombre que la fiche publique et
+   * l'Observatoire affichent pour ce fonds. Il était calculé ici depuis
+   * toujours (`deriveDiscoverAssetTier` en renvoie le profil complet) et jeté
+   * aussitôt : l'explorateur montrait à la place le score ESG du fournisseur
+   * sur 10. Deux surfaces, deux nombres, un seul fonds — c'est ce qui faisait
+   * douter d'un produit dont l'argument est la rigueur.
+   * `null` si aucun pilier n'est exploitable : « non noté », jamais 0.
+   */
+  seedow_score: number | null;
+  /** Le détail du composite — répond à « pourquoi ce score ? » sans requête. */
+  score_breakdown: ScorePillar[];
 }

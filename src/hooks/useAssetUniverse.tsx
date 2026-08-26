@@ -204,6 +204,8 @@ async function fetchAssetUniverse(): Promise<AssetUniverseResult> {
       greenwashing_risk: greenwashing.risk,
       greenwashing_reasons: greenwashing.reasons,
       sustainability_tier: sustainability.tier,
+      seedow_score: sustainability.score,
+      score_breakdown: sustainability.scoreBreakdown,
     };
   });
 

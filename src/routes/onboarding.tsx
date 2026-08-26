@@ -18,7 +18,7 @@ import {
   PiggyBank,
   type LucideIcon,
 } from "lucide-react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useServerFn } from "@tanstack/react-start";
@@ -1146,15 +1146,35 @@ function PreviewScene({
                   transition={{ delay: i * 0.05, duration: 0.3 }}
                   className="py-3"
                 >
-                  {/* Nom lisible d'abord ; le ticker devient une métadonnée. */}
-                  <div className="min-w-0">
-                    <span className="font-value text-body-sm text-ink truncate block">
-                      {a.name}
+                  {/* Nom lisible d'abord ; le ticker devient une métadonnée.
+                      La ligne est CLIQUABLE : l'aperçu affichait douze noms de
+                      fonds sans aucune sortie, alors qu'on venait précisément
+                      de promettre des alternatives. On peut maintenant ouvrir
+                      chacune et voir ce qu'elle finance avant de composer quoi
+                      que ce soit. */}
+                  <Link
+                    to="/fonds/$isin"
+                    params={{ isin: a.ticker }}
+                    className="group flex items-baseline justify-between gap-3 min-w-0 -my-1 py-1 rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ink"
+                  >
+                    <span className="min-w-0">
+                      <span className="font-value text-body-sm text-ink truncate block group-hover:underline underline-offset-4">
+                        {a.name}
+                      </span>
+                      <span className="text-tag font-mono uppercase tracking-wider text-ink-3">
+                        {a.ticker}
+                      </span>
                     </span>
-                    <span className="text-tag font-mono uppercase tracking-wider text-ink-3">
-                      {a.ticker}
+                    <span className="shrink-0 flex items-baseline gap-2">
+                      <span className="font-value text-body-sm tabular-nums text-ink-2">
+                        {a.seedow_esg_score ?? "—"}
+                        <span className="text-tag text-ink-3"> /100</span>
+                      </span>
+                      <span aria-hidden className="text-ink-3">
+                        ›
+                      </span>
                     </span>
-                  </div>
+                  </Link>
                   {/* Les RAISONS, pas le score. Un « 87/100 » trié par ordre
                       décroissant se lit comme un palmarès — Seedow classe un
                       pool, il ne désigne pas un gagnant (cf. `poolReasons`).

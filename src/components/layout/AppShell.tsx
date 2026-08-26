@@ -127,6 +127,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [navigate, focus, setFocus, toggleFocus]);
 
+  // Pages qui portent leur propre en-tête et se lisent sans compte. Les deux
+  // dernières sont les plus exposées de toutes : `/fonds/$isin` et
+  // `/observatoire` sont indexées et reçoivent des visiteurs venus d'un moteur
+  // de recherche. Elles s'affichaient jusqu'ici DANS le châssis applicatif —
+  // rail de navigation, cloche de notifications, roue de réglages, bascule de
+  // langue en double — pour quelqu'un qui n'a pas de compte et découvre le
+  // produit par un fonds. Le premier écran de Seedow ressemblait à une app
+  // qu'on aurait ouverte par effraction.
   const fullBleed =
     pathname === "/" ||
     pathname.startsWith("/cours") ||
@@ -134,7 +142,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     pathname.startsWith("/onboarding") ||
     pathname.startsWith("/tarifs") ||
     pathname.startsWith("/aide") ||
-    pathname.startsWith("/certificat");
+    pathname.startsWith("/certificat") ||
+    pathname.startsWith("/fonds") ||
+    pathname.startsWith("/observatoire");
 
   const showBanner = showBetaBannerFor(pathname);
 

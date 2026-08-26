@@ -8,6 +8,8 @@ import { InvestDialog } from "@/components/portfolio/InvestDialog";
 import { Glossary, useTermLabel } from "@/components/ui/Glossary";
 import { RelatedCourse } from "@/components/courses/RelatedCourse";
 import { WhyEthi } from "@/components/ethi/WhyEthi";
+import { WhyThis } from "@/components/common/WhyThis";
+import { ScorePillars } from "@/components/esg/SeedowScore";
 import {
   DataCoverageBadge,
   GreenwashingBadge,
@@ -99,13 +101,17 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                   </span>
                 </p>
               </div>
-              <Glossary
-                term="ESG"
-                className="flex items-center gap-1 text-tag font-semibold !text-highlight-1 hover:!text-highlight-1 bg-highlight-5 px-2 py-1 rounded-full border !border-solid !border-highlight-4 flex-shrink-0"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-highlight-1" aria-hidden="true" />
-                ESG {asset.overall_esg_score.toFixed(1)}
-              </Glossary>
+              {/* Le score Seedow, pas la note ESG du fournisseur : c'est le
+                  nombre que la fiche publique et l'Observatoire affichent pour
+                  ce même fonds. La note ESG reste visible plus bas, comme l'un
+                  des trois piliers du composite. */}
+              <div className="flex-shrink-0 text-right">
+                <p className="font-value text-2xl leading-none tabular-nums text-ink">
+                  {asset.seedow_score ?? "—"}
+                  <span className="text-ink-3 text-caption"> /100</span>
+                </p>
+                <SustainabilityBadge className="mt-1.5" score={asset.seedow_score} />
+              </div>
             </div>
           </SheetHeader>
         </div>
@@ -182,18 +188,28 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
             {/* Verdict lisible en une seconde (principe Yuka) AVANT le détail
                 carbone dense — progressive disclosure : l'essentiel d'abord. */}
             <div className="mb-3">
-              <SustainabilityBadge score={asset.overall_esg_score} />
               {/* Ce que la note EST, dit à côté d'elle et non en fin d'écran :
                   une notation de pratiques, pas un effet mesuré sur le monde.
-                  Sans cette phrase, le badge se lit comme un impact (§1.3). */}
-              <p className="mt-1.5 text-tag text-ink-3 leading-snug">
+                  Sans cette phrase, le score se lit comme un impact (§1.3). */}
+              <p className="text-tag text-ink-3 leading-snug">
                 {t("asset_detail.sustainability_note")}
               </p>
               {/* La page sourcée : revendications du fonds, données, limites. */}
               <FundEvidenceLink className="mt-2" isin={asset.isin} ticker={asset.ticker} />
             </div>
 
-            {/* « Pourquoi ce score ? » — réponse Ethi en un clic (§11/§24). */}
+            {/* « Pourquoi ce score ? » — la DONNÉE d'abord, Ethi ensuite.
+                L'écran ne proposait qu'une question à l'assistant : pour lire le
+                détail d'un chiffre affiché à l'écran, il fallait attendre une
+                réponse générée. Les piliers viennent du calcul lui-même ; Ethi
+                reste là pour ce qui dépasse la lecture du composite. */}
+            <div className="mb-3 border-t border-b border-paper-3">
+              <WhyThis variant="section" label={t("fonds_page.why_score")}>
+                <p className="mb-4">{t("xray.why_score_intro")}</p>
+                <ScorePillars pillars={asset.score_breakdown} />
+                <p className="mt-4 text-tag text-ink-3 leading-snug">{t("xray.score_is_index")}</p>
+              </WhyThis>
+            </div>
             <div className="mb-3">
               <WhyEthi
                 label={t("asset_detail.why_score_label")}
