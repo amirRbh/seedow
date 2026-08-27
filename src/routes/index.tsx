@@ -9,8 +9,7 @@ import { Provenance } from "@/components/ui/Provenance";
 import { Button } from "@/components/ui/button";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
 import { cn } from "@/lib/utils";
-
-const SITE_URL = "https://seedow.life";
+import { siteUrl, socialMeta } from "@/lib/seo/socialMeta";
 
 /**
  * Coupure de chapitre du catalogue : un filet d'un pixel, et l'espace au-dessus.
@@ -23,26 +22,14 @@ const SECTION_RULE = "section-rule pt-14 md:pt-16";
 
 export const Route = createFileRoute("/")({
   head: () => ({
-    meta: [
-      { title: "Seedow — Votre argent façonne déjà le monde" },
-      {
-        name: "description",
-        content:
-          "Seedow vous montre ce que votre argent finance vraiment. Investissement ESG, visualisé clairement, expliqué par une IA qui ne vous vend rien.",
-      },
-      { property: "og:title", content: "Seedow — Votre argent façonne déjà le monde" },
-      {
-        property: "og:description",
-        content: "Seedow vous montre ce que votre argent finance vraiment.",
-      },
-      { property: "og:url", content: SITE_URL },
-      { property: "og:type", content: "website" },
-      { property: "og:image", content: `${SITE_URL}/og-seedow.jpg` },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: `${SITE_URL}/og-seedow.jpg` },
-    ],
-
-    links: [{ rel: "canonical", href: SITE_URL }],
+    meta: socialMeta({
+      title: "Seedow — Votre argent façonne déjà le monde",
+      description:
+        "Seedow vous montre ce que votre argent finance vraiment. Investissement ESG, visualisé clairement, expliqué par une IA qui ne vous vend rien.",
+      cardDescription: "Seedow vous montre ce que votre argent finance vraiment.",
+      path: "/",
+    }),
+    links: [{ rel: "canonical", href: siteUrl("/") }],
   }),
   component: Landing,
 });
