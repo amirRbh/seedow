@@ -126,105 +126,109 @@ function Landing() {
           </div>
         </nav>
 
-        <header className="max-w-[1160px] mx-auto px-7 pt-12 pb-14 md:pt-16 md:pb-16">
-          <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-16 lg:items-start">
-            <div className="contents lg:block">
-              <div className="order-1">
-                <span className="chip">
-                  <span aria-hidden className="live-dot" />
-                  {t("landing.rv.hero.eyebrow")}
-                </span>
+        {/* ── PREMIÈRE SCÈNE : où va ton argent ─────────────────────
+            Le champ de recherche ouvrait la page en demandant un nom de fonds
+            à quelqu'un qui n'en a aucun : premier écran vide, premier départ.
+            Le flux montre d'abord le mécanisme — l'épargne se répartit, et se
+            redirige dès qu'une conviction est cochée. Le rayon X garde toute
+            sa place juste en dessous, pour qui sait déjà quoi taper. */}
+        <header className="max-w-[1160px] mx-auto px-7 pt-12 pb-16 md:pt-16 md:pb-20">
+          <span className="chip">
+            <span aria-hidden className="live-dot" />
+            {t("landing.rv.hero.eyebrow")}
+          </span>
 
-                <h1 className="display-xl mt-6 md:mt-7 max-w-[13ch]">
-                  {t("landing.rv.hero.title_line1")}
-                  <br />
-                  {t("landing.rv.hero.title_accent")}
-                </h1>
+          {/* L'accent porte du TEXTE : variante `--mint-ink`, jamais l'accent
+              brut (CLAUDE.md §4). Dans la bande, `.on-deep` la remappe sur le
+              vert lumineux — verrouillé par le test de contraste. */}
+          <h1 className="display-xl mt-6 md:mt-7 max-w-[14ch]">
+            {t("landing.flow.title_line1")}
+            <br />
+            <span className="text-mint-ink">{t("landing.flow.title_accent")}</span>
+          </h1>
 
-                <p className="mt-5 md:mt-7 max-w-[46ch] text-body-lg md:text-body-xl leading-relaxed text-ink-2">
-                  {t("landing.rv.hero.subtitle")}
-                </p>
-              </div>
+          <p className="mt-5 md:mt-7 max-w-[52ch] text-body-lg md:text-body-xl leading-relaxed text-ink-2">
+            {t("landing.flow.desc")}
+          </p>
 
-              {/* Le premier geste n'est plus un bouton : c'est le champ de
-                  recherche à droite. Ces liens sont les portes SECONDAIRES —
-                  pour qui n'a aucun nom de fonds en tête, ou revient. */}
-              <div className="order-3 lg:order-none flex flex-wrap items-center gap-x-7 gap-y-3 mt-2 lg:mt-9">
-                {isAuthed ? (
-                  <Button asChild variant="on-dark">
-                    <Link to="/le-fil">{t("landing.rv.hero.cta_authed")}</Link>
-                  </Button>
-                ) : (
-                  <>
-                    <Link
-                      to="/onboarding"
-                      search={{ guest: true }}
-                      onClick={onCta("hero", "preview")}
-                      className="text-body font-semibold text-on-deep underline underline-offset-4 hover:no-underline rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-on-deep"
-                    >
-                      {t("landing.rv.hero.cta_secondary_path")} <span aria-hidden>→</span>
-                    </Link>
-                    <Link
-                      to="/auth"
-                      search={{ redirect: "/le-fil", mode: "login" }}
-                      onClick={onCta("hero", "login")}
-                      className="text-body font-semibold text-ink-2 hover:text-ink transition-colors rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-on-deep"
-                    >
-                      {t("landing.nav.login")}
-                    </Link>
-                  </>
-                )}
-              </div>
+          <div className="mt-10">
+            <MoneyFlow />
+          </div>
 
-              <p className="order-4 lg:order-none mt-4 lg:mt-6 text-body-sm text-ink-3 max-w-[52ch]">
-                {t("landing.rv.hero.note")}
-              </p>
-            </div>
-
-            {/* Le produit lui-même, pas une capture de produit. En mobile il
-                remonte juste sous le sous-titre : le geste demandé doit être
-                atteignable sans dérouler un écran et demi de discours. */}
-            <div className="order-2 lg:order-none">
-              <MoneyXray variant="hero" />
-            </div>
+          <div className="mt-9">
+            {isAuthed ? (
+              <Button asChild variant="on-dark">
+                <Link to="/le-fil">{t("landing.rv.hero.cta_authed")}</Link>
+              </Button>
+            ) : (
+              <Button asChild variant="on-dark">
+                <Link to="/onboarding" search={{ guest: true }} onClick={onCta("flow", "preview")}>
+                  {t("landing.flow.cta")}
+                </Link>
+              </Button>
+            )}
           </div>
         </header>
 
-        {/* ── Deuxième scène, même bande : où va ton argent ─────────
-            Le rayon X ci-dessus suppose qu'on a un nom de fonds en tête.
-            Celui qui n'a rien à taper — le cas le plus fréquent d'un premier
-            passage — voit ici le mécanisme avant qu'on lui demande quoi que
-            ce soit : son épargne se répartit, et se redirige dès qu'il coche
-            une conviction. Les mots sont ceux de l'onboarding, l'étape
-            suivante ne le surprendra pas. */}
+        {/* ── DEUXIÈME SCÈNE : le rayon X ───────────────────────────
+            Le geste demandé à qui a un relevé sous les yeux. En mobile, le
+            champ remonte juste sous le sous-titre : il doit rester
+            atteignable sans dérouler un écran et demi de discours. */}
         <section className="max-w-[1160px] mx-auto px-7 pb-20 md:pb-24">
           <div className="border-t border-paper-3 pt-14 md:pt-16">
-            <p className="eyebrow">{t("landing.flow.eyebrow")}</p>
-            <h2 className="mt-3 max-w-[15ch]">{t("landing.flow.title")}</h2>
-            <p className="mt-5 max-w-[54ch] text-body-lg leading-relaxed text-ink-2">
-              {t("landing.flow.desc")}
-            </p>
+            <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-16 lg:items-start">
+              <div className="contents lg:block">
+                <div className="order-1">
+                  <p className="eyebrow">{t("landing.rv.hero.eyebrow_search")}</p>
 
-            <div className="mt-10">
-              <MoneyFlow />
-            </div>
+                  <h2 className="mt-3 max-w-[14ch]">
+                    {t("landing.rv.hero.title_line1")}
+                    <br />
+                    <span className="text-mint-ink">{t("landing.rv.hero.title_accent")}</span>
+                  </h2>
 
-            <div className="mt-9">
-              {isAuthed ? (
-                <Button asChild variant="on-dark">
-                  <Link to="/le-fil">{t("landing.rv.hero.cta_authed")}</Link>
-                </Button>
-              ) : (
-                <Button asChild variant="on-dark">
-                  <Link
-                    to="/onboarding"
-                    search={{ guest: true }}
-                    onClick={onCta("flow", "preview")}
-                  >
-                    {t("landing.flow.cta")}
-                  </Link>
-                </Button>
-              )}
+                  <p className="mt-5 max-w-[46ch] text-body-lg leading-relaxed text-ink-2">
+                    {t("landing.rv.hero.subtitle")}
+                  </p>
+                </div>
+
+                {/* Portes secondaires : pour qui n'a aucun nom de fonds en
+                    tête, ou revient. */}
+                <div className="order-3 lg:order-none flex flex-wrap items-center gap-x-7 gap-y-3 mt-2 lg:mt-8">
+                  {isAuthed ? (
+                    <Button asChild variant="on-dark">
+                      <Link to="/le-fil">{t("landing.rv.hero.cta_authed")}</Link>
+                    </Button>
+                  ) : (
+                    <>
+                      <Link
+                        to="/onboarding"
+                        search={{ guest: true }}
+                        onClick={onCta("hero", "preview")}
+                        className="text-body font-semibold text-on-deep underline underline-offset-4 hover:no-underline rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-on-deep"
+                      >
+                        {t("landing.rv.hero.cta_secondary_path")} <span aria-hidden>→</span>
+                      </Link>
+                      <Link
+                        to="/auth"
+                        search={{ redirect: "/le-fil", mode: "login" }}
+                        onClick={onCta("hero", "login")}
+                        className="text-body font-semibold text-ink-2 hover:text-ink transition-colors rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-on-deep"
+                      >
+                        {t("landing.nav.login")}
+                      </Link>
+                    </>
+                  )}
+                </div>
+
+                <p className="order-4 lg:order-none mt-4 lg:mt-6 text-body-sm text-ink-3 max-w-[52ch]">
+                  {t("landing.rv.hero.note")}
+                </p>
+              </div>
+
+              <div className="order-2 lg:order-none">
+                <MoneyXray variant="hero" />
+              </div>
             </div>
           </div>
         </section>

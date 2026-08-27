@@ -40,6 +40,13 @@ const dark = readTokens(css, ".dark");
  */
 const COMPUTED: Record<string, string> = {
   "--deep-inset-computed": "#353536",
+  /**
+   * `.on-deep` remappe --mint-ink sur un vert lumineux, écrit en dur dans le
+   * bloc de la bande (styles.css). Ce n'est pas un token de `:root`, donc on
+   * le fige ici — le titre de la landing porte cette encre sur --deep, et
+   * c'est ce que cette valeur verrouille. À tenir en phase avec `.on-deep`.
+   */
+  "--on-deep-mint-computed": "#4ed0ae",
 };
 
 function resolveToken(tokens: Record<string, string>, name: string, depth = 0): string {
@@ -113,6 +120,9 @@ const TEXT_PAIRS: Array<[string, string]> = [
   // depuis le CSS (alpha sur un fond connu, pas une valeur de token).
   ["--on-deep-3", "--deep-inset-computed"],
   ["--on-deep-2", "--deep-inset-computed"],
+  // L'accent vert du titre de la landing, posé sur la bande.
+  ["--on-deep-mint-computed", "--deep"],
+  ["--on-deep-mint-computed", "--deep-2"],
 ];
 
 /** Aplats de marque (grands titres, graphiques, filets) : 3:1 suffit. */

@@ -3156,9 +3156,10 @@ const landingCopyEn = {
  */
 const moneyFlowFr = {
   landing: {
+    rv: { hero: { eyebrow_search: "Tu as un nom de fonds en tête" } },
     flow: {
-      eyebrow: "Sans compte, sans rien taper",
-      title: "Regarde où va ton argent.",
+      title_line1: "Regarde où va",
+      title_accent: "ton argent.",
       desc: "Ton épargne circule déjà, quelque part, tous les mois. Coche ce que tu veux financer et ce que tu refuses : le flux se redirige sous tes yeux.",
       want_label: "Ce que je veux financer",
       refuse_label: "Ce que je refuse",
@@ -3188,9 +3189,10 @@ const moneyFlowFr = {
 
 const moneyFlowEn = {
   landing: {
+    rv: { hero: { eyebrow_search: "Got a fund name in mind" } },
     flow: {
-      eyebrow: "No account, nothing to type",
-      title: "See where your money goes.",
+      title_line1: "See where",
+      title_accent: "your money goes.",
       desc: "Your savings already flow somewhere, every month. Tick what you want to fund and what you refuse: the flow redirects before your eyes.",
       want_label: "What I want to fund",
       refuse_label: "What I refuse",
