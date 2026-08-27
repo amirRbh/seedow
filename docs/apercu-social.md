@@ -26,13 +26,13 @@ verrouille la parité.
 Les scrapers mettent l'aperçu en cache **par URL**, souvent sans expiration
 utile :
 
-| Plateforme         | Durée du cache             | Comment le forcer                                                             |
-| ------------------ | -------------------------- | ----------------------------------------------------------------------------- |
-| Facebook, WhatsApp | jusqu'au re-scrape manuel  | [Sharing Debugger](https://developers.facebook.com/tools/debug/) → _Scrape Again_ (rafraîchit aussi WhatsApp) |
-| LinkedIn           | ~7 jours                   | [Post Inspector](https://www.linkedin.com/post-inspector/)                     |
-| X                  | plusieurs jours            | pas d'outil public depuis le retrait du Card Validator — partager le lien avec un paramètre (`?v=2`) régénère la carte |
-| Slack, Discord     | ~30 min à quelques heures  | attendre, ou `?v=2`                                                            |
-| iMessage           | cache local à l'appareil   | `?v=2`, ou vider le fil de discussion                                          |
+| Plateforme         | Durée du cache            | Comment le forcer                                                                                                      |
+| ------------------ | ------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Facebook, WhatsApp | jusqu'au re-scrape manuel | [Sharing Debugger](https://developers.facebook.com/tools/debug/) → _Scrape Again_ (rafraîchit aussi WhatsApp)          |
+| LinkedIn           | ~7 jours                  | [Post Inspector](https://www.linkedin.com/post-inspector/)                                                             |
+| X                  | plusieurs jours           | pas d'outil public depuis le retrait du Card Validator — partager le lien avec un paramètre (`?v=2`) régénère la carte |
+| Slack, Discord     | ~30 min à quelques heures | attendre, ou `?v=2`                                                                                                    |
+| iMessage           | cache local à l'appareil  | `?v=2`, ou vider le fil de discussion                                                                                  |
 
 Conséquence pratique : **réexporter `public/og-seedow.jpg` sans changer l'URL ne
 change aucun aperçu déjà vu quelque part.** C'est le rôle de
