@@ -39,4 +39,11 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-        run: bun run scripts/ingest-holdings.ts ${{ inputs.isins }}
+          # Passé par l'environnement, pas interpolé dans la commande : une
+          # saisie libre recopiée telle quelle dans un `run:` est exécutée par
+          # le shell. Le déclenchement demande certes un accès en écriture au
+          # dépôt, mais ce job détient une clé `service_role` — elle contourne
+          # toutes les RLS, sur toutes les tables, données utilisateurs
+          # comprises. Ce n'est pas l'endroit où laisser une porte ouverte.
+          INGEST_ISINS: ${{ inputs.isins }}
+        run: bun run scripts/ingest-holdings.ts $INGEST_ISINS

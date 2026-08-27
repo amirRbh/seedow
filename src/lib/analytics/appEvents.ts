@@ -17,7 +17,9 @@ import { getSessionId } from "@/lib/preferences/tracking";
 export type AppEventName =
   | "landing_viewed"
   | "landing_cta_clicked"
-  | "landing_tour_step_viewed"
+  // Le rayon X du hero : un fonds ouvert = quelqu'un qui a compris la promesse
+  // sans qu'on lui demande son email. C'est LA mesure d'activation de la page.
+  | "xray_fund_opened"
   | "preview_started"
   | "account_created"
   | "search_performed"

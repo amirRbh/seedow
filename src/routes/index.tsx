@@ -2,9 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
-import { EsgQuickCheck } from "@/components/landing/EsgQuickCheck";
 import { LandingCourses } from "@/components/landing/LandingCourses";
-import { LandingTour } from "@/components/landing/LandingTour";
+import { MoneyXray } from "@/components/landing/MoneyXray";
 import { Provenance } from "@/components/ui/Provenance";
 import { Button } from "@/components/ui/button";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
@@ -127,54 +126,66 @@ function Landing() {
         </nav>
 
         <header className="max-w-[1160px] mx-auto px-7 pt-12 pb-24 md:pt-16 md:pb-28">
-          <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-14 lg:gap-16 items-center">
-            <div>
-              <span className="chip">
-                <span aria-hidden className="live-dot" />
-                {t("landing.rv.hero.eyebrow")}
-              </span>
+          <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-16 lg:items-start">
+            <div className="contents lg:block">
+              <div className="order-1">
+                <span className="chip">
+                  <span aria-hidden className="live-dot" />
+                  {t("landing.rv.hero.eyebrow")}
+                </span>
 
-              <h1 className="display-xl mt-7 max-w-[13ch]">
-                {t("landing.rv.hero.title_line1")}
-                <br />
-                {t("landing.rv.hero.title_accent")}
-              </h1>
+                <h1 className="display-xl mt-6 md:mt-7 max-w-[13ch]">
+                  {t("landing.rv.hero.title_line1")}
+                  <br />
+                  {t("landing.rv.hero.title_accent")}
+                </h1>
 
-              <p className="mt-7 max-w-[46ch] text-body-xl leading-relaxed text-ink-2">
-                {t("landing.rv.hero.subtitle")}
-              </p>
+                <p className="mt-5 md:mt-7 max-w-[46ch] text-body-lg md:text-body-xl leading-relaxed text-ink-2">
+                  {t("landing.rv.hero.subtitle")}
+                </p>
+              </div>
 
-              <div className="flex flex-wrap items-center gap-3 mt-10">
+              {/* Le premier geste n'est plus un bouton : c'est le champ de
+                  recherche à droite. Ces liens sont les portes SECONDAIRES —
+                  pour qui n'a aucun nom de fonds en tête, ou revient. */}
+              <div className="order-3 lg:order-none flex flex-wrap items-center gap-x-7 gap-y-3 mt-2 lg:mt-9">
                 {isAuthed ? (
                   <Button asChild variant="on-dark">
                     <Link to="/le-fil">{t("landing.rv.hero.cta_authed")}</Link>
                   </Button>
                 ) : (
                   <>
-                    <Button asChild variant="on-dark">
-                      <Link
-                        to="/onboarding"
-                        search={{ guest: true }}
-                        onClick={onCta("hero", "preview")}
-                      >
-                        {t("landing.rv.hero.cta_primary")}
-                      </Link>
-                    </Button>
-                    <Button asChild variant="outline">
-                      <Link to="/auth" onClick={onCta("hero", "signup")}>
-                        {t("landing.rv.hero.cta_secondary")}
-                      </Link>
-                    </Button>
+                    <Link
+                      to="/onboarding"
+                      search={{ guest: true }}
+                      onClick={onCta("hero", "preview")}
+                      className="text-body font-semibold text-on-deep underline underline-offset-4 hover:no-underline rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-on-deep"
+                    >
+                      {t("landing.rv.hero.cta_secondary_path")} <span aria-hidden>→</span>
+                    </Link>
+                    <Link
+                      to="/auth"
+                      search={{ redirect: "/le-fil", mode: "login" }}
+                      onClick={onCta("hero", "login")}
+                      className="text-body font-semibold text-ink-2 hover:text-ink transition-colors rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-on-deep"
+                    >
+                      {t("landing.nav.login")}
+                    </Link>
                   </>
                 )}
               </div>
 
-              <p className="mt-6 text-body-sm text-ink-3 max-w-[52ch]">
+              <p className="order-4 lg:order-none mt-4 lg:mt-6 text-body-sm text-ink-3 max-w-[52ch]">
                 {t("landing.rv.hero.note")}
               </p>
             </div>
 
-            <HeroProof t={t} />
+            {/* Le produit lui-même, pas une capture de produit. En mobile il
+                remonte juste sous le sous-titre : le geste demandé doit être
+                atteignable sans dérouler un écran et demi de discours. */}
+            <div className="order-2 lg:order-none">
+              <MoneyXray variant="hero" />
+            </div>
           </div>
         </header>
       </div>
@@ -237,26 +248,6 @@ function Landing() {
           </Reveal>
         )}
 
-        {/* Simulateur */}
-        <Section
-          eyebrow={t("landing.rv.cards.simulate.eyebrow")}
-          title={t("landing.rv.cards.simulate.title")}
-          desc={t("landing.rv.cards.simulate.desc")}
-          action={
-            <Button asChild>
-              <Link
-                to="/onboarding"
-                search={{ guest: true }}
-                onClick={onCta("card_simulate", "preview")}
-              >
-                {t("landing.rv.cards.simulate.cta")}
-              </Link>
-            </Button>
-          }
-        >
-          <LandingTour embedded />
-        </Section>
-
         {/* Le constat — bande sombre encartée */}
         <Reveal>
           <div className="ink-section px-7 py-16 md:px-14 md:py-20">
@@ -280,7 +271,7 @@ function Landing() {
           </div>
         </Reveal>
 
-        {/* Impact */}
+        {/* Ce que Seedow mesure — et ce qu'il ne mesure pas */}
         <Section
           eyebrow={t("landing.rv.cards.impact.eyebrow")}
           title={t("landing.rv.cards.impact.title")}
@@ -292,7 +283,25 @@ function Landing() {
           }
           side
         >
-          <ImpactProof t={t} />
+          <MeasureScope t={t} />
+        </Section>
+
+        {/* Observatoire — la promesse du fonds, face à ses données */}
+        <Section
+          eyebrow={t("landing.observatory.eyebrow")}
+          title={t("landing.observatory.title")}
+          desc={t("landing.observatory.desc")}
+          action={
+            <Button asChild>
+              <Link to="/observatoire" onClick={onCta("card_observatory", "preview")}>
+                {t("landing.observatory.cta")}
+              </Link>
+            </Button>
+          }
+          accent="ice"
+          side
+        >
+          <ClaimVsData t={t} />
         </Section>
 
         {/* Cours */}
@@ -328,20 +337,19 @@ function Landing() {
           </div>
         </Section>
 
-        {/* Méthode */}
+        {/* Méthode — le rayon X vit maintenant dans le hero ; ici on ouvre
+            seulement la grille de notation, ses poids et ses limites. */}
         <Section
           eyebrow={t("landing.rv.cards.method.eyebrow")}
           title={t("landing.rv.cards.method.title")}
           desc={t("landing.rv.cards.method.desc")}
           action={
-            <Button asChild variant="link" className="px-0">
+            <Button asChild>
               <Link to="/methodologie">{t("landing.rv.cards.method.cta")}</Link>
             </Button>
           }
           accent="volt"
-        >
-          <EsgQuickCheck embedded />
-        </Section>
+        />
 
         {/* CTA final */}
         <Reveal>
@@ -589,101 +597,93 @@ function PathCard({
 }
 
 /**
- * Bloc de preuve du hero — un extrait de simulation avec son état de preuve.
- * Ce n'est pas une capture décorative : c'est la démonstration du titre.
+ * « Ce qu'on mesure, ce qu'on ne mesure pas ».
+ *
+ * Ce bloc remplace deux cartes qui affichaient des chiffres FABRIQUÉS : un
+ * score de 74/100, une empreinte de −58 %, et une simulation « portefeuille
+ * Seedow 24 180 € contre ETF monde 23 940 € » — dix ans de performance
+ * comparée, entièrement inventés, sur la page d'accueil d'un produit dont
+ * l'argument est la transparence. Aucune mention de simulation ne rattrape ça :
+ * c'est exactement ce qu'un visiteur méfiant vient vérifier, et exactement ce
+ * qu'il ne fallait pas faire.
+ *
+ * Il n'y avait pas de chiffre honnête à mettre à la place — un chiffre de
+ * démonstration porte forcément sur un fonds, et le fonds, l'utilisateur le
+ * choisit lui-même dans le rayon X du hero. Ce qui reste, et qui se démontre :
+ * la LISTE de ce que Seedow mesure, et celle de ce qu'il ne prétend pas mesurer.
+ * La seconde est la plus différenciante des deux.
  */
-function HeroProof({ t }: { t: (key: string, opts?: Record<string, unknown>) => string }) {
-  // Trois convictions, trois couleurs : la barre est le seul endroit du bloc
-  // où la couleur porte une distinction. Tout en mint, elles se lisaient comme
-  // une seule et même série.
-  const convictions = [
-    { label: t("landing.hero2.preview.conv_climate"), weight: 42, bar: "bg-mint" },
-    { label: t("landing.hero2.preview.conv_biodiversity"), weight: 33, bar: "bg-ice" },
-    { label: t("landing.hero2.preview.conv_social"), weight: 25, bar: "bg-volt" },
+function MeasureScope({ t }: { t: (key: string) => string }) {
+  const measured = [
+    t("landing.measure.measured_1"),
+    t("landing.measure.measured_2"),
+    t("landing.measure.measured_3"),
+    t("landing.measure.measured_4"),
+  ];
+  const notMeasured = [
+    t("landing.measure.not_1"),
+    t("landing.measure.not_2"),
+    t("landing.measure.not_3"),
   ];
 
   return (
-    <div className="paper-card p-7" aria-hidden>
-      <div className="flex items-center justify-between gap-3">
-        <p className="text-body font-semibold text-ink-2">{t("landing.hero2.preview.label")}</p>
-        <span className="chip">{t("landing.hero2.preview.source")}</span>
-      </div>
-
-      <div className="mt-7 flex flex-col gap-4">
-        {convictions.map((c, i) => (
-          <div key={c.label}>
-            <div className="flex items-baseline justify-between text-body">
-              <span className="text-ink">{c.label}</span>
-              <span className="font-value text-ink">{c.weight} %</span>
-            </div>
-            <div className="mt-2 h-1.5 rounded-full bg-paper-2 overflow-hidden">
-              <div
-                className={`h-full rounded-full ${c.bar} trace`}
-                style={{ width: `${c.weight}%`, animationDelay: `${0.15 + i * 0.08}s` }}
-              />
-            </div>
-          </div>
+    <div className="paper-card p-7">
+      <p className="stamp">{t("landing.measure.measured_label")}</p>
+      <ul className="mt-3">
+        {measured.map((line) => (
+          <li key={line} className="py-2.5 border-b border-paper-3 text-body text-ink">
+            {line}
+          </li>
         ))}
-      </div>
+      </ul>
 
-      <div className="mt-8 pt-6 border-t border-paper-3 grid grid-cols-2 gap-6">
-        <div>
-          <p className="text-body-sm font-semibold text-ink-2">
-            {t("landing.hero2.preview.kpi_esg")}
-          </p>
-          <p className="font-value text-[34px] leading-none mt-2 text-ink">74</p>
-        </div>
-        <div>
-          <p className="text-body-sm font-semibold text-ink-2">
-            {t("landing.hero2.preview.kpi_carbon")}
-          </p>
-          <p className="font-value text-[34px] leading-none mt-2 text-mint-ink">−58 %</p>
-        </div>
-      </div>
+      <p className="stamp mt-7">{t("landing.measure.not_label")}</p>
+      <ul className="mt-3">
+        {notMeasured.map((line) => (
+          <li key={line} className="py-2.5 border-b border-paper-3 text-body text-ink-2">
+            {line}
+          </li>
+        ))}
+      </ul>
 
-      <p className="mt-6 text-body-sm leading-relaxed text-ink-3">
-        {t("landing.hero2.preview.note")}
-      </p>
+      <p className="mt-6 text-body-sm leading-relaxed text-ink-3">{t("landing.measure.note")}</p>
     </div>
   );
 }
 
-/** Preuve d'impact — un score, deux mesures, un état de preuve. */
-function ImpactProof({ t }: { t: (key: string, opts?: Record<string, unknown>) => string }) {
+/**
+ * « Ce que le fonds dit » / « ce que ses données montrent » — la forme de
+ * l'Observatoire, réduite à sa mécanique.
+ *
+ * Aucune valeur n'est affichée ici : ce sont les LIBELLÉS des deux colonnes que
+ * l'Observatoire remplit avec des fonds réels. Montrer un exemple chiffré
+ * reviendrait à désigner un fonds nommément depuis la page d'accueil, sur des
+ * chiffres que le visiteur ne peut pas encore vérifier — c'est l'Observatoire
+ * qui fait ça, avec la source et la date à côté de chaque ligne.
+ */
+function ClaimVsData({ t }: { t: (key: string) => string }) {
+  const rows = [
+    { claim: t("landing.observatory.row_1_claim"), data: t("landing.observatory.row_1_data") },
+    { claim: t("landing.observatory.row_2_claim"), data: t("landing.observatory.row_2_data") },
+    { claim: t("landing.observatory.row_3_claim"), data: t("landing.observatory.row_3_data") },
+  ];
+
   return (
-    <div className="paper-card p-8">
-      <p className="stamp">{t("comparatif_panel.impact_score")}</p>
-      <p className="font-value text-[clamp(48px,7vw,68px)] leading-none mt-3 text-mint-ink">
-        74
-        <span className="text-ink-3 text-[0.38em] ml-2">/ 100</span>
-      </p>
-      {/* Le score sortait en noir, indistinct des deux mesures en dessous.
-          Il porte le mint de marque et sa barre : 74/100 se lit d'un coup
-          d'œil, sans comparer le chiffre à l'échelle écrite. */}
-      <div className="mt-4 h-2 rounded-full bg-paper-2 overflow-hidden">
-        <div className="h-full rounded-full bg-mint trace" style={{ width: "74%" }} />
+    <div className="paper-card p-7">
+      <div className="grid grid-cols-2 gap-x-5">
+        <p className="stamp">{t("landing.observatory.col_claim")}</p>
+        <p className="stamp">{t("landing.observatory.col_data")}</p>
       </div>
-
-      <div className="mt-8 pt-6 border-t border-paper-3 grid grid-cols-2 gap-6">
-        <div>
-          <p className="stamp">{t("landing.hero2.preview.kpi_carbon")}</p>
-          <p className="font-value text-[28px] leading-none mt-2 text-mint-ink">−58 %</p>
-        </div>
-        <div>
-          <p className="stamp">{t("comparatif_panel.simulated_10y")}</p>
-          <p className="font-value text-[28px] leading-none mt-2 text-ink">24 180 €</p>
-          <p className="mt-2 text-body-sm text-ink-3">
-            {t("comparatif_panel.on_invested", { amount: "10 000" })}
-          </p>
-        </div>
-      </div>
-
-      <Provenance className="mt-6" status="modelled" source="MSCI ESG" />
-      {/* La réserve sortait en solar 12,5 px sur toute sa longueur, collée à la
-          ligne de source. Le statut reste coloré, la phrase redevient du texte
-          gris lisible. */}
-      <p className="mt-3 text-body-sm leading-relaxed text-ink-3">
-        {t("landing.hero2.preview.note")}
+      <ul className="mt-3">
+        {rows.map((r) => (
+          <li key={r.claim} className="grid grid-cols-2 gap-x-5 py-3.5 border-b border-paper-3">
+            <span className="text-body-sm leading-snug text-ink-2">« {r.claim} »</span>
+            <span className="text-body-sm leading-snug text-ink font-medium">{r.data}</span>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-6 text-body-sm leading-relaxed text-ink-3">
+        {t("landing.observatory.note")}
       </p>
     </div>
   );

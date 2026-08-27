@@ -324,17 +324,18 @@
     },
     "rv": {
       "hero": {
-        "eyebrow": "Bêta ouverte · 112 fonds analysés",
+        "eyebrow": "Bêta ouverte · sans compte",
         "title_line1": "Ton argent,",
         "title_accent": "à découvert.",
-        "subtitle": "Vois ce que ton épargne finance vraiment, simule un portefeuille aligné sur tes convictions, et compare-le aux indices classiques. En 2 minutes, sans compte.",
+        "subtitle": "Tape le nom d'un fonds. Tu vois ce qu'il finance, ce qu'il ne s'interdit pas de financer, et d'où vient chaque chiffre. Dix secondes, aucun compte.",
         "cta_primary": "Simuler mon portefeuille",
         "cta_secondary": "Créer mon compte",
         "cta_authed": "Accéder à mon espace",
-        "note": "Simulation pédagogique. Seedow n'investit pas à ta place et ne vend aucun produit."
+        "note": "Seedow n'investit pas à ta place, ne vend aucun produit et ne touche aucune commission.",
+        "cta_secondary_path": "Je ne sais pas quoi chercher"
       },
       "proof": {
-        "funds": "<b>112</b> fonds analysés",
+        "funds": "Le catalogue <b>entier</b>, consultable sans compte",
         "sources": "Données <b>MSCI ESG</b> · <b>SFDR</b> · <b>Yahoo Finance</b>",
         "no_advice": "<b>0</b> conseil financier",
         "free": "Cours <b>gratuits</b>, sans compte",
@@ -349,9 +350,9 @@
           "cta": "Essayer sans compte"
         },
         "impact": {
-          "eyebrow": "Impact",
-          "title": "Ton impact, chiffré.",
-          "desc": "Score ESG, intensité carbone comparée à l'indice mondial, exposition aux énergies fossiles. Des chiffres sourcés, pas des promesses.",
+          "eyebrow": "Périmètre",
+          "title": "Ce qu'on mesure. Ce qu'on ne mesure pas.",
+          "desc": "La deuxième liste est la plus utile des deux : elle dit où s'arrête ce que Seedow peut prouver. Personne ne la publie, c'est bien le problème.",
           "cta": "Voir la méthode"
         },
         "problem": {
@@ -372,7 +373,7 @@
         "method": {
           "eyebrow": "Méthode",
           "title": "Tout est ouvert, y compris nos limites.",
-          "desc": "Sources, pondérations, biais connus : notre grille de notation ESG est publiée en entier. Teste un fonds tout de suite, sans compte.",
+          "desc": "Sources, pondérations, biais connus : la grille de notation est publiée en entier, avec la version du calcul et ce qu'il ne sait pas faire.",
           "cta": "Lire la méthodologie"
         }
       },
@@ -396,7 +397,35 @@
       "investor_title": "Comprendre mon portefeuille",
       "investor_desc": "Ajoute tes investissements et vois vraiment ce que ton argent finance.",
       "investor_cta": "Voir mon portefeuille"
-    }
+    },
+    "measure": {
+      "measured_label": "Ce que Seedow mesure",
+      "measured_1": "L'exposition thématique déclarée d'un fonds, par cause.",
+      "measured_2": "Les secteurs qu'il exclut — et ceux qu'il ne s'interdit pas.",
+      "measured_3": "Son intensité carbone, comparée à un indice monde de référence.",
+      "measured_4": "L'écart entre ce qu'il revendique et ce que ses données montrent.",
+      "not_label": "Ce que Seedow ne mesure pas",
+      "not_1": "L'effet réel de ton argent sur le climat ou la société.",
+      "not_2": "La performance future d'un fonds, ni celle d'un portefeuille.",
+      "not_3": "Ce que fait une entreprise entre deux publications de données.",
+      "note": "Chaque chiffre affiché porte sa source et sa date. Ce qui manque est écrit « donnée indisponible » — jamais estimé en silence."
+    },
+    "observatory": {
+      "eyebrow": "Observatoire",
+      "title": "Ce qu'un fonds dit. Ce que ses données montrent.",
+      "desc": "Un fonds peut se déclarer durable et ne rien s'interdire. Seedow met les deux colonnes côte à côte, fonds par fonds, avec la source et la date.",
+      "cta": "Ouvrir l'Observatoire",
+      "col_claim": "Ce que le fonds dit",
+      "col_data": "Ce que la donnée montre",
+      "row_1_claim": "Fonds durable, article 8 SFDR",
+      "row_1_data": "Aucune exclusion sectorielle déclarée",
+      "row_2_claim": "Orienté transition climatique",
+      "row_2_data": "Intensité carbone au-dessus de l'indice monde",
+      "row_3_claim": "Sélection ESG rigoureuse",
+      "row_3_data": "Piliers E, S et G non publiés",
+      "note": "Ces trois lignes décrivent la forme du tableau, pas un fonds en particulier : l'Observatoire nomme les fonds, avec leurs chiffres et leurs sources."
+    },
+    "xray_hint": "Ce qu'il finance · ce qu'il ne s'interdit pas · d'où vient chaque chiffre"
   },
   "auth": {
     "title_login": "Connexion",
@@ -883,7 +912,7 @@
     "priority": "priorité"
   },
   "fonds_page": {
-    "back": "← Comprendre",
+    "back": "← Observatoire",
     "intro": "Ce que Seedow sait réellement de ce fonds, sourcé et daté — pas un jugement, les données.",
     "metric_esg": "Score ESG",
     "metric_climate": "Score climat",
@@ -908,18 +937,37 @@
     "source_unknown": "non communiquée",
     "coverage_complete": "Couverture complète",
     "coverage_partial": "Couverture partielle",
-    "coverage_estimated": "Couverture estimée"
+    "coverage_estimated": "Couverture estimée",
+    "level_1": "Ce que tu achètes",
+    "what_it_finances": "Ce que ce fonds finance",
+    "what_it_allows": "Ce qu'il ne s'interdit pas",
+    "why_score": "Pourquoi ce score ?",
+    "holdings_title": "Ce qu'il y a vraiment dedans",
+    "figures_title": "Les chiffres, en détail",
+    "sources_title": "Sources, couverture et limites",
+    "limits": "Seedow compare ce que les fournisseurs de données publient. Il ne mesure pas l'effet réel de ce fonds sur le climat ou la société, et n'a aucune visibilité sur ce qui se passe entre deux publications.",
+    "no_isin_note": "Ce fonds n'a pas d'ISIN vérifié dans Seedow. Il est identifié par son symbole boursier — on ne devine pas un identifiant réglementaire."
   },
   "observatoire": {
-    "back": "← Comprendre",
-    "title": "Observatoire du greenwashing",
-    "intro": "Tous les fonds analysés par Seedow, classés par risque de greenwashing. Chaque flag renvoie vers les données sourcées qui l'expliquent.",
-    "search": "Rechercher (nom, ISIN)",
+    "back": "← Accueil",
+    "title": "Ce qu'un fonds dit. Ce que ses données montrent.",
+    "intro": "Un fonds peut se déclarer durable et ne rien s'interdire. Cette page met les deux colonnes côte à côte, fonds par fonds, sans verdict — l'écart est écrit, la source aussi.",
+    "search": "Rechercher un fonds, un ISIN, un émetteur",
     "empty": "Aucun fonds ne correspond.",
-    "hint": "Un risque « élevé » signale des signaux contradictoires à vérifier, pas une fraude avérée.",
+    "hint": "Un écart signale une contradiction entre ce que le fonds affiche et ce que ses données publiées montrent. Il se vérifie sur la fiche du fonds, chiffre par chiffre.",
     "risk_low": "Risque faible",
     "risk_medium": "Risque modéré",
-    "risk_high": "Risque élevé"
+    "risk_high": "Risque élevé",
+    "filter_aria": "Filtrer les fonds",
+    "filter_all": "Tous",
+    "filter_flagged": "Avec écart",
+    "filter_claiming": "Se déclarent durables",
+    "stat_total": "fonds documentés dans le catalogue Seedow",
+    "stat_claiming": "se déclarent durables (article 8 ou 9 SFDR)",
+    "stat_flagged": "d'entre eux portent au moins un écart entre leur revendication et leurs données",
+    "stat_note": "Ces compteurs décrivent le catalogue Seedow, pas le marché : ils bougent à chaque fonds ajouté. Un écart est un point à vérifier, jamais une fraude constatée.",
+    "claim_none": "Aucune revendication déclarée",
+    "no_gap": "Aucun écart relevé sur les signaux que Seedow suit."
   },
   "next_step": {
     "eyebrow": "Prochaine étape",
@@ -3316,5 +3364,52 @@
       "stale": "Composition publiée le {{date}}, il y a {{days}} jours. Elle décrit le passé : à lire avec prudence.",
       "unknown": "Date de publication inconnue pour cette composition."
     }
+  },
+  "seedow_score": {
+    "label": "Score Seedow",
+    "band": {
+      "strong": "Bon alignement",
+      "partial": "Alignement partiel",
+      "weak": "Alignement faible",
+      "unrated": "Non noté"
+    },
+    "unrated_hint": "Aucun des trois piliers n'est documenté pour ce fonds. Seedow préfère l'écrire plutôt que d'afficher un chiffre qui n'en est pas un.",
+    "pillar": {
+      "esg": "Note ESG",
+      "climate": "Climat",
+      "exclusions": "Exclusions déclarées"
+    },
+    "pillar_missing": "Donnée indisponible",
+    "pillar_excluded": "Écarté du calcul — poids reporté sur les autres piliers.",
+    "pillar_weight": "{{pct}} % du score"
+  },
+  "xray": {
+    "field_label": "Cherche un fonds, un ETF, un ISIN",
+    "placeholder": "Le nom du fonds, tel qu'il apparaît sur ton relevé",
+    "loading": "Chargement du catalogue…",
+    "error": "Le catalogue n'a pas répondu.",
+    "no_results": "Ce fonds n'est pas encore dans Seedow.",
+    "no_results_hint": "Le catalogue couvre les fonds que nous avons pu documenter à partir d'une source publique. Il s'agrandit — il n'est pas exhaustif, et on ne prétend pas le contraire.",
+    "try_label": "Essaie",
+    "disclaimer": "Données publiques, sourcées et datées. Seedow ne vend aucun produit et ne recommande aucun achat.",
+    "another": "Autre fonds",
+    "finances_label": "Ce que ce fonds finance",
+    "finances_empty": "Aucune exposition thématique documentée. Ça ne veut pas dire zéro : ça veut dire que nous n'avons pas la donnée.",
+    "not_excluded_label": "Ce qu'il ne s'interdit pas",
+    "not_excluded_note": "Ce fonds ne déclare aucune exclusion sur ces secteurs. C'est une absence d'engagement — pas la preuve qu'il en détient.",
+    "not_excluded_empty": "Ce fonds déclare une exclusion sur les six secteurs que Seedow suit.",
+    "cost_label": "Frais annuels",
+    "cost_note": "Prélevés chaque année sur l'encours, que le fonds monte ou descende.",
+    "why_score": "Pourquoi ce score ?",
+    "why_score_intro": "Le score combine trois piliers. Un pilier sans donnée est écarté et le poids des autres est recalculé — jamais remplacé par une valeur moyenne inventée.",
+    "score_is_index": "Indice Seedow : un outil de comparaison entre fonds, pas une mesure de l'impact réel.",
+    "where_from": "D'où viennent ces chiffres ?",
+    "source_unknown": "Source non renseignée",
+    "flags_label": "Points de vigilance",
+    "flags_note": "Des écarts entre ce que le fonds revendique et ce que ses données montrent. Un drapeau à vérifier, pas un verdict.",
+    "limits": "Seedow ne mesure pas l'effet réel de ce fonds sur le climat ou la société : il compare ce que les fournisseurs de données publient. Ce qui manque est écrit, jamais comblé en silence.",
+    "full_sheet": "La fiche complète",
+    "find_alternatives": "Trouver des alternatives",
+    "catalogue_unavailable": "Le catalogue n'a renvoyé aucun fonds. C'est de notre côté, pas du tien — réessaie dans un moment."
   }
 }

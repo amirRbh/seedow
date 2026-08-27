@@ -324,17 +324,18 @@
     },
     "rv": {
       "hero": {
-        "eyebrow": "Open beta · 112 funds analysed",
+        "eyebrow": "Open beta · no account",
         "title_line1": "Your money,",
         "title_accent": "uncovered.",
-        "subtitle": "See what your savings actually fund, simulate a portfolio aligned with your convictions, and compare it to standard indices. Two minutes, no account.",
+        "subtitle": "Type a fund name. See what it finances, what it doesn't rule out financing, and where every number comes from. Ten seconds, no account.",
         "cta_primary": "Simulate my portfolio",
         "cta_secondary": "Create my account",
         "cta_authed": "Go to my space",
-        "note": "Educational simulation. Seedow does not invest for you and sells no product."
+        "note": "Seedow does not invest for you, sells no product and takes no commission.",
+        "cta_secondary_path": "I don't know what to search for"
       },
       "proof": {
-        "funds": "<b>112</b> funds analysed",
+        "funds": "The <b>whole</b> catalogue, readable without an account",
         "sources": "<b>MSCI ESG</b> · <b>SFDR</b> · <b>Yahoo Finance</b> data",
         "no_advice": "<b>0</b> financial advice",
         "free": "<b>Free</b> courses, no account",
@@ -349,9 +350,9 @@
           "cta": "Try without an account"
         },
         "impact": {
-          "eyebrow": "Impact",
-          "title": "Your impact, in numbers.",
-          "desc": "ESG score, carbon intensity against the world index, fossil fuel exposure. Sourced figures, not promises.",
+          "eyebrow": "Scope",
+          "title": "What we measure. What we don't.",
+          "desc": "The second list is the more useful of the two: it says where what Seedow can prove stops. Nobody publishes it — that is rather the problem.",
           "cta": "See the method"
         },
         "problem": {
@@ -372,7 +373,7 @@
         "method": {
           "eyebrow": "Method",
           "title": "Everything is open, including our limits.",
-          "desc": "Sources, weightings, known biases: our ESG grid is published in full. Test a fund right now, no account needed.",
+          "desc": "Sources, weightings, known biases: the rating grid is published in full, with the version of the calculation and what it cannot do.",
           "cta": "Read the methodology"
         }
       },
@@ -396,7 +397,35 @@
       "investor_title": "Understand my portfolio",
       "investor_desc": "Add your investments and truly see what your money funds.",
       "investor_cta": "See my portfolio"
-    }
+    },
+    "measure": {
+      "measured_label": "What Seedow measures",
+      "measured_1": "A fund's declared thematic exposure, cause by cause.",
+      "measured_2": "The sectors it excludes — and the ones it doesn't rule out.",
+      "measured_3": "Its carbon intensity, against a world index benchmark.",
+      "measured_4": "The gap between what it claims and what its data shows.",
+      "not_label": "What Seedow does not measure",
+      "not_1": "The real effect of your money on the climate or society.",
+      "not_2": "The future performance of a fund, or of a portfolio.",
+      "not_3": "What a company does between two data releases.",
+      "note": "Every number carries its source and date. What is missing reads « no data » — never quietly estimated."
+    },
+    "observatory": {
+      "eyebrow": "Observatory",
+      "title": "What a fund says. What its data shows.",
+      "desc": "A fund can call itself sustainable and rule nothing out. Seedow puts both columns side by side, fund by fund, with the source and the date.",
+      "cta": "Open the Observatory",
+      "col_claim": "What the fund says",
+      "col_data": "What the data shows",
+      "row_1_claim": "Sustainable fund, SFDR article 8",
+      "row_1_data": "No sector exclusion declared",
+      "row_2_claim": "Climate transition oriented",
+      "row_2_data": "Carbon intensity above the world index",
+      "row_3_claim": "Rigorous ESG selection",
+      "row_3_data": "E, S and G pillars not published",
+      "note": "These three rows show the shape of the table, not one particular fund: the Observatory names the funds, with their numbers and their sources."
+    },
+    "xray_hint": "What it finances · what it doesn't rule out · where each number comes from"
   },
   "auth": {
     "title_login": "Sign in",
@@ -883,7 +912,7 @@
     "priority": "priority"
   },
   "fonds_page": {
-    "back": "← Understand",
+    "back": "← Observatory",
     "intro": "What Seedow actually knows about this fund, sourced and dated — not a judgment, the data.",
     "metric_esg": "ESG score",
     "metric_climate": "Climate score",
@@ -908,18 +937,37 @@
     "source_unknown": "not disclosed",
     "coverage_complete": "Full coverage",
     "coverage_partial": "Partial coverage",
-    "coverage_estimated": "Estimated coverage"
+    "coverage_estimated": "Estimated coverage",
+    "level_1": "What you are buying",
+    "what_it_finances": "What this fund finances",
+    "what_it_allows": "What it doesn't rule out",
+    "why_score": "Why this score?",
+    "holdings_title": "What is actually inside",
+    "figures_title": "The numbers, in detail",
+    "sources_title": "Sources, coverage and limits",
+    "limits": "Seedow compares what data providers publish. It does not measure this fund's real effect on the climate or society, and has no visibility on what happens between two data releases.",
+    "no_isin_note": "This fund has no verified ISIN in Seedow. It is identified by its market symbol — we do not guess a regulatory identifier."
   },
   "observatoire": {
-    "back": "← Understand",
-    "title": "Greenwashing observatory",
-    "intro": "Every fund Seedow analyzes, ranked by greenwashing risk. Each flag links to the sourced data that explains it.",
-    "search": "Search (name, ISIN)",
+    "back": "← Home",
+    "title": "What a fund says. What its data shows.",
+    "intro": "A fund can call itself sustainable and rule nothing out. This page puts both columns side by side, fund by fund, with no verdict — the gap is written down, and so is the source.",
+    "search": "Search a fund, an ISIN, an issuer",
     "empty": "No fund matches.",
-    "hint": "A \"high\" risk flags contradictory signals worth checking, not proven fraud.",
+    "hint": "A gap flags a contradiction between what the fund displays and what its published data shows. You can check it on the fund sheet, number by number.",
     "risk_low": "Low risk",
     "risk_medium": "Moderate risk",
-    "risk_high": "High risk"
+    "risk_high": "High risk",
+    "filter_aria": "Filter funds",
+    "filter_all": "All",
+    "filter_flagged": "With a gap",
+    "filter_claiming": "Claim to be sustainable",
+    "stat_total": "funds documented in the Seedow catalogue",
+    "stat_claiming": "claim to be sustainable (SFDR article 8 or 9)",
+    "stat_flagged": "of those carry at least one gap between their claim and their data",
+    "stat_note": "These counters describe the Seedow catalogue, not the market: they move with every fund added. A gap is something to check, never established fraud.",
+    "claim_none": "No claim declared",
+    "no_gap": "No gap found on the signals Seedow tracks."
   },
   "next_step": {
     "eyebrow": "Next step",
@@ -3316,5 +3364,52 @@
       "stale": "Composition published on {{date}}, {{days}} days ago. It describes the past: read with care.",
       "unknown": "Publication date unknown for this composition."
     }
+  },
+  "seedow_score": {
+    "label": "Seedow score",
+    "band": {
+      "strong": "Well aligned",
+      "partial": "Partly aligned",
+      "weak": "Poorly aligned",
+      "unrated": "Not rated"
+    },
+    "unrated_hint": "None of the three pillars is documented for this fund. Seedow says so rather than showing a number that isn't one.",
+    "pillar": {
+      "esg": "ESG rating",
+      "climate": "Climate",
+      "exclusions": "Declared exclusions"
+    },
+    "pillar_missing": "No data",
+    "pillar_excluded": "Left out of the calculation — its weight goes to the other pillars.",
+    "pillar_weight": "{{pct}}% of the score"
+  },
+  "xray": {
+    "field_label": "Search a fund, an ETF, an ISIN",
+    "placeholder": "The fund name, as it appears on your statement",
+    "loading": "Loading the catalogue…",
+    "error": "The catalogue did not respond.",
+    "no_results": "This fund isn't in Seedow yet.",
+    "no_results_hint": "The catalogue covers the funds we could document from a public source. It keeps growing — it is not exhaustive, and we won't pretend otherwise.",
+    "try_label": "Try",
+    "disclaimer": "Public data, sourced and dated. Seedow sells no product and recommends no purchase.",
+    "another": "Another fund",
+    "finances_label": "What this fund finances",
+    "finances_empty": "No documented thematic exposure. That doesn't mean zero: it means we don't have the data.",
+    "not_excluded_label": "What it doesn't rule out",
+    "not_excluded_note": "This fund declares no exclusion on these sectors. That's a missing commitment — not proof that it holds them.",
+    "not_excluded_empty": "This fund declares an exclusion on all six sectors Seedow tracks.",
+    "cost_label": "Annual fee",
+    "cost_note": "Charged every year on the amount held, whether the fund rises or falls.",
+    "why_score": "Why this score?",
+    "why_score_intro": "The score combines three pillars. A pillar without data is left out and the others are reweighted — never replaced by an invented average.",
+    "score_is_index": "Seedow index: a tool for comparing funds, not a measure of real-world impact.",
+    "where_from": "Where do these numbers come from?",
+    "source_unknown": "Source not stated",
+    "flags_label": "Watch points",
+    "flags_note": "Gaps between what the fund claims and what its data shows. A flag to check, not a verdict.",
+    "limits": "Seedow does not measure this fund's real effect on the climate or society: it compares what data providers publish. What is missing is written down, never quietly filled in.",
+    "full_sheet": "Full fund sheet",
+    "find_alternatives": "Find alternatives",
+    "catalogue_unavailable": "The catalogue returned no funds. That's on our side, not yours — try again in a moment."
   }
 }

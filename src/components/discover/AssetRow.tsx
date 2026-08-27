@@ -57,7 +57,7 @@ export function AssetRow({ asset, index, onOpen }: Props) {
             ? formatCurrency(asset.current_price, lang)
             : t("discover.row.price_unavailable")}
         </p>
-        <SustainabilityBadge score={asset.overall_esg_score} />
+        <SustainabilityBadge score={asset.seedow_score} />
       </div>
     </motion.button>
   );

@@ -122,6 +122,10 @@ interface ColumnMap {
   name: number;
   sector: number;
   weight: number;
+  /** Présentes sur les fonds obligataires (14 colonnes), absentes en actions (9). */
+  maturity: number;
+  coupon: number;
+  assetClass: number;
 }
 
 function mapColumns(header: string[]): ColumnMap | null {
@@ -130,7 +134,18 @@ function mapColumns(header: string[]): ColumnMap | null {
   const name = find("Name");
   const weight = find("Weight (%)");
   if (name < 0 || weight < 0) return null;
-  return { ticker: find("Issuer Ticker", "Ticker"), name, sector: find("Sector"), weight };
+  return {
+    ticker: find("Issuer Ticker", "Ticker"),
+    name,
+    sector: find("Sector"),
+    weight,
+    // Échéance et coupon sont ce qui sépare deux obligations du même émetteur.
+    // Elles étaient lues et jetées ; sans elles, quatre-vingts obligations AT&T
+    // se confondent en une seule ligne.
+    maturity: find("Maturity"),
+    coupon: find("Coupon (%)"),
+    assetClass: find("Asset Class"),
+  };
 }
 
 /**
@@ -183,6 +198,15 @@ export function parseISharesHoldings(xml: string): ParsedHoldings {
     if (!name) continue;
     const weightPct = parseWeight(r[cols.weight] ?? "");
     if (weightPct === null) continue;
+    // « - » est la façon dont l'export note « sans objet » (une ligne de
+    // liquidités n'a pas d'échéance). On le rend absent, pas littéral.
+    const cell = (idx: number): string | null => {
+      if (idx < 0) return null;
+      const v = (r[idx] ?? "").trim();
+      return v === "" || v === "-" ? null : v;
+    };
+    const coupon = parseWeight(r[cols.coupon] ?? "");
+
     holdings.push({
       ticker: cols.ticker >= 0 ? r[cols.ticker] || null : null,
       name,
@@ -192,6 +216,9 @@ export function parseISharesHoldings(xml: string): ParsedHoldings {
       // déduire du ticker serait un identifiant fabriqué.
       isin: null,
       weightPct,
+      maturity: cell(cols.maturity),
+      couponPct: coupon,
+      assetClass: cell(cols.assetClass),
     });
   }
 

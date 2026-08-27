@@ -2786,10 +2786,391 @@ const oneVoiceEn = {
   },
 };
 
+// ─────────────────────────────────────────────────────────────────────────────
+// « Ton argent finance quoi ? » — le rayon X public, et le vocabulaire UNIQUE
+// du score Seedow.
+//
+// Ces chaînes existent parce que le produit disait la même chose de trois
+// façons : un score sur 10 dans l'explorateur, un score fournisseur ×10 sur la
+// landing, le composite Seedow sur la fiche publique. Un seul libellé, une
+// seule échelle, une seule bande — partout.
+// ─────────────────────────────────────────────────────────────────────────────
+
+const xrayFr = {
+  seedow_score: {
+    label: "Score Seedow",
+    band: {
+      strong: "Bon alignement",
+      partial: "Alignement partiel",
+      weak: "Alignement faible",
+      unrated: "Non noté",
+    },
+    unrated_hint:
+      "Aucun des trois piliers n'est documenté pour ce fonds. Seedow préfère l'écrire plutôt que d'afficher un chiffre qui n'en est pas un.",
+    pillar: {
+      esg: "Note ESG",
+      climate: "Climat",
+      exclusions: "Exclusions déclarées",
+    },
+    pillar_missing: "Donnée indisponible",
+    pillar_excluded: "Écarté du calcul — poids reporté sur les autres piliers.",
+    pillar_weight: "{{pct}} % du score",
+  },
+  xray: {
+    field_label: "Cherche un fonds, un ETF, un ISIN",
+    placeholder: "Le nom du fonds, tel qu'il apparaît sur ton relevé",
+    loading: "Chargement du catalogue…",
+    error: "Le catalogue n'a pas répondu.",
+    no_results: "Ce fonds n'est pas encore dans Seedow.",
+    no_results_hint:
+      "Le catalogue couvre les fonds que nous avons pu documenter à partir d'une source publique. Il s'agrandit — il n'est pas exhaustif, et on ne prétend pas le contraire.",
+    try_label: "Essaie",
+    disclaimer:
+      "Données publiques, sourcées et datées. Seedow ne vend aucun produit et ne recommande aucun achat.",
+    catalogue_unavailable:
+      "Le catalogue n'a renvoyé aucun fonds. C'est de notre côté, pas du tien — réessaie dans un moment.",
+    another: "Autre fonds",
+    finances_label: "Ce que ce fonds finance",
+    finances_empty:
+      "Aucune exposition thématique documentée. Ça ne veut pas dire zéro : ça veut dire que nous n'avons pas la donnée.",
+    not_excluded_label: "Ce qu'il ne s'interdit pas",
+    not_excluded_note:
+      "Ce fonds ne déclare aucune exclusion sur ces secteurs. C'est une absence d'engagement — pas la preuve qu'il en détient.",
+    not_excluded_empty: "Ce fonds déclare une exclusion sur les six secteurs que Seedow suit.",
+    cost_label: "Frais annuels",
+    cost_note: "Prélevés chaque année sur l'encours, que le fonds monte ou descende.",
+    why_score: "Pourquoi ce score ?",
+    why_score_intro:
+      "Le score combine trois piliers. Un pilier sans donnée est écarté et le poids des autres est recalculé — jamais remplacé par une valeur moyenne inventée.",
+    score_is_index:
+      "Indice Seedow : un outil de comparaison entre fonds, pas une mesure de l'impact réel.",
+    where_from: "D'où viennent ces chiffres ?",
+    source_unknown: "Source non renseignée",
+    flags_label: "Points de vigilance",
+    flags_note:
+      "Des écarts entre ce que le fonds revendique et ce que ses données montrent. Un drapeau à vérifier, pas un verdict.",
+    limits:
+      "Seedow ne mesure pas l'effet réel de ce fonds sur le climat ou la société : il compare ce que les fournisseurs de données publient. Ce qui manque est écrit, jamais comblé en silence.",
+    full_sheet: "La fiche complète",
+    find_alternatives: "Trouver des alternatives",
+  },
+};
+
+const xrayEn = {
+  seedow_score: {
+    label: "Seedow score",
+    band: {
+      strong: "Well aligned",
+      partial: "Partly aligned",
+      weak: "Poorly aligned",
+      unrated: "Not rated",
+    },
+    unrated_hint:
+      "None of the three pillars is documented for this fund. Seedow says so rather than showing a number that isn't one.",
+    pillar: {
+      esg: "ESG rating",
+      climate: "Climate",
+      exclusions: "Declared exclusions",
+    },
+    pillar_missing: "No data",
+    pillar_excluded: "Left out of the calculation — its weight goes to the other pillars.",
+    pillar_weight: "{{pct}}% of the score",
+  },
+  xray: {
+    field_label: "Search a fund, an ETF, an ISIN",
+    placeholder: "The fund name, as it appears on your statement",
+    loading: "Loading the catalogue…",
+    error: "The catalogue did not respond.",
+    no_results: "This fund isn't in Seedow yet.",
+    no_results_hint:
+      "The catalogue covers the funds we could document from a public source. It keeps growing — it is not exhaustive, and we won't pretend otherwise.",
+    try_label: "Try",
+    disclaimer:
+      "Public data, sourced and dated. Seedow sells no product and recommends no purchase.",
+    catalogue_unavailable:
+      "The catalogue returned no funds. That's on our side, not yours — try again in a moment.",
+    another: "Another fund",
+    finances_label: "What this fund finances",
+    finances_empty:
+      "No documented thematic exposure. That doesn't mean zero: it means we don't have the data.",
+    not_excluded_label: "What it doesn't rule out",
+    not_excluded_note:
+      "This fund declares no exclusion on these sectors. That's a missing commitment — not proof that it holds them.",
+    not_excluded_empty: "This fund declares an exclusion on all six sectors Seedow tracks.",
+    cost_label: "Annual fee",
+    cost_note: "Charged every year on the amount held, whether the fund rises or falls.",
+    why_score: "Why this score?",
+    why_score_intro:
+      "The score combines three pillars. A pillar without data is left out and the others are reweighted — never replaced by an invented average.",
+    score_is_index: "Seedow index: a tool for comparing funds, not a measure of real-world impact.",
+    where_from: "Where do these numbers come from?",
+    source_unknown: "Source not stated",
+    flags_label: "Watch points",
+    flags_note:
+      "Gaps between what the fund claims and what its data shows. A flag to check, not a verdict.",
+    limits:
+      "Seedow does not measure this fund's real effect on the climate or society: it compares what data providers publish. What is missing is written down, never quietly filled in.",
+    full_sheet: "Full fund sheet",
+    find_alternatives: "Find alternatives",
+  },
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Landing V4 — le rayon X en première scène.
+//
+// Trois cartes de la page d'accueil affichaient des chiffres inventés (score
+// 74/100, empreinte −58 %, « 24 180 € contre 23 940 € sur dix ans »). Elles
+// sont remplacées par ce que Seedow peut réellement démontrer : ce qu'il
+// mesure, ce qu'il refuse de prétendre mesurer, et la mécanique de
+// l'Observatoire. Le seul chiffre du hero est désormais celui que le visiteur
+// va chercher lui-même, sur le fonds de son choix.
+// ─────────────────────────────────────────────────────────────────────────────
+
+const landingV4Fr = {
+  landing: {
+    rv: {
+      hero: {
+        eyebrow: "Bêta ouverte · sans compte",
+        subtitle:
+          "Tape le nom d'un fonds. Tu vois ce qu'il finance, ce qu'il ne s'interdit pas de financer, et d'où vient chaque chiffre. Dix secondes, aucun compte.",
+        cta_secondary_path: "Je ne sais pas quoi chercher",
+        note: "Seedow n'investit pas à ta place, ne vend aucun produit et ne touche aucune commission.",
+      },
+    },
+    measure: {
+      measured_label: "Ce que Seedow mesure",
+      measured_1: "L'exposition thématique déclarée d'un fonds, par cause.",
+      measured_2: "Les secteurs qu'il exclut — et ceux qu'il ne s'interdit pas.",
+      measured_3: "Son intensité carbone, comparée à un indice monde de référence.",
+      measured_4: "L'écart entre ce qu'il revendique et ce que ses données montrent.",
+      not_label: "Ce que Seedow ne mesure pas",
+      not_1: "L'effet réel de ton argent sur le climat ou la société.",
+      not_2: "La performance future d'un fonds, ni celle d'un portefeuille.",
+      not_3: "Ce que fait une entreprise entre deux publications de données.",
+      note: "Chaque chiffre affiché porte sa source et sa date. Ce qui manque est écrit « donnée indisponible » — jamais estimé en silence.",
+    },
+    observatory: {
+      eyebrow: "Observatoire",
+      title: "Ce qu'un fonds dit. Ce que ses données montrent.",
+      desc: "Un fonds peut se déclarer durable et ne rien s'interdire. Seedow met les deux colonnes côte à côte, fonds par fonds, avec la source et la date.",
+      cta: "Ouvrir l'Observatoire",
+      col_claim: "Ce que le fonds dit",
+      col_data: "Ce que la donnée montre",
+      row_1_claim: "Fonds durable, article 8 SFDR",
+      row_1_data: "Aucune exclusion sectorielle déclarée",
+      row_2_claim: "Orienté transition climatique",
+      row_2_data: "Intensité carbone au-dessus de l'indice monde",
+      row_3_claim: "Sélection ESG rigoureuse",
+      row_3_data: "Piliers E, S et G non publiés",
+      note: "Ces trois lignes décrivent la forme du tableau, pas un fonds en particulier : l'Observatoire nomme les fonds, avec leurs chiffres et leurs sources.",
+    },
+  },
+};
+
+const landingV4En = {
+  landing: {
+    rv: {
+      hero: {
+        eyebrow: "Open beta · no account",
+        subtitle:
+          "Type a fund name. See what it finances, what it doesn't rule out financing, and where every number comes from. Ten seconds, no account.",
+        cta_secondary_path: "I don't know what to search for",
+        note: "Seedow does not invest for you, sells no product and takes no commission.",
+      },
+    },
+    measure: {
+      measured_label: "What Seedow measures",
+      measured_1: "A fund's declared thematic exposure, cause by cause.",
+      measured_2: "The sectors it excludes — and the ones it doesn't rule out.",
+      measured_3: "Its carbon intensity, against a world index benchmark.",
+      measured_4: "The gap between what it claims and what its data shows.",
+      not_label: "What Seedow does not measure",
+      not_1: "The real effect of your money on the climate or society.",
+      not_2: "The future performance of a fund, or of a portfolio.",
+      not_3: "What a company does between two data releases.",
+      note: "Every number carries its source and date. What is missing reads « no data » — never quietly estimated.",
+    },
+    observatory: {
+      eyebrow: "Observatory",
+      title: "What a fund says. What its data shows.",
+      desc: "A fund can call itself sustainable and rule nothing out. Seedow puts both columns side by side, fund by fund, with the source and the date.",
+      cta: "Open the Observatory",
+      col_claim: "What the fund says",
+      col_data: "What the data shows",
+      row_1_claim: "Sustainable fund, SFDR article 8",
+      row_1_data: "No sector exclusion declared",
+      row_2_claim: "Climate transition oriented",
+      row_2_data: "Carbon intensity above the world index",
+      row_3_claim: "Rigorous ESG selection",
+      row_3_data: "E, S and G pillars not published",
+      note: "These three rows show the shape of the table, not one particular fund: the Observatory names the funds, with their numbers and their sources.",
+    },
+  },
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Observatoire — de l'annuaire à la démonstration, et fiche fonds à trois
+// niveaux de lecture.
+// ─────────────────────────────────────────────────────────────────────────────
+
+const observatoryFr = {
+  observatoire: {
+    back: "← Accueil",
+    title: "Ce qu'un fonds dit. Ce que ses données montrent.",
+    intro:
+      "Un fonds peut se déclarer durable et ne rien s'interdire. Cette page met les deux colonnes côte à côte, fonds par fonds, sans verdict — l'écart est écrit, la source aussi.",
+    search: "Rechercher un fonds, un ISIN, un émetteur",
+    filter_aria: "Filtrer les fonds",
+    filter_all: "Tous",
+    filter_flagged: "Avec écart",
+    filter_claiming: "Se déclarent durables",
+    stat_total: "fonds documentés dans le catalogue Seedow",
+    stat_claiming: "se déclarent durables (article 8 ou 9 SFDR)",
+    stat_flagged: "d'entre eux portent au moins un écart entre leur revendication et leurs données",
+    stat_note:
+      "Ces compteurs décrivent le catalogue Seedow, pas le marché : ils bougent à chaque fonds ajouté. Un écart est un point à vérifier, jamais une fraude constatée.",
+    claim_none: "Aucune revendication déclarée",
+    no_gap: "Aucun écart relevé sur les signaux que Seedow suit.",
+    empty: "Aucun fonds ne correspond.",
+    hint: "Un écart signale une contradiction entre ce que le fonds affiche et ce que ses données publiées montrent. Il se vérifie sur la fiche du fonds, chiffre par chiffre.",
+  },
+  fonds_page: {
+    back: "← Observatoire",
+    level_1: "Ce que tu achètes",
+    what_it_finances: "Ce que ce fonds finance",
+    what_it_allows: "Ce qu'il ne s'interdit pas",
+    why_score: "Pourquoi ce score ?",
+    holdings_title: "Ce qu'il y a vraiment dedans",
+    figures_title: "Les chiffres, en détail",
+    sources_title: "Sources, couverture et limites",
+    limits:
+      "Seedow compare ce que les fournisseurs de données publient. Il ne mesure pas l'effet réel de ce fonds sur le climat ou la société, et n'a aucune visibilité sur ce qui se passe entre deux publications.",
+    no_isin_note:
+      "Ce fonds n'a pas d'ISIN vérifié dans Seedow. Il est identifié par son symbole boursier — on ne devine pas un identifiant réglementaire.",
+  },
+};
+
+const observatoryEn = {
+  observatoire: {
+    back: "← Home",
+    title: "What a fund says. What its data shows.",
+    intro:
+      "A fund can call itself sustainable and rule nothing out. This page puts both columns side by side, fund by fund, with no verdict — the gap is written down, and so is the source.",
+    search: "Search a fund, an ISIN, an issuer",
+    filter_aria: "Filter funds",
+    filter_all: "All",
+    filter_flagged: "With a gap",
+    filter_claiming: "Claim to be sustainable",
+    stat_total: "funds documented in the Seedow catalogue",
+    stat_claiming: "claim to be sustainable (SFDR article 8 or 9)",
+    stat_flagged: "of those carry at least one gap between their claim and their data",
+    stat_note:
+      "These counters describe the Seedow catalogue, not the market: they move with every fund added. A gap is something to check, never established fraud.",
+    claim_none: "No claim declared",
+    no_gap: "No gap found on the signals Seedow tracks.",
+    empty: "No fund matches.",
+    hint: "A gap flags a contradiction between what the fund displays and what its published data shows. You can check it on the fund sheet, number by number.",
+  },
+  fonds_page: {
+    back: "← Observatory",
+    level_1: "What you are buying",
+    what_it_finances: "What this fund finances",
+    what_it_allows: "What it doesn't rule out",
+    why_score: "Why this score?",
+    holdings_title: "What is actually inside",
+    figures_title: "The numbers, in detail",
+    sources_title: "Sources, coverage and limits",
+    limits:
+      "Seedow compares what data providers publish. It does not measure this fund's real effect on the climate or society, and has no visibility on what happens between two data releases.",
+    no_isin_note:
+      "This fund has no verified ISIN in Seedow. It is identified by its market symbol — we do not guess a regulatory identifier.",
+  },
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Reprises de copie liées à la refonte de la landing.
+//
+// Trois textes promettaient encore ce que la page ne fait plus : un compteur de
+// fonds écrit en dur (qui dérive dès qu'un fonds est ajouté — exactement le
+// défaut que l'Observatoire dénonce), un titre « Ton impact, chiffré » au-dessus
+// d'une carte qui ne chiffre plus rien, et une invitation à « tester un fonds »
+// dans la section Méthode alors que le rayon X a déménagé dans le hero.
+// ─────────────────────────────────────────────────────────────────────────────
+
+const landingCopyFr = {
+  landing: {
+    rv: {
+      proof: {
+        funds: "Le catalogue <b>entier</b>, consultable sans compte",
+      },
+      cards: {
+        impact: {
+          eyebrow: "Périmètre",
+          title: "Ce qu'on mesure. Ce qu'on ne mesure pas.",
+          desc: "La deuxième liste est la plus utile des deux : elle dit où s'arrête ce que Seedow peut prouver. Personne ne la publie, c'est bien le problème.",
+          cta: "Voir la méthode",
+        },
+        method: {
+          desc: "Sources, pondérations, biais connus : la grille de notation est publiée en entier, avec la version du calcul et ce qu'il ne sait pas faire.",
+        },
+      },
+    },
+    xray_hint: "Ce qu'il finance · ce qu'il ne s'interdit pas · d'où vient chaque chiffre",
+  },
+};
+
+const landingCopyEn = {
+  landing: {
+    rv: {
+      proof: {
+        funds: "The <b>whole</b> catalogue, readable without an account",
+      },
+      cards: {
+        impact: {
+          eyebrow: "Scope",
+          title: "What we measure. What we don't.",
+          desc: "The second list is the more useful of the two: it says where what Seedow can prove stops. Nobody publishes it — that is rather the problem.",
+          cta: "See the method",
+        },
+        method: {
+          desc: "Sources, weightings, known biases: the rating grid is published in full, with the version of the calculation and what it cannot do.",
+        },
+      },
+    },
+    xray_hint: "What it finances · what it doesn't rule out · where each number comes from",
+  },
+};
+
+/**
+ * Les blocs sont appliqués DANS L'ORDRE, chacun par-dessus le précédent : à clé
+ * égale, le dernier gagne. Un `reduce` plutôt qu'une pile de `deepMerge`
+ * imbriqués — à six blocs, l'imbrication demandait déjà de recompter les
+ * parenthèses à chaque ajout, ce qui est exactement la façon dont on finit par
+ * écraser un bloc sans s'en apercevoir.
+ */
+const FR_BLOCKS: Json[] = [
+  composeSwitchFr,
+  pedagogyFr,
+  oneVoiceFr,
+  xrayFr,
+  landingV4Fr,
+  observatoryFr,
+  landingCopyFr,
+];
+const EN_BLOCKS: Json[] = [
+  composeSwitchEn,
+  pedagogyEn,
+  oneVoiceEn,
+  xrayEn,
+  landingV4En,
+  observatoryEn,
+  landingCopyEn,
+];
+
 writeFileSync(
   "src/i18n/locales/fr.json",
   JSON.stringify(
-    deepMerge(deepMerge(deepMerge(mergedFr, composeSwitchFr), pedagogyFr), oneVoiceFr),
+    FR_BLOCKS.reduce((acc, block) => deepMerge(acc, block), mergedFr as Json),
     null,
     2,
   ) + "\n",
@@ -2798,7 +3179,7 @@ writeFileSync(
 writeFileSync(
   "src/i18n/locales/en.json",
   JSON.stringify(
-    deepMerge(deepMerge(deepMerge(mergedEn, composeSwitchEn), pedagogyEn), oneVoiceEn),
+    EN_BLOCKS.reduce((acc, block) => deepMerge(acc, block), mergedEn as Json),
     null,
     2,
   ) + "\n",

@@ -23,7 +23,7 @@ import {
   type ValidationStatus,
 } from "./validation";
 import { isValidIsin } from "./isin";
-import type { ParsedHolding } from "./holdings";
+import { holdingIdentity, type ParsedHolding } from "./holdings";
 
 export interface HoldingsQualityIssue {
   kind:
@@ -105,11 +105,17 @@ export function runHoldingsQualityChecks(input: HoldingsQualityInput): HoldingsQ
     results.push(wr);
     if (typeof h.weightPct === "number" && Number.isFinite(h.weightPct)) weightSum += h.weightPct;
 
-    const dupKey = (h.isin?.trim() || h.name.trim().toLowerCase()).toString();
+    // Un doublon se juge sur l'IDENTITÉ publiée de la ligne, pas sur son seul
+    // nom. Le nom seul faisait de quatre-vingts obligations AT&T un doublon
+    // répété quatre-vingts fois : le contrôle rejetait l'intégralité des fonds
+    // obligataires du catalogue, sur des fichiers pourtant parfaitement sains.
+    // Deux lignes qui partagent nom, ticker, échéance ET coupon sont, elles,
+    // réellement la même position lue deux fois.
+    const dupKey = holdingIdentity(h);
     if (seen.has(dupKey)) {
       issues.push({
         kind: "duplicate_security",
-        detail: `Titre en double dans le fonds`,
+        detail: `Position identique répétée dans le fichier`,
         security: h.name,
       });
       results.push({ status: "review_required", reason: "doublon" });

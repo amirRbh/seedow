@@ -1,40 +1,61 @@
 import { useTranslation } from "react-i18next";
-import { impactRating, type ImpactTone } from "@/lib/discover/impact";
+import { scoreBand, type ScoreBand } from "@/lib/esg/sustainability-classification";
 import { cn } from "@/lib/utils";
 
-const TONE: Record<ImpactTone, { dot: string; text: string }> = {
-  mint: { dot: "bg-mint", text: "text-mint-ink" },
-  ink: { dot: "bg-ink", text: "text-ink" },
-  muted: { dot: "bg-ink-3", text: "text-ink-3" },
+/**
+ * Badge de durabilité « lisible en une seconde » : une pastille, un mot, le
+ * chiffre. Le mot et le chiffre portent l'information même sans la couleur
+ * (DA §4 — jamais de sens par la couleur seule).
+ *
+ * ── Il affichait le mauvais nombre ─────────────────────────────────────────
+ *
+ * Il montrait le score ESG du fournisseur sur 10, avec son propre vocabulaire
+ * (« limite / correct / solide / fort ») et ses propres seuils. Pendant ce
+ * temps, la fiche publique du même fonds affichait le score Seedow sur 100 avec
+ * sa bande à lui. Deux échelles, deux vocabulaires, deux verdicts possibles sur
+ * un seul fonds : celui qui ouvrait les deux écrans avait raison de douter.
+ *
+ * Il porte désormais le score Seedow et la bande unique (`scoreBand`) — le même
+ * nombre partout, du rayon X de la page d'accueil jusqu'à sa propre ligne de
+ * portefeuille. Le score ESG fournisseur n'a pas disparu : il reste visible au
+ * niveau de détail de la fiche, comme l'un des trois piliers du composite,
+ * c'est-à-dire à l'endroit où il veut dire quelque chose.
+ *
+ * `score` peut être null : le fonds est alors « non noté », ce qui ne se dit pas
+ * comme « mal noté » et ne s'écrit donc pas 0.
+ */
+
+const TONE: Record<ScoreBand, { dot: string; text: string }> = {
+  strong: { dot: "bg-mint", text: "text-mint-ink" },
+  partial: { dot: "bg-solar", text: "text-solar-ink" },
+  weak: { dot: "bg-alert", text: "text-alert-ink" },
+  unrated: { dot: "bg-paper-3", text: "text-ink-3" },
 };
 
-/**
- * Badge de DURABILITÉ « lisible en une seconde » (principe Yuka) : une pastille
- * de couleur + un mot qualitatif + la note chiffrée. Le mot et le chiffre
- * portent l'information même sans la couleur (DA §4 — jamais de sens par la
- * couleur seule).
- *
- * Il s'est longtemps appelé « badge d'impact ». C'était faux : la note agrège
- * des PRATIQUES notées par un fournisseur ESG, elle ne mesure aucun effet de
- * l'argent de l'utilisateur sur le monde. Un composant nommé `ImpactBadge`
- * réintroduisait la confusion à chaque nouvel appel — d'où le nom actuel.
- */
-export function SustainabilityBadge({ score, className }: { score: number; className?: string }) {
+export function SustainabilityBadge({
+  score,
+  className,
+}: {
+  /** Score Seedow 0..100, ou null si aucun pilier n'est exploitable. */
+  score: number | null;
+  className?: string;
+}) {
   const { t } = useTranslation();
-  const { level, tone } = impactRating(score);
-  const c = TONE[tone];
+  const band = scoreBand(score);
+  const c = TONE[band];
+
   return (
     <span
       className={cn("inline-flex items-center gap-1.5", className)}
-      title={`${t("discover.row.impact")} ${score.toFixed(1)}/10`}
+      title={`${t("seedow_score.label")} ${score ?? "—"}/100`}
     >
       <span className={cn("w-1.5 h-1.5 rounded-full flex-shrink-0", c.dot)} aria-hidden="true" />
       <span className={cn("text-tag uppercase tracking-wider font-mono", c.text)}>
-        {t("discover.row.impact")} {t(`discover.impact_rating.${level}`)}
+        {t(`seedow_score.band.${band}`)}
       </span>
-      <span className="text-tag text-ink-3 font-semibold tabular-nums">
-        {score.toFixed(1).replace(".", ",")}
-      </span>
+      {score != null && (
+        <span className="text-tag text-ink-3 font-semibold tabular-nums">{score}</span>
+      )}
     </span>
   );
 }

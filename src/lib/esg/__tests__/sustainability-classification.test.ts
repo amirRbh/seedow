@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   deriveSustainabilityProfile,
   parseImpliedTempC,
+  scoreBand,
   type SustainabilitySignals,
 } from "../sustainability-classification";
 
@@ -156,5 +157,77 @@ describe("score Seedow (composite pondéré, propriétaire)", () => {
     const aligned = deriveSustainabilityProfile({ ...base, impliedTempRise: "1.0°C" }).score!;
     const misaligned = deriveSustainabilityProfile({ ...base, impliedTempRise: "5.0°C" }).score!;
     expect(aligned).toBeGreaterThan(misaligned);
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Bande de lecture et détail du composite — le « pourquoi » doit redonner le
+// « combien », sinon les deux surfaces divergeront tôt ou tard.
+// ─────────────────────────────────────────────────────────────────────────────
+
+describe("scoreBand", () => {
+  it("distingue non noté et mal noté", () => {
+    expect(scoreBand(null)).toBe("unrated");
+    expect(scoreBand(0)).toBe("weak");
+  });
+
+  it("place les bornes à 70 et 55, incluses", () => {
+    expect(scoreBand(70)).toBe("strong");
+    expect(scoreBand(69)).toBe("partial");
+    expect(scoreBand(55)).toBe("partial");
+    expect(scoreBand(54)).toBe("weak");
+  });
+
+  it("traite une valeur non finie comme non notée, jamais comme faible", () => {
+    expect(scoreBand(Number.NaN)).toBe("unrated");
+    expect(scoreBand(Number.POSITIVE_INFINITY)).toBe("unrated");
+  });
+});
+
+describe("scoreBreakdown", () => {
+  it("expose les trois piliers du composite, jamais E/S/G", () => {
+    const p = deriveSustainabilityProfile(base);
+    expect(p.scoreBreakdown.map((b) => b.id)).toEqual(["esg", "climate", "exclusions"]);
+  });
+
+  it("reconstitue exactement le score affiché", () => {
+    const p = deriveSustainabilityProfile(base);
+    const recomputed = Math.round(
+      p.scoreBreakdown.reduce((acc, b) => acc + (b.value ?? 0) * b.effectiveWeight, 0),
+    );
+    // Tolérance de 1 point : le score est arrondi une fois, la reconstitution
+    // repart de piliers eux-mêmes arrondis pour l'affichage.
+    expect(Math.abs(recomputed - p.score!)).toBeLessThanOrEqual(1);
+  });
+
+  it("écarte un pilier sans donnée et reporte son poids sur les autres", () => {
+    const p = deriveSustainabilityProfile({
+      ...base,
+      waci: null,
+      benchmarkWaci: null,
+      impliedTempRise: null,
+    });
+    const climate = p.scoreBreakdown.find((b) => b.id === "climate")!;
+    expect(climate.value).toBeNull();
+    expect(climate.effectiveWeight).toBe(0);
+    // ESG (0,4) et exclusions (0,2) se partagent la totalité du poids.
+    const rest = p.scoreBreakdown.filter((b) => b.id !== "climate");
+    expect(rest.reduce((acc, b) => acc + b.effectiveWeight, 0)).toBeCloseTo(1, 6);
+  });
+
+  it("liste les trois piliers même quand aucun n'est exploitable", () => {
+    const p = deriveSustainabilityProfile({
+      ...base,
+      esgScore: null,
+      climateScore: null,
+      waci: null,
+      benchmarkWaci: null,
+      impliedTempRise: null,
+      exclusionsCount: Number.NaN,
+    });
+    // `exclusionsCount` non fini retombe à 0, qui reste un pilier VALIDE : le
+    // score existe donc, et le détail le dit plutôt que de rester muet.
+    expect(p.scoreBreakdown).toHaveLength(3);
+    expect(p.scoreBreakdown.every((b) => typeof b.weight === "number")).toBe(true);
   });
 });
