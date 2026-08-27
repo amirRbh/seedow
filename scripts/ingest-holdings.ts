@@ -187,10 +187,25 @@ async function main() {
     );
     if (r.error) console.log(`      ${r.error}`);
   }
+  // Répartition des contrôles qualité. C'est ce qu'un opérateur doit lire AVANT
+  // de décider d'écrire : « ingéré » dit que la chaîne est allée au bout, pas
+  // que le lot est sans réserve. Un `review_required` reste publiable — il
+  // signale des lignes que l'émetteur lui-même ne distingue pas — mais il se
+  // regarde, et il ne se devinait pas dans la sortie précédente.
+  const qc = { valid: 0, review_required: 0, rejected: 0 };
+  for (const r of results) if (r.qc) qc[r.qc.status as keyof typeof qc] += 1;
+
   console.log(
     `\n${summary.ingested} ingéré(s) · ${summary.holdingsInserted} positions · ` +
       `${summary.no_source} sans source · ${summary.fetch_failed} en échec · ${summary.rejected} rejeté(s)`,
   );
+  console.log(
+    `QC : ${qc.valid} valid · ${qc.review_required} review_required · ${qc.rejected} rejected`,
+  );
+
+  // Un fonds ciblé qui ne ressort pas ingéré est un trou : le dire, chiffré.
+  const missed = assets.length - summary.ingested;
+  if (missed > 0) console.log(`⚠ ${missed} cible(s) n'ont produit aucune composition.`);
 }
 
 main().catch((e) => {
