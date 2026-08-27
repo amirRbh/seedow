@@ -425,7 +425,32 @@
       "row_3_data": "E, S and G pillars not published",
       "note": "These three rows show the shape of the table, not one particular fund: the Observatory names the funds, with their numbers and their sources."
     },
-    "xray_hint": "What it finances · what it doesn't rule out · where each number comes from"
+    "xray_hint": "What it finances · what it doesn't rule out · where each number comes from",
+    "flow": {
+      "eyebrow": "No account, nothing to type",
+      "title": "See where your money goes.",
+      "desc": "Your savings already flow somewhere, every month. Tick what you want to fund and what you refuse: the flow redirects before your eyes.",
+      "want_label": "What I want to fund",
+      "refuse_label": "What I refuse",
+      "on": "on",
+      "off": "off",
+      "ledger_title": "What it funds",
+      "excluded": "excluded",
+      "source_amount": "€150",
+      "source_label": "a month, your savings",
+      "source_note": "Mechanism illustration · demo values. In the app: MSCI ESG · SFDR · Yahoo Finance, every line dated.",
+      "disclaimer": "This diagram shows how an allocation moves when you change your criteria. It is not a return forecast, and no real money is invested here.",
+      "cta": "Build my portfolio · 2 min",
+      "lane": {
+        "renouvelable": "Renewable energy",
+        "renovation": "Building retrofits",
+        "vivant": "Water, forests, farming",
+        "social": "Health, education",
+        "diversifie": "Diversified industry",
+        "fossile": "Oil, gas, coal",
+        "armement": "Weapons"
+      }
+    }
   },
   "auth": {
     "title_login": "Sign in",

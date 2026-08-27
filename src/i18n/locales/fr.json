@@ -425,7 +425,32 @@
       "row_3_data": "Piliers E, S et G non publiés",
       "note": "Ces trois lignes décrivent la forme du tableau, pas un fonds en particulier : l'Observatoire nomme les fonds, avec leurs chiffres et leurs sources."
     },
-    "xray_hint": "Ce qu'il finance · ce qu'il ne s'interdit pas · d'où vient chaque chiffre"
+    "xray_hint": "Ce qu'il finance · ce qu'il ne s'interdit pas · d'où vient chaque chiffre",
+    "flow": {
+      "eyebrow": "Sans compte, sans rien taper",
+      "title": "Regarde où va ton argent.",
+      "desc": "Ton épargne circule déjà, quelque part, tous les mois. Coche ce que tu veux financer et ce que tu refuses : le flux se redirige sous tes yeux.",
+      "want_label": "Ce que je veux financer",
+      "refuse_label": "Ce que je refuse",
+      "on": "activé",
+      "off": "désactivé",
+      "ledger_title": "Ce que ça finance",
+      "excluded": "exclu",
+      "source_amount": "150 €",
+      "source_label": "par mois, ton épargne",
+      "source_note": "Illustration du mécanisme · valeurs de démonstration. Dans l'app : MSCI ESG · SFDR · Yahoo Finance, chaque ligne datée.",
+      "disclaimer": "Ce schéma montre comment une répartition se déplace quand tu changes tes critères. Ce n'est pas une prévision de rendement, et aucun argent réel n'est investi ici.",
+      "cta": "Composer mon portefeuille · 2 min",
+      "lane": {
+        "renouvelable": "Énergies renouvelables",
+        "renovation": "Rénovation, bâtiment",
+        "vivant": "Eau, forêts, agriculture",
+        "social": "Santé, éducation",
+        "diversifie": "Industrie diversifiée",
+        "fossile": "Pétrole, gaz, charbon",
+        "armement": "Armement"
+      }
+    }
   },
   "auth": {
     "title_login": "Connexion",

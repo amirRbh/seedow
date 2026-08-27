@@ -20,6 +20,9 @@ export type AppEventName =
   // Le rayon X du hero : un fonds ouvert = quelqu'un qui a compris la promesse
   // sans qu'on lui demande son email. C'est LA mesure d'activation de la page.
   | "xray_fund_opened"
+  // Une conviction cochée sur le flux de la landing : le visiteur qui n'avait
+  // aucun nom de fonds à taper vient quand même d'entrer dans le produit.
+  | "landing_flow_toggled"
   | "preview_started"
   | "account_created"
   | "search_performed"
