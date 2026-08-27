@@ -1,0 +1,1125 @@
+<title>Rayon X Seedow</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+/>
+
+<!--
+  PROPOSITION 1 — « Le Rayon X »
+  Parti pris : la landing EST le produit. Pas de capture d'écran, pas de
+  discours : on tape un nom de fonds et le fonds s'ouvre à l'écran, en direct.
+  Le « wow » vient du geste (scan + cascade), pas d'un dégradé.
+  Fond clair assumé : la V actuelle est sombre de bout en bout, c'est là que
+  naît l'impression morose.
+  Données : trois fonds de DÉMONSTRATION, explicitement étiquetés comme tels
+  (CLAUDE.md §1.2 / §1.3 — on n'invente pas de chiffres sur un fonds réel).
+-->
+
+<style>
+  :root {
+    --paper: #ffffff;
+    --paper-2: #f5f4f1;
+    --paper-3: #dddad3;
+    --paper-inset: #edebe6;
+    --deep: #0e0f10;
+    --deep-2: #212427;
+    --on-deep: #ffffff;
+    --on-deep-2: #b7bbc0;
+    --on-deep-3: #9aa0a6;
+    --ink: #16181a;
+    --ink-2: #5d6167;
+    --ink-3: #666a6f;
+    --mint: #0d7a66;
+    --mint-ink: #0c6857;
+    --alert: #c2372a;
+    --alert-ink: #b23124;
+    --solar: #a16207;
+    --solar-ink: #8a5406;
+    --ice: #1f5fb8;
+    --ice-ink: #1b5299;
+    --volt: #5b4b9e;
+    --volt-ink: #544593;
+    --mint-wash: #e7f2ee;
+    --alert-wash: #fbeeec;
+    --solar-wash: #fbf3e3;
+    --ease: cubic-bezier(0.2, 0, 0, 1);
+    --shell: 1160px;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: var(--paper-2);
+    color: var(--ink);
+    font-family:
+      "Manrope",
+      system-ui,
+      -apple-system,
+      sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .shell {
+    max-width: var(--shell);
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+  .mono {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+  }
+
+  a {
+    color: inherit;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 3px;
+    border-radius: 8px;
+  }
+
+  /* ── Nav ──────────────────────────────────────────────── */
+  .nav {
+    height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .wordmark {
+    font-weight: 800;
+    font-size: 21px;
+    letter-spacing: -0.03em;
+    text-decoration: none;
+  }
+  .wordmark span {
+    color: var(--mint);
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+  }
+  .nav-links a {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink-2);
+    text-decoration: none;
+  }
+  .nav-links a:hover {
+    color: var(--ink);
+  }
+  @media (max-width: 720px) {
+    .nav-links a.hide-s {
+      display: none;
+    }
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 48px;
+    padding: 0 24px;
+    border-radius: 999px;
+    border: 0;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition:
+      transform 0.2s var(--ease),
+      background 0.2s var(--ease);
+  }
+  .btn:hover {
+    transform: scale(1.03);
+  }
+  .btn-ink {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .btn-mint {
+    background: var(--mint);
+    color: #fff;
+  }
+  .btn-sm {
+    height: 40px;
+    padding: 0 18px;
+    font-size: 14px;
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink);
+    box-shadow: inset 0 0 0 1.5px var(--paper-3);
+  }
+
+  /* ── Hero ─────────────────────────────────────────────── */
+  .hero {
+    padding: 26px 0 20px;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    height: 34px;
+    padding: 0 15px;
+    border-radius: 999px;
+    background: var(--mint-wash);
+    color: var(--mint-ink);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: var(--mint);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.3;
+    }
+  }
+
+  h1 {
+    margin: 20px 0 0;
+    font-size: clamp(2.75rem, 7.4vw, 5.25rem);
+    line-height: 0.94;
+    letter-spacing: -0.045em;
+    font-weight: 800;
+    text-wrap: balance;
+    max-width: 15ch;
+  }
+  h1 em {
+    font-style: normal;
+    color: var(--mint);
+    /* Le trait se dessine au chargement : le fonds s'ouvre, littéralement. */
+    background-image: linear-gradient(var(--mint), var(--mint));
+    background-repeat: no-repeat;
+    background-position: 0 92%;
+    background-size: 0% 5px;
+    animation: underline-in 0.7s var(--ease) 0.45s forwards;
+  }
+  @keyframes underline-in {
+    to {
+      background-size: 100% 5px;
+    }
+  }
+
+  .lede {
+    margin: 22px 0 0;
+    max-width: 54ch;
+    font-size: clamp(1.0625rem, 1.4vw, 1.25rem);
+    color: var(--ink-2);
+  }
+
+  /* ── Le plateau de recherche ──────────────────────────── */
+  .stage {
+    margin-top: 34px;
+  }
+  .searchbar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    height: 76px;
+    padding: 0 12px 0 26px;
+    background: var(--paper);
+    border-radius: 22px;
+    box-shadow: inset 0 0 0 1.5px var(--paper-3);
+    transition: box-shadow 0.25s var(--ease);
+  }
+  .searchbar:focus-within {
+    box-shadow: inset 0 0 0 2px var(--ink);
+  }
+  .searchbar svg {
+    flex: none;
+    color: var(--ink-3);
+  }
+  .searchbar input {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    border: 0;
+    background: transparent;
+    font-family: inherit;
+    font-size: clamp(1rem, 2.1vw, 1.375rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .searchbar input::placeholder {
+    color: var(--ink-3);
+    font-weight: 500;
+  }
+  .searchbar input:focus {
+    outline: none;
+  }
+  @media (max-width: 640px) {
+    .searchbar .btn {
+      display: none;
+    }
+    .searchbar {
+      padding-right: 22px;
+    }
+  }
+
+  .examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+    align-items: center;
+  }
+  .examples-label {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: 600;
+  }
+  .ex {
+    height: 36px;
+    padding: 0 15px;
+    border-radius: 999px;
+    border: 0;
+    background: var(--paper);
+    box-shadow: inset 0 0 0 1.5px var(--paper-3);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--ink-2);
+    cursor: pointer;
+    transition:
+      background 0.18s var(--ease),
+      color 0.18s var(--ease);
+  }
+  .ex:hover {
+    background: var(--paper-inset);
+    color: var(--ink);
+  }
+  .ex[aria-pressed="true"] {
+    background: var(--ink);
+    color: var(--paper);
+    box-shadow: none;
+  }
+
+  /* ── La carte rayon X ─────────────────────────────────── */
+  .xray {
+    position: relative;
+    overflow: hidden;
+    margin-top: 18px;
+    padding: 28px;
+    background: var(--paper);
+    border-radius: 24px;
+    box-shadow: inset 0 0 0 1.5px var(--paper-3);
+  }
+  @media (min-width: 900px) {
+    .xray {
+      padding: 34px 38px;
+    }
+  }
+
+  .xray::after {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 44%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(13, 122, 102, 0.1) 55%,
+      rgba(13, 122, 102, 0.55) 96%,
+      transparent 100%
+    );
+    transform: translateX(-110%);
+    pointer-events: none;
+    opacity: 0;
+  }
+  .xray.scanning::after {
+    opacity: 1;
+    animation: sweep 0.95s var(--ease);
+  }
+  @keyframes sweep {
+    from {
+      transform: translateX(-110%);
+    }
+    to {
+      transform: translateX(330%);
+    }
+  }
+
+  .xray-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .fund-name {
+    font-size: clamp(1.375rem, 2.6vw, 1.875rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin: 0;
+  }
+  .fund-meta {
+    margin: 7px 0 0;
+    font-size: 12.5px;
+    color: var(--ink-3);
+    letter-spacing: 0.02em;
+  }
+
+  .verdict {
+    text-align: right;
+  }
+  .verdict-band {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 32px;
+    padding: 0 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .verdict-line {
+    margin: 9px 0 0;
+    font-size: 14px;
+    color: var(--ink-2);
+    max-width: 34ch;
+  }
+
+  .band-mint {
+    background: var(--mint-wash);
+    color: var(--mint-ink);
+  }
+  .band-solar {
+    background: var(--solar-wash);
+    color: var(--solar-ink);
+  }
+  .band-alert {
+    background: var(--alert-wash);
+    color: var(--alert-ink);
+  }
+
+  .pillars {
+    display: grid;
+    gap: 34px;
+    margin-top: 28px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 620px) {
+    .pillars {
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+  }
+  .pillar-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .pillar-name {
+    font-size: 13.5px;
+    font-weight: 700;
+  }
+  .pillar-val {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13.5px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .track {
+    height: 8px;
+    margin-top: 9px;
+    border-radius: 999px;
+    background: var(--paper-inset);
+    overflow: hidden;
+  }
+  .fill {
+    height: 100%;
+    width: 0;
+    border-radius: 999px;
+    transition: width 0.8s var(--ease);
+  }
+
+  .split {
+    display: grid;
+    gap: 22px;
+    margin-top: 30px;
+    grid-template-columns: 1fr 1fr;
+  }
+  @media (max-width: 760px) {
+    .split {
+      grid-template-columns: 1fr;
+    }
+  }
+  .col-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+  .col-title .mark {
+    width: 16px;
+    height: 16px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    font-size: 11px;
+    color: #fff;
+    font-weight: 800;
+  }
+  ul.list {
+    list-style: none;
+    margin: 14px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  ul.list li {
+    display: flex;
+    gap: 10px;
+    font-size: 14.5px;
+    color: var(--ink-2);
+  }
+  ul.list li b {
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .tick {
+    flex: none;
+    font-weight: 800;
+  }
+
+  .source-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    align-items: center;
+    margin-top: 26px;
+    padding-top: 18px;
+    border-top: 1px solid var(--paper-3);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: var(--ink-3);
+  }
+  .timer {
+    color: var(--mint-ink);
+    font-weight: 600;
+  }
+
+  .disclaimer {
+    margin: 16px 0 0;
+    font-size: 13.5px;
+    color: var(--ink-3);
+    max-width: 62ch;
+  }
+
+  /* ── Bandeau de preuves ───────────────────────────────── */
+  .proof {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    margin-top: 56px;
+    background: var(--paper-3);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  @media (max-width: 800px) {
+    .proof {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  .proof div {
+    background: var(--paper);
+    padding: 22px 20px;
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .proof b {
+    display: block;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  /* ── Sections ─────────────────────────────────────────── */
+  section {
+    padding: 84px 0;
+  }
+  .eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mint-ink);
+    margin: 0;
+  }
+  h2 {
+    margin: 14px 0 0;
+    font-size: clamp(1.875rem, 3.6vw, 2.75rem);
+    line-height: 1.06;
+    letter-spacing: -0.035em;
+    font-weight: 800;
+    max-width: 20ch;
+    text-wrap: balance;
+  }
+  .section-lede {
+    margin: 16px 0 0;
+    max-width: 56ch;
+    font-size: 1.0625rem;
+    color: var(--ink-2);
+  }
+
+  .paths {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 36px;
+  }
+  @media (max-width: 860px) {
+    .paths {
+      grid-template-columns: 1fr;
+    }
+  }
+  .path {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 26px;
+    background: var(--paper);
+    border-radius: 20px;
+    text-decoration: none;
+    box-shadow: inset 0 0 0 1.5px var(--paper-3);
+    transition:
+      transform 0.22s var(--ease),
+      box-shadow 0.22s var(--ease);
+  }
+  .path:hover {
+    transform: translateY(-3px);
+    box-shadow: inset 0 0 0 2px var(--ink);
+  }
+  .path-eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+  .path h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+  }
+  .path p {
+    margin: 0;
+    font-size: 14.5px;
+    color: var(--ink-2);
+    flex: 1;
+  }
+  .path span.go {
+    font-size: 14.5px;
+    font-weight: 700;
+  }
+
+  .duel {
+    margin-top: 34px;
+    border-radius: 20px;
+    overflow: hidden;
+    background: var(--paper-3);
+    display: grid;
+    gap: 1px;
+    grid-template-columns: 1fr 1fr;
+  }
+  .duel > div {
+    background: var(--paper);
+    padding: 22px 24px;
+  }
+  .duel .h {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .duel .claim {
+    font-size: 15px;
+    color: var(--ink-2);
+    margin: 0;
+  }
+  .duel .data {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--alert-ink);
+    margin: 0;
+    display: flex;
+    gap: 8px;
+  }
+
+  /* ── CTA final ────────────────────────────────────────── */
+  .final {
+    background: var(--deep);
+    color: var(--on-deep);
+    border-radius: 28px;
+    padding: 76px 28px;
+    text-align: center;
+    margin-bottom: 84px;
+  }
+  .final h2 {
+    margin: 0 auto;
+    color: var(--on-deep);
+    max-width: 17ch;
+  }
+  .final p {
+    margin: 18px auto 0;
+    max-width: 44ch;
+    color: var(--on-deep-2);
+    font-size: 1.0625rem;
+  }
+  .final .btn-mint {
+    margin-top: 30px;
+  }
+  .final small {
+    display: block;
+    margin-top: 14px;
+    color: var(--on-deep-3);
+    font-size: 13px;
+  }
+
+  footer {
+    background: var(--deep);
+    color: var(--on-deep);
+    padding: 52px 0;
+  }
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    justify-content: space-between;
+  }
+  .foot a {
+    color: var(--on-deep-2);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .foot a:hover {
+    color: var(--on-deep);
+  }
+  .foot nav {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 10px 44px;
+  }
+  @media (max-width: 620px) {
+    .foot nav {
+      grid-template-columns: repeat(2, auto);
+    }
+  }
+  .foot .wordmark {
+    color: var(--on-deep);
+  }
+  .foot p {
+    margin: 12px 0 0;
+    font-size: 13px;
+    color: var(--on-deep-3);
+  }
+
+  @media (max-width: 440px) {
+    .nav .btn-sm {
+      font-size: 13px;
+      padding: 0 14px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+</style>
+
+<div class="shell">
+  <div class="nav">
+    <a class="wordmark" href="#">seedow<span>.</span></a>
+    <div class="nav-links">
+      <a class="hide-s" href="#">Cours</a>
+      <a class="hide-s" href="#">Méthodologie</a>
+      <a class="hide-s" href="#">Se connecter</a>
+      <a class="btn btn-ink btn-sm" href="#">Simuler mon portefeuille</a>
+    </div>
+  </div>
+
+  <header class="hero">
+    <span class="chip"><span class="dot" aria-hidden="true"></span>Bêta ouverte · sans compte</span>
+    <h1>Ton argent, <em>à découvert.</em></h1>
+    <p class="lede">
+      Tape le nom d'un fonds. Tu vois ce qu'il finance, ce qu'il ne s'interdit pas de financer, et
+      d'où vient chaque chiffre. Dix secondes, aucun compte.
+    </p>
+
+    <div class="stage">
+      <div class="searchbar">
+        <svg
+          width="22"
+          height="22"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          aria-hidden="true"
+        >
+          <circle cx="11" cy="11" r="7"></circle>
+          <path d="M20 20l-3.5-3.5"></path>
+        </svg>
+        <input
+          id="q"
+          type="text"
+          autocomplete="off"
+          spellcheck="false"
+          aria-label="Cherche un fonds, un ETF, un ISIN"
+          placeholder="Cherche un fonds, un ETF, un ISIN"
+        />
+        <button class="btn btn-mint" id="go" type="button">Passer au rayon X</button>
+      </div>
+
+      <div class="examples">
+        <span class="examples-label">Essaie :</span>
+        <button class="ex" type="button" data-i="0" aria-pressed="true">
+          Horizon Climat Europe
+        </button>
+        <button class="ex" type="button" data-i="1" aria-pressed="false">
+          Global Balanced Core
+        </button>
+        <button class="ex" type="button" data-i="2" aria-pressed="false">Tech Leaders World</button>
+      </div>
+
+      <article class="xray" id="xray" aria-live="polite">
+        <div class="xray-head">
+          <div>
+            <h2 class="fund-name" id="f-name">Horizon Climat Europe</h2>
+            <p class="fund-meta mono" id="f-meta">ISIN FR0000000001 · ETF actions · TER 0,32 %</p>
+          </div>
+          <div class="verdict">
+            <span class="verdict-band band-mint" id="f-band">Plutôt aligné</span>
+            <p class="verdict-line" id="f-verdict">
+              Va dans le bon sens, avec quelques angles morts.
+            </p>
+          </div>
+        </div>
+
+        <div class="pillars" id="pillars"></div>
+
+        <div class="split">
+          <div>
+            <p class="col-title" style="color: var(--mint-ink)">
+              <span class="mark" style="background: var(--mint)" aria-hidden="true">+</span>
+              Ce que ce fonds finance
+            </p>
+            <ul class="list" id="f-pos"></ul>
+          </div>
+          <div>
+            <p class="col-title" style="color: var(--alert-ink)">
+              <span class="mark" style="background: var(--alert)" aria-hidden="true">−</span>
+              Ce qu'il ne s'interdit pas
+            </p>
+            <ul class="list" id="f-neg"></ul>
+          </div>
+        </div>
+
+        <div class="source-line">
+          <span id="f-src">Sources : MSCI ESG · SFDR · Yahoo Finance — relevé du 26 août 2026</span>
+          <span class="timer" id="f-timer">analysé en 0,0 s</span>
+        </div>
+      </article>
+
+      <p class="disclaimer">
+        Fonds de démonstration : les trois exemples ci-dessus décrivent la forme de l'analyse, pas
+        un produit réel. Dans l'app, chaque ligne porte sa source et sa date. Seedow n'investit pas
+        à ta place, ne vend aucun produit et ne touche aucune commission.
+      </p>
+    </div>
+
+    <div class="proof">
+      <div><b>Entier</b>Le catalogue, consultable sans compte</div>
+      <div><b>3</b>Sources publiques : MSCI ESG, SFDR, Yahoo Finance</div>
+      <div><b>0</b>Conseil financier, jamais</div>
+      <div><b>Gratuit</b>Douze cours, sans compte</div>
+    </div>
+  </header>
+
+  <section>
+    <p class="eyebrow">Par où commencer</p>
+    <h2>Que veux-tu faire ?</h2>
+    <div class="paths">
+      <a class="path" href="#">
+        <span class="path-eyebrow" style="color: var(--mint-ink)">Je débute</span>
+        <h3>Je n'ai jamais investi</h3>
+        <p>On part de zéro, sans jargon. En 2 minutes tu vois par où commencer.</p>
+        <span class="go" style="color: var(--mint-ink)">Commencer →</span>
+      </a>
+      <a class="path" href="#">
+        <span class="path-eyebrow" style="color: var(--ice-ink)">Je veux comprendre</span>
+        <h3>ETF, fonds, actions… c'est quoi ?</h3>
+        <p>Comprends ce qu'il y a derrière ces mots, sans jargon, à ton rythme.</p>
+        <span class="go" style="color: var(--ice-ink)">Comprendre →</span>
+      </a>
+      <a class="path" href="#">
+        <span class="path-eyebrow" style="color: var(--volt-ink)">J'investis déjà</span>
+        <h3>Comprendre mon portefeuille</h3>
+        <p>Ajoute tes investissements et vois vraiment ce que ton argent finance.</p>
+        <span class="go" style="color: var(--volt-ink)">Voir mon portefeuille →</span>
+      </a>
+    </div>
+  </section>
+
+  <section style="padding-top: 0">
+    <p class="eyebrow" style="color: var(--ice-ink)">Observatoire</p>
+    <h2>Ce qu'un fonds dit. Ce que ses données montrent.</h2>
+    <p class="section-lede">
+      Un fonds peut se déclarer durable et ne rien s'interdire. Seedow met les deux colonnes côte à
+      côte, fonds par fonds, avec la source et la date.
+    </p>
+    <div class="duel">
+      <div>
+        <p class="h">Ce que le fonds dit</p>
+        <p class="claim" style="margin-top: 10px">Fonds durable, article 8 SFDR</p>
+      </div>
+      <div>
+        <p class="h">Ce que la donnée montre</p>
+        <p class="data" style="margin-top: 10px">
+          <span aria-hidden="true">▲</span> Aucune exclusion sectorielle déclarée
+        </p>
+      </div>
+      <div><p class="claim">Orienté transition climatique</p></div>
+      <div>
+        <p class="data">
+          <span aria-hidden="true">▲</span> Intensité carbone au-dessus de l'indice monde
+        </p>
+      </div>
+      <div><p class="claim">Sélection ESG rigoureuse</p></div>
+      <div>
+        <p class="data"><span aria-hidden="true">▲</span> Piliers E, S et G non publiés</p>
+      </div>
+    </div>
+    <p class="disclaimer" style="margin-top: 18px">
+      Ces trois lignes décrivent la forme du tableau, pas un fonds en particulier : l'Observatoire
+      nomme les fonds, avec leurs chiffres et leurs sources.
+    </p>
+  </section>
+
+  <div class="final">
+    <h2>Prêt à voir où va ton argent ?</h2>
+    <p>Deux minutes, sans compte, sans carte bancaire.</p>
+    <a class="btn btn-mint" href="#">Simuler mon portefeuille</a>
+    <small>Seedow est un outil de simulation. Aucun argent réel n'est investi ici.</small>
+  </div>
+</div>
+
+<footer>
+  <div class="shell foot">
+    <div>
+      <span class="wordmark">seedow<span style="color: var(--mint)">.</span></span>
+      <p>© 2026 · Ton argent façonne déjà le monde.</p>
+    </div>
+    <nav>
+      <a href="#">Cours</a><a href="#">Méthodologie</a><a href="#">Observatoire</a>
+      <a href="#">Tarifs</a><a href="#">Aide</a><a href="#">Mentions légales</a>
+      <a href="#">Confidentialité</a><a href="#">CGU</a><a href="#">Se connecter</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  const FUNDS = [
+    {
+      name: "Horizon Climat Europe",
+      meta: "ISIN FR0000000001 · ETF actions · TER 0,32 %",
+      band: "Plutôt aligné",
+      tone: "mint",
+      verdict: "Va dans le bon sens, avec quelques angles morts.",
+      pillars: [
+        ["Environnement", 78, "mint"],
+        ["Social", 54, "solar"],
+        ["Gouvernance", 61, "solar"],
+      ],
+      pos: [
+        ["Rénovation énergétique", "31 % de l'encours"],
+        ["Réseaux électriques", "18 %"],
+        ["Mobilité bas carbone", "9 %"],
+      ],
+      neg: [
+        ["Gaz fossile", "aucune exclusion déclarée"],
+        ["Sous-traitants d'armement", "aucune exclusion déclarée"],
+      ],
+      src: "Sources : MSCI ESG · SFDR · Yahoo Finance — relevé du 26 août 2026",
+      time: "8,2",
+    },
+    {
+      name: "Global Balanced Core",
+      meta: "ISIN LU0000000002 · fonds diversifié · TER 1,08 %",
+      band: "Mitigé",
+      tone: "solar",
+      verdict: "Autant d'alignement que de contradictions.",
+      pillars: [
+        ["Environnement", 46, "solar"],
+        ["Social", 44, "solar"],
+        ["Gouvernance", 67, "mint"],
+      ],
+      pos: [
+        ["Obligations vertes souveraines", "12 % de l'encours"],
+        ["Santé publique", "7 %"],
+      ],
+      neg: [
+        ["Pétrole et gaz", "6 % de l'encours"],
+        ["Charbon thermique", "aucune exclusion déclarée"],
+        ["Intensité carbone", "au-dessus de l'indice monde"],
+      ],
+      src: "Sources : MSCI ESG · SFDR · Yahoo Finance — relevé du 26 août 2026",
+      time: "6,9",
+    },
+    {
+      name: "Tech Leaders World",
+      meta: "ISIN IE0000000003 · ETF actions · TER 0,20 %",
+      band: "Peu aligné",
+      tone: "alert",
+      verdict: "Finance largement ce que tu voulais éviter.",
+      pillars: [
+        ["Environnement", 29, "alert"],
+        ["Social", 33, "alert"],
+        ["Gouvernance", 58, "solar"],
+      ],
+      pos: [["Efficacité énergétique des data centers", "4 % de l'encours"]],
+      neg: [
+        ["Surveillance de masse", "aucune exclusion déclarée"],
+        ["Droit du travail des sous-traitants", "donnée indisponible"],
+        ["Concentration", "les 5 premières lignes = 41 %"],
+      ],
+      src: "Sources : MSCI ESG · SFDR · Yahoo Finance — relevé du 26 août 2026",
+      time: "7,4",
+    },
+  ];
+
+  const TONES = { mint: "--mint", solar: "--solar", alert: "--alert" };
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const $ = (id) => document.getElementById(id);
+  const input = $("q"),
+    xray = $("xray");
+  let typing = null;
+
+  function paint(f) {
+    $("f-name").textContent = f.name;
+    $("f-meta").textContent = f.meta;
+    const band = $("f-band");
+    band.textContent = f.band;
+    band.className = "verdict-band band-" + f.tone;
+    $("f-verdict").textContent = f.verdict;
+    $("f-src").textContent = f.src;
+    $("f-timer").textContent = "analysé en " + f.time + " s";
+
+    $("pillars").innerHTML = f.pillars
+      .map(
+        ([n, v, t]) => `
+      <div>
+        <div class="pillar-top"><span class="pillar-name">${n}</span><span class="pillar-val" style="color: var(${TONES[t]})">${v}/100</span></div>
+        <div class="track"><div class="fill" data-w="${v}" style="background: var(${TONES[t]})"></div></div>
+      </div>`,
+      )
+      .join("");
+
+    $("f-pos").innerHTML = f.pos
+      .map(
+        ([a, b]) =>
+          `<li><span class="tick" style="color: var(--mint)" aria-hidden="true">+</span><span><b>${a}</b> — ${b}</span></li>`,
+      )
+      .join("");
+    $("f-neg").innerHTML = f.neg
+      .map(
+        ([a, b]) =>
+          `<li><span class="tick" style="color: var(--alert)" aria-hidden="true">−</span><span><b>${a}</b> — ${b}</span></li>`,
+      )
+      .join("");
+
+    requestAnimationFrame(() => {
+      document.querySelectorAll(".fill").forEach((el, i) => {
+        setTimeout(
+          () => {
+            el.style.width = el.dataset.w + "%";
+          },
+          reduce ? 0 : 90 * i,
+        );
+      });
+    });
+  }
+
+  function scan(i) {
+    const f = FUNDS[i];
+    document
+      .querySelectorAll(".ex")
+      .forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.i === i)));
+    if (reduce) {
+      input.value = f.name;
+      paint(f);
+      return;
+    }
+    xray.classList.remove("scanning");
+    void xray.offsetWidth;
+    xray.classList.add("scanning");
+    setTimeout(() => paint(f), 420);
+  }
+
+  function type(text, done) {
+    clearInterval(typing);
+    input.value = "";
+    let n = 0;
+    typing = setInterval(() => {
+      input.value = text.slice(0, ++n);
+      if (n >= text.length) {
+        clearInterval(typing);
+        setTimeout(done, 260);
+      }
+    }, 42);
+  }
+
+  document.querySelectorAll(".ex").forEach((b) => {
+    b.addEventListener("click", () => {
+      const i = +b.dataset.i;
+      if (reduce) {
+        scan(i);
+        return;
+      }
+      type(FUNDS[i].name, () => scan(i));
+    });
+  });
+
+  $("go").addEventListener("click", () => scan(0));
+  // Ouverture : le champ se remplit tout seul, puis le fonds s'ouvre.
+  paint(FUNDS[0]);
+  if (!reduce) {
+    input.value = "";
+    setTimeout(() => type(FUNDS[0].name, () => scan(0)), 900);
+  } else {
+    input.value = FUNDS[0].name;
+  }
+</script>

@@ -1,0 +1,1034 @@
+<title>Le Flux Seedow</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+/>
+
+<!--
+  PROPOSITION 3 — « Le Flux »
+  Parti pris : rendre l'argent visible avant de l'expliquer. Un flux de
+  particules part de ton épargne et se répartit, en direct, dans ce qu'elle
+  finance. On coche une conviction : le flux se redirige sous les yeux.
+  C'est le seul endroit de la page où la couleur est saturée — le reste
+  reste sobre (DA V3 : accent < 5 % de la surface).
+  Le noir n'est plus un décor triste, il devient le fond sur lequel la
+  lumière circule.
+  Données : illustration du mécanisme, valeurs de démonstration, étiquetées
+  comme telles à l'écran.
+-->
+
+<style>
+  :root {
+    --paper: #ffffff;
+    --paper-2: #f5f4f1;
+    --paper-3: #dddad3;
+    --paper-inset: #edebe6;
+    --deep: #0e0f10;
+    --deep-2: #212427;
+    --on-deep: #ffffff;
+    --on-deep-2: #b7bbc0;
+    --on-deep-3: #9aa0a6;
+    --on-deep-line: rgba(255, 255, 255, 0.13);
+    --ink: #16181a;
+    --ink-2: #5d6167;
+    --ink-3: #666a6f;
+    --mint: #0d7a66;
+    --mint-ink: #0c6857;
+    --alert-ink: #b23124;
+    --ice-ink: #1b5299;
+    --volt-ink: #544593;
+    --solar-ink: #8a5406;
+    /* Encres lumineuses, réservées à la bande sombre */
+    --glow-mint: #4ed0ae;
+    --glow-ice: #7faef5;
+    --glow-volt: #a996ee;
+    --glow-solar: #e0b45e;
+    --glow-alert: #ff9a8a;
+    --glow-mute: #6f757c;
+    --ease: cubic-bezier(0.2, 0, 0, 1);
+    --shell: 1200px;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: var(--paper-2);
+    color: var(--ink);
+    font-family:
+      "Manrope",
+      system-ui,
+      -apple-system,
+      sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .shell {
+    max-width: var(--shell);
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+  a {
+    color: inherit;
+  }
+  :focus-visible {
+    outline: 2px solid var(--glow-mint);
+    outline-offset: 3px;
+    border-radius: 8px;
+  }
+
+  /* ── Bande sombre : nav + flux ────────────────────────── */
+  .dark-band {
+    background: var(--deep);
+    color: var(--on-deep);
+    padding-bottom: 64px;
+  }
+
+  .nav {
+    height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .wordmark {
+    font-weight: 800;
+    font-size: 21px;
+    letter-spacing: -0.03em;
+    text-decoration: none;
+    color: var(--on-deep);
+  }
+  .wordmark span {
+    color: var(--glow-mint);
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .nav-links a {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--on-deep-2);
+    text-decoration: none;
+  }
+  .nav-links a:hover {
+    color: var(--on-deep);
+  }
+  @media (max-width: 760px) {
+    .nav-links a.hide-s {
+      display: none;
+    }
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 48px;
+    padding: 0 26px;
+    border-radius: 999px;
+    border: 0;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform 0.2s var(--ease);
+  }
+  .btn:hover {
+    transform: scale(1.03);
+  }
+  .btn-sm {
+    height: 40px;
+    padding: 0 18px;
+    font-size: 14px;
+  }
+  .btn-light {
+    background: var(--on-deep);
+    color: var(--deep);
+  }
+  .btn-mint {
+    background: var(--mint);
+    color: #fff;
+  }
+
+  .hero-top {
+    padding-top: 30px;
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 40px;
+    align-items: end;
+  }
+  @media (max-width: 900px) {
+    .hero-top {
+      grid-template-columns: 1fr;
+      gap: 22px;
+      align-items: start;
+    }
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    height: 34px;
+    padding: 0 15px;
+    border-radius: 999px;
+    background: rgba(78, 208, 174, 0.14);
+    color: var(--glow-mint);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: var(--glow-mint);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.3;
+    }
+  }
+
+  h1 {
+    margin: 20px 0 0;
+    font-size: clamp(2.5rem, 6.6vw, 4.75rem);
+    line-height: 0.96;
+    letter-spacing: -0.045em;
+    font-weight: 800;
+    max-width: 14ch;
+    text-wrap: balance;
+  }
+  h1 em {
+    font-style: normal;
+    color: var(--glow-mint);
+  }
+  .lede {
+    margin: 20px 0 0;
+    max-width: 50ch;
+    font-size: clamp(1.0625rem, 1.4vw, 1.1875rem);
+    color: var(--on-deep-2);
+  }
+
+  /* ── Les convictions ──────────────────────────────────── */
+  .switchboard {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .sw-group-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--on-deep-3);
+    margin: 0 0 9px;
+  }
+  .sw-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+  }
+  .sw {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    height: 42px;
+    padding: 0 17px;
+    border-radius: 999px;
+    border: 1.5px solid var(--on-deep-line);
+    background: transparent;
+    color: var(--on-deep-2);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.22s var(--ease);
+  }
+  .sw:hover {
+    border-color: var(--on-deep-3);
+    color: var(--on-deep);
+  }
+  .sw .led {
+    width: 9px;
+    height: 9px;
+    border-radius: 999px;
+    background: var(--glow-mute);
+    transition: background 0.22s var(--ease);
+  }
+  .sw[aria-pressed="true"] {
+    color: var(--deep);
+  }
+  .sw[aria-pressed="true"] .led {
+    background: var(--deep);
+  }
+  .sw.want[aria-pressed="true"] {
+    background: var(--glow-mint);
+    border-color: var(--glow-mint);
+  }
+  .sw.refuse[aria-pressed="true"] {
+    background: var(--glow-alert);
+    border-color: var(--glow-alert);
+  }
+  .sw .state {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    opacity: 0.72;
+  }
+
+  /* ── Le plateau du flux ───────────────────────────────── */
+  .flux {
+    position: relative;
+    margin-top: 30px;
+    border: 1px solid var(--on-deep-line);
+    border-radius: 26px;
+    overflow: hidden;
+    background: linear-gradient(180deg, #131517 0%, #0e0f10 100%);
+    display: grid;
+    grid-template-columns: 1fr 300px;
+  }
+  @media (max-width: 900px) {
+    .flux {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .canvas-wrap {
+    position: relative;
+    min-height: 420px;
+  }
+  @media (max-width: 900px) {
+    .canvas-wrap {
+      min-height: 300px;
+    }
+  }
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+  }
+
+  .source {
+    position: absolute;
+    left: 26px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    pointer-events: none;
+  }
+  .source .amount {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 1.375rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--on-deep);
+  }
+  .source .who {
+    font-size: 12.5px;
+    color: var(--on-deep-3);
+  }
+
+  .ledger {
+    border-left: 1px solid var(--on-deep-line);
+    padding: 24px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  @media (max-width: 900px) {
+    .ledger {
+      border-left: 0;
+      border-top: 1px solid var(--on-deep-line);
+    }
+  }
+  .ledger h2 {
+    margin: 0 0 12px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--on-deep-3);
+  }
+  .lane {
+    display: grid;
+    grid-template-columns: 10px 1fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .lane:last-of-type {
+    border-bottom: 0;
+  }
+  .lane .swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+  }
+  .lane .name {
+    font-size: 13.5px;
+    color: var(--on-deep-2);
+  }
+  .lane.off .name {
+    color: var(--on-deep-3);
+    text-decoration: line-through;
+  }
+  .lane .pct {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13.5px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--on-deep);
+  }
+  .lane.off .pct {
+    color: var(--on-deep-3);
+  }
+  .ledger .src {
+    margin: 14px 0 0;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--on-deep-3);
+  }
+
+  .flux-foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 22px;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+  }
+  .flux-foot p {
+    margin: 0;
+    font-size: 13.5px;
+    color: var(--on-deep-3);
+    max-width: 62ch;
+  }
+
+  .hero-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 22px;
+    margin-top: 30px;
+  }
+  .hero-cta a.text {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--on-deep);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .hero-cta a.text:hover {
+    text-decoration: none;
+  }
+
+  /* ── Bande claire ─────────────────────────────────────── */
+  section {
+    padding: 84px 0;
+  }
+  .eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--mint-ink);
+    margin: 0;
+  }
+  h2.big {
+    margin: 14px 0 0;
+    font-size: clamp(1.875rem, 3.6vw, 2.75rem);
+    line-height: 1.05;
+    letter-spacing: -0.038em;
+    font-weight: 800;
+    max-width: 20ch;
+    text-wrap: balance;
+  }
+  .section-lede {
+    margin: 16px 0 0;
+    max-width: 56ch;
+    font-size: 1.0625rem;
+    color: var(--ink-2);
+  }
+
+  .proof {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--paper-3);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: -34px;
+    position: relative;
+    z-index: 2;
+  }
+  @media (max-width: 800px) {
+    .proof {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  .proof div {
+    background: var(--paper);
+    padding: 22px 20px;
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .proof b {
+    display: block;
+    font-size: 21px;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 5px;
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 36px;
+    counter-reset: s;
+  }
+  @media (max-width: 860px) {
+    .steps {
+      grid-template-columns: 1fr;
+    }
+  }
+  .step {
+    padding: 26px;
+    background: var(--paper);
+    border-radius: 20px;
+    box-shadow: inset 0 0 0 1.5px var(--paper-3);
+  }
+  .step .num {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--mint-ink);
+  }
+  .step h3 {
+    margin: 12px 0 0;
+    font-size: 1.1875rem;
+    letter-spacing: -0.025em;
+  }
+  .step p {
+    margin: 9px 0 0;
+    font-size: 14.5px;
+    color: var(--ink-2);
+  }
+
+  .chat {
+    margin-top: 36px;
+    padding: 28px;
+    background: var(--paper);
+    border-radius: 22px;
+    box-shadow: inset 0 0 0 1.5px var(--paper-3);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .msg {
+    max-width: 62ch;
+  }
+  .msg .who {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .msg p {
+    margin: 7px 0 0;
+    font-size: 15.5px;
+  }
+  .msg.ethi {
+    align-self: flex-end;
+    text-align: left;
+    padding: 18px 22px;
+    background: var(--paper-2);
+    border-radius: 18px;
+  }
+  .msg.ethi .who {
+    color: var(--volt-ink);
+  }
+
+  .final {
+    background: var(--deep);
+    color: var(--on-deep);
+    border-radius: 28px;
+    padding: 80px 28px;
+    text-align: center;
+    margin-bottom: 84px;
+  }
+  .final h2 {
+    margin: 0 auto;
+    max-width: 17ch;
+    font-size: clamp(1.875rem, 3.8vw, 2.75rem);
+    line-height: 1.06;
+    letter-spacing: -0.04em;
+    font-weight: 800;
+  }
+  .final p {
+    margin: 18px auto 0;
+    max-width: 44ch;
+    color: var(--on-deep-2);
+    font-size: 1.0625rem;
+  }
+  .final .btn {
+    margin-top: 30px;
+  }
+  .final small {
+    display: block;
+    margin-top: 16px;
+    color: var(--on-deep-3);
+    font-size: 13px;
+  }
+
+  footer {
+    background: var(--deep);
+    color: var(--on-deep);
+    padding: 52px 0;
+  }
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    justify-content: space-between;
+  }
+  .foot a {
+    color: var(--on-deep-2);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .foot a:hover {
+    color: var(--on-deep);
+  }
+  .foot nav {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 10px 44px;
+  }
+  @media (max-width: 620px) {
+    .foot nav {
+      grid-template-columns: repeat(2, auto);
+    }
+  }
+  .foot p {
+    margin: 12px 0 0;
+    font-size: 13px;
+    color: var(--on-deep-3);
+  }
+
+  @media (max-width: 440px) {
+    .nav .btn-sm {
+      font-size: 13px;
+      padding: 0 14px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+</style>
+
+<div class="dark-band">
+  <div class="shell">
+    <div class="nav">
+      <a class="wordmark" href="#">seedow<span>.</span></a>
+      <div class="nav-links">
+        <a class="hide-s" href="#">Cours</a>
+        <a class="hide-s" href="#">Méthodologie</a>
+        <a class="hide-s" href="#">Se connecter</a>
+        <a class="btn btn-light btn-sm" href="#">Simuler mon portefeuille</a>
+      </div>
+    </div>
+
+    <div class="hero-top">
+      <div>
+        <span class="chip"
+          ><span class="dot" aria-hidden="true"></span>Bêta ouverte · sans compte</span
+        >
+        <h1>Regarde où va <em>ton argent.</em></h1>
+        <p class="lede">
+          Ton épargne circule déjà, quelque part, tous les mois. Coche ce que tu veux financer et ce
+          que tu refuses : le flux se redirige sous tes yeux.
+        </p>
+      </div>
+
+      <div class="switchboard">
+        <div>
+          <p class="sw-group-label">Ce que je veux financer</p>
+          <div class="sw-row">
+            <button class="sw want" type="button" data-want="climat" aria-pressed="true">
+              <span class="led" aria-hidden="true"></span>Climat<span class="state">ON</span>
+            </button>
+            <button class="sw want" type="button" data-want="sante" aria-pressed="false">
+              <span class="led" aria-hidden="true"></span>Santé, éducation<span class="state"
+                >OFF</span
+              >
+            </button>
+            <button class="sw want" type="button" data-want="biodiv" aria-pressed="false">
+              <span class="led" aria-hidden="true"></span>Biodiversité<span class="state">OFF</span>
+            </button>
+          </div>
+        </div>
+        <div>
+          <p class="sw-group-label">Ce que je refuse</p>
+          <div class="sw-row">
+            <button class="sw refuse" type="button" data-refuse="fossiles" aria-pressed="false">
+              <span class="led" aria-hidden="true"></span>Énergies fossiles<span class="state"
+                >OFF</span
+              >
+            </button>
+            <button class="sw refuse" type="button" data-refuse="armement" aria-pressed="false">
+              <span class="led" aria-hidden="true"></span>Armement<span class="state">OFF</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flux">
+      <div class="canvas-wrap">
+        <canvas id="flux" aria-hidden="true"></canvas>
+        <div class="source">
+          <span class="amount">150 €</span>
+          <span class="who">par mois, ton épargne</span>
+        </div>
+      </div>
+
+      <div class="ledger">
+        <h2>Ce que ça finance</h2>
+        <div id="lanes"></div>
+        <p class="src">
+          Illustration du mécanisme · valeurs de démonstration.<br />
+          Dans l'app : MSCI ESG · SFDR · Yahoo Finance, chaque ligne datée.
+        </p>
+      </div>
+    </div>
+
+    <div class="flux-foot">
+      <p>
+        Ce schéma montre comment une répartition se déplace quand tu changes tes critères. Ce n'est
+        pas une prévision de rendement, et aucun argent réel n'est investi ici.
+      </p>
+    </div>
+
+    <div class="hero-cta">
+      <a class="btn btn-mint" href="#">Simuler mon portefeuille · 2 min</a>
+      <a class="text" href="#">Je ne sais pas quoi chercher →</a>
+    </div>
+  </div>
+</div>
+
+<div class="shell">
+  <div class="proof">
+    <div><b>Entier</b>Le catalogue, consultable sans compte</div>
+    <div><b>3</b>Sources publiques : MSCI ESG, SFDR, Yahoo Finance</div>
+    <div><b>0</b>Conseil financier, jamais</div>
+    <div><b>0 €</b>Douze cours, sans compte</div>
+  </div>
+
+  <section>
+    <p class="eyebrow">Comment ça marche</p>
+    <h2 class="big">Trois écrans, et tu sais.</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="num">ÉTAPE 01</span>
+        <h3>Tu dis ce qui compte</h3>
+        <p>
+          Cinq questions, pas un questionnaire de banque. Ce que tu veux financer, ce que tu
+          refuses.
+        </p>
+      </div>
+      <div class="step">
+        <span class="num">ÉTAPE 02</span>
+        <h3>Tu vois le détail</h3>
+        <p>
+          Chaque fonds proposé s'ouvre : ce qu'il finance, ce qu'il ne s'interdit pas, et d'où vient
+          le chiffre.
+        </p>
+      </div>
+      <div class="step">
+        <span class="num">ÉTAPE 03</span>
+        <h3>Tu décides</h3>
+        <p>
+          Seedow n'investit pas à ta place, ne vend aucun produit et ne touche aucune commission.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top: 0">
+    <p class="eyebrow" style="color: var(--volt-ink)">Ethi</p>
+    <h2 class="big">Une IA qui explique, jamais qui vend.</h2>
+    <p class="section-lede">
+      Pose n'importe quelle question sur ton portefeuille. Ethi t'explique le mécanisme et cite ses
+      sources — sans jamais te recommander d'acheter.
+    </p>
+    <div class="chat">
+      <div class="msg">
+        <span class="who">Toi</span>
+        <p>C'est quoi cette ligne à 4 % dans mon portefeuille ?</p>
+      </div>
+      <div class="msg ethi">
+        <span class="who">Ethi</span>
+        <p>
+          Un fonds obligataire vert qui finance des rénovations énergétiques en Europe. Rendement
+          stable, faible volatilité.
+        </p>
+      </div>
+      <div class="msg">
+        <span class="who">Toi</span>
+        <p>Et si je veux plus d'impact direct ?</p>
+      </div>
+      <div class="msg ethi">
+        <span class="who">Ethi</span>
+        <p>
+          Je peux te montrer 3 fonds équivalents en risque, avec un score climat supérieur — à toi
+          de décider. Je ne te dis pas quoi acheter.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="final">
+    <h2>Prêt à voir où va ton argent ?</h2>
+    <p>Deux minutes, sans compte, sans carte bancaire.</p>
+    <a class="btn btn-mint" href="#">Simuler mon portefeuille</a>
+    <small>Seedow est un outil de simulation. Aucun argent réel n'est investi ici.</small>
+  </div>
+</div>
+
+<footer>
+  <div class="shell foot">
+    <div>
+      <span class="wordmark">seedow<span>.</span></span>
+      <p>© 2026 · Ton argent façonne déjà le monde.</p>
+    </div>
+    <nav>
+      <a href="#">Cours</a><a href="#">Méthodologie</a><a href="#">Observatoire</a>
+      <a href="#">Tarifs</a><a href="#">Aide</a><a href="#">Mentions légales</a>
+      <a href="#">Confidentialité</a><a href="#">CGU</a><a href="#">Se connecter</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  const css = getComputedStyle(document.documentElement);
+  const C = (n) => css.getPropertyValue(n).trim();
+
+  // Six destinations. `base` = répartition de départ, `tags` = leviers.
+  const LANES = [
+    {
+      id: "renouv",
+      name: "Énergies renouvelables",
+      color: C("--glow-mint"),
+      base: 14,
+      want: "climat",
+    },
+    {
+      id: "renov",
+      name: "Rénovation, bâtiment",
+      color: C("--glow-mint"),
+      base: 11,
+      want: "climat",
+    },
+    {
+      id: "vivant",
+      name: "Eau, forêts, agriculture",
+      color: C("--glow-ice"),
+      base: 8,
+      want: "biodiv",
+    },
+    { id: "social", name: "Santé, éducation", color: C("--glow-volt"), base: 10, want: "sante" },
+    { id: "divers", name: "Industrie diversifiée", color: C("--glow-mute"), base: 39 },
+    {
+      id: "fossile",
+      name: "Pétrole, gaz, charbon",
+      color: C("--glow-alert"),
+      base: 13,
+      refuse: "fossiles",
+    },
+    { id: "arme", name: "Armement", color: C("--glow-solar"), base: 5, refuse: "armement" },
+  ];
+
+  const state = { climat: true, sante: false, biodiv: false, fossiles: false, armement: false };
+  LANES.forEach((l) => {
+    l.w = l.base;
+    l.target = l.base;
+  });
+
+  function recompute() {
+    let raw = LANES.map((l) => {
+      if (l.refuse && state[l.refuse]) return 0;
+      if (l.want && state[l.want]) return l.base * 2.6;
+      return l.base;
+    });
+    const sum = raw.reduce((a, b) => a + b, 0) || 1;
+    LANES.forEach((l, i) => {
+      l.target = (raw[i] / sum) * 100;
+    });
+    renderLedger();
+  }
+
+  function renderLedger() {
+    document.getElementById("lanes").innerHTML = LANES.map(
+      (l) => `
+      <div class="lane${l.target < 0.5 ? " off" : ""}">
+        <span class="swatch" style="background:${l.target < 0.5 ? C("--glow-mute") : l.color}" aria-hidden="true"></span>
+        <span class="name">${l.name}</span>
+        <span class="pct">${l.target < 0.5 ? "exclu" : l.target.toFixed(0) + " %"}</span>
+      </div>`,
+    ).join("");
+  }
+
+  document.querySelectorAll(".sw").forEach((b) => {
+    b.addEventListener("click", () => {
+      const key = b.dataset.want || b.dataset.refuse;
+      state[key] = !state[key];
+      b.setAttribute("aria-pressed", String(state[key]));
+      b.querySelector(".state").textContent = state[key] ? "ON" : "OFF";
+      recompute();
+    });
+  });
+
+  /* ── Le flux ───────────────────────────────────────────
+     Canvas plutôt que SVG : quelques centaines de particules,
+     redirigées à chaque changement de conviction. */
+  const cv = document.getElementById("flux");
+  const ctx = cv.getContext("2d");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let W = 0,
+    H = 0,
+    dpr = 1;
+
+  function resize() {
+    const r = cv.parentElement.getBoundingClientRect();
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = r.width;
+    H = r.height;
+    cv.width = W * dpr;
+    cv.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function laneY(i) {
+    const top = H * 0.12,
+      bottom = H * 0.88;
+    return top + ((bottom - top) * i) / (LANES.length - 1);
+  }
+
+  function pick() {
+    const total = LANES.reduce((a, l) => a + l.w, 0) || 1;
+    let r = Math.random() * total;
+    for (let i = 0; i < LANES.length; i++) {
+      r -= LANES[i].w;
+      if (r <= 0) return i;
+    }
+    return LANES.length - 1;
+  }
+
+  const N = 280;
+  const P = Array.from({ length: N }, () => ({
+    t: Math.random(),
+    lane: pick(),
+    v: 0.0028 + Math.random() * 0.0034,
+    j: (Math.random() - 0.5) * 26,
+    r: 1.1 + Math.random() * 1.5,
+  }));
+
+  function bez(t, a, b, c, d) {
+    const u = 1 - t;
+    return u * u * u * a + 3 * u * u * t * b + 3 * u * t * t * c + t * t * t * d;
+  }
+
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+    LANES.forEach((l) => {
+      l.w += (l.target - l.w) * 0.06;
+    });
+
+    const x0 = W * 0.09,
+      x1 = W * 0.97,
+      my = H / 2;
+
+    // Rails : une trace discrète par destination, épaisse selon la part.
+    LANES.forEach((l, i) => {
+      const y = laneY(i);
+      ctx.beginPath();
+      ctx.moveTo(x0, my);
+      ctx.bezierCurveTo(W * 0.45, my, W * 0.58, y, x1, y);
+      ctx.strokeStyle = l.color;
+      ctx.globalAlpha = 0.05 + Math.min(l.w / 100, 0.4) * 0.32;
+      ctx.lineWidth = 1 + (l.w / 100) * 16;
+      ctx.stroke();
+    });
+    ctx.globalAlpha = 1;
+
+    P.forEach((p) => {
+      p.t += p.v;
+      if (p.t >= 1) {
+        p.t -= 1;
+        p.lane = pick();
+        p.j = (Math.random() - 0.5) * 26;
+      }
+      const l = LANES[p.lane];
+      const y = laneY(p.lane);
+      const px = bez(p.t, x0, W * 0.45, W * 0.58, x1);
+      const py = bez(p.t, my + p.j * 0.4, my + p.j, y + p.j * 0.5, y);
+      const fade = p.t < 0.06 ? p.t / 0.06 : p.t > 0.93 ? (1 - p.t) / 0.07 : 1;
+      ctx.beginPath();
+      ctx.arc(px, py, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = l.color;
+      ctx.globalAlpha = 0.85 * fade;
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+
+    // Le point de départ : ton épargne.
+    ctx.beginPath();
+    ctx.arc(x0, my, 6, 0, Math.PI * 2);
+    ctx.fillStyle = C("--on-deep");
+    ctx.fill();
+
+    if (!reduce) requestAnimationFrame(frame);
+  }
+
+  new ResizeObserver(resize).observe(cv.parentElement);
+  resize();
+  recompute();
+  LANES.forEach((l) => {
+    l.w = l.target;
+  });
+  frame();
+</script>
