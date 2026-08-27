@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { buildEuroBreakdown, DEFAULT_REFERENCE_AMOUNT } from "@/lib/impact/euroBreakdown";
+import {
+  buildEuroBreakdown,
+  DEFAULT_REFERENCE_AMOUNT,
+  hasPublishedComposition,
+} from "@/lib/impact/euroBreakdown";
 import type { HoldingLine } from "@/lib/portfolio/holdings-summary";
 
 const line = (
@@ -104,5 +108,21 @@ describe("buildEuroBreakdown", () => {
     ]);
     expect(b!.lineCount).toBe(2);
     expect(b!.sectors).toEqual([{ key: "Santé", weightPct: 25, euros: 250 }]);
+  });
+});
+
+describe("hasPublishedComposition", () => {
+  it("suit exactement le prédicat de buildEuroBreakdown", () => {
+    const cases: HoldingLine[][] = [
+      [],
+      [line("Cash", null)],
+      [line("Zéro", 0)],
+      [line("Négatif", -4)],
+      [line("Apple", 4.2, "Technologie")],
+      [line("Cash", null), line("Apple", 0.01)],
+    ];
+    for (const holdings of cases) {
+      expect(hasPublishedComposition(holdings)).toBe(buildEuroBreakdown(holdings) !== null);
+    }
   });
 });

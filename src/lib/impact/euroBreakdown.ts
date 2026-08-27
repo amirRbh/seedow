@@ -167,3 +167,20 @@ export function buildEuroBreakdown(
     totalWeightPct,
   };
 }
+
+/**
+ * Y a-t-il de quoi dire quelque chose en euros ?
+ *
+ * Le même prédicat que `buildEuroBreakdown` applique pour renvoyer `null`,
+ * exposé à part parce que les écrans en ont besoin AVANT de composer leur
+ * mise en page : la traduction en euros mérite la première place quand elle
+ * existe, et ne doit pas la prendre quand elle n'existe pas. Ouvrir une fiche
+ * sur « composition non publiée » remplirait par une absence le seul
+ * emplacement censé porter la réponse.
+ *
+ * L'absence reste dite — au niveau des sources, là où vit déjà ce que Seedow
+ * ne sait pas. Elle change de place, elle ne disparaît pas.
+ */
+export function hasPublishedComposition(holdings: readonly HoldingLine[]): boolean {
+  return holdings.some((h) => usableWeight(h.weightPct));
+}

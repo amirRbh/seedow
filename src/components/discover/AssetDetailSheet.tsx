@@ -29,6 +29,7 @@ import type { DiscoverAsset } from "@/lib/discover/types";
 import { AssetLayersBlock } from "./AssetLayersBlock";
 import { EuroBreakdownBlock } from "@/components/impact/EuroBreakdownBlock";
 import { useFundComposition } from "@/hooks/useFundComposition";
+import { hasPublishedComposition } from "@/lib/impact/euroBreakdown";
 
 interface Props {
   open: boolean;
@@ -144,22 +145,24 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
               parce que c'est la seule chose ici qui se comprend sans rien
               savoir de la finance, et parce qu'elle est mesurée là où les
               thèmes sont une appréciation. */}
-          <section>
-            {composition.status !== "ready" ? (
-              <p className="text-body-sm text-ink-3" role="status">
-                {t("xray.composition_loading")}
-              </p>
-            ) : (
-              <EuroBreakdownBlock
-                variant="bare"
-                holdings={composition.holdings}
-                asOf={composition.asOf}
-                source={composition.issuer ?? asset.issuer ?? null}
-                sourceUrl={composition.sourceUrl}
-                ter={asset.ter_pct / 100}
-              />
-            )}
-          </section>
+          {(composition.status !== "ready" || hasPublishedComposition(composition.holdings)) && (
+            <section>
+              {composition.status !== "ready" ? (
+                <p className="text-body-sm text-ink-3" role="status">
+                  {t("xray.composition_loading")}
+                </p>
+              ) : (
+                <EuroBreakdownBlock
+                  variant="bare"
+                  holdings={composition.holdings}
+                  asOf={composition.asOf}
+                  source={composition.issuer ?? asset.issuer ?? null}
+                  sourceUrl={composition.sourceUrl}
+                  ter={asset.ter_pct / 100}
+                />
+              )}
+            </section>
+          )}
 
           {/* POURQUOI POUR TOI — la fiche décrivait le fonds dans l'absolu sans
               jamais le relier aux convictions déclarées trois écrans plus tôt.

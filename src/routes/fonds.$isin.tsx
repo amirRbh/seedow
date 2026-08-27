@@ -2,6 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { getPublicFundByIsin } from "@/lib/esg/public-fund.functions";
 import { EuroBreakdownBlock } from "@/components/impact/EuroBreakdownBlock";
+import { hasPublishedComposition } from "@/lib/impact/euroBreakdown";
 import type { PublicFundAsset } from "@/lib/esg/public-fund";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { Provenance } from "@/components/ui/Provenance";
@@ -105,6 +106,11 @@ function FundAuthorityPage() {
   const { t } = useTranslation();
 
   const allowed = notExcluded(fund.excluded_sectors);
+  // La traduction en euros ouvre la page quand elle a de quoi parler. Sinon
+  // elle descend au niveau des sources : une fiche qui s'ouvre sur
+  // « composition non publiée » remplit d'une absence le seul emplacement
+  // censé porter la réponse. L'absence est dite, plus bas, à sa place.
+  const composed = hasPublishedComposition(fund.holdings ?? []);
   const sourceLabel = fund.source ?? t("fonds_page.source_unknown");
 
   return (
@@ -148,18 +154,20 @@ function FundAuthorityPage() {
             montant de référence. Le score, les piliers et la grille SFDR
             viennent après — ils répondent à une question qu'on ne se pose
             qu'une fois la première comprise. */}
-        <EuroBreakdownBlock
-          className="mt-8"
-          holdings={fund.holdings ?? []}
-          asOf={fund.holdingsAsOf ?? null}
-          source={fund.issuer ?? null}
-          sourceUrl={fund.holdingsSourceUrl ?? null}
-          ter={fund.ter}
-        />
+        {composed && (
+          <EuroBreakdownBlock
+            className="mt-8"
+            holdings={fund.holdings ?? []}
+            asOf={fund.holdingsAsOf ?? null}
+            source={fund.issuer ?? null}
+            sourceUrl={fund.holdingsSourceUrl ?? null}
+            ter={fund.ter}
+          />
+        )}
 
         {/* ── NIVEAU 1 bis — ce que le fonds revendique ──────────────────── */}
 
-        <section className="paper-card p-7 mt-6">
+        <section className={`paper-card p-7 ${composed ? "mt-6" : "mt-8"}`}>
           <div className="grid gap-7 sm:grid-cols-2">
             <div>
               <p className="stamp">{t("fonds_page.what_it_finances")}</p>
@@ -311,6 +319,16 @@ function FundAuthorityPage() {
                   <p className="mt-2.5 text-caption text-ink-3 leading-relaxed max-w-[62ch]">
                     {t("fonds_page.risk_disclaimer")}
                   </p>
+                </div>
+              )}
+
+              {/* Ce que Seedow ne sait pas de ce fonds vit ici. Une composition
+                  non publiée en fait partie : elle ne disparaît pas de la page,
+                  elle cesse seulement d'en occuper l'ouverture. */}
+              {!composed && (
+                <div className="mt-6">
+                  <p className="font-semibold text-ink">{t("euro_breakdown.empty_title")}</p>
+                  <p className="mt-1.5 max-w-[62ch]">{t("euro_breakdown.empty_body")}</p>
                 </div>
               )}
 

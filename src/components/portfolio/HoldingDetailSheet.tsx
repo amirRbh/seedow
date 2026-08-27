@@ -8,6 +8,7 @@ import { PortfolioSustainabilityBadge } from "./PortfolioSustainabilityBadge";
 import { FundEvidenceLink } from "@/components/discover/FundEvidenceLink";
 import { EuroBreakdownBlock } from "@/components/impact/EuroBreakdownBlock";
 import { useFundComposition } from "@/hooks/useFundComposition";
+import { hasPublishedComposition } from "@/lib/impact/euroBreakdown";
 
 interface Props {
   open: boolean;
@@ -158,18 +159,20 @@ export function HoldingDetailSheet({ open, onClose, holding, valued }: Props) {
             affichés ici sont ceux qu'il a réellement mis sur cette ligne.
             C'est le seul endroit du produit où la question se pose au
             présent, avec son propre argent. */}
-        <div className="mt-3 paper-card p-4">
-          <EuroBreakdownBlock
-            variant="bare"
-            holdings={composition.holdings}
-            asOf={composition.asOf}
-            source={composition.issuer}
-            sourceUrl={composition.sourceUrl}
-            ter={composition.ter}
-            fixedAmount={valued?.invested ?? null}
-            leadKey="euro_breakdown.lead_mine"
-          />
-        </div>
+        {hasPublishedComposition(composition.holdings) && (
+          <div className="mt-3 paper-card p-4">
+            <EuroBreakdownBlock
+              variant="bare"
+              holdings={composition.holdings}
+              asOf={composition.asOf}
+              source={composition.issuer}
+              sourceUrl={composition.sourceUrl}
+              ter={composition.ter}
+              fixedAmount={valued?.invested ?? null}
+              leadKey="euro_breakdown.lead_mine"
+            />
+          </div>
+        )}
 
         {/* Ce que le fonds revendique, ce que les données montrent, et les
             limites. La page sourcée de l'Observatoire n'était atteignable que
