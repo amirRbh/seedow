@@ -26,6 +26,7 @@ import { installGlobalErrorReporting, reportReactError } from "@/lib/monitoring/
 import { ThemeProvider, THEME_INIT_SCRIPT } from "@/hooks/useTheme";
 import { FontScaleProvider, FONT_SCALE_INIT_SCRIPT } from "@/hooks/useFontScale";
 import { PreferenceSync } from "@/components/PreferenceSync";
+import { socialMeta } from "@/lib/seo/socialMeta";
 
 import appCss from "../styles.css?url";
 
@@ -56,35 +57,13 @@ export const Route = createRootRoute({
         content:
           "width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content",
       },
-      { title: "Seedow — Investis avec impact, simplement" },
-      {
-        name: "description",
-        content:
+      ...socialMeta({
+        // Valeurs par défaut du site : toute route qui n'appelle pas
+        // `socialMeta` hérite de celles-ci pour les deux familles de balises.
+        title: "Seedow — Votre argent façonne déjà le monde",
+        description:
           "Investis, suis ta performance, mesure ton impact. Une expérience claire et responsable.",
-      },
-      { property: "og:title", content: "Seedow — Investis avec impact, simplement" },
-      {
-        property: "og:description",
-        content:
-          "Investis, suis ta performance, mesure ton impact. Une expérience claire et responsable.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:title", content: "Seedow — Investis avec impact, simplement" },
-      {
-        name: "twitter:description",
-        content:
-          "Investis, suis ta performance, mesure ton impact. Une expérience claire et responsable.",
-      },
-      { property: "og:image", content: "https://seedow.life/og-seedow.jpg" },
-      { property: "og:image:width", content: "1200" },
-      { property: "og:image:height", content: "630" },
-      {
-        property: "og:image:alt",
-        content: "Seedow — Votre argent façonne déjà le monde",
-      },
-      { name: "twitter:image", content: "https://seedow.life/og-seedow.jpg" },
-
-      { name: "twitter:card", content: "summary_large_image" },
+      }),
       { name: "theme-color", content: "#f5f4f1" },
       { name: "mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-capable", content: "yes" },

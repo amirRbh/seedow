@@ -4,22 +4,18 @@ import { useTranslation } from "react-i18next";
 import { joinWaitlist } from "@/lib/beta/beta.functions";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { Button } from "@/components/ui/button";
+import { siteUrl, socialMeta } from "@/lib/seo/socialMeta";
 
 export const Route = createFileRoute("/waitlist")({
   head: () => ({
-    meta: [
-      { title: "Liste d'attente — Seedow" },
-      {
-        name: "description",
-        content:
-          "La phase bêta de Seedow est complète. Inscris-toi sur la liste d'attente pour être notifié·e dès qu'une place se libère.",
-      },
-      { property: "og:title", content: "Liste d'attente — Seedow" },
-      {
-        property: "og:description",
-        content: "Phase bêta complète. Inscris-toi pour la prochaine vague.",
-      },
-    ],
+    meta: socialMeta({
+      title: "Liste d'attente — Seedow",
+      description:
+        "La phase bêta de Seedow est complète. Inscris-toi sur la liste d'attente pour être notifié·e dès qu'une place se libère.",
+      cardDescription: "Phase bêta complète. Inscris-toi pour la prochaine vague.",
+      path: "/waitlist",
+    }),
+    links: [{ rel: "canonical", href: siteUrl("/waitlist") }],
   }),
   component: WaitlistPage,
 });

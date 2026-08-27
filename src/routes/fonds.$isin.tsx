@@ -9,6 +9,7 @@ import { Provenance } from "@/components/ui/Provenance";
 import { WhyThis } from "@/components/common/WhyThis";
 import { SeedowScore, ScorePillars } from "@/components/esg/SeedowScore";
 import { notExcluded } from "@/lib/esg/exclusions";
+import { siteUrl, socialMeta } from "@/lib/seo/socialMeta";
 
 /**
  * La fiche d'un fonds — trois niveaux de lecture, dans cet ordre.
@@ -53,17 +54,15 @@ export const Route = createFileRoute("/fonds/$isin")({
     if (!fund) return { meta: [{ title: "Fonds — Seedow" }] };
     const title = `${fund.name} : ce fonds finance quoi ? — Seedow`;
     const description = `Données sourcées et datées sur ${fund.name} (${fund.isin ?? fund.ticker}) : ce qu'il finance, ce qu'il ne s'interdit pas, score Seedow, empreinte carbone, article SFDR.`;
-    const url = `https://seedow.life/fonds/${params.isin}`;
+    const path = `/fonds/${params.isin}`;
     return {
-      meta: [
-        { title },
-        { name: "description", content: description },
-        { property: "og:title", content: title },
-        { property: "og:description", content: description },
-        { property: "og:url", content: url },
-        { property: "og:type", content: "article" },
-      ],
-      links: [{ rel: "canonical", href: url }],
+      meta: socialMeta({
+        title,
+        description,
+        path,
+        type: "article",
+      }),
+      links: [{ rel: "canonical", href: siteUrl(path) }],
     };
   },
   component: FundAuthorityPage,

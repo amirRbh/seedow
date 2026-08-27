@@ -8,6 +8,7 @@ import { CourseQuiz } from "@/components/courses/CourseQuiz";
 import { CourseQuizGate } from "@/components/courses/CourseQuizGate";
 import { markCourseOpened } from "@/lib/courses/reading";
 import { LanguageToggle } from "@/components/LanguageToggle";
+import { siteUrl, socialMeta } from "@/lib/seo/socialMeta";
 
 export const Route = createFileRoute("/cours/$slug")({
   loader: ({ params }) => {
@@ -20,16 +21,16 @@ export const Route = createFileRoute("/cours/$slug")({
     if (!course) {
       return { meta: [{ title: "Cours — Seedow" }] };
     }
-    const url = `https://seedow.life/cours/${params.slug}`;
+    const path = `/cours/${params.slug}`;
+    const url = siteUrl(path);
     return {
-      meta: [
-        { title: `${course.title} — Cours Seedow` },
-        { name: "description", content: course.description },
-        { property: "og:title", content: course.title },
-        { property: "og:description", content: course.description },
-        { property: "og:url", content: url },
-        { property: "og:type", content: "article" },
-      ],
+      meta: socialMeta({
+        title: `${course.title} — Cours Seedow`,
+        description: course.description,
+        cardTitle: course.title,
+        path,
+        type: "article",
+      }),
       links: [{ rel: "canonical", href: url }],
       scripts: [
         {

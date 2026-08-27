@@ -11,25 +11,20 @@ import { LearnTabs } from "@/components/courses/LearnTabs";
 import { getReadingState } from "@/lib/courses/reading";
 import { computeCourseStatuses } from "@/lib/courses/status";
 import { cn } from "@/lib/utils";
+import { siteUrl, socialMeta } from "@/lib/seo/socialMeta";
 
 export const Route = createFileRoute("/cours/")({
   head: () => ({
-    meta: [
-      { title: "Cours — Finance & Finance ESG pour débutants | Seedow" },
-      {
-        name: "description",
-        content:
-          "Apprends la finance et l'investissement ESG sans jargon. 12 cours en accès libre — quiz et certificat avec un compte gratuit.",
-      },
-      { property: "og:title", content: "Cours — Seedow" },
-      {
-        property: "og:description",
-        content:
-          "12 cours pour comprendre la finance et l'ESG sans jargon, en accès libre. Quiz et certificat avec un compte gratuit, sans engagement.",
-      },
-      { property: "og:url", content: "https://seedow.life/cours" },
-    ],
-    links: [{ rel: "canonical", href: "https://seedow.life/cours" }],
+    meta: socialMeta({
+      title: "Cours — Finance & Finance ESG pour débutants | Seedow",
+      description:
+        "Apprends la finance et l'investissement ESG sans jargon. 12 cours en accès libre — quiz et certificat avec un compte gratuit.",
+      cardTitle: "Cours — Seedow",
+      cardDescription:
+        "12 cours pour comprendre la finance et l'ESG sans jargon, en accès libre. Quiz et certificat avec un compte gratuit, sans engagement.",
+      path: "/cours",
+    }),
+    links: [{ rel: "canonical", href: siteUrl("/cours") }],
   }),
   component: CoursesIndex,
 });
