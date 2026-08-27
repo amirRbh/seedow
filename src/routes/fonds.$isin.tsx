@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { getPublicFundByIsin } from "@/lib/esg/public-fund.functions";
-import { FundHoldingsBlock } from "@/components/discover/FundHoldingsBlock";
+import { EuroBreakdownBlock } from "@/components/impact/EuroBreakdownBlock";
 import type { PublicFundAsset } from "@/lib/esg/public-fund";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { Provenance } from "@/components/ui/Provenance";
@@ -22,13 +22,14 @@ import { notExcluded } from "@/lib/esg/exclusions";
  *
  * ── Ce qu'elle est ─────────────────────────────────────────────────────────
  *
- *   Niveau 1, ouvert   — ce que le fonds finance, ce qu'il ne s'interdit pas,
- *                        son score et ses frais. La réponse, en dix secondes.
- *   Niveau 1 bis, ouvert — la composition réelle : « qu'est-ce qu'il y a
- *                        vraiment dedans ». Elle reste ouverte parce que c'est
- *                        le maillon qui fait passer du fonds à l'entreprise ;
- *                        le bloc gère lui-même, franchement, le cas où
- *                        l'émetteur ne l'a pas publiée.
+ *   Niveau 1, ouvert   — la composition publiée, DITE EN EUROS sur un montant
+ *                        de référence. C'est la seule chose de cette page qui
+ *                        se comprend sans rien savoir de la finance, donc elle
+ *                        passe devant tout le reste. Le bloc gère lui-même,
+ *                        franchement, le cas où l'émetteur n'a rien publié.
+ *   Niveau 1 bis, ouvert — ce que le fonds REVENDIQUE (thèmes déclarés, ce
+ *                        qu'il ne s'interdit pas), son score et ses frais. On
+ *                        lit d'abord ce qu'il détient, ensuite ce qu'il dit.
  *   Niveau 2, replié   — pourquoi ce score : les piliers du composite.
  *   Niveau 3, replié   — la grille complète, les sources, les écarts relevés,
  *                        et ce que Seedow ne mesure pas.
@@ -141,9 +142,24 @@ function FundAuthorityPage() {
           </div>
         </div>
 
-        {/* ── NIVEAU 1 — la réponse ─────────────────────────────────────── */}
+        {/* ── NIVEAU 1 — la réponse, en euros ───────────────────────────
+            Le premier bloc de la page est celui qui se comprend sans rien
+            savoir de la finance : la composition publiée, dite en euros sur un
+            montant de référence. Le score, les piliers et la grille SFDR
+            viennent après — ils répondent à une question qu'on ne se pose
+            qu'une fois la première comprise. */}
+        <EuroBreakdownBlock
+          className="mt-8"
+          holdings={fund.holdings ?? []}
+          asOf={fund.holdingsAsOf ?? null}
+          source={fund.issuer ?? null}
+          sourceUrl={fund.holdingsSourceUrl ?? null}
+          ter={fund.ter}
+        />
 
-        <section className="paper-card p-7 mt-8">
+        {/* ── NIVEAU 1 bis — ce que le fonds revendique ──────────────────── */}
+
+        <section className="paper-card p-7 mt-6">
           <div className="grid gap-7 sm:grid-cols-2">
             <div>
               <p className="stamp">{t("fonds_page.what_it_finances")}</p>
@@ -168,6 +184,11 @@ function FundAuthorityPage() {
                   {t("xray.finances_empty")}
                 </p>
               )}
+              {/* Une appréciation Seedow, dite comme telle — la mesure, elle,
+                  est le bloc en euros au-dessus. */}
+              <p className="mt-3 text-caption text-ink-3 leading-relaxed">
+                {t("xray.finances_note")}
+              </p>
             </div>
 
             <div>
@@ -219,16 +240,6 @@ function FundAuthorityPage() {
               </p>
             </WhyThis>
           </div>
-        </section>
-
-        {/* ── NIVEAU 1 bis — ce qu'il y a vraiment dedans ───────────────── */}
-        <section className="paper-card p-7 mt-6">
-          <FundHoldingsBlock
-            holdings={fund.holdings ?? []}
-            asOf={fund.holdingsAsOf ?? null}
-            source={fund.issuer ?? null}
-            sourceUrl={fund.holdingsSourceUrl ?? null}
-          />
         </section>
 
         {/* ── NIVEAU 3 — la profondeur, à la demande ────────────────────── */}
