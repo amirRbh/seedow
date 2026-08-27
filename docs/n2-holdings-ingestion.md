@@ -77,15 +77,15 @@ Un lot est **rejeté** (rien persisté) ou **`review_required`** selon :
 L'egress vers `blackrock.com` est ouvert depuis la session du 26 août 2026. Les
 vingt et un classeurs du registre ont été téléchargés et passés dans la chaîne
 complète. Quatre défauts sont apparus, qu'aucun test sur donnée fabriquée
-n'aurait pu montrer — ils tenaient tous à la même hypothèse : *un titre = un
-nom*.
+n'aurait pu montrer — ils tenaient tous à la même hypothèse : _un titre = un
+nom_.
 
-| Défaut | Ce que le fichier réel montre | Correction |
-| --- | --- | --- |
-| Clé d'unicité `(fonds, nom, date)` | Le iShares Global Corp Bond publie 14 978 lignes dont **2 077 noms répétés** — « AT&T INC » 80 fois, une obligation différente à chaque fois. Sur l'ensemble du registre, **41,4 % des positions** (12 397 sur 29 941) s'écrasaient silencieusement à l'insertion. | Clé = **rang de la ligne** dans le document publié (`line_no`). |
-| Contrôle « doublon » | Rejetait tout fonds obligataire : 11 354 signalements sur un fichier sain. | Le doublon se juge sur l'**identité publiée** (nom + ticker + échéance + coupon), pas sur le nom seul. |
-| `CHECK (weight_pct >= 0)` | Cinq fonds sur vingt et un publient une ligne négative : compte de liquidités à découvert (« USD CASH −0,39 % »), jambe de change à terme. | Bornes `[-100, 100]` : l'implausible, c'est qu'une ligne pèse plus que le fonds. |
-| Échéance et coupon lus puis jetés | Ce sont précisément les colonnes qui distinguent deux obligations du même émetteur. | Persistées (`security_maturity`, `security_coupon_pct`, `security_asset_class`). |
+| Défaut                             | Ce que le fichier réel montre                                                                                                                                                                                                                                      | Correction                                                                                             |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| Clé d'unicité `(fonds, nom, date)` | Le iShares Global Corp Bond publie 14 978 lignes dont **2 077 noms répétés** — « AT&T INC » 80 fois, une obligation différente à chaque fois. Sur l'ensemble du registre, **41,4 % des positions** (12 397 sur 29 941) s'écrasaient silencieusement à l'insertion. | Clé = **rang de la ligne** dans le document publié (`line_no`).                                        |
+| Contrôle « doublon »               | Rejetait tout fonds obligataire : 11 354 signalements sur un fichier sain.                                                                                                                                                                                         | Le doublon se juge sur l'**identité publiée** (nom + ticker + échéance + coupon), pas sur le nom seul. |
+| `CHECK (weight_pct >= 0)`          | Cinq fonds sur vingt et un publient une ligne négative : compte de liquidités à découvert (« USD CASH −0,39 % »), jambe de change à terme.                                                                                                                         | Bornes `[-100, 100]` : l'implausible, c'est qu'une ligne pèse plus que le fonds.                       |
+| Échéance et coupon lus puis jetés  | Ce sont précisément les colonnes qui distinguent deux obligations du même émetteur.                                                                                                                                                                                | Persistées (`security_maturity`, `security_coupon_pct`, `security_asset_class`).                       |
 
 Résultat après correction, sur les mêmes fichiers : **0 rejet** (contre 8), 14
 fonds `valid`, 7 en `review_required` — et ces sept-là sont de vraies ambiguïtés
