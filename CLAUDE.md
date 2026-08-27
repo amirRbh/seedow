@@ -89,6 +89,7 @@ src/
 │   ├── market/                    # client Yahoo Finance (server-only)
 │   ├── esg/                       # scoring ESG, détection greenwashing
 │   ├── ethi/                      # prompts & contexte de l'assistant
+│   ├── landing/                   # répartition du flux « où va ton argent »
 │   ├── mcp/                        # serveur MCP + tools
 │   └── account/ auth/ beta/ discover/ preferences/ analytics/ monitoring/
 ├── i18n/ · content/               # locales (i18next) & contenu des cours

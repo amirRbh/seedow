@@ -691,6 +691,42 @@
     color: var(--alert-ink);
   }
 
+  /* ── Pastille de conviction (flux « où va ton argent ») ────────
+     Même recette de couleur que .chip--verified : fond teinté à 12 %,
+     texte en encre d'accent. Elle tient donc à l'identique sur --paper
+     et dans la bande sombre, où `.on-deep` a déjà remappé --mint et
+     --alert sur leurs variantes lumineuses — un fond plein d'accent,
+     lui, aurait demandé une couleur de texte différente par contexte.
+     Hauteur 44px : c'est un contrôle, pas une étiquette. */
+  .flow-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 44px;
+    padding: 0 16px;
+    border-radius: 999px;
+    background-color: transparent;
+    box-shadow: inset 0 0 0 1px var(--paper-3);
+    color: var(--ink-2);
+    font-size: calc(13.5px * var(--font-scale));
+    font-weight: 600;
+    letter-spacing: -0.006em;
+    white-space: nowrap;
+  }
+  .flow-pill:hover {
+    color: var(--ink);
+  }
+  .flow-pill[aria-pressed="true"] {
+    box-shadow: inset 0 0 0 1.5px var(--mint);
+    background-color: color-mix(in srgb, var(--mint) 12%, transparent);
+    color: var(--mint-ink);
+  }
+  .flow-pill--refuse[aria-pressed="true"] {
+    box-shadow: inset 0 0 0 1.5px var(--alert);
+    background-color: color-mix(in srgb, var(--alert) 12%, transparent);
+    color: var(--alert-ink);
+  }
+
   /* ── Sélecteur segmenté (périodes, onglets courts) ────────────── */
   .segmented {
     display: inline-flex;

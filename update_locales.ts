@@ -3148,6 +3148,76 @@ const landingCopyEn = {
  * parenthèses à chaque ajout, ce qui est exactement la façon dont on finit par
  * écraser un bloc sans s'en apercevoir.
  */
+/**
+ * Le flux « regarde où va ton argent » — première scène de la landing.
+ * Les libellés des convictions ne sont PAS redéfinis ici : le composant réutilise
+ * `onboarding.steps.values.*` et `onboarding.steps.exclusions.*`, pour que le
+ * visiteur retrouve exactement les mêmes mots à l'étape suivante.
+ */
+const moneyFlowFr = {
+  landing: {
+    flow: {
+      eyebrow: "Sans compte, sans rien taper",
+      title: "Regarde où va ton argent.",
+      desc: "Ton épargne circule déjà, quelque part, tous les mois. Coche ce que tu veux financer et ce que tu refuses : le flux se redirige sous tes yeux.",
+      want_label: "Ce que je veux financer",
+      refuse_label: "Ce que je refuse",
+      on: "activé",
+      off: "désactivé",
+      ledger_title: "Ce que ça finance",
+      excluded: "exclu",
+      source_amount: "150 €",
+      source_label: "par mois, ton épargne",
+      source_note:
+        "Illustration du mécanisme · valeurs de démonstration. Dans l'app : MSCI ESG · SFDR · Yahoo Finance, chaque ligne datée.",
+      disclaimer:
+        "Ce schéma montre comment une répartition se déplace quand tu changes tes critères. Ce n'est pas une prévision de rendement, et aucun argent réel n'est investi ici.",
+      cta: "Composer mon portefeuille · 2 min",
+      lane: {
+        renouvelable: "Énergies renouvelables",
+        renovation: "Rénovation, bâtiment",
+        vivant: "Eau, forêts, agriculture",
+        social: "Santé, éducation",
+        diversifie: "Industrie diversifiée",
+        fossile: "Pétrole, gaz, charbon",
+        armement: "Armement",
+      },
+    },
+  },
+};
+
+const moneyFlowEn = {
+  landing: {
+    flow: {
+      eyebrow: "No account, nothing to type",
+      title: "See where your money goes.",
+      desc: "Your savings already flow somewhere, every month. Tick what you want to fund and what you refuse: the flow redirects before your eyes.",
+      want_label: "What I want to fund",
+      refuse_label: "What I refuse",
+      on: "on",
+      off: "off",
+      ledger_title: "What it funds",
+      excluded: "excluded",
+      source_amount: "€150",
+      source_label: "a month, your savings",
+      source_note:
+        "Mechanism illustration · demo values. In the app: MSCI ESG · SFDR · Yahoo Finance, every line dated.",
+      disclaimer:
+        "This diagram shows how an allocation moves when you change your criteria. It is not a return forecast, and no real money is invested here.",
+      cta: "Build my portfolio · 2 min",
+      lane: {
+        renouvelable: "Renewable energy",
+        renovation: "Building retrofits",
+        vivant: "Water, forests, farming",
+        social: "Health, education",
+        diversifie: "Diversified industry",
+        fossile: "Oil, gas, coal",
+        armement: "Weapons",
+      },
+    },
+  },
+};
+
 const FR_BLOCKS: Json[] = [
   composeSwitchFr,
   pedagogyFr,
@@ -3156,6 +3226,7 @@ const FR_BLOCKS: Json[] = [
   landingV4Fr,
   observatoryFr,
   landingCopyFr,
+  moneyFlowFr,
 ];
 const EN_BLOCKS: Json[] = [
   composeSwitchEn,
@@ -3165,6 +3236,7 @@ const EN_BLOCKS: Json[] = [
   landingV4En,
   observatoryEn,
   landingCopyEn,
+  moneyFlowEn,
 ];
 
 writeFileSync(

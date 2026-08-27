@@ -18,6 +18,12 @@ chaque chiffre sourcé et daté, aucune recommandation d'achat, mint = positif /
 alert = négatif jamais inversés, jamais d'information portée par la couleur
 seule, ton factuel sans alarmisme.
 
+> **Décision — 27 août 2026.** La direction **3 · Le Flux** est retenue et
+> intégrée à la landing (`src/components/landing/MoneyFlow.tsx`), en deuxième
+> scène de la bande sombre, juste sous le rayon X. Les autres sections de la
+> page n'ont pas bougé. Les trois maquettes restent ici comme trace de la
+> décision — elles ne sont pas du code de production.
+
 ## Les trois directions
 
 |                                       | Ce que ça change                                                                                                                                                                                                     | Pour qui, d'abord                                                    |
@@ -60,7 +66,7 @@ Ces fichiers sont des maquettes autonomes, pas du code à copier tel quel :
 5. Vérifier les contrastes ajoutés dans `src/lib/a11y/__tests__/contrast.test.ts`
    avant merge, comme pour toute nouvelle paire texte/fond.
 
-## Recommandation
+## Recommandation initiale
 
 **La 1 comme base, la 2 comme section.** Le Rayon X est celle qui fait le moins
 de promesses et la meilleure démonstration : elle montre le produit dans les

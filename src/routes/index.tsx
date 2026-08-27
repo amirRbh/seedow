@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { LandingCourses } from "@/components/landing/LandingCourses";
+import { MoneyFlow } from "@/components/landing/MoneyFlow";
 import { MoneyXray } from "@/components/landing/MoneyXray";
 import { Provenance } from "@/components/ui/Provenance";
 import { Button } from "@/components/ui/button";
@@ -125,7 +126,7 @@ function Landing() {
           </div>
         </nav>
 
-        <header className="max-w-[1160px] mx-auto px-7 pt-12 pb-24 md:pt-16 md:pb-28">
+        <header className="max-w-[1160px] mx-auto px-7 pt-12 pb-14 md:pt-16 md:pb-16">
           <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-16 lg:items-start">
             <div className="contents lg:block">
               <div className="order-1">
@@ -188,6 +189,45 @@ function Landing() {
             </div>
           </div>
         </header>
+
+        {/* ── Deuxième scène, même bande : où va ton argent ─────────
+            Le rayon X ci-dessus suppose qu'on a un nom de fonds en tête.
+            Celui qui n'a rien à taper — le cas le plus fréquent d'un premier
+            passage — voit ici le mécanisme avant qu'on lui demande quoi que
+            ce soit : son épargne se répartit, et se redirige dès qu'il coche
+            une conviction. Les mots sont ceux de l'onboarding, l'étape
+            suivante ne le surprendra pas. */}
+        <section className="max-w-[1160px] mx-auto px-7 pb-20 md:pb-24">
+          <div className="border-t border-paper-3 pt-14 md:pt-16">
+            <p className="eyebrow">{t("landing.flow.eyebrow")}</p>
+            <h2 className="mt-3 max-w-[15ch]">{t("landing.flow.title")}</h2>
+            <p className="mt-5 max-w-[54ch] text-body-lg leading-relaxed text-ink-2">
+              {t("landing.flow.desc")}
+            </p>
+
+            <div className="mt-10">
+              <MoneyFlow />
+            </div>
+
+            <div className="mt-9">
+              {isAuthed ? (
+                <Button asChild variant="on-dark">
+                  <Link to="/le-fil">{t("landing.rv.hero.cta_authed")}</Link>
+                </Button>
+              ) : (
+                <Button asChild variant="on-dark">
+                  <Link
+                    to="/onboarding"
+                    search={{ guest: true }}
+                    onClick={onCta("flow", "preview")}
+                  >
+                    {t("landing.flow.cta")}
+                  </Link>
+                </Button>
+              )}
+            </div>
+          </div>
+        </section>
       </div>
 
       {/* ── CATALOGUE : bande claire ──────────────────────────────── */}
