@@ -332,7 +332,8 @@
         "cta_secondary": "Create my account",
         "cta_authed": "Go to my space",
         "note": "Seedow does not invest for you, sells no product and takes no commission.",
-        "cta_secondary_path": "I don't know what to search for"
+        "cta_secondary_path": "I don't know what to search for",
+        "eyebrow_search": "Got a fund name in mind"
       },
       "proof": {
         "funds": "The <b>whole</b> catalogue, readable without an account",
@@ -427,8 +428,6 @@
     },
     "xray_hint": "What it finances · what it doesn't rule out · where each number comes from",
     "flow": {
-      "eyebrow": "No account, nothing to type",
-      "title": "See where your money goes.",
       "desc": "Your savings already flow somewhere, every month. Tick what you want to fund and what you refuse: the flow redirects before your eyes.",
       "want_label": "What I want to fund",
       "refuse_label": "What I refuse",
@@ -449,7 +448,9 @@
         "diversifie": "Diversified industry",
         "fossile": "Oil, gas, coal",
         "armement": "Weapons"
-      }
+      },
+      "title_line1": "See where",
+      "title_accent": "your money goes."
     }
   },
   "auth": {

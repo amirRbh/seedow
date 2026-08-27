@@ -332,7 +332,8 @@
         "cta_secondary": "Créer mon compte",
         "cta_authed": "Accéder à mon espace",
         "note": "Seedow n'investit pas à ta place, ne vend aucun produit et ne touche aucune commission.",
-        "cta_secondary_path": "Je ne sais pas quoi chercher"
+        "cta_secondary_path": "Je ne sais pas quoi chercher",
+        "eyebrow_search": "Tu as un nom de fonds en tête"
       },
       "proof": {
         "funds": "Le catalogue <b>entier</b>, consultable sans compte",
@@ -427,8 +428,6 @@
     },
     "xray_hint": "Ce qu'il finance · ce qu'il ne s'interdit pas · d'où vient chaque chiffre",
     "flow": {
-      "eyebrow": "Sans compte, sans rien taper",
-      "title": "Regarde où va ton argent.",
       "desc": "Ton épargne circule déjà, quelque part, tous les mois. Coche ce que tu veux financer et ce que tu refuses : le flux se redirige sous tes yeux.",
       "want_label": "Ce que je veux financer",
       "refuse_label": "Ce que je refuse",
@@ -449,7 +448,9 @@
         "diversifie": "Industrie diversifiée",
         "fossile": "Pétrole, gaz, charbon",
         "armement": "Armement"
-      }
+      },
+      "title_line1": "Regarde où va",
+      "title_accent": "ton argent."
     }
   },
   "auth": {
