@@ -14,3 +14,21 @@
 #
 # Format : ticker,isin,source
 ticker,isin,source
+
+# Les treize lignes ci-dessous viennent du screener produit officiel de
+# BlackRock, pas d'une saisie : ticker, ISIN et identifiant produit sont ceux
+# que l'émetteur publie. Chaque fonds a ensuite rendu un classeur de
+# composition daté, ce qui confirme la correspondance de bout en bout.
+BGRN,US46435U4408,BlackRock iShares US product screener (product-screener-v3.1.jsn) — relevé le 2026-08-27
+CRBN,US46434V4648,BlackRock iShares US product screener (product-screener-v3.1.jsn) — relevé le 2026-08-27
+DSI,US4642885705,BlackRock iShares US product screener (product-screener-v3.1.jsn) — relevé le 2026-08-27
+EAGG,US46435U5496,BlackRock iShares US product screener (product-screener-v3.1.jsn) — relevé le 2026-08-27
+ESGD,US46435G5163,BlackRock iShares US product screener (product-screener-v3.1.jsn) — relevé le 2026-08-27
+ESGE,US46434G8630,BlackRock iShares US product screener (product-screener-v3.1.jsn) — relevé le 2026-08-27
+ESGU,US46435G4257,BlackRock iShares US product screener (product-screener-v3.1.jsn) — relevé le 2026-08-27
+ICLN,US4642882249,BlackRock iShares US product screener (product-screener-v3.1.jsn) — relevé le 2026-08-27
+SUSA,US4642888022,BlackRock iShares US product screener (product-screener-v3.1.jsn) — relevé le 2026-08-27
+SUSB,US46435G2434,BlackRock iShares US product screener (product-screener-v3.1.jsn) — relevé le 2026-08-27
+SUSC,US46435G1931,BlackRock iShares US product screener (product-screener-v3.1.jsn) — relevé le 2026-08-27
+SUSL,US46435U2188,BlackRock iShares US product screener (product-screener-v3.1.jsn) — relevé le 2026-08-27
+WOOD,US4642881746,BlackRock iShares US product screener (product-screener-v3.1.jsn) — relevé le 2026-08-27

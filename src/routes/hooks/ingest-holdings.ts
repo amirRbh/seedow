@@ -1,4 +1,4 @@
-import { resolveISharesPortfolioId } from "@/lib/data-engine/ishares-funds";
+import { resolveISharesFund } from "@/lib/data-engine/ishares-funds";
 import { iSharesHoldingsUrl, parseISharesHoldings } from "@/lib/data-engine/ishares-holdings";
 import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
@@ -84,8 +84,12 @@ export const Route = createFileRoute("/hooks/ingest-holdings")({
           if (curated) return { url: curated, sourceId: null };
           // 2) Sinon, le registre iShares — chacune de ses entrées a été vérifiée
           //    par une requête réelle à l'émetteur.
-          const portfolioId = resolveISharesPortfolioId(asset.isin);
-          if (portfolioId) return { url: iSharesHoldingsUrl(portfolioId), sourceId: null };
+          // Apparie sur l'ISIN puis sur le ticker, et porte la place de
+          // cotation : le catalogue Seedow n'a pas d'ISIN, et l'hôte
+          // britannique ne sert pas les fonds américains (il rend un classeur
+          // aux poids tronqués plutôt qu'une erreur).
+          const ref = resolveISharesFund(asset);
+          if (ref) return { url: iSharesHoldingsUrl(ref.portfolioId, ref.site), sourceId: null };
           // 3) Aucune source : `no_source`, et l'interface le dira franchement.
           return null;
         };

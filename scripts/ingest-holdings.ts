@@ -31,7 +31,7 @@ import { createClient } from "@supabase/supabase-js";
 import { ingestHoldingsForAssets } from "../src/lib/data-engine/holdings-ingest";
 import type { HoldingsIngestAsset } from "../src/lib/data-engine/holdings-ingest";
 import { supabaseHoldingWriter } from "../src/lib/data-engine/holdings.supabase";
-import { ISHARES_FUNDS, resolveISharesPortfolioId } from "../src/lib/data-engine/ishares-funds";
+import { ISHARES_REGISTRY, resolveISharesFund } from "../src/lib/data-engine/ishares-funds";
 import { iSharesHoldingsUrl, parseISharesHoldings } from "../src/lib/data-engine/ishares-holdings";
 
 const PERSIST = process.env.SEEDOW_PERSIST === "1";
@@ -59,8 +59,18 @@ const admin = url && key ? createClient(url, key) : null;
  * L'appariement se fait sur l'ISIN : un fonds du catalogue absent du registre
  * n'est pas ingéré, et ce n'est pas une erreur — c'est le cas courant.
  */
-async function targetAssets(): Promise<{ assets: HoldingsIngestAsset[]; fromCatalogue: boolean }> {
-  const refs = ISHARES_FUNDS.filter((f) => only.size === 0 || only.has(f.isin));
+/** Un filtre `--only` accepte aussi bien un ISIN qu'un ticker. */
+function selected(f: { isin: string; ticker: string | null }): boolean {
+  if (only.size === 0) return true;
+  return only.has(f.isin.toUpperCase()) || (f.ticker != null && only.has(f.ticker.toUpperCase()));
+}
+
+async function targetAssets(): Promise<{
+  assets: HoldingsIngestAsset[];
+  fromCatalogue: boolean;
+  catalogueSize?: number;
+}> {
+  const refs = ISHARES_REGISTRY.filter(selected);
   if (refs.length === 0) return { assets: [], fromCatalogue: false };
 
   // Sans base, le registre lui-même fait la liste des cibles : on vérifie les
@@ -70,7 +80,7 @@ async function targetAssets(): Promise<{ assets: HoldingsIngestAsset[]; fromCata
     return {
       assets: refs.map((f) => ({
         id: f.isin,
-        ticker: f.isin,
+        ticker: f.ticker ?? f.isin,
         name: f.name,
         isin: f.isin,
         issuer: "iShares",
@@ -79,37 +89,75 @@ async function targetAssets(): Promise<{ assets: HoldingsIngestAsset[]; fromCata
     };
   }
 
+  // On lit tout le catalogue actif et on apparie EN MÉMOIRE, plutôt que de
+  // filtrer sur `isin` côté base.
+  //
+  // Le filtre `.in("isin", …)` rendait systématiquement zéro ligne, pour deux
+  // raisons qui se cumulaient : la colonne `assets.isin` est vide sur tout le
+  // catalogue (`data/catalog-isins.csv` n'a jamais été renseigné), et le
+  // registre ne listait que des UCITS irlandais quand le catalogue est composé
+  // d'ETF américains. Aucun ISIN d'un côté, aucun ISIN correspondant de
+  // l'autre : l'intersection ne pouvait pas être autre chose que vide.
+  //
+  // `resolveISharesFund` apparie sur l'ISIN quand il existe, sur le ticker
+  // sinon — c'est ainsi que l'émetteur lui-même désigne ces fonds.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data, error } = await (admin as any)
     .from("assets")
     .select("id, ticker, name, isin, issuer")
-    .eq("is_active", true)
-    .in(
-      "isin",
-      refs.map((f) => f.isin),
-    );
+    .eq("is_active", true);
   if (error) throw new Error(`assets: ${error.message}`);
-  return { assets: (data ?? []) as HoldingsIngestAsset[], fromCatalogue: true };
+
+  const wanted = new Set(refs.map((f) => f.portfolioId));
+  const matched = ((data ?? []) as HoldingsIngestAsset[]).filter((a) => {
+    const ref = resolveISharesFund(a);
+    return ref != null && wanted.has(ref.portfolioId);
+  });
+  return { assets: matched, fromCatalogue: true, catalogueSize: (data ?? []).length };
 }
 
 async function main() {
-  const { assets, fromCatalogue } = await targetAssets();
+  const { assets, fromCatalogue, catalogueSize } = await targetAssets();
+  const registrySize = ISHARES_REGISTRY.filter(selected).length;
   console.log(
-    `${ISHARES_FUNDS.length} fonds au registre · ${assets.length} cible(s)` +
-      (fromCatalogue ? " appariée(s) au catalogue" : " (registre seul — pas d'accès base)") +
+    `${registrySize} fonds au registre · ${assets.length} cible(s)` +
+      (fromCatalogue
+        ? ` appariée(s) sur ${catalogueSize ?? 0} actifs actifs`
+        : " (registre seul — pas d'accès base)") +
       (only.size > 0 ? ` · filtre : ${[...only].join(", ")}` : "") +
       (PERSIST ? " · ÉCRITURE" : " · à blanc (SEEDOW_PERSIST=1 pour écrire)"),
   );
+
+  // ── Garde-fou : zéro cible sur un registre non vide est une PANNE ───────
+  //
+  // Ce script s'est déjà terminé en code 0 sur « 21 fonds au registre · 0
+  // cible ». Techniquement, rien n'avait échoué : aucun téléchargement, aucune
+  // écriture, aucune exception. Sauf qu'un pipeline d'ingestion qui n'ingère
+  // rien n'a pas réussi — et un vert en CI sur un travail non fait est pire
+  // qu'un rouge, parce qu'il ferme la question.
+  //
+  // La condition est étroite à dessein : un registre vide (filtre `--only` qui
+  // ne désigne rien) reste une sortie normale, tout comme un catalogue qui
+  // aurait légitimement perdu ces fonds — mais ce dernier cas se signale, il
+  // ne se devine pas.
+  if (registrySize > 0 && assets.length === 0) {
+    console.error(
+      `\n✗ ${registrySize} fonds au registre, aucun apparié au catalogue.\n` +
+        `  Le registre apparie sur l'ISIN puis sur le ticker. Aucun des deux n'a répondu :\n` +
+        `  soit le catalogue ne contient pas ces fonds, soit leurs identifiants ont changé.\n` +
+        `  Rien n'a été téléchargé ni écrit.`,
+    );
+    process.exit(1);
+  }
   if (assets.length === 0) {
-    // Aucun appariement : le dire, plutôt que de laisser croire à un succès vide.
-    console.log("Aucun fonds du registre n'est présent dans le catalogue actif.");
+    console.log("Le filtre ne désigne aucun fonds du registre.");
     return;
   }
 
   const { results, summary } = await ingestHoldingsForAssets(assets, {
     resolveUrl: (a) => {
-      const pid = resolveISharesPortfolioId(a.isin);
-      return pid ? { url: iSharesHoldingsUrl(pid), sourceId: null } : null;
+      const ref = resolveISharesFund(a);
+      return ref ? { url: iSharesHoldingsUrl(ref.portfolioId, ref.site), sourceId: null } : null;
     },
     download: async (u: string) => {
       const res = await fetch(u, { signal: AbortSignal.timeout(90_000) });

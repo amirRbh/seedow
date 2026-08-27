@@ -115,3 +115,49 @@ describe("fidélité au document", () => {
     expect(new Set(keys).size).toBe(rows.length);
   });
 });
+
+/**
+ * ── Classeur AMÉRICAIN ────────────────────────────────────────────────────
+ *
+ * Le catalogue Seedow est composé d'ETF cotés aux États-Unis, pas d'UCITS
+ * irlandais. Le registre ne connaissait que les seconds : l'ingestion trouvait
+ * zéro cible et s'arrêtait en code 0, ce qui ressemblait à un succès.
+ *
+ * L'extrait est une tranche CONTIGUË d'un classeur officiel : le préambule
+ * (qui porte deux dates — celle de la composition et celle de création du
+ * fonds), l'en-tête, deux positions, puis le tableau qui suit immédiatement.
+ */
+describe("classeur américain réel", () => {
+  const parsed = parseISharesHoldings(read("ishares-us-extract.xml"));
+
+  it("lit la date au format américain « Aug 26, 2026 »", () => {
+    // Ce format n'était pas reconnu : `asOf` restait null, le lot était rejeté
+    // (§12) et `buildHoldingRows` ne rendait aucune ligne. Tout fonds américain
+    // était donc lu correctement, puis jeté.
+    expect(parsed.asOf).toBe("2026-08-26");
+  });
+
+  it("prend la date de la composition, pas celle de création du fonds", () => {
+    // Le préambule annonce « Inception Date | Jun 24, 2008 » juste avant
+    // « Fund Holdings as of | Aug 26, 2026 ». Confondre les deux daterait la
+    // composition de dix-huit ans.
+    expect(parsed.asOf).not.toBe("2008-06-24");
+  });
+
+  it("s'arrête à la fin du tableau au lieu de lire le suivant", () => {
+    // L'export enchaîne les tableaux sans ligne vide : la composition est
+    // suivie d'un « As Of | NAV per Share | … » de cinq colonnes. Le parser
+    // sautait ces lignes puis continuait, ramassant quarante lignes d'un
+    // historique de distributions — avec une date en guise de nom de titre.
+    expect(parsed.holdings).toHaveLength(2);
+    expect(parsed.holdings.map((h) => h.name)).toEqual([
+      "FIRST SOLAR",
+      "CHINA YANGTZE POWER LTD A",
+    ]);
+  });
+
+  it("lit le secteur, sur lequel s'ouvre le bloc de composition", () => {
+    expect(parsed.holdings[0].sector).toBe("Information Technology");
+    expect(parsed.holdings[1].sector).toBe("Utilities");
+  });
+});
