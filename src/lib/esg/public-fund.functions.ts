@@ -18,20 +18,35 @@ import { mapPublicFundRow, PUBLIC_FUND_COLUMNS, type PublicFundRow } from "./pub
  *
  * On ne devine pas l'ISIN manquant — il ne se dérive de rien. On accepte
  * simplement l'identifiant que l'application utilise réellement.
+ *
+ * ── Deux requêtes, et pas un `or` ─────────────────────────────────────────
+ *
+ * La clé arrive du segment d'URL `/fonds/$isin` : elle est publique et
+ * arbitraire. Interpolée dans `.or("isin.eq.<clé>,ticker.eq.<clé>")`, une clé
+ * contenant une virgule ou une parenthèse ne se lit plus comme une valeur mais
+ * comme de la GRAMMAIRE de filtre PostgREST — l'appelant décide alors d'une
+ * partie de la requête. `.eq()` passe la valeur en paramètre, jamais en
+ * syntaxe : deux appels successifs ferment la porte, au prix d'un aller-retour
+ * supplémentaire dans le seul cas où l'ISIN ne correspond à rien.
  */
 export const getPublicFundByIsin = createServerFn({ method: "GET" })
   .inputValidator((input: string) => z.string().min(1).parse(input))
   .handler(async ({ data: key }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data, error } = await supabaseAdmin
-      .from("assets")
-      .select(`${PUBLIC_FUND_COLUMNS}, id`)
-      .eq("is_active", true)
-      // `or` plutôt que deux requêtes : un ticker et un ISIN ne se confondent
-      // pas, la première correspondance est la bonne.
-      .or(`isin.eq.${key},ticker.eq.${key}`)
-      .limit(1)
-      .maybeSingle();
+    const byColumn = (column: "isin" | "ticker") =>
+      supabaseAdmin
+        .from("assets")
+        .select(`${PUBLIC_FUND_COLUMNS}, id`)
+        .eq("is_active", true)
+        .eq(column, key)
+        .limit(1)
+        .maybeSingle();
+
+    // Un ticker et un ISIN ne se confondent pas : la première correspondance
+    // est la bonne, et l'ISIN prime puisque c'est l'identifiant officiel.
+    let { data, error } = await byColumn("isin");
+    if (error) throw new Error(error.message);
+    if (!data) ({ data, error } = await byColumn("ticker"));
     if (error) throw new Error(error.message);
     if (!data) return null;
     const fund = mapPublicFundRow(data as unknown as PublicFundRow);
