@@ -327,7 +327,7 @@
         "eyebrow": "Bêta ouverte · sans compte",
         "title_line1": "Ton argent,",
         "title_accent": "à découvert.",
-        "subtitle": "Tape le nom d'un fonds. Tu vois ce qu'il finance, ce qu'il ne s'interdit pas de financer, et d'où vient chaque chiffre. Dix secondes, aucun compte.",
+        "subtitle": "Tape le nom d'un fonds. Tu vois, sur 1 000 € placés, où va chaque euro, ce que le fonds ne s'interdit pas de financer, et d'où vient chaque chiffre. Dix secondes, aucun compte.",
         "cta_primary": "Simuler mon portefeuille",
         "cta_secondary": "Créer mon compte",
         "cta_authed": "Accéder à mon espace",
@@ -426,7 +426,7 @@
       "row_3_data": "Piliers E, S et G non publiés",
       "note": "Ces trois lignes décrivent la forme du tableau, pas un fonds en particulier : l'Observatoire nomme les fonds, avec leurs chiffres et leurs sources."
     },
-    "xray_hint": "Ce qu'il finance · ce qu'il ne s'interdit pas · d'où vient chaque chiffre",
+    "xray_hint": "Sur 1 000 € placés · où va chaque euro · d'où vient chaque chiffre",
     "flow": {
       "desc": "Ton épargne circule déjà, quelque part, tous les mois. Coche ce que tu veux financer et ce que tu refuses : le flux se redirige sous tes yeux.",
       "want_label": "Ce que je veux financer",
@@ -965,7 +965,7 @@
     "coverage_partial": "Couverture partielle",
     "coverage_estimated": "Couverture estimée",
     "level_1": "Ce que tu achètes",
-    "what_it_finances": "Ce que ce fonds finance",
+    "what_it_finances": "Thèmes rattachés par Seedow",
     "what_it_allows": "Ce qu'il ne s'interdit pas",
     "why_score": "Pourquoi ce score ?",
     "holdings_title": "Ce qu'il y a vraiment dedans",
@@ -3027,7 +3027,8 @@
     "details_title": "Ce que ça donne",
     "edit": "Modifier",
     "edit_total": "Modifier le montant à répartir",
-    "remove_named": "Retirer {{name}}"
+    "remove_named": "Retirer {{name}}",
+    "why_line": "Pourquoi {{name}} est dans cette liste"
   },
   "data_provenance": {
     "coverage_label": "Que signifie la couverture ?",
@@ -3419,7 +3420,7 @@
     "try_label": "Essaie",
     "disclaimer": "Données publiques, sourcées et datées. Seedow ne vend aucun produit et ne recommande aucun achat.",
     "another": "Autre fonds",
-    "finances_label": "Ce que ce fonds finance",
+    "finances_label": "Thèmes rattachés par Seedow",
     "finances_empty": "Aucune exposition thématique documentée. Ça ne veut pas dire zéro : ça veut dire que nous n'avons pas la donnée.",
     "not_excluded_label": "Ce qu'il ne s'interdit pas",
     "not_excluded_note": "Ce fonds ne déclare aucune exclusion sur ces secteurs. C'est une absence d'engagement — pas la preuve qu'il en détient.",
@@ -3436,6 +3437,32 @@
     "limits": "Seedow ne mesure pas l'effet réel de ce fonds sur le climat ou la société : il compare ce que les fournisseurs de données publient. Ce qui manque est écrit, jamais comblé en silence.",
     "full_sheet": "La fiche complète",
     "find_alternatives": "Trouver des alternatives",
-    "catalogue_unavailable": "Le catalogue n'a renvoyé aucun fonds. C'est de notre côté, pas du tien — réessaie dans un moment."
+    "catalogue_unavailable": "Le catalogue n'a renvoyé aucun fonds. C'est de notre côté, pas du tien — réessaie dans un moment.",
+    "composition_loading": "Lecture de la composition publiée…",
+    "finances_note": "Ce rattachement est une appréciation de Seedow, pas une mesure de ce que le fonds détient — cette mesure est celle affichée au-dessus, en euros. Le détail du calcul de ces parts n'est pas encore publié."
+  },
+  "euro_breakdown": {
+    "eyebrow": "Ton argent, en euros",
+    "lead": "Sur {{amount}} placés dans ce fonds, voilà où ils vont.",
+    "lead_mine": "Sur les {{amount}} que tu as placés ici, voilà où ils vont.",
+    "amount_label": "Montant de référence",
+    "sectors_rest": "Autres secteurs",
+    "sector_unknown": "Secteur non publié par l'émetteur",
+    "undescribed": "Destination non décrite",
+    "undescribed_note": "La composition publiée ne couvre pas la totalité du fonds : liquidités, produits dérivés, arrondis. Seedow n'attribue pas cet écart — le répartir reviendrait à inventer une destination que l'émetteur n'a pas publiée.",
+    "over_100": "Les poids publiés totalisent {{pct}}. L'écart au-dessus de 100 % vient de l'émetteur (levier, arrondis) ; les euros ci-dessus suivent ces poids sans correction.",
+    "fees": "Frais du fonds sur ce montant : {{amount}} par an.",
+    "fees_unknown": "Les frais annuels de ce fonds ne sont pas renseignés.",
+    "companies_label": "Les entreprises derrière ces euros",
+    "source": "Composition publiée par {{source}}",
+    "source_missing": "Source de la composition non renseignée",
+    "source_link": "Voir le document",
+    "disclaimer": "Répartition d'un montant de référence selon les poids publiés, pas une prévision de rendement. Aucun euro n'est investi ici.",
+    "empty_title": "Composition non publiée",
+    "empty_body": "L'émetteur de ce fonds n'a pas publié la liste de ce qu'il détient, ou Seedow ne l'a pas encore récupérée. On préfère le dire plutôt que d'estimer une répartition.",
+    "companies_rest_one": "{{count}} autre position",
+    "companies_rest_other": "{{count}} autres positions",
+    "lines_one": "{{count}} ligne publiée",
+    "lines_other": "{{count}} lignes publiées"
   }
 }

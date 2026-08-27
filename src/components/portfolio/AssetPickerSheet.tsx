@@ -9,7 +9,7 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet";
 import { useAssetUniverse } from "@/hooks/useAssetUniverse";
-import { poolReasons } from "@/lib/portfolio/poolReasons";
+import { poolReasons, type PoolReasons } from "@/lib/portfolio/poolReasons";
 import { PoolReasonList } from "@/components/discover/PoolReasonList";
 import type { CauseTag } from "@/lib/portfolio/types";
 
@@ -21,6 +21,17 @@ export interface PickedAsset {
   asset_class: string;
   /** Note de durabilité sur 0..100 (note ESG composite, pas un effet mesuré). */
   esgScore: number;
+  /**
+   * Pourquoi ce fonds était proposé — calculé ici, au moment du choix, et
+   * transporté avec lui.
+   *
+   * Le recalculer côté builder demanderait de recharger l'univers pour des
+   * champs (exposition par cause, source de la note, historique de marché) que
+   * le modèle de vue du builder ne porte pas : il finirait par afficher une
+   * justification plus pauvre que celle qui a servi à choisir, ou pire, une
+   * autre. Une seule raison, écrite une fois, suit la ligne.
+   */
+  reasons: PoolReasons;
 }
 
 interface Props {
@@ -101,50 +112,52 @@ export function AssetPickerSheet({ open, onOpenChange, excludeIds, onPick, cause
             <p className="text-label text-ink-3 text-center py-8">{t("asset_picker.empty")}</p>
           ) : (
             <ul className="space-y-1.5 pb-4">
-              {results.map((a) => (
-                <li key={a.id}>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onPick({
-                        id: a.id,
-                        ticker: a.ticker,
-                        name: a.name,
-                        asset_class: a.asset_class,
-                        esgScore: Math.round(a.overall_esg_score * 10),
-                      });
-                      onOpenChange(false);
-                    }}
-                    className="w-full flex items-start gap-3 p-3 rounded-2xl border border-paper-3 bg-paper-2 text-left hover:bg-paper-3/40 transition-colors"
-                  >
-                    <div className="flex-1 min-w-0">
-                      <p className="text-body-sm font-semibold text-ink truncate">{a.name}</p>
-                      <p className="text-tag text-ink-3 truncate">
-                        {a.ticker} · {a.category}
-                      </p>
-                      {/* Pourquoi cette ligne, et ce qu'on ignore d'elle. Le
+              {results.map((a) => {
+                // Une seule évaluation par fonds : celle qui est AFFICHÉE est
+                // exactement celle qui suivra la ligne dans le builder.
+                const reasons = poolReasons({
+                  causes: causes ?? [],
+                  themes: a.themes,
+                  sustainability: Math.round(a.overall_esg_score * 10),
+                  esgSource: a.esg_score_source,
+                  ter: a.ter_pct / 100,
+                  statsObservations: a.stats_observations,
+                });
+                return (
+                  <li key={a.id}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onPick({
+                          id: a.id,
+                          ticker: a.ticker,
+                          name: a.name,
+                          asset_class: a.asset_class,
+                          esgScore: Math.round(a.overall_esg_score * 10),
+                          reasons,
+                        });
+                        onOpenChange(false);
+                      }}
+                      className="w-full flex items-start gap-3 p-3 rounded-2xl border border-paper-3 bg-paper-2 text-left hover:bg-paper-3/40 transition-colors"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <p className="text-body-sm font-semibold text-ink truncate">{a.name}</p>
+                        <p className="text-tag text-ink-3 truncate">
+                          {a.ticker} · {a.category}
+                        </p>
+                        {/* Pourquoi cette ligne, et ce qu'on ignore d'elle. Le
                           modèle de vue ne porte pas l'exposition chiffrée par
                           cause : on passe les thèmes dominants, et `poolReasons`
                           s'en accommode sans rien inventer. */}
-                      <PoolReasonList
-                        compact
-                        className="mt-1"
-                        reasons={poolReasons({
-                          causes: causes ?? [],
-                          themes: a.themes,
-                          sustainability: Math.round(a.overall_esg_score * 10),
-                          esgSource: a.esg_score_source,
-                          ter: a.ter_pct / 100,
-                          statsObservations: a.stats_observations,
-                        })}
-                      />
-                    </div>
-                    <span className="w-8 h-8 rounded-full bg-ink text-paper flex items-center justify-center flex-shrink-0">
-                      <Plus className="w-4 h-4" strokeWidth={2.2} aria-hidden />
-                    </span>
-                  </button>
-                </li>
-              ))}
+                        <PoolReasonList compact className="mt-1" reasons={reasons} />
+                      </div>
+                      <span className="w-8 h-8 rounded-full bg-ink text-paper flex items-center justify-center flex-shrink-0">
+                        <Plus className="w-4 h-4" strokeWidth={2.2} aria-hidden />
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </div>

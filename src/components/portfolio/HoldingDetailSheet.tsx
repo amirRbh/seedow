@@ -6,6 +6,9 @@ import type { ActiveHolding } from "@/hooks/useActivePortfolio";
 import type { ValuedHolding } from "@/hooks/usePortfolioValuation";
 import { PortfolioSustainabilityBadge } from "./PortfolioSustainabilityBadge";
 import { FundEvidenceLink } from "@/components/discover/FundEvidenceLink";
+import { EuroBreakdownBlock } from "@/components/impact/EuroBreakdownBlock";
+import { useFundComposition } from "@/hooks/useFundComposition";
+import { hasPublishedComposition } from "@/lib/impact/euroBreakdown";
 
 interface Props {
   open: boolean;
@@ -52,6 +55,10 @@ const fmtDate = (iso: string | null) => {
 };
 
 export function HoldingDetailSheet({ open, onClose, holding, valued }: Props) {
+  // Chargée seulement quand la feuille est ouverte : personne ne regarde la
+  // composition d'un fonds dont la fiche est fermée.
+  const composition = useFundComposition(holding?.isin ?? holding?.ticker ?? null, open);
+
   if (!holding) return null;
 
   const hasQuote =
@@ -146,6 +153,26 @@ export function HoldingDetailSheet({ open, onClose, holding, valued }: Props) {
             </div>
           </div>
         </div>
+
+        {/* « Et concrètement, mon argent finance quoi ? » — la même lecture
+            que sur la fiche publique, mais sur SON montant : les euros
+            affichés ici sont ceux qu'il a réellement mis sur cette ligne.
+            C'est le seul endroit du produit où la question se pose au
+            présent, avec son propre argent. */}
+        {hasPublishedComposition(composition.holdings) && (
+          <div className="mt-3 paper-card p-4">
+            <EuroBreakdownBlock
+              variant="bare"
+              holdings={composition.holdings}
+              asOf={composition.asOf}
+              source={composition.issuer}
+              sourceUrl={composition.sourceUrl}
+              ter={composition.ter}
+              fixedAmount={valued?.invested ?? null}
+              leadKey="euro_breakdown.lead_mine"
+            />
+          </div>
+        )}
 
         {/* Ce que le fonds revendique, ce que les données montrent, et les
             limites. La page sourcée de l'Observatoire n'était atteignable que

@@ -5,6 +5,9 @@ import { Provenance } from "@/components/ui/Provenance";
 import { WhyThis } from "@/components/common/WhyThis";
 import { SeedowScore, ScorePillars } from "@/components/esg/SeedowScore";
 import { notExcluded } from "@/lib/esg/exclusions";
+import { EuroBreakdownBlock } from "@/components/impact/EuroBreakdownBlock";
+import { useFundComposition } from "@/hooks/useFundComposition";
+import { hasPublishedComposition } from "@/lib/impact/euroBreakdown";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
 import type { EsgPreviewAsset } from "@/routes/api.public.esg-preview";
 
@@ -25,7 +28,9 @@ import type { EsgPreviewAsset } from "@/routes/api.public.esg-preview";
  *
  * ── Trois niveaux de lecture ───────────────────────────────────────────────
  *
- *   1. ce que ça finance / ce que ça ne s'interdit pas + le score et sa bande ;
+ *   1. la composition publiée dite EN EUROS sur 1 000 € — la seule chose qui
+ *      se comprend sans rien savoir de la finance —, puis ce que le fonds
+ *      revendique, ce qu'il ne s'interdit pas, son score et sa bande ;
  *   2. « Pourquoi ce score ? » → les piliers du composite, tels qu'il les
  *      calcule vraiment (ESG, climat, exclusions) ;
  *   3. « D'où viennent ces chiffres ? » → source, date, couverture, drapeaux,
@@ -236,6 +241,10 @@ function XrayReveal({
   variant: "hero" | "section";
 }) {
   const { t } = useTranslation();
+  const composition = useFundComposition(asset.isin ?? asset.ticker);
+  // Elle ouvre le révélateur quand elle existe. Sinon elle descend au niveau
+  // des sources : le premier geste du produit ne peut pas rendre une absence.
+  const composed = hasPublishedComposition(composition.holdings);
 
   // Ce que le fonds NE S'INTERDIT PAS. Formulation exacte : c'est l'absence
   // d'une exclusion déclarée, pas la preuve d'une position détenue.
@@ -270,7 +279,33 @@ function XrayReveal({
         </button>
       </div>
 
-      {/* ── NIVEAU 1 — la réponse ─────────────────────────────────────────── */}
+      {/* ── NIVEAU 1 — la réponse, en euros ───────────────────────────────
+          Un score et des pourcentages demandent qu'on sache déjà lire un
+          fonds. « Sur 1 000 € placés ici, 314 € vont à la technologie » ne
+          demande rien. C'est donc ce qui arrive en premier, et le reste
+          descend d'un cran. La composition n'est pas dans l'index public (500
+          fonds × leurs lignes seraient un payload absurde) : elle est
+          récupérée pour le seul fonds ouvert. */}
+      {(composition.status !== "ready" || composed) && (
+        <div className="mt-7 border-t border-paper-3 pt-6">
+          {composition.status !== "ready" ? (
+            <p className="text-body-sm text-ink-3" role="status">
+              {t("xray.composition_loading")}
+            </p>
+          ) : (
+            <EuroBreakdownBlock
+              variant="bare"
+              holdings={composition.holdings}
+              asOf={composition.asOf}
+              source={asset.issuer}
+              sourceUrl={composition.sourceUrl}
+              ter={asset.ter}
+            />
+          )}
+        </div>
+      )}
+
+      {/* ── NIVEAU 1 bis — ce que le fonds revendique ──────────────────────── */}
 
       <div className="mt-7 flex flex-col gap-7">
         <section>
@@ -294,6 +329,11 @@ function XrayReveal({
               {t("xray.finances_empty")}
             </p>
           )}
+          {/* Ce que ces parts sont, et ce qu'elles ne sont pas. Sans cette
+              ligne, une appréciation Seedow se lit comme une mesure. */}
+          <p className="mt-3 text-caption text-ink-3 leading-relaxed max-w-[60ch]">
+            {t("xray.finances_note")}
+          </p>
         </section>
 
         {/* Le moment « attends, mon argent finance ça ? ». Il vient du même
@@ -368,6 +408,15 @@ function XrayReveal({
               <p className="mt-2.5 text-caption text-ink-3 leading-relaxed max-w-[60ch]">
                 {t("xray.flags_note")}
               </p>
+            </div>
+          )}
+
+          {/* Une composition non publiée est une chose que Seedow ne sait pas
+              de ce fonds : elle a sa place ici, avec les autres. */}
+          {composition.status === "ready" && !composed && (
+            <div className="mt-5">
+              <p className="font-semibold text-ink">{t("euro_breakdown.empty_title")}</p>
+              <p className="mt-1.5 max-w-[60ch]">{t("euro_breakdown.empty_body")}</p>
             </div>
           )}
 

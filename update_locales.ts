@@ -3220,6 +3220,124 @@ const moneyFlowEn = {
   },
 };
 
+/* ────────────────────────────────────────────────────────────────────────────
+   « Sur 1 000 € investis » — la traduction en euros de la composition publiée.
+   Un pourcentage est exact et muet ; le même fait dit en euros se comprend
+   sans rien savoir de la finance. Les deux écarts (secteur non publié, part
+   non décrite) ont leurs propres libellés : ils ne sont jamais lissés.
+   ──────────────────────────────────────────────────────────────────────── */
+
+const euroBreakdownFr: Json = {
+  xray: {
+    composition_loading: "Lecture de la composition publiée…",
+    // Ces parts viennent de `cause_exposure`, une appréciation portée par
+    // Seedow (source `seedow-internal-v1`) — pas une mesure de ce que le fonds
+    // détient. Tant que la composition n'était pas affichée, le libellé « ce
+    // que ce fonds finance » passait pour une mesure. Il ne peut plus, la
+    // vraie composition est juste au-dessus.
+    finances_label: "Thèmes rattachés par Seedow",
+    // La promesse du champ suit désormais ce qu'il rend vraiment : des euros.
+
+    finances_note:
+      "Ce rattachement est une appréciation de Seedow, pas une mesure de ce que le fonds détient — cette mesure est celle affichée au-dessus, en euros. Le détail du calcul de ces parts n'est pas encore publié.",
+  },
+  fonds_page: {
+    what_it_finances: "Thèmes rattachés par Seedow",
+  },
+  blank_builder: {
+    why_line: "Pourquoi {{name}} est dans cette liste",
+  },
+  landing: {
+    xray_hint: "Sur 1 000 € placés · où va chaque euro · d'où vient chaque chiffre",
+    rv: {
+      hero: {
+        subtitle:
+          "Tape le nom d'un fonds. Tu vois, sur 1 000 € placés, où va chaque euro, ce que le fonds ne s'interdit pas de financer, et d'où vient chaque chiffre. Dix secondes, aucun compte.",
+      },
+    },
+  },
+  euro_breakdown: {
+    eyebrow: "Ton argent, en euros",
+    lead: "Sur {{amount}} placés dans ce fonds, voilà où ils vont.",
+    lead_mine: "Sur les {{amount}} que tu as placés ici, voilà où ils vont.",
+    amount_label: "Montant de référence",
+    sectors_rest: "Autres secteurs",
+    sector_unknown: "Secteur non publié par l'émetteur",
+    undescribed: "Destination non décrite",
+    undescribed_note:
+      "La composition publiée ne couvre pas la totalité du fonds : liquidités, produits dérivés, arrondis. Seedow n'attribue pas cet écart — le répartir reviendrait à inventer une destination que l'émetteur n'a pas publiée.",
+    over_100:
+      "Les poids publiés totalisent {{pct}}. L'écart au-dessus de 100 % vient de l'émetteur (levier, arrondis) ; les euros ci-dessus suivent ces poids sans correction.",
+    fees: "Frais du fonds sur ce montant : {{amount}} par an.",
+    fees_unknown: "Les frais annuels de ce fonds ne sont pas renseignés.",
+    companies_label: "Les entreprises derrière ces euros",
+    companies_rest_one: "{{count}} autre position",
+    companies_rest_other: "{{count}} autres positions",
+    source: "Composition publiée par {{source}}",
+    source_missing: "Source de la composition non renseignée",
+    source_link: "Voir le document",
+    lines_one: "{{count}} ligne publiée",
+    lines_other: "{{count}} lignes publiées",
+    disclaimer:
+      "Répartition d'un montant de référence selon les poids publiés, pas une prévision de rendement. Aucun euro n'est investi ici.",
+    empty_title: "Composition non publiée",
+    empty_body:
+      "L'émetteur de ce fonds n'a pas publié la liste de ce qu'il détient, ou Seedow ne l'a pas encore récupérée. On préfère le dire plutôt que d'estimer une répartition.",
+  },
+};
+
+const euroBreakdownEn: Json = {
+  xray: {
+    composition_loading: "Reading the published composition…",
+    finances_label: "Themes assigned by Seedow",
+    finances_note:
+      "This is a Seedow assessment, not a measurement of what the fund holds — that measurement is the one above, in euros. How these shares are computed is not published yet.",
+  },
+  fonds_page: {
+    what_it_finances: "Themes assigned by Seedow",
+  },
+  blank_builder: {
+    why_line: "Why {{name}} is on this list",
+  },
+  landing: {
+    xray_hint: "On €1,000 invested · where each euro goes · where each figure comes from",
+    rv: {
+      hero: {
+        subtitle:
+          "Type a fund name. You see, on €1,000 invested, where each euro goes, what the fund does not rule out financing, and where each figure comes from. Ten seconds, no account.",
+      },
+    },
+  },
+  euro_breakdown: {
+    eyebrow: "Your money, in euros",
+    lead: "Of {{amount}} put into this fund, here is where it goes.",
+    lead_mine: "Of the {{amount}} you put here, this is where it goes.",
+    amount_label: "Reference amount",
+    sectors_rest: "Other sectors",
+    sector_unknown: "Sector not published by the issuer",
+    undescribed: "Destination not described",
+    undescribed_note:
+      "The published composition does not cover the whole fund: cash, derivatives, rounding. Seedow does not attribute that gap — spreading it would invent a destination the issuer never published.",
+    over_100:
+      "Published weights add up to {{pct}}. Anything above 100% comes from the issuer (leverage, rounding); the euros above follow those weights uncorrected.",
+    fees: "Fund fees on this amount: {{amount}} per year.",
+    fees_unknown: "Annual fees for this fund are not on record.",
+    companies_label: "The companies behind those euros",
+    companies_rest_one: "{{count}} other position",
+    companies_rest_other: "{{count}} other positions",
+    source: "Composition published by {{source}}",
+    source_missing: "Composition source not on record",
+    source_link: "See the document",
+    lines_one: "{{count}} published line",
+    lines_other: "{{count}} published lines",
+    disclaimer:
+      "A reference amount split according to published weights — not a return forecast. No euro is invested here.",
+    empty_title: "Composition not published",
+    empty_body:
+      "This fund's issuer has not published what it holds, or Seedow has not retrieved it yet. We would rather say so than estimate a split.",
+  },
+};
+
 const FR_BLOCKS: Json[] = [
   composeSwitchFr,
   pedagogyFr,
@@ -3229,6 +3347,7 @@ const FR_BLOCKS: Json[] = [
   observatoryFr,
   landingCopyFr,
   moneyFlowFr,
+  euroBreakdownFr,
 ];
 const EN_BLOCKS: Json[] = [
   composeSwitchEn,
@@ -3239,6 +3358,7 @@ const EN_BLOCKS: Json[] = [
   observatoryEn,
   landingCopyEn,
   moneyFlowEn,
+  euroBreakdownEn,
 ];
 
 writeFileSync(

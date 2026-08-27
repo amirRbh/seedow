@@ -22,6 +22,9 @@ import { usePortfolioAnalysis } from "@/hooks/usePortfolioAnalysis";
 import { readPoolHandoff, type PoolHandoffIntent } from "@/lib/onboarding/poolHandoff";
 import { recordComposition } from "@/lib/portfolio/lastChange";
 import { usePortfolioSync } from "@/hooks/usePortfolioSync";
+import { PoolReasonList } from "@/components/discover/PoolReasonList";
+import { WhyThis } from "@/components/common/WhyThis";
+import type { PoolReasons } from "@/lib/portfolio/poolReasons";
 
 interface Line {
   id: string;
@@ -30,6 +33,13 @@ interface Line {
   esgScore: number;
   /** Montant placé sur cette ligne, en euros. */
   amount: number;
+  /**
+   * Pourquoi cette ligne est là — telle que le sélecteur l'a formulée au moment
+   * du choix. Absente sur les lignes amorcées depuis le questionnaire (le
+   * transfert ne porte pas ces champs) : le « Pourquoi ? » ne s'affiche alors
+   * pas, plutôt que d'afficher une justification reconstruite après coup.
+   */
+  reasons?: PoolReasons;
 }
 
 /** Montant à répartir par défaut, quand le builder est ouvert sans questionnaire. */
@@ -157,7 +167,14 @@ export function BlankCanvasBuilder() {
     // Ajouté à 0 € : c'est l'utilisateur qui décide combien, pas Seedow.
     const next = [
       ...lines,
-      { id: a.id, ticker: a.ticker, name: a.name, esgScore: a.esgScore, amount: 0 },
+      {
+        id: a.id,
+        ticker: a.ticker,
+        name: a.name,
+        esgScore: a.esgScore,
+        amount: 0,
+        reasons: a.reasons,
+      },
     ];
     setLines(next);
     commit(next);
@@ -431,6 +448,21 @@ export function BlankCanvasBuilder() {
                         <Trash2 className="w-4 h-4" strokeWidth={1.8} aria-hidden />
                       </button>
                     </div>
+
+                    {/* « Pourquoi cette ligne ? » — la question que pose
+                        n'importe qui devant une liste de fonds qu'il vient de
+                        composer. La réponse est celle qui a servi à choisir,
+                        transportée depuis le sélecteur : repliée, parce
+                        qu'ouverte sur chaque ligne elle noierait la
+                        composition elle-même. */}
+                    {l.reasons && (
+                      <WhyThis
+                        className="mt-2"
+                        ariaLabel={t("blank_builder.why_line", { name: l.name })}
+                      >
+                        <PoolReasonList compact reasons={l.reasons} />
+                      </WhyThis>
+                    )}
 
                     {/* Raccourcis — seulement sur la ligne qu'on édite. Affichés
                         sur toutes, ils faisaient vingt pastilles à l'écran. */}

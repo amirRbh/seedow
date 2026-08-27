@@ -27,6 +27,9 @@ import { relativeIntensityVsBenchmark } from "@/lib/esg/carbon";
 import { ACWI_WACI_TCO2E_PER_MUSD, ACWI_WACI_SOURCE, ACWI_WACI_ASOF } from "@/lib/esg/benchmark";
 import type { DiscoverAsset } from "@/lib/discover/types";
 import { AssetLayersBlock } from "./AssetLayersBlock";
+import { EuroBreakdownBlock } from "@/components/impact/EuroBreakdownBlock";
+import { useFundComposition } from "@/hooks/useFundComposition";
+import { hasPublishedComposition } from "@/lib/impact/euroBreakdown";
 
 interface Props {
   open: boolean;
@@ -51,6 +54,10 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
     6: { label: t("asset_detail.risk_labels.6"), tone: "text-rust" },
     7: { label: t("asset_detail.risk_labels.7"), tone: "text-bloom" },
   };
+
+  // Composition publiée du fonds ouvert — chargée seulement quand la feuille
+  // l'est. Ce que le fonds détient vraiment, à côté de ce qu'il revendique.
+  const composition = useFundComposition(asset?.isin ?? asset?.ticker ?? null, open);
 
   const [detailsOpen, setDetailsOpen] = useState(false);
   const { isWatched, toggle } = useWatchlist();
@@ -132,6 +139,30 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
               {t(`asset_detail.plain.kinds.${assetKind(asset.asset_class)}.desc`)}
             </p>
           </section>
+
+          {/* CE QUE ÇA FINANCE, EN EUROS — la composition publiée traduite sur
+              1 000 €. Elle passe avant le score et avant les thèmes revendiqués
+              parce que c'est la seule chose ici qui se comprend sans rien
+              savoir de la finance, et parce qu'elle est mesurée là où les
+              thèmes sont une appréciation. */}
+          {(composition.status !== "ready" || hasPublishedComposition(composition.holdings)) && (
+            <section>
+              {composition.status !== "ready" ? (
+                <p className="text-body-sm text-ink-3" role="status">
+                  {t("xray.composition_loading")}
+                </p>
+              ) : (
+                <EuroBreakdownBlock
+                  variant="bare"
+                  holdings={composition.holdings}
+                  asOf={composition.asOf}
+                  source={composition.issuer ?? asset.issuer ?? null}
+                  sourceUrl={composition.sourceUrl}
+                  ter={asset.ter_pct / 100}
+                />
+              )}
+            </section>
+          )}
 
           {/* POURQUOI POUR TOI — la fiche décrivait le fonds dans l'absolu sans
               jamais le relier aux convictions déclarées trois écrans plus tôt.

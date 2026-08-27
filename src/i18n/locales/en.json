@@ -327,7 +327,7 @@
         "eyebrow": "Open beta · no account",
         "title_line1": "Your money,",
         "title_accent": "uncovered.",
-        "subtitle": "Type a fund name. See what it finances, what it doesn't rule out financing, and where every number comes from. Ten seconds, no account.",
+        "subtitle": "Type a fund name. You see, on €1,000 invested, where each euro goes, what the fund does not rule out financing, and where each figure comes from. Ten seconds, no account.",
         "cta_primary": "Simulate my portfolio",
         "cta_secondary": "Create my account",
         "cta_authed": "Go to my space",
@@ -426,7 +426,7 @@
       "row_3_data": "E, S and G pillars not published",
       "note": "These three rows show the shape of the table, not one particular fund: the Observatory names the funds, with their numbers and their sources."
     },
-    "xray_hint": "What it finances · what it doesn't rule out · where each number comes from",
+    "xray_hint": "On €1,000 invested · where each euro goes · where each figure comes from",
     "flow": {
       "desc": "Your savings already flow somewhere, every month. Tick what you want to fund and what you refuse: the flow redirects before your eyes.",
       "want_label": "What I want to fund",
@@ -965,7 +965,7 @@
     "coverage_partial": "Partial coverage",
     "coverage_estimated": "Estimated coverage",
     "level_1": "What you are buying",
-    "what_it_finances": "What this fund finances",
+    "what_it_finances": "Themes assigned by Seedow",
     "what_it_allows": "What it doesn't rule out",
     "why_score": "Why this score?",
     "holdings_title": "What is actually inside",
@@ -3027,7 +3027,8 @@
     "details_title": "What it comes to",
     "edit": "Edit",
     "edit_total": "Edit the amount to allocate",
-    "remove_named": "Remove {{name}}"
+    "remove_named": "Remove {{name}}",
+    "why_line": "Why {{name}} is on this list"
   },
   "data_provenance": {
     "coverage_label": "What does coverage mean?",
@@ -3419,7 +3420,7 @@
     "try_label": "Try",
     "disclaimer": "Public data, sourced and dated. Seedow sells no product and recommends no purchase.",
     "another": "Another fund",
-    "finances_label": "What this fund finances",
+    "finances_label": "Themes assigned by Seedow",
     "finances_empty": "No documented thematic exposure. That doesn't mean zero: it means we don't have the data.",
     "not_excluded_label": "What it doesn't rule out",
     "not_excluded_note": "This fund declares no exclusion on these sectors. That's a missing commitment — not proof that it holds them.",
@@ -3436,6 +3437,32 @@
     "limits": "Seedow does not measure this fund's real effect on the climate or society: it compares what data providers publish. What is missing is written down, never quietly filled in.",
     "full_sheet": "Full fund sheet",
     "find_alternatives": "Find alternatives",
-    "catalogue_unavailable": "The catalogue returned no funds. That's on our side, not yours — try again in a moment."
+    "catalogue_unavailable": "The catalogue returned no funds. That's on our side, not yours — try again in a moment.",
+    "composition_loading": "Reading the published composition…",
+    "finances_note": "This is a Seedow assessment, not a measurement of what the fund holds — that measurement is the one above, in euros. How these shares are computed is not published yet."
+  },
+  "euro_breakdown": {
+    "eyebrow": "Your money, in euros",
+    "lead": "Of {{amount}} put into this fund, here is where it goes.",
+    "lead_mine": "Of the {{amount}} you put here, this is where it goes.",
+    "amount_label": "Reference amount",
+    "sectors_rest": "Other sectors",
+    "sector_unknown": "Sector not published by the issuer",
+    "undescribed": "Destination not described",
+    "undescribed_note": "The published composition does not cover the whole fund: cash, derivatives, rounding. Seedow does not attribute that gap — spreading it would invent a destination the issuer never published.",
+    "over_100": "Published weights add up to {{pct}}. Anything above 100% comes from the issuer (leverage, rounding); the euros above follow those weights uncorrected.",
+    "fees": "Fund fees on this amount: {{amount}} per year.",
+    "fees_unknown": "Annual fees for this fund are not on record.",
+    "companies_label": "The companies behind those euros",
+    "source": "Composition published by {{source}}",
+    "source_missing": "Composition source not on record",
+    "source_link": "See the document",
+    "disclaimer": "A reference amount split according to published weights — not a return forecast. No euro is invested here.",
+    "empty_title": "Composition not published",
+    "empty_body": "This fund's issuer has not published what it holds, or Seedow has not retrieved it yet. We would rather say so than estimate a split.",
+    "companies_rest_one": "{{count}} other position",
+    "companies_rest_other": "{{count}} other positions",
+    "lines_one": "{{count}} published line",
+    "lines_other": "{{count}} published lines"
   }
 }
