@@ -29,30 +29,49 @@
  */
 
 import type { ParsedHolding, ParsedHoldings } from "./holdings";
+import type { ISharesSite } from "./ishares-funds";
 
 /**
- * Domaine de l'API produit BlackRock. Le site iShares grand public appelle la
- * même adresse : ce n'est pas un contournement, c'est le chemin officiel.
+ * API produit BlackRock, par place de cotation. Le site iShares grand public
+ * appelle ces mêmes adresses : ce n'est pas un contournement, c'est le chemin
+ * officiel — chacune a été relevée dans la page produit correspondante.
+ *
+ * Les deux hôtes ne sont PAS interchangeables, et l'erreur est silencieuse :
+ * demander un fonds britannique à l'hôte américain rend bien un classeur, avec
+ * les mêmes lignes — mais des poids tronqués à l'entier (« 5 » au lieu de
+ * « 5,33 »), dont la somme tombe à 37 %. Un fichier qui a l'air juste et qui ne
+ * l'est pas. D'où une adresse par place, et la place portée par le registre.
  */
-const PRODUCT_API =
-  "https://www.blackrock.com/varnish-api/uk-retail01-product-data/product-data/api/v1/get-fund-document";
+const PRODUCT_API: Record<ISharesSite, { host: string; targetSite: string; locale: string }> = {
+  uk: {
+    host: "https://www.blackrock.com/varnish-api/uk-retail01-product-data/product-data/api/v1/get-fund-document",
+    targetSite: "ishares-uk",
+    locale: "en_GB",
+  },
+  us: {
+    host: "https://www.blackrock.com/varnish-api/blk-one01-product-data/product-data/api/v1/get-fund-document",
+    targetSite: "us-ishares",
+    locale: "en_US",
+  },
+};
 
 /**
- * URL du classeur de composition d'un fonds, à partir de son identifiant
- * produit BlackRock. C'est l'URL enregistrée en `source_url` : elle est
- * publique et rejouable, donc vérifiable par quiconque lit la donnée.
+ * URL du classeur de composition d'un fonds. C'est l'URL enregistrée en
+ * `source_url` : elle est publique et rejouable, donc vérifiable par quiconque
+ * lit la donnée.
  */
-export function iSharesHoldingsUrl(portfolioId: string): string {
+export function iSharesHoldingsUrl(portfolioId: string, site: ISharesSite = "uk"): string {
+  const api = PRODUCT_API[site];
   const params = new URLSearchParams({
     appType: "PRODUCT_PAGE",
     appSubType: "ISHARES",
-    targetSite: "ishares-uk",
-    locale: "en_GB",
+    targetSite: api.targetSite,
+    locale: api.locale,
     component: "fundDownloadV2",
     userType: "individual",
     portfolioId,
   });
-  return `${PRODUCT_API}?${params.toString()}`;
+  return `${api.host}?${params.toString()}`;
 }
 
 // ── Lecture du classeur ───────────────────────────────────────────────────
@@ -81,27 +100,39 @@ function cellsOf(row: string): string[] {
   return out;
 }
 
-/** `25/Aug/2026` → `2026-08-25`. Rend null sur tout format non reconnu. */
+const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+
+/**
+ * Date de référence d'un classeur, dans les deux formes que BlackRock publie :
+ * `25/Aug/2026` sur le site britannique, `Aug 26, 2026` sur le site américain.
+ *
+ * La seconde n'était pas reconnue. La conséquence n'avait rien de cosmétique :
+ * sans date, `runHoldingsQualityChecks` rejette le lot (§12 — une composition
+ * sans date de référence n'est pas publiable) et `buildHoldingRows` ne rend
+ * aucune ligne. Tout fonds américain était donc lu correctement, puis jeté.
+ *
+ * Rend null sur tout format non reconnu — on ne devine pas une date.
+ */
 export function parseIsharesDate(raw: string): string | null {
-  const m = /^(\d{2})\/([A-Za-z]{3})\/(\d{4})$/.exec(raw.trim());
-  if (!m) return null;
-  const months = [
-    "jan",
-    "feb",
-    "mar",
-    "apr",
-    "may",
-    "jun",
-    "jul",
-    "aug",
-    "sep",
-    "oct",
-    "nov",
-    "dec",
-  ];
-  const idx = months.indexOf(m[2].toLowerCase());
-  if (idx < 0) return null;
-  return `${m[3]}-${String(idx + 1).padStart(2, "0")}-${m[1]}`;
+  const text = raw.trim();
+
+  // Britannique : 25/Aug/2026
+  const uk = /^(\d{2})\/([A-Za-z]{3})\/(\d{4})$/.exec(text);
+  if (uk) {
+    const idx = MONTHS.indexOf(uk[2].toLowerCase());
+    return idx < 0 ? null : `${uk[3]}-${String(idx + 1).padStart(2, "0")}-${uk[1]}`;
+  }
+
+  // Américain : Aug 26, 2026 (le jour peut n'avoir qu'un chiffre)
+  const us = /^([A-Za-z]{3})[a-z]* (\d{1,2}), (\d{4})$/.exec(text);
+  if (us) {
+    const idx = MONTHS.indexOf(us[1].toLowerCase());
+    return idx < 0
+      ? null
+      : `${us[3]}-${String(idx + 1).padStart(2, "0")}-${us[2].padStart(2, "0")}`;
+  }
+
+  return null;
 }
 
 /** `'5.33'` → 5.33 ; `'1,234.5'` → 1234.5 ; vide ou illisible → null. */
@@ -194,6 +225,20 @@ export function parseISharesHoldings(xml: string): ParsedHoldings {
   const holdings: ParsedHolding[] = [];
   for (let i = headerIdx + 1; i < rows.length; i++) {
     const r = rows[i];
+
+    // Fin du tableau. Le classeur enchaîne les tableaux SANS ligne vide entre
+    // eux : la composition est immédiatement suivie d'un « As Of | NAV per
+    // Share | … » de cinq colonnes. Une ligne trop courte pour porter la
+    // colonne des poids n'appartient donc pas à ce tableau — et si on se
+    // contente de la SAUTER, la lecture se poursuit dans les tableaux
+    // suivants et ramasse leurs lignes.
+    //
+    // C'est ce qui arrivait sur l'export américain complet : quarante lignes
+    // d'un historique de distributions rejoignaient la composition, avec une
+    // date en guise de nom de titre (« Jun 15, 2026 ») et un nombre en guise
+    // de classe d'actif. On s'arrête au lieu de sauter.
+    if (r.length <= cols.weight) break;
+
     const name = r[cols.name] ?? "";
     if (!name) continue;
     const weightPct = parseWeight(r[cols.weight] ?? "");

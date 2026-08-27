@@ -1,0 +1,222 @@
+<?xml version="1.0"?>
+<ss:Workbook xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+<ss:Table>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">iShares Global Clean Energy ETF</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Inception Date</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Jun 24, 2008</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Fund Holdings as of</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Aug 26, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Number of Securities (excluding cash and derivatives)</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">106.00</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Shares Outstanding</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">126,100,000.00</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String"></ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="headerstyle">
+<ss:Data ss:Type="String">Ticker</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="headerstyle">
+<ss:Data ss:Type="String">Name</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="headerstyle">
+<ss:Data ss:Type="String">Type</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="headerstyle">
+<ss:Data ss:Type="String">Sector</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="headerstyle">
+<ss:Data ss:Type="String">Asset Class</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="headerstyle">
+<ss:Data ss:Type="String">Market Value</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="headerstyle">
+<ss:Data ss:Type="String">Weight (%)</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="headerstyle">
+<ss:Data ss:Type="String">Notional Value</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="headerstyle">
+<ss:Data ss:Type="String">Quantity</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="headerstyle">
+<ss:Data ss:Type="String">Price</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="headerstyle">
+<ss:Data ss:Type="String">Location</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="headerstyle">
+<ss:Data ss:Type="String">Exchange</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="headerstyle">
+<ss:Data ss:Type="String">Currency</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="headerstyle">
+<ss:Data ss:Type="String">FX Rate</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="headerstyle">
+<ss:Data ss:Type="String">Accrual Date</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">FSLR</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">FIRST SOLAR</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">EQUITY</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Information Technology</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Equity</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="Number">174348163.34</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="Number">7.87053</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="Number">174348163.34</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="Number">846638</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="Number">205.93</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">United States</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">NASDAQ</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">USD</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="Number">1</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">--</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">600900</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">CHINA YANGTZE POWER LTD A</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">EQUITY</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Utilities</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Equity</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="Number">169163560.62</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="Number">7.63649</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="Number">169163560.62</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="Number">40274585</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="Number">4.2</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">China</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Shanghai Stock Exchange</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">USD</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="Number">6.72055</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">--</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="headerstyle">
+<ss:Data ss:Type="String">As Of</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="headerstyle">
+<ss:Data ss:Type="String">NAV per Share</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="headerstyle">
+<ss:Data ss:Type="String">Ex-Dividends</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="headerstyle">
+<ss:Data ss:Type="String">Shares Outstanding</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="headerstyle">
+<ss:Data ss:Type="String">Non-FV NAV</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Aug 26, 2026</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="Number">17.715792</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">--</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="Number">126100000</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="Number">17.719676</ss:Data>
+</ss:Cell>
+</ss:Row>
+</ss:Table>
+</ss:Workbook>
