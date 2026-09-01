@@ -1,39 +1,32 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { mapPublicFundRow, PUBLIC_FUND_COLUMNS, type PublicFundRow } from "@/lib/esg/public-fund";
+import { loadObservatory } from "@/lib/esg/v2/observatory.functions";
 
 /**
- * Aperçu ESG public — le "quick win" pré-inscription : chercher un fonds et voir
- * son score ESG + risque greenwashing en <10 s, sans compte. Données agrégées
- * publiques uniquement (aucune donnée utilisateur, pas de cours ni volumes).
+ * Aperçu public — le « quick win » pré-inscription : chercher un fonds et voir
+ * ce qu'il publie, en moins de dix secondes, sans compte.
  *
- * Peu volatil (les scores ESG bougent à la semaine, pas à la seconde) donc
- * caché agressivement en edge Cloudflare via s-maxage : une seule requête DB
- * par heure et par PoP, pas une par visiteur.
+ * ── Ce que cet endpoint a cessé de servir ─────────────────────────────────
+ *
+ * Il exposait le score de durabilité 0–100, ses piliers et les « raisons de
+ * greenwashing » de la v1. C'était la même affirmation que l'Observatoire, sur
+ * la surface la plus visible du produit, sans même l'écran qui explique d'où
+ * elle sort. Le score est supprimé (grille STI 2.0) ; l'endpoint sert désormais
+ * exactement ce que servent l'Observatoire et les fiches — même assemblage,
+ * même déduplication, même règle d'abstention. Un fonds ne peut donc plus
+ * afficher un chiffre sur la landing et un autre sur sa fiche.
+ *
+ * Peu volatil (une publication documentaire bouge au trimestre, pas à la
+ * seconde) : caché agressivement en edge Cloudflare via s-maxage.
  */
-
-export type { PublicFundAsset as EsgPreviewAsset } from "@/lib/esg/public-fund";
-
 export const Route = createFileRoute("/api/public/esg-preview")({
   server: {
     handlers: {
       GET: async () => {
         try {
-          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-          const { data, error } = await supabaseAdmin
-            .from("assets")
-            .select(PUBLIC_FUND_COLUMNS)
-            .eq("is_active", true)
-            .order("esg_score", { ascending: false })
-            .limit(500);
-          if (error) throw new Error(error.message);
-
-          const items = (data ?? []).map((r) => mapPublicFundRow(r as unknown as PublicFundRow));
-
-          return new Response(JSON.stringify({ assets: items }), {
+          const { funds, stats } = await loadObservatory();
+          return new Response(JSON.stringify({ funds, stats }), {
             headers: {
               "Content-Type": "application/json",
-              // max-age court navigateur, s-maxage long edge : les scores ESG
-              // publics ne justifient pas un hit DB par session.
               "Cache-Control": "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400",
             },
           });

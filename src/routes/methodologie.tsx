@@ -11,6 +11,12 @@ import { LanguageToggle } from "@/components/LanguageToggle";
 import { LearnTabs } from "@/components/courses/LearnTabs";
 import { MetricLabel } from "@/components/ui/MetricLabel";
 import { GlossaryTerm } from "@/components/common/GlossaryTerm";
+import { BLOCK_MAX, STI_VERSION, type StiBlockId } from "@/lib/esg/v2/sti";
+import {
+  DISCREPANCY_CODES,
+  NOTICE_PERIOD_WORKING_DAYS,
+  CORRECTION_DEADLINE_HOURS,
+} from "@/lib/esg/v2/discrepancies";
 import {
   DEFAULT_PILLAR_WEIGHTS,
   causeToPillarWeights,
@@ -25,6 +31,11 @@ import {
  */
 const METHODOLOGY_VERSIONS = [
   {
+    version: "2.0",
+    date: "2026-09-01",
+    noteKey: "methodologie.version_2_0_note",
+  },
+  {
     version: "1.1",
     date: "2026-08-17",
     noteKey: "methodologie.version_1_1_note",
@@ -35,6 +46,15 @@ const METHODOLOGY_VERSIONS = [
     noteKey: "methodologie.version_1_0_note",
   },
 ] as const;
+
+/** Les cinq blocs du STI, dans l'ordre de la grille publiée. */
+const STI_BLOCKS: { id: StiBlockId }[] = [
+  { id: "A" },
+  { id: "B" },
+  { id: "C" },
+  { id: "D" },
+  { id: "E" },
+];
 
 export const Route = createFileRoute("/methodologie")({
   head: () => ({
@@ -481,29 +501,83 @@ function MethodologyPage() {
         </div>
       </section>
 
-      {/* Score Seedow — méthodologie propriétaire, publique et versionnée */}
-      <section className="max-w-6xl mx-auto px-6 py-10 border-t border-paper-3">
+      {/* ── Indice de transparence Seedow (STI 2.0) ──────────────────────
+          La page la plus importante de la marque : elle dit ce que Seedow
+          mesure, ce qu'il ne mesure pas, et pourquoi il ne note pas la
+          durabilité. Elle passe donc AVANT l'historique de version. */}
+      <section id="sti" className="max-w-6xl mx-auto px-6 py-10 border-t border-paper-3">
         <p className="text-tag uppercase tracking-[0.12em] text-ink-3 font-medium mb-3">
-          {t("methodologie.seedow_score_title")}
+          {t("methodologie.sti_title")}
         </p>
         <p className="text-body-sm text-ink-2 leading-relaxed max-w-2xl">
-          {t("methodologie.seedow_score_intro")}
+          {t("methodologie.sti_intro")}
         </p>
-        <ul className="mt-4 space-y-2 text-body-sm">
-          <li className="flex justify-between border-b border-paper-3 pb-2">
-            <span className="text-ink-2">{t("methodologie.seedow_score_pillar_esg")}</span>
-            <span className="tabular-nums font-medium">40 %</span>
-          </li>
-          <li className="flex justify-between border-b border-paper-3 pb-2">
-            <span className="text-ink-2">{t("methodologie.seedow_score_pillar_climate")}</span>
-            <span className="tabular-nums font-medium">40 %</span>
-          </li>
-          <li className="flex justify-between pb-2">
-            <span className="text-ink-2">{t("methodologie.seedow_score_pillar_exclusions")}</span>
-            <span className="tabular-nums font-medium">20 %</span>
-          </li>
+
+        <p className="mt-6 text-body-sm font-semibold text-ink">
+          {t("methodologie.sti_not_measured_title")}
+        </p>
+        <p className="mt-2 text-body-sm text-ink-2 leading-relaxed max-w-2xl">
+          {t("methodologie.sti_not_measured")}
+        </p>
+
+        <p className="mt-6 text-body-sm font-semibold text-ink">
+          {t("methodologie.sti_grid_title")}
+        </p>
+        <ul className="mt-3 space-y-2 text-body-sm">
+          {STI_BLOCKS.map((b) => (
+            <li key={b.id} className="flex justify-between gap-4 border-b border-paper-3 pb-2">
+              <span className="text-ink-2">
+                <span className="font-mono text-ink-3 mr-2">{b.id}</span>
+                {t(`sti.block.${b.id}`)}
+              </span>
+              <span className="tabular-nums font-medium shrink-0">{BLOCK_MAX[b.id]} pts</span>
+            </li>
+          ))}
         </ul>
-        <p className="text-caption text-ink-3 mt-3">{t("methodologie.seedow_score_renorm")}</p>
+
+        <p className="mt-6 text-body-sm font-semibold text-ink">
+          {t("methodologie.sti_abstention_title")}
+        </p>
+        <p className="mt-2 text-body-sm text-ink-2 leading-relaxed max-w-2xl">
+          {t("methodologie.sti_abstention")}
+        </p>
+
+        {/* Le point le plus contre-intuitif de la grille : sans cette phrase,
+            le bloc B est lu comme une note de sévérité et la grille entière se
+            lit de travers. */}
+        <p className="mt-6 text-body-sm font-semibold text-ink">
+          {t("methodologie.sti_precision_title")}
+        </p>
+        <p className="mt-2 text-body-sm text-ink-2 leading-relaxed max-w-2xl">
+          {t("sti.precision_not_severity")}
+        </p>
+
+        <p className="mt-6 text-body-sm font-semibold text-ink">
+          {t("methodologie.sti_discrepancies_title")}
+        </p>
+        <p className="mt-2 text-body-sm text-ink-2 leading-relaxed max-w-2xl">
+          {t("methodologie.sti_discrepancies")}
+        </p>
+        <ul className="mt-3 space-y-2 text-body-sm">
+          {DISCREPANCY_CODES.map((code) => (
+            <li key={code} className="flex gap-3 border-b border-paper-3 pb-2">
+              <span className="font-mono text-ink-3 shrink-0">{code}</span>
+              <span className="text-ink-2">{t(`constats.type.${code}`)}</span>
+            </li>
+          ))}
+        </ul>
+
+        <p className="mt-6 text-body-sm font-semibold text-ink">
+          {t("methodologie.sti_governance_title")}
+        </p>
+        <p className="mt-2 text-body-sm text-ink-2 leading-relaxed max-w-2xl">
+          {t("methodologie.sti_governance", {
+            days: NOTICE_PERIOD_WORKING_DAYS,
+            hours: CORRECTION_DEADLINE_HOURS,
+          })}
+        </p>
+
+        <p className="text-caption text-ink-3 mt-6">{t("sti.version", { version: STI_VERSION })}</p>
       </section>
 
       {/* C3 — Historique de version (transparence auditable, Moat Blueprint) */}

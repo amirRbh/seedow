@@ -1,51 +1,50 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
-import { Provenance } from "@/components/ui/Provenance";
 import { WhyThis } from "@/components/common/WhyThis";
-import { SeedowScore, ScorePillars } from "@/components/esg/SeedowScore";
-import { notExcluded } from "@/lib/esg/exclusions";
+import { StiScore } from "@/components/observatory/StiScore";
+import { StiBlocks } from "@/components/observatory/StiBlocks";
+import { ThemeClaims } from "@/components/observatory/ThemeClaims";
+import { SectorDisclosureList } from "@/components/observatory/SectorDisclosure";
 import { EuroBreakdownBlock } from "@/components/impact/EuroBreakdownBlock";
 import { useFundComposition } from "@/hooks/useFundComposition";
 import { hasPublishedComposition } from "@/lib/impact/euroBreakdown";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
-import type { EsgPreviewAsset } from "@/routes/api.public.esg-preview";
+import type { ObservatoryFund } from "@/lib/esg/v2/observatory";
 
 /**
  * « Ton argent finance quoi ? » — la porte d'entrée du produit.
  *
  * C'est le seul écran qui doit tenir en dix secondes : on tape le nom d'un
- * fonds, et on lit ce qu'il finance, ce qu'il ne s'interdit pas de financer, et
- * à quel point Seedow peut le prouver. Pas de compte, pas de questionnaire.
+ * fonds, et on lit ce qu'il finance, ce qu'il publie, et ce que Seedow n'a pas
+ * pu vérifier. Pas de compte, pas de questionnaire.
  *
- * ── Pourquoi il remplace le questionnaire en première scène ────────────────
+ * ── Ce que ce widget a cessé d'afficher (grille STI 2.0) ───────────────────
  *
- * L'ancien parcours ouvrait sur quatre questions avant de montrer quoi que ce
- * soit : formulaire → résultat. On demandait ses convictions à quelqu'un qui ne
- * savait pas encore ce que le produit sait faire. Ici l'ordre est inversé —
- * curiosité, découverte, surprise — et le questionnaire garde tout son sens,
- * une fois qu'on a compris pourquoi il est posé.
+ * Un score de durabilité 0–100, ses piliers, des pourcentages thématiques
+ * (« biodiversité 85 % ») et une liste de « drapeaux de greenwashing ». Trois
+ * de ces quatre objets étaient des appréciations Seedow présentées avec la
+ * précision d'une mesure — sur la surface la plus visible du produit, et sans
+ * l'écran qui explique d'où elles sortent. Le pourcentage thématique était
+ * saisi à la main ; le score mélangeait une donnée tierce, une estimation
+ * carbone et un décompte d'exclusions ; la moitié des drapeaux décrivaient un
+ * trou de données de Seedow, pas un défaut du fonds.
+ *
+ * À la place : l'indice de transparence, qui mesure ce que le fonds PUBLIE, et
+ * qui vient du même assemblage que l'Observatoire et les fiches. Un fonds ne
+ * peut plus afficher un chiffre ici et un autre là.
  *
  * ── Trois niveaux de lecture ───────────────────────────────────────────────
  *
- *   1. la composition publiée dite EN EUROS sur 1 000 € — la seule chose qui
- *      se comprend sans rien savoir de la finance —, puis ce que le fonds
- *      revendique, ce qu'il ne s'interdit pas, son score et sa bande ;
- *   2. « Pourquoi ce score ? » → les piliers du composite, tels qu'il les
- *      calcule vraiment (ESG, climat, exclusions) ;
- *   3. « D'où viennent ces chiffres ? » → source, date, couverture, drapeaux,
- *      et ce que Seedow ne sait PAS de ce fonds.
+ *   1. la composition publiée dite EN EUROS sur 1 000 € — la seule chose qui se
+ *      comprend sans rien savoir de la finance —, puis ce que le fonds
+ *      revendique et ce que sa documentation dit des six secteurs ;
+ *   2. « Comment ce chiffre est calculé ? » → les cinq blocs du STI, avec les
+ *      signaux non vérifiés nommés un par un ;
+ *   3. « Et ce que Seedow ne sait pas » → les limites, dites en toutes lettres.
  *
  * Un débutant s'arrête au niveau 1 et a compris. Un professionnel descend au
- * niveau 3 et trouve de quoi vérifier. Aucun des deux ne gêne l'autre.
- *
- * ── Rien d'inventé ─────────────────────────────────────────────────────────
- *
- * Chaque valeur affichée vient d'une colonne réelle servie par
- * `/api/public/esg-preview`. Les trous sont nommés (« donnée indisponible »,
- * « couverture limitée »), jamais comblés. Notamment : « ne s'interdit pas »
- * décrit l'ABSENCE d'une exclusion déclarée — pas la présence d'une position,
- * qu'on n'a pas mesurée et qu'on n'affirme donc pas.
+ * niveau 3 et trouve de quoi vérifier.
  */
 
 /** Combien de suggestions on propose avant toute frappe. */
@@ -55,9 +54,9 @@ const MAX_RESULTS = 6;
 export function MoneyXray({ variant = "hero" }: { variant?: "hero" | "section" } = {}) {
   const { t } = useTranslation();
   const [query, setQuery] = useState("");
-  const [assets, setAssets] = useState<EsgPreviewAsset[] | null>(null);
+  const [funds, setFunds] = useState<ObservatoryFund[] | null>(null);
   const [status, setStatus] = useState<"idle" | "loading" | "error" | "ready">("idle");
-  const [selected, setSelected] = useState<EsgPreviewAsset | null>(null);
+  const [selected, setSelected] = useState<ObservatoryFund | null>(null);
   const fetchStarted = useRef(false);
 
   /**
@@ -71,8 +70,8 @@ export function MoneyXray({ variant = "hero" }: { variant?: "hero" | "section" }
     setStatus("loading");
     fetch("/api/public/esg-preview")
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
-      .then((json: { assets?: EsgPreviewAsset[] }) => {
-        setAssets(json.assets ?? []);
+      .then((json: { funds?: ObservatoryFund[] }) => {
+        setFunds(json.funds ?? []);
         setStatus("ready");
       })
       .catch(() => setStatus("error"));
@@ -85,42 +84,41 @@ export function MoneyXray({ variant = "hero" }: { variant?: "hero" | "section" }
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!assets || q.length < 2) return [];
-    return assets
+    if (!funds || q.length < 2) return [];
+    return funds
       .filter(
-        (a) =>
-          a.name.toLowerCase().includes(q) ||
-          a.ticker.toLowerCase().includes(q) ||
-          (a.isin ?? "").toLowerCase().includes(q) ||
-          (a.issuer ?? "").toLowerCase().includes(q),
+        (f) =>
+          f.name.toLowerCase().includes(q) ||
+          f.tickers.some((tk) => tk.toLowerCase().includes(q)) ||
+          f.isins.some((i) => i.toLowerCase().includes(q)) ||
+          (f.issuer ?? "").toLowerCase().includes(q),
       )
       .slice(0, MAX_RESULTS);
-  }, [assets, query]);
+  }, [funds, query]);
 
   /**
    * Suggestions de départ. Elles sortent de l'index réellement chargé — un
    * exemple codé en dur finirait un jour par désigner un fonds qui n'est plus
    * dans le catalogue, et le premier geste du produit tomberait à vide.
    */
-  const suggestions = useMemo(() => (assets ?? []).slice(0, SUGGESTION_COUNT), [assets]);
+  const suggestions = useMemo(() => (funds ?? []).slice(0, SUGGESTION_COUNT), [funds]);
 
   /**
    * Index chargé mais VIDE : ce n'est pas « ce fonds est introuvable », c'est
    * « le catalogue n'a rien renvoyé ». Les deux se ressemblent à l'écran et ne
    * veulent pas dire la même chose — l'un décrit un fonds, l'autre une panne.
-   * Sans cette distinction, une base injoignable se lit comme un catalogue vide.
    */
-  const catalogueEmpty = status === "ready" && (assets?.length ?? 0) === 0;
+  const catalogueEmpty = status === "ready" && (funds?.length ?? 0) === 0;
   const showEmpty =
     status === "ready" && !catalogueEmpty && query.trim().length >= 2 && results.length === 0;
 
-  const pick = (asset: EsgPreviewAsset) => {
-    setSelected(asset);
-    void trackAppEvent("xray_fund_opened", { ticker: asset.ticker });
+  const pick = (fund: ObservatoryFund) => {
+    setSelected(fund);
+    void trackAppEvent("xray_fund_opened", { ticker: fund.tickers[0] ?? fund.slug });
   };
 
   if (selected) {
-    return <XrayReveal asset={selected} onReset={() => setSelected(null)} variant={variant} />;
+    return <XrayReveal fund={selected} onReset={() => setSelected(null)} variant={variant} />;
   }
 
   return (
@@ -171,8 +169,8 @@ export function MoneyXray({ variant = "hero" }: { variant?: "hero" | "section" }
             </p>
           </div>
         )}
-        {results.map((a) => (
-          <ResultRow key={a.ticker} asset={a} onSelect={() => pick(a)} />
+        {results.map((f) => (
+          <ResultRow key={f.key} fund={f} onSelect={() => pick(f)} />
         ))}
       </div>
 
@@ -182,14 +180,14 @@ export function MoneyXray({ variant = "hero" }: { variant?: "hero" | "section" }
         <div className="mt-4">
           <p className="stamp">{t("xray.try_label")}</p>
           <div className="mt-2 flex flex-wrap gap-2">
-            {suggestions.map((a) => (
+            {suggestions.map((f) => (
               <button
-                key={a.ticker}
+                key={f.key}
                 type="button"
-                onClick={() => pick(a)}
+                onClick={() => pick(f)}
                 className="chip hover:bg-paper-inset transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
               >
-                {a.name}
+                {f.name}
               </button>
             ))}
           </div>
@@ -206,7 +204,7 @@ export function MoneyXray({ variant = "hero" }: { variant?: "hero" | "section" }
 
 /* ─────────────────────────── Ligne de résultat ─────────────────────────── */
 
-function ResultRow({ asset, onSelect }: { asset: EsgPreviewAsset; onSelect: () => void }) {
+function ResultRow({ fund, onSelect }: { fund: ObservatoryFund; onSelect: () => void }) {
   const { t } = useTranslation();
   return (
     <button
@@ -215,9 +213,18 @@ function ResultRow({ asset, onSelect }: { asset: EsgPreviewAsset; onSelect: () =
       className="paper-card-inset w-full min-h-[56px] px-4 py-3 flex items-center gap-4 text-left hover:bg-paper-inset transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
     >
       <span className="flex-1 min-w-0">
-        <span className="block text-body font-semibold text-ink truncate">{asset.name}</span>
+        <span className="block text-body font-semibold text-ink truncate">{fund.name}</span>
         <span className="mono-meta block mt-0.5 truncate">
-          {[asset.ticker, asset.issuer, t(`transparency.coverage.${asset.coverage}`)]
+          {[
+            fund.tickers.join(" · "),
+            fund.issuer,
+            // Le nombre de blocs évalués voyage avec le fonds dès la liste : un
+            // résultat de recherche ne doit pas laisser croire à une note pleine.
+            t("sti.blocks_evaluated", {
+              evaluated: fund.sti.blocksEvaluated,
+              total: fund.sti.blocksTotal,
+            }),
+          ]
             .filter(Boolean)
             .join(" · ")}
         </span>
@@ -232,30 +239,25 @@ function ResultRow({ asset, onSelect }: { asset: EsgPreviewAsset; onSelect: () =
 /* ──────────────────────────── Le révélateur ────────────────────────────── */
 
 function XrayReveal({
-  asset,
+  fund,
   onReset,
   variant,
 }: {
-  asset: EsgPreviewAsset;
+  fund: ObservatoryFund;
   onReset: () => void;
   variant: "hero" | "section";
 }) {
   const { t } = useTranslation();
-  const composition = useFundComposition(asset.isin ?? asset.ticker);
+  const composition = useFundComposition(fund.slug);
   // Elle ouvre le révélateur quand elle existe. Sinon elle descend au niveau
   // des sources : le premier geste du produit ne peut pas rendre une absence.
   const composed = hasPublishedComposition(composition.holdings);
 
-  // Ce que le fonds NE S'INTERDIT PAS. Formulation exacte : c'est l'absence
-  // d'une exclusion déclarée, pas la preuve d'une position détenue.
-  const allowed = notExcluded(asset.excluded_sectors);
-  const coverageLabel = t(`transparency.coverage.${asset.coverage}`);
-
   const meta = [
-    asset.ticker,
-    asset.issuer,
-    asset.isin,
-    asset.sfdr_article != null ? `SFDR Art. ${asset.sfdr_article}` : null,
+    fund.tickers.join(" · "),
+    fund.issuer,
+    fund.isins[0],
+    fund.sfdrArticle != null ? `SFDR Art. ${fund.sfdrArticle}` : null,
   ]
     .filter(Boolean)
     .join(" · ");
@@ -267,7 +269,7 @@ function XrayReveal({
         <div className="min-w-0">
           <p className="mono-meta truncate">{meta}</p>
           <h3 className="mt-1 font-display text-[clamp(20px,3vw,26px)] leading-[1.12] tracking-[-0.02em] text-ink">
-            {asset.name}
+            {fund.name}
           </h3>
         </div>
         <button
@@ -280,12 +282,11 @@ function XrayReveal({
       </div>
 
       {/* ── NIVEAU 1 — la réponse, en euros ───────────────────────────────
-          Un score et des pourcentages demandent qu'on sache déjà lire un
-          fonds. « Sur 1 000 € placés ici, 314 € vont à la technologie » ne
-          demande rien. C'est donc ce qui arrive en premier, et le reste
-          descend d'un cran. La composition n'est pas dans l'index public (500
-          fonds × leurs lignes seraient un payload absurde) : elle est
-          récupérée pour le seul fonds ouvert. */}
+          « Sur 1 000 € placés ici, 314 € vont à la technologie » ne demande de
+          savoir lire ni un score ni un pourcentage d'exposition. C'est donc ce
+          qui arrive en premier. La composition n'est pas dans l'index public
+          (le payload serait absurde) : elle est récupérée pour le seul fonds
+          ouvert. */}
       {(composition.status !== "ready" || composed) && (
         <div className="mt-7 border-t border-paper-3 pt-6">
           {composition.status !== "ready" ? (
@@ -297,90 +298,52 @@ function XrayReveal({
               variant="bare"
               holdings={composition.holdings}
               asOf={composition.asOf}
-              source={asset.issuer}
+              source={fund.issuer}
               sourceUrl={composition.sourceUrl}
-              ter={asset.ter}
+              ter={fund.ter ?? 0}
             />
           )}
         </div>
       )}
 
-      {/* ── NIVEAU 1 bis — ce que le fonds revendique ──────────────────────── */}
+      {/* ── NIVEAU 1 bis — ce que le fonds revendique, et ce qu'il documente ── */}
 
       <div className="mt-7 flex flex-col gap-7">
         <section>
-          <p className="stamp">{t("xray.finances_label")}</p>
-          {asset.themes.length > 0 ? (
-            <ul className="mt-2.5 flex flex-col">
-              {asset.themes.map((th) => (
-                <li
-                  key={th.tag}
-                  className="flex items-baseline justify-between gap-3 py-2 border-b border-paper-3"
-                >
-                  <span className="text-body-sm text-ink">
-                    {t(`landing.rayon_x.themes_labels.${th.tag}`, { defaultValue: th.tag })}
-                  </span>
-                  <span className="font-value text-body-sm tabular-nums text-ink">{th.pct} %</span>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="mt-2.5 text-body-sm text-ink-3 leading-relaxed">
-              {t("xray.finances_empty")}
-            </p>
-          )}
-          {/* Ce que ces parts sont, et ce qu'elles ne sont pas. Sans cette
-              ligne, une appréciation Seedow se lit comme une mesure. */}
+          <p className="stamp">{t("fonds_page.themes_declared")}</p>
+          <ThemeClaims themes={fund.themes} />
           <p className="mt-3 text-caption text-ink-3 leading-relaxed max-w-[60ch]">
-            {t("xray.finances_note")}
+            {t("themes.no_attribution_note")}
           </p>
         </section>
 
         {/* Le moment « attends, mon argent finance ça ? ». Il vient du même
-            écran que la promesse du fonds, pas trois clics plus loin. */}
+            écran que la promesse du fonds, pas trois clics plus loin — et il
+            distingue « le fonds documente qu'il n'exclut pas » de « Seedow n'a
+            pas vérifié », qui ne disent pas la même chose. */}
         <section>
-          <p className="stamp">{t("xray.not_excluded_label")}</p>
-          {allowed.length > 0 ? (
-            <>
-              <ul className="mt-2.5 flex flex-wrap gap-2">
-                {allowed.map((s) => (
-                  <li key={s} className="chip chip--modelled">
-                    {t(`landing.rayon_x.sectors_labels.${s}`, { defaultValue: s })}
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-3 text-body-sm text-ink-3 leading-relaxed">
-                {t("xray.not_excluded_note")}
-              </p>
-            </>
-          ) : (
-            <p className="mt-2.5 text-body-sm text-ink-2 leading-relaxed">
-              {t("xray.not_excluded_empty")}
-            </p>
-          )}
+          <p className="stamp">{t("sti.sectors_title")}</p>
+          <SectorDisclosureList sectors={fund.sectors} />
         </section>
       </div>
 
       <div className="mt-7 pt-6 border-t border-paper-3 flex flex-wrap items-start justify-between gap-x-8 gap-y-5">
-        <SeedowScore score={asset.seedow_score} size="md" />
+        <StiScore sti={fund.sti} size="md" />
         <div className="max-w-[34ch]">
           <p className="stamp">{t("xray.cost_label")}</p>
           <p className="font-value text-[24px] leading-none text-ink mt-2 tabular-nums">
-            {(asset.ter * 100).toFixed(2).replace(".", ",")} %
+            {fund.ter != null ? `${(fund.ter * 100).toFixed(2).replace(".", ",")} %` : "—"}
           </p>
           <p className="mt-2 text-body-sm text-ink-3 leading-relaxed">{t("xray.cost_note")}</p>
         </div>
       </div>
 
-      {/* ── NIVEAU 2 — pourquoi ce nombre ─────────────────────────────────── */}
+      {/* ── NIVEAU 2 — comment ce chiffre est calculé ──────────────────────── */}
 
       <div className="mt-6 border-t border-paper-3">
-        <WhyThis variant="section" label={t("xray.why_score")}>
-          <p className="mb-4 max-w-[60ch]">{t("xray.why_score_intro")}</p>
-          <ScorePillars pillars={asset.score_breakdown} />
-          <p className="mt-4 text-caption text-ink-3 leading-relaxed max-w-[60ch]">
-            {t("xray.score_is_index")}
-          </p>
+        <WhyThis variant="section" label={t("sti.why_this_number")}>
+          <p className="mb-4 max-w-[60ch]">{t("sti.what_it_measures")}</p>
+          <StiBlocks sti={fund.sti} />
         </WhyThis>
       </div>
 
@@ -388,27 +351,8 @@ function XrayReveal({
 
       <div className="border-t border-paper-3">
         <WhyThis variant="section" label={t("xray.where_from")}>
-          <Provenance
-            status={asset.coverage === "estimated" ? "modelled" : "verified"}
-            source={asset.source ?? t("xray.source_unknown")}
-            asOf={asset.data_asof ?? undefined}
-            note={coverageLabel}
-          />
-
-          {asset.greenwashing_reasons.length > 0 && (
-            <div className="mt-5">
-              <p className="stamp">{t("xray.flags_label")}</p>
-              <ul className="mt-2">
-                {asset.greenwashing_reasons.map((reason) => (
-                  <li key={reason} className="py-2 border-b border-paper-3 text-body-sm text-ink-2">
-                    {t(`transparency.reasons.${reason}`, { defaultValue: reason })}
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-2.5 text-caption text-ink-3 leading-relaxed max-w-[60ch]">
-                {t("xray.flags_note")}
-              </p>
-            </div>
+          {fund.sti.oldestDataDate && (
+            <p className="mono-meta">{t("sti.oldest_data", { date: fund.sti.oldestDataDate })}</p>
           )}
 
           {/* Une composition non publiée est une chose que Seedow ne sait pas
@@ -429,7 +373,7 @@ function XrayReveal({
       <div className="mt-6 pt-6 border-t border-paper-3 flex flex-wrap items-center gap-x-6 gap-y-3">
         <Link
           to="/fonds/$isin"
-          params={{ isin: asset.isin ?? asset.ticker }}
+          params={{ isin: fund.slug }}
           className="text-body font-semibold text-ink underline underline-offset-4 hover:no-underline rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
         >
           {t("xray.full_sheet")} <span aria-hidden>→</span>
