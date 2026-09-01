@@ -87,7 +87,8 @@ src/
 ├── lib/                          # logique métier (jamais de calcul lourd en composant)
 │   ├── portfolio/                 # engine, markowitz, metrics, server functions
 │   ├── market/                    # client Yahoo Finance (server-only)
-│   ├── esg/                       # scoring ESG, détection greenwashing
+│   ├── esg/                       # scoring ESG interne, détection greenwashing
+│   │   └── v2/                     # STI 2.0 : signaux, constats E1–E5, déduplication
 │   ├── ethi/                      # prompts & contexte de l'assistant
 │   ├── landing/                   # répartition du flux « où va ton argent »
 │   ├── mcp/                        # serveur MCP + tools
@@ -207,7 +208,8 @@ Ethi est l'assistant conversationnel du produit (Lovable AI Gateway, Gemini/GPT-
 - Comprendre / Méthodologie (pédagogie, transparence sur la méthode)
 - Cours (contenu éducatif structuré)
 - Communauté (partage de portefeuille)
-- Détection de greenwashing (score, historique, alertes)
+- Observatoire de la transparence — indice STI 2.0 et constats d'écart opposables (cf. `docs/scoring-v2.md`)
+- Détection de greenwashing dans l'explorateur interne (drapeaux « à vérifier », historique, alertes)
 - Auth (email + Google OAuth), bêta à liste d'attente + garde `_authenticated`
 - Ingestion de données de marché horaire (Yahoo Finance) + recalcul du modèle de risque
 - Serveur MCP (exposition d'outils Seedow via le protocole MCP)
@@ -233,7 +235,8 @@ Ethi est l'assistant conversationnel du produit (Lovable AI Gateway, Gemini/GPT-
 - [ ] **i18n** : nouvelles chaînes passées par `update_locales.ts`, pas de texte en dur non traduisible dans un composant destiné à plusieurs langues.
 - [ ] **Cohérence DA** : toute UI nouvelle respecte les tokens couleur/typo du §4 — pas de couleur en dur, pas de nouvelle police introduite sans validation.
 - [ ] **Conformité Ethi** : si la PR touche à Ethi ou à un texte généré/affiché par lui, elle respecte le §5 (pas de recommandation individualisée, sourçage systématique).
+- [ ] **Scoring public** : rien de nouveau ne s'affiche sur l'Observatoire, une fiche fonds ou l'aperçu public sans remonter à un signal sourcé et daté (`docs/scoring-v2.md` §3). Pas de score de durabilité, pas de pourcentage thématique, pas de classement inter-catégories, aucun constat sans sa ligne « ce que ce constat ne dit pas ».
 
 ---
 
-_Dernière mise à jour : synthèse initiale à partir du README du repo `amirRbh/seedow` et des 5 fichiers de DA carousels fournis, puis réconciliation de l'arborescence §3 avec l'état réel de `src/routes` et unification du lockfile Bun (§6). À maintenir à jour à chaque décision structurante — ce fichier n'a de valeur que s'il reste vrai._
+_Dernière mise à jour : scoring v2 — le score de durabilité est remplacé par l'indice de transparence Seedow (STI 2.0) sur l'Observatoire, les fiches fonds et l'aperçu public ; voir `docs/scoring-v2.md`. Précédemment : synthèse initiale à partir du README du repo `amirRbh/seedow` et des 5 fichiers de DA carousels fournis, puis réconciliation de l'arborescence §3 avec l'état réel de `src/routes` et unification du lockfile Bun (§6). À maintenir à jour à chaque décision structurante — ce fichier n'a de valeur que s'il reste vrai._

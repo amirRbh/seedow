@@ -413,18 +413,18 @@
     },
     "observatory": {
       "eyebrow": "Observatory",
-      "title": "What a fund says. What its data shows.",
-      "desc": "A fund can call itself sustainable and rule nothing out. Seedow puts both columns side by side, fund by fund, with the source and the date.",
+      "title": "What each fund publishes. And what it doesn't.",
+      "desc": "Seedow does not rate a fund's sustainability: it rates what that fund publishes, and how precisely. A verifiable fact, with its source and date.",
       "cta": "Open the Observatory",
-      "col_claim": "What the fund says",
-      "col_data": "What the data shows",
+      "col_claim": "What the fund declares",
+      "col_data": "What its documents show",
       "row_1_claim": "Sustainable fund, SFDR article 8",
-      "row_1_data": "No sector exclusion declared",
+      "row_1_data": "No sector exclusion policy published",
       "row_2_claim": "Climate transition oriented",
-      "row_2_data": "Carbon intensity above the world index",
+      "row_2_data": "Carbon intensity above its own declared benchmark",
       "row_3_claim": "Rigorous ESG selection",
-      "row_3_data": "E, S and G pillars not published",
-      "note": "These three rows show the shape of the table, not one particular fund: the Observatory names the funds, with their numbers and their sources."
+      "row_3_data": "Portfolio holdings not published",
+      "note": "These three rows describe the shape of the table, not one particular fund: the Observatory names funds, with their documents, their dates and their issuer's right of reply."
     },
     "xray_hint": "On €1,000 invested · where each euro goes · where each figure comes from",
     "flow": {
@@ -969,18 +969,26 @@
     "what_it_allows": "What it doesn't rule out",
     "why_score": "Why this score?",
     "holdings_title": "What is actually inside",
-    "figures_title": "The numbers, in detail",
-    "sources_title": "Sources, coverage and limits",
-    "limits": "Seedow compares what data providers publish. It does not measure this fund's real effect on the climate or society, and has no visibility on what happens between two data releases.",
-    "no_isin_note": "This fund has no verified ISIN in Seedow. It is identified by its market symbol — we do not guess a regulatory identifier."
+    "figures_title": "Raw facts",
+    "sources_title": "Sources and limits",
+    "limits": "Seedow reads public documents. It does not measure this fund's real effect on the climate or on society, visits no holding company, and has no visibility on what happens between two publications. What this page states is limited to what those documents say, on their date.",
+    "no_isin_note": "This fund has no verified ISIN in Seedow. It is identified by its market symbol — we do not guess a regulatory identifier.",
+    "issuer_unknown": "Issuer not disclosed",
+    "share_classes_note": "This fund has {{n}} share classes (accumulation, distribution, currencies). They share the same strategy, so the same page and the same index — one fund cannot carry two ratings depending on which listing you look at.",
+    "declared_title": "What the fund declares",
+    "themes_declared": "Themes claimed by the fund",
+    "metric_share_classes": "Share classes",
+    "raw_facts_note": "These values are reproduced exactly as published, with no transformation and no aggregation. They feed no score.",
+    "peers_title": "Funds in the same peer group",
+    "peers_note": "Same asset class, same region, same claimed theme. That is the only scope in which comparing transparency indices means anything."
   },
   "observatoire": {
     "back": "← Home",
-    "title": "What a fund says. What its data shows.",
-    "intro": "A fund can call itself sustainable and rule nothing out. This page puts both columns side by side, fund by fund, with no verdict — the gap is written down, and so is the source.",
+    "title": "What each fund publishes. And what it doesn't.",
+    "intro": "Seedow does not rate a fund's sustainability — that would mean measuring an effect on the world. It rates what the fund publishes, and how precisely. That is a fact anyone can verify with the same documents.",
     "search": "Search a fund, an ISIN, an issuer",
     "empty": "No fund matches.",
-    "hint": "A gap flags a contradiction between what the fund displays and what its published data shows. You can check it on the fund sheet, number by number.",
+    "hint": "Funds are grouped by peer group — asset class, region, claimed theme — and sorted alphabetically inside it. No global ranking is possible: two funds from different categories are not held to the same publication duties, and comparing them would produce a league table that means nothing.",
     "risk_low": "Low risk",
     "risk_medium": "Moderate risk",
     "risk_high": "High risk",
@@ -991,9 +999,20 @@
     "stat_total": "funds documented in the Seedow catalogue",
     "stat_claiming": "claim to be sustainable (SFDR article 8 or 9)",
     "stat_flagged": "of those carry at least one gap between their claim and their data",
-    "stat_note": "These counters describe the Seedow catalogue, not the market: they move with every fund added. A gap is something to check, never established fraud.",
-    "claim_none": "No claim declared",
-    "no_gap": "No gap found on the signals Seedow tracks."
+    "stat_note": "{{lines}} listings grouped into {{funds}} funds: accumulation, distribution and currency share classes of the same fund are attributes, not separate funds. The share of non-ratable funds comes first — it says what the catalogue does not know, and it beats any ranking.",
+    "claim_none": "No declared claim",
+    "no_gap": "No opposable discrepancy.",
+    "filter_rated": "Ratable",
+    "filter_gaps": "With a discrepancy",
+    "stat_not_ratable": "of catalogue funds do not publish enough to be rated",
+    "stat_funds": "funds tracked, after grouping share classes",
+    "stat_gaps": "carry at least one opposable discrepancy",
+    "peer_group": "{{assetClass}} · {{region}} · {{theme}}",
+    "no_declared_theme": "no claimed theme",
+    "col_declared": "What the fund declares",
+    "col_gaps": "Discrepancies",
+    "share_classes": "{{n}} share classes grouped",
+    "methodology_cta": "Read the methodology"
   },
   "next_step": {
     "eyebrow": "Next step",
@@ -1608,7 +1627,20 @@
     "pool_ter": "fees {{ter}}",
     "breakdown_count_one": "{{count}} fund",
     "breakdown_count_other": "{{count}} funds",
-    "screening_version": "Ranking method v{{version}} — published and versioned."
+    "screening_version": "Ranking method v{{version}} — published and versioned.",
+    "sti_title": "Seedow Transparency Index (STI 2.0)",
+    "sti_intro": "Seedow does not rate whether a fund is sustainable. It rates what that fund publishes, and how precisely. Each point matches the verifiable existence of a public document or data point, on a given date — never an appraisal. The test applied to any candidate signal: would a third party with access to the same public documents get exactly the same result? If not, the signal is rejected.",
+    "sti_not_measured_title": "What this index does not measure",
+    "sti_not_measured": "It does not measure a fund's effect on the climate or on society. It does not say one fund is better than another. It does not measure how strict an exclusion policy is either. A high index means “this fund publishes a lot, and precisely”, nothing more — and that is already something no saver finds anywhere else.",
+    "sti_grid_title": "The grid, in five blocks",
+    "sti_abstention_title": "Abstention rule",
+    "sti_abstention": "A non-evaluable block is not worth zero: it voids the block. A block is non-evaluable when Seedow could not reach the source — not to be confused with a block scored zero, which means the search was carried out and the fund publishes nothing. The index is published only if at least four of five blocks are evaluable, blocks A and B being mandatory; it is then reproportioned over the evaluated blocks, and the page shows how many blocks it was computed on. Otherwise the fund is shown as “Not enough published documentation to rate”, with no number.",
+    "sti_precision_title": "Precision, not severity",
+    "sti_discrepancies_title": "Documented discrepancies",
+    "sti_discrepancies": "A discrepancy requires three simultaneous elements: a claim by the fund quoted from a public document with its source and date, a fact from a public document that contradicts it with its source and date, and no interpretation in between — the reader must be able to see it themselves. If any of the three is missing, there is no discrepancy. Five types exist, and only one of them compares numbers (E3), using the benchmark the fund itself declares, never a benchmark chosen by Seedow.",
+    "sti_governance_title": "Notice and right of reply",
+    "sti_governance": "Every discrepancy is notified to the issuer before publication, with a {{days}} working-day reply window; the notification date is shown on the page. The reply is published in full next to the discrepancy, with no comment from Seedow. A disputed discrepancy stays published, marked “disputed by the issuer”. If the issuer produces the missing document, the discrepancy is withdrawn within {{hours}} h and the correction stays traced in the page history — never a silent deletion.",
+    "version_2_0_note": "Sustainability score dropped in favour of the transparency index (STI). Discrepancies narrowed to five opposable types, thematic percentages removed, share classes grouped, issuer right of reply added."
   },
   "seed_card": {
     "id_card": "Identity card"
@@ -2326,14 +2358,17 @@
   },
   "asset_class": {
     "equity_dev": "Developed equities",
-    "equity_em": "Emerging markets",
+    "equity_em": "Emerging equities",
     "thematic": "Thematic",
     "green_bond": "Green bonds",
     "social_bond": "Social bonds",
     "sov_bond": "Sovereign bonds",
-    "reit": "Real estate",
+    "reit": "Listed real estate",
     "commodity": "Commodities",
-    "cash": "Cash"
+    "cash": "Cash",
+    "corp_bond": "Corporate bonds",
+    "money_market": "Money market",
+    "non_precise": "Unspecified class"
   },
   "impact_cert": {
     "eyebrow": "Impact certificate",
@@ -3464,5 +3499,103 @@
     "companies_rest_other": "{{count}} other positions",
     "lines_one": "{{count}} published line",
     "lines_other": "{{count}} published lines"
+  },
+  "sti": {
+    "title": "Seedow Transparency Index",
+    "not_ratable": "Not enough published documentation to rate",
+    "blocks_evaluated": "computed on {{evaluated}} of {{total}} blocks",
+    "version": "STI methodology {{version}}",
+    "what_it_measures": "This index measures what the fund publishes, and how precisely. It does not measure whether the fund is sustainable: that would require measuring an effect on the world, which Seedow does not observe.",
+    "why_this_number": "How is this number computed?",
+    "why_no_sustainability_score": "Why doesn't Seedow rate sustainability any more?",
+    "no_score_explanation": "A sustainability score assumes you can measure a real effect on the climate or on society. Seedow only has access to public documents: it filled that gap with unpublished internal estimates — the very method it denounces. What a fund publishes, on the other hand, is a fact any third party can verify with the same documents. That is what this index rates.",
+    "oldest_data": "Oldest data used: {{date}}",
+    "block_unverified": "not verified",
+    "unverified_title": "Signals not verified",
+    "unverified_note": "“Not verified” means Seedow could not reach the source, not that the fund publishes nothing. These signals cost the fund no points: they make their block non-evaluable, and the score is reproportioned over the remaining blocks.",
+    "precision_not_severity": "This block rates how precise a declaration is, not how strict it is. A fund that explicitly states it does not exclude fossil fuels is more transparent than a fund that stays silent — so it scores higher, even though its policy is weaker.",
+    "sectors_title": "What its documentation says about the six sectors",
+    "label": {
+      "elevee": "High transparency — publishes most of what a saver can ask for",
+      "correcte": "Fair transparency — publishes the essentials, with identified blind spots",
+      "partielle": "Partial transparency — several key items not published",
+      "faible": "Low transparency — most verifiable items are not public",
+      "non_notable": "Not ratable — insufficient documentation to assess"
+    },
+    "block": {
+      "A": "Accessible documentation",
+      "B": "Precision of exclusions",
+      "C": "Published impact metrics",
+      "D": "Data freshness",
+      "E": "Third-party verification"
+    },
+    "signal": {
+      "kid_public": "KID publicly accessible online",
+      "exclusion_policy_public": "Public sector exclusion policy",
+      "esg_report_annual": "Annual ESG or sustainability report",
+      "holdings_full_monthly": "Full holdings published (≤ 1 month)",
+      "exclusion_fossiles": "Exclusion — fossil fuels",
+      "exclusion_armement": "Exclusion — weapons",
+      "exclusion_tabac": "Exclusion — tobacco",
+      "exclusion_jeux": "Exclusion — gambling",
+      "exclusion_tests_animaux": "Exclusion — animal testing",
+      "exclusion_fast_fashion": "Exclusion — fast fashion",
+      "carbon_scope_1_2": "Scope 1+2 carbon intensity",
+      "carbon_scope_3": "Scope 3",
+      "carbon_coverage_rate": "Carbon data coverage rate",
+      "pai_published": "Principal adverse impacts (PAI) published",
+      "public_label": "Public label (ISR, Greenfin, Towards Sustainability…)",
+      "third_party_audit": "ESG methodology audited by a third party"
+    },
+    "sector": {
+      "fossiles": "Fossil fuels",
+      "armement": "Weapons",
+      "tabac": "Tobacco",
+      "jeux": "Gambling",
+      "tests_animaux": "Animal testing",
+      "fast_fashion": "Fast fashion"
+    },
+    "disclosure": {
+      "exclu_seuil_quantifie": "Excluded, with a quantified threshold",
+      "exclu_sans_seuil": "Excluded, no published threshold",
+      "non_exclu_documente": "Not excluded — documented",
+      "non_verifie": "Not verified by Seedow"
+    }
+  },
+  "constats": {
+    "title": "Documented discrepancies",
+    "none": "No opposable discrepancy on this fund. A discrepancy requires a quoted claim, a public fact that contradicts it, and no interpretation in between — three simultaneous conditions.",
+    "disputed": "Disputed by the issuer",
+    "line_declares": "What the fund declares",
+    "line_shows": "What the document shows",
+    "line_does_not_say": "What this does not say",
+    "notified_at": "Issuer notified on {{date}}",
+    "issuer_response": "Issuer's response, published in full",
+    "response_received": "Response received on {{date}}",
+    "independence_note": "A discrepancy never feeds any score. A fund can publish a great deal — and therefore score high on transparency — while still carrying a contradiction inside what it publishes.",
+    "type": {
+      "E1": "Classified Article 8 or 9 with no formal sector exclusion policy published",
+      "E2": "Sustainability term in the name or objective, with no published exclusion on the matching sectors",
+      "E3": "Published carbon intensity above the benchmark the fund itself declares",
+      "E4": "Reporting commitment written into the prospectus, unmet for over 24 months",
+      "E5": "Divergence between exclusions announced in marketing material and those in the prospectus"
+    }
+  },
+  "themes": {
+    "none": "This fund claims no theme in its documentation.",
+    "level": {
+      "revendique": "Claimed",
+      "mentionne": "Mentioned",
+      "non_revendique": "Not claimed"
+    },
+    "no_attribution_note": "Seedow assigns no theme a fund does not claim itself. “Claimed” means the theme appears in the fund's name or investment objective; “mentioned”, that it appears in the ESG documentation without being an objective. Thematic percentages have been removed: they were entered by hand, never computed."
+  },
+  "region": {
+    "monde": "World",
+    "emergents": "Emerging markets",
+    "europe": "Europe",
+    "amerique_nord": "North America",
+    "asie_pacifique": "Asia-Pacific",
+    "non_precise": "Unspecified region"
   }
 }

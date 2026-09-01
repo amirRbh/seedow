@@ -82,11 +82,11 @@ describe("buildReveil", () => {
         assetId: "a",
         name: "Claimy",
         greenwashingRisk: "high",
-        greenwashingReasons: ["green_theme_low_climate", "art9_low_esg"],
+        greenwashingReasons: ["art9_no_exclusions", "art9_low_esg"],
       }),
     ];
     const [card] = buildReveil(subjects, []);
-    expect(card.bodyKey).toBe("reveil.reason.green_theme_low_climate");
+    expect(card.bodyKey).toBe("reveil.reason.art9_no_exclusions");
   });
 
   it("adds a bright card only for low-risk, high-ESG holdings", () => {

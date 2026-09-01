@@ -1,14 +1,24 @@
 /**
- * Transparence des données ESG — deux signaux affichés partout où un score apparaît :
+ * Transparence des données ESG — deux signaux de l'explorateur interne
+ * (`/discover`, tableau de bord, alertes) :
  *
  *  - DataCoverage : qualité de couverture de NOS données pour un actif
  *    ("complete" / "partial" / "estimated"). On assume publiquement les trous
  *    plutôt que de les masquer : c'est le contrat de confiance de Seedow.
  *
- *  - GreenwashingRisk : heuristique de cohérence entre ce que le fonds revendique
- *    (article SFDR, thèmes verts) et ce que les données montrent (scores, exclusions,
- *    carbone). Ce n'est PAS un verdict — c'est un drapeau "à vérifier", toujours
- *    accompagné de ses raisons pour que l'utilisateur puisse juger lui-même.
+ *  - GreenwashingRisk : heuristique de cohérence entre ce qu'un fonds revendique
+ *    (article SFDR) et ce que les données montrent (score ESG, exclusions). Ce
+ *    n'est PAS un verdict — c'est un drapeau "à vérifier", toujours accompagné de
+ *    ses raisons pour que l'utilisateur puisse juger lui-même.
+ *
+ * ── Périmètre, depuis la grille STI 2.0 ─────────────────────────────────────
+ * Cette heuristique ne sort plus sur les surfaces PUBLIQUES : l'Observatoire,
+ * les fiches fonds et l'aperçu de la landing publient l'indice de transparence
+ * et les constats opposables E1–E5 (`src/lib/esg/v2/`), qui exigent une
+ * revendication citée et un fait public qui la contredit. Ici on reste sur un
+ * signal d'aide à l'exploration, jamais publié comme un constat opposable — et
+ * les trois familles de drapeaux que la v2 interdit ont été retirées (voir plus
+ * bas, dans `assessGreenwashingRisk`).
  *
  * ── « Est-ce que ce fond est vraiment vert ? » ───────────────────────────────
  * L'analogie du fond vert (chroma key) tient bien : on ne se contente pas d'un
@@ -24,8 +34,7 @@
  *     un article SFDR hors {6,8,9} sont neutralisés — pas de faux positif sur
  *     une donnée corrompue.
  *
- * Fonctions pures, sans dépendance UI/DB : utilisées côté client (useAssetUniverse)
- * et côté serveur (endpoint public /api/public/esg-preview).
+ * Fonctions pures, sans dépendance UI/DB (`useAssetUniverse`, screening).
  */
 
 export type DataCoverage = "complete" | "partial" | "estimated";
@@ -38,11 +47,7 @@ export type GreenwashingReason =
   | "art9_no_exclusions"
   | "sfdr_low_esg"
   | "sfdr_borderline_esg"
-  | "sfdr_missing_carbon"
-  | "sfdr_no_exclusions"
-  | "green_theme_low_climate"
-  | "green_theme_borderline_climate"
-  | "claims_on_estimated_data";
+  | "sfdr_no_exclusions";
 
 export interface TransparencyInput {
   /** Un cours (live ou dernier close) est connu. */
@@ -54,16 +59,9 @@ export interface TransparencyInput {
   sfdrArticle: number | null;
   /** Score ESG global, échelle 0..10. */
   overallEsgScore: number;
-  /** Score climat (pilier E), échelle 0..10. */
-  climateScore: number;
   /** Nombre de secteurs formellement exclus par le fonds. */
   exclusionsCount: number;
-  /** Le fonds revendique des thèmes environnementaux (clean energy, climat…). */
-  claimsGreenTheme: boolean;
 }
-
-/** Causes considérées comme des revendications "vertes" (vs sociales/gouvernance). */
-export const GREEN_CAUSE_TAGS = new Set(["climat", "biodiversite", "circulaire"]);
 
 /**
  * Seuils de l'heuristique, nommés et centralisés — pas de nombre magique éparpillé
@@ -76,7 +74,6 @@ export const GREEN_CAUSE_TAGS = new Set(["climat", "biodiversite", "circulaire"]
  */
 const ART9_ESG_FLOOR = 6;
 const SUSTAINABLE_ESG_FLOOR = 5;
-const CLIMATE_FLOOR = 5;
 const BORDERLINE_BAND = 1;
 
 /** Contradictions franches : leur présence porte le risque à "high". */
@@ -127,7 +124,6 @@ export function assessGreenwashingRisk(input: TransparencyInput): GreenwashingAs
   // comme "inconnu" (null) et on n'affirme alors aucune contradiction chiffrée.
   const article = normalizeSfdrArticle(input.sfdrArticle);
   const esg = clampScore(input.overallEsgScore);
-  const climate = clampScore(input.climateScore);
   const exclusions = Number.isFinite(input.exclusionsCount)
     ? Math.max(0, Math.floor(input.exclusionsCount))
     : 0;
@@ -156,18 +152,25 @@ export function assessGreenwashingRisk(input: TransparencyInput): GreenwashingAs
   if (article === 9 && exclusions === 0) reasons.push("art9_no_exclusions");
   if (article === 8 && exclusions === 0) reasons.push("sfdr_no_exclusions");
 
-  // ── Thème vert vs score climat réel ───────────────────────────────────────
-  if (input.claimsGreenTheme && climate != null) {
-    if (climate < CLIMATE_FLOOR) reasons.push("green_theme_low_climate");
-    else if (climate < CLIMATE_FLOOR + BORDERLINE_BAND)
-      reasons.push("green_theme_borderline_climate");
-  }
-
-  // ── Revendications invérifiables (donnée manquante ou estimée) ────────────
-  // Signaux "medium" par nature : on ne peut pas contredire, seulement douter.
-  if (claimsSustainable && !input.hasCarbonData) reasons.push("sfdr_missing_carbon");
-  if (claimsSustainable && computeDataCoverage(input) === "estimated")
-    reasons.push("claims_on_estimated_data");
+  // ── Ce qui n'est PLUS signalé ici (grille STI 2.0, cf. docs/scoring-v2.md) ──
+  //
+  // Trois familles de drapeaux ont été retirées définitivement :
+  //
+  //   « revendication durable sans donnée d'intensité carbone mesurée »
+  //        → c'est un trou de données SEEDOW, pas un défaut du fonds. Il est
+  //          désormais compté à sa juste place, dans le bloc C du STI, où c'est
+  //          l'absence de PUBLICATION par l'émetteur qui coûte des points.
+  //   « revendication appuyée sur des données en partie estimées »
+  //        → décrit la source Seedow, pas le fonds. Vit dans l'indicateur de
+  //          couverture, qui est déjà affiché à côté de chaque chiffre.
+  //   « thème environnemental revendiqué avec un score climat à la limite »
+  //        → circulaire : Seedow attribuait le thème, puis constatait l'écart
+  //          avec son propre score. Supprimé sans remplacement — un fonds ne
+  //          peut pas être pris en défaut par une donnée que Seedow a produite.
+  //
+  // Un émetteur épinglé sur un constat qui s'avère être un trou de données de
+  // Seedow attaque, et gagne. C'est ce qui faisait passer le catalogue de 8
+  // constats opposables à 67 constats dont 59 étaient attaquables.
 
   if (reasons.length === 0) return { risk: "low", reasons };
   const hasStrongSignal = reasons.some((r) => STRONG_REASONS.has(r));

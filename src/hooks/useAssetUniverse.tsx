@@ -6,7 +6,6 @@ import { deriveDiscoverAssetTier } from "@/lib/discover/sustainability";
 import {
   assessGreenwashingRisk,
   computeDataCoverage,
-  GREEN_CAUSE_TAGS,
   type TransparencyInput,
 } from "@/lib/esg/transparency";
 
@@ -150,9 +149,7 @@ async function fetchAssetUniverse(): Promise<AssetUniverseResult> {
       hasCarbonData: carbon != null,
       sfdrArticle: r.sfdr_article,
       overallEsgScore: esg / 10,
-      climateScore: Number(r.env_score ?? esg) / 10,
       exclusionsCount: (r.excluded_sectors ?? []).length,
-      claimsGreenTheme: themes.some((th) => GREEN_CAUSE_TAGS.has(th)),
     };
     const greenwashing = assessGreenwashingRisk(transparencyInput);
     const dataCoverage = computeDataCoverage(transparencyInput);

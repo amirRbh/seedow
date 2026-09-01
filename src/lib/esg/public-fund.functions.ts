@@ -109,15 +109,3 @@ export interface FundHoldingRow {
   sector: string | null;
   weightPct: number | null;
 }
-
-export const getPublicFundsList = createServerFn({ method: "GET" }).handler(async () => {
-  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const { data, error } = await supabaseAdmin
-    .from("assets")
-    .select(PUBLIC_FUND_COLUMNS)
-    .eq("is_active", true)
-    .order("esg_score", { ascending: false })
-    .limit(500);
-  if (error) throw new Error(error.message);
-  return (data ?? []).map((r) => mapPublicFundRow(r as unknown as PublicFundRow));
-});

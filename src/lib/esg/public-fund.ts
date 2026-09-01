@@ -7,7 +7,6 @@
 import {
   assessGreenwashingRisk,
   computeDataCoverage,
-  GREEN_CAUSE_TAGS,
   type TransparencyInput,
 } from "./transparency";
 import {
@@ -75,9 +74,6 @@ export interface PublicFundAsset {
 export function mapPublicFundRow(r: PublicFundRow): PublicFundAsset {
   const esg = Number(r.esg_score);
   const causeExposure = r.cause_exposure ?? {};
-  const claimThemes = Object.entries(causeExposure)
-    .filter(([, v]) => Number(v) > 0.15)
-    .map(([k]) => k);
   const themesOut = Object.entries(causeExposure)
     .map(([tag, v]) => ({ tag, pct: Math.round(Number(v) * 100) }))
     .filter((th) => th.pct >= 8)
@@ -89,9 +85,7 @@ export function mapPublicFundRow(r: PublicFundRow): PublicFundAsset {
     hasCarbonData: r.carbon_intensity_gco2e_per_eur != null,
     sfdrArticle: r.sfdr_article,
     overallEsgScore: esg / 10,
-    climateScore: Number(r.env_score ?? esg) / 10,
     exclusionsCount: (r.excluded_sectors ?? []).length,
-    claimsGreenTheme: claimThemes.some((th) => GREEN_CAUSE_TAGS.has(th)),
   };
   const gw = assessGreenwashingRisk(input);
   const coverage = computeDataCoverage(input);

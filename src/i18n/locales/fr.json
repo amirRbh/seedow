@@ -413,18 +413,18 @@
     },
     "observatory": {
       "eyebrow": "Observatoire",
-      "title": "Ce qu'un fonds dit. Ce que ses données montrent.",
-      "desc": "Un fonds peut se déclarer durable et ne rien s'interdire. Seedow met les deux colonnes côte à côte, fonds par fonds, avec la source et la date.",
+      "title": "Ce que chaque fonds publie. Et ce qu'il ne publie pas.",
+      "desc": "Seedow ne note pas la durabilité d'un fonds : il note ce que ce fonds publie, et à quel niveau de précision. Un fait vérifiable, avec sa source et sa date.",
       "cta": "Ouvrir l'Observatoire",
-      "col_claim": "Ce que le fonds dit",
-      "col_data": "Ce que la donnée montre",
+      "col_claim": "Ce que le fonds déclare",
+      "col_data": "Ce que ses documents montrent",
       "row_1_claim": "Fonds durable, article 8 SFDR",
-      "row_1_data": "Aucune exclusion sectorielle déclarée",
+      "row_1_data": "Aucune politique d'exclusion sectorielle publiée",
       "row_2_claim": "Orienté transition climatique",
-      "row_2_data": "Intensité carbone au-dessus de l'indice monde",
+      "row_2_data": "Intensité carbone au-dessus de son propre indice de référence déclaré",
       "row_3_claim": "Sélection ESG rigoureuse",
-      "row_3_data": "Piliers E, S et G non publiés",
-      "note": "Ces trois lignes décrivent la forme du tableau, pas un fonds en particulier : l'Observatoire nomme les fonds, avec leurs chiffres et leurs sources."
+      "row_3_data": "Composition du portefeuille non publiée",
+      "note": "Ces trois lignes décrivent la forme du tableau, pas un fonds en particulier : l'Observatoire nomme les fonds, avec leurs documents, leurs dates et le droit de réponse de leur émetteur."
     },
     "xray_hint": "Sur 1 000 € placés · où va chaque euro · d'où vient chaque chiffre",
     "flow": {
@@ -969,18 +969,26 @@
     "what_it_allows": "Ce qu'il ne s'interdit pas",
     "why_score": "Pourquoi ce score ?",
     "holdings_title": "Ce qu'il y a vraiment dedans",
-    "figures_title": "Les chiffres, en détail",
-    "sources_title": "Sources, couverture et limites",
-    "limits": "Seedow compare ce que les fournisseurs de données publient. Il ne mesure pas l'effet réel de ce fonds sur le climat ou la société, et n'a aucune visibilité sur ce qui se passe entre deux publications.",
-    "no_isin_note": "Ce fonds n'a pas d'ISIN vérifié dans Seedow. Il est identifié par son symbole boursier — on ne devine pas un identifiant réglementaire."
+    "figures_title": "Les faits bruts",
+    "sources_title": "Sources et limites",
+    "limits": "Seedow lit des documents publics. Il ne mesure pas l'effet réel de ce fonds sur le climat ou la société, ne visite aucune entreprise détenue, et n'a aucune visibilité sur ce qui se passe entre deux publications. Ce que cette page affirme se limite à ce que ces documents disent, à leur date.",
+    "no_isin_note": "Ce fonds n'a pas d'ISIN vérifié dans Seedow. Il est identifié par son symbole boursier — on ne devine pas un identifiant réglementaire.",
+    "issuer_unknown": "Émetteur non communiqué",
+    "share_classes_note": "Ce fonds compte {{n}} parts de classe (accumulation, distribution, devises). Elles partagent la même stratégie, donc la même fiche et le même indice — un même fonds ne peut pas porter deux notes selon la ligne consultée.",
+    "declared_title": "Ce que le fonds déclare",
+    "themes_declared": "Thèmes revendiqués par le fonds",
+    "metric_share_classes": "Parts de classe",
+    "raw_facts_note": "Ces valeurs sont reprises telles que publiées, sans transformation ni agrégation. Elles n'entrent dans aucun score.",
+    "peers_title": "Fonds du même groupe de pairs",
+    "peers_note": "Même classe d'actifs, même zone, même thématique déclarée. C'est le seul périmètre dans lequel une comparaison d'indices de transparence a un sens."
   },
   "observatoire": {
     "back": "← Accueil",
-    "title": "Ce qu'un fonds dit. Ce que ses données montrent.",
-    "intro": "Un fonds peut se déclarer durable et ne rien s'interdire. Cette page met les deux colonnes côte à côte, fonds par fonds, sans verdict — l'écart est écrit, la source aussi.",
+    "title": "Ce que chaque fonds publie. Et ce qu'il ne publie pas.",
+    "intro": "Seedow ne note pas la durabilité d'un fonds — cela supposerait de mesurer un effet sur le monde. Il note ce que le fonds publie, et à quel niveau de précision. C'est un fait vérifiable par n'importe qui avec les mêmes documents.",
     "search": "Rechercher un fonds, un ISIN, un émetteur",
     "empty": "Aucun fonds ne correspond.",
-    "hint": "Un écart signale une contradiction entre ce que le fonds affiche et ce que ses données publiées montrent. Il se vérifie sur la fiche du fonds, chiffre par chiffre.",
+    "hint": "Les fonds sont rangés par groupe de pairs — classe d'actifs, zone, thématique déclarée — et par ordre alphabétique à l'intérieur. Aucun classement général n'est possible : deux fonds de catégories différentes ne sont pas soumis aux mêmes obligations de publication, et les comparer produirait un palmarès qui ne veut rien dire.",
     "risk_low": "Risque faible",
     "risk_medium": "Risque modéré",
     "risk_high": "Risque élevé",
@@ -991,9 +999,20 @@
     "stat_total": "fonds documentés dans le catalogue Seedow",
     "stat_claiming": "se déclarent durables (article 8 ou 9 SFDR)",
     "stat_flagged": "d'entre eux portent au moins un écart entre leur revendication et leurs données",
-    "stat_note": "Ces compteurs décrivent le catalogue Seedow, pas le marché : ils bougent à chaque fonds ajouté. Un écart est un point à vérifier, jamais une fraude constatée.",
+    "stat_note": "{{lines}} lignes de cotation regroupées en {{funds}} fonds : les parts d'accumulation, de distribution et les devises d'un même fonds sont des attributs, pas des fonds différents. Le taux de fonds non notables est publié en premier — c'est ce que le catalogue ne sait pas, et il vaut mieux qu'un classement.",
     "claim_none": "Aucune revendication déclarée",
-    "no_gap": "Aucun écart relevé sur les signaux que Seedow suit."
+    "no_gap": "Aucun constat opposable.",
+    "filter_rated": "Notables",
+    "filter_gaps": "Avec constat",
+    "stat_not_ratable": "des fonds du catalogue ne publient pas assez pour être notés",
+    "stat_funds": "fonds suivis, après regroupement des parts de classe",
+    "stat_gaps": "portent au moins un constat d'écart opposable",
+    "peer_group": "{{assetClass}} · {{region}} · {{theme}}",
+    "no_declared_theme": "sans thème revendiqué",
+    "col_declared": "Ce que le fonds déclare",
+    "col_gaps": "Constats d'écart",
+    "share_classes": "{{n}} parts de classe regroupées",
+    "methodology_cta": "Lire la méthodologie"
   },
   "next_step": {
     "eyebrow": "Prochaine étape",
@@ -1608,7 +1627,20 @@
     "pool_ter": "frais {{ter}}",
     "breakdown_count_one": "{{count}} fonds",
     "breakdown_count_other": "{{count}} fonds",
-    "screening_version": "Méthode de classement v{{version}} — publiée et versionnée."
+    "screening_version": "Méthode de classement v{{version}} — publiée et versionnée.",
+    "sti_title": "Indice de transparence Seedow (STI 2.0)",
+    "sti_intro": "Seedow ne note pas si un fonds est durable. Il note ce que ce fonds publie, et à quel niveau de précision. Chaque point correspond à l'existence vérifiable d'un document ou d'une donnée publique, à une date donnée — jamais à une appréciation. Test appliqué à tout signal candidat : un tiers avec accès aux mêmes documents publics obtiendrait-il exactement le même résultat ? Si la réponse est non, le signal est rejeté.",
+    "sti_not_measured_title": "Ce que cet indice ne mesure pas",
+    "sti_not_measured": "Il ne mesure pas l'effet d'un fonds sur le climat ou la société. Il ne dit pas qu'un fonds est meilleur qu'un autre. Il ne mesure pas non plus la sévérité d'une politique d'exclusion. Un indice élevé signifie « ce fonds publie beaucoup et précisément », rien de plus — et c'est déjà une information qu'aucun épargnant ne trouve ailleurs.",
+    "sti_grid_title": "La grille, en cinq blocs",
+    "sti_abstention_title": "Règle d'abstention",
+    "sti_abstention": "Un bloc non évaluable ne vaut pas zéro : il rend le bloc nul. Un bloc est non évaluable quand Seedow n'a pas pu atteindre la source — à ne pas confondre avec un bloc évalué à zéro, qui signifie que la recherche a été menée et que le fonds ne publie rien. L'indice n'est publié que si au moins quatre blocs sur cinq sont évaluables, dont obligatoirement les blocs A et B ; il est alors reproportionné sur les blocs évalués, et la fiche affiche sur combien de blocs il a été calculé. Sinon le fonds est affiché « Documentation insuffisante pour être noté », sans chiffre.",
+    "sti_precision_title": "Précision, pas sévérité",
+    "sti_discrepancies_title": "Constats d'écart",
+    "sti_discrepancies": "Un constat requiert trois éléments simultanés : une revendication du fonds citée depuis un document public avec sa source et sa date, un fait issu d'un document public qui la contredit avec sa source et sa date, et aucune interprétation entre les deux — le lecteur doit pouvoir constater lui-même. Si l'un des trois manque, il n'y a pas de constat. Cinq types existent, et un seul d'entre eux compare des chiffres (E3), en utilisant l'indice de référence déclaré par le fonds lui-même, jamais un indice choisi par Seedow.",
+    "sti_governance_title": "Notification et droit de réponse",
+    "sti_governance": "Tout constat est notifié à l'émetteur avant publication, avec un délai de réponse de {{days}} jours ouvrés ; la date de notification est affichée sur la fiche. La réponse est publiée intégralement à côté du constat, sans commentaire de Seedow. Un constat contesté reste publié, avec la mention « contesté par l'émetteur ». Si l'émetteur produit le document manquant, le constat est retiré sous {{hours}} h et la correction reste tracée dans l'historique de la fiche — jamais de suppression silencieuse.",
+    "version_2_0_note": "Abandon du score de durabilité au profit de l'indice de transparence (STI). Constats ramenés à cinq types opposables, pourcentages thématiques retirés, parts de classe regroupées, droit de réponse des émetteurs."
   },
   "seed_card": {
     "id_card": "Carte d'identité"
@@ -2326,14 +2358,17 @@
   },
   "asset_class": {
     "equity_dev": "Actions développées",
-    "equity_em": "Marchés émergents",
-    "thematic": "Thématiques",
+    "equity_em": "Actions émergentes",
+    "thematic": "Thématique",
     "green_bond": "Obligations vertes",
     "social_bond": "Obligations sociales",
     "sov_bond": "Obligations souveraines",
-    "reit": "Immobilier",
+    "reit": "Immobilier coté",
     "commodity": "Matières premières",
-    "cash": "Liquidités"
+    "cash": "Liquidités",
+    "corp_bond": "Obligations d'entreprise",
+    "money_market": "Monétaire",
+    "non_precise": "Classe non précisée"
   },
   "impact_cert": {
     "eyebrow": "Certificat d'impact",
@@ -3464,5 +3499,103 @@
     "companies_rest_other": "{{count}} autres positions",
     "lines_one": "{{count}} ligne publiée",
     "lines_other": "{{count}} lignes publiées"
+  },
+  "sti": {
+    "title": "Indice de transparence Seedow",
+    "not_ratable": "Documentation insuffisante pour être noté",
+    "blocks_evaluated": "calculé sur {{evaluated}} blocs sur {{total}}",
+    "version": "Méthodologie STI {{version}}",
+    "what_it_measures": "Cet indice mesure ce que le fonds publie, et à quel niveau de précision. Il ne mesure pas si le fonds est durable : cela supposerait de mesurer un effet sur le monde, que Seedow n'observe pas.",
+    "why_this_number": "Comment ce chiffre est calculé ?",
+    "why_no_sustainability_score": "Pourquoi Seedow ne note plus la durabilité ?",
+    "no_score_explanation": "Un score de durabilité suppose de mesurer un effet réel sur le climat ou la société. Seedow n'a accès qu'à des documents publics : il comblait ce vide par des estimations internes non publiées, c'est-à-dire par le procédé même qu'il dénonce. Ce que le fonds publie, en revanche, est un fait vérifiable par un tiers avec les mêmes documents — c'est ce que cet indice note.",
+    "oldest_data": "Donnée la plus ancienne utilisée : {{date}}",
+    "block_unverified": "non vérifié",
+    "unverified_title": "Signaux non vérifiés",
+    "unverified_note": "« Non vérifié » veut dire que Seedow n'a pas pu atteindre la source, pas que le fonds ne publie rien. Ces signaux ne coûtent aucun point au fonds : ils rendent leur bloc non évaluable, et le score est reproportionné sur les blocs restants.",
+    "precision_not_severity": "Ce bloc note la précision de la déclaration, pas sa sévérité. Un fonds qui déclare explicitement ne pas exclure les énergies fossiles est plus transparent qu'un fonds qui n'en parle pas — et il marque donc plus de points, même si sa politique est moins stricte.",
+    "sectors_title": "Ce que sa documentation dit des six secteurs",
+    "label": {
+      "elevee": "Transparence élevée — publie l'essentiel de ce qu'un épargnant peut demander",
+      "correcte": "Transparence correcte — publie l'essentiel, avec des angles morts identifiés",
+      "partielle": "Transparence partielle — plusieurs éléments clés non publiés",
+      "faible": "Transparence faible — la majorité des éléments vérifiables ne sont pas publics",
+      "non_notable": "Non notable — documentation insuffisante pour évaluer"
+    },
+    "block": {
+      "A": "Documentation accessible",
+      "B": "Précision des exclusions",
+      "C": "Métriques d'impact publiées",
+      "D": "Fraîcheur de la donnée",
+      "E": "Vérification tierce"
+    },
+    "signal": {
+      "kid_public": "DIC/KID accessible en ligne",
+      "exclusion_policy_public": "Politique d'exclusion sectorielle publique",
+      "esg_report_annual": "Rapport ESG ou de durabilité annuel",
+      "holdings_full_monthly": "Composition complète publiée (≤ 1 mois)",
+      "exclusion_fossiles": "Exclusion — énergies fossiles",
+      "exclusion_armement": "Exclusion — armement",
+      "exclusion_tabac": "Exclusion — tabac",
+      "exclusion_jeux": "Exclusion — jeux d'argent",
+      "exclusion_tests_animaux": "Exclusion — tests animaux",
+      "exclusion_fast_fashion": "Exclusion — fast fashion",
+      "carbon_scope_1_2": "Intensité carbone scope 1+2",
+      "carbon_scope_3": "Scope 3",
+      "carbon_coverage_rate": "Taux de couverture de la donnée carbone",
+      "pai_published": "Incidences négatives (PAI) publiées",
+      "public_label": "Label public (ISR, Greenfin, Towards Sustainability…)",
+      "third_party_audit": "Méthodologie ESG auditée par un tiers"
+    },
+    "sector": {
+      "fossiles": "Énergies fossiles",
+      "armement": "Armement",
+      "tabac": "Tabac",
+      "jeux": "Jeux d'argent",
+      "tests_animaux": "Tests animaux",
+      "fast_fashion": "Fast fashion"
+    },
+    "disclosure": {
+      "exclu_seuil_quantifie": "Exclu, avec seuil chiffré",
+      "exclu_sans_seuil": "Exclu, sans seuil publié",
+      "non_exclu_documente": "Non exclu — documenté",
+      "non_verifie": "Non vérifié par Seedow"
+    }
+  },
+  "constats": {
+    "title": "Constats d'écart",
+    "none": "Aucun constat opposable sur ce fonds. Un constat exige une revendication citée, un fait public qui la contredit, et aucune interprétation entre les deux — trois conditions simultanées.",
+    "disputed": "Contesté par l'émetteur",
+    "line_declares": "Ce que le fonds déclare",
+    "line_shows": "Ce que le document montre",
+    "line_does_not_say": "Ce que ce constat ne dit pas",
+    "notified_at": "Émetteur notifié le {{date}}",
+    "issuer_response": "Réponse de l'émetteur, publiée intégralement",
+    "response_received": "Réponse reçue le {{date}}",
+    "independence_note": "Un constat n'entre dans aucun score. Un fonds peut publier beaucoup — donc obtenir un indice de transparence élevé — et porter malgré tout une contradiction dans ce qu'il publie.",
+    "type": {
+      "E1": "Classé Article 8 ou 9 sans aucune exclusion sectorielle formelle publiée",
+      "E2": "Terme durable dans la dénomination ou l'objectif, sans exclusion publiée sur les secteurs correspondants",
+      "E3": "Intensité carbone publiée supérieure à l'indice de référence déclaré par le fonds lui-même",
+      "E4": "Engagement de reporting inscrit au prospectus, non tenu depuis plus de 24 mois",
+      "E5": "Divergence entre les exclusions annoncées en communication commerciale et celles du prospectus"
+    }
+  },
+  "themes": {
+    "none": "Ce fonds ne revendique aucun thème dans sa documentation.",
+    "level": {
+      "revendique": "Revendiqué",
+      "mentionne": "Mentionné",
+      "non_revendique": "Non revendiqué"
+    },
+    "no_attribution_note": "Seedow n'attribue aucun thème que le fonds ne revendique pas lui-même. « Revendiqué » signifie que le thème figure dans la dénomination ou l'objectif d'investissement ; « mentionné », qu'il apparaît dans la documentation ESG sans être un objectif. Les pourcentages thématiques ont été retirés : ils étaient saisis à la main, jamais calculés."
+  },
+  "region": {
+    "monde": "Monde",
+    "emergents": "Marchés émergents",
+    "europe": "Europe",
+    "amerique_nord": "Amérique du Nord",
+    "asie_pacifique": "Asie-Pacifique",
+    "non_precise": "Zone non précisée"
   }
 }

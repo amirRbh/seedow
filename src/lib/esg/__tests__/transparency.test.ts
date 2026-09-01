@@ -12,9 +12,7 @@ function input(overrides: Partial<TransparencyInput> = {}): TransparencyInput {
     hasCarbonData: true,
     sfdrArticle: 8,
     overallEsgScore: 7.5,
-    climateScore: 7,
     exclusionsCount: 3,
-    claimsGreenTheme: false,
     ...overrides,
   };
 }
@@ -65,32 +63,21 @@ describe("assessGreenwashingRisk", () => {
     expect(res.reasons).toContain("art9_no_exclusions");
   });
 
-  it("flags an unverifiable sustainable claim as medium risk", () => {
-    const res = assessGreenwashingRisk(input({ hasCarbonData: false }));
-    expect(res.risk).toBe("medium");
-    expect(res.reasons).toEqual(["sfdr_missing_carbon"]);
-  });
-
-  it("flags a green theme with weak climate score as medium risk", () => {
-    const res = assessGreenwashingRisk(
-      input({ sfdrArticle: null, claimsGreenTheme: true, climateScore: 3 }),
-    );
-    expect(res.risk).toBe("medium");
-    expect(res.reasons).toEqual(["green_theme_low_climate"]);
-  });
-
-  it("flags sustainable claims backed only by estimated data", () => {
-    const res = assessGreenwashingRisk(input({ hasPillarScores: false }));
-    expect(res.risk).toBe("medium");
-    expect(res.reasons).toContain("claims_on_estimated_data");
-  });
-
   it("keeps every reason so the UI can explain the verdict", () => {
     const res = assessGreenwashingRisk(
-      input({ sfdrArticle: 9, overallEsgScore: 4, exclusionsCount: 0, hasCarbonData: false }),
+      input({ sfdrArticle: 9, overallEsgScore: 4, exclusionsCount: 0 }),
     );
     expect(res.risk).toBe("high");
-    expect(res.reasons.length).toBeGreaterThanOrEqual(3);
+    expect(res.reasons).toEqual(["art9_low_esg", "sfdr_low_esg", "art9_no_exclusions"]);
+  });
+
+  // ── Ce que l'heuristique NE signale PLUS (grille STI 2.0) ─────────────────
+  // Les trois familles retirées décrivaient un trou de données de Seedow, ou
+  // bouclaient sur un score que Seedow avait lui-même produit. Un fonds ne peut
+  // pas être pris en défaut par une donnée qui manque chez nous.
+  it("no longer flags a fund for data Seedow itself is missing", () => {
+    expect(assessGreenwashingRisk(input({ hasCarbonData: false })).reasons).toEqual([]);
+    expect(assessGreenwashingRisk(input({ hasPillarScores: false })).reasons).toEqual([]);
   });
 
   // ── Tolérance : la zone limite juste au-dessus du plancher ─────────────────
@@ -119,14 +106,6 @@ describe("assessGreenwashingRisk", () => {
       expect(res.risk).toBe("high");
       expect(res.reasons).toContain("art9_low_esg");
       expect(res.reasons).not.toContain("sfdr_borderline_esg");
-    });
-
-    it("flags a green theme with a borderline climate score as medium", () => {
-      const res = assessGreenwashingRisk(
-        input({ sfdrArticle: null, claimsGreenTheme: true, climateScore: 5.5 }),
-      );
-      expect(res.risk).toBe("medium");
-      expect(res.reasons).toEqual(["green_theme_borderline_climate"]);
     });
   });
 
