@@ -14,6 +14,10 @@
 # rend « vert » une migration qui n'a rien créé est pire qu'un workflow absent —
 # il fait croire que la base est à jour.
 #
+# Ce que ce workflow ne peut PAS garantir : que l'API REST voie les nouvelles
+# tables. Le cache de schéma PostgREST ne se recharge pas depuis le pooler (voir
+# l'étape dédiée) ; c'est un geste console à faire après coup.
+#
 # Secret requis : SUPABASE_DB_URL (chaîne « Session pooler », port 5432, IPv4).
 name: DB migrate (Supabase)
 
@@ -73,15 +77,26 @@ jobs:
           echo "==== Résumé des erreurs de TOUTES les migrations (tolérées) ===="
           grep -E "ERROR:|FATAL:" "$log" | sed -E 's/^psql:[^:]+:[0-9]+: //' | sort | uniq -c | sort -rn | head -60 || echo "(aucune)"
 
-      - name: Recharger le cache de schéma PostgREST
+      - name: Recharger le cache de schéma PostgREST (best effort)
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
           # Une table peut exister en base et rester invisible via l'API REST
-          # tant que PostgREST n'a pas rechargé son cache (PGRST205). Sans ce
-          # rechargement, « la table n'existe pas » et « l'API ne la voit pas
-          # encore » se ressemblent — et on ne saurait pas laquelle des deux on
-          # regarde. Sans effet si le cache était déjà à jour.
+          # tant que PostgREST n'a pas rechargé son cache (PGRST205) : « la table
+          # n'existe pas » et « l'API ne la voit pas encore » se ressemblent.
+          #
+          # ⚠ NE PAS s'y fier depuis ce workflow. Le secret est une chaîne
+          # « Session pooler » (imposée : les connexions directes Supabase sont
+          # IPv6, les runners GitHub sont IPv4), et Supavisor ne relaie pas
+          # LISTEN/NOTIFY jusqu'à la connexion de PostgREST. Ce NOTIFY part donc
+          # dans le vide ici — il n'est gardé que parce qu'il fonctionne sur une
+          # connexion directe, et qu'il ne coûte rien.
+          #
+          # Le rechargement fiable est un geste console : Supabase → Settings →
+          # API → « Reload schema cache » (ou un redémarrage du projet). Tant
+          # qu'il n'a pas eu lieu, une table nouvellement créée reste absente de
+          # l'API et l'application ne la voit pas, même si l'étape de
+          # vérification ci-dessous la trouve bien en base.
           psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=0 -q -c "NOTIFY pgrst, 'reload schema';" || true
 
       - name: Vérifier le schéma (gate = 'assets' existe)
