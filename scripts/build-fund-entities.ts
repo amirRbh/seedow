@@ -29,15 +29,18 @@ import { groupFundEntities, type FundLine } from "../src/lib/esg/v2/fund-entity"
 import { STI_SIGNAL_IDS } from "../src/lib/esg/v2/sti";
 
 const url = process.env.SUPABASE_URL ?? process.env.VITE_SUPABASE_URL;
+// La clé publiable ne suffit PAS, même en lecture seule : `assets` est protégée
+// par RLS et ne s'ouvre qu'au rôle `authenticated`. Avec la clé anonyme, la
+// requête répond 200 avec un tableau vide — le script conclurait « 0 fonds »
+// au lieu de « je n'ai pas le droit de lire ». C'est la même confusion que la
+// v2 combat ailleurs : une absence de droit lue comme une absence de donnée.
 const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const persist = process.env.SEEDOW_PERSIST === "1";
 
-if (persist && (!url || !key)) {
-  console.error("SEEDOW_PERSIST=1 exige SUPABASE_URL et SUPABASE_SERVICE_ROLE_KEY.");
-  process.exit(1);
-}
 if (!url || !key) {
-  console.error("SUPABASE_URL et SUPABASE_SERVICE_ROLE_KEY sont requis pour lire le catalogue.");
+  console.error(
+    "SUPABASE_URL et SUPABASE_SERVICE_ROLE_KEY sont requis (RLS : `assets` n'est pas lisible en anonyme).",
+  );
   process.exit(1);
 }
 
@@ -59,6 +62,15 @@ if (error) {
 }
 
 const rows = (data ?? []) as unknown as AssetRow[];
+// Un catalogue vide n'est jamais un résultat : c'est une lecture qui a échoué
+// sans le dire (RLS, mauvais projet, table vidée). Mieux vaut s'arrêter que
+// d'écrire « 0 fonds après déduplication » avec l'aplomb d'une mesure.
+if (rows.length === 0) {
+  console.error(
+    "`assets` n'a renvoyé aucune ligne active. Vérifier le projet Supabase et les droits de la clé avant d'en conclure quoi que ce soit.",
+  );
+  process.exit(1);
+}
 const entities = groupFundEntities(rows);
 
 console.log(`${rows.length} lignes de cotation → ${entities.length} fonds après déduplication.`);
