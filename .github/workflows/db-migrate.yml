@@ -5,8 +5,18 @@
 # `cron.unschedule()` non gardés échouent sur base vierge). Plutôt que de
 # modifier les fichiers de migration, on applique tout en mode TOLÉRANT
 # (psql ON_ERROR_STOP=0) : les collisions d'idempotence (« already exists »,
-# doublons) sont ignorées, le reste est appliqué. Le succès est conditionné à
-# l'existence effective de `public.assets`. Chaque erreur ignorée est logguée.
+# doublons) sont ignorées, le reste est appliqué. Chaque erreur ignorée est
+# logguée, et celles de la dernière migration le sont INTÉGRALEMENT (le résumé
+# global est agrégé puis tronqué : il ne peut pas servir de diagnostic).
+#
+# Le succès n'est PAS conditionné au seul `public.assets` : les tables déclarées
+# par la dernière migration doivent exister, sinon le run échoue. Un workflow qui
+# rend « vert » une migration qui n'a rien créé est pire qu'un workflow absent —
+# il fait croire que la base est à jour.
+#
+# Ce que ce workflow ne peut PAS garantir : que l'API REST voie les nouvelles
+# tables. Le cache de schéma PostgREST ne se recharge pas depuis le pooler (voir
+# l'étape dédiée) ; c'est un geste console à faire après coup.
 #
 # Secret requis : SUPABASE_DB_URL (chaîne « Session pooler », port 5432, IPv4).
 name: DB migrate (Supabase)
@@ -44,13 +54,50 @@ jobs:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
           set -euo pipefail
+          mkdir -p /tmp/mig
           log=/tmp/apply.log; : > "$log"
+          last=$(ls supabase/migrations/*.sql | sort | tail -1)
           for f in $(ls supabase/migrations/*.sql | sort); do
             echo "→ $(basename "$f")"
-            psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=0 -q -f "$f" >>"$log" 2>&1 || true
+            # Un log PAR fichier : le résumé global est agrégé et tronqué, donc
+            # incapable de dire si UNE migration précise a échoué. C'est ce qui
+            # a laissé passer un run « vert » alors que la dernière migration
+            # n'avait rien créé.
+            psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=0 -q -f "$f" \
+              >"/tmp/mig/$(basename "$f").log" 2>&1 || true
+            cat "/tmp/mig/$(basename "$f").log" >>"$log"
           done
-          echo "==== Résumé des erreurs rencontrées (toutes tolérées) ===="
+
+          echo "==== Erreurs de la DERNIÈRE migration ($(basename "$last")) ===="
+          # Intégralement, sans agrégation ni troncature : c'est celle que ce run
+          # est censé livrer, elle ne se noie pas dans les collisions du passé.
+          grep -E "ERROR:|FATAL:" "/tmp/mig/$(basename "$last").log" || echo "(aucune)"
+
+          echo
+          echo "==== Résumé des erreurs de TOUTES les migrations (tolérées) ===="
           grep -E "ERROR:|FATAL:" "$log" | sed -E 's/^psql:[^:]+:[0-9]+: //' | sort | uniq -c | sort -rn | head -60 || echo "(aucune)"
+
+      - name: Recharger le cache de schéma PostgREST (best effort)
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          # Une table peut exister en base et rester invisible via l'API REST
+          # tant que PostgREST n'a pas rechargé son cache (PGRST205) : « la table
+          # n'existe pas » et « l'API ne la voit pas encore » se ressemblent.
+          #
+          # ⚠ NE PAS s'y fier depuis ce workflow. Le secret est une chaîne
+          # « Session pooler » (imposée : les connexions directes Supabase sont
+          # IPv6, les runners GitHub sont IPv4), et Supavisor ne relaie pas
+          # LISTEN/NOTIFY jusqu'à la connexion de PostgREST. Ce NOTIFY part donc
+          # dans le vide ici — il n'est gardé que parce qu'il fonctionne sur une
+          # connexion directe, et qu'il ne coûte rien.
+          #
+          # Le rechargement fiable est un geste console : Supabase → Settings →
+          # API → « Reload schema cache » (ou un redémarrage du projet). Tant
+          # qu'il n'a pas eu lieu, une table nouvellement créée reste absente de
+          # l'API et l'application ne la voit pas, même si l'étape de
+          # vérification ci-dessous la trouve bien en base.
+          psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=0 -q -c "NOTIFY pgrst, 'reload schema';" || true
 
       - name: Vérifier le schéma (gate = 'assets' existe)
         env:
@@ -66,3 +113,32 @@ jobs:
           fi
           echo "Tables clés présentes :"
           psql "$SUPABASE_DB_URL" -Atc "select table_name from information_schema.tables where table_schema='public' and table_name in ('assets','asset_observations','agm_resolutions','resolution_votes') order by 1;" | tr '\n' ' '; echo
+
+      # Le gate « assets existe » ne dit rien de la migration qu'on vient
+      # d'ajouter : il passait au vert avec cinq tables manquantes. On vérifie
+      # donc que les tables déclarées par la DERNIÈRE migration existent
+      # vraiment. Aucune liste codée en dur : elle est extraite du fichier.
+      - name: Vérifier les tables de la dernière migration
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          set -euo pipefail
+          last=$(ls supabase/migrations/*.sql | sort | tail -1)
+          echo "Dernière migration : $(basename "$last")"
+          tables=$(grep -oiE 'CREATE TABLE( IF NOT EXISTS)? +public\.[a-z0-9_]+' "$last" \
+                   | sed -E 's/.*public\.//' | sort -u)
+          if [ -z "$tables" ]; then
+            echo "Aucune table créée par cette migration — rien à vérifier."; exit 0
+          fi
+          missing=0
+          for t in $tables; do
+            if [ "$(psql "$SUPABASE_DB_URL" -Atc "select count(*) from information_schema.tables where table_schema='public' and table_name='$t';")" = "1" ]; then
+              echo "  ✓ $t"
+            else
+              echo "  ✗ $t — ABSENTE"; missing=1
+            fi
+          done
+          if [ "$missing" = "1" ]; then
+            echo "::error::La dernière migration n'a pas créé toutes ses tables. Voir « Erreurs de la DERNIÈRE migration » ci-dessus."
+            exit 1
+          fi
