@@ -1,0 +1,101 @@
+{
+  "client": "Société de gestion fictive (démonstration)",
+  "demo": true,
+  "funds": [
+    {
+      "id": "DEMO-1",
+      "name": "Démo Actions Europe Climat",
+      "sfdrArticle": 8,
+      "sfdrSource": {
+        "text": "Ce produit financier promeut des caractéristiques environnementales (article 8)",
+        "source_document": "Annexe précontractuelle SFDR (FICTIVE)",
+        "source_url": null,
+        "date": "2026-01-15"
+      },
+      "benchmarkExclusionsReference": {
+        "value": "CTB",
+        "source": {
+          "text": "Le fonds applique les exclusions de l'article 12(1)(a) à (c) du règlement délégué (UE) 2020/1818",
+          "source_document": "Prospectus (FICTIF)",
+          "source_url": null,
+          "date": "2026-01-15"
+        }
+      },
+      "declaredExclusions": [
+        {
+          "value": "charbon_1pct",
+          "source": {
+            "text": "Exclusion des émetteurs tirant plus de 1 % de leur chiffre d'affaires du charbon",
+            "source_document": "Politique d'exclusion (FICTIVE)",
+            "source_url": null,
+            "date": "2025-11-02"
+          }
+        }
+      ],
+      "minAlignedProportionPct": {
+        "value": 75,
+        "source": {
+          "text": "Au moins 75 % des investissements sont alignés sur les caractéristiques promues",
+          "source_document": "Annexe précontractuelle SFDR (FICTIVE)",
+          "source_url": null,
+          "date": "2026-01-15"
+        }
+      },
+      "minSustainableInvestmentPct": null
+    },
+    {
+      "id": "DEMO-2",
+      "name": "Démo Obligations Durables",
+      "sfdrArticle": 9,
+      "sfdrSource": {
+        "text": "Ce produit a pour objectif l'investissement durable (article 9)",
+        "source_document": "Annexe précontractuelle SFDR (FICTIVE)",
+        "source_url": null,
+        "date": "2026-02-01"
+      },
+      "benchmarkExclusionsReference": {
+        "value": "PAB",
+        "source": {
+          "text": "Le fonds applique les exclusions de l'article 12(1)(a) à (g) du règlement délégué (UE) 2020/1818",
+          "source_document": "Prospectus (FICTIF)",
+          "source_url": null,
+          "date": "2026-02-01"
+        }
+      },
+      "declaredExclusions": [],
+      "minAlignedProportionPct": {
+        "value": 90,
+        "source": {
+          "text": "Au moins 90 % des investissements sont des investissements durables",
+          "source_document": "Annexe précontractuelle SFDR (FICTIVE)",
+          "source_url": null,
+          "date": "2026-02-01"
+        }
+      },
+      "minSustainableInvestmentPct": {
+        "value": 90,
+        "source": {
+          "text": "Part minimale d'investissements durables : 90 %",
+          "source_document": "Annexe précontractuelle SFDR (FICTIVE)",
+          "source_url": null,
+          "date": "2026-02-01"
+        }
+      }
+    },
+    {
+      "id": "DEMO-3",
+      "name": "Démo Patrimoine ESG",
+      "sfdrArticle": 6,
+      "sfdrSource": {
+        "text": "Le fonds ne promeut pas de caractéristiques environnementales ou sociales (article 6)",
+        "source_document": "Prospectus (FICTIF)",
+        "source_url": null,
+        "date": "2025-09-30"
+      },
+      "benchmarkExclusionsReference": null,
+      "declaredExclusions": [],
+      "minAlignedProportionPct": null,
+      "minSustainableInvestmentPct": null
+    }
+  ]
+}

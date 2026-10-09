@@ -1,0 +1,6551 @@
+[
+  {
+    "sgpId": 8524,
+    "name": "AMUNDI ASSET MANAGEMENT",
+    "agreementNum": "GP-04000036",
+    "www": null,
+    "address": "91/93, boulevard Pasteur, 75730, PARIS CEDEX 15",
+    "phone": "0176333030",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "DQ2T0MMUTO0IPF9G9Z35",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 1394,
+    "esgRetailFunds": 91,
+    "funds": [
+      {
+        "name": "AMUNDI AFD AVENIRS DURABLES",
+        "isin": "FR0010698555",
+        "terms": ["durables"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI AFD AVENIRS DURABLES ESR",
+        "isin": "990000103989",
+        "terms": ["durables"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI OBLIG EURO DURABLE",
+        "isin": "FR0010093724",
+        "terms": ["durable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LCL OBLIG EURO DURABLE",
+        "isin": "FR0000018855",
+        "terms": ["durable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "PEG AIRBUS DEVELOPPEMENT DURABLE ET SOLIDAIRE",
+        "isin": "990000122849",
+        "terms": ["solidaire", "durable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ODDO BHF 2E SUSTAINABLE CREDIT OPPORTUNITIES",
+        "isin": "990000135389",
+        "terms": ["sustainable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CDC ACTIONS EURO ISR",
+        "isin": "990000132089",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CDC ACTIONS MONDE ISR",
+        "isin": "990000132079",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CDC DIVERSIFIE ISR SOLIDAIRE",
+        "isin": "990000132099",
+        "terms": ["solidaire", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CDC OBLIGATIONS ISR",
+        "isin": "990000132109",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "DANONE.COMMUNITIES D. ISR PRUDENT",
+        "isin": "FR0010439935",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "HYMNOS ISR",
+        "isin": "FR0007447891",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LCL ACTIONS EURO ODD ISR",
+        "isin": "FR0000985145",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "Amundi MSCI World Ex EMU SRI Climate Paris Aligned UCITS ETF",
+        "isin": "FR0013209921",
+        "terms": ["climate", "paris aligned", "sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI ACTIONS MONDE ESG TRANSITION INDICIEL ESR",
+        "isin": "990000206879",
+        "terms": ["transition", "esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "Amundi MSCI Europe Ex EMU ESG Selection UCITS ETF",
+        "isin": "FR0010821819",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "Amundi PEA Emergent (MSCI Emerging) ESG Transition UCITS ETF",
+        "isin": "FR0013412020",
+        "terms": ["transition", "esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "Amundi PEA Emergent EMEA (MSCI Emerging EMEA) ESG Transition UCITS ETF",
+        "isin": "FR0011440478",
+        "terms": ["transition", "esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LVM WORLD ESG",
+        "isin": "FR001400D419",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI ACTIONS MONDE CLIMAT PAB INDICIEL ESR",
+        "isin": "990000206919",
+        "terms": ["climat"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "Amundi CAC Transition Climat UCITS ETF",
+        "isin": "FR0010655704",
+        "terms": ["climat", "transition"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI DYNAMIQUE CLIMAT",
+        "isin": "FR0013379302",
+        "terms": ["climat"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI EQUILIBRE CLIMAT",
+        "isin": "FR0011199371",
+        "terms": ["climat"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI EQUILIBRE CLIMAT ESR",
+        "isin": "990000052919",
+        "terms": ["climat"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "Amundi MSCI World Climate Paris Aligned Umweltzeichen UCITS ETF",
+        "isin": "FR0014003FW1",
+        "terms": ["climate", "paris aligned"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI OBLIGATIONS ENTREPRISES EURO CLIMAT ESR",
+        "isin": "FR00140061N6",
+        "terms": ["climat"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "EURO CORPORATE BOND CLIMATE",
+        "isin": "FR0013053444",
+        "terms": ["climate"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SELECTION EURO CLIMAT (SEPTEMBRE 2024)",
+        "isin": "FR001400QFG1",
+        "terms": ["climat"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SG AMUNDI ACTIONS MONDE ENJEU CLIMAT",
+        "isin": "FR0014000QG7",
+        "terms": ["climat"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ALSTOM EQUILIBRE SOLIDAIRE BAS CARBONE",
+        "isin": "990000027209",
+        "terms": ["carbone", "bas carbone", "solidaire"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "EDF SOLIDAIRE ET BAS-CARBONE",
+        "isin": "990000126539",
+        "terms": ["carbone", "bas carbone", "solidaire"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI IMPACT EURO CREDIT SHORT TERM GREEN BOND",
+        "isin": "FR0010001214",
+        "terms": ["green", "impact"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI IMPACT ULTRA SHORT TERM GREEN BOND",
+        "isin": "FR001400BW39",
+        "terms": ["green", "impact"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "IMPACT GREEN BOND",
+        "isin": "FR0013188729",
+        "terms": ["green", "impact"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "IRCANTEC GREEN BONDS AMUNDI AM",
+        "isin": "FR0007014006",
+        "terms": ["green"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ODDO BHF 2E GREEN PLANET",
+        "isin": "990000135379",
+        "terms": ["green", "planet"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI CONVERTIBLES RESPONSABLE",
+        "isin": "FR0010236091",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI - KBI ACTIONS MONDE ENVIRONNEMENT",
+        "isin": "FR0007070594",
+        "terms": ["environnement"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI ACTIONS  EUROPE ENVIRONNEMENT",
+        "isin": "FR0000991424",
+        "terms": ["environnement"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI ACTIONS EURO HORIZON ENVIRONNEMENT",
+        "isin": "FR0011358092",
+        "terms": ["environnement"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI ACTIONS EUROPE ENVIRONNEMENT ESR",
+        "isin": "FR00140061M8",
+        "terms": ["environnement"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LCL ACTIONS EUROPE ENVIRONNEMENT",
+        "isin": "FR0000989006",
+        "terms": ["environnement"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LCL ACTIONS MONDE ENVIRONNEMENT",
+        "isin": "FR0011689447",
+        "terms": ["environnement"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SELECTION FRANCE ENVIRONNEMENT (JANVIER 2022)",
+        "isin": "FR0014006VK6",
+        "terms": ["environnement"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SELECTION FRANCE ENVIRONNEMENT (JANVIER 2023)",
+        "isin": "FR001400E474",
+        "terms": ["environnement"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SELECTION FRANCE ENVIRONNEMENT (JANVIER 2024)",
+        "isin": "FR001400LYP4",
+        "terms": ["environnement"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SELECTION FRANCE ENVIRONNEMENT (MAI 2023)",
+        "isin": "FR001400H8T9",
+        "terms": ["environnement"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SELECTION FRANCE ENVIRONNEMENT (OCTOBRE 2021)",
+        "isin": "FR0014004QT2",
+        "terms": ["environnement"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SELECTION FRANCE ENVIRONNEMENT (SEPTEMBRE 2022)",
+        "isin": "FR001400ATA9",
+        "terms": ["environnement"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SELECTION FRANCE ENVIRONNEMENT (SEPTEMBRE 2024)",
+        "isin": "FR001400QFF3",
+        "terms": ["environnement"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "COMPAGNIE LEA NATURE",
+        "isin": "990000119529",
+        "terms": ["nature"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI PEA EAU (MSCI WATER) UCITS ETF",
+        "isin": "FR0011882364",
+        "terms": ["water"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "Amundi MSCI Water UCITS ETF",
+        "isin": "FR0010527275",
+        "terms": ["water"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI IMPACT SOCIAL BOND",
+        "isin": "FR0013531233",
+        "terms": ["impact", "social"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SELECTION FRANCE SOCIAL (JANVIER 2022)",
+        "isin": "FR0014006FY0",
+        "terms": ["social"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "SELECTION FRANCE SOCIAL (MAI 2022)",
+        "isin": "FR0014009AG2",
+        "terms": ["social"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "SELECTION FRANCE SOCIAL (SEPTEMBRE 2022)",
+        "isin": "FR001400ATB7",
+        "terms": ["social"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "SOCIALEMENT RESPONSABLE ET SOLIDAIRE",
+        "isin": "990000104299",
+        "terms": ["solidaire", "responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI EQUILIBRE GLOBAL SOLIDAIRE",
+        "isin": "FR0013442852",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "AMUNDI EQUILIBRE GLOBAL SOLIDAIRE ESR",
+        "isin": "990000123579",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "AMUNDI LABEL ACTIONS SOLIDAIRE ESR",
+        "isin": "990000081489",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "AMUNDI LABEL EQUILIBRE SOLIDAIRE ESR",
+        "isin": "990000079319",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "AMUNDI LABEL HARMONIE SOLIDAIRE ESR",
+        "isin": "990000102329",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "DIVERSIFIE ET SOLIDAIRE",
+        "isin": "990000098079",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "DIVERSIFIE SOLIDAIRE - JAS HENNESSY & CO",
+        "isin": "990000083679",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "EPARGNE SOLIDAIRE EQUILIBRE THALES",
+        "isin": "990000116899",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "FDJ EQUILIBRE SOLIDAIRE",
+        "isin": "990000095369",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "HORIZON SOLIDAIRE",
+        "isin": "990000103169",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "HORIZON TRESORERIE SOLIDAIRE",
+        "isin": "990000083489",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "L.S. DYNAMIQUE ET SOLIDAIRE",
+        "isin": "990000001839",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "LAFARGE PLACEMENT DIVERSIFIE ET SOLIDAIRE",
+        "isin": "990000000639",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "NESTLÉ HARMONIE SOLIDAIRE",
+        "isin": "990000001179",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "PEG AIRBUS OBLIGATIONS EURO SOLIDAIRE",
+        "isin": "990000100289",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "PFIZER COURT TERME SOLIDAIRE",
+        "isin": "990000106109",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "TOTALENERGIES DIVERSIFIE EQUILIBRE ET SOLIDAIRE",
+        "isin": "990000029969",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "AMUNDI ACTIONS EURO RESPONSABLE",
+        "isin": "FR0010458745",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI ACTIONS EURO RESPONSABLE EQUILIBRE",
+        "isin": "FR0010251736",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI ACTIONS EUROPE RESPONSABLE",
+        "isin": "FR0000991432",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI ACTIONS FRANCE RESPONSABLE",
+        "isin": "FR0010263491",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI ACTIONS USA RESPONSABLE",
+        "isin": "FR0010153320",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI OBLIG MONDE RESPONSABLE",
+        "isin": "FR0000286338",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CACIB Patrimoine Responsable",
+        "isin": "990000206789",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "DANONE.COMMUNITIES INVESTISSEMENT RESPONSABLE S3",
+        "isin": "FR0010440156",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LCL ACTIONS ETATS-UNIS RESPONSABLE",
+        "isin": "FR0000985152",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LCL ACTIONS EURO RESPONSABLE EQUILIBRE",
+        "isin": "FR0010736629",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LCL ACTIONS USA RESPONSABLE (EURO)",
+        "isin": "FR0000994816",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LCL OBLIG MONDE RESPONSABLE",
+        "isin": "FR0000985210",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI ABS RESPONSIBLE",
+        "isin": "FR0010319996",
+        "terms": ["responsible"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI EURO LIQUIDITY SHORT TERM RESPONSIBLE",
+        "isin": "FR0007435920",
+        "terms": ["responsible"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI EURO LIQUIDITY-RATED RESPONSIBLE",
+        "isin": "FR0007038138",
+        "terms": ["responsible"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AMUNDI ULTRA SHORT TERM BOND RESPONSIBLE",
+        "isin": "FR0011088657",
+        "terms": ["responsible"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 28792,
+    "name": "LBP AM",
+    "agreementNum": "GP-20000031",
+    "www": "lbpam.com",
+    "address": "36 Quai Henri IV, 75004, PARIS",
+    "phone": "+33 (0)1 57 24 21 00",
+    "legalForm": "Société anonyme",
+    "lei": "9695005YEKXREPY54B44",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 189,
+    "esgRetailFunds": 67,
+    "funds": [
+      {
+        "name": "DECISIEL ISR DURABLE",
+        "isin": "FR001400V3R6",
+        "terms": ["isr", "durable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LA POSTE ISR DURABLE",
+        "isin": "FR001400V4I3",
+        "terms": ["isr", "durable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR THEMATIQUES DURABLES",
+        "isin": "FR0010622704",
+        "terms": ["isr", "durables"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "DECISIEL ISR ACTIONS",
+        "isin": "FR0011258565",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "DECISIEL ISR ACTIONS 70 SOLIDAIRE",
+        "isin": "FR0011258912",
+        "terms": ["solidaire", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "DECISIEL ISR DIVERSIFIE",
+        "isin": "FR0013281003",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "DECISIEL ISR MONETAIRE",
+        "isin": "FR0011258938",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "DECISIEL ISR OBLIGATAIRE",
+        "isin": "FR0011258946",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LA POSTE ISR ACTIONS 100",
+        "isin": "FR0010431213",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LA POSTE ISR ACTIONS 30",
+        "isin": "FR0010431304",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LA POSTE ISR ACTIONS 70 SOLIDAIRE",
+        "isin": "FR0011057363",
+        "terms": ["solidaire", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LA POSTE ISR MONETAIRE",
+        "isin": "FR0010431312",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LA POSTE ISR OBLIGATIONS",
+        "isin": "FR0010431205",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR ACTIONS ASIE",
+        "isin": "FR0007079330",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR ACTIONS EUROMONDE",
+        "isin": "FR0007012182",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR ACTIONS EUROPE MONDE",
+        "isin": "FR0000936528",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR ACTIONS EX-EURO",
+        "isin": "FR0007022793",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR ACTIONS FOCUS EURO",
+        "isin": "FR0000285884",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR ACTIONS FOCUS FRANCE",
+        "isin": "FR0000286304",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR ACTIONS HORIZON MONDE",
+        "isin": "FR0013450798",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR ACTIONS JAPON",
+        "isin": "FR0010892471",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR ACTIONS SMALL CAP EURO",
+        "isin": "FR0000934325",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR ACTIONS SOLIDAIRE",
+        "isin": "FR0010871905",
+        "terms": ["solidaire", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR CONVERTIBLES OPPORTUNITES",
+        "isin": "FR0011640903",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR DETTES FINANCIERES FLEXIBLE",
+        "isin": "FR0013398658",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR EURO HIGH YIELD",
+        "isin": "FR0013403680",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR FLEX DYNAMIQUE",
+        "isin": "FR0012902427",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR FLEX EQUILIBRE",
+        "isin": "FR0013304680",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR MULTI ACTIONS EURO",
+        "isin": "FR0010622670",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR MULTI ACTIONS MONDE",
+        "isin": "FR0010622688",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR OBLI ENTREPRISES",
+        "isin": "FR0010957860",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR OBLI EUROPE",
+        "isin": "FR0000423378",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR OBLI FEVRIER 2029",
+        "isin": "FR001400G5L3",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR OBLI JUILLET 2026",
+        "isin": "FR001400FDS4",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR OBLI JUIN 2029",
+        "isin": "FR001400MQU8",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR OBLI LONG TERME",
+        "isin": "FR0000994493",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR OBLI MARS 2028",
+        "isin": "FR001400KGJ6",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR OBLI MOYEN TERME",
+        "isin": "FR0000287997",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR OBLI NOVEMBRE 2028",
+        "isin": "FR001400FM37",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR OBLI REVENUS",
+        "isin": "FR0010295295",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR OPTI EURO EQUITY",
+        "isin": "FR0011441583",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR OPTI EURO MODERATE",
+        "isin": "FR0011898451",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR PRO ALTO",
+        "isin": "FR0011758044",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR PROFIL 25",
+        "isin": "FR0000288060",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR PROFIL 50",
+        "isin": "FR0000288045",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR PROFIL HARMONIE",
+        "isin": "FR0007014212",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR PROTECT 80-85 MAI 2028",
+        "isin": "FR001400D2D0",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ISR PROTECT 80-85 SEPTEMBRE 2028",
+        "isin": "FR001400GTT6",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "TOCQUEVILLE GLOBAL CLIMATE CHANGE ISR",
+        "isin": "FR0010940882",
+        "terms": ["climate", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "TOCQUEVILLE MID CAP EURO ISR",
+        "isin": "FR0011304278",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "TONI ACTIONS ISR 100",
+        "isin": "FR0000972408",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "VIVACCIO ISR ACTIONS",
+        "isin": "FR0010241919",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM ABSOLUTE RETURN SHORT DURATION SRI",
+        "isin": "FR0012904639",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LBPAM SRI HUMAN RIGHTS",
+        "isin": "FR0000004962",
+        "terms": ["human rights", "sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LFDE ABSOLUTE RETURN CONVERTIBLES SRI",
+        "isin": "FR0013403755",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LFDE ABSOLUTE RETURN CREDIT SRI",
+        "isin": "FR0013340726",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LFDE ABSOLUTE RETURN RATES SRI",
+        "isin": "FR0013341401",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LFDE EMERGING ENHANCED EQUITY SRI",
+        "isin": "FR0011049709",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LFDE EUROPE CONVERTIBLES SRI",
+        "isin": "FR0010130807",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LFDE EUROPE ENHANCED EQUITY SRI",
+        "isin": "FR0013239365",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LFDE US ENHANCED EQUITY SRI",
+        "isin": "FR0013239407",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LFDE WORLD CONVERTIBLES SRI",
+        "isin": "FR0014004IU7",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "TOCQUEVILLE EURO EQUITY GROWTH SRI",
+        "isin": "FR0007022967",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "TOCQUEVILLE EURO EQUITY SRI",
+        "isin": "FR0000008963",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "TOCQUEVILLE EURO EQUITY VALUE SRI",
+        "isin": "FR0007074166",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "TOCQUEVILLE US EQUITY SRI",
+        "isin": "FR0007057674",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "L.V. DIVERSIFIE SOLIDAIRE",
+        "isin": "990000206739",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      }
+    ]
+  },
+  {
+    "sgpId": 1115,
+    "name": "BNP PARIBAS ASSET MANAGEMENT Europe",
+    "agreementNum": "GP96002",
+    "www": "www.bnpparibas-am.fr",
+    "address": "1, Bd Haussmann, 75009, PARIS",
+    "phone": "0158972525",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "W51AX6427FJZJFPF8H34",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 1000,
+    "esgRetailFunds": 59,
+    "funds": [
+      {
+        "name": "AGIPI MONDE DURABLE",
+        "isin": "FR0010500603",
+        "terms": ["durable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AXA HORIZON DURABLE",
+        "isin": "990000016289",
+        "terms": ["durable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BNP PARIBAS EURO CREDIT DURABLE",
+        "isin": "FR0000288664",
+        "terms": ["durable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AXA ISR EUROPE ACTIONS",
+        "isin": "990000089109",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BNP PARIBAS ACTIONS CROISSANCE ISR",
+        "isin": "FR0010319434",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BNP PARIBAS ACTIONS EURO ISR",
+        "isin": "FR0007074232",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BNP PARIBAS ACTIONS MONDE ISR",
+        "isin": "FR0010108977",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BNP PARIBAS ACTIONS MULTI-FACTEUR EURO ISR",
+        "isin": "FR0010115410",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BNP PARIBAS ACTIONS PATRIMOINE ISR",
+        "isin": "FR0010107235",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BNP PARIBAS ACTIONS PME ETI ISR",
+        "isin": "FR0013254364",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BNP PARIBAS ACTIONS PME ISR",
+        "isin": "FR0011011261",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BNP PARIBAS MOIS ISR",
+        "isin": "FR0007009808",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BNP PARIBAS OBLI ISR",
+        "isin": "FR0010076893",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "FONDS BOEHRINGER ISR EQUILIBRE SOLIDAIRE",
+        "isin": "990000018999",
+        "terms": ["solidaire", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "GESTION INTERNATIONALE DYNAMIQUE ISR",
+        "isin": "FR0007046123",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "GESTION INTERNATIONALE EQUILIBREE ISR",
+        "isin": "FR0007045901",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "GESTION INTERNATIONALE MODEREE ISR",
+        "isin": "FR0000977555",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MULTIPAR ACTIONS PME ETI ISR",
+        "isin": "FR001400R8D1",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SAUR EPARGNE SOLIDAIRE ISR",
+        "isin": "FR001400P1X6",
+        "terms": ["solidaire", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AXA IM EURO LIQUIDITY SRI",
+        "isin": "FR0000978371",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BNP PARIBAS SRI INVEST 3M",
+        "isin": "FR0010209916",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BNP PARIBAS EASY CAC 40® ESG UCITS ETF",
+        "isin": "FR0010150458",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BNP PARIBAS INDICE FRANCE ESG",
+        "isin": "FR0010106831",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BNP PARIBAS EURO CLIMATE ALIGNED",
+        "isin": "FR0010028969",
+        "terms": ["climate"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "THEAM QUANT EQUITY EUROPE CLIMATE CARE",
+        "isin": "FR0013397726",
+        "terms": ["climate"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MULTIPAR ACTIONS EURO BAS CARBONE",
+        "isin": "FR001400OSK1",
+        "terms": ["carbone", "bas carbone"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MULTIPAR ACTIONS EUROPE BAS CARBONE",
+        "isin": "990000079589",
+        "terms": ["carbone", "bas carbone"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AXA ACT CARBON OFFSET EQUITY QI",
+        "isin": "FR0010074682",
+        "terms": ["carbon"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AXA ACT CARBON OFFSET EUROBLOC EQUITY QI",
+        "isin": "FR0010074666",
+        "terms": ["carbon"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BNP PARIBAS GREEN BUSINESS IMPACT",
+        "isin": "FR0013385200",
+        "terms": ["green", "impact"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MULTIPAR GREEN BOND",
+        "isin": "FR001400ONC9",
+        "terms": ["green"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MULTIPAR SOLUTIONS ENVIRONNEMENT",
+        "isin": "FR001400QD35",
+        "terms": ["environnement"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BNP PARIBAS EUROPE ENVIRONMENTAL SOLUTIONS",
+        "isin": "FR0010076430",
+        "terms": ["environmental"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BNP PARIBAS APOLLO GLOBAL WATER",
+        "isin": "FR0050000043",
+        "terms": ["water"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BNP PARIBAS SOCIAL BUSINESS IMPACT",
+        "isin": "FR0012261501",
+        "terms": ["impact", "social"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BNP PARIBAS TOWARDS IMPACT FUND I SLP",
+        "isin": "FR0013528056",
+        "terms": ["impact"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ALSTOM MODERE SOCIALEMENT RESPONSABLE",
+        "isin": "FR001400R8F6",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AXA SOCIAL",
+        "isin": "FR0007062567",
+        "terms": ["social"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "BNP PARIBAS SOCIAL ET SOLIDAIRE",
+        "isin": "FR0011870997",
+        "terms": ["social", "solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "MULTIPAR ACTIONS SOCIALEMENT RESPONSABLE",
+        "isin": "FR001400R7G6",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MULTIPAR MONETAIRE SOCIALEMENT RESPONSABLE",
+        "isin": "FR001400OSQ8",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MULTIPAR SOLIDAIRE DYNAMIQUE SOCIALEMENT RESPONSABLE",
+        "isin": "FR001400R7L6",
+        "terms": ["solidaire", "responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MULTIPAR SOLIDAIRE EQUILIBRE SOCIALEMENT RESPONSABLE",
+        "isin": "FR001400R7K8",
+        "terms": ["solidaire", "responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MULTIPAR SOLIDAIRE MODERE SOCIALEMENT RESPONSABLE",
+        "isin": "FR001400Z6Q7",
+        "terms": ["solidaire", "responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MULTIPAR SOLIDAIRE OBLIG SOCIALEMENT RESPONSABLE",
+        "isin": "FR001400R7F8",
+        "terms": ["solidaire", "responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AGIPI REGIONS SOLIDAIRE",
+        "isin": "FR0013218302",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "AXA DIVERSIFIE SOLIDAIRE",
+        "isin": "990000070339",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "AXA GENERATION TEMPERE SOLIDAIRE",
+        "isin": "FR0014001H85",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "FCPE DANONE COMMUNITIES SOLIDAIRE",
+        "isin": "990000094669",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "GF AMBITION SOLIDAIRE",
+        "isin": "FR0007020201",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "LESAFFRE EQUILIBRE RESPONSABLE & SOLIDAIRE",
+        "isin": "FR001400P207",
+        "terms": ["solidaire", "responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "REXEL MODERE ET SOLIDAIRE",
+        "isin": "FR001400R823",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "BNP PARIBAS APOLLO THEMATIC GENDER",
+        "isin": "FR0014004LP1",
+        "terms": ["gender"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "BNP PARIBAS APOLLO THEMATIC GENDER II",
+        "isin": "FR001400NBN3",
+        "terms": ["gender"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "AXA EURO VALEURS RESPONSABLES",
+        "isin": "FR0000982761",
+        "terms": ["responsables"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BNP PARIBAS ACTIONS RENDEMENT RESPONSABLE",
+        "isin": "FR0007074208",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BNP PARIBAS SMALLCAP EUROLAND RESPONSABLE.",
+        "isin": "FR0010128587",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ETHIQUE CONVICTIONS",
+        "isin": "FR0013324654",
+        "terms": ["ethique"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SCISJ ETHIQUE",
+        "isin": "FR0013443793",
+        "terms": ["ethique"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 494,
+    "name": "VEGA INVESTMENT SOLUTIONS",
+    "agreementNum": "GP-04000045",
+    "www": "http://www.vega-is.com",
+    "address": "43 avenue Pierre Mendès France, 75013, PARIS",
+    "phone": "0158196100",
+    "legalForm": "Société Anonyme à Directoire",
+    "lei": "969500O0FR2QWV4D6N39",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 292,
+    "esgRetailFunds": 55,
+    "funds": [
+      {
+        "name": "ACTIONS MONDE DES SALARIES SUEZ ISR",
+        "isin": "990000023229",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AG2R ISR",
+        "isin": "990000024659",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BIB ISR DIVERSIFIE SOLIDAIRE",
+        "isin": "990000010559",
+        "terms": ["solidaire", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BIB ISR DYNAMIQUE CLIMAT",
+        "isin": "990000133799",
+        "terms": ["climat", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BIB ISR DYNAMIQUE EURO",
+        "isin": "990000133779",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BIB ISR DYNAMIQUE MONDE",
+        "isin": "990000054569",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BIB ISR EQUILIBRE",
+        "isin": "990000082939",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BIB ISR EQUILIBRE PLANETE",
+        "isin": "990000133819",
+        "terms": ["planete", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CAP ISR ACTIONS EUROPE",
+        "isin": "990000094839",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CAP ISR CROISSANCE",
+        "isin": "990000051429",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CAP ISR MIXTE SOLIDAIRE",
+        "isin": "990000025599",
+        "terms": ["solidaire", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CAP ISR MONETAIRE",
+        "isin": "990000064599",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CAP ISR OBLIG EURO",
+        "isin": "990000111539",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CAP ISR RENDEMENT",
+        "isin": "990000025579",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CORA DIVERSIFIE ISR",
+        "isin": "990000004109",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "COVEA SALARIES FLEXIBLE ISR",
+        "isin": "990000128319",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "DASSAULT SYSTEMES ISR DYNAMIQUE",
+        "isin": "990000083499",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "DASSAULT SYSTEMES ISR EQUILIBRE",
+        "isin": "990000128199",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "EPARGNE ISR MONETAIRE",
+        "isin": "990000080879",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ES MIXTE ISR",
+        "isin": "990000020619",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ES OBLIGATIONS ISR",
+        "isin": "990000084439",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "FDJ ACTIONS EUROPE ISR",
+        "isin": "990000045739",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "GROUPE IPSEN ISR",
+        "isin": "990000057619",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "IMPACT ISR DYNAMIQUE",
+        "isin": "990000080889",
+        "terms": ["impact", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "IMPACT ISR EQUILIBRE",
+        "isin": "990000080899",
+        "terms": ["impact", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "IMPACT ISR MIXTE SOLIDAIRE",
+        "isin": "990000131519",
+        "terms": ["impact", "solidaire", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "IMPACT ISR OBLIG EURO",
+        "isin": "990000100649",
+        "terms": ["impact", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "IMPACT ISR PERFORMANCE",
+        "isin": "990000080919",
+        "terms": ["impact", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "IMPACT ISR RENDEMENT SOLIDAIRE",
+        "isin": "990000080929",
+        "terms": ["impact", "solidaire", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MAIF PARTICIPATION ISR et SOLIDAIRE",
+        "isin": "990000013019",
+        "terms": ["solidaire", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFFENSIF ISR AIR LIQUIDE EXPANSION",
+        "isin": "990000000519",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ORANO DIVERSIFIE OBLIGATAIRE ISR",
+        "isin": "990000088749",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SAFRAN RETRAITE ACTIONS ISR",
+        "isin": "990000107689",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SAFRAN RETRAITE OBLIGATIONS ISR",
+        "isin": "990000107669",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SELECTION DNCA ACTIONS ISR",
+        "isin": "990000115199",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SELECTION DNCA EVOLUTIF ISR",
+        "isin": "990000116179",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SELECTION DNCA MIXTE ISR",
+        "isin": "990000116099",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SELECTION VEGA EURO RENDEMENT ISR",
+        "isin": "990000125579",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SEQUOIA ISR ACTIONS EURO",
+        "isin": "990000002269",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SEQUOIA ISR MONETAIRE",
+        "isin": "990000090799",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "EXPERTISE ESG DYNAMIQUE",
+        "isin": "990000128699",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "EXPERTISE ESG EQUILIBRE",
+        "isin": "990000128749",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "EXPERTISE ESG RENDEMENT",
+        "isin": "990000128799",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "DAN'DYNAMIQUE ENVIRONNEMENT",
+        "isin": "990000123459",
+        "terms": ["environnement"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SELECTION MIROVA EUROPE ENVIRONNEMENT",
+        "isin": "990000124669",
+        "terms": ["environnement"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SELECTION  MIROVA THEMATIC WATER",
+        "isin": "990000125369",
+        "terms": ["water"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "IMPACT SOLIDAIRE THALES",
+        "isin": "990000201869",
+        "terms": ["impact", "solidaire"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CARREFOUR EQUILIBRE SOLIDAIRE",
+        "isin": "990000078959",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "DEFENSE CONSEIL INTERNATIONAL SOLIDAIRE",
+        "isin": "990000008489",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "HP EQUILIBRE SOLIDAIRE",
+        "isin": "990000070949",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "KRONENBOURG EQUILIBRE ET SOLIDAIRE",
+        "isin": "990000074019",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "P&G-OBLIGATIONS&SOLIDAIRE",
+        "isin": "990000110209",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "REGULIER AIR LIQUIDE DEVELOPPEMENT SOLIDAIRE",
+        "isin": "990000025309",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "SELECTION MIROVA THEMATIC EMPLOI SOLIDAIRE",
+        "isin": "990000099449",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "SEQUOIA DIVERSIFIE ET SOLIDAIRE",
+        "isin": "990000022529",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      }
+    ]
+  },
+  {
+    "sgpId": 1063,
+    "name": "OFI INVEST ASSET MANAGEMENT",
+    "agreementNum": "GP92012",
+    "www": "https://www.ofi-invest-am.com",
+    "address": "127/129 quai du Président Roosevelt, 92130, ISSY-LES-MOULINEAUX",
+    "phone": "0140681717",
+    "legalForm": "Société anonyme à Conseil d'Administration",
+    "lei": "7DOA3A75EDWS6E3NMH88",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 234,
+    "esgRetailFunds": 42,
+    "funds": [
+      {
+        "name": "AFER DIVERSIFIÉ ISR",
+        "isin": "FR0010821470",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AVENIR PARTAGE ISR",
+        "isin": "FR0010279034",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ES OFI INVEST ISR CREDIT BONDS EURO",
+        "isin": "FR0014005BB9",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ES OFI INVEST ISR CROISSANCE RESPONSABLE",
+        "isin": "FR0014005B95",
+        "terms": ["isr", "responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST ISR ACTIONS EUROPE",
+        "isin": "FR0007473798",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST ISR CRÉDIT BONDS EURO",
+        "isin": "FR0011024249",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST ISR CRÉDIT BONDS EURO 1-3",
+        "isin": "FR0007390075",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST ISR CROISSANCE RESPONSABLE",
+        "isin": "FR0010746776",
+        "terms": ["isr", "responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST ISR MONETAIRE CT",
+        "isin": "FR0000985558",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST ISR VALEURS EUROPE",
+        "isin": "FR0007082920",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ES OFI INVEST ESG ACTIONS SOLIDAIRE EURO",
+        "isin": "990000080259",
+        "terms": ["solidaire", "esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ES OFI INVEST ESG CREDIT BOND 1-3",
+        "isin": "FR0014005BA1",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ES OFI INVEST ESG DYNAMIQUE EURO",
+        "isin": "990000082199",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ES OFI INVEST ESG EQUILIBRE EURO",
+        "isin": "990000082189",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ES OFI INVEST ESG MULTITRACK",
+        "isin": "990000055629",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ES OFI INVEST ESG OBLIGATIONS EUROPE",
+        "isin": "990000079049",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ES OFI INVEST ESG PRUDENT EURO",
+        "isin": "990000082179",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST ESG  ALLOCATION FLEXIBLE",
+        "isin": "FR0007493010",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "Ofi Invest ESG Action Mieux Vivre",
+        "isin": "FR0014008US7",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST ESG ACTION ZONE EURO",
+        "isin": "FR0013498458",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST ESG ACTIONS EURO",
+        "isin": "FR0000971186",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST ESG ACTIONS INTERNATIONALES",
+        "isin": "FR001400I5F3",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST ESG ACTIONS SOLIDAIRE EURO",
+        "isin": "FR0000983819",
+        "terms": ["solidaire", "esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST ESG CREDIT BOND 1-3",
+        "isin": "FR0000979866",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST ESG DYNAMIQUE EURO",
+        "isin": "FR0000970097",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST ESG EQUILIBRE EURO",
+        "isin": "FR0000970105",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST ESG EQUITY CLIMATE FOCUS",
+        "isin": "FR0000981441",
+        "terms": ["climate", "esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST ESG EURO EQUITY",
+        "isin": "FR0000971178",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST ESG EURO INVESTMENT GRADE CLIMATE FOCUS",
+        "isin": "FR0000945180",
+        "terms": ["climate", "esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST ESG LIQUIDITES",
+        "isin": "FR0000008997",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST ESG MID CAPS EURO",
+        "isin": "FR0010821462",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST ESG MING",
+        "isin": "FR0007043781",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST ESG MONETAIRE",
+        "isin": "FR0011381227",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST ESG MULTI REACTIF",
+        "isin": "FR0010028605",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST ESG MULTITRACK",
+        "isin": "FR0010564351",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST ESG MULTITRACK SOLIDAIRE",
+        "isin": "FR001400I251",
+        "terms": ["solidaire", "esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST ESG OBLIGATIONS COURT TERME",
+        "isin": "FR0011461219",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST ESG PRUDENT EURO",
+        "isin": "FR0000970089",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST GREEN BONDS EURO",
+        "isin": "FR0013422839",
+        "terms": ["green"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OFI INVEST GREEN FUTURE",
+        "isin": "FR0010508333",
+        "terms": ["green"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MAIF ACTIONS TRANSITION SOCIALE",
+        "isin": "FR0000435455",
+        "terms": ["transition", "sociale"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "OFI INVEST ACTIONS SOLIDAIRE FRANCE",
+        "isin": "FR0000427452",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      }
+    ]
+  },
+  {
+    "sgpId": 55,
+    "name": "CREDIT MUTUEL ASSET MANAGEMENT",
+    "agreementNum": "GP97138",
+    "www": "WWW.CMCIC-AM.FR",
+    "address": "128 boulevard Raspail, 75006, PARIS",
+    "phone": "0142668110",
+    "legalForm": "Société anonyme à Conseil d'Administration",
+    "lei": "969500BXTBE4U1HLLF51",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 1054,
+    "esgRetailFunds": 38,
+    "funds": [
+      {
+        "name": "CM-AM SUSTAINABLE PLANET",
+        "isin": "FR0000444366",
+        "terms": ["planet", "sustainable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CM-AM CASH ISR",
+        "isin": "FR0000979825",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CM-AM MONE ISR",
+        "isin": "FR0007084660",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CM-AM OBLIGATIONS ISR",
+        "isin": "FR0007084611",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CM-AM SELECTION RESPONSABLE ISR",
+        "isin": "FR0013505047",
+        "terms": ["isr", "responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CM-AM SOLIDAIRE TEMPERE ISR",
+        "isin": "FR0007084629",
+        "terms": ["solidaire", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LA FRANCAISE TRESORERIE ISR",
+        "isin": "FR0000991390",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ORANO ISR SOLIDAIRE",
+        "isin": "FR0010291088",
+        "terms": ["solidaire", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "S. ACTIVE ACTIONS ISR",
+        "isin": "FR0007084652",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "S. ACTIVE DIVERSIFIE ISR",
+        "isin": "FR0007084645",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CM-AM SELECTION USA SRI",
+        "isin": "FR001400ASL8",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CM-AM USA SRI HEDGED",
+        "isin": "FR001400DA33",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CM-AM GLOBAL CLIMATE CHANGE",
+        "isin": "FR0014000YQ0",
+        "terms": ["climate"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CM-AM STRATEGIE GLOBAL CLIMATE CHANGE",
+        "isin": "990000130279",
+        "terms": ["climate"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CONVERGENCE GLOBAL CLIMATE CHANGE",
+        "isin": "990000135549",
+        "terms": ["climate"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CM-AM Stratégie Actions Carbon Impact",
+        "isin": "990000087839",
+        "terms": ["carbon", "impact"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CM-AM Stratégie Obligations Carbon Impact",
+        "isin": "990000054359",
+        "terms": ["carbon", "impact"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CONVERGENCE OBLIGATIONS CARBON IMPACT",
+        "isin": "990000131419",
+        "terms": ["carbon", "impact"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LA FRANCAISE CARBON IMPACT FLOATING RATES",
+        "isin": "FR0007053640",
+        "terms": ["carbon", "impact"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "La Française Carbon Impact FRN",
+        "isin": "FR0013431152",
+        "terms": ["carbon", "impact"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LA FRANÇAISE OBLIGATIONS CARBON IMPACT",
+        "isin": "FR0010915314",
+        "terms": ["carbon", "impact"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CM-AM GREEN BONDS",
+        "isin": "FR0013246543",
+        "terms": ["green"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CM-AM STRATEGIE ENVIRONNEMENT",
+        "isin": "990000128369",
+        "terms": ["environnement"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CM-AM GLOBAL BIODIVERSITE",
+        "isin": "FR001400YQY5",
+        "terms": ["biodiversite"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CM-AM IMPACT FIRST INCLUSION",
+        "isin": "FR001400CT66",
+        "terms": ["impact", "inclusion"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CONVERGENCE EQUILIBRE SOCIALEMENT RESPONSABLE",
+        "isin": "990000083429",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SOCIAL ACTIVE ACTIONS",
+        "isin": "990000084499",
+        "terms": ["social"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "SOCIAL ACTIVE DIVERSIFIE",
+        "isin": "990000084539",
+        "terms": ["social"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "SOCIAL ACTIVE DYNAMIQUE SOLIDAIRE",
+        "isin": "990000112839",
+        "terms": ["social", "solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "SOCIAL ACTIVE EQUILIBRE SOLIDAIRE",
+        "isin": "990000106169",
+        "terms": ["social", "solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "SOCIAL ACTIVE MONETAIRE",
+        "isin": "990000084509",
+        "terms": ["social"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "SOCIAL ACTIVE OBLIGATIONS",
+        "isin": "990000084529",
+        "terms": ["social"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "SOCIAL ACTIVE TEMPERE SOLIDAIRE",
+        "isin": "990000084519",
+        "terms": ["social", "solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "CMNE PARTICIPATION SOLIDAIRE",
+        "isin": "990000103439",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "CONVERGENCE SOLIDAIRE TEMPERE",
+        "isin": "990000101369",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "OTIS MOYEN TERME SOLIDAIRE",
+        "isin": "990000026899",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "SAFRAN EQUILIBRE SOLIDAIRE",
+        "isin": "990000069719",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "LA FRANÇAISE ACTIONS €CO2 RESPONSABLE",
+        "isin": "FR0010834390",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 899,
+    "name": "NATIXIS INVESTMENT MANAGERS INTERNATIONAL",
+    "agreementNum": "GP90009",
+    "www": null,
+    "address": "43 avenue Pierre Mendès-France, 75013, PARIS",
+    "phone": "01 78 40 80 00",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500WCY7P9HOJNP063",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 267,
+    "esgRetailFunds": 31,
+    "funds": [
+      {
+        "name": "BPCE ACTIONS ISR",
+        "isin": "990000103949",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "VEGA ALPHA OPPORTUNITES ISR",
+        "isin": "FR0013200243",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "VEGA EURO OPPORTUNITES ISR",
+        "isin": "FR0010242461",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "VEGA EURO RENDEMENT ISR",
+        "isin": "FR0011037894",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "VEGA EURO SPREAD ISR",
+        "isin": "FR0007371877",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "VEGA EUROPE CONVICTIONS ISR",
+        "isin": "FR0010626796",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "VEGA FRANCE OPPORTUNITES ISR",
+        "isin": "FR0010458190",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "VEGA GLOBAL CARE ISR",
+        "isin": "FR00140021C3",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "VEGA OBLIGATIONS EURO ISR",
+        "isin": "FR0007465083",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "VEGA PATRIMOINE ISR",
+        "isin": "FR0007371810",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ECUREUIL SRI OBLI MOYEN TERME",
+        "isin": "FR0010091181",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OSTRUM SRI CASH",
+        "isin": "FR0010392951",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OSTRUM SRI CASH PLUS",
+        "isin": "FR0000293714",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OSTRUM SRI CREDIT 12M",
+        "isin": "FR0011375989",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OSTRUM SRI CREDIT 6M",
+        "isin": "FR0014009DF8",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OSTRUM SRI CREDIT EURO",
+        "isin": "FR0000982217",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OSTRUM SRI CREDIT ULTRA SHORT PLUS",
+        "isin": "FR0007053749",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OSTRUM SRI CROSSOVER",
+        "isin": "FR0011350677",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OSTRUM SRI EURO BONDS 3-5",
+        "isin": "FR0011311414",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OSTRUM SRI EURO BONDS 5-7",
+        "isin": "FR0010201699",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OSTRUM SRI EURO MINVOL EQUITY",
+        "isin": "FR0000003188",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OSTRUM SRI EURO SOVEREIGN BONDS",
+        "isin": "FR0000003196",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OSTRUM SRI MONEY",
+        "isin": "FR0007075122",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OSTRUM SRI MONEY HORIZON",
+        "isin": "FR0010750984",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OSTRUM SRI MONEY PLUS",
+        "isin": "FR0010885210",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "NATIXIS ESG PEA",
+        "isin": "FR0013196672",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OSTRUM CLIMATE AND SOCIAL IMPACT BOND",
+        "isin": "FR0014007BJ8",
+        "terms": ["climate", "impact", "social"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MIROVA EUROPE ENVIRONNEMENT",
+        "isin": "FR0010521575",
+        "terms": ["environnement"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MAIF ACTIONS TRANSITION BIODIVERSITE",
+        "isin": "FR0007061973",
+        "terms": ["biodiversite", "transition"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CLS EQUILIBRE SOLIDAIRE",
+        "isin": "990000079469",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "VEGA TRANSFORMATION RESPONSABLE",
+        "isin": "FR0013462744",
+        "terms": ["transformation", "responsable"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 787,
+    "name": "CPR ASSET MANAGEMENT",
+    "agreementNum": "GP01056",
+    "www": "www.cpr-am.com",
+    "address": "91-93, boulevard Pasteur, 75015, PARIS",
+    "phone": "01 53 15 70 00",
+    "legalForm": "Société anonyme",
+    "lei": "969500E0FOS38XJ2E978",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 177,
+    "esgRetailFunds": 26,
+    "funds": [
+      {
+        "name": "BFT CREDIT EURO OBLIGATIONS DURABLES",
+        "isin": "FR001400C9Y2",
+        "terms": ["durables"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BFT ACTIONS EURO ODD ISR",
+        "isin": "FR0010720631",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BFT AUREUS ISR",
+        "isin": "FR0010599399",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BFT CREDIT 12 MOIS ISR",
+        "isin": "FR0010796433",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BFT CREDIT 6 MOIS ISR",
+        "isin": "FR0010796425",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BFT CREDIT HIGH YIELD SHORT TERM ISR",
+        "isin": "FR0010744300",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BFT CREDIT OPPORTUNITES ISR",
+        "isin": "FR0010638676",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BFT MONETAIRE COURT TERME ISR CLIMAT",
+        "isin": "FR0010232298",
+        "terms": ["climat", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "FONDS BRIAND COURT TERME ISR",
+        "isin": "FR0010215616",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BFT PARTNERS - VIA EQUITY EUROPE SRI",
+        "isin": "FR0013385531",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AGIPI CLIMAT",
+        "isin": "FR0011355510",
+        "terms": ["climat"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BFT RENDEMENT 2030 CLIMAT",
+        "isin": "FR001400UIC6",
+        "terms": ["climat"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CPR ACTIONS FRANCE CLIMAT",
+        "isin": "FR0013429974",
+        "terms": ["climat"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CPR ES ACTION CLIMAT",
+        "isin": "990000122749",
+        "terms": ["climat"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MAIF ACTIONS TRANSITION CLIMAT",
+        "isin": "FR0010696815",
+        "terms": ["climat", "transition"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BFT SELECTION RENDEMENT 2027 REDUCTION CARBONE",
+        "isin": "FR0014000EJ7",
+        "terms": ["carbone"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LCL COMPENSATION CARBONE ACTIONS EURO",
+        "isin": "FR0014005BV7",
+        "terms": ["carbone"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LCL COMPENSATION CARBONE ACTIONS MONDE",
+        "isin": "FR0013466489",
+        "terms": ["carbone"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LCL COMPENSATION CARBONE MULTI STRATÉGIES",
+        "isin": "FR0013466463",
+        "terms": ["carbone"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BFT LCR SOCIAL GREEN",
+        "isin": "FR0010544775",
+        "terms": ["green", "social"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CPR ES Biodiversité",
+        "isin": "990000133619",
+        "terms": ["biodiversite"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LCL Biodiversité Actions Monde",
+        "isin": "FR0013455011",
+        "terms": ["biodiversite"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CPR ES SOCIAL ACTIONS MONDE",
+        "isin": "990000130569",
+        "terms": ["social"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "CPR Actions Euro Responsable",
+        "isin": "FR0010744532",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CPR Actions USA Responsable",
+        "isin": "FR0010501858",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CPR GLOBAL ALLOCATION RESPONSABLE",
+        "isin": "FR0011144070",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 347,
+    "name": "SIENNA GESTION",
+    "agreementNum": "GP97020",
+    "www": "hga.humanis.com",
+    "address": "21 Boulevard Haussmann, 75009, PARIS",
+    "phone": null,
+    "legalForm": "Société anonyme",
+    "lei": "9695003C7PPLQN1DJN65",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 195,
+    "esgRetailFunds": 24,
+    "funds": [
+      {
+        "name": "CNP DEVELOPPEMENT DURABLE",
+        "isin": "FR0010484881",
+        "terms": ["durable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MH EPARGNE ACTIONS TRANSITION CLIMAT",
+        "isin": "990000126409",
+        "terms": ["climat", "transition"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SIENNA ACTIONS TRANSITION CLIMAT",
+        "isin": "FR0007460175",
+        "terms": ["climat", "transition"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MH EPARGNE ACTIONS EURO BAS CARBONE",
+        "isin": "990000081349",
+        "terms": ["carbone", "bas carbone"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SIENNA ESR ACTIONS EURO BAS CARBONE",
+        "isin": "FR001400OMK4",
+        "terms": ["carbone", "bas carbone"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MH EPARGNE OBLIGATIONS IMPACT SOCIAL",
+        "isin": "990000134239",
+        "terms": ["impact", "social"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SIENNA IMPACT SOLIDAIRE",
+        "isin": "FR001400N9G6",
+        "terms": ["impact", "solidaire"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SIENNA OBLIGATIONS IMPACT SOCIAL",
+        "isin": "FR001400EZC4",
+        "terms": ["impact", "social"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MH EPARGNE PICTET CLEAN ENERGY TRANSITION",
+        "isin": "990000080549",
+        "terms": ["clean energy", "transition"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AIRBUS PERCOL OBLIGATIONS SOLIDAIRE",
+        "isin": "990000131829",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "ARCELOR 9 SOLIDAIRE",
+        "isin": "990000094059",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "CARREFOUR PRUDENCE SOLIDAIRE",
+        "isin": "990000083049",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "EPARGNE SOLIDAIRE DYNAMIQUE THALES",
+        "isin": "990000093539",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "EPSENS GRAND OUEST SOLIDAIRE",
+        "isin": "990000058079",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "EPSENS GRAND SUD OUEST SOLIDAIRE",
+        "isin": "990000031629",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "IBM FRANCE G - SOLIDAIRE",
+        "isin": "990000006209",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "MH EPARGNE ACTIONS EMPLOI RETRAITE SOLIDAIRE",
+        "isin": "FR0010184978",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "MH EPARGNE DIVERSIFIE DEFENSIF SOLIDAIRE",
+        "isin": "FR0010342220",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "MH EPARGNE DIVERSIFIE EQUILIBRE SOLIDAIRE",
+        "isin": "990000061399",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "MH EPARGNE OBLIG COURT TERME SOLIDAIRE",
+        "isin": "FR0010168682",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "SAFRAN ETHIQUE SOLIDAIRE",
+        "isin": "990000076729",
+        "terms": ["solidaire", "ethique"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SIENNA ACTIONS EMPLOI RETRAITE SOLIDAIRE",
+        "isin": "FR0010915652",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "SIENNA ESR ACTIONS EMPLOI RETRAITE SOLIDAIRE",
+        "isin": "FR001400RPA1",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "SIENNA OBLIG COURT TERME SOLIDAIRE",
+        "isin": "FR0013477155",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      }
+    ]
+  },
+  {
+    "sgpId": 618,
+    "name": "HSBC GLOBAL ASSET MANAGEMENT (FRANCE)",
+    "agreementNum": "GP99026",
+    "www": null,
+    "address": "110 Esplanade du Général de Gaulle, 75419, PARIS CEDEX 08",
+    "phone": "0141024000",
+    "legalForm": "Société anonyme",
+    "lei": "W85O53OGKSNJNYNJES25",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 130,
+    "esgRetailFunds": 17,
+    "funds": [
+      {
+        "name": "DASSAULT SYSTEMES ISR MODERE SOLIDAIRE",
+        "isin": "990000128259",
+        "terms": ["solidaire", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "FDJ MODERE ISR",
+        "isin": "990000120599",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "HSBC EE ISR ACTIONS EURO",
+        "isin": "990000087369",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "HSBC EE ISR ACTIONS MONDE",
+        "isin": "990000071359",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "HSBC EE ISR DIVERSIFIE ET SOLIDAIRE",
+        "isin": "990000087379",
+        "terms": ["solidaire", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "HSBC EE ISR EQUILIBRE ET SOLIDAIRE",
+        "isin": "990000125489",
+        "terms": ["solidaire", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "HSBC EE ISR OBLIG EURO ET SOLIDAIRE",
+        "isin": "990000087389",
+        "terms": ["solidaire", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "HSBC RESPONSIBLE INVESTMENT FUNDS - SRI BALANCED",
+        "isin": "FR0013443181",
+        "terms": ["sri", "responsible"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "HSBC RESPONSIBLE INVESTMENT FUNDS - SRI DYNAMIC",
+        "isin": "FR0013443165",
+        "terms": ["sri", "responsible"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "HSBC RESPONSIBLE INVESTMENT FUNDS - SRI EURO BOND",
+        "isin": "FR0010061283",
+        "terms": ["sri", "responsible"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "HSBC RESPONSIBLE INVESTMENT FUNDS - SRI EUROLAND EQUITY",
+        "isin": "FR0000437113",
+        "terms": ["sri", "responsible"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "HSBC RESPONSIBLE INVESTMENT FUNDS - SRI GLOBAL EQUITY",
+        "isin": "FR0000438905",
+        "terms": ["sri", "responsible"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "HSBC RESPONSIBLE INVESTMENT FUNDS - SRI MODERATE",
+        "isin": "FR0013443132",
+        "terms": ["sri", "responsible"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "HSBC EE ESG EURO MONETAIRE",
+        "isin": "990000071389",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "HSBC ESG EURO MONEY MARKET",
+        "isin": "FR0000971277",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "HSBC EE ACTIONS EUROPE SOLUTIONS CLIMAT",
+        "isin": "990000086299",
+        "terms": ["climat"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "HSBC RESPONSIBLE INVESTMENT FUNDS - EUROPE EQUITY GREEN SOLUTIONS",
+        "isin": "FR0000982456",
+        "terms": ["green", "responsible"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 268,
+    "name": "ECOFI INVESTISSEMENTS",
+    "agreementNum": "GP97004",
+    "www": "www.ecofi.fr",
+    "address": "12  BOULEVARD DE PESARO, 92000, NANTERRE",
+    "phone": "01 44 88 39 24",
+    "legalForm": "Société anonyme",
+    "lei": "969500Y51OCOYMD5F464",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 63,
+    "esgRetailFunds": 17,
+    "funds": [
+      {
+        "name": "DYNAMIS SOLIDAIRE ISR",
+        "isin": "FR0010855528",
+        "terms": ["solidaire", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ECOFI AGIR POUR LE CLIMAT",
+        "isin": "FR0010642280",
+        "terms": ["climat"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ECOFI CHOIX RESPONSABLE CLIMAT",
+        "isin": "FR0010878678",
+        "terms": ["climat", "responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ECOFI SMART TRANSITION",
+        "isin": "FR0000004970",
+        "terms": ["transition"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "CHOIX SOLIDAIRE",
+        "isin": "FR0010177899",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "CONFIANCE SOLIDAIRE",
+        "isin": "FR0010515601",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "ECOFI CONTRAT SOLIDAIRE",
+        "isin": "FR0011066000",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "EPARGNE SOLIDAIRE",
+        "isin": "FR0007413091",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "SCHNEIDER ENERGIE SICAV SOLIDAIRE",
+        "isin": "FR0010821017",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "SCHNEIDER ENERGIE SOLIDAIRE OBLIGATAIRE",
+        "isin": "990000103359",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "ECOFI CHOIX RESPONSABLE AUDACE",
+        "isin": "FR0010878744",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ECOFI CHOIX RESPONSABLE ENGAGEMENT",
+        "isin": "FR0010878686",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ECOFI CHOIX RESPONSABLE EVOLUTIF",
+        "isin": "FR0010878710",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ECOFI CHOIX RESPONSABLE MONETAIRE",
+        "isin": "FR0011160563",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ECOFI CHOIX RESPONSABLE PERENNITE",
+        "isin": "FR0010897926",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ECOFI CHOIX RESPONSABLE PRUDENCE",
+        "isin": "FR0010878736",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "EPARGNE ETHIQUE FLEXIBLE",
+        "isin": "FR0000097560",
+        "terms": ["ethique"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 12675,
+    "name": "ERES GESTION",
+    "agreementNum": "GP-07000005",
+    "www": "www.eres-gestion.com",
+    "address": "115, rue Réaumur, 75002, PARIS",
+    "phone": "01.49.70.98.88",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "96950007E0G0C3N98D53",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 176,
+    "esgRetailFunds": 14,
+    "funds": [
+      {
+        "name": "ACTIONS SOLIDAIRES ISR",
+        "isin": "990000100689",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ERES MULTI ISR COURT TERME",
+        "isin": "FR0014002Y67",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ERES MULTI ISR ENVIRONNEMENT",
+        "isin": "FR0014003LP3",
+        "terms": ["environnement", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ERES MULTI ISR LONG TERME",
+        "isin": "FR0014002Y91",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ERES MULTI ISR MODERE",
+        "isin": "FR0014002YC6",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ERES MULTI ISR MOYEN TERME",
+        "isin": "FR0014002YF9",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ERES SELECT ISR COURT TERME",
+        "isin": "990000129779",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ERES SELECT ISR ENVIRONNEMENT",
+        "isin": "990000130189",
+        "terms": ["environnement", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ERES SELECT ISR LONG TERME",
+        "isin": "990000129879",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ERES SELECT ISR MODERE",
+        "isin": "990000129819",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ERES SELECT ISR MOYEN TERME",
+        "isin": "990000129849",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ACTIONS IMPACT GROUP",
+        "isin": "990000131059",
+        "terms": ["impact"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ERES MULTIGESTION PARTAGE & SOLIDAIRE",
+        "isin": "FR0014002OW5",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "ERES SELECTION PARTAGE & SOLIDAIRE",
+        "isin": "990000119699",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      }
+    ]
+  },
+  {
+    "sgpId": 15823,
+    "name": "SOCIETE GENERALE GESTION",
+    "agreementNum": "GP-09000020",
+    "www": null,
+    "address": "91/93 boulevard Pasteur, 75015, Paris",
+    "phone": "01 76 37 34 00",
+    "legalForm": "Société anonyme",
+    "lei": "96950035YGNIE3C1D663",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 178,
+    "esgRetailFunds": 14,
+    "funds": [
+      {
+        "name": "SG ACTIONS EURO RENDEMENT ISR",
+        "isin": "FR0010501676",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SG ACTIONS INTERNATIONALES ISR",
+        "isin": "990000046649",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SG AMUNDI ACTIONS EUROPE ENVIRONNEMENT ISR",
+        "isin": "FR0000444275",
+        "terms": ["environnement", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SG AMUNDI ACTIONS MONDE EAU ISR",
+        "isin": "FR0013381035",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SG AMUNDI MONETAIRE ISR",
+        "isin": "FR0010423228",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SG AMUNDI OBLIG ENTREPRISES EURO ISR",
+        "isin": "FR0050000837",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SG DIVERSIFIE ISR",
+        "isin": "990000010239",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SG ERS AMUNDI ACTIONS EUROPE ENVIRONNEMENT ISR",
+        "isin": "990000096829",
+        "terms": ["environnement", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SG ERS AMUNDI MONETAIRE ISR",
+        "isin": "990000118159",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SG ERS AMUNDI OBLIGATIONS ENTREPRISES EURO ISR",
+        "isin": "990000089999",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SG ERS CPR ACTIONS CLIMAT ISR",
+        "isin": "990000090069",
+        "terms": ["climat", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SG OBLIGATIONS ISR",
+        "isin": "990000009869",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SG AMUNDI EQUILIBRE CLIMAT",
+        "isin": "FR0011584416",
+        "terms": ["climat"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SG ERS AMUNDI ACTIONS EUROPE SOLIDAIRE",
+        "isin": "990000089949",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      }
+    ]
+  },
+  {
+    "sgpId": 765,
+    "name": "ARKEA ASSET MANAGEMENT",
+    "agreementNum": "GP01036",
+    "www": "www.arkea-am.com",
+    "address": "1, allée Louis Lichou, 29480, LE RELECQ-KERHUON",
+    "phone": "09.69.32.88.32",
+    "legalForm": "Société anonyme à Conseil d'Administration",
+    "lei": "969500OXP9XOC0TJFZ49",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 149,
+    "esgRetailFunds": 13,
+    "funds": [
+      {
+        "name": "AUTOFOCUS ESG JUIN 2022",
+        "isin": "FR0014009M80",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CHABRIERES RENDEMENT ESG",
+        "isin": "FR0014006AN4",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AUTOFOCUS TRANSITION CLIMAT AVRIL 2024",
+        "isin": "FR001400L9E3",
+        "terms": ["climat", "transition"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AUTOFOCUS TRANSITION CLIMAT FEVRIER 2023",
+        "isin": "FR001400C4N6",
+        "terms": ["climat", "transition"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AUTOFOCUS TRANSITION CLIMAT FEVRIER 2024",
+        "isin": "FR001400J0U2",
+        "terms": ["climat", "transition"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AUTOFOCUS TRANSITION CLIMAT FEVRIER 2025",
+        "isin": "FR001400T6M4",
+        "terms": ["climat", "transition"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AUTOFOCUS TRANSITION CLIMAT JUIN 2025",
+        "isin": "FR001400T3Z3",
+        "terms": ["climat", "transition"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AUTOFOCUS TRANSITION CLIMAT OCTOBRE 2024",
+        "isin": "FR001400N3W6",
+        "terms": ["climat", "transition"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "Arkéa Global Green Bonds",
+        "isin": "FR0007394846",
+        "terms": ["green"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ARKEA FOCUS - BIODIVERSITY",
+        "isin": "FR001400EPL6",
+        "terms": ["biodiversity"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "Autofocus Ambition Planète Juillet 2024",
+        "isin": "FR001400L9D5",
+        "terms": ["planete"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "Arkéa Focus - Water Security and Transparency",
+        "isin": "FR001400Z0F3",
+        "terms": ["water"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ARKEA SOLIDAIRE",
+        "isin": "FR0014009J10",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      }
+    ]
+  },
+  {
+    "sgpId": 1026,
+    "name": "FINANCIERE DE L'ECHIQUIER",
+    "agreementNum": "GP91004",
+    "www": "www.lfde.com",
+    "address": "53, avenue d'Iéna, 75116, PARIS",
+    "phone": "0147239090",
+    "legalForm": "Société anonyme",
+    "lei": "9695009FIABOZ346XE79",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 83,
+    "esgRetailFunds": 11,
+    "funds": [
+      {
+        "name": "TOCQUEVILLE SILVER AGE ISR",
+        "isin": "FR0000446304",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ECHIQUIER ALPHA MAJOR SRI",
+        "isin": "FR0013406691",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ECHIQUIER ARTY SRI",
+        "isin": "FR0010611293",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ECHIQUIER CREDIT SRI EUROPE",
+        "isin": "FR0010491803",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ECHIQUIER HIGH YIELD SRI EUROPE",
+        "isin": "FR0013193679",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ECHIQUIER MAJOR SRI GROWTH EUROPE",
+        "isin": "FR0010321828",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ECHIQUIER SHORT TERM CREDIT SRI",
+        "isin": "FR0010839282",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ECHIQUIER SMID BLEND EURO SRI",
+        "isin": "FR0010546903",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "TOCQUEVILLE EUROPE STRATEGIC TECH SRI",
+        "isin": "FR0000446296",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ECHIQUIER HEALTH IMPACT FOR ALL",
+        "isin": "FR0013441714",
+        "terms": ["impact"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ECHIQUIER POSITIVE IMPACT EUROPE",
+        "isin": "FR0010863688",
+        "terms": ["impact"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 13941,
+    "name": "SWISS LIFE ASSET MANAGERS FRANCE",
+    "agreementNum": "GP-07000055",
+    "www": "fr.swisslife-am.com",
+    "address": null,
+    "phone": null,
+    "legalForm": "Société Anonyme à Directoire",
+    "lei": "969500JP6ZUA1083OX58",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 109,
+    "esgRetailFunds": 11,
+    "funds": [
+      {
+        "name": "ESG IMMOBILIER INCLUSIF INVEST",
+        "isin": "FR0013356276",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ESG PIERRE CAPITALE",
+        "isin": "SCPI00004299",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ESG TENDANCES PIERRE",
+        "isin": "FR0014007X71",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SLF (FRANCE) EQUITY ESG USA LOW CARBON",
+        "isin": "FR001400AA44",
+        "terms": ["carbon", "low carbon", "esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SLF (FRANCE) EQUITY ESG WORLD LOW CARBON",
+        "isin": "FR001400A8Z3",
+        "terms": ["carbon", "low carbon", "esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SWISS LIFE FUNDS (F) BOND ESG 6M",
+        "isin": "FR0010899179",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SWISS LIFE FUNDS (F) EQUITY ESG EUROPE CONSERVATIVE",
+        "isin": "FR0010645515",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SWISS LIFE FUNDS (F) EQUITY ESG EUROPE MINIMUM VOLATILITY",
+        "isin": "FR0010074914",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SWISS LIFE FUNDS (F) ESG MONEY MARKET EURO",
+        "isin": "FR0010089649",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SWISS LIFE FUNDS (F) ESG SHORT TERM EURO",
+        "isin": "FR0011060870",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SWISS LIFE FUNDS (F) GREEN BONDS IMPACT",
+        "isin": "FR0013123999",
+        "terms": ["green", "impact"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 501,
+    "name": "LAZARD FRERES GESTION",
+    "agreementNum": "GP-04000068",
+    "www": null,
+    "address": "25, rue de Courcelles, 75008, PARIS",
+    "phone": "0144130111",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500X727PNIAL33P77",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 235,
+    "esgRetailFunds": 10,
+    "funds": [
+      {
+        "name": "LAZARD CAPITAL FI SRI",
+        "isin": "FR0010952788",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LAZARD CREDIT FI SRI",
+        "isin": "FR0010590950",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LAZARD EQUITY SRI",
+        "isin": "FR0000003998",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LAZARD EURO CREDIT SRI",
+        "isin": "FR0010751008",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LAZARD EURO SHORT DURATION INCOME OPPORTUNITIES SRI",
+        "isin": "FR0013506987",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LAZARD EURO SHORT DURATION SRI",
+        "isin": "FR0000027609",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LAZARD PATRIMOINE OPPORTUNITIES SRI",
+        "isin": "FR0007028543",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LAZARD PATRIMOINE SRI",
+        "isin": "FR0012355113",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LAZARD GLOBAL GREEN BOND OPPORTUNITIES",
+        "isin": "FR001400BVQ9",
+        "terms": ["green"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LAZARD GREEN CAPITAL",
+        "isin": "FR001400M857",
+        "terms": ["green"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 877,
+    "name": "AG2R LA MONDIALE GESTION D'ACTIFS",
+    "agreementNum": "GP03027",
+    "www": "www.ag2rlamondiale-ga.fr",
+    "address": "14-16 boulevard Malesherbes, 75008, PARIS",
+    "phone": "+33 (0) 1 87 27 20 49",
+    "legalForm": "Société Anonyme à Directoire",
+    "lei": "969500ZY4YHADNB5Z404",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 24,
+    "esgRetailFunds": 9,
+    "funds": [
+      {
+        "name": "ALM ACTIONS EUROPE ISR",
+        "isin": "FR0007494703",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ALM ACTIONS MONDE ISR",
+        "isin": "FR0007045554",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ALM ACTIONS ZONE EURO ISR",
+        "isin": "FR0000984346",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ALM CREDIT EURO ISR",
+        "isin": "FR0007071006",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ALM ES ACTIONS MONDE ISR",
+        "isin": "FR00140071U0",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ALM ES OBLIG EURO ISR",
+        "isin": "FR00140071X4",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ALM OBLIG EURO ISR",
+        "isin": "FR0007021324",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ALM SELECTION ISR",
+        "isin": "FR0010563734",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ALM SOLIDAIRE ISR",
+        "isin": "FR0013410271",
+        "terms": ["solidaire", "isr"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 14170,
+    "name": "MANDARINE GESTION",
+    "agreementNum": "GP-08000008",
+    "www": "http://www.mandarine-gestion.com",
+    "address": "30, Avenue Kléber, 75016, Paris",
+    "phone": "0153402020",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500EWBJ0A1W6UTO35",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 127,
+    "esgRetailFunds": 8,
+    "funds": [
+      {
+        "name": "MAM TRANSITION DURABLE ACTIONS",
+        "isin": "FR0000970949",
+        "terms": ["transition", "durable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MANDARINE PATRIMOINE DURABLE",
+        "isin": "FR0000971764",
+        "terms": ["durable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "PROXIMITE RENDEMENT DURABLE",
+        "isin": "FR0014007BD1",
+        "terms": ["durable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MANDARINE IMPACT GREEN BONDS",
+        "isin": "FR0000971822",
+        "terms": ["green", "impact"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AFER ACTIONS ENVIRONNEMENT",
+        "isin": "FR001400A0C9",
+        "terms": ["environnement"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "FCPR MANDARINE IMPACT SOLIDAIRE",
+        "isin": "FR0010869339",
+        "terms": ["impact", "solidaire"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ETHIQUE ET PARTAGE - CCFD",
+        "isin": "FR0000970899",
+        "terms": ["ethique"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BF EVOLUTION",
+        "isin": "FR0010305201",
+        "terms": ["evolution"],
+        "baseline": "CTB"
+      }
+    ]
+  },
+  {
+    "sgpId": 933,
+    "name": "MANSARTIS GESTION",
+    "agreementNum": "GP90045",
+    "www": "www.mansartis.com",
+    "address": "8, place Vendôme, 75001, PARIS",
+    "phone": "0142961070",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "96950021TL5W93GCMP38",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 21,
+    "esgRetailFunds": 7,
+    "funds": [
+      {
+        "name": "MANSARTIS AMERIQUE ISR",
+        "isin": "FR0010317487",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MANSARTIS ASIE ISR",
+        "isin": "FR0007481429",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MANSARTIS INVESTISSEMENTS ISR",
+        "isin": "FR0007385109",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MANSARTIS JAPON ISR",
+        "isin": "FR0010206144",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MANSARTIS TERNATIV ISR",
+        "isin": "FR0013250982",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MANSARTIS ZONE EURO ISR",
+        "isin": "FR0007385083",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MANSARTIS GREEN BONDS",
+        "isin": "FR0013425691",
+        "terms": ["green"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 21460,
+    "name": "MYRIA ASSET MANAGEMENT",
+    "agreementNum": "GP-14000039",
+    "www": "MYRIA-AM.COM",
+    "address": "70, Avenue de l'Europe, 92270, BOIS-COLOMBES",
+    "phone": null,
+    "legalForm": "A renseigner",
+    "lei": "969500CGJ8U85YXKYF85",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 61,
+    "esgRetailFunds": 7,
+    "funds": [
+      {
+        "name": "UFF EPARGNE MONETAIRE ISR CT",
+        "isin": "990000073719",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "UFF ACTIONS BIODIVERSITE",
+        "isin": "FR0013446838",
+        "terms": ["biodiversite"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ABEILLE CAPITAL PLANETE",
+        "isin": "FR0010921445",
+        "terms": ["planete"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "UFF CAPITAL PLANETE",
+        "isin": "FR0010921452",
+        "terms": ["planete"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "UFF EPARGNE CAPITAL PLANETE",
+        "isin": "990000105759",
+        "terms": ["planete"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "KALINA TRANSITION ECOLOGIQUE",
+        "isin": "FR001400KTL5",
+        "terms": ["ecologique", "transition"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "UFF EPARGNE SOLIDAIRE",
+        "isin": "990000083439",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      }
+    ]
+  },
+  {
+    "sgpId": 819,
+    "name": "MIROVA",
+    "agreementNum": "GP02014",
+    "www": "http://www.mirova.com/fr",
+    "address": "59 avenue Pierre Mendès-France, 75013, PARIS",
+    "phone": "0178408736",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500YW3F4AWI51IH84",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 42,
+    "esgRetailFunds": 6,
+    "funds": [
+      {
+        "name": "FONDS OBJECTIF BIODIVERSITE ACTIONS COTEES",
+        "isin": "FR001400WZF9",
+        "terms": ["biodiversite"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "IMPACT ES ACTIONS EUROPE",
+        "isin": "FR0011439082",
+        "terms": ["impact"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "IMPACT ES OBLIG EURO",
+        "isin": "FR0011439116",
+        "terms": ["impact"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MIROVA ENERGY TRANSITION 5",
+        "isin": "FR0014000PX4",
+        "terms": ["transition"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "MIROVA ENERGY TRANSITION 6 S.L.P.",
+        "isin": "FR001400M0Q5",
+        "terms": ["transition"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "TERRA RESPONSABLE",
+        "isin": "FR001400X0O7",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 749,
+    "name": "SYCOMORE ASSET MANAGEMENT",
+    "agreementNum": "GP01030",
+    "www": "www.sycomore-am.com",
+    "address": "14 avenue Hoche, 75008, PARIS",
+    "phone": "0144401612",
+    "legalForm": "Société anonyme à Conseil d'Administration",
+    "lei": "9695006BRVMTPTUB1R68",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 50,
+    "esgRetailFunds": 5,
+    "funds": [
+      {
+        "name": "EDF AMBITION PLANETE DURABLE",
+        "isin": "FR001400XMV2",
+        "terms": ["planete", "durable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "GOODVEST PLANET  AMBITION",
+        "isin": "FR001400M5U6",
+        "terms": ["planet"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SYCOMORE SOCIAL IMPACT",
+        "isin": "FR0007073119",
+        "terms": ["impact", "social"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ALPHA RESPONSABLE OPPORTUNITES",
+        "isin": "FR0013373859",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SYCOMORE SELECTION RESPONSABLE",
+        "isin": "FR0010971705",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 422,
+    "name": "APICIL ASSET MANAGEMENT",
+    "agreementNum": "GP98038",
+    "www": "www.apicil-asset-management.com",
+    "address": "20, rue de la Baume, 75383, PARIS CEDEX 08",
+    "phone": "0155312400",
+    "legalForm": "Société anonyme",
+    "lei": "969500OWM8Z5P4K0ZA42",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 35,
+    "esgRetailFunds": 5,
+    "funds": [
+      {
+        "name": "STRATEGIE ALIMENTATION DURABLE",
+        "isin": "FR0000973455",
+        "terms": ["durable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "STRATEGIE OBLIGATIONS DURABLES",
+        "isin": "FR0007438429",
+        "terms": ["durables"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "STRATEGIE PATRIMOINE SOLIDAIRE SICAV",
+        "isin": "FR0014004V76",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "STRATEGIE EURO DIVIDENDES RESPONSABLE",
+        "isin": "FR0010283838",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "STRATEGIE EURO PME RESPONSABLES",
+        "isin": "FR0011659937",
+        "terms": ["responsables"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 104,
+    "name": "MONTPENSIER ARBEVEL",
+    "agreementNum": "GP97125",
+    "www": "www.montpensier-arbevel.com/",
+    "address": "58, avenue Marceau, 75008, PARIS",
+    "phone": "0145055555",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500ZULWSYU0KNNI20",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 51,
+    "esgRetailFunds": 5,
+    "funds": [
+      {
+        "name": "AESCULAPE SRI",
+        "isin": "FR00140032U2",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BEST BUSINESS MODELS SRI",
+        "isin": "FR0013073731",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "M SPORT SOLUTIONS SRI",
+        "isin": "FR0013440062",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "TECH FUTURE SRI",
+        "isin": "FR001400A0A3",
+        "terms": ["sri"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MA CLIMATE CLEAN ENERGY",
+        "isin": "FR0013446812",
+        "terms": ["climate", "clean energy"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 24835,
+    "name": "ROTHSCHILD & CO ASSET MANAGEMENT",
+    "agreementNum": "GP-17000014",
+    "www": "am.eu.rothschildandco.com",
+    "address": "29, avenue de Messine, 75008, Paris",
+    "phone": "01 40 74 40 74",
+    "legalForm": "Société en commandite simple",
+    "lei": "969500KLODYGIWUZ9F42",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 249,
+    "esgRetailFunds": 5,
+    "funds": [
+      {
+        "name": "R-CO 4CHANGE GREEN BONDS",
+        "isin": "FR0013513124",
+        "terms": ["green"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "R-CO 4CHANGE NET ZERO CREDIT EURO",
+        "isin": "FR0007393285",
+        "terms": ["net zero"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "R-CO 4CHANGE NET ZERO EQUITY EURO",
+        "isin": "FR0010784835",
+        "terms": ["net zero"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "R-CO 4CHANGE INCLUSION & HANDICAP EQUITY",
+        "isin": "FR0012383743",
+        "terms": ["inclusion"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "FAIRWIN EVOLUTION STRATEGY",
+        "isin": "FR0014019TC0",
+        "terms": ["evolution"],
+        "baseline": "CTB"
+      }
+    ]
+  },
+  {
+    "sgpId": 54,
+    "name": "PRO BTP FINANCE",
+    "agreementNum": "GP97083",
+    "www": "www.probtpfinance.com",
+    "address": "7, rue du Regard, 75006, PARIS",
+    "phone": "0149544000",
+    "legalForm": "Société anonyme",
+    "lei": "969500NV1KESDG5G9V85",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 60,
+    "esgRetailFunds": 5,
+    "funds": [
+      {
+        "name": "REGARD GREEN BONDS",
+        "isin": "FR0013511532",
+        "terms": ["green"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ImpulsES FLEXIBLE ET SOLIDAIRE",
+        "isin": "990000205749",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "REGARD EPARGNE FLEXIBLE ET SOLIDAIRE",
+        "isin": "990000084579",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "REGARD FLEXIBLE ET SOLIDAIRE",
+        "isin": "FR00140044H4",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "REGARD RESPONSABLE FLEXIBLE",
+        "isin": "FR0013420197",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 747,
+    "name": "1 2 3 INVESTMENT MANAGERS",
+    "agreementNum": "GP01021",
+    "www": "http://www.123-im.com",
+    "address": "94 rue de la Victoire, 75009, PARIS",
+    "phone": "0149269800",
+    "legalForm": "Société anonyme",
+    "lei": "969500FCL62N0Y9Z0Y08",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 99,
+    "esgRetailFunds": 5,
+    "funds": [
+      {
+        "name": "IMPACT SENIOR",
+        "isin": "FR0013412426",
+        "terms": ["impact"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "123 TRANSITION ENERGETIQUE",
+        "isin": "FR0014009NE0",
+        "terms": ["transition"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "SOLIDAIRE MAIF 2014",
+        "isin": "FR0012082691",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "SOLIDAIRE MAIF 2015",
+        "isin": "FR0012830891",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "SOLIDAIRE MAIF 2016",
+        "isin": "FR0013045804",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      }
+    ]
+  },
+  {
+    "sgpId": 256,
+    "name": "PALATINE ASSET MANAGEMENT",
+    "agreementNum": "GP-05000014",
+    "www": "www.palatine-am.com",
+    "address": "86 rue de Courcelles, 75008, PARIS",
+    "phone": "0155279606",
+    "legalForm": "Société anonyme à Conseil d'Administration",
+    "lei": "9695000QMU1H848E3Q66",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 36,
+    "esgRetailFunds": 4,
+    "funds": [
+      {
+        "name": "CONSERVATEUR EMPLOI DURABLE",
+        "isin": "FR0000930471",
+        "terms": ["durable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "Palatine Europe Emploi Durable",
+        "isin": "990000211369",
+        "terms": ["durable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "PALATINE EUROPE SUSTAINABLE EMPLOYMENT",
+        "isin": "FR0010915181",
+        "terms": ["sustainable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "PALATINE PLANETE",
+        "isin": "FR0010341800",
+        "terms": ["planete"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 20741,
+    "name": "MERIDIAM",
+    "agreementNum": "GP-14000003",
+    "www": null,
+    "address": "4 Place de l Opéra, 75002, Paris",
+    "phone": "01 53 34 96 96",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500XDNEIYIX371907",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 31,
+    "esgRetailFunds": 4,
+    "funds": [
+      {
+        "name": "MERIDIAM SUSTAINABLE INFRASTRUCTURE EASTERN EUROPE IV",
+        "isin": "FR0014001XN7",
+        "terms": ["sustainable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MERIDIAM SUSTAINABLE INFRASTRUCTURE EUROPE IV",
+        "isin": "FR0014000X86",
+        "terms": ["sustainable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MERIDIAM SUSTAINABLE INFRASTRUCTURE EUROPE IV PARALLEL SLP",
+        "isin": "FR0014002O85",
+        "terms": ["sustainable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "MERIDIAM SUSTAINABLE WATER AND WASTE FUND",
+        "isin": "FR0014003Q33",
+        "terms": ["water", "sustainable"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 1071,
+    "name": "GROUPAMA ASSET MANAGEMENT",
+    "agreementNum": "GP93002",
+    "www": null,
+    "address": "25, rue de la Ville l'Evêque, 75008, PARIS",
+    "phone": "0144567676",
+    "legalForm": "Société anonyme à Conseil d'Administration",
+    "lei": "96950003NUWIFWUNHV80",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 216,
+    "esgRetailFunds": 4,
+    "funds": [
+      {
+        "name": "GROUPAMA SOCIAL IMPACT",
+        "isin": "FR001400APS9",
+        "terms": ["impact", "social"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "GROUPAMA EPARGNE & RETRAITE PERSPECTIVE SOLIDAIRE",
+        "isin": "990000102349",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "GROUPAMA EPARGNE & RETRAITE SOLIDAIRE",
+        "isin": "990000084369",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "TESORUS SOLIDAIRE",
+        "isin": "990000087649",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      }
+    ]
+  },
+  {
+    "sgpId": 1100,
+    "name": "GAY-LUSSAC GESTION",
+    "agreementNum": "GP95001",
+    "www": "www.gaylussacgestion.com",
+    "address": "45,avenue George V, 75008, PARIS",
+    "phone": "0145616490",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500XIVRY4NB88V418",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 27,
+    "esgRetailFunds": 3,
+    "funds": [
+      {
+        "name": "COLGATE PALMOLIVE ACTIONS DURABLES",
+        "isin": "990000040179",
+        "terms": ["durables"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "GAY-LUSSAC GREEN IMPACT",
+        "isin": "FR0010178665",
+        "terms": ["green", "impact"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "GAY-LUSSAC IMPACT SOCIAL",
+        "isin": "990000121319",
+        "terms": ["impact", "social"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 14071,
+    "name": "LA FINANCIERE RESPONSABLE",
+    "agreementNum": "GP-08000001",
+    "www": "www.la-financiere-responsable.fr",
+    "address": "116 rue La Boétie, 75008, PARIS",
+    "phone": "0175777500",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "9695002LS2XZA1T4CW47",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 4,
+    "esgRetailFunds": 3,
+    "funds": [
+      {
+        "name": "LFR EURO DEVELOPPEMENT DURABLE ISR",
+        "isin": "FR0010526079",
+        "terms": ["isr", "durable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LFR ACTIONS SOLIDAIRES ISR",
+        "isin": "FR0010610386",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LFR INCLUSION RESPONSABLE ISR",
+        "isin": "FR0013418647",
+        "terms": ["inclusion", "isr", "responsable"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 9744,
+    "name": "Société Générale Investment Solutions (France)",
+    "agreementNum": "GP-06000029",
+    "www": "https://investmentsolutions.societegenerale.fr",
+    "address": "29 boulevard Haussmann, 75421, PARIS CEDEX 09",
+    "phone": "01 53 43 99.87",
+    "legalForm": "Société par actions simplifiée",
+    "lei": null,
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 329,
+    "esgRetailFunds": 3,
+    "funds": [
+      {
+        "name": "SG MIROVA ACTIONS MONDE DURABLE ISR",
+        "isin": "FR0050000431",
+        "terms": ["isr", "durable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CAPELAN SUSTAINABLE FUND",
+        "isin": "FR0013400231",
+        "terms": ["sustainable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SG DNCA  ACTIONS EURO CLIMAT ISR",
+        "isin": "FR0013535390",
+        "terms": ["climat", "isr"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 507,
+    "name": "WORMSER FRERES GESTION",
+    "agreementNum": "GP97088",
+    "www": null,
+    "address": "7-11 Boulevard Haussmann, 75009, PARIS",
+    "phone": "0147709080",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "9695000UDD7BUSC36639",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de FIA - en-dessous des seuils et ne souhaitant pas opter pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 39,
+    "esgRetailFunds": 3,
+    "funds": [
+      {
+        "name": "WF Continuation Durable",
+        "isin": "FR001400UZU2",
+        "terms": ["durable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "WF FCPE VALEURS INTERNATIONALES DURABLES",
+        "isin": "990000114939",
+        "terms": ["durables"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "WF VALEURS INTERNATIONALES DURABLES",
+        "isin": "FR001400L7U3",
+        "terms": ["durables"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 16743,
+    "name": "EIFFEL INVESTMENT GROUP",
+    "agreementNum": "GP-10000035",
+    "www": null,
+    "address": "22 rue de Marignan, 75008, PARIS",
+    "phone": "0139543567",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "549300PBLPGO5HHRXL63",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de FIA - en-dessous des seuils et ne souhaitant pas opter pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 68,
+    "esgRetailFunds": 3,
+    "funds": [
+      {
+        "name": "EIFFEL NOVA EUROPE ISR",
+        "isin": "FR0011585520",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "EIFFEL HIGH YIELD LOW CARBON",
+        "isin": "FR001400MZD5",
+        "terms": ["carbon", "low carbon"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "FONDS EIFFEL GAZ VERT S.L.P.",
+        "isin": "FR0013462066",
+        "terms": ["vert"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 9652,
+    "name": "INDEP'AM",
+    "agreementNum": "GP-06000016",
+    "www": null,
+    "address": "56 RUE SAINT LAZARE, 75009, PARIS",
+    "phone": "0153252200",
+    "legalForm": "Société anonyme à Conseil d'Administration",
+    "lei": "969500EX3MK1RWJXGH05",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 16,
+    "esgRetailFunds": 3,
+    "funds": [
+      {
+        "name": "INDEP ACTIONS ISR BAS CARBONE",
+        "isin": "FR0013382223",
+        "terms": ["carbone", "bas carbone", "isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "INDEP INDEXACTIONS EURO ESG",
+        "isin": "FR0010165050",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "GARANCE ÉQUILIBRE ET SOLIDAIRE",
+        "isin": "FR0013202306",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      }
+    ]
+  },
+  {
+    "sgpId": 366,
+    "name": "PORTZAMPARC GESTION",
+    "agreementNum": "GP97077",
+    "www": "http://www.portzamparcgestion.fr/",
+    "address": "10, rue Meuris, 44186, NANTES",
+    "phone": "0240449400",
+    "legalForm": "Société anonyme",
+    "lei": "969500T74BGTAKN9AL59",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 8,
+    "esgRetailFunds": 3,
+    "funds": [
+      {
+        "name": "PORTZAMPARC MOMENTUM ISR",
+        "isin": "FR0007394762",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "PORTZAMPARC NEXT LEADERS ISR",
+        "isin": "FR0010426072",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "PORTZAMPARC PME ISR",
+        "isin": "FR0000989543",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 616,
+    "name": "ABN AMRO INVESTMENT SOLUTIONS",
+    "agreementNum": "GP99027",
+    "www": null,
+    "address": "119-121 boulevard Haussmann, 75008, PARIS",
+    "phone": "0156217250",
+    "legalForm": "Société Anonyme à Directoire",
+    "lei": "969500O7C77E2WVAXK44",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 86,
+    "esgRetailFunds": 3,
+    "funds": [
+      {
+        "name": "ABN AMRO CANDRIAM ESG TREASURY",
+        "isin": "FR0000993610",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "NEUFLIZE EURO ACTIONS ESG",
+        "isin": "FR0014002YL7",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "Neuflize Euro Obligations ESG",
+        "isin": "FR0012399707",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 14653,
+    "name": "IMPACT PARTNERS",
+    "agreementNum": "GP-08000053",
+    "www": null,
+    "address": "22 rue de la pépinière, 75008, PARIS",
+    "phone": "01 42 27 47 70",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500ITH4YP1PZ0NI50",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 13,
+    "esgRetailFunds": 3,
+    "funds": [
+      {
+        "name": "IMPACT CREATION ILE-DE-FRANCE",
+        "isin": "FR0013231958",
+        "terms": ["impact"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "IMPACT CREATION I",
+        "isin": "FR0013229986",
+        "terms": ["impact"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "IMPACT PARTENAIRES III",
+        "isin": "FR0012353522",
+        "terms": ["impact"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 18596,
+    "name": "SANSO LONGCHAMP ASSET MANAGEMENT",
+    "agreementNum": "GP-11000033",
+    "www": "https://sanso-longchamp.com/",
+    "address": "17 rue de Chaillot, 75116, PARIS",
+    "phone": "01.84.16.64.36",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500YG058LY4Z60081",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 53,
+    "esgRetailFunds": 3,
+    "funds": [
+      {
+        "name": "SANSO SMART CLIMATE",
+        "isin": "FR0014003NV7",
+        "terms": ["climate"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SANSO CARBON INITIATIVE TRENDS",
+        "isin": "FR0013251840",
+        "terms": ["carbon"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "APICIL MONDE ACTIONS RESPONSABLES",
+        "isin": "FR0011623933",
+        "terms": ["responsables"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 12717,
+    "name": "TIKEHAU INVESTMENT MANAGEMENT",
+    "agreementNum": "GP-07000006",
+    "www": "www.tikehauim.com",
+    "address": "32 rue de Monceau, 75008, Paris",
+    "phone": "0153590500",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "9695008ZSNJ7URJK4A27",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 156,
+    "esgRetailFunds": 3,
+    "funds": [
+      {
+        "name": "TIKEHAU GREEN 1",
+        "isin": "FR0013382777",
+        "terms": ["green"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "T2 ELTIF ENERGY TRANSITION FUND",
+        "isin": "FR0013479409",
+        "terms": ["transition"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "T2 ENERGY TRANSITION FUND",
+        "isin": "FR0013343233",
+        "terms": ["transition"],
+        "baseline": "CTB"
+      }
+    ]
+  },
+  {
+    "sgpId": 21798,
+    "name": "SWEN CAPITAL PARTNERS",
+    "agreementNum": "GP-14000047",
+    "www": "www.swen-cp.fr",
+    "address": "127-129 quai du Président Roosevelt, 92130, ISSY-LES-MOULINEAUX",
+    "phone": null,
+    "legalForm": "Société anonyme",
+    "lei": "969500T4R5D8N0OQM202",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 62,
+    "esgRetailFunds": 3,
+    "funds": [
+      {
+        "name": "BLUE OCEAN",
+        "isin": "FR0014004F68",
+        "terms": ["ocean"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SWEN IMPACT FUND FOR TRANSITION",
+        "isin": "FR0013425485",
+        "terms": ["impact", "transition"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SWEN IMPACT FUND FOR TRANSITION 2",
+        "isin": "FR0014005ZW4",
+        "terms": ["impact", "transition"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 26372,
+    "name": "OSTRUM ASSET MANAGEMENT",
+    "agreementNum": "GP-18000014",
+    "www": null,
+    "address": "43 avenue Pierre Mendès France, 75013, PARIS",
+    "phone": null,
+    "legalForm": "Société anonyme",
+    "lei": "969500YVSB0RNS7OCS11",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 76,
+    "esgRetailFunds": 2,
+    "funds": [
+      {
+        "name": "CNP OSTRUM CREDIT DURABLE",
+        "isin": "FR0000296386",
+        "terms": ["durable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CNP OSTRUM SOUVERAIN DURABLE",
+        "isin": "FR0007468285",
+        "terms": ["durable"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 287,
+    "name": "EDMOND DE ROTHSCHILD ASSET MANAGEMENT (FRANCE)",
+    "agreementNum": "GP-04000015",
+    "www": "www.edmond-de-rothschild.com",
+    "address": "47, rue du faubourg Saint Honoré, 75401, PARIS CEDEX 08",
+    "phone": "0140172525",
+    "legalForm": "Société anonyme",
+    "lei": "969500TIKC7USR8ZJZ49",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 198,
+    "esgRetailFunds": 2,
+    "funds": [
+      {
+        "name": "EDR SICAV - EURO SUSTAINABLE CREDIT",
+        "isin": "FR0010172767",
+        "terms": ["sustainable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "EDR SICAV - EURO SUSTAINABLE EQUITY",
+        "isin": "FR0010505578",
+        "terms": ["sustainable"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 8762,
+    "name": "DEMEA SUSTAINABLE INVESTMENT",
+    "agreementNum": "GP-05000027",
+    "www": "https://demeter-im.com",
+    "address": "81 avenue de la Grande armée, 75116, PARIS",
+    "phone": null,
+    "legalForm": "Société Anonyme à Directoire",
+    "lei": "969500YL5YFZBH0QGV26",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de FIA - en-dessous des seuils et ne souhaitant pas opter pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 17,
+    "esgRetailFunds": 2,
+    "funds": [
+      {
+        "name": "FMET-FONDS DE MODERNISATION ECOLOGIQUE DES TRANSPORTS",
+        "isin": "FR0013144045",
+        "terms": ["ecologique"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "PARIS FONDS VERT",
+        "isin": "FR0013317484",
+        "terms": ["vert"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 18003,
+    "name": "ZENCAP ASSET MANAGEMENT",
+    "agreementNum": "GP-11000024",
+    "www": "http://www.zencap-am.fr/",
+    "address": "127-129 quai du Président Roosevelt, 92130, ISSY LES MOULINEAUX",
+    "phone": "01 56 68 54 24",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500L5IH63MC8W3V03",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 27,
+    "esgRetailFunds": 2,
+    "funds": [
+      {
+        "name": "ZENCAP EUROPEAN SUSTAINABLE TRANSITION II FPS -  ZEST II SUB FUND",
+        "isin": "FR0014008N15",
+        "terms": ["transition", "sustainable"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "Zencap European Sustainable Transition III FPS - Zest III Sub-Fund",
+        "isin": "FR0014019V38",
+        "terms": ["transition", "sustainable"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 1067,
+    "name": "PROMEPAR ASSET MANAGEMENT",
+    "agreementNum": "GP92017",
+    "www": "http://www.promepar.fr/",
+    "address": "18, Quai de la Rapée, 75012, PARIS",
+    "phone": null,
+    "legalForm": "Société anonyme à Conseil d'Administration",
+    "lei": "969500LW8TECNTP84D31",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 43,
+    "esgRetailFunds": 2,
+    "funds": [
+      {
+        "name": "BRED SELECTION ISR",
+        "isin": "FR0013433703",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "BRED GREEN BONDS",
+        "isin": "FR0010897199",
+        "terms": ["green"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 7149,
+    "name": "AEW",
+    "agreementNum": "GP-07000043",
+    "www": "https://www.aewciloger.com/",
+    "address": "22 Rue du Docteur Lancereaux, 75008, PARIS",
+    "phone": "01 78 40 53 00",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500YGVB0OJSOAM964",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 60,
+    "esgRetailFunds": 2,
+    "funds": [
+      {
+        "name": "IMMO DIVERSIFICATION ISR",
+        "isin": "FR0011427699",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "OPCI FRANCEUROPE IMMO ISR",
+        "isin": "FR0010665661",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 920,
+    "name": "TAILOR AM",
+    "agreementNum": "GP90031",
+    "www": null,
+    "address": "23 rue Royale, 75008, PARIS",
+    "phone": "0158183810",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "549300INVP71EOYOVV10",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - en-dessous des seuils et ne souhaitant pas opter pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 23,
+    "esgRetailFunds": 2,
+    "funds": [
+      {
+        "name": "TAILOR ACTIONS AVENIR ISR",
+        "isin": "FR0007472501",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "LYSIS ESG THEMATICS",
+        "isin": "FR0013531357",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 70,
+    "name": "C-QUADRAT ASSET MANAGEMENT FRANCE",
+    "agreementNum": "GP97124",
+    "www": null,
+    "address": "14 rue de Bassano, 75016, PARIS",
+    "phone": "+33 1 70 08 08 15",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500IX5SLMIX4H5O35",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 9,
+    "esgRetailFunds": 2,
+    "funds": [
+      {
+        "name": "C-QUADRAT GLOBAL EQUITY ESG",
+        "isin": "FR0000994667",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "C-QUADRAT GREENSTARS ESG FLEXIBLE",
+        "isin": "FR0011374073",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 22920,
+    "name": "Althéis",
+    "agreementNum": "GP-15000014",
+    "www": "https://www.althe.is",
+    "address": "231 rue Saint-Honoré, 75001, Paris",
+    "phone": "01 75 85 97 47",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500I145NF5Z0BM914",
+    "status": "NSGP:VIV",
+    "acts": ["Gestion de portefeuille (au sens gestion collective)"],
+    "totalCompartments": 3,
+    "esgRetailFunds": 2,
+    "funds": [
+      {
+        "name": "YOMONI ALLOCATION ESG",
+        "isin": "FR0013329786",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "YOMONI MONDE ESG",
+        "isin": "FR0013329778",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 833,
+    "name": "AMIRAL GESTION",
+    "agreementNum": "GP-04000038",
+    "www": "www.amiralgestion.fr",
+    "address": "103. rue de Grenelle, 75007, PARIS",
+    "phone": "0147207818",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500797CYN8EAVWA69",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 48,
+    "esgRetailFunds": 2,
+    "funds": [
+      {
+        "name": "AMIRAL CLIMATE SOLUTIONS – DEBT FUND 1",
+        "isin": "FR001400IRP4",
+        "terms": ["climate"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "SEXTANT CLIMATE TRANSITION EUROPE",
+        "isin": "FR001400A5A2",
+        "terms": ["climate", "transition"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 1077,
+    "name": "DORVAL ASSET MANAGEMENT",
+    "agreementNum": "GP93008",
+    "www": "www.dorval-am.com",
+    "address": "111, boulevard Pereire, 75017, PARIS",
+    "phone": null,
+    "legalForm": "Société anonyme",
+    "lei": "969500M1SCHXU8UOXD03",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - en-dessous des seuils et ne souhaitant pas opter pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 14,
+    "esgRetailFunds": 2,
+    "funds": [
+      {
+        "name": "DORVAL EUROPEAN CLIMATE INITIATIVE",
+        "isin": "FR0013334372",
+        "terms": ["climate"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "DORVAL GLOBAL TRANSITION",
+        "isin": "FR001400E9H5",
+        "terms": ["transition"],
+        "baseline": "CTB"
+      }
+    ]
+  },
+  {
+    "sgpId": 17865,
+    "name": "PHILIPPE HOTTINGUER GESTION - Groupe Philippe HOTTINGUER",
+    "agreementNum": "GP-11000021",
+    "www": "www.phhgestion.com",
+    "address": "9 rue Vézelay, 75008, PARIS",
+    "phone": "01 78 91 79 00",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "96950051KWVIVKC9VY20",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - en-dessous des seuils et ne souhaitant pas opter pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 6,
+    "esgRetailFunds": 2,
+    "funds": [
+      {
+        "name": "ABACUS GREEN DEAL",
+        "isin": "FR0014008KI9",
+        "terms": ["green"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "ABACUS CREDIT IMPACT",
+        "isin": "FR001400FT48",
+        "terms": ["impact"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 14593,
+    "name": "SUNNY ASSET MANAGEMENT",
+    "agreementNum": "GP-08000045",
+    "www": "www.sunny-am.com",
+    "address": "85 rue Jouffroy d'Abbans, 75017, PARIS",
+    "phone": "0180271857",
+    "legalForm": "Société anonyme à Conseil d'Administration",
+    "lei": "969500W75ZTO1IAZE717",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 59,
+    "esgRetailFunds": 2,
+    "funds": [
+      {
+        "name": "SUNNY GREEN BONDS 2028",
+        "isin": "FR001400KTM3",
+        "terms": ["green"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "CP INVEST EVOLUTION",
+        "isin": "FR0014009IK7",
+        "terms": ["evolution"],
+        "baseline": "CTB"
+      }
+    ]
+  },
+  {
+    "sgpId": 401,
+    "name": "ODDO BHF ASSET MANAGEMENT SAS",
+    "agreementNum": "GP99011",
+    "www": "http://am.oddo-bhf.com",
+    "address": "12, boulevard de la Madeleine, 75440, PARIS CEDEX 09",
+    "phone": "0144518500",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500PM0E65UZXZGK64",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 134,
+    "esgRetailFunds": 2,
+    "funds": [
+      {
+        "name": "MONCEAU ETHIQUE",
+        "isin": "FR0007056098",
+        "terms": ["ethique"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "PILOTAGE SELECTION RESPONSABLE",
+        "isin": "FR0011250307",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 20866,
+    "name": "QUAERO CAPITAL (FRANCE) SAS",
+    "agreementNum": "GP-14000016",
+    "www": "www.quaerocapital.com",
+    "address": "6 RUE DARU, 75008, PARIS",
+    "phone": "01 87 39 11 33",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500SLDR1DSNU3O436",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 14,
+    "esgRetailFunds": 2,
+    "funds": [
+      {
+        "name": "Quaero Water Infra Fund S.L.P.",
+        "isin": "AMF100032339",
+        "terms": ["water"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "QUAERO BONDS IMPACT OPPORTUNITIES",
+        "isin": "FR0014007811",
+        "terms": ["impact"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 305638,
+    "name": "EURAZEO INFRASTRUCTURE PARTNERS",
+    "agreementNum": "GP-202173",
+    "www": "https://www.eurazeo.com/fr/metiers/real-assets/infrastructure",
+    "address": "2 rue de Thann, 75017, PARIS",
+    "phone": null,
+    "legalForm": "Société en nom collectif",
+    "lei": "969500Z2HNHZ7VKC9828",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 4,
+    "esgRetailFunds": 2,
+    "funds": [
+      {
+        "name": "EURAZEO TRANSITION INFRASTRUCTURE FUND",
+        "isin": "FR0014007TZ6",
+        "terms": ["transition"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "EZ TRANSITION INFRASTRUCTURE CO-INVESTMENT FUND - ELECTRA COMPARTIMENT I",
+        "isin": "FR001400DTZ0",
+        "terms": ["transition"],
+        "baseline": "CTB"
+      }
+    ]
+  },
+  {
+    "sgpId": 864,
+    "name": "AGRICA Gestion d'actifs",
+    "agreementNum": "GP-04000005",
+    "www": "www.agrica-ga.fr",
+    "address": "21, rue de la Bienfaisance, 75008, PARIS",
+    "phone": "0171215325",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500XHR56HFFD7OE32",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de FIA - en-dessous des seuils et ne souhaitant pas opter pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 16,
+    "esgRetailFunds": 2,
+    "funds": [
+      {
+        "name": "AGRICA ACTIONS RESPONSABLES",
+        "isin": "990000129949",
+        "terms": ["responsables"],
+        "baseline": "PAB"
+      },
+      {
+        "name": "AGRICA EURO RESPONSABLE",
+        "isin": "FR0013529856",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 8559,
+    "name": "TRAIL SOLUTIONS PATRIMOINE",
+    "agreementNum": "GP-04000041",
+    "www": "www.trailsolutionspatrimoine.com",
+    "address": "12, Avenue Matignon, 75008, PARIS",
+    "phone": "0147039842",
+    "legalForm": "Société Anonyme à Directoire",
+    "lei": "8945002XRUP7PALXFZ73",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de FIA - en-dessous des seuils et ne souhaitant pas opter pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 22,
+    "esgRetailFunds": 2,
+    "funds": [
+      {
+        "name": "AGRO RENDEMENT EVOLUTION",
+        "isin": "FR0013346640",
+        "terms": ["evolution"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "RENDEMENT BIEN ETRE EVOLUTION",
+        "isin": "FR0013348513",
+        "terms": ["evolution"],
+        "baseline": "CTB"
+      }
+    ]
+  },
+  {
+    "sgpId": 20885,
+    "name": "NOVAXIA INVESTISSEMENT",
+    "agreementNum": "GP-14000022",
+    "www": "www.novaxia-invest.fr",
+    "address": "45 rue Saint-Charles, 75015, Paris",
+    "phone": "0142290713",
+    "legalForm": "A renseigner",
+    "lei": "969500KOGKNNDBM8J517",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 46,
+    "esgRetailFunds": 2,
+    "funds": [
+      {
+        "name": "NOVAXIA IMMO EVOLUTION",
+        "isin": "FR0012646206",
+        "terms": ["evolution"],
+        "baseline": "CTB"
+      },
+      {
+        "name": "NOVAXIA IMMO EVOLUTION II",
+        "isin": "FR0013252731",
+        "terms": ["evolution"],
+        "baseline": "CTB"
+      }
+    ]
+  },
+  {
+    "sgpId": 615,
+    "name": "EQUIGEST",
+    "agreementNum": "GP99020",
+    "www": "www.equigest.fr",
+    "address": "153, rue du Faubourg Saint Honoré, 75008, PARIS",
+    "phone": "0143126100",
+    "legalForm": "Société anonyme",
+    "lei": "969500DJGG2I7E58AR31",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 13,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "EQUI-DEVELOPPEMENT DURABLE",
+        "isin": "FR0014006Q63",
+        "terms": ["durable"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 24291,
+    "name": "OCTOBER FACTORY",
+    "agreementNum": "GP-16000030",
+    "www": null,
+    "address": "40 Rue de Monceau, 75008, PARIS",
+    "phone": "0630069889",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500CUHYQ0L5MGXQ10",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 7,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "FONDS ASSUREURS - CDC RELANCE DURABLE TOURISME",
+        "isin": "FR0013532959",
+        "terms": ["durable"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 15710,
+    "name": "MONTAIGNE CAPITAL",
+    "agreementNum": "GP-09000024",
+    "www": "www.montaigne-capital.com",
+    "address": "33 avenue de l'Opéra, 75002, Paris",
+    "phone": "0140155550",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500AISJ9PCQJEPS70",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de FIA - en-dessous des seuils et ne souhaitant pas opter pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 10,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "MC LEADERS DURABLES",
+        "isin": "FR0013449360",
+        "terms": ["durables"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 20278,
+    "name": "SAGIS ASSET MANAGEMENT",
+    "agreementNum": "GP-13000024",
+    "www": null,
+    "address": "72 avenue Victor Hugo, 75116, Paris",
+    "phone": "01 76 62 26 22",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500LBVFT5C6WQP916",
+    "status": "NSGP:VIV",
+    "acts": ["Gestion de portefeuille (au sens gestion collective)"],
+    "totalCompartments": 12,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "S ACTIONS DURABLES MIROVA",
+        "isin": "FR001400UW28",
+        "terms": ["durables"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 29646,
+    "name": "CONQUEST ADVISORS FRANCE",
+    "agreementNum": "GP-21000022",
+    "www": "www.conquest.group",
+    "address": "54 rue de Bitche, 92400, COURBEVOIE",
+    "phone": null,
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500F9V6N9LVIUYI05",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 1,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "SUSTAINABLE 2",
+        "isin": "FR00140051V0",
+        "terms": ["sustainable"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 26514,
+    "name": "YOTTA CAPITAL PARTNERS",
+    "agreementNum": "GP-19000035",
+    "www": "www.yottacapital.fr",
+    "address": "18-20 Place de la Madeleine, 75008, Paris",
+    "phone": "0181708852",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500ODUG70E99LKN71",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 3,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "YOTTA SUSTAINABLE INDUSTRIES 2",
+        "isin": "FR001400Y5D8",
+        "terms": ["sustainable"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 470,
+    "name": "CARMIGNAC GESTION",
+    "agreementNum": "GP97008",
+    "www": "www.carmignac.com",
+    "address": "24, place Vendôme, 75001, PARIS",
+    "phone": "0142865335",
+    "legalForm": "Société anonyme",
+    "lei": "X0V79C0OOSCP8T3CJZ56",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 18,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "CARMIGNAC EPARGNE ACTIONS MONDE ISR",
+        "isin": "FR001400XC60",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 1122,
+    "name": "COVEA FINANCE",
+    "agreementNum": "GP97007",
+    "www": "www.covea-finance.fr",
+    "address": "8-12, rue Boissy d'Anglas, 75008, PARIS",
+    "phone": "0140065150",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500T2ER13UUWFNJ46",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 52,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "COVÉA FLEXIBLE ISR",
+        "isin": "FR0000002164",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 931,
+    "name": "GEFIP - GESTION FINANCIERE PRIVEE",
+    "agreementNum": "GP90043",
+    "www": "https://www.gefip.fr/",
+    "address": "223, rue Saint Honoré, 75001, PARIS",
+    "phone": "0142965737",
+    "legalForm": "Société anonyme",
+    "lei": "969500463RNL8V0VB646",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - en-dessous des seuils et ne souhaitant pas opter pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 8,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "GEFIP EUROLAND ISR",
+        "isin": "FR0014006Z05",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 720,
+    "name": "KEREN FINANCE",
+    "agreementNum": "GP01001",
+    "www": "www.kerenfinance.com",
+    "address": "12 bis, place Henri Bergson, 75008, PARIS",
+    "phone": null,
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500O4VW7J9NW29U37",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de FIA - en-dessous des seuils et ne souhaitant pas opter pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 16,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "KEREN CREDIT ISR",
+        "isin": "FR0014000W38",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 8602,
+    "name": "AURIS GESTION",
+    "agreementNum": "GP-04000069",
+    "www": null,
+    "address": "157 Boulevard Haussmann, 75008, PARIS",
+    "phone": "0142258340",
+    "legalForm": "Société Anonyme à Directoire",
+    "lei": "969500ZO1N6L8K3WIE40",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 145,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "LC EURO TUTELLE ISR",
+        "isin": "FR001400BP38",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 24378,
+    "name": "OFI INVEST REAL ESTATE",
+    "agreementNum": "GP-17000003",
+    "www": "https://www.ofi-invest-re.com/sgp/",
+    "address": "127-129, quai du Président Rooevelt, 75008, PARIS",
+    "phone": "0649486757",
+    "legalForm": "Société anonyme",
+    "lei": "96950034E1K0KW2NC888",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 14,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "OFI INVEST ISR EXPERIMMO",
+        "isin": "FR0013418761",
+        "terms": ["isr"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 15097,
+    "name": "SCOR INVESTMENT PARTNERS SE",
+    "agreementNum": "GP-09000006",
+    "www": null,
+    "address": "5, avenue Kléber, 75016, PARIS",
+    "phone": "01 58 44 71 17",
+    "legalForm": "Société Européene",
+    "lei": "969500BJLZOGFUSE3D73",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 42,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "SCOR ESG EURO HIGH YIELD",
+        "isin": "FR0010853556",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 707,
+    "name": "DNCA FINANCE",
+    "agreementNum": "GP00030",
+    "www": "www.dnca-investments.com",
+    "address": "19, place Vendôme, 75001, PARIS",
+    "phone": "0158625500",
+    "legalForm": "Société en commandite simple",
+    "lei": "9695000CUPKHA77F4266",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 95,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "TALOU ESG+",
+        "isin": "FR001400WP17",
+        "terms": ["esg"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 8777,
+    "name": "ARGOS FRANCE S.A.S",
+    "agreementNum": "GP-05000033",
+    "www": "https://argos.fund/",
+    "address": "112 avenue de Wagram, 75017, PARIS",
+    "phone": "0153672050",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500SO51KWX8L5GA63",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 20,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "ARGOS CLIMATE F&F",
+        "isin": "FR001400JH48",
+        "terms": ["climate"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 13657,
+    "name": "FIDEAS CAPITAL SAS",
+    "agreementNum": "GP-07000046",
+    "www": "www.fideas.fr",
+    "address": "75 rue d'Amsterdam, 75008, PARIS",
+    "phone": "01 78 09 19 80",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "9695001PEBCAGNEUAI60",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 12,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "FIDEAS ACT FOR CLIMATE",
+        "isin": "FR001400CX86",
+        "terms": ["climate"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 729,
+    "name": "BPIFRANCE INVESTISSEMENT",
+    "agreementNum": "GP01006",
+    "www": null,
+    "address": "27-31 avenue du Général Leclerc, 94710, MAISONS-ALFORT",
+    "phone": "0158507171",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "96950082Z6KUVA6TW686",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 124,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "FONDS DE FONDS CLIMAT GLOBAL 1 S.L.P.",
+        "isin": "FR001400HLS3",
+        "terms": ["climat"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 16783,
+    "name": "KANOPY AM",
+    "agreementNum": "GP-10000038",
+    "www": "https://kanopy-am.com/",
+    "address": "38 rue Etienne Marcel, 75002, PARIS",
+    "phone": "0663233602",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500VA4GG41O2AGN71",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 2,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "KANOPY ACTIVE CLIMATE TRANSITION",
+        "isin": "FR001400GFE7",
+        "terms": ["climate", "transition"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 329649,
+    "name": "SLATE Venture Capital",
+    "agreementNum": "GP-20240023",
+    "www": "https://www.slate.vc/",
+    "address": "76 rue Blanche, 75009, PARIS",
+    "phone": null,
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500OGKSC909G2IF02",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 1,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "SLATEVC CLIMATE FUND ONE",
+        "isin": "FR001400MSX8",
+        "terms": ["climate"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 324169,
+    "name": "AEDGIS",
+    "agreementNum": "GP-20250002",
+    "www": "https://www.aedgis.com/",
+    "address": "121 avenue de Malakoff, 75116, PARIS",
+    "phone": null,
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500ASDUZL6UJA3P84",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 1,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "CHENAVARI REAL ESTATE DECARBONISATION FUND",
+        "isin": "FR001400J2P8",
+        "terms": ["decarbonisation"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 28706,
+    "name": "PRIVATE CORNER",
+    "agreementNum": "GP-20000038",
+    "www": "www.private-corner.eu",
+    "address": "161 rue du Faubourg Saint Honoré, 75008, PARIS",
+    "phone": "+33622530690",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500O3PG17TH59PW85",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 50,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "Tikehau Decarbonization Fund II - Feeder",
+        "isin": "FR001400RM66",
+        "terms": ["decarbonization"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 16895,
+    "name": "HOMA CAPITAL",
+    "agreementNum": "GP-11000002",
+    "www": "www.homacapital.fr",
+    "address": "1, Boulevard Pasteur, 75015, PARIS",
+    "phone": "0175774700",
+    "legalForm": "Société anonyme",
+    "lei": "969500MW7YG6OFHPFS24",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 11,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "GREEN AND IMPACT BOND FRANCE",
+        "isin": "FR0013387099",
+        "terms": ["green", "impact"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 669,
+    "name": "SWISSLIFE GESTION PRIVEE",
+    "agreementNum": "GP00038",
+    "www": null,
+    "address": "7, place Vendôme, 75001, PARIS",
+    "phone": "0153291500",
+    "legalForm": "Société anonyme à Conseil d'Administration",
+    "lei": "969500DTZ4VL3NRORO47",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 12,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "GREEN BONDS INVESTMENTS",
+        "isin": "FR0010734467",
+        "terms": ["green"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 823,
+    "name": "ALOE PRIVATE EQUITY",
+    "agreementNum": "GP03005",
+    "www": "www.aloe-group.com",
+    "address": "23 rue Galilée, 75116, PARIS",
+    "phone": "0175434208",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500A2XUWKYVAJYI41",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 5,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "ALOE ENVIRONNEMENT FUND",
+        "isin": "FR0010081323",
+        "terms": ["environnement"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 16789,
+    "name": "NORD CAPITAL PARTENAIRES SAS",
+    "agreementNum": "GP-10000039",
+    "www": "http://www.nord-cp.com/",
+    "address": "12 Place Saint Hubert, 59000, LILLE",
+    "phone": null,
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500SAACISAUHWXK14",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - en-dessous des seuils et ne souhaitant pas opter pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 6,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "FIP CROISSANCE ET ENVIRONNEMENT",
+        "isin": "FR0013275195",
+        "terms": ["environnement"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 8620,
+    "name": "ATALANTE",
+    "agreementNum": "GP-04000065",
+    "www": "www.capza.co",
+    "address": "103, rue de Grenelle, 75007, PARIS",
+    "phone": "0142603805",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500H6SRUN2J11QM66",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 60,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "MAIF DETTE À IMPACT ENVIRONNEMENTAL S.L.P.",
+        "isin": "FR001400BSL6",
+        "terms": ["environnemental", "impact"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 45,
+    "name": "BDF-GESTION",
+    "agreementNum": "GP97069",
+    "www": null,
+    "address": "1, rue la Vrillière, 75001, PARIS",
+    "phone": "0142925597",
+    "legalForm": "Société par actions simplifiée unipersonnelle",
+    "lei": "9695007B9JFMLO5B3A94",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 32,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "FRANCE BDF-GESTION CDC BIODIVERSITÉ",
+        "isin": "FR001400SYM6",
+        "terms": ["biodiversite"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 25295,
+    "name": "DAUPHINE AM",
+    "agreementNum": "GP-17000033",
+    "www": "www.dauphine-am.fr",
+    "address": "67 rue La Boétie, 75008, Paris",
+    "phone": "01 47 20 58 07",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500YLPZN3BPFQS275",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - en-dessous des seuils et ne souhaitant pas opter pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 4,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "AMBITION POUR LA PLANETE",
+        "isin": "FR0013528304",
+        "terms": ["planete"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 996,
+    "name": "MCA FINANCE",
+    "agreementNum": "GP90116",
+    "www": "www.mcafinance.fr",
+    "address": "48 C boulevard du Marechal FOCH, 49051, ANGERS CEDEX 02",
+    "phone": "0241873000",
+    "legalForm": "Société anonyme",
+    "lei": "9695001EZKHJOZIDKS24",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 22,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "GESTION PRIVEE PLANETE",
+        "isin": "FR0000930836",
+        "terms": ["planete"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 331883,
+    "name": "MONCEAU IS",
+    "agreementNum": "GP-20250007",
+    "www": null,
+    "address": "65 Rue de Monceau, 75008, PARIS",
+    "phone": "0642573442",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "213800CVBOKCS3EAHF06",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 14,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "MONCEAU MULTI GESTION EPARGNE SOLIDAIRE",
+        "isin": "FR0014005807",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      }
+    ]
+  },
+  {
+    "sgpId": 814,
+    "name": "ANDERA PARTNERS",
+    "agreementNum": "GP02029",
+    "www": null,
+    "address": "2 Place Rio de Janeiro, 75008, PARIS",
+    "phone": "01 85 73 64 00",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500Y5L6ZTZ0B39W29",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 71,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "OCEAN MEZZANINE FPCI",
+        "isin": "FR0011759265",
+        "terms": ["ocean"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 492,
+    "name": "SAINT OLIVE GESTION",
+    "agreementNum": "GP-05000016",
+    "www": null,
+    "address": "84, rue Duguesclin, 69006, LYON",
+    "phone": "0472821010",
+    "legalForm": "Société en nom collectif",
+    "lei": "969500NNHI81RO3MRM38",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 29,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "SOLAR AKICITA",
+        "isin": "FR0010479865",
+        "terms": ["solar"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 304756,
+    "name": "ALPHAJET FAIR INVESTORS",
+    "agreementNum": "GP-202162",
+    "www": null,
+    "address": "18 rue de la Pépinière, 75008, PARIS",
+    "phone": null,
+    "legalForm": "Société par actions simplifiée",
+    "lei": "9695006R59Z41KSPT258",
+    "status": "NSGP:VIV",
+    "acts": ["Gestion de portefeuille (au sens gestion collective)"],
+    "totalCompartments": 5,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "ALPHAJET IMPACT GLOBAL360",
+        "isin": "FR00140087K7",
+        "terms": ["impact"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 808,
+    "name": "IQ EQ Management",
+    "agreementNum": "GP02023",
+    "www": "https://iqeq.fr/",
+    "address": "92 avenue de Wagram, 75017, PARIS",
+    "phone": "0180279999",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500CY9YKWDZW47Y85",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 133,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "ARKEA EXCLUSIVE IMPACT INFRASTRUCTURE DEBT FUND",
+        "isin": "FR0014011DC1",
+        "terms": ["impact"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 27665,
+    "name": "VAUBAN INFRASTRUCTURE PARTNERS",
+    "agreementNum": "GP-19000044",
+    "www": null,
+    "address": "Centorial, 75002, PARIS",
+    "phone": "0178409025",
+    "legalForm": "Société en commandite par actions",
+    "lei": "969500ASSGG85ELYV462",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 12,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "BTP IMPACT LOCAL",
+        "isin": "FR0011577071",
+        "terms": ["impact"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 16699,
+    "name": "CITIZEN CAPITAL PARTENAIRES",
+    "agreementNum": "GP-10000045",
+    "www": null,
+    "address": "7 ter, cour des Petites Ecuries, 75010, PARIS",
+    "phone": "01.76.74.77.20",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500MLUQ0W7KIA2992",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - en-dessous des seuils et ne souhaitant pas opter pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 6,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "CITIZEN CAPITAL IMPACT INITIATIVE",
+        "isin": "FR0013397585",
+        "terms": ["impact"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 27928,
+    "name": "FAMAE IMPACT",
+    "agreementNum": "GP-20000012",
+    "www": null,
+    "address": "61 bis rue Bichat, 75010, PARIS",
+    "phone": "0142061976",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500RALRA843QHHD15",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 1,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "FAMAE IMPACT I",
+        "isin": "FR0013519170",
+        "terms": ["impact"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 24413,
+    "name": "FRENCHFOOD CAPITAL",
+    "agreementNum": "GP-17000005",
+    "www": "http://frenchfoodcapital.com/",
+    "address": "82 rue du Faubourg Saint-Honoré, 75008, PARIS",
+    "phone": "+33 1 70 81 04 45",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "9695000Y1V1MXJ4LOY48",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 6,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "FRENCHFOOD POSITIVE IMPACT",
+        "isin": "FR0014009OZ3",
+        "terms": ["impact"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 19559,
+    "name": "CAPITAL CROISSANCE SAS",
+    "agreementNum": "GP-12000028",
+    "www": "www.capitalcroissance.fr",
+    "address": "18 bis rue d'Anjou, 75008, PARIS",
+    "phone": "01 80 40 04 10",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "969500IRMBT7W28O8V05",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 25,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "GAIA ENERGY IMPACT FUND II",
+        "isin": "FR001400BRR5",
+        "terms": ["impact"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 23631,
+    "name": "HORIZON ASSET MANAGEMENT",
+    "agreementNum": "GP-16000018",
+    "www": "https://www.horizon-am.fr/",
+    "address": "21 B rue Jacques Cartier, 78960, VOISINS LE BRETONNEUX",
+    "phone": null,
+    "legalForm": "Société par actions simplifiée",
+    "lei": "9695006COCAX17BDB714",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - en-dessous des seuils et ne souhaitant pas opter pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 10,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "HORIZON IMPACT - COMPARTIMENT FRANCE HABITAT",
+        "isin": "FR0013215639",
+        "terms": ["impact"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 16362,
+    "name": "ESFIN GESTION SA",
+    "agreementNum": "GP-10000026",
+    "www": null,
+    "address": "12 Boulevard Pesaro, 92024, NANTERRE CEDEX",
+    "phone": "01.40.23.30.60",
+    "legalForm": "Société anonyme",
+    "lei": "969500R3NDLS4OGSUJ16",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de FIA - en-dessous des seuils et ne souhaitant pas opter pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 10,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "IMPACT COOPERATIF",
+        "isin": "FR0012452761",
+        "terms": ["impact"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 25735,
+    "name": "RAISE",
+    "agreementNum": "GP-18000007",
+    "www": "https://www.raise.co/",
+    "address": "39 boulevard de la Tour Maubourg, 75007, Paris",
+    "phone": "01 84170909",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "9695003VJPO0GZOVAY72",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 8,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "RAISE IMPACT 2 S.L.P.",
+        "isin": "FR001400GML8",
+        "terms": ["impact"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 8723,
+    "name": "WEINBERG CAPITAL PARTNERS",
+    "agreementNum": "GP-05000018",
+    "www": "www.weinbergcapital.com",
+    "address": "1 rue Euler, 75008, PARIS",
+    "phone": "01 53 53 55 10",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "96950024VQCG5DMUWB21",
+    "status": ":VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 19,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "WCP IMPACT DEV #1",
+        "isin": "FR0013418431",
+        "terms": ["impact"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 307365,
+    "name": "WENOVA ASSET MANAGEMENT",
+    "agreementNum": "GP-202212",
+    "www": null,
+    "address": "5 rue de la Terrasse, 75017, PARIS",
+    "phone": null,
+    "legalForm": "Société par actions simplifiée",
+    "lei": "9845002C76540B92DA67",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 8,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "WENOVA TRANSITION",
+        "isin": "AMF100024092",
+        "terms": ["transition"],
+        "baseline": "CTB"
+      }
+    ]
+  },
+  {
+    "sgpId": 221,
+    "name": "UZES GESTION",
+    "agreementNum": "GP-04000053",
+    "www": null,
+    "address": "75002, PARIS",
+    "phone": "0145089640",
+    "legalForm": "Société anonyme",
+    "lei": "9695000LDTHLV0MP6Q81",
+    "status": ":VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 26,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "FCPE TRECENTO OBLIGATAIRE SOLIDAIRE",
+        "isin": "990000115259",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      }
+    ]
+  },
+  {
+    "sgpId": 848,
+    "name": "FIL GESTION",
+    "agreementNum": "GP03004",
+    "www": "fidelity.fr",
+    "address": "21 avenue Kléber, 75016, PARIS",
+    "phone": "0173043553",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "96950051B8PCYINJT692",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 19,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "SG EPARGNE ENTREPRISE DIVERSIFIÉ SOLIDAIRE",
+        "isin": "990000128009",
+        "terms": ["solidaire"],
+        "baseline": "CTB"
+      }
+    ]
+  },
+  {
+    "sgpId": 20249,
+    "name": "RCUBE ASSET MANAGEMENT",
+    "agreementNum": "GP-13000027",
+    "www": "www.rcube.com",
+    "address": "9 avenue Franklin Roosevelt, 75008, PARIS",
+    "phone": "0145643103",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "529900X4PRL0DZNPT990",
+    "status": ":VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM",
+      "Gestion de FIA - en-dessous des seuils et ne souhaitant pas opter pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 6,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "GBI GOOD GOVERNANCE UCITS",
+        "isin": "FR0013525854",
+        "terms": ["governance"],
+        "baseline": "CTB"
+      }
+    ]
+  },
+  {
+    "sgpId": 705,
+    "name": "SMALT CAPITAL",
+    "agreementNum": "GP00046",
+    "www": null,
+    "address": "10 Boulevard Ralli, 13008, MARSEILLE CEDEX 08",
+    "phone": "0491294150",
+    "legalForm": "Société anonyme",
+    "lei": "969500QJCEUJHDWUY164",
+    "status": ":VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 23,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "ECO RESPONSABLE",
+        "isin": "FR0014000LZ8",
+        "terms": ["responsable"],
+        "baseline": "PAB"
+      }
+    ]
+  },
+  {
+    "sgpId": 17147,
+    "name": "ZENITH AM",
+    "agreementNum": "GP-11000028",
+    "www": "www.zenith-am.com",
+    "address": "8 rue du General Foy, 75008, PARIS",
+    "phone": "0180980050",
+    "legalForm": "Société par actions simplifiée",
+    "lei": "549300BBGZCVGWMMRP23",
+    "status": "NSGP:VIV",
+    "acts": [
+      "Gestion de FIA - en-dessous des seuils et ne souhaitant pas opter pour l'application de la Directive AIFM",
+      "Gestion de portefeuille (au sens gestion collective)"
+    ],
+    "totalCompartments": 16,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "JUMP EVOLUTION",
+        "isin": "FR0013322435",
+        "terms": ["evolution"],
+        "baseline": "CTB"
+      }
+    ]
+  },
+  {
+    "sgpId": 22148,
+    "name": "SOGELYM DIXENCE INVESTMENT MANAGEMENT",
+    "agreementNum": "GP-15000011",
+    "www": null,
+    "address": "8,rue de Dublin, 67300, Schiltigheim",
+    "phone": null,
+    "legalForm": "Société par actions simplifiée",
+    "lei": "894500Q8040QZZ0RKA64",
+    "status": ":VIV",
+    "acts": [
+      "Gestion de FIA - au-delà des seuils de la Directive AIFM ou ayant opté pour l'application de la Directive AIFM"
+    ],
+    "totalCompartments": 8,
+    "esgRetailFunds": 1,
+    "funds": [
+      {
+        "name": "PRIME STONE EVOLUTION",
+        "isin": "FR00140010Y3",
+        "terms": ["evolution"],
+        "baseline": "CTB"
+      }
+    ]
+  }
+]
