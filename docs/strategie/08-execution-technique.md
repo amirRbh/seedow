@@ -58,6 +58,13 @@ bun run scripts/precheck-fund-names.ts client-x.json rapport-client-x.md
 
 **Les fichiers clients ne doivent jamais être versionnés dans ce dépôt** : les garder hors du repo (ou dans un dossier ignoré par git), sous accord de confidentialité.
 
-## Pour qualifier la liste de prospects
+## Liste de prospects (ajout du 2026-10-09)
+
+- `scripts/build-sgp-prospects.ts` : collecte GECO (recherche publique de fonds + fiches société), filtre `detectNameTerms`, sorties JSON. Requêtes séquentielles espacées de 400 ms.
+- Bogue trouvé et corrigé pendant la collecte : GECO renvoie parfois une page de 49 lignes pour 50 demandées ; la boucle s'arrêtait sur cette page courte et ne voyait que 99 fonds « ISR » au lieu de 320. La pagination s'arrête désormais sur `total`.
+- Lexique enrichi : « transition énergétique » / « energy transition » sont aussi des termes environnementaux (socle PAB + point de lecture), test ajouté (23 tests).
+- Résultat : `data/prospects/` et [prospects-sgp.md](prospects-sgp.md).
+
+## Pour qualifier la liste de prospects (procédure initiale)
 
 `detectNameTerms(nom)` sert aussi à filtrer une liste de dénominations de fonds (base GECO de l'AMF) : un nom qui renvoie au moins un terme = une SGP à qualifier. Un petit script d'import sera écrit quand le fichier source aura été téléchargé (data.gouv.fr était injoignable depuis l'environnement de cette session : son format n'a pas pu être vérifié, et il n'a donc pas été deviné).

@@ -86,6 +86,8 @@ const LEXICON: LexiconEntry[] = [
   { term: "decarbonisation", categories: E },
   { term: "decarbonization", categories: E },
   { term: "paris aligned", categories: E },
+  { term: "transition energetique", categories: E },
+  { term: "energy transition", categories: E },
   { term: "biodiversity", categories: E },
   { term: "biodiversite", categories: E },
   { term: "planet", categories: E },

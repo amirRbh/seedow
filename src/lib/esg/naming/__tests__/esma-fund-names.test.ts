@@ -53,6 +53,13 @@ describe("detectNameTerms", () => {
     expect(m.ambiguous).toBe(true);
   });
 
+  it("« transition énergétique » est aussi un terme environnemental", () => {
+    const r = requirementsFor(detectNameTerms("123 Transition Energetique"));
+    expect(r.baseline).toBe("PAB");
+    expect(r.transitionPath).toBe(true);
+    expect(r.readingNotes.length).toBeGreaterThan(0);
+  });
+
   it("reconnaît les expressions multi-mots", () => {
     expect(detectNameTerms("World Net-Zero Leaders").map((t) => t.term)).toEqual(["net zero"]);
   });

@@ -6,20 +6,21 @@
 
 ## Les livrables
 
-| #   | Fichier                                                | Contenu                                                     |
-| --- | ------------------------------------------------------ | ----------------------------------------------------------- |
-| 1   | [01-diagnostic.md](01-diagnostic.md)                   | État réel de Seedow, actifs, dette, options                 |
-| 2   | [02-carte-opportunites.md](02-carte-opportunites.md)   | 23 opportunités notées sur 100                              |
-| 3   | [03-finalistes.md](03-finalistes.md)                   | 5 finalistes : concurrence, prix, distribution, stress test |
-| 4   | [04-decision.md](04-decision.md)                       | Recommandation, alternative, conditions d'invalidation      |
-| 5   | [05-plan-economique.md](05-plan-economique.md)         | Scénarios prudent / central / ambitieux, point mort         |
-| 6   | [06-plan-commercial-30j.md](06-plan-commercial-30j.md) | Semaine par semaine, critères d'arrêt                       |
-| 7   | [07-produit-minimal.md](07-produit-minimal.md)         | Le produit vendable, et ce qu'on ne construit pas           |
-| 8   | [08-execution-technique.md](08-execution-technique.md) | Ce qui a été codé, testé, et ce qui reste                   |
-| 9   | [09-kit-de-vente.md](09-kit-de-vente.md)               | Page de vente, messages, relances, démo, offre pilote       |
-| 10  | [10-pilotage.md](10-pilotage.md)                       | Indicateurs, seuils de décision, revue hebdomadaire         |
-| —   | [hypotheses.md](hypotheses.md)                         | Registre des hypothèses et de leur niveau de preuve         |
-| —   | [sources.md](sources.md)                               | Sources externes, URL, dates, ce qu'elles prouvent ou non   |
+| #   | Fichier                                                | Contenu                                                         |
+| --- | ------------------------------------------------------ | --------------------------------------------------------------- |
+| 1   | [01-diagnostic.md](01-diagnostic.md)                   | État réel de Seedow, actifs, dette, options                     |
+| 2   | [02-carte-opportunites.md](02-carte-opportunites.md)   | 23 opportunités notées sur 100                                  |
+| 3   | [03-finalistes.md](03-finalistes.md)                   | 5 finalistes : concurrence, prix, distribution, stress test     |
+| 4   | [04-decision.md](04-decision.md)                       | Recommandation, alternative, conditions d'invalidation          |
+| 5   | [05-plan-economique.md](05-plan-economique.md)         | Scénarios prudent / central / ambitieux, point mort             |
+| 6   | [06-plan-commercial-30j.md](06-plan-commercial-30j.md) | Semaine par semaine, critères d'arrêt                           |
+| 7   | [07-produit-minimal.md](07-produit-minimal.md)         | Le produit vendable, et ce qu'on ne construit pas               |
+| 8   | [08-execution-technique.md](08-execution-technique.md) | Ce qui a été codé, testé, et ce qui reste                       |
+| 9   | [09-kit-de-vente.md](09-kit-de-vente.md)               | Page de vente, messages, relances, démo, offre pilote           |
+| 10  | [10-pilotage.md](10-pilotage.md)                       | Indicateurs, seuils de décision, revue hebdomadaire             |
+| —   | [hypotheses.md](hypotheses.md)                         | Registre des hypothèses et de leur niveau de preuve             |
+| —   | [prospects-sgp.md](prospects-sgp.md)                   | Les 40 sociétés de gestion cibles, la réserve et les exclusions |
+| —   | [sources.md](sources.md)                               | Sources externes, URL, dates, ce qu'elles prouvent ou non       |
 
 ## La décision en cinq lignes
 
@@ -37,6 +38,7 @@
 | 2026-10-09 | Cible principale : sociétés de gestion (SGP), offre de pré-contrôle documentaire ESG                     | Oui          | Obligation en vigueur, acheteur identifiable (RCCI), budget conformité, actifs Seedow directement réutilisables         |
 | 2026-10-09 | Construire uniquement le moteur de pré-contrôle « noms de fonds » + le générateur de rapport             | Oui          | C'est le livrable du pilote ; tout le reste se fait à la main tant qu'aucun client ne paie                              |
 | 2026-10-09 | Ne pas créer de nouvelle marque à ce stade                                                               | Oui          | Le nom n'est pas la contrainte ; décision reportée après les 10 premiers entretiens                                     |
+| 2026-10-09 | Liste de 40 SGP : 112 sociétés concernées, 59 indépendantes retenues ou en réserve                       | Oui          | H1 juste sous le seuil de 60 : marché français étroit, le canal C et l'extension LU/BE deviennent prioritaires          |
 | À trancher | Suspendre la publication de constats nominatifs sur l'Observatoire public pendant la prospection des SGP | Oui          | Vendre un service à un émetteur qu'on épingle publiquement crée un conflit d'intérêts apparent — **décision fondateur** |
 
 ## État d'avancement
@@ -45,10 +47,11 @@
 - [x] Recherche de marché externe, sources datées
 - [x] Carte des opportunités, finalistes, décision
 - [x] Moteur de pré-contrôle « noms de fonds » codé et testé (22 tests)
-- [ ] **Constituer la liste de 40 SGP cibles** (procédure dans `06`) — prochaine action
+- [x] Liste des 40 SGP cibles construite depuis GECO (AMF) — [prospects-sgp.md](prospects-sgp.md), 2026-10-09
+- [ ] **Identifier le RCCI ou le dirigeant des 15 cibles P1 (sources publiques), puis envoyer les 10 premiers messages** — prochaine action
 - [ ] Valider le cadre juridique de l'offre avec un avocat (périmètre « consultation juridique », loi de 1971) — avant la première facture
 - [ ] Premiers entretiens de découverte
 
 ## Prochaine action à plus fort impact commercial
 
-**Construire la liste des 40 sociétés de gestion cibles depuis les registres publics de l'AMF, puis envoyer les 10 premiers messages.** Rien d'autre ne produit d'information sur la volonté de payer.
+**Trouver, dans des sources publiques, le nom du RCCI ou du dirigeant des 15 cibles P1 de [prospects-sgp.md](prospects-sgp.md), puis envoyer les 10 premiers messages (sur autorisation du fondateur).** Rien d'autre ne produit d'information sur la volonté de payer.
