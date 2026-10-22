@@ -1,0 +1,33 @@
+# PROBE read-only : quelle part d'un portefeuille réel, EN POIDS, peut être
+# appariée à un signal ESG publié gratuitement (GLEIF, SBTi, Climate TRACE).
+# C'est la mesure qui décide de la stratégie « score par transparisation »
+# — cf. docs/esg-holdings-beta.md §4. N'écrit RIEN, ne persiste rien.
+name: Probe ESG company signals
+
+on:
+  workflow_dispatch:
+    inputs:
+      isins:
+        description: "ISIN séparés par des virgules (vide = échantillon MSCI World par défaut)"
+        required: false
+        default: ""
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.11"
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Probe ESG company signals
+        env:
+          ISINS: ${{ inputs.isins }}
+        run: bun run scripts/probe-esg-company-signals.ts
