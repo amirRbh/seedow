@@ -32,7 +32,7 @@ export function PortfolioSustainabilityBadge({
       title={`${t("discover.row.impact")} ${score}/100`}
     >
       <span className={cn("w-1.5 h-1.5 rounded-full flex-shrink-0", c.dot)} aria-hidden="true" />
-      <span className={cn("text-tag uppercase tracking-wider font-mono", c.text)}>
+      <span className={cn("text-caption font-semibold", c.text)}>
         {t("discover.row.impact")} {t(`portfolio_customizer.impact_level.${level}`)}
       </span>
       <span className="text-tag text-ink-3 font-semibold tabular-nums">{score}</span>

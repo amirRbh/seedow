@@ -40,14 +40,14 @@ function CertificatPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-paper-2 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <p className="text-label text-ink-3">{t("certificate.preparing")}</p>
       </div>
     );
   }
   if (!portfolio) {
     return (
-      <div className="min-h-screen bg-paper-2 flex items-center justify-center px-6 text-center">
+      <div className="min-h-screen flex items-center justify-center px-6 text-center">
         <div>
           <p className="text-sm text-ink-2">{t("certificate.no_portfolio")}</p>
           <Link to="/portfolio" className="inline-block mt-4 text-label underline text-ink">
@@ -82,13 +82,13 @@ function CertificatPage() {
   const numLocale = lang === "en" ? "en-US" : "fr-FR";
 
   return (
-    <div className="min-h-screen bg-paper-2">
+    <div className="min-h-screen">
       {/* Toolbar — masquée à l'impression */}
       <div className="print:hidden sticky top-0 z-10 bg-paper/90 backdrop-blur border-b border-paper-3">
         <div className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
           <Link
             to="/portfolio"
-            className="text-label uppercase tracking-[0.18em] text-ink-3 hover:text-ink"
+            className="text-label font-semibold text-ink-3 hover:text-ink"
           >
             {t("certificate.back_portfolio_short")}
           </Link>
@@ -97,7 +97,7 @@ function CertificatPage() {
             <button
               type="button"
               onClick={() => window.print()}
-              className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-ink text-paper text-label font-semibold uppercase tracking-[0.14em] hover:bg-ink-2 transition-colors"
+              className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-ink text-paper text-label font-semibold hover:bg-ink-2 transition-colors"
             >
               {t("certificate.print_pdf")}
             </button>
@@ -109,7 +109,7 @@ function CertificatPage() {
       <article className="max-w-5xl mx-auto px-8 md:px-14 py-12 print:py-8">
         <div
           role="note"
-          className="mb-6 flex items-center gap-2 border border-paper-3 bg-paper-2/60 px-4 py-2 text-caption uppercase tracking-[0.18em] text-ink-2"
+          className="mb-6 flex items-center gap-2 border border-paper-3 bg-paper-2/60 px-4 py-2 text-caption font-semibold text-ink-2"
         >
           <span className="inline-block w-1.5 h-1.5 rounded-full bg-gold" aria-hidden />
           <span className="font-semibold">Bêta</span>
@@ -124,7 +124,7 @@ function CertificatPage() {
             <p className="eyebrow mt-3">{t("certificate.subtitle")}</p>
           </div>
           <div className="text-right">
-            <p className="text-tag uppercase tracking-[0.22em] text-ink-3 font-mono">
+            <p className="text-caption font-semibold text-ink-3">
               {t("certificate.reference")}
             </p>
             <p className="font-display text-sm text-ink mt-1 tabular-nums">{certNo}</p>

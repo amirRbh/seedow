@@ -20,7 +20,7 @@ export function CourseArticle({ course, sections, truncated }: Props) {
         <p className="text-lg md:text-xl text-ink-2 leading-relaxed">{course.intro}</p>
         {course.eli5 && (
           <aside className="mt-8 bg-paper-2/70 border border-ink/8 p-5 md:p-6">
-            <p className="font-mono text-tag uppercase tracking-[0.22em] text-ink-3 mb-2">
+            <p className="text-caption font-semibold text-ink-3 mb-2">
               En une image
             </p>
             <p className="text-body-lg md:text-base text-ink italic leading-relaxed">
@@ -28,7 +28,7 @@ export function CourseArticle({ course, sections, truncated }: Props) {
             </p>
           </aside>
         )}
-        <div className="mt-6 flex items-center gap-4 text-tag font-semibold uppercase tracking-[0.22em] text-ink-3">
+        <div className="mt-6 flex items-center gap-4 text-caption font-semibold text-ink-3">
           <span>{course.track === "esg" ? "Finance ESG" : "Finance"}</span>
           <span>·</span>
           <span>{course.level === "debutant" ? "Débutant" : "Intermédiaire"}</span>

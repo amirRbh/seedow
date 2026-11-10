@@ -71,12 +71,12 @@ function CoursePage() {
       <header className="border-b border-ink/8 sticky top-0 z-30 bg-paper/95 backdrop-blur-xl">
         <nav className="max-w-7xl mx-auto flex justify-between items-center px-6 md:px-12 py-4">
           <div className="flex items-center gap-6">
-            <Link to="/" className="font-display font-bold text-xl tracking-tight uppercase">
+            <Link to="/" className="font-display font-bold text-xl tracking-tight ">
               seedow<span className="text-gold gold-pulse">.</span>
             </Link>
             <LanguageToggle />
           </div>
-          <div className="flex items-center gap-5 md:gap-8 text-tag font-semibold uppercase tracking-[0.22em]">
+          <div className="flex items-center gap-5 md:gap-8 text-caption font-semibold ">
             <Link to="/cours" className="hover:text-gold transition-colors">
               ← Tous les cours
             </Link>

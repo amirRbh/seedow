@@ -82,7 +82,7 @@ export function HoldingDetailSheet({ open, onClose, holding, valued }: Props) {
 
         {/* Performance bloc */}
         <div className="mt-5 paper-card p-4">
-          <p className="text-tag uppercase tracking-wider text-ink-3 font-mono mb-2">
+          <p className="text-caption font-semibold text-ink-3 mb-2">
             Évolution du prix
           </p>
           {hasQuote ? (
@@ -96,13 +96,13 @@ export function HoldingDetailSheet({ open, onClose, holding, valued }: Props) {
               </div>
               <div className="grid grid-cols-2 gap-3 mt-3 pt-3 border-t border-paper-3">
                 <div>
-                  <p className="text-tag uppercase tracking-wider text-ink-3">Prix d'entrée</p>
+                  <p className="text-caption font-semibold text-ink-3">Prix d'entrée</p>
                   <p className="font-value text-body-sm text-ink mt-0.5">
                     {fmtPrice(valued!.entryPrice!)} €
                   </p>
                 </div>
                 <div>
-                  <p className="text-tag uppercase tracking-wider text-ink-3">Prix actuel</p>
+                  <p className="text-caption font-semibold text-ink-3">Prix actuel</p>
                   <p className="font-value text-body-sm text-ink mt-0.5">
                     {fmtPrice(valued!.currentPrice!)} €
                   </p>
@@ -122,22 +122,22 @@ export function HoldingDetailSheet({ open, onClose, holding, valued }: Props) {
 
         {/* Position bloc */}
         <div className="mt-3 paper-card p-4">
-          <p className="text-tag uppercase tracking-wider text-ink-3 font-mono mb-2">Ta position</p>
+          <p className="text-caption font-semibold text-ink-3 mb-2">Ta position</p>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <p className="text-tag uppercase tracking-wider text-ink-3">Allocation</p>
+              <p className="text-caption font-semibold text-ink-3">Allocation</p>
               <p className="font-value text-body-sm text-ink mt-0.5">
                 {holding.allocationPct.toFixed(2)}%
               </p>
             </div>
             <div>
-              <p className="text-tag uppercase tracking-wider text-ink-3">Capital investi</p>
+              <p className="text-caption font-semibold text-ink-3">Capital investi</p>
               <p className="font-value text-body-sm text-ink mt-0.5">
                 {fmtEur(valued?.invested ?? 0)}
               </p>
             </div>
             <div>
-              <p className="text-tag uppercase tracking-wider text-ink-3">Valeur actuelle</p>
+              <p className="text-caption font-semibold text-ink-3">Valeur actuelle</p>
               <p className="font-value text-body-sm text-ink mt-0.5">
                 {fmtEur(valued?.currentValue ?? 0)}
               </p>
@@ -146,7 +146,7 @@ export function HoldingDetailSheet({ open, onClose, holding, valued }: Props) {
               {/* « Score d'impact » nommait ici une moyenne de notes ESG —
                   dernier résidu de la correction de #185, sur un écran qui
                   n'est pas passé par l'i18n. */}
-              <p className="text-tag uppercase tracking-wider text-ink-3">Durabilité</p>
+              <p className="text-caption font-semibold text-ink-3">Durabilité</p>
               <div className="mt-1">
                 <PortfolioSustainabilityBadge esgScore={holding.esgScore} />
               </div>
@@ -228,7 +228,7 @@ function FundRejectionCard({ holding }: { holding: ActiveHolding }) {
       <div className="mt-3 text-center">
         <button
           onClick={() => setOpen(true)}
-          className="text-caption uppercase tracking-[0.18em] text-ink-3 hover:text-ink font-mono transition-colors"
+          className="text-caption font-semibold text-ink-3 hover:text-ink transition-colors"
         >
           Pas assez vert pour moi ?
         </button>
@@ -238,7 +238,7 @@ function FundRejectionCard({ holding }: { holding: ActiveHolding }) {
 
   return (
     <div className="mt-3 paper-card p-4 border border-paper-3">
-      <p className="text-tag uppercase tracking-wider text-ink-3 font-mono mb-2">
+      <p className="text-caption font-semibold text-ink-3 mb-2">
         Pourquoi ce fonds ne te convient pas
       </p>
       <p className="text-caption text-ink-3 mb-3">

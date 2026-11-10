@@ -99,7 +99,7 @@ function ComprendrePage() {
       <header className="border-b border-ink/8">
         <nav className="max-w-3xl mx-auto flex justify-between items-center px-6 py-5">
           <div className="flex items-center gap-6">
-            <Link to="/" className="font-display font-bold text-xl tracking-tight uppercase">
+            <Link to="/" className="font-display font-bold text-xl tracking-tight ">
               seedow<span className="text-gold gold-pulse">.</span>
             </Link>
             <LanguageToggle />
@@ -107,7 +107,7 @@ function ComprendrePage() {
           <button
             type="button"
             onClick={finish}
-            className="text-tag font-semibold uppercase tracking-[0.22em] text-ink-3 hover:text-ink transition-colors"
+            className="text-caption font-semibold text-ink-3 hover:text-ink transition-colors"
           >
             Passer
           </button>
@@ -160,7 +160,7 @@ function ComprendrePage() {
               type="button"
               onClick={goPrev}
               disabled={step === 0}
-              className="text-tag font-semibold uppercase tracking-[0.22em] text-ink-3 hover:text-ink transition-colors disabled:opacity-0 disabled:pointer-events-none"
+              className="text-caption font-semibold text-ink-3 hover:text-ink transition-colors disabled:opacity-0 disabled:pointer-events-none"
             >
               ← Retour
             </button>
@@ -170,14 +170,14 @@ function ComprendrePage() {
                 <Link
                   to="/cours"
                   onClick={markIntroDone}
-                  className="text-center text-xs font-semibold uppercase tracking-[0.22em] text-ink-3 hover:text-gold transition-colors px-3 py-3"
+                  className="text-center text-xs font-semibold text-ink-3 hover:text-mint-ink transition-colors px-3 py-3"
                 >
                   Voir les cours
                 </Link>
                 <button
                   type="button"
                   onClick={finish}
-                  className="bg-ink text-paper px-7 py-3.5 text-xs font-semibold uppercase tracking-[0.22em] hover:bg-ink-2 transition-colors"
+                  className="bg-ink text-paper px-7 py-3.5 text-xs font-semibold hover:bg-ink-2 transition-colors"
                 >
                   {user ? "Aller au tableau de bord →" : "Explorer les fonds →"}
                 </button>
@@ -186,7 +186,7 @@ function ComprendrePage() {
               <button
                 type="button"
                 onClick={goNext}
-                className="bg-ink text-paper px-7 py-3.5 text-xs font-semibold uppercase tracking-[0.22em] hover:bg-ink-2 transition-colors"
+                className="bg-ink text-paper px-7 py-3.5 text-xs font-semibold hover:bg-ink-2 transition-colors"
               >
                 Continuer →
               </button>

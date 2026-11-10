@@ -46,7 +46,7 @@ export function EmptyPortfolioState({ userName }: { userName: string }) {
         </svg>
       </motion.div>
 
-      <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium">
+      <p className="text-caption text-ink-3 font-medium">
         {t("empty_portfolio.welcome", { name: userName })}
       </p>
       <h1 className="font-value text-3xl text-ink mt-2 leading-tight">
@@ -127,7 +127,7 @@ function IntentCard({
       search={search}
       className="group flex flex-col rounded-2xl border border-paper-3 bg-paper-2/40 p-5 min-h-[132px] transition-all duration-200 hover:-translate-y-0.5 hover:border-ink/30 outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
     >
-      <span className="inline-flex items-center gap-2 text-tag uppercase tracking-[0.16em] font-mono text-ink-3">
+      <span className="inline-flex items-center gap-2 text-caption font-semibold text-ink-3">
         <span aria-hidden className={`inline-block h-1.5 w-1.5 rounded-full ${a.dot}`} />
         {eyebrow}
       </span>

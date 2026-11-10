@@ -69,7 +69,7 @@ export function AssetLayersBlock({ asset }: { asset: DiscoverAsset }) {
 
   return (
     <section className="mt-6">
-      <p className="text-tag uppercase tracking-[0.14em] font-mono text-ink-3">
+      <p className="text-caption font-semibold text-ink-3">
         {t("asset_layers.title")}
       </p>
       <p className="mt-1.5 text-body-sm text-ink-2 leading-relaxed">{t("asset_layers.hint")}</p>
@@ -83,7 +83,7 @@ export function AssetLayersBlock({ asset }: { asset: DiscoverAsset }) {
               <div className="flex items-baseline justify-between gap-3">
                 <span className="text-body-sm text-ink">{t(`asset_layers.layer.${id}`)}</span>
                 <span
-                  className={`text-tag font-mono uppercase tracking-wider ${STATUS_TONE[layer.status]}`}
+                  className={`text-caption font-semibold ${STATUS_TONE[layer.status]}`}
                 >
                   {t(`asset_layers.status.${layer.status}`)}
                 </span>

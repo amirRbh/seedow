@@ -27,18 +27,24 @@ import { ThemeProvider, THEME_INIT_SCRIPT } from "@/hooks/useTheme";
 import { FontScaleProvider, FONT_SCALE_INIT_SCRIPT } from "@/hooks/useFontScale";
 import { PreferenceSync } from "@/components/PreferenceSync";
 import { socialMeta } from "@/lib/seo/socialMeta";
+import { useSpotlight } from "@/hooks/useSpotlight";
 
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
   const { t } = useTranslation();
   return (
-    <div className="flex min-h-screen items-center justify-center bg-paper-2 px-4">
-      <div className="max-w-md text-center">
-        <h1 className="font-value text-7xl text-ink">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-ink">{t("root.not_found_title")}</h2>
-        <p className="mt-2 text-sm text-ink-3">{t("root.not_found_desc")}</p>
-        <div className="mt-6">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden px-4">
+      <div aria-hidden className="aurora">
+        <i />
+        <i />
+        <i />
+      </div>
+      <div className="relative z-10 max-w-md text-center">
+        <p className="display-xl text-gradient animate-float motion-reduce:animate-none">404</p>
+        <h1 className="mt-4 text-h1-page">{t("root.not_found_title")}</h1>
+        <p className="mt-3 text-body-lg text-ink-2">{t("root.not_found_desc")}</p>
+        <div className="mt-8">
           <Button asChild size="pill">
             <Link to="/">{t("root.back_home")}</Link>
           </Button>
@@ -76,10 +82,10 @@ export const Route = createRootRoute({
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        // DA V3 (docs/DA-V3.md) — Manrope pour tout (400→800, chiffres
-        // tabulaires, tracking serré sur les grandes valeurs) ; IBM Plex Mono
-        // réservé aux tickers, ISIN et lignes de source.
-        href: "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap",
+        // DA V4 (docs/DA-V4.md) — Bricolage Grotesque pour les titres, Manrope
+        // pour le texte et les chiffres (tabulaires), IBM Plex Mono réservé aux
+        // tickers, ISIN et lignes de source.
+        href: "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap",
       },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "apple-touch-icon", href: "/favicon.png" },
@@ -124,10 +130,10 @@ class RootErrorBoundary extends Component<{ children: ReactNode }, { hasError: b
   render() {
     if (this.state.hasError) {
       return (
-        <div className="flex min-h-screen items-center justify-center bg-paper-2 px-4">
+        <div className="flex min-h-screen items-center justify-center px-4">
           <div className="max-w-md text-center">
-            <h1 className="font-value text-4xl text-ink">Oups.</h1>
-            <p className="mt-3 text-sm text-ink-3">
+            <h1 className="display-lg text-ink">Oups.</h1>
+            <p className="mt-4 text-body-lg text-ink-2">
               Une erreur inattendue s'est produite. L'équipe a été notifiée automatiquement.
             </p>
             <Button size="pill" className="mt-6" onClick={() => window.location.assign("/")}>
@@ -147,10 +153,10 @@ function RouteTransition() {
     <AnimatePresence mode="wait" initial={false}>
       <motion.div
         key={pathname}
-        initial={{ opacity: 0, y: 4 }}
+        initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: DURATION.fast, ease: EASE_SIGNATURE }}
+        exit={{ opacity: 0, y: -6 }}
+        transition={{ duration: DURATION.base, ease: EASE_SIGNATURE }}
         style={{ willChange: "opacity, transform" }}
       >
         <Outlet />
@@ -163,6 +169,8 @@ function RootComponent() {
   useEffect(() => {
     installGlobalErrorReporting();
   }, []);
+  // Reflet qui suit le curseur sur les cartes `.spot` — un écouteur pour toute l'app.
+  useSpotlight();
 
   // Une instance par rendu racine (pas un singleton module-level) : en SSR,
   // un client partagé entre requêtes ferait fuiter le cache d'un utilisateur

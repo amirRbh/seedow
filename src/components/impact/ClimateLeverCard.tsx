@@ -54,7 +54,7 @@ export function ClimateLeverCard({
       </div>
       <div className="rounded-3xl border border-paper-3 bg-paper p-5 md:p-6">
         <label className="block">
-          <span className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.12em] text-ink-3">
+          <span className="flex items-center justify-between text-caption font-semibold text-ink-3">
             <span>{t("impact_xp.lever.slider_label", { pct })}</span>
           </span>
           <input
@@ -71,7 +71,7 @@ export function ClimateLeverCard({
 
         <div className="mt-5 grid grid-cols-2 gap-4">
           <div>
-            <p className="text-caption uppercase tracking-wider text-ink-3">
+            <p className="text-caption font-semibold text-ink-3">
               {t("impact_xp.lever.waci_label")}
             </p>
             <div className="mt-1 flex items-baseline gap-2">
@@ -90,7 +90,7 @@ export function ClimateLeverCard({
             </div>
           </div>
           <div>
-            <p className="text-caption uppercase tracking-wider text-ink-3">
+            <p className="text-caption font-semibold text-ink-3">
               {t("impact_xp.lever.volatility_label")}
             </p>
             <div className="mt-1 flex items-baseline gap-2">

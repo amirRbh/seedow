@@ -37,7 +37,7 @@ export function ReveilFeed({ dispatches, onAssetClick }: Props) {
               {tone.icon}
             </span>
             <div className="min-w-0 flex-1">
-              <p className="font-mono text-tag uppercase tracking-[0.14em] text-ink-3">
+              <p className="text-caption font-semibold text-ink-3">
                 {t(`reveil.tone.${d.tone}`)} · {d.source} · {t("reveil.source_today")}
               </p>
               <p className="mt-1.5 font-value text-body-lg leading-snug text-ink">
@@ -48,7 +48,7 @@ export function ReveilFeed({ dispatches, onAssetClick }: Props) {
                   {t(d.bodyKey, d.bodyParams)}
                 </p>
               )}
-              <span className="mt-2.5 inline-flex items-center gap-1 font-mono text-tag uppercase tracking-[0.12em] text-ink">
+              <span className="mt-2.5 inline-flex items-center gap-1 text-caption font-semibold text-ink">
                 {d.action?.kind === "vote" ? t("reveil.cta_vote") : t("reveil.cta_why")}
                 <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
                   →

@@ -55,14 +55,14 @@ export function GoalSimulator({
 
   return (
     <div className="rounded-lg border border-paper-3 bg-paper p-6">
-      <p className="text-tag font-semibold uppercase tracking-[0.22em] text-gold mb-4">
+      <p className="text-caption font-semibold text-mint-ink mb-4">
         {t("goal.sim_eyebrow")}
       </p>
 
       <div className="space-y-5">
         <div>
           <div className="flex items-baseline justify-between mb-2">
-            <span className="text-caption uppercase tracking-[0.18em] text-ink-3">
+            <span className="text-caption font-semibold text-ink-3">
               {t("goal.sim_monthly_label")}
             </span>
             <span className="font-value text-xl text-ink tabular-nums">
@@ -106,7 +106,7 @@ export function GoalSimulator({
         </div>
 
         <div className="rounded-md bg-paper-2 px-4 py-3 text-sm">
-          <p className="text-ink-3 text-xs uppercase tracking-[0.18em] font-mono mb-1">
+          <p className="text-ink-3 text-xs font-semibold mb-1">
             {t("goal.sim_to_reach", { amount: formatCurrency(goal.target_amount, lang) })}
           </p>
           {needed.feasible ? (

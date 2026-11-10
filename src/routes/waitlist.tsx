@@ -42,18 +42,18 @@ function WaitlistPage() {
   };
 
   return (
-    <div className="min-h-screen bg-paper-2 flex items-center justify-center px-6 py-12">
+    <div className="min-h-screen flex items-center justify-center px-6 py-12">
       <div className="w-full max-w-md">
         <div className="flex items-center justify-between mb-6">
           <Link
             to="/"
-            className="block text-tag uppercase tracking-[0.22em] text-ink-3 font-medium hover:text-ink transition-colors"
+            className="block text-caption text-ink-3 font-medium hover:text-ink transition-colors"
           >
             ← {t("common.back")}
           </Link>
           <LanguageToggle />
         </div>
-        <p className="text-tag uppercase tracking-[0.22em] text-gold font-mono mb-3">
+        <p className="text-caption font-semibold text-mint-ink mb-3">
           {t("waitlist.eyebrow")}
         </p>
         <h1 className="font-display text-3xl text-ink leading-tight">{t("waitlist.title")}</h1>
@@ -61,7 +61,7 @@ function WaitlistPage() {
 
         {position !== null ? (
           <div className="mt-8 p-6 border border-paper-3 rounded-2xl bg-paper-2">
-            <p className="text-tag uppercase tracking-[0.22em] text-ink-3 font-mono">
+            <p className="text-caption font-semibold text-ink-3">
               {t("waitlist.registered")}
             </p>
             <p className="font-value text-4xl text-ink mt-2">#{position}</p>

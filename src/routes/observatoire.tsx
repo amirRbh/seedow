@@ -91,7 +91,7 @@ function ObservatoryPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-paper-2 text-ink">
+    <div className="min-h-screen text-ink">
       <header className="max-w-4xl mx-auto px-6 pt-10 pb-8">
         <div className="flex items-center justify-between gap-4">
           <Link to="/" className="stamp hover:text-ink transition-colors">

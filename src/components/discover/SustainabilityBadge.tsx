@@ -50,7 +50,7 @@ export function SustainabilityBadge({
       title={`${t("seedow_score.label")} ${score ?? "—"}/100`}
     >
       <span className={cn("w-1.5 h-1.5 rounded-full flex-shrink-0", c.dot)} aria-hidden="true" />
-      <span className={cn("text-tag uppercase tracking-wider font-mono", c.text)}>
+      <span className={cn("text-caption font-semibold", c.text)}>
         {t(`seedow_score.band.${band}`)}
       </span>
       {score != null && (

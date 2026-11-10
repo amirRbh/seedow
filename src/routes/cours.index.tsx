@@ -98,12 +98,12 @@ function CoursesIndex() {
       <header className="border-b border-ink/8">
         <nav className="max-w-7xl mx-auto flex justify-between items-center px-6 md:px-12 py-5">
           <div className="flex items-center gap-6">
-            <Link to="/" className="font-display font-bold text-xl tracking-tight uppercase">
+            <Link to="/" className="font-display font-bold text-xl tracking-tight ">
               seedow<span className="text-gold gold-pulse">.</span>
             </Link>
             <LanguageToggle />
           </div>
-          <div className="flex items-center gap-5 md:gap-8 text-tag font-semibold uppercase tracking-[0.22em]">
+          <div className="flex items-center gap-5 md:gap-8 text-caption font-semibold ">
             <Link
               to="/methodologie"
               className="hidden sm:inline-block hover:text-gold transition-colors"
@@ -217,7 +217,7 @@ function CoursesIndex() {
             <Link
               to="/auth"
               search={{ redirect: "/cours", mode: "signup" }}
-              className="inline-block bg-gold text-ink px-7 py-3.5 text-xs font-semibold uppercase tracking-[0.22em] hover:bg-gold/90 transition-colors"
+              className="inline-block bg-gold text-ink px-7 py-3.5 text-xs font-semibold hover:bg-gold/90 transition-colors"
             >
               Créer mon compte →
             </Link>
@@ -268,7 +268,7 @@ function FilterButton({
       type="button"
       onClick={onClick}
       className={cn(
-        "px-4 py-2 text-tag font-semibold uppercase tracking-[0.2em] border transition-colors",
+        "px-4 py-2 text-caption font-semibold border transition-colors",
         active
           ? "border-ink bg-ink text-paper"
           : "border-ink/20 text-ink-2 hover:border-ink hover:text-ink",

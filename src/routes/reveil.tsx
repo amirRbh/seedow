@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { Sunrise } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { EmptyState } from "@/components/common/EmptyState";
+import { Button } from "@/components/ui/button";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { ReveilFeed } from "@/components/reveil/ReveilFeed";
@@ -30,40 +33,46 @@ function ReveilPage() {
   const [detail, setDetail] = useState<DiscoverAsset | null>(null);
 
   return (
-    <div className="min-h-screen bg-paper-2 pb-24 md:pb-12">
-      <AppHeader eyebrow={t("reveil.eyebrow")} title={t("reveil.title")} hideViewToggle />
-      <div className="mx-auto max-w-3xl px-4 pt-6 md:px-8">
-        <p className="mb-6 max-w-prose text-body text-ink-2">
-          {loading
-            ? t("reveil.loading")
-            : dispatches.length > 0
-              ? t("reveil.subtitle", { n: dispatches.length })
-              : t("reveil.subtitle_empty")}
-        </p>
+    <div className="min-h-screen">
+      <div className="page accent-solar">
+        <AppHeader
+          eyebrow={t("reveil.eyebrow")}
+          title={t("reveil.title")}
+          subtitle={
+            loading
+              ? t("reveil.loading")
+              : dispatches.length > 0
+                ? t("reveil.subtitle", { n: dispatches.length })
+                : t("reveil.subtitle_empty")
+          }
+          hideViewToggle
+        />
+        <div className="px-5">
 
         {loading ? (
           <div className="space-y-3">
             {[0, 1, 2].map((i) => (
-              <Skeleton key={i} className="h-24 w-full rounded-2xl" />
+              <Skeleton key={i} className="h-24 w-full rounded-[24px]" />
             ))}
           </div>
         ) : dispatches.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-paper-3 bg-paper p-10 text-center">
-            <p className="font-value text-xl text-ink">{t("reveil.empty_title")}</p>
-            <p className="mt-2 text-body-sm text-ink-3">{t("reveil.empty_desc")}</p>
-            <Link
-              to="/discover"
-              className="mt-6 inline-block rounded-full border border-ink px-4 py-2 text-label font-medium transition-colors hover:bg-ink hover:text-paper"
-            >
-              {t("reveil.empty_cta")}
-            </Link>
-          </div>
+          <EmptyState
+            icon={Sunrise}
+            title={t("reveil.empty_title")}
+            description={t("reveil.empty_desc")}
+            action={
+              <Button asChild variant="outline">
+                <Link to="/discover">{t("reveil.empty_cta")}</Link>
+              </Button>
+            }
+          />
         ) : (
           <ReveilFeed
             dispatches={dispatches}
             onAssetClick={(id) => setDetail(assetsById.get(id) ?? null)}
           />
         )}
+        </div>
       </div>
 
       <AssetDetailSheet

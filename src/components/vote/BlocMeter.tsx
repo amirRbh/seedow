@@ -34,7 +34,7 @@ export function BlocMeter({ bloc, myChoice, onShare }: Props) {
     >
       <div className="flex items-center gap-2">
         <span aria-hidden="true" className="apple-live" />
-        <span className="text-tag font-mono uppercase tracking-[0.14em] text-mint-ink">
+        <span className="text-caption font-semibold text-mint-ink">
           {t("vote.bloc.live")}
         </span>
       </div>
@@ -81,7 +81,7 @@ export function BlocMeter({ bloc, myChoice, onShare }: Props) {
                 style={{ width: `${Math.round(forShare * 100)}%` }}
               />
             </div>
-            <div className="mt-3 flex items-center justify-between font-mono text-tag uppercase tracking-[0.08em] text-paper/70">
+            <div className="mt-3 flex items-center justify-between text-caption font-semibold text-paper/70">
               <span>
                 {choiceLabel("against")} · {nf.format(bloc.against)}
               </span>

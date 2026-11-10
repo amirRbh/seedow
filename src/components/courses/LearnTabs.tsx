@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 export function LearnTabs({ active }: { active: "courses" | "methodology" }) {
   const { t } = useTranslation();
   const base =
-    "px-4 py-2 rounded-full text-tag font-semibold uppercase tracking-[0.16em] transition-colors";
+    "px-4 py-2 rounded-full text-caption font-semibold transition-colors";
   return (
     <nav
       aria-label={t("rail_nav.learn")}

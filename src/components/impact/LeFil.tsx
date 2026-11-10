@@ -67,7 +67,7 @@ export function LeFil({ dispatches }: LeFilProps) {
                 {tone.icon}
               </span>
               <div className="min-w-0 flex-1">
-                <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-3">
+                <p className="text-[11px] font-semibold text-ink-3">
                   <span className="sr-only">{toneLabel} · </span>
                   {d.anchored
                     ? t("impact_living.fil.since", { date: fmtDate(d.dateISO) })

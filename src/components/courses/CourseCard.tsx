@@ -41,17 +41,17 @@ export function CourseCard({
       )}
     >
       {completed && (
-        <span className="absolute top-0 right-0 inline-flex items-center gap-1 bg-mint/15 text-mint-ink text-tag font-semibold uppercase tracking-[0.18em] px-2.5 py-1">
+        <span className="absolute top-0 right-0 inline-flex items-center gap-1 bg-mint/15 text-mint-ink text-caption font-semibold px-2.5 py-1">
           <CheckIcon />
           {t("courses.status_completed")}
         </span>
       )}
       {!completed && isStartHere && (
-        <span className="absolute top-0 right-0 inline-flex items-center gap-1 bg-gold/15 text-gold text-tag font-semibold uppercase tracking-[0.18em] px-2.5 py-1">
+        <span className="absolute top-0 right-0 inline-flex items-center gap-1 bg-gold/15 text-mint-ink text-caption font-semibold px-2.5 py-1">
           {t("courses.start_here")}
         </span>
       )}
-      <div className="flex items-center justify-between text-tag font-semibold uppercase tracking-[0.18em] text-ink-3">
+      <div className="flex items-center justify-between text-caption font-semibold text-ink-3">
         <span>
           {trackLabel} · {levelLabel}
         </span>
@@ -70,14 +70,14 @@ export function CourseCard({
 
       <div className="mt-auto pt-4 border-t border-ink/8 flex items-center justify-between">
         {completed ? (
-          <span className="inline-flex items-center gap-1.5 text-tag font-semibold uppercase tracking-[0.18em] text-mint-ink">
+          <span className="inline-flex items-center gap-1.5 text-caption font-semibold text-mint-ink">
             <CheckIcon />
             {score ? `Quiz ${score.score}/${score.total}` : statusLabel}
           </span>
         ) : (
           <span
             className={cn(
-              "inline-flex items-center gap-1.5 text-tag font-semibold uppercase tracking-[0.18em]",
+              "inline-flex items-center gap-1.5 text-caption font-semibold ",
               status === "in_progress" ? "text-gold" : "text-mint-ink",
             )}
           >

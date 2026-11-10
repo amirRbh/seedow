@@ -88,7 +88,7 @@ export function InvestDialog({ trigger, defaultAmount = 200, label }: Props) {
           <div>
             <label
               htmlFor="invest-amount"
-              className="text-caption uppercase tracking-[0.18em] text-ink-3 font-mono"
+              className="text-caption font-semibold text-ink-3"
             >
               {t("invest_dialog.amount")}
             </label>
@@ -138,7 +138,7 @@ export function InvestDialog({ trigger, defaultAmount = 200, label }: Props) {
             onClick={handleConfirm}
             disabled={!canSubmit}
             className={cn(
-              "w-full h-12 rounded-full font-semibold text-body-sm uppercase tracking-[0.16em] transition-colors flex items-center justify-center gap-2",
+              "w-full h-12 rounded-full font-semibold text-body-sm transition-colors flex items-center justify-center gap-2",
               "bg-highlight-1 text-paper hover:bg-highlight-2",
               "disabled:opacity-50 disabled:cursor-not-allowed",
             )}
@@ -165,7 +165,7 @@ function DefaultTrigger({ label }: { label: string }) {
   return (
     <button
       type="button"
-      className="inline-flex items-center gap-1.5 h-10 px-5 rounded-full bg-ink text-paper text-label font-semibold uppercase tracking-[0.14em] hover:bg-ink-2 transition-colors"
+      className="inline-flex items-center gap-1.5 h-10 px-5 rounded-full bg-ink text-paper text-label font-semibold hover:bg-ink-2 transition-colors"
     >
       <svg
         viewBox="0 0 16 16"

@@ -117,7 +117,7 @@ function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen bg-paper-2 flex items-center justify-center px-6 py-12">
+    <div className="min-h-screen flex items-center justify-center px-6 py-12">
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -131,7 +131,7 @@ function AuthPage() {
         </div>
         <Link
           to="/"
-          className="block text-tag uppercase tracking-[0.18em] text-ink-3 font-medium hover:text-ink transition-colors"
+          className="block text-caption text-ink-3 font-medium hover:text-ink transition-colors"
         >
           ← {t("common.back")}
         </Link>
@@ -155,7 +155,7 @@ function AuthPage() {
         </p>
 
         {mode === "signup" && capacity && !betaFull && waitlistDone === null && (
-          <p className="mt-4 text-tag uppercase tracking-[0.18em] text-ink-3">
+          <p className="mt-4 text-caption font-semibold text-ink-3">
             {t("auth.slots_remaining")} :{" "}
             <span className="text-ink font-semibold">{capacity.slotsLeft}</span> / {capacity.cap}
           </p>
@@ -188,7 +188,7 @@ function AuthPage() {
 
         <div className="my-5 flex items-center gap-3">
           <div className="flex-1 h-px bg-paper-3" />
-          <span className="text-tag uppercase tracking-[0.15em] text-ink-3">{t("common.or")}</span>
+          <span className="text-caption font-semibold text-ink-3">{t("common.or")}</span>
           <div className="flex-1 h-px bg-paper-3" />
         </div>
 

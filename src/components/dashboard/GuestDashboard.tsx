@@ -19,9 +19,9 @@ export function GuestDashboard() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-paper-2 flex flex-col items-center justify-center px-6 text-center"
+      className="min-h-screen flex flex-col items-center justify-center px-6 text-center"
     >
-      <p className="text-eyebrow uppercase tracking-[0.15em] text-ink-3">
+      <p className="text-eyebrow font-semibold text-ink-3">
         {t("dashboard.guest_dashboard.browse_eyebrow")}
       </p>
       <h1 className="mt-3 text-h2 text-ink max-w-[460px]">

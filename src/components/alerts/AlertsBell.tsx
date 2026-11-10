@@ -63,7 +63,7 @@ export function AlertsBell() {
 
       <SheetContent side="right" className="w-full sm:max-w-md bg-paper border-paper-3 p-0">
         <SheetHeader className="px-5 pt-6 pb-4 border-b border-paper-3 text-left">
-          <p className="text-tag uppercase tracking-[0.22em] text-gold font-mono">
+          <p className="text-caption font-semibold text-mint-ink">
             {t("alerts.eyebrow")}
           </p>
           <SheetTitle className="font-value text-2xl text-ink leading-tight">
@@ -87,7 +87,7 @@ export function AlertsBell() {
                     <span
                       className={cn("inline-block w-1.5 h-1.5 rounded-full", TONE_DOT[a.severity])}
                     />
-                    <span className="text-tag uppercase tracking-[0.18em] font-mono text-ink-3">
+                    <span className="text-caption font-semibold text-ink-3">
                       {TONE_LABEL[a.severity]}
                     </span>
                   </div>
@@ -106,7 +106,7 @@ export function AlertsBell() {
                   <Link
                     to={a.ctaHref}
                     onClick={() => setOpen(false)}
-                    className="mt-3 inline-flex items-center gap-2 text-caption font-semibold uppercase tracking-[0.18em] text-ink hover:text-highlight-1 transition-colors"
+                    className="mt-3 inline-flex items-center gap-2 text-caption font-semibold text-ink hover:text-highlight-1 transition-colors"
                   >
                     {a.ctaLabel}
                     <svg

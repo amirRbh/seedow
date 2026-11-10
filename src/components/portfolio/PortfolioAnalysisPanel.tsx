@@ -148,7 +148,7 @@ export function PortfolioAnalysisPanel({ analysis, showTradeoffs = true, classNa
               <li key={tr.type} className="flex items-start gap-2 text-body-sm leading-snug">
                 {/* Le niveau est ÉCRIT, pas seulement coloré. */}
                 <span
-                  className={`text-tag font-mono uppercase tracking-wider shrink-0 ${
+                  className={`text-caption font-semibold shrink-0 ${
                     SEVERITY_TONE[tr.severity] ?? "text-ink-2"
                   }`}
                 >

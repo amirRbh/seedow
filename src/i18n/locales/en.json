@@ -451,6 +451,32 @@
       },
       "title_line1": "See where",
       "title_accent": "your money goes."
+    },
+    "v5": {
+      "hero_secondary": "I have a fund to check",
+      "try_hint": "Try it: tick a conviction and watch the flow reroute.",
+      "proof_aria": "What Seedow guarantees",
+      "how": {
+        "eyebrow": "How it works",
+        "title": "Three moves. Two minutes.",
+        "step_label": "Step {{n}}",
+        "step1_title": "Say what matters to you",
+        "step1_desc": "Your causes, what you refuse to fund, your horizon. Four questions, no account and no jargon.",
+        "step2_title": "See what passes your filters",
+        "step2_desc": "Matching funds stay, the others drop out. For each one: its fees, what it publishes — and what it doesn't.",
+        "step3_title": "Understand every figure",
+        "step3_desc": "Every data point carries its proof status, its source and its date. And if a word escapes you, Ethi explains it — without selling you anything.",
+        "visual_kept": "kept",
+        "visual_out": "set aside",
+        "visual_source": "source · date · coverage"
+      },
+      "ethi": {
+        "badge": "Has nothing to sell",
+        "q1": "What is an ETF?",
+        "a1": "A basket of securities you buy in one go: instead of picking one company, you hold hundreds at once. Its yearly fee is called the TER.",
+        "q2": "And how do I know what it really funds?",
+        "a2": "By reading its published holdings: the list of what it owns, with its date. I'll show you where to find it and how to read it. The decision stays yours."
+      }
     }
   },
   "auth": {
@@ -3597,5 +3623,18 @@
     "amerique_nord": "North America",
     "asie_pacifique": "Asia-Pacific",
     "non_precise": "Unspecified region"
+  },
+  "site": {
+    "home_aria": "Seedow — home",
+    "nav_aria": "Main navigation",
+    "menu_open": "Open menu",
+    "menu_close": "Close menu",
+    "signature_1": "It isn't inevitable.",
+    "signature_2": "It's a choice. Yours too.",
+    "footer": {
+      "col_product": "Product",
+      "col_learn": "Understand",
+      "col_legal": "Legal"
+    }
   }
 }

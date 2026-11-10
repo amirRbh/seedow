@@ -28,7 +28,7 @@ export function ResolutionResult({ resolution, bloc }: Props) {
   return (
     <div className="flex flex-col gap-6">
       <div className="paper-card p-6 text-center md:p-8">
-        <p className="text-tag font-mono uppercase tracking-[0.14em] text-ink-3">
+        <p className="text-caption font-semibold text-ink-3">
           {t("vote.result.official")}
         </p>
         {resolution.outcomePct != null ? (
@@ -47,7 +47,7 @@ export function ResolutionResult({ resolution, bloc }: Props) {
 
       {/* Comment le Bloc Seedow s'est positionné (vrai décompte) */}
       <div className="rounded-lg border border-paper-3 bg-paper p-5">
-        <p className="text-tag font-mono uppercase tracking-[0.12em] text-ink-3">
+        <p className="text-caption font-semibold text-ink-3">
           {t("vote.result.bloc_title")}
         </p>
         {bloc.total === 0 ? (
@@ -67,7 +67,7 @@ export function ResolutionResult({ resolution, bloc }: Props) {
         href={resolution.sourceUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-1.5 font-mono text-tag uppercase tracking-[0.08em] text-ink-3 transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
+        className="inline-flex items-center gap-1.5 text-caption font-semibold text-ink-3 transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
       >
         {t("vote.source", { name: resolution.sourceName })}
       </a>

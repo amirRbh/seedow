@@ -30,7 +30,7 @@ export function DataProvenance({ basis, source, asOf, coveragePct, link, classNa
 
   return (
     <p
-      className={`font-mono text-[10px] leading-relaxed uppercase tracking-[0.12em] text-ink-3 ${className}`}
+      className={` text-caption leading-relaxed font-semibold text-ink-3 ${className}`}
     >
       <span className="normal-case tracking-normal">{basis}</span>
       {source && (

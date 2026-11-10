@@ -46,11 +46,11 @@ export function VoteTeaserCard() {
         <div className="flex items-center justify-between gap-3">
           <span className="inline-flex items-center gap-2">
             <span aria-hidden="true" className="apple-live" />
-            <span className="font-mono text-tag uppercase tracking-[0.14em] text-mint-ink">
+            <span className="text-caption font-semibold text-mint-ink">
               {t("vote.teaser.eyebrow")}
             </span>
           </span>
-          <span className="font-mono text-tag uppercase tracking-[0.08em] text-paper/70">
+          <span className="text-caption font-semibold text-paper/70">
             {days === 0
               ? t("vote.status.last_day")
               : days != null
@@ -71,7 +71,7 @@ export function VoteTeaserCard() {
               ? t("vote.teaser.be_first")
               : t("vote.teaser.bloc_count", { formatted: nf.format(bloc.total) })}
           </span>
-          <span className="font-mono text-tag uppercase tracking-[0.12em] text-mint-ink">
+          <span className="text-caption font-semibold text-mint-ink">
             {voted ? t("vote.teaser.cta_voted") : t("vote.teaser.cta")}
             <span
               aria-hidden="true"

@@ -193,7 +193,7 @@ function Onboarding() {
   };
 
   return (
-    <main className="min-h-screen bg-paper-2 text-ink">
+    <main className="min-h-screen text-ink">
       <AnimatePresence mode="wait">
         {phase === "steps" && (
           <Step
@@ -521,7 +521,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
 
                 <div className="my-4 flex items-center gap-3">
                   <div className="flex-1 h-px bg-paper-3" />
-                  <span className="text-tag uppercase tracking-[0.15em] text-ink-3">ou</span>
+                  <span className="text-caption font-semibold text-ink-3">ou</span>
                   <div className="flex-1 h-px bg-paper-3" />
                 </div>
               </>
@@ -728,7 +728,7 @@ function Step({
       {stepIndex === 0 && (
         <div className="px-6 pt-6 text-center">
           <p className="font-value text-xl text-ink">{t("onboarding.header.title")}</p>
-          <p className="mt-1 text-caption uppercase tracking-[0.16em] text-ink-3">
+          <p className="mt-1 text-caption font-semibold text-ink-3">
             {t("onboarding.header.meta")}
           </p>
         </div>
@@ -1078,7 +1078,7 @@ function PreviewScene({
                 className="absolute inset-y-0 w-1/2 bg-ink"
               />
             </div>
-            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium">
+            <p className="text-caption text-ink-3 font-medium">
               {t("onboarding.pool.loading_eyebrow")}
             </p>
             <p className="font-value text-2xl text-ink mt-3">
@@ -1096,7 +1096,7 @@ function PreviewScene({
             role="alert"
             className="w-full max-w-md text-center"
           >
-            <p className="text-tag uppercase tracking-[0.18em] text-rust font-medium">
+            <p className="text-caption text-rust font-medium">
               {t("onboarding.building.error_eyebrow")}
             </p>
             <h1 className="font-value text-2xl text-ink mt-3">
@@ -1121,7 +1121,7 @@ function PreviewScene({
             className="w-full max-w-md"
           >
             <SimulationBadge center withTagline className="mb-5" />
-            <p className="text-tag uppercase tracking-[0.18em] text-mint font-medium text-center">
+            <p className="text-caption text-mint font-medium text-center">
               {t("onboarding.pool.eyebrow")}
             </p>
             <h1 className="font-value text-2xl text-ink text-center mt-2 mb-3">
@@ -1161,7 +1161,7 @@ function PreviewScene({
                       <span className="font-value text-body-sm text-ink truncate block group-hover:underline underline-offset-4">
                         {a.name}
                       </span>
-                      <span className="text-tag font-mono uppercase tracking-wider text-ink-3">
+                      <span className="text-caption font-semibold text-ink-3">
                         {a.ticker}
                       </span>
                     </span>

@@ -29,18 +29,18 @@ export function ReveilTeaserCard() {
         <div className="flex items-center justify-between gap-3">
           <span className="inline-flex items-center gap-2">
             <span aria-hidden className="apple-live" />
-            <span className="font-mono text-tag uppercase tracking-[0.14em] text-mint-ink">
+            <span className="text-caption font-semibold text-mint-ink">
               {t("reveil.eyebrow")}
             </span>
           </span>
-          <span className="font-mono text-tag uppercase tracking-[0.08em] text-ink-3">
+          <span className="text-caption font-semibold text-ink-3">
             {t("reveil.teaser.count", { n: dispatches.length })}
           </span>
         </div>
         <p className="mt-3 font-value text-lg leading-snug text-ink">
           {t(top.headlineKey, top.headlineParams)}
         </p>
-        <span className="mt-3 inline-flex items-center gap-1 font-mono text-tag uppercase tracking-[0.12em] text-ink">
+        <span className="mt-3 inline-flex items-center gap-1 text-caption font-semibold text-ink">
           {t("reveil.teaser.cta")}
           <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
             →

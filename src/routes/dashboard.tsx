@@ -59,11 +59,11 @@ function DashboardEntry() {
     if (user && !guest) navigate({ to: "/le-fil", replace: true });
   }, [user, guest, navigate]);
 
-  if (loading) return <div className="min-h-screen bg-paper-2" aria-hidden />;
+  if (loading) return <div className="min-h-screen" aria-hidden />;
   if (guest) return <GuestDashboard />;
   if (user) return <Dashboard />;
   // Non connecté et non invité : la garde beforeLoad a déjà redirigé vers /auth.
-  return <div className="min-h-screen bg-paper-2" aria-hidden />;
+  return <div className="min-h-screen" aria-hidden />;
 }
 
 function getGreetingKey(hour: number) {
@@ -155,12 +155,12 @@ function Dashboard() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-paper-2"
+      className="min-h-screen"
     >
       {/* Bandeau mode invité — sticky, pleine largeur (hors conteneur centré) */}
       <GuestBanner guestParam={guest ?? false} />
 
-      <div className="max-w-lg mx-auto pb-28">
+      <div className="page accent-mint">
         <AppHeader eyebrow={greeting} title={userName} showPortfolioSelector />
 
         {/* 1. Bloc valeur — le solde d'abord (ordre TR : solde → portefeuille →

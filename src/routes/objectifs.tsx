@@ -3,7 +3,10 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import { AppHeader } from "@/components/navigation/AppHeader";
-import { EditorialSection } from "@/components/ui/EditorialSection";
+import { Plus, Target } from "lucide-react";
+import { EmptyState } from "@/components/common/EmptyState";
+import { RevealGroup } from "@/components/motion/Reveal";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { useFinancialGoals, type FinancialGoal } from "@/hooks/useFinancialGoals";
 import { GoalCard } from "@/components/goals/GoalCard";
@@ -40,46 +43,56 @@ function ObjectifsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-paper-2 pb-24 md:pb-12">
-      <AppHeader eyebrow={t("objectives.eyebrow_cap")} title={t("objectives.title")} />
-      <div className="mx-auto max-w-5xl px-4 md:px-8">
-        <EditorialSection
+    <div className="min-h-screen">
+      <div className="page page--wide accent-solar">
+        <AppHeader
           eyebrow={t("objectives.section_eyebrow")}
           title={t("objectives.section_title")}
-          kicker={t("objectives.section_kicker")}
-          number="01"
-        >
-          <div className="flex justify-end mb-6">
-            <Button onClick={openNew}>{t("objectives.new_goal")}</Button>
-          </div>
-
-          {loading ? (
-            <p className="text-ink-3 text-sm">{t("objectives.loading")}</p>
-          ) : goals.length === 0 ? (
-            <div className="rounded-lg border border-dashed border-paper-3 bg-paper p-10 text-center">
-              <p className="font-value text-xl text-ink">{t("objectives.empty_title")}</p>
-              <p className="mt-2 text-sm text-ink-3">{t("objectives.empty_desc")}</p>
-              <Button className="mt-6" onClick={openNew}>
-                {t("objectives.create_goal")}
+          subtitle={t("objectives.section_kicker")}
+        />
+        <div className="px-5">
+          {goals.length > 0 && (
+            <div className="mb-5 flex justify-end">
+              <Button onClick={openNew}>
+                <Plus aria-hidden />
+                {t("objectives.new_goal")}
               </Button>
-            </div>
-          ) : (
-            <div className="grid gap-4 md:grid-cols-2">
-              {goals.map((g) => (
-                <GoalCard key={g.id} goal={g} onEdit={() => openEdit(g)} />
-              ))}
             </div>
           )}
 
-          <div className="gold-rule my-10" />
-          <p className="text-xs text-ink-3">
+          {loading ? (
+            <div className="grid gap-4 md:grid-cols-2">
+              <Skeleton className="h-44 w-full rounded-[24px]" />
+              <Skeleton className="h-44 w-full rounded-[24px]" />
+            </div>
+          ) : goals.length === 0 ? (
+            <EmptyState
+              icon={Target}
+              title={t("objectives.empty_title")}
+              description={t("objectives.empty_desc")}
+              action={
+                <Button onClick={openNew}>
+                  <Plus aria-hidden />
+                  {t("objectives.create_goal")}
+                </Button>
+              }
+            />
+          ) : (
+            <RevealGroup className="grid gap-4 md:grid-cols-2">
+              {goals.map((g) => (
+                <GoalCard key={g.id} goal={g} onEdit={() => openEdit(g)} />
+              ))}
+            </RevealGroup>
+          )}
+
+          <p className="mt-10 text-body-sm text-ink-3">
             {t("objectives.estimates_note")}{" "}
-            <Link to="/methodologie" className="underline">
+            <Link to="/methodologie" className="font-semibold text-ink-2 underline underline-offset-2">
               {t("objectives.methodology_link")}
             </Link>
             .
           </p>
-        </EditorialSection>
+        </div>
       </div>
 
       <GoalDialog open={dialogOpen} onOpenChange={setDialogOpen} goal={editing} onSaved={refresh} />

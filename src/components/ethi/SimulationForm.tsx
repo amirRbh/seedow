@@ -43,7 +43,7 @@ export function SimulationForm({ onSubmit, onCancel }: Props) {
       onSubmit={submit}
       className="bg-paper-2 border border-paper-3 rounded-2xl p-3 space-y-3 backdrop-blur-xl"
     >
-      <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono">
+      <p className="text-caption font-semibold text-ink-3">
         {t("ethi.sim.title")}
       </p>
       <div className="grid grid-cols-3 gap-2">
@@ -118,7 +118,7 @@ function Field({
 }) {
   return (
     <label className="flex flex-col gap-1">
-      <span className="text-tag uppercase tracking-wider text-ink-3">{label}</span>
+      <span className="text-caption font-semibold text-ink-3">{label}</span>
       <div className="flex items-center gap-1 bg-paper-2 border border-paper-3 rounded-md px-2 py-1.5">
         <input
           type="number"

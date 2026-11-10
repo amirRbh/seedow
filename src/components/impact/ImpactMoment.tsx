@@ -63,11 +63,11 @@ export function ImpactMoment() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-mint opacity-60" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-mint" />
             </span>
-            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-ink-3">
+            <span className="text-caption font-bold text-ink-3">
               {t("impact_moment.eyebrow")}
             </span>
           </span>
-          <span className="inline-flex items-center gap-1 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-ink-3 transition-colors group-hover:text-ink">
+          <span className="inline-flex items-center gap-1 text-caption font-semibold text-ink-3 transition-colors group-hover:text-ink">
             {t("impact_moment.cta")}
             <svg
               viewBox="0 0 24 24"

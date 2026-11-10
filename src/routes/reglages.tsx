@@ -79,7 +79,7 @@ function ReglagesPage() {
 
   if (authLoading || !user) {
     return (
-      <div className="min-h-screen bg-paper-2 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <p className="text-label text-ink-3">{t("common.loading")}</p>
       </div>
     );
@@ -89,9 +89,9 @@ function ReglagesPage() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-paper-2"
+      className="min-h-screen"
     >
-      <div className="max-w-lg mx-auto pb-28">
+      <div className="page accent-mint">
         <AppHeader
           eyebrow={t("reglages.eyebrow")}
           title={t("reglages.title")}
@@ -344,7 +344,7 @@ function PreferencesSection() {
           className="border border-paper-3 rounded-lg p-4 bg-paper-2"
         >
           <div className="flex items-baseline justify-between gap-3 mb-1">
-            <p className="text-tag uppercase tracking-[0.15em] text-ink-3 font-medium">
+            <p className="text-caption text-ink-3 font-medium">
               {t("reglages.pool_eyebrow")}
             </p>
             <span className="text-caption text-ink-3">
@@ -372,7 +372,7 @@ function PreferencesSection() {
                     à voir avec les convictions déclarées. Il passe sous le nom —
                     un libellé de cette longueur en bout de ligne écraserait le
                     nom du fonds sur un téléphone. */}
-                <span className="block pl-[3.75rem] text-tag font-mono uppercase tracking-wider text-ink-3">
+                <span className="block pl-[3.75rem] text-caption font-semibold text-ink-3">
                   {t(`pool_reasons.group.${l.group}`)}
                 </span>
               </li>
@@ -905,7 +905,7 @@ function ToggleRow({
       <span className="flex items-center gap-2">
         <span className={`text-body-sm ${disabled ? "text-ink-3" : "text-ink"}`}>{label}</span>
         {disabled && disabledHint && (
-          <span className="text-tag uppercase tracking-wider text-ink-3 bg-paper-2 border border-paper-3 rounded-full px-2 py-0.5">
+          <span className="text-caption font-semibold text-ink-3 bg-paper-2 border border-paper-3 rounded-full px-2 py-0.5">
             {disabledHint}
           </span>
         )}
@@ -1178,7 +1178,7 @@ function MethodologySection() {
 
         <div className="space-y-4">
           <div>
-            <p className="text-caption uppercase tracking-wider text-ink-3 font-mono mb-2">
+            <p className="text-caption font-semibold text-ink-3 mb-2">
               {t("reglages.methodology.esg_composite.pillars_title")}
             </p>
             <ul className="text-label text-ink-2 space-y-1.5 leading-relaxed">
@@ -1204,7 +1204,7 @@ function MethodologySection() {
           </div>
 
           <div>
-            <p className="text-caption uppercase tracking-wider text-ink-3 font-mono mb-2">
+            <p className="text-caption font-semibold text-ink-3 mb-2">
               {t("reglages.methodology.esg_composite.mapping_title")}
             </p>
             <ul className="text-label text-ink-2 space-y-1.5 leading-relaxed">
@@ -1233,7 +1233,7 @@ function MethodologySection() {
           </div>
 
           <div>
-            <p className="text-caption uppercase tracking-wider text-ink-3 font-mono mb-2">
+            <p className="text-caption font-semibold text-ink-3 mb-2">
               {t("reglages.methodology.esg_composite.portfolio_title")}
             </p>
             <p className="text-label text-ink-2 leading-relaxed">
@@ -1242,7 +1242,7 @@ function MethodologySection() {
           </div>
 
           <div className="pt-2 border-t border-paper-3">
-            <p className="text-caption uppercase tracking-wider text-ink-3 font-mono mb-2">
+            <p className="text-caption font-semibold text-ink-3 mb-2">
               {t("reglages.methodology.esg_composite.scale_title")}
             </p>
             <div className="grid grid-cols-4 gap-1.5 text-tag">
@@ -1291,7 +1291,7 @@ function MethodologySection() {
         </ul>
 
         <div className="mt-4 rounded border border-paper-3 bg-paper-2 p-3">
-          <p className="text-caption uppercase tracking-wider text-ink-3 font-mono mb-2">
+          <p className="text-caption font-semibold text-ink-3 mb-2">
             {t("reglages.methodology.carbon.coverage_title")}
           </p>
           <ul className="text-label text-ink-2 space-y-1.5 leading-relaxed mb-3">
@@ -1338,7 +1338,7 @@ function MethodologySection() {
 function Block({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <p className="text-tag uppercase tracking-[0.15em] text-ink-3 font-medium border-b border-paper-3 pb-2 mb-3">
+      <p className="text-caption text-ink-3 font-medium border-b border-paper-3 pb-2 mb-3">
         {title}
       </p>
       {children}

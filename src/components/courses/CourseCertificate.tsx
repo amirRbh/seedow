@@ -38,16 +38,16 @@ export function CourseCertificate({
         className="relative overflow-hidden rounded-[18px] border border-ink/15 bg-paper-2 p-8 md:p-12"
       >
         <div className="flex items-center justify-between">
-          <span className="font-display font-bold text-lg tracking-tight uppercase text-ink">
+          <span className="font-display font-bold text-lg tracking-tight text-ink">
             seedow<span className="text-mint-ink">.</span>
           </span>
-          <span className="font-mono text-caption uppercase tracking-[0.18em] text-ink-3">
+          <span className="text-caption font-semibold text-ink-3">
             Certificat de progression
           </span>
         </div>
 
         <div className="mt-10 md:mt-14">
-          <p className="text-caption uppercase tracking-[0.18em] text-ink-3 font-medium">
+          <p className="text-caption text-ink-3 font-medium">
             Délivré à
           </p>
           <p className="font-value text-2xl md:text-3xl text-ink mt-1">{name}</p>
@@ -86,7 +86,7 @@ export function CourseCertificate({
             >
               <path d="M20 6 9 17l-5-5" />
             </svg>
-            <span className="text-tag font-semibold uppercase tracking-[0.16em] text-mint-ink">
+            <span className="text-caption font-semibold text-mint-ink">
               Parcours complété
             </span>
           </div>
@@ -106,7 +106,7 @@ export function CourseCertificate({
         <button
           type="button"
           onClick={() => window.print()}
-          className="inline-flex items-center gap-2 text-tag font-semibold uppercase tracking-[0.18em] text-ink-3 hover:text-ink transition-colors"
+          className="inline-flex items-center gap-2 text-caption font-semibold text-ink-3 hover:text-ink transition-colors"
         >
           <svg
             viewBox="0 0 24 24"

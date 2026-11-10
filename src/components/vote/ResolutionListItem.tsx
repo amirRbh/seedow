@@ -28,16 +28,16 @@ export function ResolutionListItem({ resolution, bloc, myChoice }: Props) {
       style={{ transitionTimingFunction: "cubic-bezier(0.32,0.72,0,1)" }}
     >
       <div className="flex items-center justify-between gap-3">
-        <span className="font-mono text-tag uppercase tracking-[0.1em] text-ink-3">
+        <span className="text-caption font-semibold text-ink-3">
           {resolution.company}
           {resolution.ticker ? ` · ${resolution.ticker}` : ""}
         </span>
         {isClosed ? (
-          <span className="rounded-full bg-paper-2 px-2.5 py-1 font-mono text-tag uppercase tracking-[0.08em] text-ink-2">
+          <span className="rounded-full bg-paper-2 px-2.5 py-1 text-caption font-semibold text-ink-2">
             {t("vote.status.closed")}
           </span>
         ) : (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-paper-2 px-2.5 py-1 font-mono text-tag uppercase tracking-[0.08em] text-ink">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-paper-2 px-2.5 py-1 text-caption font-semibold text-ink">
             <span aria-hidden="true" className="apple-live" />
             {days === 0 ? t("vote.status.last_day") : t("vote.status.days_left", { n: days })}
           </span>
@@ -52,7 +52,7 @@ export function ResolutionListItem({ resolution, bloc, myChoice }: Props) {
             ? t("vote.list.bloc_empty")
             : t("vote.list.bloc_count", { formatted: nf.format(bloc.total) })}
         </span>
-        <span className="font-mono text-tag uppercase tracking-[0.12em] text-ink">
+        <span className="text-caption font-semibold text-ink">
           {myChoice
             ? t("vote.list.voted", { choice: t(`vote.choice_${myChoice}`) })
             : isClosed

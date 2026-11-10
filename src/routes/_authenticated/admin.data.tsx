@@ -56,7 +56,7 @@ function AdminDataPage() {
     <div className="max-w-6xl mx-auto px-6 py-12 space-y-10">
       <header className="flex items-end justify-between flex-wrap gap-4">
         <div>
-          <p className="text-tag uppercase tracking-[0.22em] text-gold font-mono">
+          <p className="text-caption font-semibold text-mint-ink">
             {t("admin_data.eyebrow")}
           </p>
           <h1 className="font-display text-3xl text-ink mt-2">{t("admin_data.title")}</h1>
@@ -98,7 +98,7 @@ function AdminDataPage() {
         <div className="border border-paper-3 rounded-2xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-body-sm">
-              <thead className="bg-paper-2/60 text-tag uppercase tracking-[0.14em] text-ink-3">
+              <thead className="bg-paper-2/60 text-caption font-semibold text-ink-3">
                 <tr>
                   <th className="text-left font-semibold px-4 py-3">
                     {t("admin_data.col_source")}
@@ -129,7 +129,7 @@ function AdminDataPage() {
                         <span className="text-ink-3">—</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-center text-ink-3 uppercase text-caption tracking-wide">
+                    <td className="px-4 py-3 text-center text-ink-3 font-semibold text-caption">
                       {s.health}
                     </td>
                     <td className="px-4 py-3 text-right text-ink-3 text-caption tabular-nums">
@@ -201,7 +201,7 @@ function AdminDataPage() {
 function Kpi({ label, value, tone }: { label: string; value: string; tone?: "forest" | "rust" }) {
   return (
     <div className="border border-paper-3 rounded-2xl p-4">
-      <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono">{label}</p>
+      <p className="text-caption font-semibold text-ink-3">{label}</p>
       <p
         className={`font-value text-2xl mt-1 tabular-nums ${
           tone === "forest" ? "text-forest" : tone === "rust" ? "text-rust" : "text-ink"

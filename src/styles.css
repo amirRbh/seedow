@@ -6,43 +6,48 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ═══════════════════════════════════════════════════════════════
-   SEEDOW — DA V3  (spec : docs/DA-V3.md)
+   SEEDOW — DA V4 « Vivant »  (spec : docs/DA-V4.md)
 
-   Principe : les mécaniques d'interface sont celles, éprouvées, du
-   marché premium (Revolut, Trade Republic). On n'invente que là où
-   Seedow a réellement quelque chose à dire — l'état de preuve.
+   La V3 avait raison sur la structure (aplats, rayons généreux, cibles
+   de 48px, état de preuve) et tort sur la température : une interface
+   exacte, mais immobile et grise — rien ne répondait au geste, rien ne
+   donnait envie de descendre d'un écran. La V4 garde l'ossature et lui
+   rend la vie.
 
-   Les quatre mécaniques empruntées, et pourquoi :
-     1. PROFONDEUR PAR APLAT, jamais par ombre. Une carte blanche posée
-        sur --paper-2 EST une élévation ; une bande --deep qui percute
-        une bande blanche fait le reste. Zéro box-shadow dans tout le
-        système (hors calques flottants : dialog, sheet, popover).
-     2. RAYONS GÉNÉREUX : 8 (chips) · 14 (champs) · 20 (cartes) ·
-        28 (feuilles, chrome) · 999 (boutons). La V2 était à 2px : ça ne
-        produisait pas de la rigueur, ça produisait un fil de fer.
-     3. CIBLES TACTILES : boutons 48px, champs 56px.
-     4. RESPIRATION : 88px entre sections, 24–28px dans les cartes.
+   Ce qui change :
+     1. LA COULEUR SITUE. Chaque espace porte son accent (accueil mint,
+        explorer ice, apprendre volt…) : une teinte de fond légère, un
+        libellé teinté, un halo d'ambiance. La sémantique ne bouge pas —
+        mint = positif, alert = négatif réel — et aucune information ne
+        repose sur la couleur seule.
+     2. L'INTERFACE RÉPOND. Reflet qui suit le curseur (`.spot`), carte
+        qui se soulève (`.lift`), bouton qui s'enfonce, indicateur de
+        navigation qui glisse, chiffres qui comptent, sections qui se
+        révèlent en cascade courte. Toujours < 600 ms, une seule courbe.
+     3. LA PROFONDEUR REVIENT, DOUCE. Une ombre portée très diffuse sous
+        les cartes et le chrome flottant (`--shadow-card`, `--shadow-lift`).
+        Les aplats restent la structure ; l'ombre n'est que le tactile.
+     4. UNE VOIX EN TITRE. Bricolage Grotesque pour les titres — ronde,
+        franche, lisible par tous. Manrope reste le texte et les chiffres
+        (tabulaires), IBM Plex Mono les tickers et les sources.
 
-   Ce qui reste propre à Seedow : l'ÉTAT DE PREUVE de chaque chiffre
-   (vérifié / estimé / contesté), exprimé en pastille et en fiche —
-   pas en crochet ASCII sous chaque nombre (CLAUDE.md §1.2).
-
-   Typographie : Manrope pour tout (400→800, chiffres tabulaires,
-   tracking serré sur les grandes valeurs). IBM Plex Mono uniquement
-   pour les tickers et les lignes de source.
+   Ce qui ne change pas : les tokens de couleur et leurs ratios (verrouillés
+   par src/lib/a11y/__tests__/contrast.test.ts), le plancher typographique,
+   l'état de preuve de chaque chiffre, et `prefers-reduced-motion`, qui
+   neutralise TOUT le mouvement décrit ici.
 ═══════════════════════════════════════════════════════════════ */
 
 @theme inline {
-  --radius-sm: 8px; /* chips, tags */
-  --radius-md: 14px; /* champs, petites tuiles */
-  --radius-lg: var(--radius); /* cartes — 20px */
-  --radius-xl: 24px;
-  --radius-2xl: 28px; /* feuilles, chrome d'écran */
-  --radius-3xl: 32px;
+  --radius-sm: 10px; /* chips, tags */
+  --radius-md: 16px; /* champs, petites tuiles */
+  --radius-lg: var(--radius); /* cartes — 24px */
+  --radius-xl: 28px;
+  --radius-2xl: 32px; /* feuilles, chrome d'écran */
+  --radius-3xl: 40px; /* scènes, grands panneaux */
 
   --font-sans: "Manrope", system-ui, -apple-system, sans-serif;
   --font-value: "Manrope", system-ui, sans-serif;
-  --font-display: "Manrope", system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque", "Manrope", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
 
   --color-background: var(--background);
@@ -105,6 +110,8 @@
   --color-section-accent: var(--section-accent);
   --color-section-accent-ink: var(--section-accent-ink);
 
+  --color-mint-tint: var(--mint-tint);
+  --color-mint-tint-border: var(--mint-tint-border);
   --color-alert-tint: var(--alert-tint);
   --color-alert-tint-border: var(--alert-tint-border);
   --color-solar-tint: var(--solar-tint);
@@ -117,11 +124,50 @@
   --shadow-flat-1: var(--shadow-flat-1);
   --shadow-flat-2: var(--shadow-flat-2);
   --shadow-flat-3: var(--shadow-flat-3);
+  --shadow-card: var(--shadow-card);
+  --shadow-soft: var(--shadow-soft);
+  --shadow-lift: var(--shadow-lift);
+  --shadow-layer: var(--shadow-layer);
 
-  --animate-fade-in-up: rise 0.42s var(--ease-out) both;
+  --ease-brand: cubic-bezier(0.32, 0.72, 0, 1);
+
+  --animate-fade-in-up: rise 0.5s var(--ease-brand) both;
   --animate-trace-x: trace-x 0.5s var(--ease-out) both;
-  --animate-reveal-scale: rise 0.42s var(--ease-out) both;
-  --animate-breathe: none;
+  --animate-reveal-scale: pop 0.45s var(--ease-brand) both;
+  --animate-breathe: breathe 5s ease-in-out infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-pop: pop 0.45s var(--ease-brand) both;
+
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: translateY(10px) scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  @keyframes breathe {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.85;
+    }
+    50% {
+      transform: scale(1.06);
+      opacity: 1;
+    }
+  }
 
   @keyframes trace-x {
     from {
@@ -134,7 +180,7 @@
   @keyframes rise {
     from {
       opacity: 0;
-      transform: translateY(8px);
+      transform: translateY(14px);
     }
     to {
       opacity: 1;
@@ -145,12 +191,14 @@
 
 :root {
   /* Rayon des cartes. Toute l'échelle en découle (voir @theme ci-dessus). */
-  --radius: 20px;
+  --radius: 24px;
 
   /* Accessibilité — multiplicateur de taille de texte piloté par useFontScale. */
   --font-scale: 1;
 
   --ease-out: cubic-bezier(0.2, 0, 0, 1);
+  /* La courbe de la marque (CLAUDE.md §4) : tout ce qui répond à un geste. */
+  --ease-brand: cubic-bezier(0.32, 0.72, 0, 1);
 
   /* ── Surfaces ─────────────────────────────────────────────────
      Trois niveaux suffisent, et ils remplacent les ombres :
@@ -226,6 +274,8 @@
   --glacier: var(--ice);
 
   /* Fonds teintés — très désaturés, ils portent des pastilles */
+  --mint-tint: #e7f4f0; /* --mint-ink dessus : AA (contrast.test.ts) */
+  --mint-tint-border: #a9d6ca;
   --alert-tint: #fbeeec;
   --alert-tint-border: #eebdb6;
   --solar-tint: #fbf3e3;
@@ -256,12 +306,23 @@
   --input: var(--paper-3);
   --ring: var(--ink);
 
-  /* Aucune ombre sur le contenu — la profondeur vient des aplats.
-     Une seule ombre existe : les calques flottants. */
+  /* ── Ombres (V4) ──────────────────────────────────────────────
+     Trois niveaux, tous très diffus : l'ombre dit « ça se touche », elle ne
+     dessine jamais un contour.
+       --shadow-card  la carte au repos, à peine décollée du sol
+       --shadow-soft  le chrome flottant (barres, dock)
+       --shadow-lift  la carte survolée, le calque
+     `--shadow-flat-*` restent neutralisés (vestiges V2). */
   --shadow-flat-1: 0 0 0 0 transparent;
   --shadow-flat-2: 0 0 0 0 transparent;
   --shadow-flat-3: 0 0 0 0 transparent;
+  --shadow-card: 0 1px 2px rgb(22 24 26 / 0.04), 0 10px 28px -18px rgb(22 24 26 / 0.14);
+  --shadow-soft: 0 1px 2px rgb(22 24 26 / 0.05), 0 14px 36px -18px rgb(22 24 26 / 0.2);
+  --shadow-lift: 0 2px 6px rgb(22 24 26 / 0.05), 0 28px 56px -24px rgb(22 24 26 / 0.28);
   --shadow-layer: 0 24px 64px -32px rgb(14 15 16 / 0.36);
+
+  /* Intensité du halo d'ambiance (fond de page, scènes). */
+  --ambient: 1;
 }
 
 .dark {
@@ -290,6 +351,8 @@
   --alert-ink: #ffaa9c;
   --solar-ink: #e8c27c;
   --volt-ink: #b7a7f2;
+  --mint-tint: #11261f;
+  --mint-tint-border: #24503f;
   --alert-tint: #2c1714;
   --alert-tint-border: #57302a;
   --solar-tint: #2b2412;
@@ -306,7 +369,11 @@
   --popover-foreground: var(--ink);
   --border: var(--paper-3);
   --input: var(--paper-3);
+  --shadow-card: 0 0 0 0 transparent;
+  --shadow-soft: 0 14px 36px -18px rgb(0 0 0 / 0.7);
+  --shadow-lift: 0 28px 56px -24px rgb(0 0 0 / 0.85);
   --shadow-layer: 0 24px 64px -32px rgb(0 0 0 / 0.8);
+  --ambient: 0.7;
 }
 
 /* ─────────────────────────────────────────────────────────
@@ -339,9 +406,10 @@
   font-size: calc(18px * var(--font-scale));
 }
 @utility text-h1-page {
-  font-size: calc(30px * var(--font-scale));
-  line-height: 1.12;
-  letter-spacing: -0.028em;
+  font-family: var(--font-display);
+  font-size: clamp(calc(30px * var(--font-scale)), 3.6vw, calc(42px * var(--font-scale)));
+  line-height: 1.06;
+  letter-spacing: -0.03em;
   font-weight: 800;
 }
 /* Chiffre héros — grotesque, gras, chiffres tabulaires, tracking très
@@ -376,6 +444,42 @@
     font-weight: 400;
     font-variant-numeric: tabular-nums;
     text-rendering: optimizeLegibility;
+  }
+
+  /* ── Halo d'ambiance ──────────────────────────────────────────
+     Deux taches de couleur très diluées, fixes, derrière tout le contenu :
+     c'est ce qui sort l'app du gris uni. Les teintes sont lues sur les
+     tokens, donc le halo suit le thème clair / sombre sans rien réécrire.
+     Dosage mesuré : au point le plus dense, le sol reste à plus de 4,5:1
+     sous `--ink-3` — le halo ne grignote pas le contraste du texte. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: var(--ambient);
+    background:
+      radial-gradient(
+        58rem 34rem at 6% -14%,
+        color-mix(in srgb, var(--mint) 8%, transparent),
+        transparent 62%
+      ),
+      radial-gradient(
+        46rem 30rem at 104% -6%,
+        color-mix(in srgb, var(--volt) 7%, transparent),
+        transparent 60%
+      ),
+      radial-gradient(
+        40rem 26rem at 70% 108%,
+        color-mix(in srgb, var(--ice) 5%, transparent),
+        transparent 60%
+      );
+  }
+
+  ::selection {
+    background-color: color-mix(in srgb, var(--mint) 26%, transparent);
+    color: var(--ink);
   }
 
   p {
@@ -414,44 +518,68 @@
     font-variant-numeric: tabular-nums lining-nums;
   }
 
+  /* Un TITRE reste en police de titre même s'il porte `.font-value` (classe
+     historique des intitulés de carte) ; `.font-value` garde Manrope pour ce
+     qu'elle désigne vraiment — une valeur mesurée, dans un <p> ou un <span>. */
+  h1.font-value,
+  h2.font-value,
+  h3.font-value {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.028em;
+  }
+
   .font-display {
     font-family: var(--font-display);
     font-weight: 800;
     letter-spacing: -0.03em;
   }
 
+  /* Titres : Bricolage Grotesque. `font-optical-sizing` laisse la police
+     resserrer ses formes d'elle-même aux grands corps. */
   .display-xl {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
     font-weight: 800;
-    font-size: clamp(2.5rem, 6.4vw, 4.75rem);
-    line-height: 1.03;
-    letter-spacing: -0.038em;
+    font-size: clamp(2.75rem, 7.4vw, 5.75rem);
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
   }
 
   .display-lg {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
     font-weight: 800;
-    font-size: clamp(2rem, 4.4vw, 3.25rem);
-    line-height: 1.06;
-    letter-spacing: -0.034em;
+    font-size: clamp(2.125rem, 5vw, 3.75rem);
+    line-height: 1.02;
+    letter-spacing: -0.036em;
+    text-wrap: balance;
   }
 
   h1 {
+    font-family: var(--font-display);
     font-weight: 800;
-    font-size: clamp(1.875rem, 4vw, 2.75rem);
+    font-size: clamp(2rem, 4.4vw, 3.125rem);
+    line-height: 1.05;
+    letter-spacing: -0.034em;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.625rem, 3.4vw, 2.5rem);
     line-height: 1.08;
     letter-spacing: -0.032em;
     color: var(--ink);
-  }
-  h2 {
-    font-weight: 800;
-    font-size: clamp(1.5rem, 3vw, 2rem);
-    line-height: 1.12;
-    letter-spacing: -0.03em;
-    color: var(--ink);
+    text-wrap: balance;
   }
   h3 {
+    font-family: var(--font-display);
     font-weight: 700;
-    font-size: clamp(1.0625rem, 2vw, 1.25rem);
-    line-height: 1.25;
+    font-size: clamp(1.125rem, 2vw, 1.375rem);
+    line-height: 1.2;
     letter-spacing: -0.022em;
     color: var(--ink);
   }
@@ -526,7 +654,7 @@
     background-color: var(--card);
     border: 0;
     border-radius: var(--radius);
-    box-shadow: none;
+    box-shadow: var(--shadow-card);
   }
   .paper-card-inset {
     background-color: var(--paper-2);
@@ -546,6 +674,75 @@
     background-color: var(--paper);
     border-radius: var(--radius);
     box-shadow: inset 0 0 0 1px var(--paper-3);
+  }
+  /* Tuile teintée par l'accent de la section : la couleur SITUE (on est dans
+     « apprendre », dans « explorer »…), le libellé reste écrit. */
+  .tile-accent {
+    background-color: color-mix(in srgb, var(--section-accent) 9%, var(--paper));
+    border-radius: var(--radius);
+  }
+  /* Pastille d'icône — 44px, teintée par l'accent de la section. */
+  .icon-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background-color: color-mix(in srgb, var(--section-accent) 13%, transparent);
+    color: var(--section-accent-ink);
+  }
+  .icon-badge svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Carte héros : la carte du chiffre principal d'un écran (« Mon argent »).
+     Un voile d'accent dans le coin, qui se dissout dans le papier — assez
+     pour la désigner, pas assez pour teinter le chiffre posé dessus. */
+  .hero-card {
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    background:
+      radial-gradient(
+        120% 130% at 100% 0%,
+        color-mix(in srgb, var(--section-accent) 15%, transparent),
+        transparent 58%
+      ),
+      var(--card);
+  }
+
+  /* ── Gabarit des pages de l'app ───────────────────────────────
+     Une seule colonne de lecture par défaut (760px) ; `--wide` pour les
+     écrans à plusieurs colonnes (accueil, portefeuille, listes). Le bas de
+     page réserve la place de la navigation flottante sur mobile. */
+  .page {
+    width: 100%;
+    max-width: 760px;
+    margin-inline: auto;
+    padding-bottom: 8rem;
+  }
+  .page--wide {
+    max-width: 1120px;
+  }
+  .page--narrow {
+    max-width: 620px;
+  }
+  @media (min-width: 768px) {
+    .page {
+      padding-bottom: 5rem;
+    }
+  }
+
+  /* ── Verre : le chrome flottant (barres, dock) ────────────────── */
+  .glass {
+    background-color: color-mix(in srgb, var(--paper) 82%, transparent);
+    -webkit-backdrop-filter: blur(18px) saturate(1.5);
+    backdrop-filter: blur(18px) saturate(1.5);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--paper-3) 70%, transparent),
+      var(--shadow-soft);
   }
 
   /* Bloc de section — un simple groupe, séparé par de l'espace et non
@@ -595,7 +792,7 @@
     --solar-ink: #e8c27c;
   }
   .ink-section {
-    border-radius: var(--radius-2xl);
+    border-radius: var(--radius-3xl);
   }
   .on-deep h1,
   .on-deep h2,
@@ -713,8 +910,19 @@
     letter-spacing: -0.006em;
     white-space: nowrap;
   }
+  .flow-pill {
+    transition:
+      transform 220ms var(--ease-brand),
+      background-color 220ms var(--ease-brand),
+      box-shadow 220ms var(--ease-brand),
+      color 220ms var(--ease-brand);
+  }
   .flow-pill:hover {
     color: var(--ink);
+    box-shadow: inset 0 0 0 1px var(--ink-3);
+  }
+  .flow-pill:active {
+    transform: scale(0.95);
   }
   .flow-pill[aria-pressed="true"] {
     box-shadow: inset 0 0 0 1.5px var(--mint);
@@ -745,6 +953,7 @@
   .segmented > [data-active="true"] {
     background-color: var(--paper);
     color: var(--ink);
+    box-shadow: var(--shadow-card);
   }
 
   /* ── Filets ───────────────────────────────────────────────────── */
@@ -792,17 +1001,264 @@
      sur toute la bande claire. */
   .lift {
     transition:
-      transform 240ms cubic-bezier(0.32, 0.72, 0, 1),
-      background-color 240ms cubic-bezier(0.32, 0.72, 0, 1);
+      transform 320ms var(--ease-brand),
+      box-shadow 320ms var(--ease-brand),
+      background-color 240ms var(--ease-brand);
+    will-change: transform;
   }
   .lift:hover {
-    transform: scale(1.03);
+    transform: translateY(-4px) scale(1.012);
+    box-shadow: var(--shadow-lift);
   }
+  .lift:active {
+    transform: translateY(-1px) scale(0.995);
+  }
+
+  /* ── Reflet qui suit le curseur ───────────────────────────────
+     `--mx` / `--my` sont posés par UN écouteur global (useSpotlight, monté
+     à la racine) sur la carte survolée : aucun état React, aucun rendu.
+     Le reflet prend la teinte de la section. Décoratif pur : il ne porte
+     aucune information et disparaît en mouvement réduit. */
+  .spot {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .spot::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 320ms var(--ease-out);
+    background: radial-gradient(
+      420px circle at var(--mx, 50%) var(--my, 0%),
+      color-mix(in srgb, var(--section-accent) 16%, transparent),
+      transparent 62%
+    );
+  }
+  .spot:hover::before,
+  .spot:focus-visible::before {
+    opacity: 1;
+  }
+
+  /* ── Aurore : fond d'ambiance animé des scènes (hero, CTA) ──────
+     Trois taches floues qui dérivent lentement. Couleurs lues sur les
+     tokens : la même aurore rend juste en clair, en sombre et dans la
+     bande `.on-deep`. */
+  .aurora {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .aurora > i {
+    position: absolute;
+    display: block;
+    border-radius: 999px;
+    filter: blur(64px);
+    opacity: calc(0.42 * var(--ambient));
+    will-change: transform;
+    animation: aurora-drift 18s ease-in-out infinite alternate;
+  }
+  .aurora > i:nth-child(1) {
+    width: 46vmax;
+    height: 46vmax;
+    left: -12vmax;
+    top: -22vmax;
+    background: color-mix(in srgb, var(--mint) 55%, transparent);
+  }
+  .aurora > i:nth-child(2) {
+    width: 38vmax;
+    height: 38vmax;
+    right: -10vmax;
+    top: -14vmax;
+    background: color-mix(in srgb, var(--volt) 46%, transparent);
+    animation-duration: 23s;
+    animation-delay: -6s;
+  }
+  .aurora > i:nth-child(3) {
+    width: 34vmax;
+    height: 34vmax;
+    left: 34%;
+    top: 22%;
+    background: color-mix(in srgb, var(--ice) 38%, transparent);
+    animation-duration: 27s;
+    animation-delay: -11s;
+  }
+  @keyframes aurora-drift {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    50% {
+      transform: translate3d(4vmax, 3vmax, 0) scale(1.12);
+    }
+    100% {
+      transform: translate3d(-3vmax, 5vmax, 0) scale(0.94);
+    }
+  }
+  .on-deep .aurora > i,
+  .ink-section .aurora > i {
+    opacity: 0.3;
+  }
+
+  /* Trame de points — le fond des scènes de démonstration. */
+  .grid-dots {
+    background-image: radial-gradient(
+      color-mix(in srgb, var(--ink) 14%, transparent) 1px,
+      transparent 1.2px
+    );
+    background-size: 22px 22px;
+  }
+
+  /* ── Texte en dégradé de marque ───────────────────────────────
+     Entre trois ENCRES d'accent (toutes AA sur papier comme sur la bande) :
+     le dégradé ne descend donc jamais sous le contraste de la plus claire. */
+  .text-gradient {
+    background-image: linear-gradient(
+      100deg,
+      var(--mint-ink) 0%,
+      var(--ice-ink) 55%,
+      var(--volt-ink) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: var(--mint-ink);
+    padding-bottom: 0.08em; /* les jambages (g, y) ne sont pas rognés */
+  }
+  @media (forced-colors: active) {
+    .text-gradient {
+      background-image: none;
+      -webkit-text-fill-color: currentColor;
+    }
+  }
+
+  /* Soulignement qui se trace au survol. */
+  .link-u {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-size: 0% 1.5px;
+    background-position: 0 100%;
+    padding-bottom: 2px;
+    transition: background-size 320ms var(--ease-brand);
+  }
+  .link-u:hover,
+  .link-u:focus-visible {
+    background-size: 100% 1.5px;
+  }
+
+  /* ── Bandeau défilant ─────────────────────────────────────────
+     La piste est dupliquée une fois dans le DOM (la copie est aria-hidden) ;
+     -50 % la ramène donc exactement à son point de départ. S'arrête au
+     survol et au focus, pour qu'on puisse lire. */
+  .marquee {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee var(--marquee-duration, 38s) linear infinite;
+  }
+  .marquee:hover .marquee-track,
+  .marquee:focus-within .marquee-track {
+    animation-play-state: paused;
+  }
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Reflet qui balaie le CTA principal au survol. */
+  .shine {
+    position: relative;
+    overflow: hidden;
+  }
+  .shine::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-120%) skewX(-18deg);
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.28), transparent);
+    pointer-events: none;
+  }
+  .shine:hover::after {
+    transform: translateX(120%) skewX(-18deg);
+    transition: transform 700ms var(--ease-brand);
+  }
+
+  /* Trois points « Ethi écrit… » */
+  .typing-dots {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .typing-dots > i {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background-color: var(--ink-3);
+    animation: typing 1.1s ease-in-out infinite;
+  }
+  .typing-dots > i:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+  .typing-dots > i:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+  @keyframes typing {
+    0%,
+    60%,
+    100% {
+      transform: translateY(0);
+      opacity: 0.45;
+    }
+    30% {
+      transform: translateY(-4px);
+      opacity: 1;
+    }
+  }
+
+  /* Barre de progression de lecture (pages longues). */
+  .scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: 70;
+    transform-origin: 0 50%;
+    background-image: linear-gradient(90deg, var(--mint), var(--ice), var(--volt));
+    pointer-events: none;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .lift,
-    .lift:hover {
+    .lift:hover,
+    .lift:active {
       transition: none;
       transform: none;
+    }
+    .spot::before,
+    .shine::after,
+    .scroll-progress {
+      display: none;
+    }
+    .aurora > i,
+    .marquee-track,
+    .typing-dots > i {
+      animation: none !important;
+    }
+    .marquee {
+      overflow-x: auto;
+    }
+    .link-u {
+      transition: none;
     }
   }
 
@@ -851,16 +1307,19 @@
   .field::placeholder {
     color: var(--ink-3);
   }
+  .field:hover {
+    border-color: var(--ink-3);
+  }
   .field:focus {
-    border-color: var(--ink);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink) 10%, transparent);
+    border-color: var(--mint);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--mint) 18%, transparent);
   }
 
   .bubble-ethi {
     background-color: var(--paper-2);
     color: var(--ink);
     border: 0;
-    border-radius: var(--radius);
+    border-radius: var(--radius) var(--radius) var(--radius) 8px;
     padding: 14px 18px;
     line-height: 1.55;
     font-size: calc(15px * var(--font-scale));
@@ -919,16 +1378,101 @@
 
   .reveal {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(18px);
     transition:
-      opacity 0.5s var(--ease-out),
-      transform 0.5s var(--ease-out);
+      opacity 0.6s var(--ease-brand),
+      transform 0.6s var(--ease-brand);
   }
   .reveal.in-view,
   .reveal.is-in {
     opacity: 1;
     transform: none;
   }
+  /* Cascade : les ENFANTS montent l'un après l'autre (RevealGroup). */
+  .reveal-group > * {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 0.6s var(--ease-brand),
+      transform 0.6s var(--ease-brand);
+  }
+  .reveal-group.in-view > * {
+    opacity: 1;
+    transform: none;
+  }
+  .reveal-group > *:nth-child(2) {
+    transition-delay: 70ms;
+  }
+  .reveal-group > *:nth-child(3) {
+    transition-delay: 140ms;
+  }
+  .reveal-group > *:nth-child(4) {
+    transition-delay: 210ms;
+  }
+  .reveal-group > *:nth-child(5) {
+    transition-delay: 280ms;
+  }
+  .reveal-group > *:nth-child(6) {
+    transition-delay: 350ms;
+  }
+  .reveal-group > *:nth-child(7) {
+    transition-delay: 420ms;
+  }
+  .reveal-group > *:nth-child(n + 8) {
+    transition-delay: 490ms;
+  }
+  /* Une carte `.lift` dans une cascade garde sa propre transition de survol
+     une fois révélée — sinon le retard de cascade s'appliquerait au survol. */
+  .reveal-group.in-view > .lift {
+    transition:
+      transform 320ms var(--ease-brand),
+      box-shadow 320ms var(--ease-brand),
+      background-color 240ms var(--ease-brand),
+      opacity 0.6s var(--ease-brand);
+  }
+  .reveal-group.in-view > .lift:hover {
+    transition-delay: 0ms;
+  }
+
+  /* Titre mot par mot (SplitWords) — CSS pur, joué dès la première peinture. */
+  .word-mask {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+    padding-bottom: 0.12em;
+    margin-bottom: -0.12em;
+    white-space: pre;
+  }
+  .word-rise {
+    display: inline-block;
+    animation: word-rise 0.8s var(--ease-brand) both;
+    animation-delay: calc(var(--i, 0) * 70ms + 80ms);
+  }
+  @keyframes word-rise {
+    from {
+      transform: translateY(105%) rotate(4deg);
+      opacity: 0;
+    }
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+
+  /* La graine de la marque (Wordmark). */
+  .wordmark-seed {
+    display: inline-block;
+    width: 0.27em;
+    height: 0.27em;
+    margin-left: 0.07em;
+    border-radius: 999px;
+    background-color: var(--mint);
+    transition: transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .wordmark:hover .wordmark-seed {
+    transform: translateY(-0.32em) scale(1.25);
+  }
+
   .trace {
     transform-origin: left;
     animation: trace-x 0.5s var(--ease-out) both;
@@ -955,10 +1499,17 @@
       animation: none !important;
       transform: none !important;
     }
-    .reveal {
+    .reveal,
+    .reveal-group > * {
       opacity: 1 !important;
       transform: none !important;
       transition: none !important;
+    }
+    .word-rise {
+      animation: none !important;
+    }
+    .wordmark-seed {
+      transition: none;
     }
   }
 }

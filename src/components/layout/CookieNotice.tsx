@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "@tanstack/react-router";
+import { Button } from "@/components/ui/button";
 
 const STORAGE_KEY = "seedow.cookie_notice_dismissed";
 
@@ -33,20 +34,17 @@ export function CookieNotice() {
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-[60] border-t border-paper-3 bg-paper/95 backdrop-blur px-4 py-3 safe-area-bottom">
-      <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-start sm:items-center gap-3">
-        <p className="flex-1 text-label text-ink-2 leading-relaxed">
+    <div className="pointer-events-none fixed inset-x-3 bottom-3 z-[60] flex justify-center safe-area-bottom">
+      <div className="glass pointer-events-auto flex max-w-2xl animate-fade-in-up flex-col items-start gap-3 rounded-[24px] p-4 pl-5 sm:flex-row sm:items-center">
+        <p className="flex-1 text-label leading-relaxed text-ink-2">
           {t("cookie_notice.text")}{" "}
-          <Link to="/confidentialite" className="underline hover:text-ink">
+          <Link to="/confidentialite" className="font-semibold text-ink underline underline-offset-2 hover:no-underline">
             {t("cookie_notice.learn_more")}
           </Link>
         </p>
-        <button
-          onClick={dismiss}
-          className="shrink-0 px-3 py-1.5 text-label font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
-        >
+        <Button size="sm" onClick={dismiss} className="shrink-0">
           {t("cookie_notice.dismiss")}
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -64,7 +64,7 @@ export function AgencyReveal({
             className="absolute inset-y-0 w-1/2 bg-ink"
           />
         </div>
-        <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium">
+        <p className="text-caption text-ink-3 font-medium">
           {t("onboarding.agency.loading")}
         </p>
       </motion.div>
@@ -103,7 +103,7 @@ export function AgencyReveal({
         </button>
         <span className="inline-flex items-center gap-2">
           <span aria-hidden="true" className="apple-live" />
-          <span className="font-mono text-tag uppercase tracking-[0.14em] text-mint-ink">
+          <span className="text-caption font-semibold text-mint-ink">
             {t("onboarding.agency.eyebrow")}
           </span>
         </span>
@@ -138,12 +138,12 @@ export function AgencyReveal({
           className="ink-section paper-grain ink-grain mt-6 overflow-hidden rounded-2xl p-5"
         >
           <div className="flex items-center justify-between gap-3">
-            <span className="font-mono text-tag uppercase tracking-[0.1em] text-paper/70">
+            <span className="text-caption font-semibold text-paper/70">
               {resolution.company}
               {resolution.ticker ? ` · ${resolution.ticker}` : ""}
             </span>
             {days != null && (
-              <span className="inline-flex items-center gap-1.5 font-mono text-tag uppercase tracking-[0.08em] text-mint-ink">
+              <span className="inline-flex items-center gap-1.5 text-caption font-semibold text-mint-ink">
                 <span aria-hidden="true" className="apple-live" />
                 {days === 0 ? t("vote.status.last_day") : t("vote.status.days_left", { n: days })}
               </span>
@@ -158,7 +158,7 @@ export function AgencyReveal({
             </p>
           )}
 
-          <p className="mt-4 border-t border-paper/15 pt-3 font-mono text-tag uppercase tracking-[0.06em] text-paper/50">
+          <p className="mt-4 border-t border-paper/15 pt-3 text-caption font-semibold tracking-[0.06em] text-paper/50">
             {t("onboarding.agency.source", {
               source: resolution.sourceName,
               date: formatDate(resolution.meetingDate, lang),

@@ -24,7 +24,7 @@ function showBetaBannerFor(pathname: string): boolean {
 }
 
 /**
- * Shell de l'application — rail + topbar persistants sur desktop (md+).
+ * Shell de l'application — dock + barre flottants, persistants sur desktop (md+).
  * Sur mobile : passe-plat, le rendu existant (`AppHeader` + `BottomNavigation`
  * dans chaque route) prend le relais.
  *
@@ -158,17 +158,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-paper-2">
+    <div className="min-h-screen">
       <SkipLink />
-      {showBanner ? <BetaBanner /> : null}
       <div
         className={cn(
-          prefersReducedMotion
-            ? ""
-            : "transform-gpu will-change-transform transition-[opacity,transform] duration-300 ease-out",
-          focus
-            ? "md:opacity-0 md:pointer-events-none md:-translate-x-2"
-            : "md:opacity-100 md:translate-x-0",
+          // Opacité seule, AUCUN `transform` sur ce conteneur : un ancêtre
+          // transformé devient le repère des enfants `position: fixed`, et le
+          // dock (fixed, top/bottom) s'effondrait sur la hauteur nulle de ce
+          // bloc — il ne restait que son coin supérieur.
+          prefersReducedMotion ? "" : "transition-opacity duration-300 ease-out",
+          focus ? "md:opacity-0 md:pointer-events-none" : "md:opacity-100",
         )}
         aria-hidden={focus ? "true" : undefined}
         inert={focus}
@@ -178,23 +177,29 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <div
         className={cn(
           prefersReducedMotion ? "" : "transition-[padding] duration-300 ease-out",
-          focus ? "md:pl-0" : "md:pl-16",
+          focus ? "md:pl-0" : "md:pl-[112px]",
         )}
       >
+        {/* La barre colle au haut de l'écran : c'est CE conteneur qui est
+            `sticky`. La barre elle-même vit dans un bloc `overflow-hidden`
+            (nécessaire au repli du mode focus), qui en ferait sinon son propre
+            conteneur de défilement — et elle ne collerait à rien. */}
         <div
           className={cn(
+            "sticky top-0 z-30 hidden md:grid",
             prefersReducedMotion
-              ? "grid"
-              : "grid transform-gpu will-change-[grid-template-rows] transition-[grid-template-rows,opacity] duration-300 ease-out",
+              ? ""
+              : "transform-gpu will-change-[grid-template-rows] transition-[grid-template-rows,opacity] duration-300 ease-out",
             focus ? "md:grid-rows-[0fr] md:opacity-0" : "md:grid-rows-[1fr] md:opacity-100",
           )}
           aria-hidden={focus ? "true" : undefined}
           inert={focus}
         >
-          <div className="overflow-hidden min-h-0">
+          <div className="min-h-0 overflow-hidden px-3 pt-3 pb-4">
             <TopBar onOpenCommand={openPalette} />
           </div>
         </div>
+        {showBanner ? <BetaBanner /> : null}
         <main id="main-content">{children}</main>
       </div>
       <FocusToggle focus={focus} onToggle={toggleFocus} />
@@ -213,7 +218,7 @@ function SkipLink() {
   return (
     <a
       href="#main-content"
-      className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:border focus:border-ink focus:bg-paper focus:px-4 focus:py-2.5 focus:text-body-sm focus:font-semibold focus:text-ink focus:outline-none focus:ring-2 focus:ring-ink focus:ring-offset-2"
+      className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-ink focus:px-5 focus:py-3 focus:text-body-sm focus:font-semibold focus:text-paper focus:outline-none focus:ring-2 focus:ring-mint focus:ring-offset-2"
     >
       {t("a11y.skip_to_content")}
     </a>
@@ -231,12 +236,12 @@ function FocusToggle({ focus, onToggle }: { focus: boolean; onToggle: () => void
           aria-pressed={focus}
           aria-label={focus ? t("focus_mode.exit") : t("focus_mode.enter")}
           className={cn(
-            "hidden md:flex fixed bottom-4 right-4 z-50 items-center gap-1.5 h-8 px-3 rounded-full",
-            "border text-caption font-semibold uppercase tracking-[0.18em] transition-all duration-200",
-            "outline-none focus-visible:ring-2 focus-visible:ring-highlight-1",
+            "hidden md:flex fixed bottom-4 right-4 z-50 items-center gap-1.5 h-9 px-4 rounded-full",
+            "text-caption font-bold transition-all duration-200",
+            "outline-none focus-visible:ring-2 focus-visible:ring-mint",
             focus
-              ? "bg-ink text-paper border-ink shadow-lg hover:bg-ink-2 pointer-events-auto"
-              : "bg-paper/80 backdrop-blur text-ink-3 border-paper-3 opacity-0 pointer-events-none focus-visible:opacity-100 focus-visible:pointer-events-auto",
+              ? "bg-ink text-paper shadow-lift hover:opacity-90 pointer-events-auto"
+              : "glass text-ink-3 opacity-0 pointer-events-none focus-visible:opacity-100 focus-visible:pointer-events-auto",
           )}
         >
           <FocusIcon active={focus} />

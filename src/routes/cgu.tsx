@@ -12,11 +12,11 @@ export const Route = createFileRoute("/cgu")({
 
 function CguPage() {
   return (
-    <div className="min-h-screen bg-paper-2 text-ink">
+    <div className="min-h-screen text-ink">
       <header className="max-w-3xl mx-auto px-6 pt-10 pb-8 border-b border-paper-3">
         <Link
           to="/"
-          className="text-tag uppercase tracking-[0.18em] text-ink-3 hover:text-ink transition-colors"
+          className="text-caption font-semibold text-ink-3 hover:text-ink transition-colors"
         >
           ← Retour à l'accueil
         </Link>

@@ -19,7 +19,7 @@ export function CourseProgressBanner({ completedCount, total, resumeSlug, resume
   return (
     <div className="mb-10 bg-paper-2/60 border border-ink/8 p-5 md:p-6">
       <div className="flex flex-wrap items-baseline justify-between gap-2 mb-3">
-        <p className="text-tag font-semibold uppercase tracking-[0.2em] text-ink-3">
+        <p className="text-caption font-semibold text-ink-3">
           Ta progression
         </p>
         <p className="text-body-sm text-ink-2 tabular-nums">

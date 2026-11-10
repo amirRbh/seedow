@@ -3747,6 +3747,109 @@ const stiEn = {
   },
 };
 
+/**
+ * DA V4 « Vivant » — chaînes de la refonte : chrome public unique (en-tête,
+ * pied de page), nouvelles scènes de la landing, navigation de l'app.
+ *
+ * L'exemple d'échange avec Ethi est réécrit ici (`landing.v5.ethi`) : l'ancien
+ * lui faisait proposer « 3 alternatives avec un score climat supérieur », soit
+ * une recommandation individualisée adossée à un score que le produit ne publie
+ * plus (CLAUDE.md §5, docs/scoring-v2.md). Le nouveau montre ce qu'Ethi fait :
+ * expliquer un mécanisme et dire où lire la donnée.
+ */
+const designV4Fr = {
+  site: {
+    home_aria: "Seedow — accueil",
+    nav_aria: "Navigation principale",
+    menu_open: "Ouvrir le menu",
+    menu_close: "Fermer le menu",
+    signature_1: "Ce n'est pas une fatalité.",
+    signature_2: "C'est un choix. Le tien aussi.",
+    footer: {
+      col_product: "Produit",
+      col_learn: "Comprendre",
+      col_legal: "Légal",
+    },
+  },
+  landing: {
+    v5: {
+      hero_secondary: "J'ai un fonds à vérifier",
+      try_hint: "Essaie : coche une conviction, le flux se redirige.",
+      proof_aria: "Ce que Seedow garantit",
+      how: {
+        eyebrow: "Comment ça marche",
+        title: "Trois gestes. Deux minutes.",
+        step_label: "Étape {{n}}",
+        step1_title: "Dis ce qui compte pour toi",
+        step1_desc:
+          "Tes causes, ce que tu refuses de financer, ton horizon. Quatre questions, sans compte et sans jargon.",
+        step2_title: "Regarde ce qui passe tes filtres",
+        step2_desc:
+          "Les fonds qui correspondent restent, les autres sortent. Pour chacun : ses frais, ce qu'il publie — et ce qu'il ne publie pas.",
+        step3_title: "Comprends chaque chiffre",
+        step3_desc:
+          "Chaque donnée porte son état de preuve, sa source et sa date. Et si un mot t'échappe, Ethi te l'explique — sans rien te vendre.",
+        visual_kept: "retenu",
+        visual_out: "écarté",
+        visual_source: "source · date · couverture",
+      },
+      ethi: {
+        badge: "N'a rien à vendre",
+        q1: "C'est quoi, un ETF ?",
+        a1: "Un panier de titres qu'on achète en une seule fois : au lieu de choisir une entreprise, tu en détiens des centaines d'un coup. Ses frais annuels s'appellent le TER.",
+        q2: "Et comment savoir ce qu'il finance vraiment ?",
+        a2: "En lisant sa composition publiée : la liste de ce qu'il détient, avec sa date. Je te montre où la trouver et comment la lire. La décision, elle, reste la tienne.",
+      },
+    },
+  },
+};
+const designV4En = {
+  site: {
+    home_aria: "Seedow — home",
+    nav_aria: "Main navigation",
+    menu_open: "Open menu",
+    menu_close: "Close menu",
+    signature_1: "It isn't inevitable.",
+    signature_2: "It's a choice. Yours too.",
+    footer: {
+      col_product: "Product",
+      col_learn: "Understand",
+      col_legal: "Legal",
+    },
+  },
+  landing: {
+    v5: {
+      hero_secondary: "I have a fund to check",
+      try_hint: "Try it: tick a conviction and watch the flow reroute.",
+      proof_aria: "What Seedow guarantees",
+      how: {
+        eyebrow: "How it works",
+        title: "Three moves. Two minutes.",
+        step_label: "Step {{n}}",
+        step1_title: "Say what matters to you",
+        step1_desc:
+          "Your causes, what you refuse to fund, your horizon. Four questions, no account and no jargon.",
+        step2_title: "See what passes your filters",
+        step2_desc:
+          "Matching funds stay, the others drop out. For each one: its fees, what it publishes — and what it doesn't.",
+        step3_title: "Understand every figure",
+        step3_desc:
+          "Every data point carries its proof status, its source and its date. And if a word escapes you, Ethi explains it — without selling you anything.",
+        visual_kept: "kept",
+        visual_out: "set aside",
+        visual_source: "source · date · coverage",
+      },
+      ethi: {
+        badge: "Has nothing to sell",
+        q1: "What is an ETF?",
+        a1: "A basket of securities you buy in one go: instead of picking one company, you hold hundreds at once. Its yearly fee is called the TER.",
+        q2: "And how do I know what it really funds?",
+        a2: "By reading its published holdings: the list of what it owns, with its date. I'll show you where to find it and how to read it. The decision stays yours.",
+      },
+    },
+  },
+};
+
 const FR_BLOCKS: Json[] = [
   composeSwitchFr,
   pedagogyFr,
@@ -3758,6 +3861,7 @@ const FR_BLOCKS: Json[] = [
   moneyFlowFr,
   euroBreakdownFr,
   stiFr,
+  designV4Fr,
 ];
 const EN_BLOCKS: Json[] = [
   composeSwitchEn,
@@ -3770,6 +3874,7 @@ const EN_BLOCKS: Json[] = [
   moneyFlowEn,
   euroBreakdownEn,
   stiEn,
+  designV4En,
 ];
 
 writeFileSync(

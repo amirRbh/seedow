@@ -451,6 +451,32 @@
       },
       "title_line1": "Regarde où va",
       "title_accent": "ton argent."
+    },
+    "v5": {
+      "hero_secondary": "J'ai un fonds à vérifier",
+      "try_hint": "Essaie : coche une conviction, le flux se redirige.",
+      "proof_aria": "Ce que Seedow garantit",
+      "how": {
+        "eyebrow": "Comment ça marche",
+        "title": "Trois gestes. Deux minutes.",
+        "step_label": "Étape {{n}}",
+        "step1_title": "Dis ce qui compte pour toi",
+        "step1_desc": "Tes causes, ce que tu refuses de financer, ton horizon. Quatre questions, sans compte et sans jargon.",
+        "step2_title": "Regarde ce qui passe tes filtres",
+        "step2_desc": "Les fonds qui correspondent restent, les autres sortent. Pour chacun : ses frais, ce qu'il publie — et ce qu'il ne publie pas.",
+        "step3_title": "Comprends chaque chiffre",
+        "step3_desc": "Chaque donnée porte son état de preuve, sa source et sa date. Et si un mot t'échappe, Ethi te l'explique — sans rien te vendre.",
+        "visual_kept": "retenu",
+        "visual_out": "écarté",
+        "visual_source": "source · date · couverture"
+      },
+      "ethi": {
+        "badge": "N'a rien à vendre",
+        "q1": "C'est quoi, un ETF ?",
+        "a1": "Un panier de titres qu'on achète en une seule fois : au lieu de choisir une entreprise, tu en détiens des centaines d'un coup. Ses frais annuels s'appellent le TER.",
+        "q2": "Et comment savoir ce qu'il finance vraiment ?",
+        "a2": "En lisant sa composition publiée : la liste de ce qu'il détient, avec sa date. Je te montre où la trouver et comment la lire. La décision, elle, reste la tienne."
+      }
     }
   },
   "auth": {
@@ -3597,5 +3623,18 @@
     "amerique_nord": "Amérique du Nord",
     "asie_pacifique": "Asie-Pacifique",
     "non_precise": "Zone non précisée"
+  },
+  "site": {
+    "home_aria": "Seedow — accueil",
+    "nav_aria": "Navigation principale",
+    "menu_open": "Ouvrir le menu",
+    "menu_close": "Fermer le menu",
+    "signature_1": "Ce n'est pas une fatalité.",
+    "signature_2": "C'est un choix. Le tien aussi.",
+    "footer": {
+      "col_product": "Produit",
+      "col_learn": "Comprendre",
+      "col_legal": "Légal"
+    }
   }
 }

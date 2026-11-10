@@ -68,7 +68,7 @@ function FundAuthorityPage() {
   const identifiers = fund.isins.length > 0 ? fund.isins : fund.tickers;
 
   return (
-    <div className="min-h-screen bg-paper-2 text-ink">
+    <div className="min-h-screen text-ink">
       <header className="max-w-3xl mx-auto px-6 pt-8 pb-5 flex items-center justify-between gap-4">
         <Link to="/observatoire" className="stamp hover:text-ink transition-colors">
           {t("fonds_page.back")}

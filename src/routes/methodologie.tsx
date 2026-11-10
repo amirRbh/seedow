@@ -192,12 +192,12 @@ function MethodologyPage() {
   }, [pool]);
 
   return (
-    <div className="min-h-screen bg-paper-2 text-ink">
+    <div className="min-h-screen text-ink">
       <header className="max-w-6xl mx-auto px-6 pt-10 pb-8 border-b border-paper-3">
         <div className="flex items-center justify-between">
           <Link
             to="/le-fil"
-            className="text-tag uppercase tracking-[0.18em] text-ink-3 hover:text-ink transition-colors"
+            className="text-caption font-semibold text-ink-3 hover:text-ink transition-colors"
           >
             {t("methodologie.back_dashboard")}
           </Link>
@@ -236,7 +236,7 @@ function MethodologyPage() {
       <section id="en-30-secondes" className="max-w-6xl mx-auto px-6 pt-10">
         <div className="border border-paper-3 bg-paper-2/40 p-6 md:p-8 grid md:grid-cols-[1fr_1.2fr] gap-6 md:gap-10">
           <div>
-            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium">
+            <p className="text-caption text-ink-3 font-medium">
               {t("methodologie.reading_eyebrow")}
             </p>
             <h2 className="font-value text-2xl mt-2">{t("methodologie.reading_title")}</h2>
@@ -266,7 +266,7 @@ function MethodologyPage() {
       {/* Pipeline visualization — détail analytique replié sous le résumé "30 secondes" */}
       <section id="pipeline" className="max-w-6xl mx-auto px-6 py-12">
         <details className="group">
-          <summary className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium mb-8 cursor-pointer select-none list-none flex items-center gap-2">
+          <summary className="text-caption text-ink-3 font-medium mb-8 cursor-pointer select-none list-none flex items-center gap-2">
             <span className="inline-block transition-transform group-open:rotate-90">›</span>
             {t("methodologie.pipeline_title")} — {t("methodologie.details_pipeline_toggle")}
           </summary>
@@ -290,7 +290,7 @@ function MethodologyPage() {
       {/* Simulator */}
       <section className="max-w-6xl mx-auto px-6 pb-24">
         <div className="border-t border-paper-3 pt-10">
-          <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium">
+          <p className="text-caption text-ink-3 font-medium">
             {t("methodologie.simulator_eyebrow")}
           </p>
           <h2 className="font-value text-3xl mt-2">{t("methodologie.simulator_title")}</h2>
@@ -407,7 +407,7 @@ function MethodologyPage() {
 
             <div>
               <div className="flex items-baseline justify-between border-b border-paper-3 pb-2">
-                <p className="text-tag uppercase tracking-[0.12em] text-ink-3 font-medium">
+                <p className="text-caption text-ink-3 font-medium">
                   <MetricLabel
                     label={t("methodologie.pool_title")}
                     hint={t("methodologie.tips.pool")}
@@ -473,7 +473,7 @@ function MethodologyPage() {
 
             {poolByClass.length > 0 && (
               <div>
-                <p className="text-tag uppercase tracking-[0.12em] text-ink-3 font-medium border-b border-paper-3 pb-2 mb-3">
+                <p className="text-caption text-ink-3 font-medium border-b border-paper-3 pb-2 mb-3">
                   <MetricLabel
                     label={t("methodologie.breakdown_title")}
                     hint={t("methodologie.tips.breakdown")}
@@ -506,7 +506,7 @@ function MethodologyPage() {
           mesure, ce qu'il ne mesure pas, et pourquoi il ne note pas la
           durabilité. Elle passe donc AVANT l'historique de version. */}
       <section id="sti" className="max-w-6xl mx-auto px-6 py-10 border-t border-paper-3">
-        <p className="text-tag uppercase tracking-[0.12em] text-ink-3 font-medium mb-3">
+        <p className="text-caption text-ink-3 font-medium mb-3">
           {t("methodologie.sti_title")}
         </p>
         <p className="text-body-sm text-ink-2 leading-relaxed max-w-2xl">
@@ -582,7 +582,7 @@ function MethodologyPage() {
 
       {/* C3 — Historique de version (transparence auditable, Moat Blueprint) */}
       <section className="max-w-6xl mx-auto px-6 py-10 border-t border-paper-3">
-        <p className="text-tag uppercase tracking-[0.12em] text-ink-3 font-medium mb-3">
+        <p className="text-caption text-ink-3 font-medium mb-3">
           {t("methodologie.version_title")}
         </p>
         <ul className="space-y-3">
@@ -674,7 +674,7 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
     <section id="esg-scores" className="max-w-6xl mx-auto px-6 py-12 border-t border-paper-3">
       <details className="group">
         <summary className="cursor-pointer select-none list-none">
-          <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium">
+          <p className="text-caption text-ink-3 font-medium">
             Transparence · Notation ESG
           </p>
           <h2 className="font-value text-3xl mt-2 flex items-center gap-2">
@@ -690,7 +690,7 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
         <div id="sources" className="grid gap-6 md:grid-cols-2 mt-6">
           {/* Bloc 1 — Sources */}
           <div className="border border-paper-3 p-5 bg-paper-2/30">
-            <p className="text-tag uppercase tracking-[0.15em] text-ink-3 font-medium mb-3">
+            <p className="text-caption text-ink-3 font-medium mb-3">
               01 · Sources de données
             </p>
             <ul className="divide-y divide-paper-3 text-label">
@@ -712,7 +712,7 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
             {/* Journal de provenance : ce qui répond, ce qui ne répond pas. On
                 publie aussi les impasses — un trou annoncé vaut mieux qu'un
                 chiffre inventé (contrat de transparence Seedow). */}
-            <p className="text-tag uppercase tracking-[0.15em] text-ink-3 font-medium mt-5 mb-2">
+            <p className="text-caption text-ink-3 font-medium mt-5 mb-2">
               Journal de provenance
             </p>
             <ul className="text-caption text-ink-2 leading-relaxed space-y-1.5">
@@ -739,12 +739,12 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
 
           {/* Bloc 2 — Grille 3 piliers */}
           <div className="border border-paper-3 p-5 bg-paper-2/30">
-            <p className="text-tag uppercase tracking-[0.15em] text-ink-3 font-medium mb-3">
+            <p className="text-caption text-ink-3 font-medium mb-3">
               02 · Grille — 3 piliers pondérés
             </p>
             <table className="w-full text-label">
               <thead>
-                <tr className="text-tag uppercase tracking-[0.12em] text-ink-3">
+                <tr className="text-caption font-semibold text-ink-3">
                   <th className="text-left font-medium pb-2">Pilier</th>
                   <th className="text-right font-medium pb-2">Défaut</th>
                   <th className="text-right font-medium pb-2">Vos causes</th>
@@ -782,7 +782,7 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
 
         {/* Bloc 3 — Comment on construit */}
         <div className="mt-6 border border-paper-3 p-5">
-          <p className="text-tag uppercase tracking-[0.15em] text-ink-3 font-medium mb-3">
+          <p className="text-caption text-ink-3 font-medium mb-3">
             03 · Comment la grille entre dans le portefeuille
           </p>
           <ol className="grid md:grid-cols-2 gap-x-8 gap-y-3 text-label text-ink-2 leading-relaxed">
@@ -813,7 +813,7 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
 
         {/* Bloc 4 — Limites */}
         <div className="mt-6 border border-ink/20 bg-ink/[0.03] p-5">
-          <p className="text-tag uppercase tracking-[0.15em] text-ink font-medium mb-3">
+          <p className="text-caption text-ink font-medium mb-3">
             04 · Ce que la note ne dit pas
           </p>
           <ul className="space-y-2 text-label text-ink-2 leading-relaxed">
@@ -836,7 +836,7 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
             </li>
           </ul>
           <div className="mt-4 pt-3 border-t border-ink/10 flex flex-wrap gap-x-4 gap-y-1 text-caption">
-            <span className="text-ink-3 uppercase tracking-[0.12em]">Pour aller plus loin :</span>
+            <span className="text-ink-3 font-semibold">Pour aller plus loin :</span>
             <Link
               to="/cours/$slug"
               params={{ slug: "esg-cest-quoi" }}
@@ -885,7 +885,7 @@ function Block({
 }) {
   return (
     <div>
-      <p className="text-tag uppercase tracking-[0.15em] text-ink-3 font-medium border-b border-paper-3 pb-2 mb-3">
+      <p className="text-caption text-ink-3 font-medium border-b border-paper-3 pb-2 mb-3">
         <MetricLabel label={title} hint={tip} />
       </p>
       {children}
@@ -905,7 +905,7 @@ function FunnelCell({
 }) {
   return (
     <div className="bg-paper p-4">
-      <p className="text-tag uppercase tracking-[0.12em] text-ink-3 font-medium">{label}</p>
+      <p className="text-caption text-ink-3 font-medium">{label}</p>
       <p
         className={`font-value tabular-nums mt-1 ${
           strong ? "text-2xl text-ink" : "text-xl text-ink-2"

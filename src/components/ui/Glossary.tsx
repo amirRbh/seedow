@@ -197,7 +197,7 @@ export function Glossary({ term, children, variant = "inline", className }: Prop
         align="start"
         className="max-w-[280px] bg-ink text-paper border-ink"
       >
-        <p className="text-caption font-semibold tracking-wide uppercase text-gold-soft mb-1">
+        <p className="text-caption font-semibold text-gold-soft mb-1">
           {entry.title}
           {"long" in entry && entry.long && (
             <span className="ml-1.5 text-paper/70 font-normal normal-case tracking-normal">

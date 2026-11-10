@@ -28,20 +28,16 @@ function Discover() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-paper-2"
+      className="min-h-screen"
     >
-      <div className="max-w-lg mx-auto pb-28">
+      <div className="page accent-ice">
         <AppHeader eyebrow={t("discover.eyebrow")} title={t("discover.title")} />
 
         <div className="px-5 pt-2 pb-3">
           <Tabs defaultValue="explorer">
-            <TabsList className="w-full grid grid-cols-2 h-auto bg-paper-2 p-1">
-              <TabsTrigger value="explorer" className="text-caption uppercase tracking-[0.12em]">
-                {t("discover.tab_explore")}
-              </TabsTrigger>
-              <TabsTrigger value="communaute" className="text-caption uppercase tracking-[0.12em]">
-                {t("discover.tab_community")}
-              </TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 sm:w-auto sm:min-w-[320px]">
+              <TabsTrigger value="explorer">{t("discover.tab_explore")}</TabsTrigger>
+              <TabsTrigger value="communaute">{t("discover.tab_community")}</TabsTrigger>
             </TabsList>
             <TabsContent value="communaute" className="pt-4">
               <CommunityPanel />

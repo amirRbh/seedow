@@ -26,9 +26,9 @@ function ConstruirePage() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-paper-2"
+      className="min-h-screen"
     >
-      <div className="max-w-lg mx-auto pb-28">
+      <div className="page page--narrow accent-mint">
         <AppHeader eyebrow={t("blank_builder.eyebrow")} title={t("blank_builder.title")} />
         <section className="px-5 pt-4">
           <BlankCanvasBuilder />

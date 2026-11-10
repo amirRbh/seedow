@@ -52,7 +52,7 @@ export function ImpactCertificate() {
           <div className="mt-4 flex flex-wrap gap-2">
             <Link
               to="/certificat"
-              className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-ink text-paper text-label font-semibold uppercase tracking-[0.14em] hover:bg-ink-2 transition-colors"
+              className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-ink text-paper text-label font-semibold hover:bg-ink-2 transition-colors"
             >
               Ouvrir le certificat
               <svg
@@ -69,7 +69,7 @@ export function ImpactCertificate() {
               type="button"
               onClick={handleCopy}
               disabled={copying}
-              className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full border border-paper-3 bg-paper text-ink text-label font-semibold uppercase tracking-[0.14em] hover:bg-paper-2 transition-colors disabled:opacity-60"
+              className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full border border-paper-3 bg-paper text-ink text-label font-semibold hover:bg-paper-2 transition-colors disabled:opacity-60"
             >
               <svg
                 viewBox="0 0 16 16"

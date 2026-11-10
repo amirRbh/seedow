@@ -43,7 +43,7 @@ export function RelatedCourse({ slug, reason }: Props) {
         </svg>
       </span>
       <div className="min-w-0 flex-1">
-        <p className="text-tag font-semibold uppercase tracking-[0.18em] text-gold mb-0.5">
+        <p className="text-caption font-semibold text-mint-ink mb-0.5">
           {reason ?? "Cours en lien"}
         </p>
         <p className="text-body-sm font-medium text-ink leading-snug group-hover:text-gold transition-colors truncate">

@@ -105,7 +105,7 @@ function WrappedPage() {
 
       {loading ? (
         <div className="flex flex-1 items-center justify-center">
-          <p className="font-mono text-caption uppercase tracking-widest text-paper/60">
+          <p className="text-caption font-semibold text-paper/60">
             {t("wrapped.loading")}
           </p>
         </div>
@@ -154,7 +154,7 @@ function WrappedPage() {
               >
                 {current?.kind === "intro" && (
                   <>
-                    <p className="font-mono text-tag uppercase tracking-[0.2em] text-mint-ink">
+                    <p className="text-caption font-semibold text-mint-ink">
                       {t("wrapped.card_eyebrow")}
                     </p>
                     <h1 className="mt-4 font-value text-4xl leading-tight text-paper">
@@ -187,7 +187,7 @@ function WrappedPage() {
 
                 {current?.kind === "final" && (
                   <>
-                    <p className="font-mono text-tag uppercase tracking-[0.2em] text-mint-ink">
+                    <p className="text-caption font-semibold text-mint-ink">
                       {t("wrapped.card_eyebrow")}
                     </p>
                     <h2 className="mt-4 font-value text-3xl leading-tight text-paper">
@@ -217,7 +217,7 @@ function WrappedPage() {
             </AnimatePresence>
 
             {current?.kind !== "final" && (
-              <span className="absolute bottom-6 font-mono text-tag uppercase tracking-widest text-paper/40">
+              <span className="absolute bottom-6 text-caption font-semibold text-paper/40">
                 {t("wrapped.tap_hint")}
               </span>
             )}

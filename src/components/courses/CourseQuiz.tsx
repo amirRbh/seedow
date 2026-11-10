@@ -115,7 +115,7 @@ export function CourseQuiz({ slug, quiz }: Props) {
             <button
               type="button"
               onClick={reset}
-              className="text-xs font-semibold uppercase tracking-[0.18em] text-ink hover:text-gold transition-colors"
+              className="text-xs font-semibold text-ink hover:text-mint-ink transition-colors"
             >
               Recommencer →
             </button>
@@ -126,7 +126,7 @@ export function CourseQuiz({ slug, quiz }: Props) {
             disabled={!allAnswered}
             onClick={submit}
             className={cn(
-              "px-6 py-3 text-xs font-semibold uppercase tracking-[0.18em] transition-colors",
+              "px-6 py-3 text-xs font-semibold transition-colors",
               allAnswered
                 ? "bg-ink text-paper hover:bg-ink-2"
                 : "bg-ink/20 text-ink-3 cursor-not-allowed",
