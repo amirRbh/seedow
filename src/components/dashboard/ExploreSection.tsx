@@ -16,7 +16,7 @@ export function ExploreSection({ children }: { children: ReactNode }) {
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="w-full flex items-center justify-between text-caption uppercase tracking-wider text-ink-3 font-medium py-2 border-t border-paper-3"
+        className="w-full flex items-center justify-between text-caption text-ink-3 font-medium py-2 border-t border-paper-3"
       >
         {t("dashboard.explore.title")}
         <svg

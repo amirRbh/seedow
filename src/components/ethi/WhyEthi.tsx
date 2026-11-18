@@ -14,7 +14,7 @@ export function WhyEthi({ question, label }: { question: string; label?: string 
     <Link
       to="/ethi"
       search={{ q: question } as never}
-      className="inline-flex items-center gap-1.5 rounded-full border border-paper-3 bg-paper-2 px-3 py-1.5 text-caption font-semibold text-ink-2 hover:border-ink/40 hover:text-ink transition-colors outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
+      className="inline-flex items-center gap-1.5 rounded-full border border-paper-3 bg-paper-2 px-3 py-1.5 text-caption font-semibold text-ink-2 hover:border-ink/40 hover:text-ink transition-colors outline-none focus-visible:ring-2 focus-visible:ring-mint"
     >
       <svg
         viewBox="0 0 24 24"

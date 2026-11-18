@@ -40,17 +40,17 @@ export function VoteTeaserCard() {
       <Link
         to="/vote/$resolutionId"
         params={{ resolutionId: resolution.id }}
-        className="ink-section paper-grain ink-grain group block overflow-hidden rounded-2xl p-5 transition-transform duration-300 hover:scale-[1.01]"
+        className="ink-section group block overflow-hidden rounded-2xl p-5 transition-transform duration-300 hover:scale-[1.01]"
         style={{ transitionTimingFunction: "cubic-bezier(0.32,0.72,0,1)" }}
       >
         <div className="flex items-center justify-between gap-3">
           <span className="inline-flex items-center gap-2">
-            <span aria-hidden="true" className="apple-live" />
-            <span className="font-mono text-tag uppercase tracking-[0.14em] text-mint-ink">
+            <span aria-hidden="true" className="live-dot" />
+            <span className="text-caption font-semibold text-mint-ink">
               {t("vote.teaser.eyebrow")}
             </span>
           </span>
-          <span className="font-mono text-tag uppercase tracking-[0.08em] text-paper/70">
+          <span className="text-caption font-semibold text-ink-2">
             {days === 0
               ? t("vote.status.last_day")
               : days != null
@@ -59,19 +59,19 @@ export function VoteTeaserCard() {
           </span>
         </div>
 
-        <p className="mt-3 font-value text-lg leading-snug text-paper">{resolution.title}</p>
-        <p className="mt-1 font-mono text-caption text-paper/60">
+        <p className="mt-3 font-value text-lg leading-snug text-on-deep">{resolution.title}</p>
+        <p className="mt-1 text-caption text-ink-3">
           {resolution.company}
           {resolution.ticker ? ` · ${resolution.ticker}` : ""}
         </p>
 
-        <div className="mt-4 flex items-center justify-between border-t border-paper/15 pt-3">
-          <span className="font-mono text-caption text-paper/70 tabular-nums">
+        <div className="mt-4 flex items-center justify-between border-t border-on-deep/15 pt-3">
+          <span className="text-caption text-ink-2 tabular-nums">
             {bloc.total === 0
               ? t("vote.teaser.be_first")
               : t("vote.teaser.bloc_count", { formatted: nf.format(bloc.total) })}
           </span>
-          <span className="font-mono text-tag uppercase tracking-[0.12em] text-mint-ink">
+          <span className="text-caption font-semibold text-mint-ink">
             {voted ? t("vote.teaser.cta_voted") : t("vote.teaser.cta")}
             <span
               aria-hidden="true"

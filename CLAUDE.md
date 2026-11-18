@@ -108,6 +108,8 @@ src/
 ### Style
 
 - Tailwind CSS v4, design tokens hex définis dans `src/styles.css` (variables CSS `--paper`, `--ink`, `--mint`… mappées en `--color-*` pour Tailwind) — ne pas coder de couleurs en dur (`#146a4a`) dans les composants, passer par les tokens.
+- Dans une bande sombre (`.on-deep`, `.ink-section`), `--paper` est remappé sur le fond : y écrire en `text-on-deep` / `text-ink-2` / `text-ink-3`, jamais en `text-paper`.
+- Toujours composer les classes avec `cn()` (`src/lib/utils.ts`), qui connaît l'échelle typographique maison (`text-tag`, `text-label`…).
 - shadcn/ui pour les primitives d'interface. On ne réécrit pas un composant shadcn depuis zéro si une variante existe déjà.
 
 ---
@@ -118,9 +120,12 @@ Direction artistique extraite des supports de contenu (`seedow_carousel_duel.htm
 
 ### Typographie
 
-- **Inter** (400 à 900) pour tout texte lisible : titres, corps de texte, UI.
-- **IBM Plex Mono** (400/500/700) réservée aux éléments « données » : métadonnées, labels, chiffres bruts, timestamps, tags. Ce contraste serif-mono/sans-serif est ce qui donne le ton « factuel, presque journalistique » de la marque — ne pas le diluer en mettant de l'Inter partout.
-- Letter-spacing légèrement négatif sur les titres (`-0.01em` à `-0.03em`) pour l'effet « éditorial dense ».
+> Détail complet : `docs/DA-V4.md` §2.
+
+- **Bricolage Grotesque** (600 à 800) pour les titres (`h1–h3`, `.display-*`) — une voix ronde et franche, lisible par tous. Un seul token : `--font-display`.
+- **Manrope** (400 à 800) pour tout texte lisible : corps, interface, valeurs (`.font-value`, chiffres tabulaires).
+- **IBM Plex Mono** (400/500) réservée aux éléments « données » : tickers, ISIN, lignes de source (`.mono-meta`). Ce contraste titre/texte/mono donne le ton « factuel, presque journalistique » — ne pas mettre du mono partout.
+- Letter-spacing négatif sur les titres (`-0.02em` à `-0.04em`) pour l'effet « éditorial dense ».
 
 ### Palette (design tokens, identiques sur tous les supports — à porter tels quels dans `styles.css`)
 
@@ -148,9 +153,15 @@ Direction artistique extraite des supports de contenu (`seedow_carousel_duel.htm
 
 ### Composants visuels
 
-- Rayons de bordure : `14px` (cartes/légendes), `18px` (tuiles/slides), `100px` (pills/badges).
-- Micro-interactions discrètes : `transform: scale(1.03)` au hover, transition `cubic-bezier(0.32,0.72,0,1)` — jamais d'animation agressive ou de rebond exagéré.
-- Un point pulsant (`animation: pulse 2s infinite`, opacité 1→0.3) pour signaler un statut « live/actif » (ex. beta disponible) — pattern réutilisable pour tout statut temps réel dans le produit (cours de bourse en cours de rafraîchissement, etc.).
+> Détail complet et primitives réutilisables : `docs/DA-V4.md`.
+
+- Rayons de bordure : `10px` (chips), `16px` (champs), `24px` (cartes), `32px` (chrome flottant), `40px` (scènes), `999px` (boutons/pills).
+- Profondeur : aplats d'abord, plus une ombre très diffuse (`--shadow-card`, `--shadow-soft`, `--shadow-lift`). Jamais d'ombre dure ni de contour dessiné par l'ombre.
+- **Accent de section** : `.accent-{mint|ice|volt|solar|alert}` sur un conteneur teinte ses pastilles, icônes et reflets. La couleur situe l'espace, elle ne porte jamais seule une information.
+- Micro-interactions : courbe `--ease-brand` = `cubic-bezier(0.32,0.72,0,1)`, moins de 600 ms. Carte qui se soulève (`.lift`), reflet sous le curseur (`.spot`), bouton qui s'enfonce, apparition au défilement (`Reveal`). Jamais d'animation agressive, de rebond exagéré ni d'urgence fabriquée.
+- Un point pulsant (`.live-dot`) signale un statut « live/actif » — pattern réutilisable pour tout statut temps réel.
+- **`prefers-reduced-motion` neutralise tout le mouvement**, et un chiffre animé affiche toujours sa valeur finale au rendu serveur.
+- Chrome : pages publiques dans `PublicPage` (en-tête et pied de page uniques), app dans le dock + la barre flottante. Ne pas redessiner un en-tête ou une marque par page — utiliser `Wordmark`.
 
 ### Accessibilité
 
@@ -239,4 +250,4 @@ Ethi est l'assistant conversationnel du produit (Lovable AI Gateway, Gemini/GPT-
 
 ---
 
-_Dernière mise à jour : scoring v2 — le score de durabilité est remplacé par l'indice de transparence Seedow (STI 2.0) sur l'Observatoire, les fiches fonds et l'aperçu public ; voir `docs/scoring-v2.md`. Précédemment : synthèse initiale à partir du README du repo `amirRbh/seedow` et des 5 fichiers de DA carousels fournis, puis réconciliation de l'arborescence §3 avec l'état réel de `src/routes` et unification du lockfile Bun (§6). À maintenir à jour à chaque décision structurante — ce fichier n'a de valeur que s'il reste vrai._
+_Dernière mise à jour : refonte DA V4 « Vivant » — titres en Bricolage Grotesque, profondeur douce, accent de section, mouvement au service de la compréhension, chrome public unique ; voir `docs/DA-V4.md`. Précédemment : scoring v2 — le score de durabilité est remplacé par l'indice de transparence Seedow (STI 2.0) sur l'Observatoire, les fiches fonds et l'aperçu public ; voir `docs/scoring-v2.md`. À maintenir à jour à chaque décision structurante — ce fichier n'a de valeur que s'il reste vrai._

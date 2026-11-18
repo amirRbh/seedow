@@ -112,19 +112,19 @@ export function PortfolioMetricsCard({ metrics }: Props) {
   const visible = isSimple ? items.filter((i) => !i.expertOnly) : items;
 
   const toneClasses: Record<Tone, { text: string; bg: string; border: string }> = {
-    highlight: { text: "text-highlight-1", bg: "bg-highlight-5", border: "border-highlight-4" },
+    highlight: { text: "text-ink", bg: "bg-highlight-5", border: "border-highlight-4" },
     bloom: {
-      text: "text-bloom",
+      text: "text-volt-ink",
       bg: "bg-bloom-tint",
       border: "border-bloom-tint-border",
     },
     peach: {
-      text: "text-rust",
+      text: "text-alert-ink",
       bg: "bg-alert-tint",
       border: "border-alert-tint-border",
     },
     sky: {
-      text: "text-sky",
+      text: "text-ice-ink",
       bg: "bg-sky-tint",
       border: "border-sky-tint-border",
     },
@@ -144,7 +144,7 @@ export function PortfolioMetricsCard({ metrics }: Props) {
               transition={{ duration: DURATION.base, ease: EASE_REVEAL, delay: i * 0.05 }}
               className={`rounded-xl p-3 border ${c.bg} ${c.border} relative overflow-visible`}
             >
-              <div className="text-tag uppercase tracking-wider text-ink-3 font-mono leading-tight">
+              <div className="text-caption font-semibold text-ink-3 leading-tight">
                 <MetricLabel label={it.label} hint={it.hint} />
               </div>
               <p className={`font-value text-2xl mt-2 leading-none ${c.text}`}>{it.value}</p>

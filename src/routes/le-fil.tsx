@@ -160,7 +160,7 @@ function LeFil() {
   // /portfolio (questionnaire ou page blanche), plutôt qu'un second état vide.
   if (!loading && !portfolio) {
     return (
-      <div className="min-h-screen bg-paper-2">
+      <div className="min-h-screen">
         <EmptyPortfolioState userName={userName} />
         <BottomNavigation />
       </div>
@@ -168,23 +168,27 @@ function LeFil() {
   }
 
   return (
-    <div className="min-h-screen bg-paper-2">
-      <div className="max-w-lg mx-auto pb-28">
+    <div className="min-h-screen">
+      <div className="page page--wide accent-mint">
         <AppHeader eyebrow={t("le_fil.eyebrow")} title={userName} showPortfolioSelector />
 
         <div className="relative px-5 pt-4">
-          {/* Le fil vertical — c'est le rail de provenance de la DA V2 :
-              chaque nœud s'y accroche par un ergot, comme un chiffre s'accroche
-              à sa source (docs/DA-V2-PREUVE.md §4.4). */}
-          <div aria-hidden className="absolute left-[26px] top-8 bottom-10 w-px bg-paper-3" />
+          {/* Le fil vertical : sur mobile, chaque nœud s'y accroche par un ergot,
+              comme un chiffre s'accroche à sa source. Sur grand écran (DA V4),
+              les nœuds se rangent en deux colonnes et le fil s'efface — l'ordre
+              de lecture reste celui du DOM. */}
+          <div
+            aria-hidden
+            className="absolute left-[26px] top-8 bottom-10 w-px bg-paper-3 lg:hidden"
+          />
 
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 lg:block lg:columns-2 lg:gap-5 lg:[&>*]:mb-5 lg:[&>*]:break-inside-avoid">
             {/* NŒUD 1 — MON ARGENT
                 Fond papier (le pavé noir écrasait le reste du fil sans rien
                 dire de plus) et une variation qui s'explique : un mot, un
                 montant, un pourcentage dérivés du même couple, puis le repère
                 de comparaison et la date des cours. */}
-            <Node index={1} active {...reveal(1)}>
+            <Node index={1} active hero {...reveal(1)}>
               <p className="stamp">{t("le_fil.money")}</p>
               <p className="mt-1.5 text-body-sm text-ink-2">{t("le_fil.money_today")}</p>
               <h2 className="mt-1 text-figure-hero leading-none text-ink">
@@ -421,7 +425,7 @@ function LeFil() {
                         type="button"
                         onClick={() => setSelectedHolding(h)}
                         aria-label={t("le_fil.asset_detail", { name: h.name })}
-                        className="min-w-0 flex-1 rounded-sm text-left outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
+                        className="min-w-0 flex-1 rounded-sm text-left outline-none focus-visible:ring-2 focus-visible:ring-mint"
                       >
                         <p className="truncate text-body font-semibold text-ink">{h.name}</p>
                         {/* `allocationPct` est en POINTS (0..100) : le passer
@@ -486,7 +490,7 @@ function LeFil() {
 
                 {lastChange.consequences.length > 0 && (
                   <>
-                    <p className="mt-4 text-tag uppercase tracking-[0.14em] font-mono text-ink-3">
+                    <p className="mt-4 text-caption font-semibold text-ink-3">
                       {t("le_fil.changed_effect")}
                     </p>
                     <ul className="mt-1.5 flex flex-col gap-1.5">
@@ -635,23 +639,23 @@ function LeFil() {
           </div>
 
           {/* Ethi — actions contextuelles, jamais un chat vide */}
-          <motion.div {...reveal(7)} className="mt-6 pl-9">
-            <SectionLabel>{t("le_fil.ask_ethi")}</SectionLabel>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {ethiActions.map((a) => (
-                <Link
-                  key={a.intent}
-                  to="/ethi"
-                  search={{ intent: a.intent, q: undefined }}
-                  className={`inline-flex h-10 items-center rounded-full px-4 text-body font-semibold transition-opacity ${
-                    a.primary
-                      ? "bg-ink text-paper hover:opacity-85"
-                      : "bg-paper text-ink-2 hover:text-ink"
-                  }`}
-                >
-                  {t(a.key)}
-                </Link>
-              ))}
+          <motion.div {...reveal(7)} className="mt-6 pl-9 lg:mt-1 lg:pl-0">
+            <div className="tile-accent accent-ice p-6 sm:p-7">
+              <SectionLabel>{t("le_fil.ask_ethi")}</SectionLabel>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {ethiActions.map((a) => (
+                  <Link
+                    key={a.intent}
+                    to="/ethi"
+                    search={{ intent: a.intent, q: undefined }}
+                    className={`inline-flex h-11 items-center rounded-full px-5 text-body font-semibold outline-none transition-[transform,background-color,color,box-shadow] duration-200 ease-brand hover:-translate-y-0.5 hover:shadow-soft focus-visible:ring-2 focus-visible:ring-mint active:scale-[0.97] motion-reduce:transform-none ${
+                      a.primary ? "bg-ink text-paper" : "bg-paper text-ink-2 hover:text-ink"
+                    }`}
+                  >
+                    {t(a.key)}
+                  </Link>
+                ))}
+              </div>
             </div>
           </motion.div>
         </div>
@@ -771,23 +775,26 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 function Node({
   index,
   active,
+  hero = false,
   children,
   ...motionProps
 }: {
   index: number;
   active: boolean;
+  /** Le nœud du chiffre principal : carte héros, voile d'accent (DA V4). */
+  hero?: boolean;
   children: React.ReactNode;
 } & React.ComponentProps<typeof motion.div>) {
   return (
-    <motion.div {...motionProps} className="relative pl-9">
+    <motion.div {...motionProps} className="relative pl-9 lg:pl-0">
       {/* Ergot sur le fil — une pastille discrète, alignée sur la carte. */}
       <span
         aria-hidden
-        className={`absolute left-[18px] top-[26px] h-[9px] w-[9px] -translate-x-1/2 rounded-full ring-4 ring-paper-2 ${
+        className={`absolute left-[18px] top-[26px] h-[9px] w-[9px] -translate-x-1/2 rounded-full ring-4 ring-paper-2 lg:hidden ${
           active ? "bg-mint" : "bg-paper-3"
         }`}
       />
-      <div className="paper-card p-6">{children}</div>
+      <div className={hero ? "hero-card p-6 sm:p-7" : "paper-card p-6 sm:p-7"}>{children}</div>
     </motion.div>
   );
 }

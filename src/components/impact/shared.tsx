@@ -78,7 +78,7 @@ export function SignalLine({
           <span className="sr-only">{t(tone.labelKey)} · </span>
           {t(signal.headlineKey, params)}
         </p>
-        <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-3">
+        <p className="mt-1 text-caption font-semibold text-ink-3">
           {t("impact_signal.source_prefix")} {signal.source}
           {signal.asOf != null ? ` · ${signal.asOf}` : ""}
         </p>

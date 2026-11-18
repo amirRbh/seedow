@@ -46,13 +46,11 @@ export function LearnIntroCard() {
         </svg>
       </button>
 
-      <p className="text-tag font-semibold uppercase tracking-[0.2em] text-gold mb-1">
-        {t("learn_intro.eyebrow")}
-      </p>
+      <p className="text-caption font-semibold text-mint-ink mb-1">{t("learn_intro.eyebrow")}</p>
       <p className="text-body-sm text-paper/85 leading-snug mb-3">{t("learn_intro.body")}</p>
       <Link
         to="/comprendre"
-        className="inline-flex items-center gap-1.5 bg-gold text-ink px-4 py-2 text-tag font-semibold uppercase tracking-[0.18em] hover:bg-gold/90 transition-colors rounded"
+        className="inline-flex items-center gap-1.5 bg-mint text-ink px-4 py-2 text-caption font-semibold hover:bg-mint/90 transition-colors rounded"
       >
         {t("learn_intro.cta")}
         <span aria-hidden="true">→</span>

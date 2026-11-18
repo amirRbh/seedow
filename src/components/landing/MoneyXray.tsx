@@ -122,7 +122,7 @@ export function MoneyXray({ variant = "hero" }: { variant?: "hero" | "section" }
   }
 
   return (
-    <div className="paper-card p-6 md:p-7">
+    <div className="paper-card spot p-6 md:p-8">
       <label htmlFor="money-xray" className="stamp">
         {t("xray.field_label")}
       </label>
@@ -134,7 +134,7 @@ export function MoneyXray({ variant = "hero" }: { variant?: "hero" | "section" }
         onFocus={load}
         placeholder={t("xray.placeholder")}
         autoComplete="off"
-        className="mt-2.5 w-full h-12 px-4 rounded-[14px] border border-paper-3 bg-paper text-body text-ink placeholder:text-ink-3 outline-none transition-colors focus:border-ink focus-visible:ring-2 focus-visible:ring-ink"
+        className="field mt-2.5"
       />
 
       <div className="mt-4 flex flex-col gap-2.5" aria-live="polite">

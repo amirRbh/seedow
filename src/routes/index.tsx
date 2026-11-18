@@ -1,24 +1,28 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
+import { ArrowDown, ArrowRight, BookOpen, LineChart, Sprout, type LucideIcon } from "lucide-react";
 import { Trans, useTranslation } from "react-i18next";
-import { supabase } from "@/integrations/supabase/client";
+import { SiteFooter } from "@/components/layout/SiteFooter";
+import { SiteHeader } from "@/components/layout/SiteHeader";
+import { EthiDemo } from "@/components/landing/EthiDemo";
+import { HowItWorks } from "@/components/landing/HowItWorks";
 import { LandingCourses } from "@/components/landing/LandingCourses";
+import { ClaimVsData, MeasureScope } from "@/components/landing/LandingProof";
 import { MoneyFlow } from "@/components/landing/MoneyFlow";
 import { MoneyXray } from "@/components/landing/MoneyXray";
+import { Aurora } from "@/components/motion/Aurora";
+import { Magnetic } from "@/components/motion/Magnetic";
+import { Marquee } from "@/components/motion/Marquee";
+import { Reveal, RevealGroup } from "@/components/motion/Reveal";
+import { ScrollProgress } from "@/components/motion/ScrollProgress";
+import { SplitWords } from "@/components/motion/SplitWords";
+import { wordCount } from "@/lib/motion";
 import { Provenance } from "@/components/ui/Provenance";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
 import { cn } from "@/lib/utils";
 import { siteUrl, socialMeta } from "@/lib/seo/socialMeta";
-
-/**
- * Coupure de chapitre du catalogue : un filet d'un pixel, et l'espace au-dessus.
- * Les sections s'enchaînaient sur le même aplat `--paper-2` séparées par du vide
- * seul : impossible de voir où une section s'arrêtait, ni quelle démonstration
- * appartenait à quel titre. Le filet fait la coupure, l'accent du libellé
- * identifie le chapitre.
- */
-const SECTION_RULE = "section-rule pt-14 md:pt-16";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -34,26 +38,30 @@ export const Route = createFileRoute("/")({
   component: Landing,
 });
 
+const CONTAINER = "mx-auto max-w-[1160px] px-5 sm:px-7";
+
 /**
- * Landing — DA V3 (docs/DA-V3.md).
+ * Landing — DA V4 « Vivant » (docs/DA-V4.md).
  *
- * La page alterne deux bandes qui se percutent : `--deep` pour le récit,
- * `--paper-2` pour le catalogue. C'est ce contraste qui fait toute la
- * profondeur — aucune ombre, aucun dégradé, aucun halo. Les cartes sont
- * blanches à 20px de rayon, les CTA des pills de 48px.
+ * La page se lit comme une suite de SCÈNES, et chacune répond au geste :
  *
- * La landing et l'app partagent les mêmes primitives (Button, .paper-card,
- * .chip, Provenance) : un seul design system, donc une seule marque.
+ *   1. le hero — le titre monte mot par mot sur une aurore, et la scène du flux
+ *      est déjà jouable (on coche une conviction, l'argent se redirige) ;
+ *   2. le bandeau de preuves, qui défile ;
+ *   3. le rayon X — pour qui a un nom de fonds en tête ;
+ *   4. « comment ça marche » — trois gestes racontés au défilement ;
+ *   5. les trois portes d'entrée, le constat, le périmètre de mesure,
+ *      l'Observatoire, les cours, Ethi, la méthode ;
+ *   6. l'appel final et la signature de marque.
+ *
+ * Règles tenues de bout en bout : aucun chiffre fabriqué (les démonstrations
+ * montrent des formes, pas des valeurs), l'illustration est écrite comme telle,
+ * et tout le mouvement s'éteint en `prefers-reduced-motion`.
  */
 function Landing() {
   const { t } = useTranslation();
-  const [isAuthed, setIsAuthed] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setIsAuthed(!!data.session));
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => setIsAuthed(!!session));
-    return () => sub.subscription.unsubscribe();
-  }, []);
+  const { session, loading } = useAuth();
+  const isAuthed = !loading && !!session;
 
   useEffect(() => {
     void trackAppEvent("landing_viewed");
@@ -69,469 +77,339 @@ function Landing() {
     { figure: "1", text: t("landing.stats.only_app"), src: t("landing.stats.only_app_src") },
   ];
 
+  const titleLine1 = t("landing.flow.title_line1");
+
   return (
-    <div className="min-h-screen bg-paper-2 text-ink">
-      {/* ── BANDE SOMBRE : nav + hero ─────────────────────────────── */}
-      <div className="on-deep">
-        <nav className="max-w-[1160px] mx-auto px-7 h-[76px] flex items-center justify-between">
-          <Wordmark onDark />
+    <div className="min-h-screen text-ink">
+      <ScrollProgress />
+      <SiteHeader />
 
-          <div className="flex items-center gap-6">
-            <Link
-              to="/cours"
-              className="hidden md:inline text-body font-semibold text-ink-2 hover:text-ink transition-colors"
-            >
-              {t("landing.nav.courses")}
-            </Link>
-            <Link
-              to="/methodologie"
-              className="hidden md:inline text-body font-semibold text-ink-2 hover:text-ink transition-colors"
-            >
-              {t("landing.nav.methodology")}
-            </Link>
-            {isAuthed ? (
-              <Button asChild size="sm" variant="on-dark">
-                <Link to="/le-fil">{t("landing.nav.my_space")}</Link>
-              </Button>
-            ) : (
-              <>
-                <Link
-                  to="/auth"
-                  search={{ redirect: "/le-fil", mode: "login" }}
-                  onClick={onCta("nav", "login")}
-                  className="hidden sm:inline text-body font-semibold text-ink-2 hover:text-ink transition-colors"
-                >
-                  {t("landing.nav.login")}
-                </Link>
-                <Button asChild size="sm" variant="on-dark">
-                  <Link to="/onboarding" search={{ guest: true }} onClick={onCta("nav", "preview")}>
-                    {t("landing.nav.simulate_cta")}
-                  </Link>
-                </Button>
-              </>
-            )}
-          </div>
-        </nav>
+      {/* ── SCÈNE 1 : le hero ─────────────────────────────────────── */}
+      <header className="relative overflow-hidden">
+        <Aurora />
 
-        {/* ── PREMIÈRE SCÈNE : où va ton argent ─────────────────────
-            Le champ de recherche ouvrait la page en demandant un nom de fonds
-            à quelqu'un qui n'en a aucun : premier écran vide, premier départ.
-            Le flux montre d'abord le mécanisme — l'épargne se répartit, et se
-            redirige dès qu'une conviction est cochée. Le rayon X garde toute
-            sa place juste en dessous, pour qui sait déjà quoi taper. */}
-        <header className="max-w-[1160px] mx-auto px-7 pt-12 pb-16 md:pt-16 md:pb-20">
-          <span className="chip">
+        <div className={cn(CONTAINER, "relative z-10 pt-[124px] text-center md:pt-[172px]")}>
+          <span className="chip bg-paper shadow-card">
             <span aria-hidden className="live-dot" />
             {t("landing.rv.hero.eyebrow")}
           </span>
 
-          {/* L'accent porte du TEXTE : variante `--mint-ink`, jamais l'accent
-              brut (CLAUDE.md §4). Dans la bande, `.on-deep` la remappe sur le
-              vert lumineux — verrouillé par le test de contraste. */}
-          <h1 className="display-xl mt-6 md:mt-7 max-w-[14ch]">
-            {t("landing.flow.title_line1")}
+          {/* Le titre monte mot par mot (CSS pur : il est peint avant même
+              l'hydratation). L'accent porte du TEXTE : dégradé entre trois
+              encres d'accent, toutes AA (styles.css `.text-gradient`). */}
+          <h1 className="display-xl mx-auto mt-7 max-w-[13ch]">
+            <SplitWords text={titleLine1} />
             <br />
-            <span className="text-mint-ink">{t("landing.flow.title_accent")}</span>
+            <span className="word-mask">
+              <span
+                className="word-rise text-gradient"
+                style={{ "--i": wordCount(titleLine1) } as React.CSSProperties}
+              >
+                {t("landing.flow.title_accent")}
+              </span>
+            </span>
           </h1>
 
-          <p className="mt-5 md:mt-7 max-w-[52ch] text-body-lg md:text-body-xl leading-relaxed text-ink-2">
+          <p className="mx-auto mt-6 max-w-[54ch] text-body-lg leading-relaxed text-ink-2 md:mt-8 md:text-body-xl">
             {t("landing.flow.desc")}
           </p>
 
-          <div className="mt-10">
-            <MoneyFlow />
-          </div>
-
-          <div className="mt-9">
+          <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
             {isAuthed ? (
-              <Button asChild variant="on-dark">
-                <Link to="/le-fil">{t("landing.rv.hero.cta_authed")}</Link>
-              </Button>
+              <Magnetic>
+                <Button asChild size="lg">
+                  <Link to="/le-fil">
+                    {t("landing.rv.hero.cta_authed")}
+                    <ArrowRight aria-hidden />
+                  </Link>
+                </Button>
+              </Magnetic>
             ) : (
-              <Button asChild variant="on-dark">
-                <Link to="/onboarding" search={{ guest: true }} onClick={onCta("flow", "preview")}>
-                  {t("landing.flow.cta")}
-                </Link>
-              </Button>
+              <Magnetic>
+                <Button asChild size="lg">
+                  <Link
+                    to="/onboarding"
+                    search={{ guest: true }}
+                    onClick={onCta("flow", "preview")}
+                  >
+                    {t("landing.flow.cta")}
+                    <ArrowRight aria-hidden />
+                  </Link>
+                </Button>
+              </Magnetic>
             )}
+            <Button asChild size="lg" variant="outline">
+              <a href="#rayon-x">{t("landing.v5.hero_secondary")}</a>
+            </Button>
           </div>
-        </header>
 
-        {/* ── DEUXIÈME SCÈNE : le rayon X ───────────────────────────
-            Le geste demandé à qui a un relevé sous les yeux. En mobile, le
-            champ remonte juste sous le sous-titre : il doit rester
-            atteignable sans dérouler un écran et demi de discours. */}
-        <section className="max-w-[1160px] mx-auto px-7 pb-20 md:pb-24">
-          <div className="border-t border-paper-3 pt-14 md:pt-16">
-            <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-16 lg:items-start">
-              <div className="contents lg:block">
-                <div className="order-1">
-                  <p className="eyebrow">{t("landing.rv.hero.eyebrow_search")}</p>
+          {!isAuthed && (
+            <p className="mt-5 text-body-sm text-ink-3">{t("landing.hero.no_account_note")}</p>
+          )}
+        </div>
 
-                  <h2 className="mt-3 max-w-[14ch]">
-                    {t("landing.rv.hero.title_line1")}
-                    <br />
-                    <span className="text-mint-ink">{t("landing.rv.hero.title_accent")}</span>
-                  </h2>
+        {/* La scène du flux : déjà jouable, sans compte. */}
+        <div className="relative z-10 mx-auto mt-14 max-w-[1240px] px-3 pb-16 sm:px-5 md:mt-20 md:pb-24">
+          <p className="mb-4 flex items-center justify-center gap-2 text-body-sm font-semibold text-ink-2">
+            <ArrowDown aria-hidden className="size-4 animate-bounce motion-reduce:animate-none" />
+            {t("landing.v5.try_hint")}
+          </p>
+          <MoneyFlow />
+        </div>
+      </header>
 
-                  <p className="mt-5 max-w-[46ch] text-body-lg leading-relaxed text-ink-2">
-                    {t("landing.rv.hero.subtitle")}
-                  </p>
-                </div>
+      {/* ── SCÈNE 2 : les preuves, en bandeau ─────────────────────── */}
+      <Marquee
+        label={t("landing.v5.proof_aria")}
+        className="border-y border-paper-3 bg-paper py-5"
+        duration={42}
+      >
+        {(["funds", "sources", "no_advice", "free"] as const).map((key) => (
+          <span
+            key={key}
+            className="mx-7 inline-flex items-center gap-7 whitespace-nowrap text-body-lg text-ink-2 [&_b]:font-bold [&_b]:text-ink"
+          >
+            <span>
+              <Trans i18nKey={`landing.rv.proof.${key}`} components={{ b: <b /> }} />
+            </span>
+            <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-mint" />
+          </span>
+        ))}
+      </Marquee>
 
-                {/* Portes secondaires : pour qui n'a aucun nom de fonds en
-                    tête, ou revient. */}
-                <div className="order-3 lg:order-none flex flex-wrap items-center gap-x-7 gap-y-3 mt-2 lg:mt-8">
+      {/* ── SCÈNE 3 : le rayon X ──────────────────────────────────── */}
+      <section id="rayon-x" className={cn(CONTAINER, "accent-ice scroll-mt-28 py-20 md:py-28")}>
+        <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-start lg:gap-16">
+          <Reveal>
+            <span className="chip chip--accent">{t("landing.rv.hero.eyebrow_search")}</span>
+            <h2 className="display-lg mt-5 max-w-[12ch]">
+              {t("landing.rv.hero.title_line1")}
+              <br />
+              <span className="text-gradient">{t("landing.rv.hero.title_accent")}</span>
+            </h2>
+            <p className="mt-6 max-w-[46ch] text-body-lg leading-relaxed text-ink-2">
+              {t("landing.rv.hero.subtitle")}
+            </p>
+            <p className="mt-6 max-w-[52ch] text-body-sm text-ink-3">{t("landing.rv.hero.note")}</p>
+          </Reveal>
+          <Reveal delay={120}>
+            <MoneyXray variant="hero" />
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ── SCÈNE 4 : comment ça marche ───────────────────────────── */}
+      <section className={cn(CONTAINER, "py-12 md:py-20")}>
+        <HowItWorks />
+      </section>
+
+      {/* ── Les trois portes d'entrée ─────────────────────────────── */}
+      {isAuthed ? null : (
+        <section className={cn(CONTAINER, "py-20 md:py-28")}>
+          <Reveal>
+            <h2 className="display-lg max-w-[14ch]">{t("landing.paths.heading")}</h2>
+          </Reveal>
+          <RevealGroup className="mt-10 grid gap-4 md:grid-cols-3">
+            <PathCard
+              icon={Sprout}
+              eyebrow={t("landing.paths.beginner_eyebrow")}
+              title={t("landing.paths.beginner_title")}
+              desc={t("landing.paths.beginner_desc")}
+              cta={t("landing.paths.beginner_cta")}
+              tone="mint"
+              to="/onboarding"
+              search={{ guest: true }}
+              onClick={onCta("path_beginner", "preview")}
+            />
+            <PathCard
+              icon={BookOpen}
+              eyebrow={t("landing.paths.learn_eyebrow")}
+              title={t("landing.paths.learn_title")}
+              desc={t("landing.paths.learn_desc")}
+              cta={t("landing.paths.learn_cta")}
+              tone="volt"
+              to="/comprendre"
+              onClick={onCta("path_learn", "preview")}
+            />
+            <PathCard
+              icon={LineChart}
+              eyebrow={t("landing.paths.investor_eyebrow")}
+              title={t("landing.paths.investor_title")}
+              desc={t("landing.paths.investor_desc")}
+              cta={t("landing.paths.investor_cta")}
+              tone="ice"
+              to="/auth"
+              search={{ redirect: "/portfolio", mode: "login" }}
+              onClick={onCta("path_investor", "login")}
+            />
+          </RevealGroup>
+        </section>
+      )}
+
+      {/* ── Le constat — bande sombre ─────────────────────────────── */}
+      <section className="mx-auto max-w-[1240px] px-3 sm:px-5">
+        <Reveal>
+          <div className="ink-section relative overflow-hidden px-7 py-16 md:px-16 md:py-24">
+            <Aurora />
+            <div className="relative z-10">
+              <span className="chip">{t("landing.rv.cards.problem.eyebrow")}</span>
+              <h2 className="display-lg mt-5 max-w-[18ch]">
+                {t("landing.rv.cards.problem.title")}
+              </h2>
+              <p className="mt-6 max-w-[54ch] text-body-lg leading-relaxed text-ink-2">
+                {t("landing.rv.cards.problem.desc")}
+              </p>
+
+              <RevealGroup className="mt-14 grid gap-10 md:grid-cols-3 md:gap-8">
+                {STATS.map((s) => (
+                  <div key={s.figure} className="border-t border-paper-3 pt-6">
+                    <p className="font-display text-[clamp(56px,7vw,92px)] font-extrabold leading-none tracking-[-0.04em] text-mint-ink">
+                      {s.figure}
+                    </p>
+                    <p className="mt-4 max-w-[26ch] text-body-lg leading-snug text-ink-2">
+                      {s.text}
+                    </p>
+                    <Provenance className="mt-4" source={s.src} status="verified" hideChip />
+                  </div>
+                ))}
+              </RevealGroup>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
+      {/* ── Ce que Seedow mesure — et ce qu'il ne mesure pas ──────── */}
+      <Section
+        eyebrow={t("landing.rv.cards.impact.eyebrow")}
+        title={t("landing.rv.cards.impact.title")}
+        desc={t("landing.rv.cards.impact.desc")}
+        action={
+          <Button asChild variant="outline">
+            <Link to="/methodologie">
+              {t("landing.rv.cards.impact.cta")}
+              <ArrowRight aria-hidden />
+            </Link>
+          </Button>
+        }
+      >
+        <MeasureScope />
+      </Section>
+
+      {/* ── Observatoire — la promesse du fonds, face à ses données ── */}
+      <Section
+        eyebrow={t("landing.observatory.eyebrow")}
+        title={t("landing.observatory.title")}
+        desc={t("landing.observatory.desc")}
+        action={
+          <Button asChild>
+            <Link to="/observatoire" onClick={onCta("card_observatory", "preview")}>
+              {t("landing.observatory.cta")}
+              <ArrowRight aria-hidden />
+            </Link>
+          </Button>
+        }
+        accent="ice"
+        side
+      >
+        <ClaimVsData />
+      </Section>
+
+      {/* ── Cours ─────────────────────────────────────────────────── */}
+      <Section
+        eyebrow={t("landing.rv.cards.courses.eyebrow")}
+        title={t("landing.rv.cards.courses.title")}
+        desc={t("landing.rv.cards.courses.desc")}
+        accent="volt"
+      >
+        <LandingCourses embedded />
+      </Section>
+
+      {/* ── Ethi ──────────────────────────────────────────────────── */}
+      <Section
+        eyebrow={t("landing.rv.cards.ethi.eyebrow")}
+        title={t("landing.rv.cards.ethi.title")}
+        desc={t("landing.rv.cards.ethi.desc")}
+        accent="mint"
+        side
+      >
+        <EthiDemo />
+      </Section>
+
+      {/* ── Méthode ───────────────────────────────────────────────── */}
+      <Section
+        eyebrow={t("landing.rv.cards.method.eyebrow")}
+        title={t("landing.rv.cards.method.title")}
+        desc={t("landing.rv.cards.method.desc")}
+        action={
+          <Button asChild variant="outline">
+            <Link to="/methodologie">
+              {t("landing.rv.cards.method.cta")}
+              <ArrowRight aria-hidden />
+            </Link>
+          </Button>
+        }
+        accent="volt"
+      />
+
+      {/* ── Appel final ───────────────────────────────────────────── */}
+      <section className="mx-auto mt-8 max-w-[1240px] px-3 sm:px-5">
+        <Reveal>
+          <div className="ink-section relative overflow-hidden px-7 py-20 text-center md:py-28">
+            <Aurora />
+            <div className="relative z-10">
+              <h2 className="display-xl mx-auto max-w-[14ch]">{t("landing.rv.final.title")}</h2>
+              <p className="mx-auto mt-6 max-w-[44ch] text-body-xl text-ink-2">
+                {isAuthed
+                  ? t("landing.rv.final.subtitle_authed")
+                  : t("landing.rv.final.subtitle_new")}
+              </p>
+
+              <div className="mt-10 flex flex-col items-center gap-4">
+                <Magnetic>
                   {isAuthed ? (
-                    <Button asChild variant="on-dark">
-                      <Link to="/le-fil">{t("landing.rv.hero.cta_authed")}</Link>
+                    <Button asChild size="lg" variant="on-dark">
+                      <Link to="/le-fil">
+                        {t("landing.rv.hero.cta_authed")}
+                        <ArrowRight aria-hidden />
+                      </Link>
                     </Button>
                   ) : (
-                    <>
+                    <Button asChild size="lg" variant="on-dark">
                       <Link
                         to="/onboarding"
                         search={{ guest: true }}
-                        onClick={onCta("hero", "preview")}
-                        className="text-body font-semibold text-on-deep underline underline-offset-4 hover:no-underline rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-on-deep"
+                        onClick={onCta("final", "preview")}
                       >
-                        {t("landing.rv.hero.cta_secondary_path")} <span aria-hidden>→</span>
+                        {t("landing.rv.hero.cta_primary")}
+                        <ArrowRight aria-hidden />
                       </Link>
-                      <Link
-                        to="/auth"
-                        search={{ redirect: "/le-fil", mode: "login" }}
-                        onClick={onCta("hero", "login")}
-                        className="text-body font-semibold text-ink-2 hover:text-ink transition-colors rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-on-deep"
-                      >
-                        {t("landing.nav.login")}
-                      </Link>
-                    </>
+                    </Button>
                   )}
-                </div>
-
-                <p className="order-4 lg:order-none mt-4 lg:mt-6 text-body-sm text-ink-3 max-w-[52ch]">
-                  {t("landing.rv.hero.note")}
-                </p>
+                </Magnetic>
+                {!isAuthed && (
+                  <p className="text-body-sm text-ink-3">{t("landing.hero.no_account_note")}</p>
+                )}
               </div>
 
-              <div className="order-2 lg:order-none">
-                <MoneyXray variant="hero" />
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-
-      {/* ── CATALOGUE : bande claire ──────────────────────────────── */}
-      <div className="max-w-[1160px] mx-auto px-7 py-20 md:py-24 flex flex-col gap-16 md:gap-20">
-        {/* Preuves */}
-        <Reveal>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <ProofTile>
-              <Trans i18nKey="landing.rv.proof.funds" components={{ b: <b /> }} />
-            </ProofTile>
-            <ProofTile>
-              <Trans i18nKey="landing.rv.proof.sources" components={{ b: <b /> }} />
-            </ProofTile>
-            <ProofTile>
-              <Trans i18nKey="landing.rv.proof.no_advice" components={{ b: <b /> }} />
-            </ProofTile>
-            <ProofTile>
-              <Trans i18nKey="landing.rv.proof.free" components={{ b: <b /> }} />
-            </ProofTile>
-          </div>
-        </Reveal>
-
-        {/* Parcours */}
-        {isAuthed ? null : (
-          <Reveal className={`accent-mint ${SECTION_RULE}`}>
-            <h2 className="max-w-[16ch]">{t("landing.paths.heading")}</h2>
-            <div className="grid md:grid-cols-3 gap-4 mt-10">
-              <PathCard
-                eyebrow={t("landing.paths.beginner_eyebrow")}
-                title={t("landing.paths.beginner_title")}
-                desc={t("landing.paths.beginner_desc")}
-                cta={t("landing.paths.beginner_cta")}
-                tone="mint"
-                to="/onboarding"
-                search={{ guest: true }}
-                onClick={onCta("path_beginner", "preview")}
-              />
-              <PathCard
-                eyebrow={t("landing.paths.learn_eyebrow")}
-                title={t("landing.paths.learn_title")}
-                desc={t("landing.paths.learn_desc")}
-                cta={t("landing.paths.learn_cta")}
-                tone="ice"
-                to="/comprendre"
-                onClick={onCta("path_learn", "preview")}
-              />
-              <PathCard
-                eyebrow={t("landing.paths.investor_eyebrow")}
-                title={t("landing.paths.investor_title")}
-                desc={t("landing.paths.investor_desc")}
-                cta={t("landing.paths.investor_cta")}
-                tone="volt"
-                to="/auth"
-                search={{ redirect: "/portfolio", mode: "login" }}
-                onClick={onCta("path_investor", "login")}
-              />
-            </div>
-          </Reveal>
-        )}
-
-        {/* Le constat — bande sombre encartée */}
-        <Reveal>
-          <div className="ink-section px-7 py-16 md:px-14 md:py-20">
-            <p className="eyebrow">{t("landing.rv.cards.problem.eyebrow")}</p>
-            <h2 className="mt-4 max-w-[20ch]">{t("landing.rv.cards.problem.title")}</h2>
-            <p className="mt-5 max-w-[54ch] text-body-lg leading-relaxed text-ink-2">
-              {t("landing.rv.cards.problem.desc")}
-            </p>
-
-            <div className="grid md:grid-cols-3 gap-10 md:gap-8 mt-14">
-              {STATS.map((s) => (
-                <div key={s.figure}>
-                  <p className="font-value text-[clamp(48px,6vw,76px)] leading-none text-mint-ink">
-                    {s.figure}
-                  </p>
-                  <p className="mt-4 text-body-lg leading-snug max-w-[26ch] text-ink-2">{s.text}</p>
-                  <Provenance className="mt-4" source={s.src} status="verified" hideChip />
-                </div>
-              ))}
+              <p className="mx-auto mt-12 max-w-[60ch] text-body-sm leading-relaxed text-ink-3">
+                {t("landing.badge_simulation")}
+              </p>
             </div>
           </div>
         </Reveal>
+      </section>
 
-        {/* Ce que Seedow mesure — et ce qu'il ne mesure pas */}
-        <Section
-          eyebrow={t("landing.rv.cards.impact.eyebrow")}
-          title={t("landing.rv.cards.impact.title")}
-          desc={t("landing.rv.cards.impact.desc")}
-          action={
-            <Button asChild variant="link" className="px-0">
-              <Link to="/methodologie">{t("landing.rv.cards.impact.cta")}</Link>
-            </Button>
-          }
-          side
-        >
-          <MeasureScope t={t} />
-        </Section>
-
-        {/* Observatoire — la promesse du fonds, face à ses données */}
-        <Section
-          eyebrow={t("landing.observatory.eyebrow")}
-          title={t("landing.observatory.title")}
-          desc={t("landing.observatory.desc")}
-          action={
-            <Button asChild>
-              <Link to="/observatoire" onClick={onCta("card_observatory", "preview")}>
-                {t("landing.observatory.cta")}
-              </Link>
-            </Button>
-          }
-          accent="ice"
-          side
-        >
-          <ClaimVsData t={t} />
-        </Section>
-
-        {/* Cours */}
-        <Section
-          eyebrow={t("landing.rv.cards.courses.eyebrow")}
-          title={t("landing.rv.cards.courses.title")}
-          desc={t("landing.rv.cards.courses.desc")}
-          accent="volt"
-        >
-          <LandingCourses embedded />
-        </Section>
-
-        {/* Ethi */}
-        <Section
-          eyebrow={t("landing.rv.cards.ethi.eyebrow")}
-          title={t("landing.rv.cards.ethi.title")}
-          desc={t("landing.rv.cards.ethi.desc")}
-          accent="ice"
-          side
-        >
-          <div className="paper-card p-7">
-            <p className="stamp">{t("landing.ethi.example_label")}</p>
-            <div className="flex flex-col gap-5 mt-5">
-              <Exchange label={t("landing.ethi.speaker_you")}>{t("landing.ethi.chat_q1")}</Exchange>
-              <Exchange who="ethi" label="Ethi">
-                {t("landing.ethi.chat_a1")}
-              </Exchange>
-              <Exchange label={t("landing.ethi.speaker_you")}>{t("landing.ethi.chat_q2")}</Exchange>
-              <Exchange who="ethi" label="Ethi">
-                {t("landing.ethi.chat_a2")}
-              </Exchange>
-            </div>
-          </div>
-        </Section>
-
-        {/* Méthode — le rayon X vit maintenant dans le hero ; ici on ouvre
-            seulement la grille de notation, ses poids et ses limites. */}
-        <Section
-          eyebrow={t("landing.rv.cards.method.eyebrow")}
-          title={t("landing.rv.cards.method.title")}
-          desc={t("landing.rv.cards.method.desc")}
-          action={
-            <Button asChild>
-              <Link to="/methodologie">{t("landing.rv.cards.method.cta")}</Link>
-            </Button>
-          }
-          accent="volt"
-        />
-
-        {/* CTA final */}
-        <Reveal>
-          <div className="ink-section px-7 py-20 md:py-24 text-center">
-            <h2 className="mx-auto max-w-[18ch]">{t("landing.rv.final.title")}</h2>
-            <p className="mt-5 mx-auto max-w-[44ch] text-body-lg text-ink-2">
-              {isAuthed
-                ? t("landing.rv.final.subtitle_authed")
-                : t("landing.rv.final.subtitle_new")}
-            </p>
-
-            <div className="mt-10 flex flex-col items-center gap-4">
-              {isAuthed ? (
-                <Button asChild variant="on-dark">
-                  <Link to="/le-fil">{t("landing.rv.hero.cta_authed")}</Link>
-                </Button>
-              ) : (
-                <>
-                  <Button asChild variant="on-dark">
-                    <Link
-                      to="/onboarding"
-                      search={{ guest: true }}
-                      onClick={onCta("final", "preview")}
-                    >
-                      {t("landing.rv.hero.cta_primary")}
-                    </Link>
-                  </Button>
-                  <p className="text-body-sm text-ink-3">{t("landing.hero.trust_line")}</p>
-                </>
-              )}
-            </div>
-
-            <p className="mt-12 mx-auto max-w-[60ch] text-body-sm leading-relaxed text-ink-3">
-              {t("landing.badge_simulation")}
-            </p>
-          </div>
-        </Reveal>
-      </div>
-
-      {/* ── FOOTER ────────────────────────────────────────────────── */}
-      <footer className="on-deep">
-        <div className="max-w-[1160px] mx-auto px-7 py-14 flex flex-col md:flex-row md:items-start justify-between gap-10">
-          <div>
-            <Wordmark onDark />
-            <p className="mt-4 text-body-sm text-ink-3">{t("landing.footer.copyright")}</p>
-          </div>
-
-          <nav className="grid grid-cols-2 sm:grid-cols-3 gap-x-12 gap-y-3">
-            {[
-              { to: "/cours", label: t("landing.footer.courses") },
-              { to: "/methodologie", label: t("landing.footer.methodology") },
-              { to: "/observatoire", label: t("landing.footer.observatory") },
-              { to: "/tarifs", label: t("landing.footer.pricing") },
-              { to: "/aide", label: t("landing.footer.help") },
-              { to: "/mentions-legales", label: t("landing.footer.legal") },
-              { to: "/confidentialite", label: t("landing.footer.privacy") },
-              { to: "/cgu", label: t("landing.footer.terms") },
-            ].map((l) => (
-              <Link
-                key={l.to}
-                to={l.to}
-                className="text-body-sm font-medium text-ink-2 hover:text-ink transition-colors"
-              >
-                {l.label}
-              </Link>
-            ))}
-            {isAuthed ? (
-              <Link
-                to="/le-fil"
-                className="text-body-sm font-medium text-ink-2 hover:text-ink transition-colors"
-              >
-                {t("landing.footer.my_space")}
-              </Link>
-            ) : (
-              <Link
-                to="/auth"
-                search={{ redirect: "/le-fil", mode: "login" }}
-                className="text-body-sm font-medium text-ink-2 hover:text-ink transition-colors"
-              >
-                {t("landing.footer.login")}
-              </Link>
-            )}
-            <a
-              href="mailto:hello@seedow.life"
-              className="text-body-sm font-medium text-ink-2 hover:text-ink transition-colors"
-            >
-              {t("landing.footer.contact")}
-            </a>
-          </nav>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }
 
 /* ---------- Sous-composants ---------- */
 
-function Wordmark({ onDark = false }: { onDark?: boolean }) {
-  return (
-    <Link
-      to="/"
-      className={`inline-flex items-baseline gap-1 text-[22px] font-extrabold tracking-[-0.03em] ${
-        onDark ? "text-on-deep" : "text-ink"
-      }`}
-    >
-      seedow
-      <span aria-hidden className="text-mint">
-        .
-      </span>
-    </Link>
-  );
-}
-
-/** Apparition au scroll — un fondu de 8px, pas une cascade différée. */
-function Reveal({ className, children }: { className?: string; children: React.ReactNode }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || typeof IntersectionObserver === "undefined") {
-      setVisible(true);
-      return;
-    }
-    const obs = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          setVisible(true);
-          obs.disconnect();
-        }
-      },
-      { rootMargin: "0px 0px -10% 0px" },
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-
-  return (
-    <div ref={ref} className={cn(visible ? "reveal in-view" : "reveal", className)}>
-      {children}
-    </div>
-  );
-}
-
 /**
- * Section de catalogue : titre à gauche, démonstration à droite ou dessous.
- *
- * En `side`, les deux colonnes s'alignaient sur leur centre : une carte plus
- * haute que son texte partait chercher le titre de la section suivante. Elles
- * s'alignent maintenant par le haut, sous un filet qui ferme la section
- * précédente.
+ * Section de catalogue : titre à gauche, démonstration à droite (`side`) ou
+ * dessous. La couleur du libellé DISTINGUE les chapitres entre eux — jamais
+ * seule porteuse d'information, le libellé est toujours écrit (CLAUDE.md §4).
  */
 function Section({
   eyebrow,
@@ -547,42 +425,32 @@ function Section({
   desc?: string;
   action?: React.ReactNode;
   side?: boolean;
-  /** Couleur du libellé : elle DISTINGUE les chapitres entre eux. Jamais seule
-   *  porteuse d'information — le libellé est toujours écrit (CLAUDE.md §4). */
   accent?: "mint" | "ice" | "volt";
   children?: React.ReactNode;
 }) {
   return (
-    <Reveal className={`accent-${accent} ${SECTION_RULE}`}>
-      <div className={side ? "grid lg:grid-cols-2 gap-10 lg:gap-16 items-start" : ""}>
-        <div>
+    <section className={cn(CONTAINER, `accent-${accent}`, "py-16 md:py-24")}>
+      <div className={side ? "grid items-start gap-10 lg:grid-cols-2 lg:gap-16" : ""}>
+        <Reveal>
           <span className="chip chip--accent">{eyebrow}</span>
-          <h2 className="mt-4 max-w-[18ch]">{title}</h2>
+          <h2 className="display-lg mt-5 max-w-[16ch]">{title}</h2>
           {desc && (
-            <p className="mt-5 max-w-[52ch] text-body-lg leading-relaxed text-ink-2">{desc}</p>
+            <p className="mt-6 max-w-[52ch] text-body-lg leading-relaxed text-ink-2">{desc}</p>
           )}
           {action && <div className="mt-8">{action}</div>}
-        </div>
-        {children && <div className={side ? "" : "mt-10"}>{children}</div>}
+        </Reveal>
+        {children && (
+          <Reveal delay={side ? 120 : 0} className={side ? "" : "mt-10 md:mt-12"}>
+            {children}
+          </Reveal>
+        )}
       </div>
-    </Reveal>
-  );
-}
-
-function ProofTile({ children }: { children: React.ReactNode }) {
-  // `h-full` + centrage : un <p> posé directement en grid item ne s'étirait
-  // pas, d'où des tuiles de hauteurs inégales dès qu'un libellé passait sur
-  // deux lignes.
-  return (
-    <div className="paper-card lift flex h-full items-center justify-center px-5 py-6">
-      <p className="text-center text-body-sm leading-relaxed text-ink-2 [&_b]:text-ink [&_b]:font-bold">
-        {children}
-      </p>
-    </div>
+    </section>
   );
 }
 
 function PathCard({
+  icon: Icon,
   eyebrow,
   title,
   desc,
@@ -592,6 +460,7 @@ function PathCard({
   onClick,
   tone,
 }: {
+  icon: LucideIcon;
   eyebrow: string;
   title: string;
   desc: string;
@@ -603,150 +472,29 @@ function PathCard({
    *  elle n'est donc pas décorative. */
   tone: "mint" | "ice" | "volt";
 }) {
-  const chipTone = { mint: "chip--verified", ice: "chip--ice", volt: "chip--volt" }[tone];
-  const linkTone = { mint: "text-mint-ink", ice: "text-ice-ink", volt: "text-volt-ink" }[tone];
   return (
     <Link
       to={to}
       search={search}
       onClick={onClick}
-      className="paper-card lift group flex h-full flex-col p-7 outline-none hover:bg-paper-inset focus-visible:ring-2 focus-visible:ring-ink"
+      className={cn(
+        `accent-${tone}`,
+        "paper-card spot lift group flex h-full flex-col p-7 outline-none focus-visible:ring-2 focus-visible:ring-mint sm:p-8",
+      )}
     >
-      <span className={`chip ${chipTone}`}>{eyebrow}</span>
-      <h3 className="mt-4">{title}</h3>
-      <p className="mt-2.5 text-body-sm leading-relaxed text-ink-2">{desc}</p>
-      <span
-        className={`mt-auto pt-6 text-body font-semibold ${linkTone} inline-flex items-center gap-1.5`}
-      >
+      <span className="icon-badge transition-transform duration-500 ease-brand group-hover:-rotate-6 group-hover:scale-110 motion-reduce:transition-none">
+        <Icon aria-hidden />
+      </span>
+      <p className="mt-6 text-body-sm font-bold text-section-accent-ink">{eyebrow}</p>
+      <h3 className="mt-1.5 text-[clamp(20px,2.2vw,24px)]">{title}</h3>
+      <p className="mt-3 text-body leading-relaxed text-ink-2">{desc}</p>
+      <span className="mt-auto inline-flex items-center gap-2 pt-8 text-body font-bold text-section-accent-ink">
         {cta}
-        <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
-          →
-        </span>
+        <ArrowRight
+          aria-hidden
+          className="size-4 transition-transform duration-300 ease-brand group-hover:translate-x-1.5"
+        />
       </span>
     </Link>
-  );
-}
-
-/**
- * « Ce qu'on mesure, ce qu'on ne mesure pas ».
- *
- * Ce bloc remplace deux cartes qui affichaient des chiffres FABRIQUÉS : un
- * score de 74/100, une empreinte de −58 %, et une simulation « portefeuille
- * Seedow 24 180 € contre ETF monde 23 940 € » — dix ans de performance
- * comparée, entièrement inventés, sur la page d'accueil d'un produit dont
- * l'argument est la transparence. Aucune mention de simulation ne rattrape ça :
- * c'est exactement ce qu'un visiteur méfiant vient vérifier, et exactement ce
- * qu'il ne fallait pas faire.
- *
- * Il n'y avait pas de chiffre honnête à mettre à la place — un chiffre de
- * démonstration porte forcément sur un fonds, et le fonds, l'utilisateur le
- * choisit lui-même dans le rayon X du hero. Ce qui reste, et qui se démontre :
- * la LISTE de ce que Seedow mesure, et celle de ce qu'il ne prétend pas mesurer.
- * La seconde est la plus différenciante des deux.
- */
-function MeasureScope({ t }: { t: (key: string) => string }) {
-  const measured = [
-    t("landing.measure.measured_1"),
-    t("landing.measure.measured_2"),
-    t("landing.measure.measured_3"),
-    t("landing.measure.measured_4"),
-  ];
-  const notMeasured = [
-    t("landing.measure.not_1"),
-    t("landing.measure.not_2"),
-    t("landing.measure.not_3"),
-  ];
-
-  return (
-    <div className="paper-card p-7">
-      <p className="stamp">{t("landing.measure.measured_label")}</p>
-      <ul className="mt-3">
-        {measured.map((line) => (
-          <li key={line} className="py-2.5 border-b border-paper-3 text-body text-ink">
-            {line}
-          </li>
-        ))}
-      </ul>
-
-      <p className="stamp mt-7">{t("landing.measure.not_label")}</p>
-      <ul className="mt-3">
-        {notMeasured.map((line) => (
-          <li key={line} className="py-2.5 border-b border-paper-3 text-body text-ink-2">
-            {line}
-          </li>
-        ))}
-      </ul>
-
-      <p className="mt-6 text-body-sm leading-relaxed text-ink-3">{t("landing.measure.note")}</p>
-    </div>
-  );
-}
-
-/**
- * « Ce que le fonds dit » / « ce que ses données montrent » — la forme de
- * l'Observatoire, réduite à sa mécanique.
- *
- * Aucune valeur n'est affichée ici : ce sont les LIBELLÉS des deux colonnes que
- * l'Observatoire remplit avec des fonds réels. Montrer un exemple chiffré
- * reviendrait à désigner un fonds nommément depuis la page d'accueil, sur des
- * chiffres que le visiteur ne peut pas encore vérifier — c'est l'Observatoire
- * qui fait ça, avec la source et la date à côté de chaque ligne.
- */
-function ClaimVsData({ t }: { t: (key: string) => string }) {
-  const rows = [
-    { claim: t("landing.observatory.row_1_claim"), data: t("landing.observatory.row_1_data") },
-    { claim: t("landing.observatory.row_2_claim"), data: t("landing.observatory.row_2_data") },
-    { claim: t("landing.observatory.row_3_claim"), data: t("landing.observatory.row_3_data") },
-  ];
-
-  return (
-    <div className="paper-card p-7">
-      <div className="grid grid-cols-2 gap-x-5">
-        <p className="stamp">{t("landing.observatory.col_claim")}</p>
-        <p className="stamp">{t("landing.observatory.col_data")}</p>
-      </div>
-      <ul className="mt-3">
-        {rows.map((r) => (
-          <li key={r.claim} className="grid grid-cols-2 gap-x-5 py-3.5 border-b border-paper-3">
-            <span className="text-body-sm leading-snug text-ink-2">« {r.claim} »</span>
-            <span className="text-body-sm leading-snug text-ink font-medium">{r.data}</span>
-          </li>
-        ))}
-      </ul>
-      <p className="mt-6 text-body-sm leading-relaxed text-ink-3">
-        {t("landing.observatory.note")}
-      </p>
-    </div>
-  );
-}
-
-/**
- * Échange avec Ethi — attribution nette, pas une bulle de messagerie.
- *
- * Les quatre tours s'enchaînaient sans séparation, et la question était signée
- * « — » : on ne voyait ni où finissait une réponse, ni qui parlait. La question
- * est posée dans un encart, la réponse porte le filet de marque, et le nom de
- * qui parle est écrit.
- */
-function Exchange({
-  who = "user",
-  label,
-  children,
-}: {
-  who?: "user" | "ethi";
-  label: string;
-  children: React.ReactNode;
-}) {
-  const isUser = who === "user";
-  return (
-    <div className={isUser ? "paper-card-inset px-4 py-3.5" : "border-l-2 border-mint pl-4"}>
-      <p className="stamp inline-flex items-center gap-2">
-        {!isUser && <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-mint" />}
-        {label}
-      </p>
-      <p className={`mt-1 text-body-lg leading-relaxed ${isUser ? "text-ink-2" : "text-ink"}`}>
-        {children}
-      </p>
-    </div>
   );
 }

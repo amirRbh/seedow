@@ -9,6 +9,7 @@ import {
   type FlowShare,
 } from "@/lib/landing/moneyFlow";
 import type { CauseTag, ExclusionTag } from "@/lib/portfolio/types";
+import { AnimatedFigure } from "@/components/ui/AnimatedFigure";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
 import { cn } from "@/lib/utils";
 
@@ -252,86 +253,115 @@ export function MoneyFlow() {
   };
 
   return (
-    <div className="flex flex-col gap-7">
-      <div className="flex flex-col gap-5 sm:flex-row sm:gap-10">
-        <div>
-          <p className="stamp">{t("landing.flow.want_label")}</p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {FLOW_CAUSES.map((tag) => (
-              <FlowPill
-                key={tag}
-                label={t(`onboarding.steps.values.${tag}`)}
-                pressed={causes.includes(tag)}
-                onClick={() => toggleCause(tag)}
-              />
-            ))}
-          </div>
-        </div>
+    <div className="flex flex-col gap-6">
+      {/* ── La scène : une bande sombre, le flux au centre ─────────
+          Les commandes vivent DANS la scène, juste au-dessus du flux : on
+          coche, et l'effet se voit dans le même regard. */}
+      <div className="ink-section relative overflow-hidden">
+        <div aria-hidden className="grid-dots absolute inset-0 opacity-50" />
 
-        <div>
-          <p className="stamp">{t("landing.flow.refuse_label")}</p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {FLOW_EXCLUSIONS.map((tag) => (
-              <FlowPill
-                key={tag}
-                label={t(`onboarding.steps.exclusions.${tag}`)}
-                pressed={exclusions.includes(tag)}
-                onClick={() => toggleExclusion(tag)}
-                refuse
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="paper-card grid overflow-hidden lg:grid-cols-[1fr_21rem]">
-        <div className="relative h-[280px] sm:h-[340px] lg:h-[400px]">
-          <canvas ref={canvasRef} aria-hidden className="absolute inset-0 h-full w-full" />
-          {/* Juste AU-DESSUS du point d'origine : centré, le libellé tombait
-              dessus. */}
-          <div className="pointer-events-none absolute top-1/2 left-6 -translate-y-[calc(100%+12px)]">
-            <p className="font-value text-body-xl">{t("landing.flow.source_amount")}</p>
-            <p className="text-body-sm text-ink-3">{t("landing.flow.source_label")}</p>
-          </div>
-        </div>
-
-        <div className="border-t border-paper-3 p-6 lg:border-t-0 lg:border-l">
-          <p className="eyebrow">{t("landing.flow.ledger_title")}</p>
-          <ul className="mt-3 flex flex-col">
-            {shares.map((lane) => (
-              <li
-                key={lane.id}
-                className="flex items-center gap-3 border-b border-paper-3 py-2.5 last:border-b-0"
-              >
-                <span
-                  aria-hidden
-                  className="size-2.5 shrink-0 rounded-[3px]"
-                  style={{ backgroundColor: lane.excluded ? "var(--ink-3)" : `var(${lane.token})` }}
+        <div className="relative z-10 flex flex-col gap-5 px-5 pt-6 sm:flex-row sm:gap-10 sm:px-8 sm:pt-8">
+          <div>
+            <p className="stamp">{t("landing.flow.want_label")}</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {FLOW_CAUSES.map((tag) => (
+                <FlowPill
+                  key={tag}
+                  label={t(`onboarding.steps.values.${tag}`)}
+                  pressed={causes.includes(tag)}
+                  onClick={() => toggleCause(tag)}
                 />
-                <span
-                  className={cn(
-                    "flex-1 text-body-sm",
-                    lane.excluded ? "text-ink-3 line-through" : "text-ink-2",
-                  )}
-                >
-                  {t(`landing.flow.lane.${lane.id}`)}
-                </span>
-                <span
-                  className={cn(
-                    "font-value text-body-sm",
-                    lane.excluded ? "text-ink-3" : "text-ink",
-                  )}
-                >
-                  {lane.excluded ? t("landing.flow.excluded") : `${lane.share} %`}
-                </span>
-              </li>
-            ))}
-          </ul>
-          <p className="mono-meta mt-4 leading-relaxed">{t("landing.flow.source_note")}</p>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <p className="stamp">{t("landing.flow.refuse_label")}</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {FLOW_EXCLUSIONS.map((tag) => (
+                <FlowPill
+                  key={tag}
+                  label={t(`onboarding.steps.exclusions.${tag}`)}
+                  pressed={exclusions.includes(tag)}
+                  onClick={() => toggleExclusion(tag)}
+                  refuse
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="relative z-10 grid lg:grid-cols-[1fr_22rem]">
+          <div className="relative h-[280px] sm:h-[340px] lg:h-[420px]">
+            <canvas ref={canvasRef} aria-hidden className="absolute inset-0 h-full w-full" />
+            {/* Juste AU-DESSUS du point d'origine : centré, le libellé tombait
+                dessus. */}
+            <div className="pointer-events-none absolute top-1/2 left-6 -translate-y-[calc(100%+12px)] sm:left-8">
+              <p className="font-value text-body-xl">{t("landing.flow.source_amount")}</p>
+              <p className="text-body-sm text-ink-3">{t("landing.flow.source_label")}</p>
+            </div>
+          </div>
+
+          <div className="m-3 rounded-[28px] bg-deep-2 p-6 lg:m-4 lg:ml-0">
+            <p className="eyebrow">{t("landing.flow.ledger_title")}</p>
+            <ul className="mt-3 flex flex-col">
+              {shares.map((lane) => (
+                <li key={lane.id} className="py-2.5">
+                  <div className="flex items-center gap-3">
+                    <span
+                      aria-hidden
+                      className="size-2.5 shrink-0 rounded-full"
+                      style={{
+                        backgroundColor: lane.excluded ? "var(--ink-3)" : `var(${lane.token})`,
+                      }}
+                    />
+                    <span
+                      className={cn(
+                        "flex-1 text-body-sm",
+                        lane.excluded ? "text-ink-3 line-through" : "text-ink-2",
+                      )}
+                    >
+                      {t(`landing.flow.lane.${lane.id}`)}
+                    </span>
+                    <span
+                      className={cn(
+                        "font-value text-body-sm",
+                        lane.excluded ? "text-ink-3" : "text-ink",
+                      )}
+                    >
+                      {lane.excluded ? (
+                        t("landing.flow.excluded")
+                      ) : (
+                        <AnimatedFigure
+                          value={lane.share}
+                          duration={520}
+                          format={(v) => `${Math.round(v)} %`}
+                        />
+                      )}
+                    </span>
+                  </div>
+                  {/* La part se lit aussi à la LONGUEUR : la barre double le
+                      chiffre, elle ne le remplace pas (CLAUDE.md §4). */}
+                  <div aria-hidden className="mt-2 h-1 overflow-hidden rounded-full bg-paper-2">
+                    <div
+                      className="h-full rounded-full transition-[width] duration-500 ease-brand motion-reduce:transition-none"
+                      style={{
+                        width: `${lane.excluded ? 0 : Math.min(100, lane.share * 2.4)}%`,
+                        backgroundColor: `var(${lane.token})`,
+                      }}
+                    />
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <p className="mono-meta mt-4 leading-relaxed">{t("landing.flow.source_note")}</p>
+          </div>
         </div>
       </div>
 
-      <p className="max-w-[68ch] text-body-sm text-ink-3">{t("landing.flow.disclaimer")}</p>
+      <p className="mx-auto max-w-[68ch] text-center text-body-sm text-ink-3">
+        {t("landing.flow.disclaimer")}
+      </p>
     </div>
   );
 }

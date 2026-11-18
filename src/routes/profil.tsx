@@ -129,12 +129,8 @@ function ProfilPage() {
   const numLocale = lang === "en" ? "en-US" : "fr-FR";
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="min-h-screen bg-paper-2"
-    >
-      <div className="max-w-lg mx-auto pb-28">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen">
+      <div className="page accent-mint">
         <AppHeader
           eyebrow={t("profile.eyebrow")}
           title={userName}
@@ -147,7 +143,7 @@ function ProfilPage() {
 
         {/* Vue d'ensemble — KPI signature */}
         <section className="px-5 pt-6">
-          <div className="grid grid-cols-2 gap-4 border-t border-paper-3 pt-5">
+          <div className="hero-card grid grid-cols-2 gap-x-4 gap-y-6 p-6 sm:grid-cols-4 sm:p-7">
             <KPIFigure
               size="sm"
               label={t("profile.kpi_invested")}
@@ -180,205 +176,188 @@ function ProfilPage() {
         </section>
 
         {/* Hub — regroupe les surfaces annexes retirées du rail de navigation */}
-        <section className="px-5 pt-10">
-          <div className="gold-rule mb-5" />
-          <p className="text-tag uppercase tracking-[0.22em] text-gold font-mono mb-3">
-            {t("profile.hub_eyebrow")}
-          </p>
-          <h2 className="font-value text-2xl text-ink leading-tight">{t("profile.hub_title")}</h2>
-          <nav className="mt-5 grid grid-cols-2 gap-2">
-            <HubLink to="/objectifs" label={t("nav.objectives")} />
-            <HubLink to="/comparatif" label={t("rail_nav.comparatif")} />
-            <HubLink to="/certificat" label={t("rail_nav.certificate")} />
-            <HubLink to="/wrapped" label={t("rail_nav.wrapped")} />
-            <HubLink to="/methodologie" label={t("nav.methodology")} />
-            <HubLink to="/reglages" label={t("nav.settings")} />
-          </nav>
+        <section className="px-5 pt-5">
+          <div className="paper-card p-6 sm:p-7">
+            <p className="chip chip--accent mb-3 w-fit">{t("profile.hub_eyebrow")}</p>
+            <h2 className="text-[clamp(20px,2.2vw,24px)]">{t("profile.hub_title")}</h2>
+            <nav className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-3">
+              <HubLink to="/objectifs" label={t("nav.objectives")} />
+              <HubLink to="/comparatif" label={t("rail_nav.comparatif")} />
+              <HubLink to="/certificat" label={t("rail_nav.certificate")} />
+              <HubLink to="/wrapped" label={t("rail_nav.wrapped")} />
+              <HubLink to="/methodologie" label={t("nav.methodology")} />
+              <HubLink to="/reglages" label={t("nav.settings")} />
+            </nav>
+          </div>
         </section>
 
         {/* Labo — les surfaces encore exploratoires. Vote et Réveil avaient
             quitté le rail comme « paris non prouvés » sans que ce statut soit
             visible nulle part : elles n'étaient plus atteignables que par ⌘K.
             Les nommer vaut mieux que les laisser dériver ou les couper. */}
-        <section className="px-5 pt-10">
-          <div className="gold-rule mb-5" />
-          <p className="text-tag uppercase tracking-[0.22em] text-gold font-mono mb-3">
-            {t("profile.lab_eyebrow")}
-          </p>
-          <h2 className="font-value text-2xl text-ink leading-tight">{t("profile.lab_title")}</h2>
-          <p className="mt-2 text-body-sm text-ink-2 max-w-[52ch] leading-relaxed">
-            {t("profile.lab_desc")}
-          </p>
-          <nav className="mt-5 grid grid-cols-2 gap-2" aria-label={t("profile.lab_title")}>
-            <HubLink to="/vote" label={t("rail_nav.vote")} />
-            <HubLink to="/reveil" label={t("rail_nav.reveil")} />
-            <HubLink to="/communaute" label={t("nav.community")} />
-            <HubLink to="/observatoire" label={t("profile.lab_observatory")} />
-          </nav>
+        <section className="px-5 pt-5">
+          <div className="paper-card p-6 sm:p-7">
+            <p className="chip chip--accent mb-3 w-fit">{t("profile.lab_eyebrow")}</p>
+            <h2 className="text-[clamp(20px,2.2vw,24px)]">{t("profile.lab_title")}</h2>
+            <p className="mt-2 text-body-sm text-ink-2 max-w-[52ch] leading-relaxed">
+              {t("profile.lab_desc")}
+            </p>
+            <nav
+              className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4"
+              aria-label={t("profile.lab_title")}
+            >
+              <HubLink to="/vote" label={t("rail_nav.vote")} />
+              <HubLink to="/reveil" label={t("rail_nav.reveil")} />
+              <HubLink to="/communaute" label={t("nav.community")} />
+              <HubLink to="/observatoire" label={t("profile.lab_observatory")} />
+            </nav>
+          </div>
         </section>
 
         {/* Tes valeurs */}
-        <section className="px-5 pt-10">
-          <div className="gold-rule mb-5" />
-          <p className="text-tag uppercase tracking-[0.22em] text-gold font-mono mb-3">
-            {t("profile.values_eyebrow")}
-          </p>
-          <h2 className="font-value text-2xl text-ink leading-tight">
-            {t("profile.values_title")}
-          </h2>
+        <section className="px-5 pt-5">
+          <div className="paper-card p-6 sm:p-7">
+            <p className="chip chip--accent mb-3 w-fit">{t("profile.values_eyebrow")}</p>
+            <h2 className="text-[clamp(20px,2.2vw,24px)]">{t("profile.values_title")}</h2>
 
-          <div className="mt-5">
-            <p className="text-caption uppercase tracking-wider text-ink-3 font-mono mb-2">
-              {t("profile.causes_supported")}
-            </p>
-            {meta && meta.causes.length > 0 ? (
-              <div className="flex flex-wrap gap-2">
-                {meta.causes.map((c) => (
-                  <span
-                    key={c}
-                    className="px-3 py-1.5 text-label font-medium border border-highlight-3 text-highlight-1 rounded-full"
-                  >
-                    {CAUSE_LABELS[c] ?? c}
-                  </span>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-ink-3">{t("profile.no_causes")}</p>
-            )}
-          </div>
+            <div className="mt-5">
+              <p className="text-caption font-semibold text-ink-3 mb-2">
+                {t("profile.causes_supported")}
+              </p>
+              {meta && meta.causes.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {meta.causes.map((c) => (
+                    <span key={c} className="chip chip--verified">
+                      {CAUSE_LABELS[c] ?? c}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-ink-3">{t("profile.no_causes")}</p>
+              )}
+            </div>
 
-          <div className="mt-5">
-            <p className="text-caption uppercase tracking-wider text-ink-3 font-mono mb-2">
-              {t("profile.exclusions")}
-            </p>
-            {meta && meta.exclusions.length > 0 ? (
-              <div className="flex flex-wrap gap-2">
-                {meta.exclusions.map((e) => (
-                  <span
-                    key={e}
-                    className="px-3 py-1.5 text-label font-medium border border-paper-3 text-ink-2 rounded-full line-through decoration-rust/60"
-                  >
-                    {EXCLUSION_LABELS[e] ?? e}
-                  </span>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-ink-3">{t("profile.no_exclusions")}</p>
-            )}
-          </div>
+            <div className="mt-5">
+              <p className="text-caption font-semibold text-ink-3 mb-2">
+                {t("profile.exclusions")}
+              </p>
+              {meta && meta.exclusions.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {meta.exclusions.map((e) => (
+                    <span key={e} className="chip line-through decoration-alert/60">
+                      {EXCLUSION_LABELS[e] ?? e}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-ink-3">{t("profile.no_exclusions")}</p>
+              )}
+            </div>
 
-          <Link
-            to="/onboarding"
-            search={{ new: 1 }}
-            className="mt-6 inline-flex items-center gap-2 text-caption font-semibold uppercase tracking-[0.18em] text-ink hover:text-highlight-1 transition-colors"
-          >
-            {t("profile.adjust_values")}
-            <svg
-              viewBox="0 0 24 24"
-              className="w-3 h-3"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
+            <Link
+              to="/onboarding"
+              search={{ new: 1 }}
+              className="link-u mt-6 inline-flex items-center gap-2 text-body-sm font-bold text-mint-ink"
             >
-              <path d="M5 12h14M13 5l7 7-7 7" />
-            </svg>
-          </Link>
+              {t("profile.adjust_values")}
+              <svg
+                viewBox="0 0 24 24"
+                className="w-3 h-3"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+              >
+                <path d="M5 12h14M13 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
         </section>
 
         {/* Ton portefeuille */}
-        <section className="px-5 pt-10">
-          <div className="gold-rule mb-5" />
-          <p className="text-tag uppercase tracking-[0.22em] text-gold font-mono mb-3">
-            {t("profile.portfolio_eyebrow")}
-          </p>
-          <h2 className="font-value text-2xl text-ink leading-tight">
-            {t("profile.portfolio_title")}
-          </h2>
+        <section className="px-5 pt-5">
+          <div className="paper-card p-6 sm:p-7">
+            <p className="chip chip--accent mb-3 w-fit">{t("profile.portfolio_eyebrow")}</p>
+            <h2 className="text-[clamp(20px,2.2vw,24px)]">{t("profile.portfolio_title")}</h2>
 
-          <dl className="mt-5 divide-y divide-paper-3 border-t border-b border-paper-3">
-            <Row label={t("profile.active_portfolio")} value={portfolio?.name ?? "—"} />
-            <Row label={t("profile.portfolio_count")} value={`${portfolios.length} / 3`} />
-            <Row
-              label={
-                <>
-                  <Glossary term="Volatilite">Volatilité</Glossary>{" "}
-                  {t("profile.target_volatility_suffix")}
-                </>
-              }
-              value={riskPct}
-            />
-            <Row
-              label={<Glossary term="Horizon">{t("profile.horizon")}</Glossary>}
-              value={meta ? t("profile.years", { n: meta.horizon_years }) : "—"}
-            />
-          </dl>
+            <dl className="mt-5 divide-y divide-paper-3 border-t border-b border-paper-3">
+              <Row label={t("profile.active_portfolio")} value={portfolio?.name ?? "—"} />
+              <Row label={t("profile.portfolio_count")} value={`${portfolios.length} / 3`} />
+              <Row
+                label={
+                  <>
+                    <Glossary term="Volatilite">Volatilité</Glossary>{" "}
+                    {t("profile.target_volatility_suffix")}
+                  </>
+                }
+                value={riskPct}
+              />
+              <Row
+                label={<Glossary term="Horizon">{t("profile.horizon")}</Glossary>}
+                value={meta ? t("profile.years", { n: meta.horizon_years }) : "—"}
+              />
+            </dl>
 
-          <Link
-            to="/portfolio"
-            className="mt-5 inline-flex items-center gap-2 text-caption font-semibold uppercase tracking-[0.18em] text-ink hover:text-highlight-1 transition-colors"
-          >
-            {t("profile.see_allocation")}
-            <svg
-              viewBox="0 0 24 24"
-              className="w-3 h-3"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
+            <Link
+              to="/portfolio"
+              className="link-u mt-5 inline-flex items-center gap-2 text-body-sm font-bold text-mint-ink"
             >
-              <path d="M5 12h14M13 5l7 7-7 7" />
-            </svg>
-          </Link>
+              {t("profile.see_allocation")}
+              <svg
+                viewBox="0 0 24 24"
+                className="w-3 h-3"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+              >
+                <path d="M5 12h14M13 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
         </section>
 
         {/* Ta progression */}
-        <section className="px-5 pt-10">
-          <div className="gold-rule mb-5" />
-          <p className="text-tag uppercase tracking-[0.22em] text-gold font-mono mb-3">
-            {t("profile.progress_eyebrow")}
-          </p>
-          <h2 className="font-value text-2xl text-ink leading-tight">
-            {t("profile.progress_title")}
-          </h2>
+        <section className="px-5 pt-5">
+          <div className="paper-card p-6 sm:p-7">
+            <p className="chip chip--accent mb-3 w-fit">{t("profile.progress_eyebrow")}</p>
+            <h2 className="text-[clamp(20px,2.2vw,24px)]">{t("profile.progress_title")}</h2>
 
-          <ul className="mt-5 space-y-3">
-            <ProgressItem
-              done
-              label={t("profile.progress_values_done")}
-              detail={t("profile.progress_values_detail", {
-                causes: meta?.causes.length ?? 0,
-                exclusions: meta?.exclusions.length ?? 0,
-              })}
-            />
-            <ProgressItem
-              done={positions > 0}
-              label={t("profile.progress_portfolio_done")}
-              detail={
-                positions > 0
-                  ? t("profile.progress_portfolio_detail_active", { n: positions })
-                  : t("profile.progress_portfolio_detail_empty")
-              }
-            />
-            <ProgressItem
-              done={currentValue > totalInvested}
-              label={t("profile.progress_perf_done")}
-              detail={t("profile.progress_perf_detail", {
-                value: `${returnPct >= 0 ? "+" : ""}${returnPct.toFixed(2)}`,
-              })}
-            />
-          </ul>
+            <ul className="mt-5 space-y-3">
+              <ProgressItem
+                done
+                label={t("profile.progress_values_done")}
+                detail={t("profile.progress_values_detail", {
+                  causes: meta?.causes.length ?? 0,
+                  exclusions: meta?.exclusions.length ?? 0,
+                })}
+              />
+              <ProgressItem
+                done={positions > 0}
+                label={t("profile.progress_portfolio_done")}
+                detail={
+                  positions > 0
+                    ? t("profile.progress_portfolio_detail_active", { n: positions })
+                    : t("profile.progress_portfolio_detail_empty")
+                }
+              />
+              <ProgressItem
+                done={currentValue > totalInvested}
+                label={t("profile.progress_perf_done")}
+                detail={t("profile.progress_perf_detail", {
+                  value: `${returnPct >= 0 ? "+" : ""}${returnPct.toFixed(2)}`,
+                })}
+              />
+            </ul>
+          </div>
         </section>
 
         {/* Historique des décisions */}
-        <section className="px-5 pt-10">
-          <div className="gold-rule mb-5" />
-          <p className="text-tag uppercase tracking-[0.22em] text-gold font-mono mb-3">
-            {t("profile.decisions_eyebrow")}
-          </p>
-          <h2 className="font-value text-2xl text-ink leading-tight">
-            {t("profile.decisions_title")}
-          </h2>
-          <p className="text-sm text-ink-3 mt-2">{t("profile.decisions_desc")}</p>
-          <DecisionTimeline />
+        <section className="px-5 pt-5">
+          <div className="paper-card p-6 sm:p-7">
+            <p className="chip chip--accent mb-3 w-fit">{t("profile.decisions_eyebrow")}</p>
+            <h2 className="text-[clamp(20px,2.2vw,24px)]">{t("profile.decisions_title")}</h2>
+            <p className="text-sm text-ink-3 mt-2">{t("profile.decisions_desc")}</p>
+            <DecisionTimeline />
+          </div>
         </section>
 
         {/* Le comparatif vit désormais dans le hub ci-dessus et dans l'onglet Impact. */}
@@ -393,12 +372,12 @@ function HubLink({ to, label }: { to: string; label: string }) {
   return (
     <Link
       to={to}
-      className="flex items-center justify-between gap-2 rounded-[14px] border border-paper-3 bg-paper-2 px-3.5 py-3 text-sm font-medium text-ink transition-colors hover:border-ink-3"
+      className="group flex min-h-[52px] items-center justify-between gap-2 rounded-2xl bg-paper-2 px-4 py-3 text-body-sm font-semibold text-ink outline-none transition-[background-color,transform] duration-200 ease-brand hover:-translate-y-0.5 hover:bg-paper-inset focus-visible:ring-2 focus-visible:ring-mint motion-reduce:transform-none"
     >
       <span className="truncate">{label}</span>
       <svg
         viewBox="0 0 24 24"
-        className="w-4 h-4 shrink-0 text-ink-3"
+        className="h-4 w-4 shrink-0 text-ink-3 transition-transform duration-300 ease-brand group-hover:translate-x-1 group-hover:text-ink"
         fill="none"
         stroke="currentColor"
         strokeWidth="2"
@@ -413,8 +392,8 @@ function HubLink({ to, label }: { to: string; label: string }) {
 function Row({ label, value }: { label: React.ReactNode; value: string }) {
   return (
     <div className="flex items-baseline justify-between py-3 gap-4">
-      <dt className="text-caption uppercase tracking-wider text-ink-3 font-medium">{label}</dt>
-      <dd className="text-sm text-ink font-medium tabular-nums truncate">{value}</dd>
+      <dt className="text-label font-medium text-ink-2">{label}</dt>
+      <dd className="truncate text-body-sm font-bold tabular-nums text-ink">{value}</dd>
     </div>
   );
 }
@@ -425,7 +404,7 @@ function ProgressItem({ done, label, detail }: { done: boolean; label: string; d
       <span
         aria-hidden="true"
         className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${
-          done ? "bg-highlight-1 text-paper" : "border border-paper-3 text-ink-3"
+          done ? "bg-mint text-paper" : "border border-paper-3 text-ink-3"
         }`}
       >
         {done ? (

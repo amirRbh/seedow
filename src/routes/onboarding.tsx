@@ -16,6 +16,9 @@ import {
   Home,
   Target,
   PiggyBank,
+  ArrowRight,
+  Check,
+  X,
   type LucideIcon,
 } from "lucide-react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
@@ -35,6 +38,9 @@ import { writePoolHandoff } from "@/lib/onboarding/poolHandoff";
 import { SimulationBadge } from "@/components/common/SimulationBadge";
 import { trackPreference, type PreferenceStep } from "@/lib/preferences/tracking";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
+import { Aurora } from "@/components/motion/Aurora";
+import { Button } from "@/components/ui/button";
+import { EASE_SIGNATURE } from "@/lib/motion";
 import type { PortfolioParams } from "@/lib/portfolio/types";
 import {
   answersToParams,
@@ -193,7 +199,7 @@ function Onboarding() {
   };
 
   return (
-    <main className="min-h-screen bg-paper-2 text-ink">
+    <main className="min-h-screen text-ink">
       <AnimatePresence mode="wait">
         {phase === "steps" && (
           <Step
@@ -284,7 +290,7 @@ function NamePortfolioStep({
       <div className="flex items-center justify-between px-6 pt-6">
         <button
           onClick={onBack}
-          className="w-11 h-11 rounded-full flex items-center justify-center text-ink-3 hover:text-ink transition-colors"
+          className="flex h-11 w-11 items-center justify-center rounded-full bg-paper text-ink-2 shadow-card outline-none transition-colors hover:text-ink focus-visible:ring-2 focus-visible:ring-mint"
           aria-label={t("onboarding.step.back")}
         >
           <svg
@@ -303,7 +309,7 @@ function NamePortfolioStep({
         </span>
       </div>
       <div className="px-6 pt-12 pb-12 max-w-md mx-auto w-full flex-1">
-        <h1 className="font-value text-3xl text-ink">{t("onboarding.naming.question")}</h1>
+        <h1 className="text-[clamp(28px,4vw,38px)]">{t("onboarding.naming.question")}</h1>
         <p className="text-body-sm text-ink-2 mt-2">
           <Trans i18nKey="onboarding.naming.description">
             Donne-lui un nom qui te parle — par exemple <em>Climat</em>, <em>Retraite</em>,{" "}
@@ -316,13 +322,13 @@ function NamePortfolioStep({
           onChange={(e) => setName(e.target.value.slice(0, 40))}
           placeholder={t("onboarding.naming.placeholder")}
           autoFocus
-          className="mt-8 w-full px-4 py-4 rounded-2xl border border-paper-3 bg-paper-2 text-ink text-[16px] placeholder-ink-3 focus:border-ink-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-1 transition-colors"
+          className="field mt-8"
         />
         <p className="mt-2 text-tag text-ink-3 text-right">{name.length}/40</p>
 
         <button
           onClick={() => onConfirm(name.trim() || t("onboarding.naming.default_name"))}
-          className="mt-8 w-full h-14 flex items-center justify-center rounded-full bg-ink text-paper font-semibold text-sm hover:opacity-90 transition-colors"
+          className="shine mt-8 flex h-14 w-full items-center justify-center rounded-full bg-ink text-body-lg font-semibold text-paper outline-none transition-[opacity,transform] duration-200 ease-brand hover:opacity-90 focus-visible:ring-2 focus-visible:ring-mint focus-visible:ring-offset-2 active:scale-[0.98] disabled:opacity-40"
         >
           {t("onboarding.naming.validate")}
         </button>
@@ -406,7 +412,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
       <div className="flex items-center justify-between px-6 pt-6">
         <button
           onClick={onBack}
-          className="w-11 h-11 rounded-full flex items-center justify-center text-ink-3 hover:text-ink transition-colors"
+          className="flex h-11 w-11 items-center justify-center rounded-full bg-paper text-ink-2 shadow-card outline-none transition-colors hover:text-ink focus-visible:ring-2 focus-visible:ring-mint"
           aria-label={t("onboarding.step.back")}
         >
           <svg
@@ -431,10 +437,10 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
           animate={{ opacity: 1, y: 0 }}
           className="flex gap-3 items-start"
         >
-          <div className="w-9 h-9 rounded-full bg-highlight-2 flex items-center justify-center flex-shrink-0 mt-0.5">
+          <div className="mt-0.5 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-ink text-paper">
             <svg
               viewBox="0 0 24 24"
-              className="w-4 h-4 text-ink"
+              className="h-[18px] w-[18px]"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
@@ -444,13 +450,13 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
               <path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0 1 1 21 12Z" />
             </svg>
           </div>
-          <div className="flex-1 bg-paper-2 text-ink text-body-sm rounded-2xl rounded-bl-sm px-4 py-3 leading-relaxed">
+          <div className="flex-1 rounded-[20px] rounded-tl-md bg-paper px-4 py-3 text-body leading-relaxed text-ink shadow-card">
             {t("onboarding.account.ethi_message")}
           </div>
         </motion.div>
 
         {pendingEmail ? (
-          <div className="mt-8 flex items-start gap-3 rounded-2xl border border-paper-3 bg-paper-2 px-4 py-4">
+          <div className="tile-accent mt-8 flex items-start gap-3 px-4 py-4">
             <div className="w-9 h-9 rounded-full bg-highlight-2 flex items-center justify-center flex-shrink-0 mt-0.5">
               <svg
                 viewBox="0 0 24 24"
@@ -496,7 +502,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
               <>
                 <button
                   onClick={onGoogle}
-                  className="mt-6 w-full py-2.5 rounded-xl border border-paper-3 hover:border-ink-3 hover:bg-paper-2 transition-colors text-body-sm font-medium text-ink flex items-center justify-center gap-2"
+                  className="mt-6 flex h-14 w-full items-center justify-center gap-2.5 rounded-full bg-paper text-body font-semibold text-ink shadow-card ring-1 ring-inset ring-paper-3 outline-none transition-shadow hover:shadow-soft focus-visible:ring-2 focus-visible:ring-mint"
                 >
                   <svg viewBox="0 0 24 24" className="w-4 h-4">
                     <path
@@ -521,7 +527,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
 
                 <div className="my-4 flex items-center gap-3">
                   <div className="flex-1 h-px bg-paper-3" />
-                  <span className="text-tag uppercase tracking-[0.15em] text-ink-3">ou</span>
+                  <span className="text-caption font-semibold text-ink-3">ou</span>
                   <div className="flex-1 h-px bg-paper-3" />
                 </div>
               </>
@@ -535,7 +541,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
                     placeholder={t("onboarding.account.firstname_placeholder")}
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
-                    className="w-full px-3.5 py-3 rounded-xl border border-paper-3 bg-paper-2 text-body-sm text-ink placeholder-ink-3 focus:border-ink-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-1 transition-colors"
+                    className="field"
                   />
                 )}
                 <input
@@ -545,7 +551,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   autoComplete="email"
-                  className="w-full px-3.5 py-3 rounded-xl border border-paper-3 bg-paper-2 text-body-sm text-ink placeholder-ink-3 focus:border-ink-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-1 transition-colors"
+                  className="field"
                 />
                 {!betaFull && (
                   <input
@@ -556,11 +562,11 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
                     required
                     minLength={8}
                     autoComplete={mode === "signup" ? "new-password" : "current-password"}
-                    className="w-full px-3.5 py-3 rounded-xl border border-paper-3 bg-paper-2 text-body-sm text-ink placeholder-ink-3 focus:border-ink-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-1 transition-colors"
+                    className="field"
                   />
                 )}
 
-                {error && <p className="text-label text-rust">{error}</p>}
+                {error && <p className="text-label text-alert-ink">{error}</p>}
 
                 <button
                   type="submit"
@@ -616,7 +622,7 @@ function StepExplainer({ stepId }: { stepId: (typeof STEPS)[number]["id"] }) {
   const { t } = useTranslation();
   const slug = EXPLAINER_COURSE[stepId];
   return (
-    <details className="group mt-4 rounded-2xl border border-paper-3 bg-paper-2 px-4 py-3">
+    <details className="faq paper-card group mt-4 rounded-[20px] px-4 py-3">
       <summary className="flex items-center justify-between gap-3 cursor-pointer list-none text-caption font-semibold text-ink-2 hover:text-ink transition-colors">
         <span>{t("onboarding.explainer.summary")}</span>
         <svg
@@ -667,6 +673,9 @@ function Step({
   const [enteredAt] = useState(() => Date.now());
   const isAmount = step.id === "amount";
   const isValues = step.id === "values";
+  // « Ce que je refuse » : l'accent passe en --alert (refus), jamais seul —
+  // l'option cochée porte aussi une croix au lieu d'une coche.
+  const isExclusions = step.id === "exclusions";
   const MAX_VALUES = 3;
   const [customAmount, setCustomAmount] = useState("");
 
@@ -722,50 +731,56 @@ function Step({
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
-      transition={{ duration: 0.35 }}
-      className="min-h-screen flex flex-col"
+      transition={{ duration: 0.35, ease: EASE_SIGNATURE }}
+      className={`${isExclusions ? "accent-alert" : "accent-mint"} relative flex min-h-screen flex-col`}
     >
-      {stepIndex === 0 && (
-        <div className="px-6 pt-6 text-center">
-          <p className="font-value text-xl text-ink">{t("onboarding.header.title")}</p>
-          <p className="mt-1 text-caption uppercase tracking-[0.16em] text-ink-3">
-            {t("onboarding.header.meta")}
-          </p>
-        </div>
-      )}
-      <div className="flex items-center justify-between px-6 pt-6 gap-4">
-        <button
-          onClick={onBack}
-          className="w-11 h-11 rounded-full flex items-center justify-center text-ink-3 hover:text-ink transition-colors"
-          aria-label={t("onboarding.step.back")}
-        >
-          <svg
-            viewBox="0 0 24 24"
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
+      <Aurora />
+      {/* Barre de pilotage : retour, progression qui se remplit, compteur écrit. */}
+      <div className="sticky top-0 z-20 px-3 pt-3">
+        <div className="glass mx-auto flex h-[60px] max-w-2xl items-center gap-4 rounded-full px-2">
+          <button
+            onClick={onBack}
+            className="flex h-11 w-11 flex-none items-center justify-center rounded-full text-ink-2 outline-none transition-colors hover:bg-paper-inset hover:text-ink focus-visible:ring-2 focus-visible:ring-mint"
+            aria-label={t("onboarding.step.back")}
           >
-            <path d="M15 6l-6 6 6 6" />
-          </svg>
-        </button>
-        <div className="flex gap-1.5 flex-1 max-w-[180px] mx-auto">
-          {Array.from({ length: totalSteps }).map((_, i) => (
-            <div
-              key={i}
-              className={`h-1 flex-1 rounded-full transition-all ${
-                i < stepIndex ? "bg-highlight-3" : i === stepIndex ? "bg-ink" : "bg-paper-3"
-              }`}
-            />
-          ))}
+            <svg
+              viewBox="0 0 24 24"
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            >
+              <path d="M15 6l-6 6 6 6" />
+            </svg>
+          </button>
+          <div className="flex flex-1 gap-1.5" aria-hidden>
+            {Array.from({ length: totalSteps }).map((_, i) => (
+              <div key={i} className="h-1.5 flex-1 overflow-hidden rounded-full bg-paper-inset">
+                <div
+                  className="h-full rounded-full bg-ink transition-[width] duration-700 ease-brand motion-reduce:transition-none"
+                  style={{ width: i <= stepIndex ? "100%" : "0%" }}
+                />
+              </div>
+            ))}
+          </div>
+          <span className="min-w-[44px] pr-3 text-right font-value text-label text-ink-2">
+            {t("onboarding.step.progress", { current: stepIndex + 1, total: totalSteps })}
+          </span>
         </div>
-        <span className="text-caption text-ink-3 font-semibold min-w-[28px] text-right">
-          {t("onboarding.step.progress", { current: stepIndex + 1, total: totalSteps })}
-        </span>
       </div>
 
-      <div className="px-6 pt-10 max-w-lg mx-auto w-full">
+      <div className="relative z-10 mx-auto w-full max-w-2xl px-5 pt-8 sm:px-6">
+        {stepIndex === 0 && (
+          <div className="mb-8 text-center">
+            <p className="font-display text-[clamp(28px,4vw,40px)] font-extrabold leading-tight tracking-[-0.03em] text-ink">
+              {t("onboarding.header.title")}
+            </p>
+            <p className="mt-2 text-body-sm font-semibold text-ink-3">
+              {t("onboarding.header.meta")}
+            </p>
+          </div>
+        )}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -795,7 +810,7 @@ function Step({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
           id="onboarding-step-question"
-          className="font-value text-2xl text-ink pt-8"
+          className="pt-8 text-[clamp(26px,3.4vw,34px)]"
         >
           {t(`onboarding.steps.${step.id}.question`)}
         </motion.h1>
@@ -824,7 +839,7 @@ function Step({
         <div
           role={step.multi ? "group" : "radiogroup"}
           aria-labelledby="onboarding-step-question"
-          className="pt-5 pb-32 space-y-2.5"
+          className="grid gap-2.5 pt-5 pb-36 sm:grid-cols-2"
         >
           {step.options.map((option, i) => {
             const isSel = selected.includes(option.id);
@@ -834,58 +849,62 @@ function Step({
                 key={option.id}
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 + i * 0.04 }}
+                transition={{ delay: 0.3 + i * 0.04, duration: 0.4, ease: EASE_SIGNATURE }}
+                whileTap={isLocked ? undefined : { scale: 0.97 }}
                 onClick={() => toggle(option.id)}
                 disabled={isLocked}
                 aria-disabled={isLocked}
                 role={step.multi ? "checkbox" : "radio"}
                 aria-checked={isSel}
-                className={`w-full flex items-center gap-3 p-3.5 rounded-2xl border text-left transition-all ${
+                className={`group flex w-full items-center gap-3 rounded-[20px] p-3.5 text-left outline-none transition-[background-color,box-shadow,opacity] duration-200 ease-brand focus-visible:ring-2 focus-visible:ring-mint ${
                   isSel
-                    ? "bg-ink text-paper border-ink"
+                    ? "bg-paper shadow-soft ring-2 ring-section-accent"
                     : isLocked
-                      ? "border-paper-3 bg-paper-2 text-ink-3 opacity-50 cursor-not-allowed"
-                      : "border-paper-3 hover:bg-paper-2 text-ink bg-paper-2"
+                      ? "cursor-not-allowed bg-paper/60 text-ink-3 opacity-50"
+                      : "bg-paper shadow-card hover:shadow-soft"
                 }`}
               >
                 <div
-                  className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0 ${isSel ? "bg-paper/15" : "bg-paper-3"}`}
+                  className={`flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-[14px] text-lg transition-[background-color,color,transform] duration-300 ease-brand ${
+                    isSel
+                      ? "bg-section-accent text-paper"
+                      : "bg-paper-2 text-ink-2 group-hover:-rotate-6 group-hover:scale-105 motion-reduce:transform-none"
+                  }`}
                 >
                   <StepOptionIcon icon={option.icon} />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className={`text-sm font-semibold ${isSel ? "text-paper" : "text-ink"}`}>
+                <div className="min-w-0 flex-1">
+                  <p className="text-body font-bold text-ink">
                     {t(`onboarding.steps.${step.id}.${option.id}`)}
                   </p>
                   {step.id !== "exclusions" && (
-                    <p className={`text-caption mt-0.5 ${isSel ? "text-paper/70" : "text-ink-2"}`}>
+                    <p className="mt-0.5 text-label text-ink-2">
                       {t(`onboarding.steps.${step.id}.${option.id}_desc`)}
                     </p>
                   )}
                 </div>
+                {/* Coché / pas coché se lit à la FORME (coche pleine contre cercle
+                    vide), pas seulement à la couleur (CLAUDE.md §4). */}
                 <div
-                  className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                    isSel ? "bg-paper border-paper" : "border-paper-3"
+                  className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full transition-[background-color,box-shadow,transform] duration-300 ease-brand ${
+                    isSel
+                      ? "scale-100 bg-section-accent text-paper"
+                      : "ring-2 ring-inset ring-paper-3"
                   }`}
                 >
-                  {isSel && (
-                    <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                      <path
-                        d="M1 4l3 3 5-6"
-                        stroke="var(--ink)"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  )}
+                  {isSel &&
+                    (isExclusions ? (
+                      <X aria-hidden className="size-3.5" strokeWidth={3} />
+                    ) : (
+                      <Check aria-hidden className="size-3.5" strokeWidth={3} />
+                    ))}
                 </div>
               </motion.button>
             );
           })}
 
           {isAmount && (
-            <div className="pt-1">
+            <div className="pt-1 sm:col-span-2">
               {/* Recadrage « curseur de jeu » (analyse UX §10 — P2) : dédramatise
                   le montant, réaffirme le statut simulation avant toute somme. */}
               <p className="mb-3 text-caption text-ink-2 leading-relaxed">
@@ -897,7 +916,7 @@ function Step({
               >
                 {t("onboarding.steps.amount.custom_label")}
               </label>
-              <div className="flex items-center gap-2 p-3.5 rounded-2xl border border-paper-3 bg-paper-2">
+              <div className="flex items-center gap-2 rounded-[20px] bg-paper p-3.5 shadow-card ring-1 ring-inset ring-paper-3 focus-within:ring-2 focus-within:ring-mint">
                 <span className="text-ink-2 text-lg" aria-hidden="true">
                   €
                 </span>
@@ -915,15 +934,17 @@ function Step({
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-paper via-paper to-transparent">
-        <div className="max-w-lg mx-auto">
-          <button
+      <div className="fixed right-0 bottom-0 left-0 z-20 bg-gradient-to-t from-paper-2 via-paper-2/90 to-transparent p-5 pt-10 sm:p-6 sm:pt-12">
+        <div className="mx-auto max-w-2xl">
+          <Button
+            size="lg"
             disabled={selected.length === 0}
             onClick={() => onComplete(selected)}
-            className="w-full h-14 rounded-full bg-ink text-paper font-semibold text-sm hover:opacity-90 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            className="h-14 w-full"
           >
             {t("onboarding.step.continue")}
-          </button>
+            <ArrowRight aria-hidden />
+          </Button>
         </div>
       </div>
     </motion.div>
@@ -1059,8 +1080,9 @@ function PreviewScene({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-paper-2 text-ink"
+      className="accent-mint relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-5 py-12 text-ink"
     >
+      <Aurora />
       <AnimatePresence mode="wait">
         {phase === "loading" && (
           <motion.div
@@ -1069,22 +1091,33 @@ function PreviewScene({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             role="status"
-            className="flex flex-col items-center"
+            className="relative z-10 flex flex-col items-center text-center"
           >
-            <div className="w-32 h-px bg-paper-3 relative mb-8 overflow-hidden">
-              <motion.div
-                animate={{ x: ["-100%", "100%"] }}
-                transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute inset-y-0 w-1/2 bg-ink"
-              />
+            {/* Le tri en cours : trois points qui gravitent autour d'une graine.
+                Décoratif — l'état est dit en toutes lettres dessous. */}
+            <div aria-hidden className="relative mb-10 h-28 w-28">
+              <span className="absolute inset-0 rounded-full ring-1 ring-paper-3" />
+              <span className="absolute inset-5 rounded-full ring-1 ring-paper-3" />
+              <span className="absolute top-1/2 left-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 animate-breathe rounded-full bg-mint" />
+              {["bg-mint", "bg-ice", "bg-volt"].map((color, i) => (
+                <motion.span
+                  key={color}
+                  className="absolute inset-0"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 2.4 + i * 0.8, repeat: Infinity, ease: "linear" }}
+                >
+                  <span
+                    className={`absolute left-1/2 h-2.5 w-2.5 -translate-x-1/2 rounded-full ${color}`}
+                    style={{ top: i === 1 ? 20 : -5 }}
+                  />
+                </motion.span>
+              ))}
             </div>
-            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium">
-              {t("onboarding.pool.loading_eyebrow")}
-            </p>
-            <p className="font-value text-2xl text-ink mt-3">
+            <span className="chip chip--accent">{t("onboarding.pool.loading_eyebrow")}</span>
+            <p className="mt-4 font-display text-[clamp(26px,3.4vw,34px)] font-extrabold tracking-[-0.03em] text-ink">
               {t("onboarding.pool.loading_title")}
             </p>
-            <p className="text-label text-ink-3 mt-2">{t("onboarding.pool.loading_desc")}</p>
+            <p className="mt-2 text-body text-ink-2">{t("onboarding.pool.loading_desc")}</p>
           </motion.div>
         )}
 
@@ -1094,21 +1127,16 @@ function PreviewScene({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             role="alert"
-            className="w-full max-w-md text-center"
+            className="paper-card relative z-10 w-full max-w-md p-8 text-center"
           >
-            <p className="text-tag uppercase tracking-[0.18em] text-rust font-medium">
-              {t("onboarding.building.error_eyebrow")}
-            </p>
-            <h1 className="font-value text-2xl text-ink mt-3">
+            <span className="chip chip--disputed">{t("onboarding.building.error_eyebrow")}</span>
+            <h1 className="mt-4 text-[clamp(24px,3vw,30px)]">
               {t("onboarding.building.error_title")}
             </h1>
             <p className="text-label text-ink-3 mt-3 break-words">{errorMsg}</p>
-            <button
-              onClick={() => setAttempt((a) => a + 1)}
-              className="mt-6 px-5 py-2.5 text-body-sm font-medium border border-ink rounded hover:bg-ink hover:text-paper transition-colors"
-            >
+            <Button className="mt-6" onClick={() => setAttempt((a) => a + 1)}>
               {t("common.retry")}
-            </button>
+            </Button>
           </motion.div>
         )}
 
@@ -1118,33 +1146,33 @@ function PreviewScene({
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             role="status"
-            className="w-full max-w-md"
+            className="relative z-10 w-full max-w-xl"
           >
             <SimulationBadge center withTagline className="mb-5" />
-            <p className="text-tag uppercase tracking-[0.18em] text-mint font-medium text-center">
-              {t("onboarding.pool.eyebrow")}
+            <p className="text-center">
+              <span className="chip chip--accent">{t("onboarding.pool.eyebrow")}</span>
             </p>
-            <h1 className="font-value text-2xl text-ink text-center mt-2 mb-3">
+            <h1 className="mt-4 mb-3 text-center text-[clamp(28px,4vw,40px)]">
               {t("onboarding.pool.title")}
             </h1>
             {/* Explication simple et claire du choix (aucune allocation imposée) :
                 on montre des actifs qui collent aux filtres, classés par pertinence,
                 et c'est l'utilisateur qui compose — il ne doit jamais se sentir perdu. */}
-            <p className="text-caption text-ink-2 text-center mb-6 leading-relaxed">
+            <p className="mb-7 text-center text-body leading-relaxed text-ink-2">
               {t("onboarding.pool.explainer", {
                 count: pool.length,
                 excluded: excludedCount,
                 universe: universeSize,
               })}
             </p>
-            <ul className="divide-y divide-paper-3 border-t border-b border-paper-3">
+            <ul className="flex flex-col gap-2">
               {pool.slice(0, POOL_PREVIEW_LIMIT).map((a, i) => (
                 <motion.li
                   key={a.id}
                   initial={{ opacity: 0, x: -6 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05, duration: 0.3 }}
-                  className="py-3"
+                  transition={{ delay: i * 0.05, duration: 0.4, ease: EASE_SIGNATURE }}
+                  className="paper-card spot p-4"
                 >
                   {/* Nom lisible d'abord ; le ticker devient une métadonnée.
                       La ligne est CLIQUABLE : l'aperçu affichait douze noms de
@@ -1161,9 +1189,7 @@ function PreviewScene({
                       <span className="font-value text-body-sm text-ink truncate block group-hover:underline underline-offset-4">
                         {a.name}
                       </span>
-                      <span className="text-tag font-mono uppercase tracking-wider text-ink-3">
-                        {a.ticker}
-                      </span>
+                      <span className="text-caption font-semibold text-ink-3">{a.ticker}</span>
                     </span>
                     <span className="shrink-0 flex items-baseline gap-2">
                       <span className="font-value text-body-sm tabular-nums text-ink-2">
@@ -1205,7 +1231,7 @@ function PreviewScene({
             <div className="mt-8 space-y-3">
               <button
                 onClick={compose}
-                className="w-full h-14 rounded-full bg-ink text-paper font-semibold text-body-sm hover:opacity-90 transition-colors"
+                className="shine h-14 w-full rounded-full bg-ink text-body-lg font-semibold text-paper outline-none transition-[opacity,transform] duration-200 ease-brand hover:opacity-90 focus-visible:ring-2 focus-visible:ring-mint focus-visible:ring-offset-2 active:scale-[0.98]"
               >
                 {t("onboarding.pool.compose_cta")}
               </button>
@@ -1216,7 +1242,7 @@ function PreviewScene({
                   writePoolHandoff([], handoffIntent);
                   void navigate({ to: "/construire" });
                 }}
-                className="w-full text-caption text-ink-3 hover:text-ink-2 transition-colors"
+                className="min-h-[44px] w-full rounded-full text-body-sm font-semibold text-ink-2 outline-none transition-colors hover:text-ink focus-visible:ring-2 focus-visible:ring-mint"
               >
                 {t("onboarding.pool.blank_cta")}
               </button>

@@ -199,13 +199,13 @@ function Manifesto({
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-mint opacity-70" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-mint" />
             </span>
-            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-paper/60">
+            <span className="text-caption font-semibold text-paper/60">
               {t("impact_xp.eyebrow")}
             </span>
           </span>
           <Link
             to="/methodologie"
-            className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-paper/50 transition-colors hover:text-paper"
+            className="text-caption font-semibold text-paper/50 transition-colors hover:text-paper"
           >
             {t("impact_xp.how_it_works")}
           </Link>
@@ -230,8 +230,8 @@ function Manifesto({
             </p>
 
             {/* Le signal le plus porteur de sens, sur fond sombre. */}
-            <div className="ink-section mt-6 rounded-2xl bg-paper/5 p-4">
-              <div className="[&_p]:!text-paper [&_.text-ink]:!text-paper [&_.text-ink-3]:!text-paper/50">
+            <div className="ink-section mt-6 rounded-2xl bg-on-deep/5 p-4">
+              <div className="[&_p]:!text-on-deep [&_.text-ink]:!text-on-deep [&_.text-ink-3]:!text-ink-3">
                 <SignalLine impact={impact} numLocale={numLocale} />
               </div>
             </div>
@@ -293,7 +293,7 @@ function ConvictionRow({ c, maxPct, index }: { c: Conviction; maxPct: number; in
           <span className="text-[15px] font-medium tracking-[-0.01em] text-ink">
             {t(`impact_living.cause.${c.cause}`)}
           </span>
-          <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-3">
+          <span className="inline-flex items-center gap-1 text-caption font-semibold text-ink-3">
             <span className={`block h-1.5 w-1.5 rounded-full ${style.dot}`} aria-hidden />
             {t(`impact_xp.tier.${c.tier}`)}
           </span>
@@ -410,7 +410,7 @@ function VsWorldBars({
           fmt={fmt}
         />
       </div>
-      <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-3">
+      <p className="text-caption font-semibold text-ink-3">
         {t("impact_xp.vs_world.unit")} · {t("impact_signal.source_prefix")} {ACWI_WACI_SOURCE} ·{" "}
         {ACWI_WACI_ASOF} · {t("impact_xp.coverage", { pct: Math.round(intensity.coverage * 100) })}
       </p>
@@ -516,7 +516,7 @@ function TangibleEstimate({
   return (
     <div className="space-y-4">
       <div>
-        <p className="text-caption uppercase tracking-wider text-ink-3">
+        <p className="text-caption font-semibold text-ink-3">
           {fullySourced
             ? t("impact_xp.tangible.footprint_label_measured")
             : t("impact_xp.tangible.footprint_label_estimated")}
@@ -592,7 +592,7 @@ function HoldingsSection({
               <span className="w-14 flex-none font-value text-label text-ink">{h.ticker}</span>
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-body-sm text-ink">{h.name}</span>
-                <span className="block truncate font-mono text-[10px] uppercase tracking-[0.1em] text-ink-3">
+                <span className="block truncate text-caption font-semibold text-ink-3">
                   {h.region
                     ? `${h.region} · ${t(`impact_translator.class.${h.category}`, { defaultValue: h.category })}`
                     : t(`impact_translator.class.${h.category}`, { defaultValue: h.category })}
@@ -722,7 +722,7 @@ function ProofSection({
 function SectionHeading({ n, title, subtitle }: { n: string; title: string; subtitle?: string }) {
   return (
     <div className="px-1">
-      <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-ink-3">
+      <p className="text-caption font-semibold text-ink-3">
         <span className="text-mint-ink">N° {n}</span> · {title}
       </p>
       {subtitle && <p className="mt-1 text-body-sm leading-snug text-ink-2">{subtitle}</p>}

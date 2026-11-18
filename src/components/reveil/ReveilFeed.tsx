@@ -37,7 +37,7 @@ export function ReveilFeed({ dispatches, onAssetClick }: Props) {
               {tone.icon}
             </span>
             <div className="min-w-0 flex-1">
-              <p className="font-mono text-tag uppercase tracking-[0.14em] text-ink-3">
+              <p className="text-caption font-semibold text-ink-3">
                 {t(`reveil.tone.${d.tone}`)} · {d.source} · {t("reveil.source_today")}
               </p>
               <p className="mt-1.5 font-value text-body-lg leading-snug text-ink">
@@ -48,7 +48,7 @@ export function ReveilFeed({ dispatches, onAssetClick }: Props) {
                   {t(d.bodyKey, d.bodyParams)}
                 </p>
               )}
-              <span className="mt-2.5 inline-flex items-center gap-1 font-mono text-tag uppercase tracking-[0.12em] text-ink">
+              <span className="mt-2.5 inline-flex items-center gap-1 text-caption font-semibold text-ink">
                 {d.action?.kind === "vote" ? t("reveil.cta_vote") : t("reveil.cta_why")}
                 <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
                   →
@@ -69,7 +69,7 @@ export function ReveilFeed({ dispatches, onAssetClick }: Props) {
               <Link
                 to="/vote/$resolutionId"
                 params={{ resolutionId: d.action.resolutionId }}
-                className="group block rounded-2xl border border-paper-3 bg-paper p-4 transition-transform duration-300 hover:scale-[1.01] hover:border-ink-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 md:p-5"
+                className="group block rounded-2xl border border-paper-3 bg-paper p-4 transition-transform duration-300 hover:scale-[1.01] hover:border-ink-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint md:p-5"
               >
                 {inner}
               </Link>
@@ -77,7 +77,7 @@ export function ReveilFeed({ dispatches, onAssetClick }: Props) {
               <button
                 type="button"
                 onClick={() => d.action?.kind === "asset" && onAssetClick(d.action.assetId)}
-                className="group block w-full rounded-2xl border border-paper-3 bg-paper p-4 text-left transition-transform duration-300 hover:scale-[1.01] hover:border-ink-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 md:p-5"
+                className="group block w-full rounded-2xl border border-paper-3 bg-paper p-4 text-left transition-transform duration-300 hover:scale-[1.01] hover:border-ink-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint md:p-5"
               >
                 {inner}
               </button>

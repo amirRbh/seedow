@@ -1,3 +1,5 @@
+import { Check, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import type { QuizQuestion } from "@/content/courses/types";
 import { cn } from "@/lib/utils";
@@ -37,10 +39,10 @@ export function CourseQuiz({ slug, quiz }: Props) {
   }
 
   return (
-    <section className="max-w-2xl mx-auto mt-20 pt-12 border-t-2 border-ink">
-      <p className="eyebrow mb-3">Quiz</p>
-      <h2 className="font-display text-2xl md:text-3xl text-ink mb-2">Vérifie ta compréhension</h2>
-      <p className="text-sm text-ink-3 mb-10">
+    <section className="paper-card mx-auto mt-16 max-w-2xl p-6 md:p-9">
+      <span className="chip chip--accent">Quiz</span>
+      <h2 className="mt-4 text-[clamp(24px,3vw,32px)]">Vérifie ta compréhension</h2>
+      <p className="mt-2 mb-10 text-body text-ink-3">
         {quiz.length} questions · réponds sans pression, le score reste sur ton appareil.
       </p>
 
@@ -49,9 +51,9 @@ export function CourseQuiz({ slug, quiz }: Props) {
           const userAnswer = answers[i];
           return (
             <li key={i}>
-              <p className="font-display text-base md:text-lg text-ink mb-4 leading-snug">
-                <span className="text-gold tabular-nums mr-2">
-                  {String(i + 1).padStart(2, "0")}.
+              <p className="mb-4 flex gap-3 text-body-lg font-bold leading-snug text-ink">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-section-accent font-value text-caption tabular-nums text-paper">
+                  {i + 1}
                 </span>
                 {q.question}
               </p>
@@ -60,35 +62,61 @@ export function CourseQuiz({ slug, quiz }: Props) {
                   const isSelected = userAnswer === j;
                   const isCorrect = j === q.correctIndex;
                   const showResult = submitted;
+                  const right = showResult && isCorrect;
+                  const wrong = showResult && !isCorrect && isSelected;
                   return (
                     <button
                       key={j}
                       type="button"
                       onClick={() => !submitted && setAnswers({ ...answers, [i]: j })}
                       disabled={submitted}
+                      aria-pressed={isSelected}
                       className={cn(
-                        "w-full text-left px-4 py-3 border text-sm md:text-base transition-colors",
-                        !showResult && isSelected && "border-ink bg-ink/5",
-                        !showResult && !isSelected && "border-ink/15 hover:border-ink/40",
-                        showResult && isCorrect && "border-mint bg-mint/8 text-ink",
-                        showResult &&
-                          !isCorrect &&
-                          isSelected &&
-                          "border-red-400 bg-red-50 text-ink",
-                        showResult && !isCorrect && !isSelected && "border-ink/10 text-ink-3",
+                        "flex min-h-[52px] w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-body outline-none ring-1 ring-inset transition-[background-color,box-shadow,transform] duration-200 ease-brand",
+                        "focus-visible:ring-2 focus-visible:ring-mint motion-reduce:transform-none",
+                        !showResult && "active:scale-[0.99]",
+                        !showResult && isSelected && "bg-paper-2 text-ink ring-2 ring-ink",
+                        !showResult &&
+                          !isSelected &&
+                          "text-ink-2 ring-paper-3 hover:bg-paper-2 hover:text-ink hover:ring-ink-3",
+                        right && "bg-mint-tint text-ink ring-2 ring-mint",
+                        wrong && "bg-alert-tint text-ink ring-2 ring-alert",
+                        showResult && !isCorrect && !isSelected && "text-ink-3 ring-paper-3",
                         submitted && "cursor-default",
                       )}
                     >
-                      <span className="font-mono text-tag text-ink-3 mr-3">
-                        {String.fromCharCode(65 + j)}
+                      {/* Juste / faux se lit à l'ICÔNE et au mot dit aux lecteurs
+                          d'écran, pas à la seule couleur (CLAUDE.md §4). */}
+                      <span
+                        aria-hidden
+                        className={cn(
+                          "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-caption font-bold",
+                          right
+                            ? "bg-mint text-paper"
+                            : wrong
+                              ? "bg-alert text-paper"
+                              : isSelected && !showResult
+                                ? "bg-ink text-paper"
+                                : "bg-paper-inset text-ink-3",
+                        )}
+                      >
+                        {right ? (
+                          <Check className="size-3.5" strokeWidth={3} />
+                        ) : wrong ? (
+                          <X className="size-3.5" strokeWidth={3} />
+                        ) : (
+                          String.fromCharCode(65 + j)
+                        )}
                       </span>
-                      {opt}
+                      <span className="flex-1">{opt}</span>
+                      {right && <span className="sr-only">— bonne réponse</span>}
+                      {wrong && <span className="sr-only">— ta réponse, incorrecte</span>}
                     </button>
                   );
                 })}
               </div>
               {submitted && (
-                <p className="mt-3 text-sm text-ink-2 italic leading-relaxed pl-1">
+                <p className="mt-3 animate-fade-in-up rounded-2xl bg-paper-2 px-4 py-3 text-body-sm leading-relaxed text-ink-2">
                   {q.explanation}
                 </p>
               )}
@@ -97,14 +125,14 @@ export function CourseQuiz({ slug, quiz }: Props) {
         })}
       </ol>
 
-      <div className="mt-12 pt-8 border-t border-ink/10 flex flex-col sm:flex-row items-center gap-4 justify-between">
+      <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-paper-3 pt-8 sm:flex-row">
         {submitted ? (
           <>
-            <div>
-              <p className="font-display text-3xl text-ink tabular-nums">
+            <div className="animate-pop">
+              <p className="font-display text-[44px] font-extrabold leading-none tracking-[-0.03em] text-ink tabular-nums">
                 {score} <span className="text-ink-3">/ {quiz.length}</span>
               </p>
-              <p className="text-sm text-ink-3 mt-1">
+              <p className="mt-2 text-body text-ink-2">
                 {score === quiz.length
                   ? "Sans faute — solide."
                   : score >= quiz.length - 1
@@ -112,28 +140,14 @@ export function CourseQuiz({ slug, quiz }: Props) {
                     : "Relis les passages clés et recommence."}
               </p>
             </div>
-            <button
-              type="button"
-              onClick={reset}
-              className="text-xs font-semibold uppercase tracking-[0.18em] text-ink hover:text-gold transition-colors"
-            >
-              Recommencer →
-            </button>
+            <Button type="button" variant="outline" onClick={reset}>
+              Recommencer
+            </Button>
           </>
         ) : (
-          <button
-            type="button"
-            disabled={!allAnswered}
-            onClick={submit}
-            className={cn(
-              "px-6 py-3 text-xs font-semibold uppercase tracking-[0.18em] transition-colors",
-              allAnswered
-                ? "bg-ink text-paper hover:bg-ink-2"
-                : "bg-ink/20 text-ink-3 cursor-not-allowed",
-            )}
-          >
+          <Button type="button" size="lg" disabled={!allAnswered} onClick={submit}>
             Valider mes réponses
-          </button>
+          </Button>
         )}
       </div>
     </section>

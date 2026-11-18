@@ -13,8 +13,8 @@ export function AlertsBell() {
   const count = alerts.length;
 
   const TONE_DOT: Record<AlertSeverity, string> = {
-    alert: "bg-rust",
-    warn: "bg-gold",
+    alert: "bg-alert",
+    warn: "bg-mint",
     info: "bg-highlight-2",
   };
   const TONE_LABEL: Record<AlertSeverity, string> = {
@@ -43,7 +43,7 @@ export function AlertsBell() {
           className={cn(
             "relative flex items-center justify-center w-11 h-11 rounded-full border border-paper-3 text-ink-2",
             "transition-colors duration-150 hover:text-ink hover:border-ink-3",
-            "outline-none focus-visible:ring-2 focus-visible:ring-highlight-1",
+            "outline-none focus-visible:ring-2 focus-visible:ring-mint",
           )}
         >
           <BellIcon />
@@ -53,7 +53,7 @@ export function AlertsBell() {
           {unread > 0 && (
             <span
               aria-hidden="true"
-              className="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] px-1 rounded-full bg-rust text-paper text-tag font-semibold leading-[16px] text-center tabular-nums"
+              className="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] px-1 rounded-full bg-alert text-paper text-tag font-semibold leading-[16px] text-center tabular-nums"
             >
               {unread > 9 ? "9+" : unread}
             </span>
@@ -63,9 +63,7 @@ export function AlertsBell() {
 
       <SheetContent side="right" className="w-full sm:max-w-md bg-paper border-paper-3 p-0">
         <SheetHeader className="px-5 pt-6 pb-4 border-b border-paper-3 text-left">
-          <p className="text-tag uppercase tracking-[0.22em] text-gold font-mono">
-            {t("alerts.eyebrow")}
-          </p>
+          <p className="text-caption font-semibold text-mint-ink">{t("alerts.eyebrow")}</p>
           <SheetTitle className="font-value text-2xl text-ink leading-tight">
             {count === 0
               ? t("alerts.all_clear")
@@ -87,7 +85,7 @@ export function AlertsBell() {
                     <span
                       className={cn("inline-block w-1.5 h-1.5 rounded-full", TONE_DOT[a.severity])}
                     />
-                    <span className="text-tag uppercase tracking-[0.18em] font-mono text-ink-3">
+                    <span className="text-caption font-semibold text-ink-3">
                       {TONE_LABEL[a.severity]}
                     </span>
                   </div>
@@ -95,7 +93,7 @@ export function AlertsBell() {
                     type="button"
                     onClick={() => void dismiss(a.id)}
                     aria-label={t("alerts.dismiss")}
-                    className="text-ink-3 hover:text-ink text-caption outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 rounded"
+                    className="text-ink-3 hover:text-ink text-caption outline-none focus-visible:ring-2 focus-visible:ring-mint rounded"
                   >
                     ✕
                   </button>
@@ -106,7 +104,7 @@ export function AlertsBell() {
                   <Link
                     to={a.ctaHref}
                     onClick={() => setOpen(false)}
-                    className="mt-3 inline-flex items-center gap-2 text-caption font-semibold uppercase tracking-[0.18em] text-ink hover:text-highlight-1 transition-colors"
+                    className="mt-3 inline-flex items-center gap-2 text-caption font-semibold text-ink hover:text-ink transition-colors"
                   >
                     {a.ctaLabel}
                     <svg

@@ -91,7 +91,7 @@ function PerfMedaillon({ value, max, accent }: { value: number; max: number; acc
   return (
     <div className="h-1 w-full bg-paper-3 rounded-full overflow-hidden mt-2">
       <div
-        className={cn("h-full rounded-full", accent ? "bg-gold" : "bg-highlight-1")}
+        className={cn("h-full rounded-full", accent ? "bg-mint" : "bg-ink")}
         style={{ width: `${w}%` }}
       />
     </div>
@@ -110,7 +110,7 @@ function ComparatifSection({ title, children }: { title: string; children: React
       <summary className="list-none cursor-pointer [&::-webkit-details-marker]:hidden">
         <div className="gold-rule mb-5" />
         <div className="flex items-center justify-between gap-3">
-          <span className="text-tag uppercase tracking-[0.22em] text-gold font-mono">{title}</span>
+          <span className="text-caption font-semibold text-mint-ink">{title}</span>
           <svg
             viewBox="0 0 16 16"
             className="w-4 h-4 flex-none text-ink-3 transition-transform duration-200 group-open:rotate-180"
@@ -205,7 +205,7 @@ export function ComparatifPanel() {
           aria-selected={benchmarkId === opt.id}
           onClick={() => setBenchmarkId(opt.id)}
           className={cn(
-            "px-3 py-1.5 rounded-full text-caption uppercase tracking-wider font-mono border transition-colors",
+            "px-3 py-1.5 rounded-full text-caption font-semibold border transition-colors",
             benchmarkId === opt.id
               ? "bg-ink text-paper border-ink"
               : "bg-transparent text-ink-3 border-paper-3 hover:border-ink-2",
@@ -221,7 +221,7 @@ export function ComparatifPanel() {
   if (!ref) {
     return (
       <div>
-        <p className="text-caption uppercase tracking-wider text-ink-3 mb-3">
+        <p className="text-caption font-semibold text-ink-3 mb-3">
           {t("comparatif_panel.benchmark_label")}
         </p>
         {BenchmarkSelector}
@@ -239,7 +239,7 @@ export function ComparatifPanel() {
 
   return (
     <div>
-      <p className="text-caption uppercase tracking-wider text-ink-3 mb-3">
+      <p className="text-caption font-semibold text-ink-3 mb-3">
         {t("comparatif_panel.benchmark_label")}
       </p>
       {BenchmarkSelector}
@@ -328,7 +328,7 @@ export function ComparatifPanel() {
           />
         </div>
         <div className="mt-4 border-t border-paper-3 pt-4 flex items-baseline justify-between gap-4">
-          <span className="text-caption uppercase tracking-wider text-ink-3">
+          <span className="text-caption font-semibold text-ink-3">
             {t("comparatif_panel.reward_risk")}
           </span>
           <span className="font-value text-label text-ink">
@@ -347,7 +347,7 @@ export function ComparatifPanel() {
       {/* Le prix de l'alignement — nommé en euros, jamais dissimulé (reste visible). */}
       {deltaScaled10y !== null && (
         <div className="mt-10 border border-paper-3 rounded-2xl p-5">
-          <p className="text-tag uppercase tracking-[0.22em] text-ink-3 font-mono mb-2">
+          <p className="text-caption font-semibold text-ink-3 mb-2">
             {t("comparatif_panel.price_title")}
           </p>
           <p className="text-label text-ink-2 leading-relaxed">
@@ -475,7 +475,7 @@ export function ComparatifPanel() {
 
       <div className="mt-10">
         <div className="gold-rule mb-5" />
-        <p className="text-tag uppercase tracking-[0.22em] text-gold font-mono mb-3">
+        <p className="text-caption font-semibold text-mint-ink mb-3">
           {t("comparatif_panel.concrete_impact")}
         </p>
         <h2 className="font-value text-2xl text-ink leading-tight">
@@ -509,7 +509,7 @@ export function ComparatifPanel() {
       </div>
 
       <div className="mt-10 border-t border-paper-3 pt-5">
-        <p className="text-caption uppercase tracking-wider text-ink-3 font-mono mb-2">
+        <p className="text-caption font-semibold text-ink-3 mb-2">
           {t("comparatif_panel.methodology")}
         </p>
         <p className="text-label text-ink-2 leading-relaxed">
@@ -517,7 +517,7 @@ export function ComparatifPanel() {
         </p>
         <Link
           to="/methodologie"
-          className="mt-3 inline-flex items-center gap-2 text-caption font-semibold uppercase tracking-[0.18em] text-ink hover:text-highlight-1 transition-colors"
+          className="mt-3 inline-flex items-center gap-2 text-caption font-semibold text-ink hover:text-ink transition-colors"
         >
           Lire la méthodologie complète
           <svg
@@ -616,10 +616,10 @@ function VerdictSummary({ items, vs }: { items: VerdictItem[]; vs: string }) {
   return (
     <div className="mb-6 rounded-2xl border border-paper-3 bg-paper-2 p-4">
       <div className="mb-3 flex items-baseline justify-between gap-2">
-        <p className="text-tag uppercase tracking-[0.16em] text-ink-3 font-mono">
+        <p className="text-caption font-semibold text-ink-3">
           {t("comparatif_panel.verdict.title")}
         </p>
-        <p className="font-mono text-tag uppercase tracking-[0.1em] text-ink-3">
+        <p className="text-caption font-semibold text-ink-3">
           {t("comparatif_panel.verdict.vs", { bench: vs })}
         </p>
       </div>
@@ -668,13 +668,13 @@ function CompareRow({
     <div className="py-4">
       <div className="flex items-baseline justify-between gap-4">
         <div className="flex items-center gap-2 min-w-0">
-          <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">{rowLabel}</p>
+          <p className="text-caption font-semibold text-ink-3">{rowLabel}</p>
           <Glossary term={term} variant="icon" />
         </div>
       </div>
       <div className="mt-2 grid grid-cols-2 gap-4">
         <div>
-          <p className="text-tag uppercase tracking-[0.18em] text-gold font-mono mb-1">Seedow</p>
+          <p className="text-caption font-semibold text-mint-ink mb-1">Seedow</p>
           <p
             className={cn(
               "kpi-figure text-xl tabular-nums",
@@ -683,16 +683,14 @@ function CompareRow({
           >
             {seedowValue}
             {seedowWins && (
-              <span aria-hidden="true" className="ml-1.5 text-gold text-xs">
+              <span aria-hidden="true" className="ml-1.5 text-mint-ink text-xs">
                 ●
               </span>
             )}
           </p>
         </div>
         <div>
-          <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono mb-1">
-            {benchmarkLabel}
-          </p>
+          <p className="text-caption font-semibold text-ink-3 mb-1">{benchmarkLabel}</p>
           <p className="kpi-figure text-xl text-ink-2 tabular-nums">{msciValue}</p>
         </div>
       </div>

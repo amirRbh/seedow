@@ -6,7 +6,12 @@ import type { ObservatoryFund } from "@/lib/esg/v2/observatory";
 import { STI_VERSION } from "@/lib/esg/v2/sti";
 import { groupByPeers } from "@/lib/esg/v2/peer-group";
 import { StiScore } from "@/components/observatory/StiScore";
-import { LanguageToggle } from "@/components/LanguageToggle";
+import { motion } from "framer-motion";
+import { PageHero, PublicPage } from "@/components/layout/PublicPage";
+import { CountUp } from "@/components/motion/CountUp";
+import { RevealGroup } from "@/components/motion/Reveal";
+import { Button } from "@/components/ui/button";
+import { EASE_SIGNATURE } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 /**
@@ -91,37 +96,34 @@ function ObservatoryPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-paper-2 text-ink">
-      <header className="max-w-4xl mx-auto px-6 pt-10 pb-8">
-        <div className="flex items-center justify-between gap-4">
-          <Link to="/" className="stamp hover:text-ink transition-colors">
-            {t("observatoire.back")}
-          </Link>
-          <LanguageToggle />
-        </div>
+    <PublicPage accent="ice">
+      <PageHero
+        eyebrow={t("landing.observatory.eyebrow")}
+        title={t("observatoire.title")}
+        subtitle={t("observatoire.intro")}
+        align="left"
+      />
 
-        <h1 className="mt-6 font-display text-[clamp(28px,5vw,44px)] leading-[1.06] tracking-[-0.02em] max-w-[20ch]">
-          {t("observatoire.title")}
-        </h1>
-        <p className="mt-4 max-w-[62ch] text-body-lg leading-relaxed text-ink-2">
-          {t("observatoire.intro")}
-        </p>
-
-        {/* Les trois chiffres de tête, calculés sur le catalogue lui-même. Le
-            premier est le taux de fonds NON NOTABLES : ce que Seedow ne sait pas
-            passe devant ce qu'il sait. */}
-        <div className="mt-9 grid gap-6 sm:grid-cols-3">
-          <Counter value={`${stats.notRatablePct} %`} label={t("observatoire.stat_not_ratable")} />
-          <Counter value={String(stats.funds)} label={t("observatoire.stat_funds")} />
-          <Counter value={String(stats.withDiscrepancy)} label={t("observatoire.stat_gaps")} />
-        </div>
-        <p className="mt-4 text-body-sm leading-relaxed text-ink-3 max-w-[66ch]">
+      {/* Les trois chiffres de tête, calculés sur le catalogue lui-même. Le
+          premier est le taux de fonds NON NOTABLES : ce que Seedow ne sait pas
+          passe devant ce qu'il sait. */}
+      <section className="mx-auto max-w-[1160px] px-5 sm:px-7">
+        <RevealGroup className="grid gap-4 sm:grid-cols-3">
+          <Counter
+            value={stats.notRatablePct}
+            suffix=" %"
+            label={t("observatoire.stat_not_ratable")}
+          />
+          <Counter value={stats.funds} label={t("observatoire.stat_funds")} />
+          <Counter value={stats.withDiscrepancy} label={t("observatoire.stat_gaps")} />
+        </RevealGroup>
+        <p className="mt-5 max-w-[66ch] text-body-sm leading-relaxed text-ink-3">
           {t("observatoire.stat_note", { lines: stats.lines, funds: stats.funds })}
         </p>
         <p className="mono-meta mt-2">{t("sti.version", { version: STI_VERSION })}</p>
-      </header>
+      </section>
 
-      <div className="max-w-4xl mx-auto px-6 pb-16">
+      <div className="mx-auto max-w-[1160px] px-5 pt-12 pb-8 sm:px-7">
         <div className="flex flex-wrap items-center gap-3">
           <label htmlFor="observatoire-search" className="sr-only">
             {t("observatoire.search")}
@@ -132,28 +134,45 @@ function ObservatoryPage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t("observatoire.search")}
-            className="h-11 flex-1 min-w-[200px] rounded-[14px] border border-paper-3 bg-paper px-4 text-body-sm text-ink placeholder:text-ink-3 outline-none transition-colors focus:border-ink focus-visible:ring-2 focus-visible:ring-ink"
+            className="field min-w-[200px] flex-1"
           />
-          <div role="group" aria-label={t("observatoire.filter_aria")} className="flex gap-2">
-            {FILTERS.map((f) => (
-              <button
-                key={f.id}
-                type="button"
-                onClick={() => setFilter(f.id)}
-                aria-pressed={filter === f.id}
-                className={cn(
-                  "chip min-h-[44px] transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink",
-                  filter === f.id ? "bg-ink text-paper border-ink" : "hover:bg-paper-inset",
-                )}
-              >
-                {f.label}
-              </button>
-            ))}
+          <div
+            role="group"
+            aria-label={t("observatoire.filter_aria")}
+            className="inline-flex items-center gap-1 rounded-full bg-paper-inset p-1"
+          >
+            {FILTERS.map((f) => {
+              const active = filter === f.id;
+              return (
+                <button
+                  key={f.id}
+                  type="button"
+                  onClick={() => setFilter(f.id)}
+                  aria-pressed={active}
+                  className={cn(
+                    "relative min-h-[44px] rounded-full px-4 text-label font-bold outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-mint",
+                    active ? "text-ink" : "text-ink-3 hover:text-ink",
+                  )}
+                >
+                  {active && (
+                    <motion.span
+                      layoutId="observatoire-filter"
+                      aria-hidden
+                      className="absolute inset-0 rounded-full bg-paper shadow-card"
+                      transition={{ duration: 0.32, ease: EASE_SIGNATURE }}
+                    />
+                  )}
+                  <span className="relative">{f.label}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
         {groups.length === 0 ? (
-          <p className="paper-card mt-6 p-6 text-body-sm text-ink-3">{t("observatoire.empty")}</p>
+          <p className="paper-card mt-6 p-8 text-center text-body text-ink-2">
+            {t("observatoire.empty")}
+          </p>
         ) : (
           groups.map(({ group, items }) => (
             <section key={group.key} className="mt-10">
@@ -170,7 +189,7 @@ function ObservatoryPage() {
                   }),
                 })}
               </h2>
-              <ul className="mt-3 flex flex-col gap-3">
+              <ul className="mt-3 grid gap-3 lg:grid-cols-2">
                 {items.map((f) => (
                   <FundRow key={f.key} fund={f} />
                 ))}
@@ -182,24 +201,25 @@ function ObservatoryPage() {
         <p className="mt-10 text-body-sm leading-relaxed text-ink-3 max-w-[66ch]">
           {t("observatoire.hint")}
         </p>
-        <Link
-          to="/methodologie"
-          className="mt-4 inline-block text-body font-semibold text-ink underline underline-offset-4 hover:no-underline rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ink"
-        >
-          {t("observatoire.methodology_cta")} <span aria-hidden>→</span>
-        </Link>
+        <Button asChild variant="outline" className="mt-5">
+          <Link to="/methodologie">
+            {t("observatoire.methodology_cta")} <span aria-hidden>→</span>
+          </Link>
+        </Button>
       </div>
-    </div>
+    </PublicPage>
   );
 }
 
-function Counter({ value, label }: { value: string; label: string }) {
+/** Un chiffre de tête : il compte jusqu'à sa valeur à l'entrée dans l'écran. */
+function Counter({ value, suffix = "", label }: { value: number; suffix?: string; label: string }) {
   return (
-    <div>
-      <p className="font-value text-[clamp(32px,5vw,44px)] leading-none tabular-nums text-ink">
-        {value}
+    <div className="paper-card spot p-6 sm:p-7">
+      <p className="font-display text-[clamp(40px,6vw,60px)] font-extrabold leading-none tracking-[-0.04em] text-ink">
+        <CountUp value={value} />
+        {suffix}
       </p>
-      <p className="mt-2.5 text-body-sm leading-snug text-ink-2 max-w-[30ch]">{label}</p>
+      <p className="mt-3 max-w-[30ch] text-body leading-snug text-ink-2">{label}</p>
     </div>
   );
 }
@@ -218,7 +238,7 @@ function FundRow({ fund }: { fund: ObservatoryFund }) {
       <Link
         to="/fonds/$isin"
         params={{ isin: fund.slug }}
-        className="paper-card block p-5 hover:bg-paper-inset transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ink"
+        className="paper-card spot lift block h-full p-5 outline-none focus-visible:ring-2 focus-visible:ring-mint sm:p-6"
       >
         <div className="flex items-start justify-between gap-5">
           <div className="min-w-0">

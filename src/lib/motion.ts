@@ -26,3 +26,8 @@ export const DURATION = {
   slow: 0.4,
   reveal: 0.6,
 } as const;
+
+/** Nombre de mots d'un texte — pour chaîner `startIndex` de `SplitWords` entre deux lignes. */
+export function wordCount(text: string): number {
+  return text.split(/\s+/).filter(Boolean).length;
+}

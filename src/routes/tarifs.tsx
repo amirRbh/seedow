@@ -1,6 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
-import { MarketingNav, MarketingFooter } from "@/components/layout/MarketingChrome";
+import { ArrowRight, Check } from "lucide-react";
+import { PageHero, PublicPage } from "@/components/layout/PublicPage";
+import { Reveal, RevealGroup } from "@/components/motion/Reveal";
+import { Tilt } from "@/components/motion/Tilt";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/tarifs")({
   head: () => ({
@@ -28,69 +32,68 @@ function TarifsPage() {
   ];
 
   return (
-    <div className="apple-landing min-h-screen">
-      <MarketingNav />
+    <PublicPage accent="mint">
+      <PageHero
+        eyebrow={t("tarifs.eyebrow")}
+        title={t("tarifs.title")}
+        subtitle={
+          <>
+            <p>{t("tarifs.free_now")}</p>
+            <p className="mt-3">{t("tarifs.future")}</p>
+          </>
+        }
+      />
 
-      <section className="px-6 pt-20 pb-16 md:pt-28">
-        <div className="max-w-[820px] mx-auto text-center">
-          <p className="apple-eyebrow" style={{ color: "var(--mint)" }}>
-            {t("tarifs.eyebrow")}
-          </p>
-          <h1 className="apple-title mt-3">{t("tarifs.title")}</h1>
-          <p className="apple-subtitle mx-auto max-w-[560px] mt-6">{t("tarifs.free_now")}</p>
-          <p className="apple-subtitle mx-auto max-w-[560px] mt-4">{t("tarifs.future")}</p>
-          <p className="apple-subtitle mx-auto max-w-[560px] mt-4">{t("tarifs.notice")}</p>
-        </div>
-      </section>
+      <section className="px-5 pb-8">
+        <Reveal className="mx-auto max-w-[480px]">
+          <Tilt max={3}>
+            <div className="hero-card spot p-8 md:p-10">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <span className="chip chip--verified">
+                    <span aria-hidden className="live-dot" />
+                    {t("landing.rv.hero.eyebrow")}
+                  </span>
+                  <h2 className="mt-4 text-[clamp(24px,3vw,32px)]">{t("tarifs.table_title")}</h2>
+                </div>
+                <p className="font-display text-[56px] font-extrabold leading-none tracking-[-0.04em] text-mint-ink">
+                  0&nbsp;€
+                </p>
+              </div>
 
-      <section className="px-6 pb-24">
-        <div className="max-w-[440px] mx-auto">
-          <div
-            className="p-8 md:p-10"
-            style={{
-              background: "var(--paper-2)",
-              border: "1px solid var(--paper-3)",
-              borderRadius: 18,
-            }}
-          >
-            <div className="flex items-baseline justify-between gap-3">
-              <h2 className="apple-title" style={{ fontSize: "clamp(24px, 3vw, 32px)" }}>
-                {t("tarifs.table_title")}
-              </h2>
-              <span className="font-mono text-body-lg" style={{ color: "var(--mint)" }}>
-                0 €
-              </span>
+              <RevealGroup as="ul" className="mt-8 flex flex-col gap-4">
+                {FEATURES.map((feature) => (
+                  <li key={feature} className="flex items-center gap-3 text-body-lg text-ink">
+                    <CheckIcon />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </RevealGroup>
+
+              <Button asChild size="lg" className="mt-10 w-full">
+                <Link to="/onboarding" search={{ guest: true }}>
+                  {t("tarifs.cta")}
+                  <ArrowRight aria-hidden />
+                </Link>
+              </Button>
             </div>
+          </Tilt>
 
-            <ul className="mt-8 flex flex-col gap-4">
-              {FEATURES.map((feature) => (
-                <li key={feature} className="flex items-center gap-3 text-body-lg">
-                  <CheckIcon />
-                  <span>{feature}</span>
-                </li>
-              ))}
-            </ul>
+          {/* L'engagement tarifaire, écrit en clair sous la carte : aucune
+              surprise, et un préavis daté (CLAUDE.md §1.5 — aucun dark pattern). */}
+          <p className="tile-accent accent-solar mt-5 px-5 py-4 text-body leading-relaxed text-ink-2">
+            {t("tarifs.notice")}
+          </p>
 
-            <Link
-              to="/onboarding"
-              className="apple-btn-primary w-full mt-10"
-              style={{ width: "100%" }}
-            >
-              {t("tarifs.cta")}
-            </Link>
-          </div>
-
-          <p className="text-center text-body-sm text-[color:var(--apple-text-2)] mt-8">
+          <p className="mt-8 text-center text-body text-ink-2">
             {t("tarifs.faq_prefix")}{" "}
-            <Link to="/aide" className="apple-link text-body-sm">
+            <Link to="/aide" className="link-u font-bold text-mint-ink">
               {t("tarifs.faq_link")}
             </Link>
           </p>
-        </div>
+        </Reveal>
       </section>
-
-      <MarketingFooter />
-    </div>
+    </PublicPage>
   );
 }
 
@@ -99,21 +102,9 @@ function CheckIcon() {
   return (
     <span
       aria-hidden
-      className="inline-flex items-center justify-center flex-shrink-0"
-      style={{ width: 22, height: 22, borderRadius: 100, background: "var(--mint)" }}
+      className="inline-flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-mint text-paper"
     >
-      <svg
-        viewBox="0 0 24 24"
-        width={13}
-        height={13}
-        fill="none"
-        stroke="#ffffff"
-        strokeWidth={3}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M20 6 9 17l-5-5" />
-      </svg>
+      <Check className="size-3.5" strokeWidth={3} />
     </span>
   );
 }

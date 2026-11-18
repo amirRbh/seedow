@@ -17,18 +17,17 @@ export function CourseProgressBanner({ completedCount, total, resumeSlug, resume
   const allDone = completedCount >= total;
 
   return (
-    <div className="mb-10 bg-paper-2/60 border border-ink/8 p-5 md:p-6">
-      <div className="flex flex-wrap items-baseline justify-between gap-2 mb-3">
-        <p className="text-tag font-semibold uppercase tracking-[0.2em] text-ink-3">
-          Ta progression
-        </p>
-        <p className="text-body-sm text-ink-2 tabular-nums">
-          <span className="text-ink font-semibold">{completedCount}</span> / {total} cours terminés
+    <div className="hero-card mb-10 p-6 md:p-7">
+      <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
+        <p className="stamp">Ta progression</p>
+        <p className="text-body text-ink-2 tabular-nums">
+          <span className="font-value text-body-xl text-ink">{completedCount}</span> / {total} cours
+          terminés
         </p>
       </div>
 
       <div
-        className="h-1.5 w-full bg-ink/10 rounded-full overflow-hidden"
+        className="h-2.5 w-full overflow-hidden rounded-full bg-paper-inset"
         role="progressbar"
         aria-valuenow={completedCount}
         aria-valuemin={0}
@@ -36,13 +35,13 @@ export function CourseProgressBanner({ completedCount, total, resumeSlug, resume
         aria-label="Cours terminés"
       >
         <div
-          className="h-full bg-mint rounded-full transition-[width] duration-500 ease-out"
+          className="h-full rounded-full bg-mint transition-[width] duration-700 ease-brand motion-reduce:transition-none"
           style={{ width: `${pct}%` }}
         />
       </div>
 
       {allDone ? (
-        <p className="mt-3 text-body-sm text-mint-ink font-medium">
+        <p className="mt-4 text-body font-semibold text-mint-ink">
           Bravo — tu as terminé tous les cours. 🌱
         </p>
       ) : (
@@ -50,7 +49,7 @@ export function CourseProgressBanner({ completedCount, total, resumeSlug, resume
           <Link
             to="/cours/$slug"
             params={{ slug: resumeSlug }}
-            className="mt-3 inline-flex items-center gap-1.5 text-body-sm font-semibold text-ink hover:text-gold transition-colors"
+            className="link-u mt-4 inline-flex items-center gap-1.5 text-body font-bold text-mint-ink"
           >
             Reprendre : {resumeTitle}
             <span aria-hidden="true">→</span>

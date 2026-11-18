@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { RevealGroup } from "@/components/motion/Reveal";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { EASE_REVEAL } from "@/lib/motion";
@@ -16,7 +17,7 @@ import { EASE_REVEAL } from "@/lib/motion";
 export function EmptyPortfolioState({ userName }: { userName: string }) {
   const { t } = useTranslation();
   return (
-    <div className="max-w-lg mx-auto px-6 pt-16 pb-32">
+    <div className="page accent-mint px-5 pt-10 md:pt-14">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -30,8 +31,10 @@ export function EmptyPortfolioState({ userName }: { userName: string }) {
             animate={{ pathLength: 1 }}
             transition={{ duration: 1.4, ease: EASE_REVEAL, delay: 0.2 }}
             d="M 0 50 L 40 46 L 80 38 L 120 30 L 160 18 L 200 8"
-            stroke="var(--ink)"
-            strokeWidth="1"
+            stroke="var(--mint)"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             fill="none"
           />
           <motion.circle
@@ -40,23 +43,19 @@ export function EmptyPortfolioState({ userName }: { userName: string }) {
             transition={{ delay: 1.4 }}
             cx="200"
             cy="8"
-            r="2"
-            fill="var(--highlight-1)"
+            r="3"
+            fill="var(--mint)"
           />
         </svg>
       </motion.div>
 
-      <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium">
-        {t("empty_portfolio.welcome", { name: userName })}
-      </p>
-      <h1 className="font-value text-3xl text-ink mt-2 leading-tight">
-        {t("empty_portfolio.title")}
-      </h1>
-      <p className="text-sm text-ink-2 mt-3 max-w-md leading-relaxed">
+      <span className="chip chip--accent">{t("empty_portfolio.welcome", { name: userName })}</span>
+      <h1 className="display-lg mt-4">{t("empty_portfolio.title")}</h1>
+      <p className="mt-4 max-w-[52ch] text-body-lg leading-relaxed text-ink-2">
         {t("empty_portfolio.choose_desc")}
       </p>
 
-      <div className="mt-8 space-y-3">
+      <RevealGroup className="mt-8 grid gap-4 md:grid-cols-2">
         <IntentCard
           accent="mint"
           eyebrow={t("empty_portfolio.beginner_eyebrow")}
@@ -74,12 +73,12 @@ export function EmptyPortfolioState({ userName }: { userName: string }) {
           cta={t("empty_portfolio.existing_cta")}
           to="/construire"
         />
-      </div>
+      </RevealGroup>
 
       <div className="mt-6">
         <Link
           to="/discover"
-          className="inline-flex items-center gap-1.5 text-body-sm text-ink-3 hover:text-ink transition-colors underline-offset-4 hover:underline"
+          className="link-u inline-flex items-center gap-1.5 text-body font-semibold text-ink-2 hover:text-ink"
         >
           {t("empty_portfolio.explore")}
           <span aria-hidden>→</span>
@@ -99,8 +98,8 @@ export function EmptyPortfolioState({ userName }: { userName: string }) {
 }
 
 const ACCENT: Record<"mint" | "ice", { dot: string; cta: string }> = {
-  mint: { dot: "bg-mint", cta: "text-mint" },
-  ice: { dot: "bg-ice", cta: "text-ice" },
+  mint: { dot: "accent-mint", cta: "text-mint-ink" },
+  ice: { dot: "accent-ice", cta: "text-ice-ink" },
 };
 
 function IntentCard({
@@ -125,20 +124,20 @@ function IntentCard({
     <Link
       to={to}
       search={search}
-      className="group flex flex-col rounded-2xl border border-paper-3 bg-paper-2/40 p-5 min-h-[132px] transition-all duration-200 hover:-translate-y-0.5 hover:border-ink/30 outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
+      className={`${a.dot} paper-card spot lift group flex min-h-[200px] flex-col p-6 outline-none focus-visible:ring-2 focus-visible:ring-mint sm:p-7`}
     >
-      <span className="inline-flex items-center gap-2 text-tag uppercase tracking-[0.16em] font-mono text-ink-3">
-        <span aria-hidden className={`inline-block h-1.5 w-1.5 rounded-full ${a.dot}`} />
-        {eyebrow}
-      </span>
-      <h2 className="mt-2.5 font-value text-lg text-ink leading-tight">{title}</h2>
-      <p className="mt-1.5 text-body-sm text-ink-2 leading-relaxed">{desc}</p>
+      <span className="chip chip--accent w-fit">{eyebrow}</span>
+      <h2 className="mt-4 text-[clamp(20px,2.2vw,24px)]">{title}</h2>
+      <p className="mt-2 text-body leading-relaxed text-ink-2">{desc}</p>
       <span
-        className={`mt-auto pt-4 inline-flex items-center gap-1 text-body-sm font-semibold ${a.cta}`}
+        className={`mt-auto inline-flex items-center gap-1.5 pt-6 text-body font-bold ${a.cta}`}
       >
         {cta}
-        <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-0.5">
-          ›
+        <span
+          aria-hidden
+          className="transition-transform duration-300 ease-brand group-hover:translate-x-1.5"
+        >
+          →
         </span>
       </span>
     </Link>

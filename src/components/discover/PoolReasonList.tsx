@@ -53,7 +53,7 @@ export function PoolReasonList({
   return (
     <div className={className}>
       {!hideGroup && (
-        <p className={`text-tag font-mono uppercase tracking-wider ${GROUP_TONE[group]}`}>
+        <p className={`text-caption font-semibold ${GROUP_TONE[group]}`}>
           {t(`pool_reasons.group.${group}`)}
         </p>
       )}

@@ -11,12 +11,12 @@ export function DecisionTimeline() {
 
   const TYPE_TONE: Record<DecisionType, { dot: string; label: string }> = {
     creation: { dot: "bg-ink", label: t("decision_timeline.creation") },
-    cause: { dot: "bg-highlight-1", label: t("decision_timeline.cause") },
-    exclusion: { dot: "bg-rust", label: t("decision_timeline.exclusion") },
-    horizon: { dot: "bg-gold", label: t("decision_timeline.horizon") },
-    risk: { dot: "bg-gold", label: t("decision_timeline.risk") },
+    cause: { dot: "bg-ink", label: t("decision_timeline.cause") },
+    exclusion: { dot: "bg-alert", label: t("decision_timeline.exclusion") },
+    horizon: { dot: "bg-mint", label: t("decision_timeline.horizon") },
+    risk: { dot: "bg-mint", label: t("decision_timeline.risk") },
     rebalance: { dot: "bg-highlight-2", label: t("decision_timeline.rebalance") },
-    contribution: { dot: "bg-gold", label: t("decision_timeline.contribution") },
+    contribution: { dot: "bg-mint", label: t("decision_timeline.contribution") },
   };
 
   if (loading) {
@@ -41,13 +41,11 @@ export function DecisionTimeline() {
               )}
             />
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-tag uppercase tracking-[0.18em] font-mono text-ink-3">
-                {tone.label}
-              </span>
+              <span className="text-caption font-semibold text-ink-3">{tone.label}</span>
               <span className="text-tag text-ink-3">·</span>
               <time
                 dateTime={d.date}
-                className="text-tag text-ink-3 tabular-nums uppercase tracking-wider"
+                className="text-caption text-ink-3 tabular-nums font-semibold"
               >
                 {formatDate(d.date, lang, { day: "numeric", month: "long", year: "numeric" })}
               </time>

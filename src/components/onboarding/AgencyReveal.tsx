@@ -64,9 +64,7 @@ export function AgencyReveal({
             className="absolute inset-y-0 w-1/2 bg-ink"
           />
         </div>
-        <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-medium">
-          {t("onboarding.agency.loading")}
-        </p>
+        <p className="text-caption text-ink-3 font-medium">{t("onboarding.agency.loading")}</p>
       </motion.div>
     );
   }
@@ -102,8 +100,8 @@ export function AgencyReveal({
           </svg>
         </button>
         <span className="inline-flex items-center gap-2">
-          <span aria-hidden="true" className="apple-live" />
-          <span className="font-mono text-tag uppercase tracking-[0.14em] text-mint-ink">
+          <span aria-hidden="true" className="live-dot" />
+          <span className="text-caption font-semibold text-mint-ink">
             {t("onboarding.agency.eyebrow")}
           </span>
         </span>
@@ -135,30 +133,28 @@ export function AgencyReveal({
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.32, duration: 0.5, ease: EASE_REVEAL }}
-          className="ink-section paper-grain ink-grain mt-6 overflow-hidden rounded-2xl p-5"
+          className="ink-section mt-6 overflow-hidden rounded-2xl p-5"
         >
           <div className="flex items-center justify-between gap-3">
-            <span className="font-mono text-tag uppercase tracking-[0.1em] text-paper/70">
+            <span className="text-caption font-semibold text-ink-2">
               {resolution.company}
               {resolution.ticker ? ` · ${resolution.ticker}` : ""}
             </span>
             {days != null && (
-              <span className="inline-flex items-center gap-1.5 font-mono text-tag uppercase tracking-[0.08em] text-mint-ink">
-                <span aria-hidden="true" className="apple-live" />
+              <span className="inline-flex items-center gap-1.5 text-caption font-semibold text-mint-ink">
+                <span aria-hidden="true" className="live-dot" />
                 {days === 0 ? t("vote.status.last_day") : t("vote.status.days_left", { n: days })}
               </span>
             )}
           </div>
 
-          <p className="mt-3 font-value text-lg leading-snug text-paper">{resolution.title}</p>
+          <p className="mt-3 font-value text-lg leading-snug text-on-deep">{resolution.title}</p>
 
           {resolution.fundsStance && (
-            <p className="mt-2 font-mono text-caption leading-relaxed text-paper/60">
-              {resolution.fundsStance}
-            </p>
+            <p className="mt-2 text-caption leading-relaxed text-ink-3">{resolution.fundsStance}</p>
           )}
 
-          <p className="mt-4 border-t border-paper/15 pt-3 font-mono text-tag uppercase tracking-[0.06em] text-paper/50">
+          <p className="mt-4 border-t border-on-deep/15 pt-3 text-caption font-semibold tracking-[0.06em] text-ink-3">
             {t("onboarding.agency.source", {
               source: resolution.sourceName,
               date: formatDate(resolution.meetingDate, lang),

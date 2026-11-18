@@ -38,9 +38,7 @@ export function WatchlistCard() {
       className="px-5 pt-8"
     >
       <div className="flex items-baseline justify-between mb-3">
-        <p className="text-caption uppercase tracking-wider text-ink-3 font-medium">
-          {t("watchlist.card_title")}
-        </p>
+        <p className="text-caption text-ink-3 font-medium">{t("watchlist.card_title")}</p>
         {watchedAssets.length > 0 && (
           <Link
             to="/discover"
@@ -77,14 +75,12 @@ export function WatchlistCard() {
               onClick={() => setDetail(asset)}
               className="paper-card w-full text-left p-3 flex items-center gap-3 hover:shadow-flat-1 transition-shadow"
             >
-              <Star className="w-4 h-4 fill-gold text-gold flex-shrink-0" aria-hidden />
+              <Star className="w-4 h-4 fill-mint text-mint-ink flex-shrink-0" aria-hidden />
               <div className="flex-1 min-w-0">
                 <p className="text-body-sm font-semibold text-ink truncate leading-tight">
                   {asset.name}
                 </p>
-                <p className="text-tag font-mono uppercase tracking-wider text-ink-3 mt-0.5">
-                  {asset.ticker}
-                </p>
+                <p className="text-caption font-semibold text-ink-3 mt-0.5">{asset.ticker}</p>
                 <SustainabilityBadge score={asset.seedow_score} className="mt-1" />
               </div>
               {asset.greenwashing_risk !== "low" && (

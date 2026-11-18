@@ -36,9 +36,7 @@ export function VotePanel({ resolution, onVote, casting }: Props) {
             style={{ background: "linear-gradient(135deg, var(--mint), var(--ice))" }}
           />
           <div>
-            <span className="text-tag font-mono uppercase tracking-[0.12em] text-ink-3">
-              {t("vote.explainer.who")}
-            </span>
+            <span className="text-caption font-semibold text-ink-3">{t("vote.explainer.who")}</span>
             <p className="mt-1 text-body-sm leading-relaxed text-ink">{resolution.summary}</p>
           </div>
         </div>
@@ -75,7 +73,7 @@ export function VotePanel({ resolution, onVote, casting }: Props) {
           type="button"
           disabled={casting}
           onClick={() => choose("abstain")}
-          className="mx-auto text-caption uppercase tracking-[0.16em] text-ink-3 underline-offset-4 transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 disabled:opacity-50"
+          className="mx-auto text-caption font-semibold text-ink-3 underline-offset-4 transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint disabled:opacity-50"
         >
           {casting && pending === "abstain" ? t("vote.casting") : t("vote.choice_abstain")}
         </button>
@@ -86,7 +84,7 @@ export function VotePanel({ resolution, onVote, casting }: Props) {
         href={resolution.sourceUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-1.5 font-mono text-tag uppercase tracking-[0.08em] text-ink-3 transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
+        className="inline-flex items-center gap-1.5 text-caption font-semibold text-ink-3 transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint"
       >
         <SourceIcon />
         {t("vote.source", { name: resolution.sourceName })}
@@ -100,7 +98,7 @@ function CampRow({ tone, label, tag }: { tone: "for" | "against"; label: string;
     <div className="flex items-start gap-3 rounded-lg border border-paper-3 bg-paper p-3">
       <span
         className={cn(
-          "mt-0.5 flex-none rounded-full px-2.5 py-1 font-mono text-tag font-semibold uppercase tracking-[0.06em]",
+          "mt-0.5 flex-none rounded-full px-2.5 py-1 text-caption font-semibold tracking-[0.06em]",
           tone === "against" ? "bg-paper-2 text-ink" : "bg-paper-2 text-ink",
         )}
       >
@@ -131,7 +129,7 @@ function VoteButton({
       className={cn(
         "flex items-center justify-center rounded-full border border-ink px-4 py-4 text-body font-semibold text-ink",
         "transition-transform duration-300 hover:scale-[1.02] hover:bg-ink hover:text-paper",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 focus-visible:ring-offset-2",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint focus-visible:ring-offset-2",
         "disabled:pointer-events-none disabled:opacity-60",
       )}
       style={{ transitionTimingFunction: "cubic-bezier(0.32,0.72,0,1)" }}

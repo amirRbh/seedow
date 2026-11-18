@@ -61,7 +61,7 @@ export function FeedbackButton() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed bottom-24 right-4 z-30 px-3.5 py-2 rounded-full bg-ink text-paper text-caption font-semibold uppercase tracking-[0.18em] shadow-lg hover:bg-ink-2 transition-colors"
+        className="fixed bottom-24 right-4 z-30 px-3.5 py-2 rounded-full bg-ink text-paper text-caption font-semibold shadow-lg hover:bg-ink-2 transition-colors"
         aria-label={t("beta.feedback_btn_aria")}
       >
         {t("beta.feedback_btn")}
@@ -94,10 +94,7 @@ export function FeedbackButton() {
               </DialogHeader>
               <div className="space-y-5 py-2">
                 <div>
-                  <p
-                    id="feedback-nps-label"
-                    className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono"
-                  >
+                  <p id="feedback-nps-label" className="text-caption font-semibold text-ink-3">
                     {t("beta.feedback_nps_label")}
                   </p>
                   <div
@@ -126,7 +123,7 @@ export function FeedbackButton() {
                 <div>
                   <label
                     htmlFor="feedback-blocker"
-                    className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono"
+                    className="text-caption font-semibold text-ink-3"
                   >
                     {t("beta.feedback_blocker")}
                   </label>
@@ -141,10 +138,7 @@ export function FeedbackButton() {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="feedback-wish"
-                    className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono"
-                  >
+                  <label htmlFor="feedback-wish" className="text-caption font-semibold text-ink-3">
                     {t("beta.feedback_wish")}
                   </label>
                   <textarea

@@ -51,7 +51,7 @@ function AdminBetaPage() {
   if (error) {
     return (
       <div className="max-w-3xl mx-auto px-6 py-12">
-        <p className="text-rust text-sm">{error}</p>
+        <p className="text-alert-ink text-sm">{error}</p>
         <Link to="/le-fil" className="text-label underline mt-4 inline-block">
           {t("admin_beta.back_dashboard")}
         </Link>
@@ -78,15 +78,14 @@ function AdminBetaPage() {
   const fillPct = Math.round(stats.fillRate * 100);
   const statusLabel =
     stats.status === "open" ? t("admin_beta.status_open") : t("admin_beta.status_closed");
-  const statusTone = stats.status === "open" && stats.slotsLeft > 0 ? "text-forest" : "text-rust";
+  const statusTone =
+    stats.status === "open" && stats.slotsLeft > 0 ? "text-forest" : "text-alert-ink";
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-12 space-y-10">
       <header className="flex items-end justify-between flex-wrap gap-4">
         <div>
-          <p className="text-tag uppercase tracking-[0.22em] text-gold font-mono">
-            {t("admin_beta.eyebrow")}
-          </p>
+          <p className="text-caption font-semibold text-mint-ink">{t("admin_beta.eyebrow")}</p>
           <h1 className="font-display text-3xl text-ink mt-2">{t("admin_beta.title")}</h1>
         </div>
         <Link to="/le-fil" className="text-label underline text-ink-3 hover:text-ink">
@@ -98,7 +97,7 @@ function AdminBetaPage() {
       <section className="border border-paper-3 rounded-2xl p-6 bg-paper-2/40">
         <div className="flex items-end justify-between flex-wrap gap-4 mb-4">
           <div>
-            <p className="text-tag uppercase tracking-[0.22em] text-ink-3 font-mono">
+            <p className="text-caption font-semibold text-ink-3">
               {t("admin_beta.capacity_title")}
             </p>
             <p className="font-display text-4xl text-ink mt-2 tabular-nums">
@@ -106,16 +105,14 @@ function AdminBetaPage() {
             </p>
           </div>
           <div className="text-right">
-            <p className={`text-label uppercase tracking-[0.18em] font-mono ${statusTone}`}>
-              ● {statusLabel}
-            </p>
+            <p className={`text-label font-semibold ${statusTone}`}>● {statusLabel}</p>
             <p className="text-body-sm text-ink-2 mt-1 tabular-nums">
               {t("admin_beta.slots_left", { count: stats.slotsLeft })}
             </p>
           </div>
         </div>
         <div className="h-2 w-full bg-paper-3 rounded-full overflow-hidden">
-          <div className="h-full bg-gold transition-all" style={{ width: `${fillPct}%` }} />
+          <div className="h-full bg-mint transition-all" style={{ width: `${fillPct}%` }} />
         </div>
         <p className="text-caption text-ink-3 mt-2 tabular-nums">{fillPct}%</p>
       </section>
@@ -159,7 +156,7 @@ function AdminBetaPage() {
                   <span className="text-ink-3 tabular-nums">
                     {s.completed} / {s.entered}
                     {s.entered > 0 && (
-                      <span className={`ml-2 ${dropRate > 0.3 ? "text-rust" : "text-ink-3"}`}>
+                      <span className={`ml-2 ${dropRate > 0.3 ? "text-alert-ink" : "text-ink-3"}`}>
                         (-{Math.round(dropRate * 100)}%)
                       </span>
                     )}
@@ -167,7 +164,7 @@ function AdminBetaPage() {
                 </div>
                 <div className="h-1.5 w-full bg-paper-3 rounded-full overflow-hidden mt-2">
                   <div
-                    className="h-full bg-gold"
+                    className="h-full bg-mint"
                     style={{ width: `${s.entered > 0 ? (s.completed / s.entered) * 100 : 0}%` }}
                   />
                 </div>
@@ -192,12 +189,12 @@ function AdminBetaPage() {
         <div className="flex items-end justify-between flex-wrap gap-3 mb-3">
           <h2 className="font-display text-lg text-ink">{t("admin_beta.ingestion_title")}</h2>
           <span
-            className={`text-label uppercase tracking-[0.18em] font-mono ${
+            className={`text-label font-semibold ${
               stats.ingestionSuccessRate === null
                 ? "text-ink-3"
                 : stats.ingestionSuccessRate >= 0.9
                   ? "text-forest"
-                  : "text-rust"
+                  : "text-alert-ink"
             }`}
           >
             {stats.ingestionSuccessRate !== null
@@ -219,8 +216,8 @@ function AdminBetaPage() {
                       r.status === "ok"
                         ? "text-forest"
                         : r.status === "partial"
-                          ? "text-gold"
-                          : "text-rust"
+                          ? "text-mint-ink"
+                          : "text-alert-ink"
                     }
                   >
                     ●
@@ -256,13 +253,13 @@ function AdminBetaPage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t("admin_beta.testers_search")}
-            className="text-body-sm border border-paper-3 rounded-lg px-3 py-1.5 bg-paper outline-none focus:border-gold transition-colors w-full sm:w-64"
+            className="text-body-sm border border-paper-3 rounded-lg px-3 py-1.5 bg-paper outline-none focus:border-mint transition-colors w-full sm:w-64"
           />
         </div>
         <div className="border border-paper-3 rounded-2xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-body-sm">
-              <thead className="bg-paper-2/60 text-tag uppercase tracking-[0.14em] text-ink-3">
+              <thead className="bg-paper-2/60 text-caption font-semibold text-ink-3">
                 <tr>
                   <th className="text-left font-semibold px-4 py-3">
                     {t("admin_beta.col_tester")}
@@ -344,7 +341,7 @@ function AdminBetaPage() {
                 </div>
                 {f.blocker && (
                   <p className="text-body-sm text-ink mb-1">
-                    <span className="text-ink-3 text-caption uppercase tracking-wider mr-2">
+                    <span className="text-ink-3 text-caption font-semibold mr-2">
                       {t("admin_beta.blocker")}
                     </span>
                     {f.blocker}
@@ -352,7 +349,7 @@ function AdminBetaPage() {
                 )}
                 {f.wish && (
                   <p className="text-body-sm text-ink">
-                    <span className="text-ink-3 text-caption uppercase tracking-wider mr-2">
+                    <span className="text-ink-3 text-caption font-semibold mr-2">
                       {t("admin_beta.wish")}
                     </span>
                     {f.wish}
@@ -438,7 +435,7 @@ function ComprehensionSection({ comp }: { comp: ComprehensionStats }) {
         />
       </div>
       <div className="border border-paper-3 rounded-2xl p-4">
-        <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono mb-3">
+        <p className="text-caption font-semibold text-ink-3 mb-3">
           {t("admin_beta.comprehension_retention_title")}
         </p>
         <div className="flex items-center justify-between text-body-sm py-1.5">
@@ -454,7 +451,7 @@ function ComprehensionSection({ comp }: { comp: ComprehensionStats }) {
           </span>
         </div>
         {lift != null && (
-          <p className={`text-caption mt-2 ${lift >= 0 ? "text-forest" : "text-rust"}`}>
+          <p className={`text-caption mt-2 ${lift >= 0 ? "text-forest" : "text-alert-ink"}`}>
             {lift >= 0 ? "+" : ""}
             {Math.round(lift * 100)} {t("admin_beta.comprehension_lift_suffix")}
           </p>
@@ -468,7 +465,7 @@ function ComprehensionSection({ comp }: { comp: ComprehensionStats }) {
 function Kpi({ label, value }: { label: string; value: string }) {
   return (
     <div className="border border-paper-3 rounded-2xl p-4">
-      <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono">{label}</p>
+      <p className="text-caption font-semibold text-ink-3">{label}</p>
       <p className="font-value text-2xl text-ink mt-1 tabular-nums">{value}</p>
     </div>
   );

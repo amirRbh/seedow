@@ -26,8 +26,8 @@ export function SimulationBadge({
   const { t } = useTranslation();
   return (
     <div className={cn(center && "flex flex-col items-center text-center", className)}>
-      <span className="inline-flex items-center gap-1.5 rounded-full border border-paper-3 bg-paper-2 px-2.5 py-1 font-mono text-tag uppercase tracking-[0.14em] text-ink-2">
-        <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-highlight-1" />
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-paper-3 bg-paper-2 px-2.5 py-1 text-caption font-semibold text-ink-2">
+        <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-ink" />
         {t("common.simulation.badge")}
       </span>
       {withTagline && (

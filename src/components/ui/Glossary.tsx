@@ -172,7 +172,7 @@ export function Glossary({ term, children, variant = "inline", className }: Prop
           aria-label={`Définition : ${entry.title}`}
           className={cn(
             "inline-flex items-baseline gap-1 align-baseline outline-none rounded-sm",
-            "focus-visible:ring-2 focus-visible:ring-highlight-1",
+            "focus-visible:ring-2 focus-visible:ring-mint",
             variant === "inline" &&
               "border-b border-dotted border-ink-3 text-inherit hover:text-ink",
             variant === "icon" &&
@@ -197,7 +197,7 @@ export function Glossary({ term, children, variant = "inline", className }: Prop
         align="start"
         className="max-w-[280px] bg-ink text-paper border-ink"
       >
-        <p className="text-caption font-semibold tracking-wide uppercase text-gold-soft mb-1">
+        <p className="text-caption font-semibold text-mint-ink mb-1">
           {entry.title}
           {"long" in entry && entry.long && (
             <span className="ml-1.5 text-paper/70 font-normal normal-case tracking-normal">

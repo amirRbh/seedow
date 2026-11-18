@@ -175,7 +175,7 @@ export function CommandPalette({ open, onOpenChange }: Props) {
                     </span>
                   </span>
                   {p.id === activeId && (
-                    <span className="ml-auto text-tag uppercase tracking-[0.18em] text-gold">
+                    <span className="ml-auto text-caption font-semibold text-mint-ink">
                       {t("command_palette.active")}
                     </span>
                   )}

@@ -78,9 +78,7 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
         <div>
           {/* « Allocation » est le mot du métier ; « Répartition » est le mot
               de l'utilisateur (§6 du vocabulaire). */}
-          <p className="text-tag uppercase tracking-wider text-ink-3 font-mono">
-            {t("allocation.title")}
-          </p>
+          <p className="text-caption font-semibold text-ink-3">{t("allocation.title")}</p>
           <p className="font-value text-2xl text-ink mt-0.5">
             {holdings.length}{" "}
             <span className="text-base text-ink-3">
@@ -135,9 +133,7 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
       {/* Movers — actifs dont le prix a évolué */}
       {movers.length > 0 && (
         <div className="border-t border-paper-3 pt-4 mb-4">
-          <p className="text-tag uppercase tracking-wider text-ink-3 font-mono mb-2">
-            Mouvements notables
-          </p>
+          <p className="text-caption font-semibold text-ink-3 mb-2">Mouvements notables</p>
           <div className="flex flex-wrap gap-2">
             {movers.map((m) => {
               const up = m.returnPct >= 0;
@@ -149,8 +145,8 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
                   onClick={() => setSelected(target)}
                   className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-caption transition-colors ${
                     up
-                      ? "border-highlight-1/30 bg-highlight-1/5 text-highlight-1 hover:bg-highlight-1/10"
-                      : "border-bloom/30 bg-bloom/5 text-bloom hover:bg-bloom/10"
+                      ? "border-ink/30 bg-ink/5 text-ink hover:bg-ink/10"
+                      : "border-volt/30 bg-volt/5 text-volt-ink hover:bg-volt/10"
                   }`}
                 >
                   {up ? (
@@ -207,7 +203,7 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
                       {hasMove && (
                         <span
                           className={`flex items-center gap-0.5 text-caption font-semibold tabular-nums ${
-                            up ? "text-highlight-1" : "text-rust"
+                            up ? "text-ink" : "text-alert-ink"
                           }`}
                         >
                           {up ? (

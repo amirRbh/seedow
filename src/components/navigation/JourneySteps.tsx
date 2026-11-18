@@ -23,7 +23,7 @@ export function JourneySteps({ active, compact = false }: Props) {
   return (
     <nav
       aria-label={t("journey_steps.aria")}
-      className={cn("flex items-stretch gap-2", !compact && "px-5 pb-2")}
+      className={cn("flex items-stretch gap-1.5", !compact && "px-5 pb-2")}
     >
       {STEPS.map((step, i) => {
         const isActive = step.key === active;
@@ -35,21 +35,27 @@ export function JourneySteps({ active, compact = false }: Props) {
             to={step.to}
             aria-current={isActive ? "step" : undefined}
             className={cn(
-              "group flex-1 min-w-0 flex items-center gap-2 py-2 border-t-2 transition-colors duration-200",
-              isActive
-                ? "border-gold text-ink"
-                : isDone
-                  ? "border-highlight-2 text-ink-2 hover:text-ink"
-                  : "border-paper-3 text-ink-3 hover:text-ink-2",
+              "group flex min-w-0 flex-1 items-center gap-2.5 rounded-full px-2 py-2 pr-4 outline-none transition-colors duration-200",
+              "focus-visible:ring-2 focus-visible:ring-mint",
+              isActive ? "bg-paper shadow-card" : "hover:bg-paper-inset",
             )}
           >
-            <span className="font-value text-tag tabular-nums tracking-widest text-ink-3 shrink-0">
-              {step.n}
+            <span
+              className={cn(
+                "flex h-7 w-7 shrink-0 items-center justify-center rounded-full font-value text-caption tabular-nums transition-colors duration-200",
+                isActive
+                  ? "bg-mint text-paper"
+                  : isDone
+                    ? "bg-mint-tint text-mint-ink"
+                    : "bg-paper-inset text-ink-3",
+              )}
+            >
+              {i + 1}
             </span>
             <span
               className={cn(
-                "text-tag uppercase tracking-[0.18em] truncate",
-                isActive ? "font-semibold" : "font-medium",
+                "truncate text-label font-bold",
+                isActive ? "text-ink" : isDone ? "text-ink-2" : "text-ink-3",
               )}
             >
               {step.label}

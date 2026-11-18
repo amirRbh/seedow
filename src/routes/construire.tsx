@@ -23,12 +23,8 @@ export const Route = createFileRoute("/construire")({
 function ConstruirePage() {
   const { t } = useTranslation();
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="min-h-screen bg-paper-2"
-    >
-      <div className="max-w-lg mx-auto pb-28">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen">
+      <div className="page page--narrow accent-mint">
         <AppHeader eyebrow={t("blank_builder.eyebrow")} title={t("blank_builder.title")} />
         <section className="px-5 pt-4">
           <BlankCanvasBuilder />

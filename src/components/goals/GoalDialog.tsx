@@ -134,10 +134,7 @@ export function GoalDialog({ open, onOpenChange, goal, onSaved }: Props) {
 
         <div className="space-y-4">
           <div>
-            <Label
-              htmlFor="goal-name"
-              className="text-caption uppercase tracking-[0.18em] text-ink-3"
-            >
+            <Label htmlFor="goal-name" className="text-caption font-semibold text-ink-3">
               {t("goal.name")}
             </Label>
             <Input
@@ -150,9 +147,7 @@ export function GoalDialog({ open, onOpenChange, goal, onSaved }: Props) {
           </div>
 
           <div>
-            <Label className="text-caption uppercase tracking-[0.18em] text-ink-3">
-              {t("goal.type")}
-            </Label>
+            <Label className="text-caption font-semibold text-ink-3">{t("goal.type")}</Label>
             <Select value={type} onValueChange={(v) => setType(v as GoalType)}>
               <SelectTrigger>
                 <SelectValue />
@@ -169,7 +164,7 @@ export function GoalDialog({ open, onOpenChange, goal, onSaved }: Props) {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label className="text-caption uppercase tracking-[0.18em] text-ink-3">
+              <Label className="text-caption font-semibold text-ink-3">
                 {t("goal.target_amount")}
               </Label>
               <Input
@@ -181,16 +176,14 @@ export function GoalDialog({ open, onOpenChange, goal, onSaved }: Props) {
               />
             </div>
             <div>
-              <Label className="text-caption uppercase tracking-[0.18em] text-ink-3">
-                {t("goal.due_date")}
-              </Label>
+              <Label className="text-caption font-semibold text-ink-3">{t("goal.due_date")}</Label>
               <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label className="text-caption uppercase tracking-[0.18em] text-ink-3">
+              <Label className="text-caption font-semibold text-ink-3">
                 {t("goal.monthly_contribution")}
               </Label>
               <Input
@@ -202,7 +195,7 @@ export function GoalDialog({ open, onOpenChange, goal, onSaved }: Props) {
               />
             </div>
             <div>
-              <Label className="text-caption uppercase tracking-[0.18em] text-ink-3">
+              <Label className="text-caption font-semibold text-ink-3">
                 {t("goal.initial_capital")}
               </Label>
               <Input
@@ -216,7 +209,7 @@ export function GoalDialog({ open, onOpenChange, goal, onSaved }: Props) {
           </div>
 
           <div>
-            <Label className="text-caption uppercase tracking-[0.18em] text-ink-3">
+            <Label className="text-caption font-semibold text-ink-3">
               {t("goal.attached_portfolio")}
             </Label>
             <Select value={portfolioId} onValueChange={setPortfolioId}>

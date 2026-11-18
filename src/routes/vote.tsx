@@ -2,7 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { BottomNavigation } from "@/components/navigation/BottomNavigation";
-import { EditorialSection } from "@/components/ui/EditorialSection";
+import { Vote } from "lucide-react";
+import { EmptyState } from "@/components/common/EmptyState";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ResolutionListItem } from "@/components/vote/ResolutionListItem";
 import { useResolutions, useMyVotes } from "@/hooks/useResolutions";
 import { requireAuthedUser } from "@/lib/auth/requireAuthedUser";
@@ -31,29 +33,32 @@ function VotePage() {
   const closed = resolutions.filter((r) => r.resolution.status === "closed");
 
   return (
-    <div className="min-h-screen bg-paper-2 pb-24 md:pb-12">
-      <AppHeader eyebrow={t("vote.eyebrow")} title={t("vote.title")} hideViewToggle />
-      <div className="mx-auto max-w-3xl px-4 md:px-8">
-        <EditorialSection
-          eyebrow={t("vote.section_eyebrow")}
+    <div className="min-h-screen">
+      <div className="page accent-volt">
+        <AppHeader
+          eyebrow={t("vote.eyebrow")}
           title={t("vote.section_title")}
-          kicker={t("vote.section_kicker")}
-          number="01"
-        >
+          subtitle={t("vote.section_kicker")}
+          hideViewToggle
+        />
+        <div className="px-5">
           {loading ? (
-            <p className="text-body-sm text-ink-3">{t("vote.loading")}</p>
-          ) : resolutions.length === 0 ? (
-            <div className="rounded-lg border border-dashed border-paper-3 bg-paper p-10 text-center">
-              <p className="font-value text-xl text-ink">{t("vote.empty_title")}</p>
-              <p className="mt-2 text-body-sm text-ink-3">{t("vote.empty_desc")}</p>
+            <div className="space-y-3">
+              {[0, 1, 2].map((i) => (
+                <Skeleton key={i} className="h-24 w-full rounded-[24px]" />
+              ))}
             </div>
+          ) : resolutions.length === 0 ? (
+            <EmptyState
+              icon={Vote}
+              title={t("vote.empty_title")}
+              description={t("vote.empty_desc")}
+            />
           ) : (
             <div className="flex flex-col gap-8">
               {open.length > 0 && (
                 <div className="flex flex-col gap-3">
-                  <p className="text-tag font-mono uppercase tracking-[0.14em] text-ink-3">
-                    {t("vote.open_heading")}
-                  </p>
+                  <p className="text-caption font-semibold text-ink-3">{t("vote.open_heading")}</p>
                   {open.map((item) => (
                     <ResolutionListItem
                       key={item.resolution.id}
@@ -67,7 +72,7 @@ function VotePage() {
 
               {closed.length > 0 && (
                 <div className="flex flex-col gap-3">
-                  <p className="text-tag font-mono uppercase tracking-[0.14em] text-ink-3">
+                  <p className="text-caption font-semibold text-ink-3">
                     {t("vote.closed_heading")}
                   </p>
                   {closed.map((item) => (
@@ -83,9 +88,8 @@ function VotePage() {
             </div>
           )}
 
-          <div className="gold-rule my-10" />
-          <p className="text-caption leading-relaxed text-ink-3">{t("vote.disclaimer")}</p>
-        </EditorialSection>
+          <p className="mt-10 text-body-sm leading-relaxed text-ink-3">{t("vote.disclaimer")}</p>
+        </div>
       </div>
       <BottomNavigation />
     </div>

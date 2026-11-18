@@ -143,7 +143,7 @@ export function PortfolioHistoryChart() {
             {t("portfolio.history_chart.loading")}
           </div>
         ) : error ? (
-          <div className="h-full flex items-center justify-center text-caption text-rust">
+          <div className="h-full flex items-center justify-center text-caption text-alert-ink">
             {error}
           </div>
         ) : points.length < 2 ? (

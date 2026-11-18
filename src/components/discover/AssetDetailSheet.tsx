@@ -46,13 +46,13 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
   const { lang } = useLang();
 
   const RISK_LABELS: Record<number, { label: string; tone: string }> = {
-    1: { label: t("asset_detail.risk_labels.1"), tone: "text-highlight-1" },
-    2: { label: t("asset_detail.risk_labels.2"), tone: "text-highlight-1" },
-    3: { label: t("asset_detail.risk_labels.3"), tone: "text-highlight-1" },
+    1: { label: t("asset_detail.risk_labels.1"), tone: "text-ink" },
+    2: { label: t("asset_detail.risk_labels.2"), tone: "text-ink" },
+    3: { label: t("asset_detail.risk_labels.3"), tone: "text-ink" },
     4: { label: t("asset_detail.risk_labels.4"), tone: "text-ink" },
-    5: { label: t("asset_detail.risk_labels.5"), tone: "text-rust" },
-    6: { label: t("asset_detail.risk_labels.6"), tone: "text-rust" },
-    7: { label: t("asset_detail.risk_labels.7"), tone: "text-bloom" },
+    5: { label: t("asset_detail.risk_labels.5"), tone: "text-alert-ink" },
+    6: { label: t("asset_detail.risk_labels.6"), tone: "text-alert-ink" },
+    7: { label: t("asset_detail.risk_labels.7"), tone: "text-volt-ink" },
   };
 
   // Composition publiée du fonds ouvert — chargée seulement quand la feuille
@@ -93,7 +93,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
           <SheetHeader className="text-left p-0">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono">
+                <p className="text-caption font-semibold text-ink-3">
                   {asset.category} · {asset.ticker}
                 </p>
                 <SheetTitle className="font-value text-2xl text-ink mt-1 leading-tight">
@@ -129,7 +129,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
               entreprise, un panier, un prêt ou de l'immobilier. On le lui dit en
               une phrase, AVANT le résumé de l'émetteur, sans jargon. */}
           <section className="rounded-xl bg-highlight-5/60 border border-highlight-4 p-3.5">
-            <p className="text-tag uppercase tracking-[0.18em] text-highlight-1 font-mono mb-1.5">
+            <p className="text-caption font-semibold text-ink mb-1.5">
               {t("asset_detail.plain.label")}
             </p>
             <p className="text-body-sm text-ink-2 leading-relaxed">
@@ -171,7 +171,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
               alors rien à mettre en rapport (cf. `poolReasons`). */}
           {causes.length > 0 && (
             <section className="rounded-xl border border-paper-3 bg-paper-2 p-3.5">
-              <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono">
+              <p className="text-caption font-semibold text-ink-3">
                 {t("asset_detail.why_for_you")}
               </p>
               <PoolReasonList
@@ -190,7 +190,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
 
           {/* {t("asset_detail.summary")} */}
           <section>
-            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono mb-2">
+            <p className="text-caption font-semibold text-ink-3 mb-2">
               {t("asset_detail_sheet.summary")}
             </p>
             <p className="text-body-sm text-ink-2 leading-relaxed">{asset.description}</p>
@@ -201,7 +201,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                     key={tag}
                     term="SFDR"
                     variant="inline"
-                    className="text-tag bg-highlight-5 text-highlight-1 font-semibold px-2 py-0.5 rounded-full capitalize border border-solid border-highlight-4 hover:text-highlight-1"
+                    className="text-tag bg-highlight-5 text-ink font-semibold px-2 py-0.5 rounded-full capitalize border border-solid border-highlight-4 hover:text-ink"
                   >
                     {tag}
                   </Glossary>
@@ -212,7 +212,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
 
           {/* Impact dynamique */}
           <section>
-            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono mb-2">
+            <p className="text-caption font-semibold text-ink-3 mb-2">
               {t("asset_detail.impact_overview")}
             </p>
 
@@ -266,8 +266,8 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                       <span
                         className={`text-tag font-semibold px-2 py-0.5 rounded-full ${
                           intensityCmp.cleaner
-                            ? "bg-highlight-5 text-highlight-1"
-                            : "bg-alert-tint text-rust"
+                            ? "bg-highlight-5 text-ink"
+                            : "bg-alert-tint text-alert-ink"
                         }`}
                       >
                         {t(
@@ -279,7 +279,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                       </span>
                     )}
                   </div>
-                  <p className="text-tag text-ink-3 mt-1.5 font-medium uppercase tracking-wider">
+                  <p className="text-caption text-ink-3 mt-1.5 font-medium ">
                     {t("asset_detail.carbon_intensity")}
                   </p>
                   <p className="text-tag text-ink-3 mt-1 leading-snug">
@@ -382,7 +382,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                 <ul className="space-y-2">
                   {risksList.map((r) => (
                     <li key={r.title} className="flex items-start gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-rust mt-1.5 flex-shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-alert mt-1.5 flex-shrink-0" />
                       <div className="text-label leading-relaxed">
                         <span className="font-semibold text-ink">{r.title} · </span>
                         <span className="text-ink-2">{r.desc}</span>
@@ -392,14 +392,14 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                 </ul>
                 {asset.exclusions && asset.exclusions.length > 0 && (
                   <div className="mt-3 pt-3 border-t border-dashed border-paper-3">
-                    <p className="text-tag uppercase tracking-wider text-ink-3 font-mono mb-1.5">
+                    <p className="text-caption font-semibold text-ink-3 mb-1.5">
                       {t("asset_detail.exclusions_applied")}
                     </p>
                     <div className="flex flex-wrap gap-1.5">
                       {asset.exclusions.map((e) => (
                         <span
                           key={e}
-                          className="text-tag bg-rust/10 text-rust font-semibold px-2 py-0.5 rounded-full border border-rust/20"
+                          className="text-tag bg-alert/10 text-alert-ink font-semibold px-2 py-0.5 rounded-full border border-alert/20"
                         >
                           ⊘ {t(`onboarding.steps.exclusions.${e}`)}
                         </span>
@@ -415,7 +415,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
               Pour un débutant, « frais 0,20 % » ne veut rien dire : on le traduit
               en euros concrets sur 1 000 € et on donne le sens de lecture. */}
           <section>
-            <p className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono mb-2">
+            <p className="text-caption font-semibold text-ink-3 mb-2">
               {t("asset_detail.cost.title")}
             </p>
             <div className="paper-card p-3.5">
@@ -444,7 +444,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
               type="button"
               onClick={() => setDetailsOpen((o) => !o)}
               aria-expanded={detailsOpen}
-              className="w-full flex items-center justify-between text-tag uppercase tracking-[0.18em] text-ink-3 font-mono hover:text-ink-2 transition-colors"
+              className="w-full flex items-center justify-between text-caption font-semibold text-ink-3 hover:text-ink-2 transition-colors"
             >
               {t("asset_detail_sheet.id_card")}
               <svg
@@ -495,12 +495,12 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
             aria-label={watched ? t("watchlist.following") : t("watchlist.follow")}
             className={`h-11 px-4 rounded-full border text-label font-semibold flex items-center gap-1.5 transition-colors ${
               watched
-                ? "bg-gold/15 border-gold text-ink"
+                ? "bg-mint/15 border-mint text-ink"
                 : "bg-paper-2 border-paper-3 text-ink-2 hover:border-ink/40"
             }`}
           >
             <Star
-              className={`w-4 h-4 transition-transform ${watched ? "fill-gold text-gold scale-110" : ""}`}
+              className={`w-4 h-4 transition-transform ${watched ? "fill-mint text-mint-ink scale-110" : ""}`}
               strokeWidth={2}
             />
             <span className="hidden sm:inline">
@@ -513,7 +513,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
             trigger={
               <button
                 type="button"
-                className="flex-1 h-11 rounded-full bg-ink text-paper text-label font-semibold uppercase tracking-[0.14em] hover:bg-ink-2 transition-colors flex items-center justify-center gap-2"
+                className="flex-1 h-11 rounded-full bg-ink text-paper text-label font-semibold hover:bg-ink-2 transition-colors flex items-center justify-center gap-2"
               >
                 <svg
                   viewBox="0 0 16 16"
@@ -556,7 +556,7 @@ function Disclosure({
   return (
     <details className="group" open={defaultOpen || undefined}>
       <summary className="flex cursor-pointer list-none items-center justify-between gap-3 py-0.5 [&::-webkit-details-marker]:hidden">
-        <span className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono">{title}</span>
+        <span className="text-caption font-semibold text-ink-3">{title}</span>
         <svg
           viewBox="0 0 16 16"
           className="w-3.5 h-3.5 flex-none text-ink-3 transition-transform duration-200 group-open:rotate-180"
@@ -651,7 +651,7 @@ function MiniBar({ label, value }: { label: string; value: number }) {
         <span className="text-tag font-bold text-ink">{value.toFixed(1)}</span>
       </div>
       <div className="h-1 bg-paper-3 rounded-full overflow-hidden">
-        <div className="h-full bg-highlight-1 rounded-full" style={{ width: `${value * 10}%` }} />
+        <div className="h-full bg-ink rounded-full" style={{ width: `${value * 10}%` }} />
       </div>
     </div>
   );

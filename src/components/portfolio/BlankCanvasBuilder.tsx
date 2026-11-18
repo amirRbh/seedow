@@ -353,7 +353,7 @@ export function BlankCanvasBuilder() {
                 <button
                   type="button"
                   onClick={() => setEditingTotal(true)}
-                  className="mt-1 shrink-0 rounded-full border border-paper-3 px-3 py-1 text-tag font-mono uppercase tracking-wider text-ink-3 hover:border-ink hover:text-ink transition-colors"
+                  className="mt-1 shrink-0 rounded-full border border-paper-3 px-3 py-1 text-caption font-semibold text-ink-3 hover:border-ink hover:text-ink transition-colors"
                 >
                   {t("blank_builder.edit")}
                 </button>
@@ -397,7 +397,7 @@ export function BlankCanvasBuilder() {
                         <p className="text-body-sm font-semibold text-ink truncate leading-tight">
                           {l.name}
                         </p>
-                        <p className="mt-0.5 text-tag font-mono uppercase tracking-wider text-ink-3 truncate">
+                        <p className="mt-0.5 text-caption font-semibold text-ink-3 truncate">
                           {l.ticker}
                         </p>
                       </div>
@@ -517,7 +517,7 @@ export function BlankCanvasBuilder() {
               il nomme les conséquences, il ne repondère jamais à la place. */}
           {changed && changed.consequences.length > 0 && (
             <div role="status" className="rounded-2xl border border-paper-3 bg-paper p-4">
-              <p className="text-tag uppercase tracking-[0.14em] font-mono text-ink-3">
+              <p className="text-caption font-semibold text-ink-3">
                 {t("blank_builder.copilot_title")}
               </p>
               <p className="mt-1.5 text-body-sm text-ink leading-relaxed">
@@ -595,7 +595,7 @@ export function BlankCanvasBuilder() {
               {/* Lecture de fond — ce que cette composition implique. */}
               {(analysis || analysisLoading) && (
                 <div className="rounded-2xl border border-paper-3 bg-paper p-4">
-                  <p className="text-tag uppercase tracking-[0.14em] font-mono text-ink-3">
+                  <p className="text-caption font-semibold text-ink-3">
                     {t("blank_builder.analysis_title")}
                   </p>
                   {analysis ? (

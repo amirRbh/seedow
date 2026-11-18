@@ -20,13 +20,18 @@ export function EthiFab() {
       search={{} as never}
       aria-label={t("rail_nav.ethi_assistant")}
       className={cn(
-        "md:hidden fixed right-4 bottom-[76px] z-40 flex h-12 w-12 items-center justify-center rounded-full",
-        "bg-ink text-paper shadow-lg shadow-ink/20 transition-transform duration-200",
-        "hover:scale-[1.03] active:scale-95",
-        "outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 focus-visible:ring-offset-2",
+        "fixed right-4 bottom-[92px] z-40 flex h-[52px] w-[52px] items-center justify-center rounded-full md:hidden",
+        "bg-ink text-paper shadow-lift transition-transform duration-300 ease-brand",
+        "hover:scale-[1.05] active:scale-95 motion-reduce:transition-none",
+        "outline-none focus-visible:ring-2 focus-visible:ring-mint focus-visible:ring-offset-2",
       )}
-      style={{ transitionTimingFunction: "cubic-bezier(0.32,0.72,0,1)" }}
     >
+      {/* Point « disponible » : Ethi répond tout de suite, sans file d'attente. */}
+      <span
+        aria-hidden
+        className="live-dot absolute top-1 right-1 ring-2 ring-paper-2"
+        style={{ width: 9, height: 9 }}
+      />
       <svg
         viewBox="0 0 24 24"
         className="h-5 w-5"

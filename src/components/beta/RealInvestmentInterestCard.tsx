@@ -51,7 +51,7 @@ export function RealInvestmentInterestCard() {
   return (
     <section className="px-5 pt-6">
       <div className="rounded-2xl border border-paper-3 bg-paper-2 p-5">
-        <p className="text-tag uppercase tracking-[0.22em] text-gold font-mono">
+        <p className="text-caption font-semibold text-mint-ink">
           {t("real_invest_interest.eyebrow")}
         </p>
         <h3 className="font-display text-lg text-ink mt-2 leading-snug">
@@ -93,10 +93,7 @@ export function RealInvestmentInterestCard() {
                 </DialogHeader>
                 <div className="space-y-5 py-2">
                   <div>
-                    <label
-                      htmlFor="rii-amount"
-                      className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono"
-                    >
+                    <label htmlFor="rii-amount" className="text-caption font-semibold text-ink-3">
                       {t("real_invest_interest.envisaged_amount")}
                     </label>
                     <div className="flex items-center gap-3 mt-2">
@@ -117,10 +114,7 @@ export function RealInvestmentInterestCard() {
                   </div>
 
                   <div>
-                    <p
-                      id="rii-frequency-label"
-                      className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono"
-                    >
+                    <p id="rii-frequency-label" className="text-caption font-semibold text-ink-3">
                       {t("real_invest_interest.frequency")}
                     </p>
                     <div
@@ -154,7 +148,7 @@ export function RealInvestmentInterestCard() {
                   <div>
                     <label
                       htmlFor="rii-contact-email"
-                      className="text-tag uppercase tracking-[0.18em] text-ink-3 font-mono"
+                      className="text-caption font-semibold text-ink-3"
                     >
                       {t("real_invest_interest.contact_email")}
                     </label>
@@ -167,7 +161,7 @@ export function RealInvestmentInterestCard() {
                     />
                   </div>
 
-                  {error && <p className="text-label text-rust">{error}</p>}
+                  {error && <p className="text-label text-alert-ink">{error}</p>}
                 </div>
                 <DialogFooter>
                   <Button

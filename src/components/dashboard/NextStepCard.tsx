@@ -64,8 +64,8 @@ export function NextStepCard() {
   if (!card) return <EthiBriefing />;
 
   const toneClasses = {
-    gold: "border-gold/40 bg-gold/5",
-    highlight: "border-highlight-1/30 bg-highlight-5/40",
+    gold: "border-mint/40 bg-mint/5",
+    highlight: "border-ink/30 bg-highlight-5/40",
   } as const;
 
   return (
@@ -82,12 +82,10 @@ export function NextStepCard() {
           toneClasses[card.tone],
         )}
       >
-        <p className="text-tag uppercase tracking-[0.2em] text-gold font-mono mb-2">
-          {card.eyebrow}
-        </p>
+        <p className="text-caption font-semibold text-mint-ink mb-2">{card.eyebrow}</p>
         <p className="font-display text-lg text-ink leading-snug">{card.title}</p>
         <p className="text-label text-ink-2 mt-2 leading-relaxed">{card.detail}</p>
-        <p className="mt-4 text-caption uppercase tracking-[0.18em] font-mono text-ink inline-flex items-center gap-1.5">
+        <p className="mt-4 text-caption font-semibold text-ink inline-flex items-center gap-1.5">
           {card.cta}
           <svg
             viewBox="0 0 24 24"

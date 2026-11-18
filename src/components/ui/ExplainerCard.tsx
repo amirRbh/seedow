@@ -16,10 +16,10 @@ const TONE_BG: Record<NonNullable<Props["tone"]>, string> = {
 };
 
 const TONE_DOT: Record<NonNullable<Props["tone"]>, string> = {
-  highlight: "bg-highlight-1",
-  bloom: "bg-bloom",
-  peach: "bg-rust",
-  sky: "bg-sky",
+  highlight: "bg-ink",
+  bloom: "bg-volt",
+  peach: "bg-alert",
+  sky: "bg-ice",
 };
 
 const STORAGE_PREFIX = "seedow:explainers-dismissed:";
@@ -66,7 +66,7 @@ export function ExplainerCard({ title, children, tone = "highlight", dismissKey 
           type="button"
           onClick={onDismiss}
           aria-label="Masquer cette aide"
-          className="absolute top-1.5 right-1.5 w-6 h-6 flex items-center justify-center text-ink-3 hover:text-ink rounded-full hover:bg-paper/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
+          className="absolute top-1.5 right-1.5 w-6 h-6 flex items-center justify-center text-ink-3 hover:text-ink rounded-full hover:bg-paper/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint"
         >
           <svg
             viewBox="0 0 16 16"

@@ -95,7 +95,7 @@ function Portfolio() {
   if (loading) {
     return (
       <div
-        className="min-h-screen bg-paper-2 max-w-lg mx-auto px-5 pt-6 pb-28"
+        className="min-h-screen max-w-lg mx-auto px-5 pt-6 pb-28"
         aria-label={t("portfolio.loading")}
       >
         <div className="flex items-center gap-3">
@@ -120,11 +120,7 @@ function Portfolio() {
       user?.email?.split("@")[0] ??
       "";
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="min-h-screen bg-paper-2"
-      >
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen">
         <EmptyPortfolioState userName={userName} />
         <BottomNavigation />
       </motion.div>
@@ -160,12 +156,8 @@ function Portfolio() {
   const subtitle = linesLabel;
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="min-h-screen bg-paper-2"
-    >
-      <div className="max-w-lg mx-auto pb-28">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen">
+      <div className="page page--wide accent-mint">
         <AppHeader
           eyebrow={t("portfolio.details")}
           title={t("portfolio.my_portfolio")}
@@ -173,6 +165,9 @@ function Portfolio() {
           showPortfolioSelector
         />
 
+        {/* DA V4 — grand écran : le solde et les objectifs restent collés à
+            gauche pendant qu'on parcourt les onglets à droite. Sur mobile,
+            tout s'empile dans l'ordre du DOM. */}
         <MarketFreshnessBanner
           latestQuoteAt={valuation.latestQuoteAt}
           hasQuotes={valuation.hasQuotes}
@@ -182,168 +177,177 @@ function Portfolio() {
 
         {/* Nœud « Mon argent » — persistant au-dessus des onglets (DA « Le Fil ») :
             le solde reste visible quel que soit l'onglet, avec le comptage animé. */}
-        <section className="px-5 pt-6">
-          <div className="rounded-[14px] border border-paper-3 bg-card p-4 shadow-sm">
-            <p className="text-caption uppercase tracking-wider text-ink-3 font-mono">
-              {t("le_fil.money")}
-            </p>
-            <h2 className="font-value text-figure-hero text-ink mt-1 leading-none">
-              <AnimatedFigure value={totalValue} from={0} format={(v) => formatCurrency(v, lang)} />
-            </h2>
-            {/* Même convention que « Le Fil » : le pourcentage vient du même
+        <div className="lg:grid lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)] lg:items-start lg:gap-6 lg:px-5">
+          <div className="lg:sticky lg:top-24">
+            <section className="px-5 pt-6 lg:px-0">
+              <div className="hero-card p-6 sm:p-7">
+                <p className="stamp">{t("le_fil.money")}</p>
+                <h2 className="font-value text-figure-hero text-ink mt-1 leading-none">
+                  <AnimatedFigure
+                    value={totalValue}
+                    from={0}
+                    format={(v) => formatCurrency(v, lang)}
+                  />
+                </h2>
+                {/* Même convention que « Le Fil » : le pourcentage vient du même
                 couple (investi, valeur du jour) que le montant — `returnPct`
                 est en POINTS, d'où `formatPercentPoints` (un `formatPercent`
                 direct affichait un écart 100× trop grand). */}
-            <p
-              className={`font-mono text-sm mt-1 ${
-                money.trend === "down" ? "text-alert-ink" : "text-mint-ink"
-              }`}
-            >
-              <span aria-hidden>
-                {money.trend === "up" ? "▲" : money.trend === "down" ? "▼" : "→"}{" "}
-              </span>
-              {t(`le_fil.money_trend_${money.trend}`)} ·{" "}
-              {formatCurrency(Math.abs(money.gain), lang)} ·{" "}
-              {formatPercentPoints(Math.abs(money.returnPoints), lang)}
-            </p>
-            {totalInvested > 0 && (
-              <p className="mt-1.5 text-body-sm leading-snug text-ink-2">
-                {t("le_fil.money_since", { invested: formatCurrency(totalInvested, lang) })}
-              </p>
-            )}
-          </div>
-        </section>
-
-        <section className="px-5 pt-6">
-          <Tabs
-            value={tab ?? "performance"}
-            onValueChange={(v) =>
-              navigate({
-                to: "/portfolio",
-                search: {
-                  tab: v === "performance" ? undefined : (v as PortfolioTab),
-                },
-                replace: true,
-              })
-            }
-          >
-            <TabsList className="w-full grid grid-cols-3 h-auto bg-paper-2 p-1">
-              <TabsTrigger value="performance" className="text-caption uppercase tracking-[0.12em]">
-                {t("portfolio.tab_perf")}
-              </TabsTrigger>
-              <TabsTrigger value="impact" className="text-caption uppercase tracking-[0.12em]">
-                {t("portfolio.tab_impact")}
-              </TabsTrigger>
-              <TabsTrigger value="affiner" className="text-caption uppercase tracking-[0.12em]">
-                {isSimple ? t("portfolio.tab_refine_simple") : t("portfolio.tab_refine")}
-              </TabsTrigger>
-            </TabsList>
-
-            {/* Performance — la réponse « où j'en suis » d'abord (valeur + gain),
-                puis le détail (tendance, allocation), le secondaire replié. */}
-            <TabsContent value="performance" className="pt-5 space-y-5">
-              <GrowthComparison
-                currentValue={totalValue}
-                invested={totalInvested}
-                gain={gain}
-                returnPct={returnPct}
-                lastUpdated={valuation.latestQuoteAt}
-                onRefresh={() => valuation.refresh()}
-                refreshing={valuation.loading}
-              />
-              {/* Action principale unique ; le versement mensuel reste accessible
-                  en lien discret (moins de charge visuelle). */}
-              <div className="space-y-2">
-                <InvestDialog label={t("portfolio.invest")} defaultAmount={200} />
-                <InvestDialog
-                  label={t("portfolio.monthly_deposit")}
-                  defaultAmount={50}
-                  trigger={
-                    <button
-                      type="button"
-                      className="block text-caption text-ink-3 hover:text-ink border-b border-dotted border-ink-3/60 transition-colors"
-                    >
-                      {t("portfolio.monthly_deposit")}
-                    </button>
-                  }
-                />
+                <p
+                  className={`chip mt-3 ${
+                    money.trend === "down" ? "chip--down" : money.trend === "up" ? "chip--up" : ""
+                  }`}
+                >
+                  <span aria-hidden>
+                    {money.trend === "up" ? "▲" : money.trend === "down" ? "▼" : "→"}{" "}
+                  </span>
+                  {t(`le_fil.money_trend_${money.trend}`)} ·{" "}
+                  {formatCurrency(Math.abs(money.gain), lang)} ·{" "}
+                  {formatPercentPoints(Math.abs(money.returnPoints), lang)}
+                </p>
+                {totalInvested > 0 && (
+                  <p className="mt-1.5 text-body-sm leading-snug text-ink-2">
+                    {t("le_fil.money_since", { invested: formatCurrency(totalInvested, lang) })}
+                  </p>
+                )}
               </div>
-              <AllocationBreakdown
-                holdings={portfolio.holdings}
-                totalAmount={totalInvested}
-                valuedHoldings={valuation.holdings}
-              />
-              <DetailDisclosure summary={t("portfolio.badges_disclosure")}>
-                <BadgesCard badges={badges} />
-              </DetailDisclosure>
-            </TabsContent>
+            </section>
 
-            {/* Impact — le récit d'impact ; le comparatif détaillé (redondant avec
+            {/* Objectifs adossés à ce portefeuille (analyse UX §06) : leur foyer.
+                Grand écran uniquement ici ; sur mobile ils suivent les onglets. */}
+            <section className="hidden pt-5 lg:block">
+              <ObjectivesTeaser />
+            </section>
+          </div>
+
+          <div className="min-w-0">
+            <section className="px-5 pt-6 lg:px-0">
+              <Tabs
+                value={tab ?? "performance"}
+                onValueChange={(v) =>
+                  navigate({
+                    to: "/portfolio",
+                    search: {
+                      tab: v === "performance" ? undefined : (v as PortfolioTab),
+                    },
+                    replace: true,
+                  })
+                }
+              >
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="performance">{t("portfolio.tab_perf")}</TabsTrigger>
+                  <TabsTrigger value="impact">{t("portfolio.tab_impact")}</TabsTrigger>
+                  <TabsTrigger value="affiner">
+                    {isSimple ? t("portfolio.tab_refine_simple") : t("portfolio.tab_refine")}
+                  </TabsTrigger>
+                </TabsList>
+
+                {/* Performance — la réponse « où j'en suis » d'abord (valeur + gain),
+                puis le détail (tendance, allocation), le secondaire replié. */}
+                <TabsContent value="performance" className="pt-5 space-y-5">
+                  <GrowthComparison
+                    currentValue={totalValue}
+                    invested={totalInvested}
+                    gain={gain}
+                    returnPct={returnPct}
+                    lastUpdated={valuation.latestQuoteAt}
+                    onRefresh={() => valuation.refresh()}
+                    refreshing={valuation.loading}
+                  />
+                  {/* Action principale unique ; le versement mensuel reste accessible
+                  en lien discret (moins de charge visuelle). */}
+                  <div className="space-y-2">
+                    <InvestDialog label={t("portfolio.invest")} defaultAmount={200} />
+                    <InvestDialog
+                      label={t("portfolio.monthly_deposit")}
+                      defaultAmount={50}
+                      trigger={
+                        <button
+                          type="button"
+                          className="block text-caption text-ink-3 hover:text-ink border-b border-dotted border-ink-3/60 transition-colors"
+                        >
+                          {t("portfolio.monthly_deposit")}
+                        </button>
+                      }
+                    />
+                  </div>
+                  <AllocationBreakdown
+                    holdings={portfolio.holdings}
+                    totalAmount={totalInvested}
+                    valuedHoldings={valuation.holdings}
+                  />
+                  <DetailDisclosure summary={t("portfolio.badges_disclosure")}>
+                    <BadgesCard badges={badges} />
+                  </DetailDisclosure>
+                </TabsContent>
+
+                {/* Impact — le récit d'impact ; le comparatif détaillé (redondant avec
                 « Vs le monde » du récit) est replié pour ne pas alourdir. */}
-            <TabsContent value="impact" className="pt-5 space-y-8">
-              <EsgFloorRelaxedNotice relaxed={portfolio.esg_floor_relaxed} />
-              <ImpactExperience />
-              {/* Comparatif promu (analyse UX §05 — P1) : le « moment aha » vs un
+                <TabsContent value="impact" className="pt-5 space-y-8">
+                  <EsgFloorRelaxedNotice relaxed={portfolio.esg_floor_relaxed} />
+                  <ImpactExperience />
+                  {/* Comparatif promu (analyse UX §05 — P1) : le « moment aha » vs un
                   fonds classique n'est plus replié. Source unique : /comparatif
                   redirige ici. */}
-              <div className="space-y-3">
-                <h3 className="font-value text-lg text-ink">
-                  {t("portfolio.comparatif_promoted")}
-                </h3>
-                <ComparatifPanel />
-              </div>
-            </TabsContent>
+                  <div className="space-y-3">
+                    <h3 className="font-value text-lg text-ink">
+                      {t("portfolio.comparatif_promoted")}
+                    </h3>
+                    <ComparatifPanel />
+                  </div>
+                </TabsContent>
 
-            {/* Ajuster — le même éditeur clair pour tous ; les arbitrages avancés
+                {/* Ajuster — le même éditeur clair pour tous ; les arbitrages avancés
                 (jargon) restent accessibles, repliés, en mode expert. */}
-            <TabsContent value="affiner" className="pt-5 space-y-5">
-              {/* Cadre réglementaire visible en tête d'onglet (mission §1.1) :
+                <TabsContent value="affiner" className="pt-5 space-y-5">
+                  {/* Cadre réglementaire visible en tête d'onglet (mission §1.1) :
                   simulation pédagogique, aucune recommandation personnalisée. */}
-              <p className="rounded-2xl border border-paper-3 bg-paper-2 p-3 text-caption text-ink-2 leading-relaxed">
-                {t("portfolio.affiner_disclaimer")}
-              </p>
-              {/* Compromis explicite (analyse UX §08 — P3) : rend visible l'arbitrage
+                  <p className="rounded-2xl border border-paper-3 bg-paper-2 p-3 text-caption text-ink-2 leading-relaxed">
+                    {t("portfolio.affiner_disclaimer")}
+                  </p>
+                  {/* Compromis explicite (analyse UX §08 — P3) : rend visible l'arbitrage
                   impact / rendement / risque, sans prescrire de décision. */}
-              <p className="border-l-2 border-mint pl-3 text-body-sm text-ink-2 leading-relaxed">
-                {t("portfolio.compromis")}
-              </p>
-              <PortfolioCustomizer
-                portfolioId={portfolio.id}
-                holdings={portfolio.holdings}
-                onSaved={() => {
-                  refreshPortfolio();
-                  valuation.refresh();
-                }}
-              />
-              {isExpert && (
-                <DetailDisclosure summary={t("portfolio.refiner_disclosure")}>
-                  <AllocationRefiner portfolioId={portfolio.id} />
-                </DetailDisclosure>
-              )}
-            </TabsContent>
-          </Tabs>
-        </section>
+                  <p className="border-l-2 border-mint pl-3 text-body-sm text-ink-2 leading-relaxed">
+                    {t("portfolio.compromis")}
+                  </p>
+                  <PortfolioCustomizer
+                    portfolioId={portfolio.id}
+                    holdings={portfolio.holdings}
+                    onSaved={() => {
+                      refreshPortfolio();
+                      valuation.refresh();
+                    }}
+                  />
+                  {isExpert && (
+                    <DetailDisclosure summary={t("portfolio.refiner_disclosure")}>
+                      <AllocationRefiner portfolioId={portfolio.id} />
+                    </DetailDisclosure>
+                  )}
+                </TabsContent>
+              </Tabs>
+            </section>
 
-        {/* Objectifs adossés à ce portefeuille (analyse UX §06) : leur foyer. */}
-        <section className="px-5 pt-8">
-          <ObjectivesTeaser />
-        </section>
+            <section className="px-5 pt-8 lg:hidden">
+              <ObjectivesTeaser />
+            </section>
 
-        {/* Secondaire (conséquences de détenir + partage) — replié par défaut
+            {/* Secondaire (conséquences de détenir + partage) — replié par défaut
             pour limiter le scroll mobile ; les Objectifs ci-dessus restent
             visibles. Réutilise le repli existant de la page. */}
-        <section className="px-5 pt-8">
-          <DetailDisclosure summary={t("le_fil.more")}>
-            <div className="space-y-4">
-              <ExploreSection>
-                <ReveilTeaserCard />
-                <VoteTeaserCard />
-                <WatchlistCard />
-              </ExploreSection>
-              <ShareToggle />
-            </div>
-          </DetailDisclosure>
-        </section>
+            <section className="px-5 pt-8 lg:px-0">
+              <DetailDisclosure summary={t("le_fil.more")}>
+                <div className="space-y-4">
+                  <ExploreSection>
+                    <ReveilTeaserCard />
+                    <VoteTeaserCard />
+                    <WatchlistCard />
+                  </ExploreSection>
+                  <ShareToggle />
+                </div>
+              </DetailDisclosure>
+            </section>
+          </div>
+        </div>
       </div>
       <BottomNavigation />
     </motion.div>

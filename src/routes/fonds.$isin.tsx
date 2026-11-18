@@ -3,7 +3,9 @@ import { useTranslation } from "react-i18next";
 import { getObservatoryFund } from "@/lib/esg/v2/observatory.functions";
 import { EuroBreakdownBlock } from "@/components/impact/EuroBreakdownBlock";
 import { hasPublishedComposition } from "@/lib/impact/euroBreakdown";
-import { LanguageToggle } from "@/components/LanguageToggle";
+import { PublicPage } from "@/components/layout/PublicPage";
+import { SiteHeaderSpacer } from "@/components/layout/SiteHeader";
+import { Button } from "@/components/ui/button";
 import { WhyThis } from "@/components/common/WhyThis";
 import { StiScore } from "@/components/observatory/StiScore";
 import { StiBlocks } from "@/components/observatory/StiBlocks";
@@ -68,21 +70,20 @@ function FundAuthorityPage() {
   const identifiers = fund.isins.length > 0 ? fund.isins : fund.tickers;
 
   return (
-    <div className="min-h-screen bg-paper-2 text-ink">
-      <header className="max-w-3xl mx-auto px-6 pt-8 pb-5 flex items-center justify-between gap-4">
-        <Link to="/observatoire" className="stamp hover:text-ink transition-colors">
+    <PublicPage accent="ice">
+      <SiteHeaderSpacer />
+      <div className="mx-auto max-w-3xl px-5 pb-8 sm:px-6">
+        <Link
+          to="/observatoire"
+          className="link-u inline-flex items-center gap-2 text-body-sm font-bold text-ink-2 hover:text-ink"
+        >
           {t("fonds_page.back")}
         </Link>
-        <LanguageToggle />
-      </header>
 
-      <div className="max-w-3xl mx-auto px-6 pb-16">
         {/* ── Identité — une seule fiche, tous les ISIN de parts dessous ──── */}
-        <div>
-          <p className="mono-meta">{fund.issuer ?? t("fonds_page.issuer_unknown")}</p>
-          <h1 className="font-display text-[clamp(26px,4vw,42px)] leading-[1.06] tracking-[-0.02em] max-w-[20ch] mt-3">
-            {fund.name}
-          </h1>
+        <div className="mt-6 animate-fade-in-up">
+          <span className="chip chip--accent">{fund.issuer ?? t("fonds_page.issuer_unknown")}</span>
+          <h1 className="display-lg mt-4 max-w-[20ch]">{fund.name}</h1>
           <p className="mono-meta mt-3">{identifiers.join(" · ")}</p>
           {identifiers.length > 1 && (
             <p className="mt-1.5 text-body-sm text-ink-3 leading-relaxed max-w-[62ch]">
@@ -104,7 +105,7 @@ function FundAuthorityPage() {
         )}
 
         {/* ── 2. L'indice de transparence ─────────────────────────────────── */}
-        <section className={`paper-card p-7 ${composed ? "mt-6" : "mt-8"}`}>
+        <section className={`hero-card p-6 sm:p-8 ${composed ? "mt-6" : "mt-8"}`}>
           <StiScore sti={fund.sti} size="lg" />
 
           <p className="mt-4 max-w-[62ch] text-body-sm leading-relaxed text-ink-2">
@@ -160,7 +161,7 @@ function FundAuthorityPage() {
         </section>
 
         {/* ── 4. Faits bruts et limites ───────────────────────────────────── */}
-        <section className="paper-card px-7 py-2 mt-6">
+        <section className="paper-card mt-6 px-6 py-2 sm:px-8">
           <div className="border-b border-paper-3">
             <WhyThis variant="section" label={t("fonds_page.declared_title")}>
               <div className="pt-1 pb-5">
@@ -220,7 +221,7 @@ function FundAuthorityPage() {
         {/* ── Les pairs — jamais un classement général ────────────────────── */}
         {peers.length > 0 && (
           <section className="mt-8">
-            <h2 className="stamp">{t("fonds_page.peers_title")}</h2>
+            <h2 className="text-[clamp(19px,2vw,22px)]">{t("fonds_page.peers_title")}</h2>
             <p className="mt-2 text-body-sm text-ink-3 leading-relaxed max-w-[62ch]">
               {t("fonds_page.peers_note")}
             </p>
@@ -230,7 +231,7 @@ function FundAuthorityPage() {
                   <Link
                     to="/fonds/$isin"
                     params={{ isin: p.slug }}
-                    className="chip hover:bg-paper-inset transition-colors rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ink"
+                    className="chip bg-paper shadow-card outline-none transition-[transform,box-shadow] duration-200 ease-brand hover:-translate-y-0.5 hover:shadow-soft focus-visible:ring-2 focus-visible:ring-mint motion-reduce:transform-none"
                   >
                     {p.name}
                   </Link>
@@ -240,22 +241,20 @@ function FundAuthorityPage() {
           </section>
         )}
 
-        <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
-          <Link
-            to="/observatoire"
-            className="text-body font-semibold text-ink underline underline-offset-4 hover:no-underline rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ink"
-          >
-            {t("landing.observatory.cta")} <span aria-hidden>→</span>
-          </Link>
-          <Link
-            to="/methodologie"
-            className="text-body font-semibold text-ink-2 underline underline-offset-4 hover:no-underline rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ink"
-          >
-            {t("observatoire.methodology_cta")} <span aria-hidden>→</span>
-          </Link>
+        <div className="mt-10 flex flex-wrap items-center gap-3">
+          <Button asChild>
+            <Link to="/observatoire">
+              {t("landing.observatory.cta")} <span aria-hidden>→</span>
+            </Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link to="/methodologie">
+              {t("observatoire.methodology_cta")} <span aria-hidden>→</span>
+            </Link>
+          </Button>
         </div>
       </div>
-    </div>
+    </PublicPage>
   );
 }
 
@@ -264,7 +263,7 @@ function Fact({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <p className="stamp">{label}</p>
-      <p className="font-value text-[24px] leading-none text-ink mt-2.5 tabular-nums">{value}</p>
+      <p className="mt-2.5 font-value text-[26px] leading-none tabular-nums text-ink">{value}</p>
     </div>
   );
 }

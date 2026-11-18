@@ -74,7 +74,7 @@ export function ShareImpactButton({
       className={cn(
         "inline-flex items-center gap-1.5 rounded-full font-mono text-xs font-semibold transition-transform hover:scale-[1.03] disabled:opacity-50",
         variant === "solid"
-          ? "bg-mint px-4 py-2 text-white"
+          ? "bg-mint px-4 py-2 text-paper"
           : "border border-paper-3 px-3 py-2 text-ink-2 hover:text-ink",
         className,
       )}

@@ -36,63 +36,67 @@ export function CourseCard({
       to="/cours/$slug"
       params={{ slug: course.slug }}
       className={cn(
-        "group relative flex flex-col gap-4 bg-paper p-6 md:p-7 border transition-all hover:border-gold/60 hover:shadow-sm",
-        completed ? "border-mint/40" : "border-ink/8",
+        course.track === "esg" ? "accent-mint" : "accent-volt",
+        "paper-card spot lift group relative flex h-full flex-col p-6 outline-none focus-visible:ring-2 focus-visible:ring-mint md:p-7",
       )}
     >
-      {completed && (
-        <span className="absolute top-0 right-0 inline-flex items-center gap-1 bg-mint/15 text-mint-ink text-tag font-semibold uppercase tracking-[0.18em] px-2.5 py-1">
-          <CheckIcon />
-          {t("courses.status_completed")}
+      <div className="flex items-start justify-between gap-3">
+        {/* Le numéro du cours en pastille : la couleur distingue les deux
+            pistes (Finance / Finance ESG), le nom de la piste est écrit dessous. */}
+        <span className="icon-badge font-value text-body-lg transition-transform duration-500 ease-brand group-hover:-rotate-6 group-hover:scale-110 motion-reduce:transition-none">
+          {String(course.number).padStart(2, "0")}
         </span>
-      )}
-      {!completed && isStartHere && (
-        <span className="absolute top-0 right-0 inline-flex items-center gap-1 bg-gold/15 text-gold text-tag font-semibold uppercase tracking-[0.18em] px-2.5 py-1">
-          {t("courses.start_here")}
-        </span>
-      )}
-      <div className="flex items-center justify-between text-tag font-semibold uppercase tracking-[0.18em] text-ink-3">
-        <span>
-          {trackLabel} · {levelLabel}
-        </span>
-        <span className="tabular-nums">{course.readingMinutes} min</span>
+        {completed ? (
+          <span className="chip chip--verified">
+            <CheckIcon />
+            {t("courses.status_completed")}
+          </span>
+        ) : isStartHere ? (
+          <span className="chip chip--accent">{t("courses.start_here")}</span>
+        ) : null}
       </div>
 
-      <p className="font-display text-xs tracking-[0.25em] text-gold tabular-nums">
-        N° {String(course.number).padStart(2, "0")}
+      <p className="mt-5 text-caption font-semibold text-ink-3">
+        {trackLabel} · {levelLabel} ·{" "}
+        <span className="tabular-nums">{course.readingMinutes} min</span>
       </p>
 
-      <h3 className="font-display text-lg md:text-xl leading-tight text-ink group-hover:text-gold transition-colors">
-        {course.title}
-      </h3>
+      <h3 className="mt-2 text-[clamp(19px,2vw,22px)] leading-snug">{course.title}</h3>
 
-      <p className="text-sm text-ink-2 leading-relaxed line-clamp-3">{course.description}</p>
+      <p className="mt-3 line-clamp-3 text-body-sm leading-relaxed text-ink-2">
+        {course.description}
+      </p>
 
-      <div className="mt-auto pt-4 border-t border-ink/8 flex items-center justify-between">
+      <div className="mt-auto flex items-center justify-between pt-6">
         {completed ? (
-          <span className="inline-flex items-center gap-1.5 text-tag font-semibold uppercase tracking-[0.18em] text-mint-ink">
+          <span className="inline-flex items-center gap-1.5 text-label font-bold text-mint-ink">
             <CheckIcon />
             {score ? `Quiz ${score.score}/${score.total}` : statusLabel}
           </span>
         ) : (
           <span
             className={cn(
-              "inline-flex items-center gap-1.5 text-tag font-semibold uppercase tracking-[0.18em]",
-              status === "in_progress" ? "text-gold" : "text-mint-ink",
+              "inline-flex items-center gap-2 text-label font-bold",
+              status === "in_progress" ? "text-solar-ink" : "text-ink-3",
             )}
           >
             <span
+              aria-hidden
               className={cn(
-                "w-1.5 h-1.5 rounded-full",
-                status === "in_progress" ? "bg-gold" : "bg-mint",
+                "h-1.5 w-1.5 rounded-full",
+                status === "in_progress" ? "bg-solar" : "bg-paper-3",
               )}
             />
             {statusLabel}
           </span>
         )}
-        <span className="text-xs text-ink-3 group-hover:text-gold transition-colors">
-          {completed ? "Revoir →" : "Lire →"}
+        <span
+          aria-hidden
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-paper-2 text-ink transition-[background-color,color,transform] duration-300 ease-brand group-hover:translate-x-1 group-hover:bg-ink group-hover:text-paper motion-reduce:transition-none"
+        >
+          →
         </span>
+        <span className="sr-only">{completed ? "Revoir" : "Lire"}</span>
       </div>
     </Link>
   );
