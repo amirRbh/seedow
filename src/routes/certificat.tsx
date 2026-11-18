@@ -6,6 +6,7 @@ import { usePortfolioValuation } from "@/hooks/usePortfolioValuation";
 import { useAuth } from "@/hooks/useAuth";
 import { useLang } from "@/hooks/useLang";
 import { formatCurrency, formatDate } from "@/lib/format";
+import { Tilt } from "@/components/motion/Tilt";
 import { KPIFigure } from "@/components/ui/KPIFigure";
 import { fireConfetti } from "@/lib/confetti";
 import { buildPortfolioImpact } from "@/lib/impact/portfolioImpact";
@@ -84,11 +85,11 @@ function CertificatPage() {
   return (
     <div className="min-h-screen">
       {/* Toolbar — masquée à l'impression */}
-      <div className="print:hidden sticky top-0 z-10 bg-paper/90 backdrop-blur border-b border-paper-3">
-        <div className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
+      <div className="sticky top-0 z-10 px-3 pt-3 print:hidden">
+        <div className="glass mx-auto flex h-[60px] max-w-5xl items-center justify-between gap-4 rounded-full pr-2 pl-5">
           <Link
             to="/portfolio"
-            className="text-label font-semibold text-ink-3 hover:text-ink"
+            className="link-u text-body-sm font-bold text-ink-2 hover:text-ink"
           >
             {t("certificate.back_portfolio_short")}
           </Link>
@@ -97,7 +98,7 @@ function CertificatPage() {
             <button
               type="button"
               onClick={() => window.print()}
-              className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-ink text-paper text-label font-semibold hover:bg-ink-2 transition-colors"
+              className="inline-flex h-11 items-center gap-1.5 rounded-full bg-ink px-5 text-label font-bold text-paper outline-none transition-[opacity,transform] duration-200 hover:opacity-90 focus-visible:ring-2 focus-visible:ring-mint active:scale-[0.97]"
             >
               {t("certificate.print_pdf")}
             </button>
@@ -106,21 +107,30 @@ function CertificatPage() {
       </div>
 
       {/* Feuille A4 paysage */}
-      <article className="max-w-5xl mx-auto px-8 md:px-14 py-12 print:py-8">
+      <div className="mx-auto max-w-5xl px-4 py-8 print:p-0">
+      <Tilt max={2}>
+      <article className="hero-card accent-mint relative overflow-hidden px-7 py-10 md:px-14 md:py-14 print:rounded-none print:shadow-none">
+        {/* Filigrane : une graine, très légère, dans le coin du certificat. */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -right-16 -bottom-16 h-64 w-64 rounded-full bg-mint/10 print:hidden"
+        />
         <div
           role="note"
-          className="mb-6 flex items-center gap-2 border border-paper-3 bg-paper-2/60 px-4 py-2 text-caption font-semibold text-ink-2"
+          className="mb-8 inline-flex flex-wrap items-center gap-2 rounded-full bg-solar-tint px-4 py-2 text-caption font-semibold text-solar-ink ring-1 ring-inset ring-solar-tint-border"
         >
           <span className="inline-block w-1.5 h-1.5 rounded-full bg-mint" aria-hidden />
           <span className="font-semibold">Bêta</span>
-          <span className="normal-case tracking-normal text-label text-ink-3">
+          <span className="text-label">
             capital virtuel · cours réels · aucun argent investi
           </span>
         </div>
 
         <header className="flex items-start justify-between gap-6 pb-6 border-b border-paper-3">
           <div>
-            <p className="font-display text-2xl text-ink lowercase tracking-tight">seedow</p>
+            <p className="font-display text-[30px] leading-none font-extrabold tracking-[-0.04em] text-ink">
+              seedow<span className="text-mint">.</span>
+            </p>
             <p className="eyebrow mt-3">{t("certificate.subtitle")}</p>
           </div>
           <div className="text-right">
@@ -134,14 +144,13 @@ function CertificatPage() {
 
         <section className="mt-10">
           <p className="eyebrow">{t("certificate.holder")}</p>
-          <h1 className="font-display text-3xl md:text-4xl text-ink mt-2">{holderName}</h1>
+          <h1 className="display-lg mt-2">{holderName}</h1>
           <p className="text-sm text-ink-2 mt-2">
             {t("certificate.portfolio_line", {
               name: portfolio.name,
               value: formatCurrency(totalValue, lang),
             })}
           </p>
-          <div className="gold-rule mt-6" />
         </section>
 
         <section className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -213,7 +222,6 @@ function CertificatPage() {
           <p className="mt-3 text-sm text-ink-2 leading-relaxed max-w-3xl">
             {t("certificate.methodology_body")}
           </p>
-          <div className="gold-rule mt-6" />
         </section>
 
         <footer className="mt-12 flex flex-wrap items-end justify-between gap-4 text-caption text-ink-3">
@@ -224,6 +232,8 @@ function CertificatPage() {
           <p>{t("certificate.issued_on", { date: dateLong })}</p>
         </footer>
       </article>
+      </Tilt>
+      </div>
 
       <style>{`
         @media print {

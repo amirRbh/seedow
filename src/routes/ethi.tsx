@@ -269,14 +269,19 @@ function Ethi() {
   };
 
   return (
-    <div className="min-h-screen text-ink flex flex-col">
-      <header className="px-5 pt-6 pb-3 border-b border-paper-3 safe-area-top">
-        <div className="flex items-center justify-between gap-3 max-w-lg mx-auto w-full">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 rounded-full bg-highlight-2 flex items-center justify-center flex-shrink-0">
+    <div className="accent-mint flex min-h-screen flex-col text-ink">
+      <header className="px-5 pt-5 pb-3 safe-area-top">
+        <div className="mx-auto flex w-full max-w-2xl items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-3">
+            {/* L'avatar d'Ethi respire doucement : il est disponible. */}
+            <div className="relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-[16px] bg-ink text-paper">
+              <span
+                aria-hidden
+                className="absolute -inset-1 animate-breathe rounded-[19px] bg-mint/25 motion-reduce:animate-none"
+              />
               <svg
                 viewBox="0 0 24 24"
-                className="w-5 h-5 text-paper"
+                className="relative h-5 w-5 text-paper"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
@@ -287,16 +292,17 @@ function Ethi() {
               </svg>
             </div>
             <div className="min-w-0">
-              <p className="text-caption font-semibold text-ink-3">
+              <p className="flex items-center gap-1.5 text-caption font-semibold text-ink-3">
+                <span aria-hidden className="live-dot" />
                 {t("ethi.your_advisor")}
               </p>
-              <h1 className="font-value text-2xl">Ethi</h1>
+              <h1 className="text-[28px] leading-tight">Ethi</h1>
             </div>
           </div>
           <Link
             to="/reglages"
             aria-label={t("ethi.settings")}
-            className="flex items-center justify-center w-11 h-11 rounded-full border border-paper-3 text-ink-2 hover:text-ink hover:border-ink-3 transition-colors flex-shrink-0"
+            className="group flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-paper text-ink-2 shadow-card outline-none transition-colors hover:text-ink focus-visible:ring-2 focus-visible:ring-mint"
           >
             <svg
               viewBox="0 0 24 24"
@@ -318,8 +324,8 @@ function Ethi() {
         ref={scrollRef}
         className="flex-1 overflow-y-auto px-5 py-6 pb-72 flex flex-col justify-end"
       >
-        <div className="w-full max-w-lg mx-auto space-y-4">
-          <div className="rounded-2xl border border-paper-3 bg-paper-2 px-4 py-2.5 flex items-start gap-2 text-caption leading-snug text-ink-2">
+        <div className="mx-auto w-full max-w-2xl space-y-4">
+          <div className="tile-accent flex items-start gap-2.5 px-4 py-3 text-label leading-snug text-ink-2">
             <span
               className="inline-block w-1.5 h-1.5 rounded-full bg-mint mt-1.5 flex-shrink-0"
               aria-hidden
@@ -349,8 +355,8 @@ function Ethi() {
         </div>
       </div>
 
-      <div className="fixed bottom-[88px] left-0 right-0 z-30 px-5 pointer-events-none">
-        <div className="max-w-lg mx-auto pointer-events-auto">
+      <div className="pointer-events-none fixed right-0 bottom-[96px] left-0 z-30 px-4 md:bottom-6 md:pl-[124px]">
+        <div className="pointer-events-auto mx-auto max-w-2xl">
           {showSim && (
             <div className="mb-3">
               <SimulationForm onSubmit={handleSimSubmit} onCancel={() => setShowSim(false)} />
@@ -370,19 +376,20 @@ function Ethi() {
               e.preventDefault();
               send(input);
             }}
-            className="flex items-center gap-2 bg-paper-2 border border-paper-3 rounded-full px-4 py-2 backdrop-blur-xl"
+            className="glass flex items-center gap-2 rounded-full py-2 pr-2 pl-5 transition-shadow focus-within:ring-2 focus-within:ring-mint"
           >
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder={t("ethi.input_placeholder")}
-              className="flex-1 bg-transparent outline-none text-sm text-ink placeholder:text-ink-3 py-2"
+              aria-label={t("ethi.input_placeholder")}
+              className="flex-1 bg-transparent py-2 text-body text-ink outline-none placeholder:text-ink-3"
               disabled={isLoading}
             />
             <button
               type="submit"
               disabled={!input.trim() || isLoading}
-              className="w-11 h-11 rounded-full bg-highlight-2 hover:bg-ink text-paper flex items-center justify-center disabled:opacity-30 transition-colors"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-ink text-paper outline-none transition-[opacity,transform] duration-200 ease-brand hover:scale-105 focus-visible:ring-2 focus-visible:ring-mint active:scale-95 disabled:scale-100 disabled:opacity-30 motion-reduce:transform-none"
               aria-label={t("ethi.send")}
             >
               <svg

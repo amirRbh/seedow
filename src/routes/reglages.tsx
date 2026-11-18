@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useLang } from "@/hooks/useLang";
 import { formatCurrency, formatPercent } from "@/lib/format";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { EASE_SIGNATURE } from "@/lib/motion";
 import { motion } from "framer-motion";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
@@ -100,8 +101,8 @@ function ReglagesPage() {
         />
 
         {/* Onglets */}
-        <nav className="px-5 border-b border-paper-3">
-          <div className="flex gap-1 -mb-px overflow-x-auto scrollbar-hide">
+        <nav className="px-5" aria-label={t("reglages.title")}>
+          <div className="scrollbar-hide inline-flex max-w-full gap-1 overflow-x-auto rounded-full bg-paper-inset p-1">
             {(
               [
                 ["portefeuille", t("reglages.tab_portfolio")],
@@ -113,19 +114,26 @@ function ReglagesPage() {
               <button
                 key={key}
                 onClick={() => setSection(key)}
-                className={`text-label py-2.5 px-3 border-b transition-colors whitespace-nowrap ${
-                  section === key
-                    ? "border-ink text-ink font-medium"
-                    : "border-transparent text-ink-3 hover:text-ink-2"
+                aria-current={section === key ? "page" : undefined}
+                className={`relative min-h-10 rounded-full px-4 py-2 text-label font-bold whitespace-nowrap outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-mint ${
+                  section === key ? "text-ink" : "text-ink-3 hover:text-ink"
                 }`}
               >
-                {label}
+                {section === key && (
+                  <motion.span
+                    layoutId="reglages-tab"
+                    aria-hidden
+                    className="absolute inset-0 rounded-full bg-paper shadow-card"
+                    transition={{ duration: 0.32, ease: EASE_SIGNATURE }}
+                  />
+                )}
+                <span className="relative">{label}</span>
               </button>
             ))}
           </div>
         </nav>
 
-        <div className="px-5 pt-6 space-y-6">
+        <div key={section} className="animate-fade-in-up space-y-4 px-5 pt-6">
           {section === "portefeuille" && <PreferencesSection />}
           {section === "profil" && <ProfileSection email={user.email ?? ""} onSignOut={signOut} />}
           {section === "notifications" && <NotificationsSection />}
@@ -323,7 +331,7 @@ function PreferencesSection() {
       {hasPortfolio ? (
         <StatusBanner status={status} errorMsg={errorMsg} />
       ) : (
-        <div className="border border-paper-3 rounded-lg p-4 bg-paper-2">
+        <div className="paper-card-inset p-4">
           <p className="text-body-sm text-ink leading-relaxed">
             {t("reglages.no_portfolio_notice")}
           </p>
@@ -341,7 +349,7 @@ function PreferencesSection() {
           key={preview.lines.map((l) => l.id).join("|")}
           initial={{ opacity: 0, y: -2 }}
           animate={{ opacity: 1, y: 0 }}
-          className="border border-paper-3 rounded-lg p-4 bg-paper-2"
+          className="paper-card-inset p-4"
         >
           <div className="flex items-baseline justify-between gap-3 mb-1">
             <p className="text-caption text-ink-3 font-medium">
@@ -399,8 +407,8 @@ function PreferencesSection() {
                   aria-checked={active}
                   aria-labelledby={`cause-${c.id}-label`}
                   onClick={() => toggleCause(c.id)}
-                  className={`w-4 h-4 rounded-sm border flex items-center justify-center flex-shrink-0 transition-colors ${
-                    active ? "bg-ink border-ink" : "bg-paper border-paper-3 hover:border-ink"
+                  className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-lg border-2 outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-mint ${
+                    active ? "border-mint bg-mint" : "border-paper-3 bg-paper hover:border-ink-3"
                   }`}
                   aria-label={c.label}
                 >
@@ -434,15 +442,21 @@ function PreferencesSection() {
               <button
                 key={e.id}
                 onClick={() => toggleExclusion(e.id)}
-                className={`flex items-center gap-2 p-2.5 rounded border text-left text-label transition-colors ${
+                aria-pressed={active}
+                className={`flex min-h-[48px] items-center gap-2.5 rounded-2xl px-3.5 py-2.5 text-left text-label font-semibold outline-none ring-1 ring-inset transition-[background-color,box-shadow,color] duration-200 focus-visible:ring-2 focus-visible:ring-mint active:scale-[0.98] ${
                   active
-                    ? "bg-ink/5 border-ink text-ink"
-                    : "bg-paper border-paper-3 text-ink-2 hover:border-ink-3"
+                    ? "bg-alert-tint text-ink ring-alert"
+                    : "bg-paper text-ink-2 ring-paper-3 hover:text-ink hover:ring-ink-3"
                 }`}
               >
+                {/* Refusé = croix dans une pastille pleine : l'état se lit à la
+                    forme, pas à la seule couleur (CLAUDE.md §4). */}
                 <span
-                  className={`w-3 h-3 rounded-sm border flex-shrink-0 ${active ? "bg-ink border-ink" : "border-paper-3"}`}
-                />
+                  aria-hidden
+                  className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-[11px] font-bold ${active ? "bg-alert text-paper" : "ring-2 ring-inset ring-paper-3"}`}
+                >
+                  {active ? "✕" : ""}
+                </span>
                 {e.label}
               </button>
             );
@@ -464,7 +478,7 @@ function PreferencesSection() {
           step={0.005}
           value={risk}
           onChange={(e) => setRisk(Number(e.target.value))}
-          className="w-full accent-ink"
+          className="w-full accent-mint"
         />
         <div className="flex justify-between text-tag text-ink-3 mt-1">
           <span>{t("reglages.risk_prudent")}</span>
@@ -487,7 +501,7 @@ function PreferencesSection() {
           step={1}
           value={horizon}
           onChange={(e) => setHorizon(Number(e.target.value))}
-          className="w-full accent-ink"
+          className="w-full accent-mint"
         />
       </Block>
 
@@ -505,7 +519,7 @@ function PreferencesSection() {
           step={100}
           value={amount}
           onChange={(e) => setAmount(Number(e.target.value))}
-          className="w-full accent-ink"
+          className="w-full accent-mint"
         />
       </Block>
 
@@ -604,7 +618,7 @@ function ProfileSection({ email, onSignOut }: { email: string; onSignOut: () => 
           <button
             onClick={saveName}
             disabled={savingName}
-            className="px-4 py-2 text-label font-medium border border-ink text-ink rounded hover:bg-ink hover:text-paper transition-colors disabled:opacity-50"
+            className="min-h-11 rounded-full bg-paper px-5 py-2 text-label font-bold text-ink ring-1 ring-inset ring-paper-3 transition-[box-shadow,background-color] duration-200 hover:ring-ink active:scale-[0.97] disabled:opacity-50"
           >
             {savingName ? "…" : t("reglages.save")}
           </button>
@@ -670,7 +684,7 @@ function SegmentedControl<T extends string>({
     <div
       role="radiogroup"
       aria-label={ariaLabel}
-      className="inline-flex gap-1 bg-paper-2 rounded-full p-1"
+      className="inline-flex gap-1 rounded-full bg-paper-inset p-1"
     >
       {options.map((opt) => (
         <button
@@ -679,8 +693,8 @@ function SegmentedControl<T extends string>({
           role="radio"
           aria-checked={value === opt.value}
           onClick={() => onChange(opt.value)}
-          className={`px-3.5 py-1.5 rounded-full text-label font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint ${
-            value === opt.value ? "bg-paper text-ink shadow-sm" : "text-ink-3 hover:text-ink-2"
+          className={`min-h-9 rounded-full px-4 py-1.5 text-label font-bold transition-[background-color,color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint ${
+            value === opt.value ? "bg-paper text-ink shadow-card" : "text-ink-3 hover:text-ink"
           }`}
         >
           {opt.label}
@@ -744,8 +758,8 @@ function ThemeToggle() {
           role="radio"
           aria-checked={theme === opt.value}
           onClick={() => setTheme(opt.value)}
-          className={`px-3.5 py-1.5 rounded-full text-label font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint ${
-            theme === opt.value ? "bg-paper text-ink shadow-sm" : "text-ink-3 hover:text-ink-2"
+          className={`min-h-9 rounded-full px-4 py-1.5 text-label font-bold transition-[background-color,color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint ${
+            theme === opt.value ? "bg-paper text-ink shadow-card" : "text-ink-3 hover:text-ink"
           }`}
         >
           {opt.label}
@@ -905,7 +919,7 @@ function ToggleRow({
       <span className="flex items-center gap-2">
         <span className={`text-body-sm ${disabled ? "text-ink-3" : "text-ink"}`}>{label}</span>
         {disabled && disabledHint && (
-          <span className="text-caption font-semibold text-ink-3 bg-paper-2 border border-paper-3 rounded-full px-2 py-0.5">
+          <span className="chip">
             {disabledHint}
           </span>
         )}
@@ -914,12 +928,14 @@ function ToggleRow({
         onClick={() => !disabled && onChange(!checked)}
         disabled={disabled}
         aria-disabled={disabled}
-        className={`w-9 h-5 rounded-full transition-colors relative ${checked && !disabled ? "bg-ink" : "bg-paper-3"} ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
-        aria-pressed={checked}
+        className={`relative h-7 w-12 flex-none rounded-full outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-mint focus-visible:ring-offset-2 ${checked && !disabled ? "bg-mint" : "bg-paper-3"} ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
+        role="switch"
+        aria-checked={checked}
+        aria-label={label}
       >
         <span
-          className={`absolute top-0.5 w-4 h-4 bg-paper rounded-full transition-transform ${
-            checked && !disabled ? "translate-x-[18px]" : "translate-x-0.5"
+          className={`absolute top-1 h-5 w-5 rounded-full bg-paper shadow-card transition-transform duration-300 ease-brand motion-reduce:transition-none ${
+            checked && !disabled ? "translate-x-6" : "translate-x-1"
           }`}
         />
       </button>
@@ -964,7 +980,7 @@ function MarketDataBlock() {
       <button
         onClick={onClick}
         disabled={state === "loading"}
-        className="px-4 py-2 text-label font-medium border border-ink text-ink rounded hover:bg-ink hover:text-paper transition-colors disabled:opacity-50"
+        className="min-h-11 rounded-full bg-paper px-5 py-2 text-label font-bold text-ink ring-1 ring-inset ring-paper-3 transition-[box-shadow,background-color] duration-200 hover:ring-ink active:scale-[0.97] disabled:opacity-50"
       >
         {state === "loading"
           ? t("reglages.methodology.market_data.refreshing")
@@ -1012,7 +1028,7 @@ function RiskModelBlock() {
       <button
         onClick={onClick}
         disabled={state === "loading"}
-        className="px-4 py-2 text-label font-medium border border-ink text-ink rounded hover:bg-ink hover:text-paper transition-colors disabled:opacity-50"
+        className="min-h-11 rounded-full bg-paper px-5 py-2 text-label font-bold text-ink ring-1 ring-inset ring-paper-3 transition-[box-shadow,background-color] duration-200 hover:ring-ink active:scale-[0.97] disabled:opacity-50"
       >
         {state === "loading"
           ? t("reglages.methodology.risk_model.refreshing")
@@ -1246,11 +1262,11 @@ function MethodologySection() {
               {t("reglages.methodology.esg_composite.scale_title")}
             </p>
             <div className="grid grid-cols-4 gap-1.5 text-tag">
-              <div className="rounded border border-paper-3 p-2">
+              <div className="rounded-xl bg-paper-2 p-2">
                 <p className="font-value text-ink">0–40</p>
                 <p className="text-ink-3">{t("reglages.methodology.esg_composite.scale_low")}</p>
               </div>
-              <div className="rounded border border-paper-3 p-2">
+              <div className="rounded-xl bg-paper-2 p-2">
                 <p className="font-value text-ink">40–60</p>
                 <p className="text-ink-3">{t("reglages.methodology.esg_composite.scale_medium")}</p>
               </div>
@@ -1335,14 +1351,13 @@ function MethodologySection() {
 // Helpers UI
 // ─────────────────────────────────────────────────────────
 
+/** Un groupe de réglages = une carte titrée (DA V4). */
 function Block({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div>
-      <p className="text-caption text-ink-3 font-medium border-b border-paper-3 pb-2 mb-3">
-        {title}
-      </p>
+    <section className="paper-card p-5 sm:p-6">
+      <h2 className="mb-4 text-[clamp(17px,1.8vw,19px)]">{title}</h2>
       {children}
-    </div>
+    </section>
   );
 }
 
@@ -1371,17 +1386,18 @@ function StatusBanner({
 
   const tone =
     status === "error"
-      ? "border-alert/40 text-alert-ink bg-alert-tint"
+      ? "text-alert-ink bg-alert-tint"
       : status === "saved"
-        ? "border-ink/30 text-ink bg-highlight-5"
-        : "border-paper-3 text-ink-3 bg-paper-2";
+        ? "text-mint-ink bg-mint-tint"
+        : "text-ink-3 bg-paper-2";
 
   return (
     <motion.div
       key={status + (errorMsg ?? "")}
       initial={{ opacity: 0, y: -4 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`text-caption px-3 py-2 rounded border flex items-center gap-2 ${tone}`}
+      role="status"
+      className={`flex items-center gap-2 rounded-full px-4 py-2 text-label font-semibold ${tone}`}
     >
       {status === "saving" && (
         <span className="inline-block w-2 h-2 rounded-full bg-ink-3 animate-pulse" />

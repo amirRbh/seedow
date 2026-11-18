@@ -230,8 +230,8 @@ function Manifesto({
             </p>
 
             {/* Le signal le plus porteur de sens, sur fond sombre. */}
-            <div className="ink-section mt-6 rounded-2xl bg-paper/5 p-4">
-              <div className="[&_p]:!text-paper [&_.text-ink]:!text-paper [&_.text-ink-3]:!text-paper/50">
+            <div className="ink-section mt-6 rounded-2xl bg-on-deep/5 p-4">
+              <div className="[&_p]:!text-on-deep [&_.text-ink]:!text-on-deep [&_.text-ink-3]:!text-ink-3">
                 <SignalLine impact={impact} numLocale={numLocale} />
               </div>
             </div>

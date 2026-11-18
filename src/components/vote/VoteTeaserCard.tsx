@@ -40,7 +40,7 @@ export function VoteTeaserCard() {
       <Link
         to="/vote/$resolutionId"
         params={{ resolutionId: resolution.id }}
-        className="ink-section paper-grain ink-grain group block overflow-hidden rounded-2xl p-5 transition-transform duration-300 hover:scale-[1.01]"
+        className="ink-section group block overflow-hidden rounded-2xl p-5 transition-transform duration-300 hover:scale-[1.01]"
         style={{ transitionTimingFunction: "cubic-bezier(0.32,0.72,0,1)" }}
       >
         <div className="flex items-center justify-between gap-3">
@@ -50,7 +50,7 @@ export function VoteTeaserCard() {
               {t("vote.teaser.eyebrow")}
             </span>
           </span>
-          <span className="text-caption font-semibold text-paper/70">
+          <span className="text-caption font-semibold text-ink-2">
             {days === 0
               ? t("vote.status.last_day")
               : days != null
@@ -59,14 +59,14 @@ export function VoteTeaserCard() {
           </span>
         </div>
 
-        <p className="mt-3 font-value text-lg leading-snug text-paper">{resolution.title}</p>
-        <p className="mt-1 font-mono text-caption text-paper/60">
+        <p className="mt-3 font-value text-lg leading-snug text-on-deep">{resolution.title}</p>
+        <p className="mt-1 text-caption text-ink-3">
           {resolution.company}
           {resolution.ticker ? ` · ${resolution.ticker}` : ""}
         </p>
 
-        <div className="mt-4 flex items-center justify-between border-t border-paper/15 pt-3">
-          <span className="font-mono text-caption text-paper/70 tabular-nums">
+        <div className="mt-4 flex items-center justify-between border-t border-on-deep/15 pt-3">
+          <span className="text-caption text-ink-2 tabular-nums">
             {bloc.total === 0
               ? t("vote.teaser.be_first")
               : t("vote.teaser.bloc_count", { formatted: nf.format(bloc.total) })}

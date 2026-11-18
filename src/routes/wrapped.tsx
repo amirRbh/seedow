@@ -94,28 +94,28 @@ function WrappedPage() {
   const advance = () => setStep((s) => Math.min(s + 1, total - 1));
 
   return (
-    <div className="ink-section paper-grain ink-grain relative flex min-h-screen flex-col overflow-hidden rounded-none">
+    <div className="ink-section relative flex min-h-screen flex-col overflow-hidden rounded-none">
       <Link
         to="/le-fil"
         aria-label={t("wrapped.close")}
-        className="absolute right-5 top-5 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-paper/20 text-paper/70 transition-colors hover:text-paper"
+        className="absolute right-5 top-5 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-on-deep/20 text-ink-2 transition-colors hover:text-on-deep"
       >
         ✕
       </Link>
 
       {loading ? (
         <div className="flex flex-1 items-center justify-center">
-          <p className="text-caption font-semibold text-paper/60">
+          <p className="text-caption font-semibold text-ink-3">
             {t("wrapped.loading")}
           </p>
         </div>
       ) : total === 0 ? (
         <div className="flex flex-1 flex-col items-center justify-center px-8 text-center">
-          <p className="font-value text-2xl text-paper">{t("wrapped.empty_title")}</p>
-          <p className="mt-2 max-w-sm text-body-sm text-paper/70">{t("wrapped.empty_desc")}</p>
+          <p className="text-[28px] text-on-deep">{t("wrapped.empty_title")}</p>
+          <p className="mt-2 max-w-sm text-body-sm text-ink-2">{t("wrapped.empty_desc")}</p>
           <Link
             to="/vote"
-            className="mt-6 rounded-full bg-mint px-6 py-3 text-body font-semibold text-paper transition-transform duration-300 hover:scale-[1.02]"
+            className="mt-6 rounded-full bg-mint px-6 py-3 text-body font-semibold text-deep transition-transform duration-300 hover:scale-[1.02]"
           >
             {t("wrapped.empty_cta")}
           </Link>
@@ -125,7 +125,7 @@ function WrappedPage() {
           {/* Segments de progression (façon story) */}
           <div className="flex gap-1.5 px-4 pt-4">
             {slides.map((_, i) => (
-              <div key={i} className="h-1 flex-1 overflow-hidden rounded-full bg-paper/20">
+              <div key={i} className="h-1 flex-1 overflow-hidden rounded-full bg-on-deep/20">
                 <div
                   className={cn(
                     "h-full rounded-full bg-mint transition-all duration-300",
@@ -157,25 +157,25 @@ function WrappedPage() {
                     <p className="text-caption font-semibold text-mint-ink">
                       {t("wrapped.card_eyebrow")}
                     </p>
-                    <h1 className="mt-4 font-value text-4xl leading-tight text-paper">
+                    <h1 className="mt-4 display-lg text-on-deep">
                       {current.title}
                     </h1>
-                    <p className="mt-3 max-w-sm text-body text-paper/70">{current.sub}</p>
+                    <p className="mt-3 max-w-sm text-body text-ink-2">{current.sub}</p>
                   </>
                 )}
 
                 {current?.kind === "stat" && (
                   <>
-                    <span className="font-mono text-[clamp(4rem,22vw,7rem)] font-bold leading-none tracking-tight text-paper tabular-nums">
+                    <span className="font-display text-[clamp(4.5rem,22vw,8rem)] font-extrabold leading-none tracking-[-0.04em] text-on-deep tabular-nums">
                       {current.big}
                     </span>
-                    <p className="mt-4 max-w-sm text-body-lg text-paper/80">{current.label}</p>
+                    <p className="mt-4 max-w-sm text-body-lg text-ink-2">{current.label}</p>
                     {current.chips && current.chips.length > 0 && (
                       <div className="mt-5 flex flex-wrap justify-center gap-2">
                         {current.chips.map((c) => (
                           <span
                             key={c}
-                            className="rounded-full border border-paper/25 px-3 py-1 font-mono text-caption text-paper/80"
+                            className="rounded-full border border-on-deep/25 px-3 py-1 text-caption font-semibold text-ink-2"
                           >
                             {c}
                           </span>
@@ -190,23 +190,23 @@ function WrappedPage() {
                     <p className="text-caption font-semibold text-mint-ink">
                       {t("wrapped.card_eyebrow")}
                     </p>
-                    <h2 className="mt-4 font-value text-3xl leading-tight text-paper">
+                    <h2 className="mt-4 text-[clamp(28px,4vw,40px)] text-on-deep">
                       {t("wrapped.final_title")}
                     </h2>
-                    <p className="mt-3 max-w-sm text-body text-paper/70">
+                    <p className="mt-3 max-w-sm text-body text-ink-2">
                       {t("wrapped.final_sub")}
                     </p>
                     <div className="mt-8 flex flex-col items-stretch gap-3">
                       <button
                         type="button"
                         onClick={share}
-                        className="rounded-full bg-mint px-8 py-3.5 text-body font-semibold text-paper transition-transform duration-300 hover:scale-[1.02]"
+                        className="rounded-full bg-mint px-8 py-3.5 text-body font-semibold text-deep transition-transform duration-300 hover:scale-[1.02]"
                       >
                         {t("wrapped.share_cta")}
                       </button>
                       <Link
                         to="/vote"
-                        className="rounded-full border border-paper/25 px-8 py-3.5 text-body font-semibold text-paper transition-colors hover:border-paper"
+                        className="rounded-full border border-on-deep/25 px-8 py-3.5 text-body font-semibold text-on-deep transition-colors hover:border-on-deep"
                       >
                         {t("wrapped.final_vote_cta")}
                       </Link>
@@ -217,7 +217,7 @@ function WrappedPage() {
             </AnimatePresence>
 
             {current?.kind !== "final" && (
-              <span className="absolute bottom-6 text-caption font-semibold text-paper/40">
+              <span className="absolute bottom-6 text-caption font-semibold text-ink-3">
                 {t("wrapped.tap_hint")}
               </span>
             )}

@@ -25,14 +25,17 @@ export function EthiBubble({ role, content, typing }: EthiBubbleProps) {
     >
       <div className={`max-w-[85%] ${isUser ? "ml-auto" : "w-full"}`}>
         {!isUser && (
-          <p className="text-tag text-ink-3 font-semibold mb-1.5 ml-1">{t("ethi.your_advisor")}</p>
+          <p className="mb-1.5 ml-1 flex items-center gap-1.5 text-caption font-semibold text-ink-3">
+            <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-mint" />
+            {t("ethi.your_advisor")}
+          </p>
         )}
 
         <div
-          className={`rounded-2xl px-4 py-3 text-body-sm leading-relaxed ${
+          className={`rounded-[22px] px-4 py-3 text-body leading-relaxed ${
             isUser
-              ? "bg-highlight-2 text-paper rounded-br-sm"
-              : "bg-paper-2 text-ink border border-paper-3 rounded-bl-sm"
+              ? "rounded-br-md bg-ink text-paper"
+              : "rounded-bl-md bg-paper text-ink shadow-card"
           }`}
         >
           {typing ? (
@@ -40,7 +43,7 @@ export function EthiBubble({ role, content, typing }: EthiBubbleProps) {
           ) : isUser ? (
             <p className="whitespace-pre-wrap">{content}</p>
           ) : (
-            <div className="space-y-1.5 [&_strong]:text-highlight-3 [&_p]:my-1 [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4">
+            <div className="space-y-1.5 [&_strong]:font-bold [&_strong]:text-ink [&_p]:my-1 [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4">
               <ReactMarkdown>{displayContent}</ReactMarkdown>
             </div>
           )}
