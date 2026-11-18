@@ -143,6 +143,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     pathname.startsWith("/tarifs") ||
     pathname.startsWith("/aide") ||
     pathname.startsWith("/certificat") ||
+    pathname.startsWith("/wrapped") ||
     pathname.startsWith("/fonds") ||
     pathname.startsWith("/observatoire") ||
     // DA V4 : toutes les pages qui se lisent sans compte portent le chrome

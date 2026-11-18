@@ -1285,8 +1285,12 @@
      (`text-body-lg`) les efface silencieusement. Vérifié :
      twMerge("text-deep", "text-body-lg") → "text-body-lg".
      C'est ce qui rendait le CTA blanc entièrement vide. */
+  /* `--paper`, pas `#fff` : en thème sombre `--ink` devient clair, et un
+     texte blanc fixe y rendait le CTA principal blanc sur blanc. Les paires
+     --paper/--ink, --paper/--mint, --paper/--alert sont vérifiées dans les
+     deux thèmes (contrast.test.ts). */
   .btn-on-ink {
-    color: #ffffff;
+    color: var(--paper);
   }
   .btn-on-paper {
     color: var(--ink);

@@ -141,7 +141,7 @@ function CoursesIndex() {
         <div
           role="group"
           aria-label="Filtrer les cours par piste"
-          className="mb-8 inline-flex flex-wrap items-center gap-1 rounded-full bg-paper-inset p-1"
+          className="scrollbar-hide mb-8 inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-full bg-paper-inset p-1"
         >
           {filters.map((f) => {
             const active = filter === f.id;
@@ -152,7 +152,7 @@ function CoursesIndex() {
                 aria-pressed={active}
                 onClick={() => setFilter(f.id)}
                 className={cn(
-                  "relative rounded-full px-5 py-2.5 text-label font-bold outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-mint",
+                  "relative shrink-0 rounded-full px-5 py-2.5 text-label font-bold whitespace-nowrap outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-mint",
                   active ? "text-ink" : "text-ink-3 hover:text-ink",
                 )}
               >
