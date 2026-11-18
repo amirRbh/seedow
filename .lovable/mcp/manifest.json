@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "sdk_version": "0.20.1",
+  "sdk_version": "3.5.0",
   "path": "/mcp",
   "auth": {
     "type": "oauth",
@@ -26,9 +26,10 @@
           "openWorldHint": false
         },
         "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
-          "properties": {}
+          "properties": {},
+          "additionalProperties": false
         },
         "outputSchema": null
       },
@@ -68,9 +69,10 @@
           "openWorldHint": false
         },
         "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
-          "properties": {}
+          "properties": {},
+          "additionalProperties": false
         },
         "outputSchema": null
       },

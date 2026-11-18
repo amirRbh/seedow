@@ -80,7 +80,7 @@ src/
 │   ├── hooks/                   # endpoints cron (pas des routes UI)
 │   │   ├── refresh-market-data.ts           # ingestion horaire Yahoo Finance
 │   │   └── recompute-risk-model.ts          # recalcul du modèle de risque
-│   ├── mcp.ts · [.mcp]/         # serveur MCP (list-tools, invoke-tool)
+│   ├── mcp.ts                   # serveur MCP (route générée par @lovable.dev/mcp-js, outils dans lib/mcp/)
 │   └── [.well-known]/ · [.]lovable.oauth.consent.tsx   # OAuth
 ├── components/                  # organisés par domaine, pas par type
 │   ├── discover/ roots/ portfolio/ goals/ dashboard/ impact/
@@ -238,10 +238,9 @@ Ethi est l'assistant conversationnel du produit (Lovable AI Gateway, Gemini/GPT-
 - API publique v1 en lecture seule (`/api/public/v1`, OpenAPI), export CSV institutionnel aux colonnes stables, rapport imprimable `/comparer/rapport`, documentation `/developpeurs`
 - Mise à niveau de sécurité : TanStack Start corrige GHSA-qx66-fv34-fjm8 ; `proxy-addr` et `shell-quote` forcés au-dessus de leurs correctifs. Zéro vulnérabilité critique à l'audit, plancher verrouillé par `src/lib/__tests__/security-floor.test.ts`.
 - Migration Vite 8 (Rolldown) et TanStack Start 1.169.5 / React Router 1.170.46 : build ~2,5× plus rapide, bundle Worker validé dans workerd (`wrangler dev` sur `.output/server`).
+- Serveur MCP sur `@lovable.dev/mcp-js` 3.5 (`@modelcontextprotocol/sdk` 1.32) : routes régénérées par le plugin (les anciennes `/.mcp/*` sont retirées), manifeste `.lovable/mcp/manifest.json` réextrait, comportement verrouillé par `src/lib/mcp/__tests__/server.test.ts` (401 sans jeton, outils en lecture seule).
 
 **Next** — _(à compléter par l'équipe produit)_
-
-- _Proposé, non validé :_ passer `@lovable.dev/mcp-js` en 3.x pour embarquer `@modelcontextprotocol/sdk` ≥ 1.32 (plusieurs avis « high » sur le serveur `/mcp`) — version majeure, à tester avec l'outillage Lovable qui génère `src/routes/[.mcp]/`.
 
 **Later** — _(à compléter par l'équipe produit)_
 
