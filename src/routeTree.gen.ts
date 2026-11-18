@@ -26,12 +26,15 @@ import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as LeFilRouteImport } from './routes/le-fil'
 import { Route as EthiRouteImport } from './routes/ethi'
+import { Route as DonneesRouteImport } from './routes/donnees'
 import { Route as DiscoverRouteImport } from './routes/discover'
+import { Route as DemoRouteImport } from './routes/demo'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CoursRouteImport } from './routes/cours'
 import { Route as ConstruireRouteImport } from './routes/construire'
 import { Route as ConfidentialiteRouteImport } from './routes/confidentialite'
 import { Route as ComprendreRouteImport } from './routes/comprendre'
+import { Route as ComparerRouteImport } from './routes/comparer'
 import { Route as ComparatifRouteImport } from './routes/comparatif'
 import { Route as CommunauteRouteImport } from './routes/communaute'
 import { Route as CguRouteImport } from './routes/cgu'
@@ -146,9 +149,19 @@ const EthiRoute = EthiRouteImport.update({
   path: '/ethi',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DonneesRoute = DonneesRouteImport.update({
+  id: '/donnees',
+  path: '/donnees',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DiscoverRoute = DiscoverRouteImport.update({
   id: '/discover',
   path: '/discover',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemoRoute = DemoRouteImport.update({
+  id: '/demo',
+  path: '/demo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -174,6 +187,11 @@ const ConfidentialiteRoute = ConfidentialiteRouteImport.update({
 const ComprendreRoute = ComprendreRouteImport.update({
   id: '/comprendre',
   path: '/comprendre',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComparerRoute = ComparerRouteImport.update({
+  id: '/comparer',
+  path: '/comparer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ComparatifRoute = ComparatifRouteImport.update({
@@ -330,12 +348,15 @@ export interface FileRoutesByFullPath {
   '/cgu': typeof CguRoute
   '/communaute': typeof CommunauteRoute
   '/comparatif': typeof ComparatifRoute
+  '/comparer': typeof ComparerRoute
   '/comprendre': typeof ComprendreRoute
   '/confidentialite': typeof ConfidentialiteRoute
   '/construire': typeof ConstruireRoute
   '/cours': typeof CoursRouteWithChildren
   '/dashboard': typeof DashboardRoute
+  '/demo': typeof DemoRoute
   '/discover': typeof DiscoverRoute
+  '/donnees': typeof DonneesRoute
   '/ethi': typeof EthiRoute
   '/le-fil': typeof LeFilRoute
   '/mcp': typeof McpRoute
@@ -382,11 +403,14 @@ export interface FileRoutesByTo {
   '/cgu': typeof CguRoute
   '/communaute': typeof CommunauteRoute
   '/comparatif': typeof ComparatifRoute
+  '/comparer': typeof ComparerRoute
   '/comprendre': typeof ComprendreRoute
   '/confidentialite': typeof ConfidentialiteRoute
   '/construire': typeof ConstruireRoute
   '/dashboard': typeof DashboardRoute
+  '/demo': typeof DemoRoute
   '/discover': typeof DiscoverRoute
+  '/donnees': typeof DonneesRoute
   '/ethi': typeof EthiRoute
   '/le-fil': typeof LeFilRoute
   '/mcp': typeof McpRoute
@@ -435,12 +459,15 @@ export interface FileRoutesById {
   '/cgu': typeof CguRoute
   '/communaute': typeof CommunauteRoute
   '/comparatif': typeof ComparatifRoute
+  '/comparer': typeof ComparerRoute
   '/comprendre': typeof ComprendreRoute
   '/confidentialite': typeof ConfidentialiteRoute
   '/construire': typeof ConstruireRoute
   '/cours': typeof CoursRouteWithChildren
   '/dashboard': typeof DashboardRoute
+  '/demo': typeof DemoRoute
   '/discover': typeof DiscoverRoute
+  '/donnees': typeof DonneesRoute
   '/ethi': typeof EthiRoute
   '/le-fil': typeof LeFilRoute
   '/mcp': typeof McpRoute
@@ -489,12 +516,15 @@ export interface FileRouteTypes {
     | '/cgu'
     | '/communaute'
     | '/comparatif'
+    | '/comparer'
     | '/comprendre'
     | '/confidentialite'
     | '/construire'
     | '/cours'
     | '/dashboard'
+    | '/demo'
     | '/discover'
+    | '/donnees'
     | '/ethi'
     | '/le-fil'
     | '/mcp'
@@ -541,11 +571,14 @@ export interface FileRouteTypes {
     | '/cgu'
     | '/communaute'
     | '/comparatif'
+    | '/comparer'
     | '/comprendre'
     | '/confidentialite'
     | '/construire'
     | '/dashboard'
+    | '/demo'
     | '/discover'
+    | '/donnees'
     | '/ethi'
     | '/le-fil'
     | '/mcp'
@@ -593,12 +626,15 @@ export interface FileRouteTypes {
     | '/cgu'
     | '/communaute'
     | '/comparatif'
+    | '/comparer'
     | '/comprendre'
     | '/confidentialite'
     | '/construire'
     | '/cours'
     | '/dashboard'
+    | '/demo'
     | '/discover'
+    | '/donnees'
     | '/ethi'
     | '/le-fil'
     | '/mcp'
@@ -647,12 +683,15 @@ export interface RootRouteChildren {
   CguRoute: typeof CguRoute
   CommunauteRoute: typeof CommunauteRoute
   ComparatifRoute: typeof ComparatifRoute
+  ComparerRoute: typeof ComparerRoute
   ComprendreRoute: typeof ComprendreRoute
   ConfidentialiteRoute: typeof ConfidentialiteRoute
   ConstruireRoute: typeof ConstruireRoute
   CoursRoute: typeof CoursRouteWithChildren
   DashboardRoute: typeof DashboardRoute
+  DemoRoute: typeof DemoRoute
   DiscoverRoute: typeof DiscoverRoute
+  DonneesRoute: typeof DonneesRoute
   EthiRoute: typeof EthiRoute
   LeFilRoute: typeof LeFilRoute
   McpRoute: typeof McpRoute
@@ -807,11 +846,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EthiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/donnees': {
+      id: '/donnees'
+      path: '/donnees'
+      fullPath: '/donnees'
+      preLoaderRoute: typeof DonneesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/discover': {
       id: '/discover'
       path: '/discover'
       fullPath: '/discover'
       preLoaderRoute: typeof DiscoverRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/demo': {
+      id: '/demo'
+      path: '/demo'
+      fullPath: '/demo'
+      preLoaderRoute: typeof DemoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -847,6 +900,13 @@ declare module '@tanstack/react-router' {
       path: '/comprendre'
       fullPath: '/comprendre'
       preLoaderRoute: typeof ComprendreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comparer': {
+      id: '/comparer'
+      path: '/comparer'
+      fullPath: '/comparer'
+      preLoaderRoute: typeof ComparerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/comparatif': {
@@ -1104,12 +1164,15 @@ const rootRouteChildren: RootRouteChildren = {
   CguRoute: CguRoute,
   CommunauteRoute: CommunauteRoute,
   ComparatifRoute: ComparatifRoute,
+  ComparerRoute: ComparerRoute,
   ComprendreRoute: ComprendreRoute,
   ConfidentialiteRoute: ConfidentialiteRoute,
   ConstruireRoute: ConstruireRoute,
   CoursRoute: CoursRouteWithChildren,
   DashboardRoute: DashboardRoute,
+  DemoRoute: DemoRoute,
   DiscoverRoute: DiscoverRoute,
+  DonneesRoute: DonneesRoute,
   EthiRoute: EthiRoute,
   LeFilRoute: LeFilRoute,
   McpRoute: McpRoute,

@@ -1,6 +1,8 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { getObservatoryFund } from "@/lib/esg/v2/observatory.functions";
+import { getSnapshotFund, type SnapshotFundAnalytics } from "@/lib/demo/demo.functions";
+import { FundAnalyticsSection } from "@/components/analytics/FundAnalyticsSection";
 import { EuroBreakdownBlock } from "@/components/impact/EuroBreakdownBlock";
 import { hasPublishedComposition } from "@/lib/impact/euroBreakdown";
 import { PublicPage } from "@/components/layout/PublicPage";
@@ -44,12 +46,20 @@ import { siteUrl, socialMeta } from "@/lib/seo/socialMeta";
  */
 export const Route = createFileRoute("/fonds/$isin")({
   loader: async ({ params }) => {
-    const data = await getObservatoryFund({ data: params.isin });
-    if (!data) throw notFound();
-    return data;
+    // Deux sources indépendantes : le catalogue (Observatoire) et l'instantané
+    // émetteur. La fiche s'affiche dès que l'une des deux connaît le fonds ;
+    // aucune ne bloque l'autre.
+    const [data, snapshot] = await Promise.all([
+      getObservatoryFund({ data: params.isin }).catch(() => null),
+      ISIN_RE.test(params.isin)
+        ? getSnapshotFund({ data: params.isin }).catch(() => null)
+        : Promise.resolve(null),
+    ]);
+    if (!data && !snapshot) throw notFound();
+    return { data, snapshot };
   },
   head: ({ params, loaderData }) => {
-    const fund = loaderData?.fund;
+    const fund = loaderData?.data?.fund ?? (loaderData?.snapshot ? { name: loaderData.snapshot.name } : null);
     if (!fund) return { meta: [{ title: "Fonds — Seedow" }] };
     const title = `${fund.name} : que publie ce fonds ? — Seedow`;
     const description = `Ce que ${fund.name} publie, et à quel niveau de précision : indice de transparence Seedow (STI ${STI_VERSION}), documents sourcés et datés, constats d'écart opposables.`;
@@ -62,8 +72,51 @@ export const Route = createFileRoute("/fonds/$isin")({
   component: FundAuthorityPage,
 });
 
+const ISIN_RE = /^[A-Z]{2}[A-Z0-9]{9}\d$/i;
+
 function FundAuthorityPage() {
-  const { fund, peers, holdings, holdingsAsOf, holdingsSourceUrl } = Route.useLoaderData();
+  const { data, snapshot } = Route.useLoaderData();
+  if (!data) return <SnapshotOnlyFundPage snapshot={snapshot!} />;
+  return <CatalogFundPage data={data} snapshot={snapshot} />;
+}
+
+/**
+ * Fonds présent dans l'instantané émetteur mais pas (encore) au catalogue :
+ * l'indice de transparence n'est pas calculé, et la page le dit.
+ */
+function SnapshotOnlyFundPage({ snapshot }: { snapshot: NonNullable<SnapshotFundAnalytics> }) {
+  const { t } = useTranslation();
+  return (
+    <PublicPage accent="ice">
+      <SiteHeaderSpacer />
+      <div className="mx-auto max-w-4xl px-5 pb-8 sm:px-6">
+        <Link to="/comparer" className="link-u inline-flex items-center gap-2 text-body-sm font-bold text-ink-2 hover:text-ink">
+          ← {t("site.nav_compare")}
+        </Link>
+        <div className="mt-6 animate-fade-in-up">
+          <span className="chip chip--accent">{snapshot.issuer}</span>
+          <h1 className="display-lg mt-4 max-w-[20ch]">{snapshot.name}</h1>
+          <p className="mono-meta mt-3">
+            {[snapshot.isin, snapshot.domicile, snapshot.currency].filter(Boolean).join(" · ")}
+          </p>
+          <p className="tile-accent accent-solar mt-5 max-w-[70ch] px-4 py-3 text-body-sm text-ink-2">
+            {t("fin.fund.not_in_catalog")}
+          </p>
+        </div>
+        <FundAnalyticsSection snapshot={snapshot} fund={null} />
+      </div>
+    </PublicPage>
+  );
+}
+
+function CatalogFundPage({
+  data,
+  snapshot,
+}: {
+  data: NonNullable<Awaited<ReturnType<typeof getObservatoryFund>>>;
+  snapshot: SnapshotFundAnalytics | null;
+}) {
+  const { fund, peers, holdings, holdingsAsOf, holdingsSourceUrl } = data;
   const { t } = useTranslation();
 
   const composed = hasPublishedComposition(holdings ?? []);
@@ -72,7 +125,7 @@ function FundAuthorityPage() {
   return (
     <PublicPage accent="ice">
       <SiteHeaderSpacer />
-      <div className="mx-auto max-w-3xl px-5 pb-8 sm:px-6">
+      <div className="mx-auto max-w-4xl px-5 pb-8 sm:px-6">
         <Link
           to="/observatoire"
           className="link-u inline-flex items-center gap-2 text-body-sm font-bold text-ink-2 hover:text-ink"
@@ -91,6 +144,9 @@ function FundAuthorityPage() {
             </p>
           )}
         </div>
+
+        {/* ── Analyse : performance, expositions, six couches ESG ─────────── */}
+        <FundAnalyticsSection snapshot={snapshot} fund={fund} />
 
         {/* ── 1. La composition publiée, en euros (fait brut) ─────────────── */}
         {composed && (

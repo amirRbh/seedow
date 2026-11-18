@@ -149,6 +149,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     // DA V4 : toutes les pages qui se lisent sans compte portent le chrome
     // public (SiteHeader / SiteFooter), jamais le dock de l'app.
     pathname.startsWith("/methodologie") ||
+    pathname.startsWith("/demo") ||
+    pathname.startsWith("/comparer") ||
+    pathname.startsWith("/donnees") ||
     pathname.startsWith("/comprendre") ||
     pathname.startsWith("/waitlist") ||
     pathname.startsWith("/mentions-legales") ||
