@@ -255,3 +255,49 @@ export const getLandingFacts = createServerFn({ method: "GET" }).handler(async (
     sourceUrl: f.sourceUrl,
   };
 });
+
+const positionInput = z.object({
+  id: z.string().min(1).max(64),
+  label: z.string().min(1).max(200),
+  isin: z.string().max(12).nullable(),
+  value: z.number().finite().nonnegative(),
+  ter: z.number().finite().min(0).max(0.1).nullable(),
+  assetClass: z.string().max(64).nullable(),
+});
+
+/**
+ * Exposition look-through des positions RÉELLES d'un utilisateur. Seule la
+ * composition publique des fonds est lue ici (aucune donnée personnelle n'est
+ * persistée ni journalisée) : un fonds dont la composition n'est pas connue
+ * reste une position entière, comptée dans la part « non ventilée ».
+ */
+export const analyzePositionsExposure = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) => z.array(positionInput).max(50).parse(input))
+  .handler(async ({ data: positions }) => {
+    const snapshots = await loadSnapshots();
+    const byIsin = new Map(snapshots.funds.map((f) => [f.isin, f]));
+    const matched: string[] = [];
+    const exposure = computePortfolioExposure(
+      positions.map((p) => {
+        const snap = p.isin ? byIsin.get(p.isin.toUpperCase()) : undefined;
+        if (snap) {
+          matched.push(p.id);
+          return { ...snapshotToPosition(snap, p.value), id: p.id, label: p.label, ter: p.ter ?? snap.ter };
+        }
+        return {
+          id: p.id,
+          label: p.label,
+          kind: "fund" as const,
+          marketValue: p.value,
+          assetClass: p.assetClass,
+          ter: p.ter,
+          composition: null,
+        };
+      }),
+    );
+    return {
+      exposure: { ...exposure, holdings: exposure.holdings.slice(0, 12), holdingsTotal: exposure.holdings.length },
+      matchedPositions: matched,
+      generatedAt: snapshots.generatedAt,
+    };
+  });

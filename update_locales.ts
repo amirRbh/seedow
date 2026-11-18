@@ -4154,6 +4154,12 @@ const finFr = {
         open_method: "Méthodologie complète",
       },
     },
+    portfolio: {
+      title: "Ce que ton portefeuille détient vraiment",
+      desc: "{{covered}} fonds sur {{total}} décomposés à partir de la publication de l'émetteur · {{pct}} de la valeur ventilée.",
+      none_covered: "Aucun de tes fonds n'a encore de composition publiée dans nos sources. Ton exposition réelle n'est donc pas calculée — elle n'est pas devinée non plus.",
+      error: "L'exposition n'a pas pu être calculée pour le moment.",
+    },
     fund: {
       performance_title: "Performance historique",
       geography_unpublished: "L'émetteur ne publie pas de répartition géographique pour ce fonds dans ce document. Elle n'est pas déduite.",
@@ -4566,6 +4572,12 @@ const finEn = {
         open_data: "All sources and their status",
         open_method: "Full methodology",
       },
+    },
+    portfolio: {
+      title: "What your portfolio actually holds",
+      desc: "{{covered}} of {{total}} funds broken down from the issuer's publication · {{pct}} of value broken down.",
+      none_covered: "None of your funds has a published composition in our sources yet. Your real exposure is therefore not computed — nor is it guessed.",
+      error: "Exposure could not be computed right now.",
     },
     fund: {
       performance_title: "Historical performance",

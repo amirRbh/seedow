@@ -4043,6 +4043,12 @@
       "coverage_title": "E / S / G indicators: what is filled in",
       "coverage_desc": "The grid is fixed and public. An empty cell stays empty: no composite score is computed on incomplete data.",
       "not_in_catalog": "This fund is in the issuer snapshot but not yet in the Seedow catalogue: its transparency index is not computed."
+    },
+    "portfolio": {
+      "title": "What your portfolio actually holds",
+      "desc": "{{covered}} of {{total}} funds broken down from the issuer's publication · {{pct}} of value broken down.",
+      "none_covered": "None of your funds has a published composition in our sources yet. Your real exposure is therefore not computed — nor is it guessed.",
+      "error": "Exposure could not be computed right now."
     }
   }
 }

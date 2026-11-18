@@ -4043,6 +4043,12 @@
       "coverage_title": "Indicateurs E / S / G : ce qui est renseigné",
       "coverage_desc": "La grille est fixe et publique. Une case vide reste vide : aucune note composite n'est calculée sur des données incomplètes.",
       "not_in_catalog": "Ce fonds figure dans l'instantané de l'émetteur, mais pas encore au catalogue Seedow : son indice de transparence n'est pas calculé."
+    },
+    "portfolio": {
+      "title": "Ce que ton portefeuille détient vraiment",
+      "desc": "{{covered}} fonds sur {{total}} décomposés à partir de la publication de l'émetteur · {{pct}} de la valeur ventilée.",
+      "none_covered": "Aucun de tes fonds n'a encore de composition publiée dans nos sources. Ton exposition réelle n'est donc pas calculée — elle n'est pas devinée non plus.",
+      "error": "L'exposition n'a pas pu être calculée pour le moment."
     }
   }
 }
