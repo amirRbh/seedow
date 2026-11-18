@@ -3645,7 +3645,8 @@
     },
     "nav_demo": "Démo",
     "nav_compare": "Comparer",
-    "nav_data": "Sources des données"
+    "nav_data": "Sources des données",
+    "nav_api": "API et exports"
   },
   "fin": {
     "status": {
@@ -3684,7 +3685,8 @@
       "no_history": "Historique insuffisant pour tracer une courbe.",
       "chart_aria": "Évolution de {{name}} et de son indice, base 100",
       "past_disclaimer": "Performances passées, calculées sur l'historique publié par l'émetteur. Elles ne préjugent pas des performances futures et ne constituent pas une prévision.",
-      "simulated_disclaimer": "Simulation : panier à poids constants, sans frais de transaction ni fiscalité. Ce n'est pas la performance d'un investisseur réel."
+      "simulated_disclaimer": "Simulation : panier à poids constants, sans frais de transaction ni fiscalité. Ce n'est pas la performance d'un investisseur réel.",
+      "monthly_note": "Série publiée en fin de mois par l'émetteur : la volatilité et l'écart de suivi sont calculés sur points mensuels, et la perte maximale entre fins de mois sous-estime la perte en cours de mois."
     },
     "method": {
       "label": "Comment c'est calculé",
@@ -3763,8 +3765,8 @@
           "not": "C'est une catégorie de divulgation déclarée par l'émetteur, pas une note de durabilité. Un article 9 n'est pas garanti sans incidence négative."
         },
         "esg_risk": {
-          "title": "Risque ESG",
-          "not": "Une note de risque ESG mesure l'exposition de l'entreprise aux enjeux ESG, pas son effet sur le monde."
+          "title": "Notation ESG",
+          "not": "Une notation ESG mesure la résilience des entreprises détenues aux risques ESG financièrement importants pour elles, pas leur effet sur le monde. Un fonds thématique climat peut être moins bien noté qu'un fonds diversifié : la note ne mesure pas la contribution à la transition."
         },
         "characteristics": {
           "title": "Caractéristiques promues",
@@ -3788,10 +3790,13 @@
           "article_6": "Ni article 8 ni article 9",
           "article_8": "Article 8 — promeut des caractéristiques E/S",
           "article_9": "Article 9 — objectif d'investissement durable",
-          "unknown": "Non renseignée"
+          "unknown": "Non renseignée",
+          "not_applicable": "Non applicable — fonds domicilié hors de l'Union européenne"
         },
         "esg_risk": {
-          "no_licensed_rating": "Aucune note sous licence dans nos sources"
+          "no_licensed_rating": "Aucune note sous licence dans nos sources",
+          "msci_fund_rating": "Notation MSCI ESG du fonds : {{rating}} — détail et couverture dans le bloc ci-dessus",
+          "published_not_exported": "Notation publiée par {{issuer}} (calcul {{provider}}) — non reproduite dans les exports"
         },
         "characteristics": {
           "documented": "{{documented}} secteur(s) documenté(s) sur {{total}} · {{excluded}} exclu(s)",
@@ -3799,11 +3804,14 @@
           "none": "Aucune politique documentée dans nos sources"
         },
         "taxonomy": {
-          "not_collected": "Non collecté"
+          "not_collected": "Non collecté",
+          "not_applicable": "Non applicable — règlement européen"
         },
         "pai": {
           "statement_published": "Déclaration PAI publiée",
-          "not_verified": "Publication non vérifiée"
+          "not_verified": "Publication non vérifiée",
+          "not_applicable": "Non applicable — pas de déclaration PAI hors Union européenne",
+          "not_applicable_proxies": "Pas de déclaration PAI (fonds hors UE) — {{proxies}} indicateur(s) voisin(s) publié(s) par l'émetteur"
         },
         "impact": {
           "not_measured": "Non mesuré par Seedow"
@@ -3827,7 +3835,13 @@
         "board_independence": "Indépendance du conseil",
         "business_ethics": "Éthique des affaires",
         "corruption_controversies": "Controverses de corruption",
-        "shareholder_rights": "Droits des actionnaires"
+        "shareholder_rights": "Droits des actionnaires",
+        "implied_temperature_rise": "Hausse de température implicite",
+        "thermal_coal_involvement": "Charbon thermique (> 5 % du CA)",
+        "oil_sands_involvement": "Sables bitumineux (> 5 % du CA)",
+        "controversial_weapons_involvement": "Armes controversées (≈ PAI 14)",
+        "ungc_violations": "Violations du Pacte mondial (≈ PAI 10)",
+        "tobacco_involvement": "Tabac"
       }
     },
     "demo": {
@@ -3927,7 +3941,7 @@
     "compare": {
       "eyebrow": "Comparateur de fonds",
       "title": "Comparer des fonds sur ce qu'ils publient.",
-      "subtitle": "Frais, classification SFDR, politiques d'exclusion documentées, performance passée, exposition et couverture des données. Jusqu'à quatre fonds, exportables en CSV.",
+      "subtitle": "Frais, classification SFDR, politiques d'exclusion documentées, performance passée, exposition et couverture des données. Jusqu'à quatre fonds, exportables en CSV, en rapport imprimable ou par API.",
       "universe": "{{catalog}} fonds au catalogue · {{total}} comparables",
       "selected_title": "Comparaison ({{count}}/{{max}})",
       "selected_desc": "Ajoute ou retire des fonds depuis la liste ci-dessous. Le lien de cette page conserve ta sélection.",
@@ -3944,7 +3958,8 @@
         "exclusions": "Exclusions documentées",
         "performance": "Performance passée (annualisée)",
         "exposure": "Exposition",
-        "quality": "Qualité des données"
+        "quality": "Qualité des données",
+        "third_party": "Publiés par l'émetteur (calcul MSCI ESG Research)"
       },
       "row": {
         "sfdr": "Classification SFDR",
@@ -3957,7 +3972,8 @@
         "ann5y": "5 ans",
         "vol3y": "Volatilité 3 ans",
         "mdd5y": "Perte maximale 5 ans",
-        "coverage": "Couverture des données"
+        "coverage": "Couverture des données",
+        "sfdr_conflict_label": "Écart catalogue / émetteur"
       },
       "sector": {
         "fossiles": "Énergies fossiles",
@@ -3997,7 +4013,11 @@
       "filter_perf": "Historique de performance disponible",
       "results_one": "{{count}} fonds correspond",
       "results_other": "{{count}} fonds correspondent",
-      "more_results": "+ {{count}} autres — affine la recherche."
+      "more_results": "+ {{count}} autres — affine la recherche.",
+      "report": "Rapport imprimable",
+      "api": "API JSON",
+      "api_docs": "API et exports institutionnels →",
+      "third_party_note": "Indicateurs MSCI : calculés par MSCI ESG Research et publiés par l'émetteur (ETF américains). Affichés avec attribution, jamais utilisés pour classer, et non repris dans les exports — Seedow n'a pas de licence de redistribution."
     },
     "data": {
       "eyebrow": "Sources et qualité",
@@ -4013,7 +4033,9 @@
         "fund_exposure": "Expositions publiées",
         "performance_history": "Historique de performance",
         "regulatory_document": "Documents réglementaires",
-        "esg_issuer": "Données ESG des entreprises"
+        "esg_issuer": "Données ESG des entreprises",
+        "performance_history_monthly": "Historique mensuel (ETF américains)",
+        "esg_fund_metrics": "Indicateurs ESG de fonds (MSCI, via l'émetteur)"
       },
       "sources_title": "Registre des sources",
       "sources_desc": "Écrit à partir du code : chaque entrée indique le fichier qui l'implémente.",
@@ -4049,6 +4071,140 @@
       "desc": "{{covered}} fonds sur {{total}} décomposés à partir de la publication de l'émetteur · {{pct}} de la valeur ventilée.",
       "none_covered": "Aucun de tes fonds n'a encore de composition publiée dans nos sources. Ton exposition réelle n'est donc pas calculée — elle n'est pas devinée non plus.",
       "error": "L'exposition n'a pas pu être calculée pour le moment."
+    },
+    "esg_data": {
+      "title": "Indicateurs de durabilité publiés par l'émetteur",
+      "desc": "Calculés par {{provider}}, publiés par {{issuer}} dans son classeur produit. Reproduits tels quels, sans recalcul ni conversion en score.",
+      "rating": "Notation MSCI ESG",
+      "rating_hint": "Score de qualité {{quality}}/10 · couverture {{coverage}}",
+      "peer": "Centile de pairs publié : {{pct}} — groupe « {{group}} » ({{count}} fonds)",
+      "waci": "Intensité carbone (WACI)",
+      "waci_unit": "t CO₂e / M$ de CA",
+      "itr": "Hausse de température implicite",
+      "coverage": "Couverture {{pct}}",
+      "involvement_title": "Part du fonds exposée à des activités",
+      "involvement_desc": "Part de la valeur du fonds investie dans des entreprises impliquées, selon MSCI ESG Research. Couverture : {{coverage}}.",
+      "involvement": {
+        "controversial_weapons": "Armes controversées",
+        "ungc_violators": "Violations du Pacte mondial de l'ONU",
+        "nuclear_weapons": "Armes nucléaires",
+        "thermal_coal": "Charbon thermique",
+        "civilian_firearms": "Armes à feu civiles",
+        "oil_sands": "Sables bitumineux",
+        "tobacco": "Tabac"
+      },
+      "involvement_threshold": "Charbon thermique et sables bitumineux : entreprises qui en tirent plus de 5 % de leur chiffre d'affaires (seuil de l'émetteur). 0,00 % signifie qu'aucune entreprise couverte n'est identifiée, pas une garantie : une entreprise non couverte par MSCI n'est pas comptée.",
+      "method_rating": "Notation MSCI ESG du fonds (AAA à CCC) : moyenne pondérée des notes ESG des entreprises détenues, publiée si au moins 65 % du fonds (50 % pour l'obligataire) est couvert. Le centile compare le score de qualité au groupe de pairs Lipper.",
+      "method_waci": "WACI : émissions des scopes 1 et 2 de chaque entreprise rapportées à son chiffre d'affaires, en t CO₂e par million de dollars, moyenne pondérée par le poids dans le fonds. Le scope 3 n'est pas inclus.",
+      "method_itr": "Hausse de température implicite : projection par MSCI de la trajectoire d'émissions des entreprises, convertie en réchauffement associé. C'est un modèle prospectif, publié en bande, et Seedow ne le convertit pas en nombre.",
+      "method_involvement": "Expositions d'activité : calculées par BlackRock à partir des profils d'implication de MSCI ESG Research, en part de la valeur de marché du fonds.",
+      "not": "Aucun de ces chiffres ne mesure l'impact réel du fonds. Une notation n'est pas un label, une intensité carbone n'inclut pas le scope 3, et une exposition nulle dépend de la couverture du fournisseur.",
+      "attribution": "Source : {{provider}}, via {{issuer}}",
+      "basis": "calculé sur les positions au {{date}}",
+      "license_note": "Seedow n'a pas de licence MSCI : ces chiffres sont affichés avec attribution, tels que l'émetteur les publie, et ne sont pas redistribués dans l'API ni dans les exports."
+    },
+    "report": {
+      "title": "Rapport de comparaison de fonds",
+      "back": "Retour au comparateur",
+      "print": "Imprimer / PDF",
+      "generated": "Généré le",
+      "snapshot": "Données émetteur du",
+      "funds": "Fonds",
+      "scope": "Ce rapport compare des fonds sur ce qu'ils publient : identité, cadre réglementaire, frais, performance passée recalculée à partir des séries de l'émetteur, expositions et exclusions documentées. Il ne classe pas les fonds, ne calcule aucun score de durabilité et ne constitue pas un conseil en investissement. Chaque bloc indique sa source et sa date ; une valeur absente est écrite « — », jamais remplacée par zéro.",
+      "not_found": "Introuvable(s) dans l'univers comparable : {{isins}}.",
+      "catalog_down": "Le catalogue Seedow était injoignable à la génération : seules les données émetteur figurent dans ce rapport (exclusions et transparence absentes).",
+      "empty_title": "Aucun fonds à mettre en rapport",
+      "empty_desc": "Sélectionne de 1 à {{max}} fonds dans le comparateur, puis ouvre le rapport imprimable.",
+      "footer": "Seedow — rapport généré à partir du comparateur public ({{url}}). Les mêmes données sont disponibles en CSV et en JSON par l'API publique v1. Les performances passées ne préjugent pas des performances futures.",
+      "identity_title": "Identité, cadre réglementaire et frais",
+      "issuer": "Émetteur",
+      "domicile": "Domicile",
+      "currency": "Devise de la part",
+      "benchmark": "Indice de référence",
+      "eu_framework": "Cadre européen (SFDR) applicable",
+      "yes": "Oui",
+      "no_non_eu": "Non — hors UE",
+      "not_applicable": "Non applicable",
+      "performance_title": "Performance passée",
+      "performance_note": "Rendements annualisés recalculés par Seedow à partir de la série de rendement total de l'émetteur (dividendes réinvestis), dans la devise de la part, et contrôlés contre les rendements que l'émetteur publie lui-même.",
+      "published_3y": "3 ans publié par l'émetteur (à sa date)",
+      "excess_3y": "Écart à l'indice, 3 ans",
+      "tracking_3y": "Écart de suivi, 3 ans",
+      "frequency": "Fréquence de la série",
+      "freq": {
+        "daily": "Quotidienne",
+        "monthly": "Mensuelle",
+        "irregular": "Irrégulière"
+      },
+      "as_of": "Données au",
+      "exposure_title": "Exposition publiée",
+      "exposure_note": "Répartitions calculées et publiées par l'émetteur. Les trois premières lignes sont montrées ; liquidités et « autres » restent comptées dans le reste.",
+      "top_sectors": "Trois premiers secteurs",
+      "top_countries": "Trois premiers pays",
+      "top10": "Poids des 10 premières lignes",
+      "exclusions_title": "Exclusions documentées et transparence",
+      "exclusions_note": "Lues dans les documents du fonds par l'Observatoire Seedow. « Non vérifié » décrit l'état de la collecte de Seedow, pas la politique du fonds.",
+      "esg_title": "Six couches ESG",
+      "esg_note": "Chaque couche est rendue séparément, avec son statut de donnée. Une classification réglementaire n'est pas une note, une note n'est pas un impact.",
+      "coverage_title": "Couverture des données",
+      "coverage_note": "Grille fixe de dix champs. Un champ indisponible n'est jamais rempli par défaut.",
+      "present": "Renseigné",
+      "sources_title": "Sources",
+      "retrieved": "collecté le",
+      "msci_not_exported": "Cet émetteur publie aussi des indicateurs calculés par {{provider}} (notation, intensité carbone, expositions d'activité) : consultables sur la fiche Seedow et chez {{issuer}}, non reproduits dans ce rapport faute de licence de redistribution.",
+      "catalog_only": "Données du catalogue Seedow uniquement (pas d'instantané émetteur).",
+      "catalog_source": "Catalogue Seedow (Observatoire) : classifications enregistrées, frais, politiques d'exclusion, indice de transparence — {{state}} à la génération.",
+      "reachable": "joignable",
+      "unreachable": "injoignable",
+      "method_title": "Méthode",
+      "method_returns": "Rendement annualisé : (fin / début)^(365,25 / jours) − 1, sur la fenêtre complète ; une fenêtre non couverte n'est jamais raccourcie.",
+      "method_vol": "Volatilité : écart-type des rendements de fin de mois × √12 (convention de l'émetteur). Perte maximale : plus forte baisse depuis un plus-haut. Aucun ratio de Sharpe : pas de taux sans risque sourcé.",
+      "method_status": "Statuts de donnée : vérifié, estimé, simulé, périmé, indisponible. Un calcul prend le statut de son entrée la plus faible.",
+      "method_limits": "Limites : séries dans la devise de la part, sans conversion de change ; les ETF américains ne publient qu'en fin de mois ; Taxonomie et valeurs PAI non collectées.",
+      "disclaimer": "Information, pas un conseil en investissement. Seedow ne recommande l'achat ou la vente d'aucun fonds."
+    },
+    "dev": {
+      "eyebrow": "API et exports",
+      "title": "Le comparateur, dans vos propres outils.",
+      "subtitle": "Une API publique en lecture seule, un export CSV aux colonnes stables et un rapport imprimable — pour les sociétés de gestion, distributeurs et équipes de sélection. Chaque valeur porte sa source, sa date et son statut.",
+      "open_compare": "Ouvrir le comparateur",
+      "format": {
+        "json": {
+          "title": "JSON, champ par champ",
+          "desc": "Chaque valeur arrive avec son statut de donnée, sa source et sa date. Une valeur inconnue vaut null, jamais 0."
+        },
+        "csv": {
+          "title": "CSV aux colonnes stables",
+          "desc": "Identifiants anglais en snake_case, UTF-8, point décimal, RFC 4180 : un import automatisé ne casse pas d'une langue à l'autre."
+        },
+        "report": {
+          "title": "Rapport imprimable",
+          "desc": "La même comparaison, mise en page pour un comité : identité, frais, performance contrôlée, expositions, couverture, sources datées."
+        }
+      },
+      "endpoints_title": "Points d'accès",
+      "endpoints_desc": "Base : {{base}}. Pas de clé, pas de compte. Réponses mises en cache en bordure (une heure). Jusqu'à {{max}} fonds par comparaison.",
+      "endpoint": {
+        "funds": "L'univers comparable, filtrable par nom, classification SFDR, frais maximum, politique fossiles documentée et historique disponible. Ordre alphabétique.",
+        "fund": "La fiche complète d'un fonds : identité, cadre réglementaire, frais, exclusions, transparence, performance par fenêtre, expositions, principales positions, couverture.",
+        "compare": "Jusqu'à huit fiches à la fois, dans l'ordre demandé, avec les lignes d'export.",
+        "compare_csv": "La même comparaison, en CSV, une ligne par fonds.",
+        "openapi": "La spécification OpenAPI 3.1, à importer dans votre outil."
+      },
+      "try": "Essayer :",
+      "curl_title": "Exemple",
+      "provenance_title": "Provenance champ par champ",
+      "provenance_desc": "Les champs sensibles sont des objets { value, status, source, asOf }. Les rendements et volatilités sont en fraction, les expositions en pourcentage, comme l'émetteur les publie.",
+      "columns_title": "Colonnes de l'export CSV",
+      "columns_desc": "Identifiants stables, dans cet ordre. Rendements, volatilité, perte maximale et frais en fraction ; parts d'exposition en pourcentage ; valeur vide = inconnue.",
+      "rules_title": "Ce que l'API ne fait pas",
+      "rule": {
+        "no_ranking": "Elle ne classe pas les fonds et ne calcule aucun score de durabilité : les listes sont alphabétiques.",
+        "provenance": "Elle ne remplit aucune case par défaut : une donnée absente est null, avec le statut « indisponible ».",
+        "msci": "Elle ne redistribue pas les indicateurs calculés par MSCI ESG Research que publient certains émetteurs : Seedow n'en a pas la licence. Elle indique seulement qu'ils existent et où les lire.",
+        "cache": "Elle n'est pas temps réel : les données documentaires bougent au mois, pas à la seconde. La date de l'instantané est dans chaque réponse.",
+        "not_advice": "Elle informe et ne conseille pas : aucune réponse ne constitue une recommandation d'achat ou de vente."
+      }
     }
   }
 }

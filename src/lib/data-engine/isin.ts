@@ -69,3 +69,15 @@ export function toCanonicalIsin(raw: string | null | undefined): string | null {
   const isin = normalizeIsin(raw);
   return isin && isValidIsin(isin) ? isin : null;
 }
+
+/**
+ * ISIN d'un titre américain à partir de son CUSIP (9 caractères) : « US » +
+ * CUSIP + chiffre de contrôle Luhn. C'est la construction normative (ISO 6166),
+ * pas une devinette : le CUSIP est publié par l'émetteur. CUSIP illisible → null.
+ */
+export function isinFromCusip(cusip: string | null | undefined, country = "US"): string | null {
+  const c = cusip?.trim().toUpperCase();
+  if (!c || !/^[A-Z0-9]{9}$/.test(c) || !/^[A-Z]{2}$/.test(country)) return null;
+  const body = `${country}${c}`;
+  return `${body}${luhnCheckDigit(expandToDigits(body))}`;
+}

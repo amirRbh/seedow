@@ -33,6 +33,7 @@ export function SiteFooter() {
         { to: "/cours", label: t("landing.footer.courses") },
         { to: "/methodologie", label: t("landing.footer.methodology") },
         { to: "/donnees", label: t("site.nav_data") },
+        { to: "/developpeurs", label: t("site.nav_api") },
       ],
     },
     {

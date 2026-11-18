@@ -20,23 +20,46 @@
  *     total, dividendes inclus), pour calculer rendements, volatilité, perte
  *     maximale et écart à l'indice ;
  *   - les rendements annualisés que l'émetteur publie lui-même, qui servent de
- *     contrôle indépendant des calculs (`performance.test.ts`).
+ *     contrôle indépendant des calculs (`performance.test.ts`) ;
+ *   - pour les ETF américains : les caractéristiques de durabilité (notation
+ *     MSCI ESG, WACI, hausse de température implicite) et les expositions
+ *     d'activité (armes controversées, Pacte mondial, charbon thermique…), que
+ *     l'émetteur publie dans le même classeur en les attribuant à MSCI ESG
+ *     Research. Seedow les reprend telles quelles, attribuées, sans licence
+ *     MSCI propre : elles ne sont ni recalculées ni redistribuées par l'API.
+ *
+ * Les ETF américains ne publient leur « croissance de 10 000 » qu'en fin de
+ * mois : leurs métriques sont calculées sur points mensuels (cf.
+ * `seriesFrequency` dans `lib/portfolio/performance.ts`).
  *
  * Usage : bun run scripts/snapshot-demo-funds.ts
  * Écrit : src/content/demo/fund-snapshots.json
  */
 import { mkdirSync, writeFileSync } from "node:fs";
+import type { ISharesSite } from "../src/lib/data-engine/ishares-funds";
 import { iSharesHoldingsUrl } from "../src/lib/data-engine/ishares-holdings";
 import { parseISharesWorkbook } from "../src/lib/data-engine/ishares-workbook";
 
-/** Fonds retenus : actions monde, monde ISR, émergents, thématique climat, obligations d'État. */
-const FUNDS = [
-  { portfolioId: "251882", role: "core_world" },
-  { portfolioId: "291392", role: "world_sri" },
-  { portfolioId: "264659", role: "emerging" },
-  { portfolioId: "251911", role: "clean_energy" },
-  { portfolioId: "251715", role: "treasury" },
-] as const;
+/**
+ * Fonds retenus.
+ *   - Europe (UCITS) : actions monde, monde ISR, émergents, thématique climat,
+ *     obligations d'État — le portefeuille de démonstration.
+ *   - États-Unis : quatre ETF dont l'émetteur publie les indicateurs MSCI ESG,
+ *     et un S&P 500 classique comme point de comparaison non ESG. Ils servent
+ *     au comparateur et aux fiches fonds, pas au portefeuille de démonstration.
+ */
+const FUNDS: { portfolioId: string; role: string; site: ISharesSite }[] = [
+  { portfolioId: "251882", role: "core_world", site: "uk" },
+  { portfolioId: "291392", role: "world_sri", site: "uk" },
+  { portfolioId: "264659", role: "emerging", site: "uk" },
+  { portfolioId: "251911", role: "clean_energy", site: "uk" },
+  { portfolioId: "251715", role: "treasury", site: "uk" },
+  { portfolioId: "271054", role: "us_low_carbon_world", site: "us" },
+  { portfolioId: "286007", role: "us_esg_aware", site: "us" },
+  { portfolioId: "308574", role: "us_esg_leaders", site: "us" },
+  { portfolioId: "239738", role: "us_clean_energy", site: "us" },
+  { portfolioId: "239726", role: "us_core", site: "us" },
+];
 
 const TOP_HOLDINGS = 150;
 /** Profondeur d'historique conservée : 6 ans couvrent la fenêtre 5 ans avec marge. */
@@ -47,12 +70,15 @@ function round(n: number, digits: number): number {
   return Math.round(n * f) / f;
 }
 
-async function snapshot(portfolioId: string, role: string) {
-  const sourceUrl = iSharesHoldingsUrl(portfolioId, "uk");
+async function snapshot(portfolioId: string, role: string, site: ISharesSite) {
+  const sourceUrl = iSharesHoldingsUrl(portfolioId, site);
   const res = await fetch(sourceUrl, { headers: { "user-agent": "seedow-snapshot/1.0" } });
   if (!res.ok) throw new Error(`${portfolioId}: HTTP ${res.status}`);
   const wb = parseISharesWorkbook(await res.text());
-  if (!wb.isin || wb.growthFund.length < 300) throw new Error(`${portfolioId}: classeur incomplet`);
+  // ≥ 5 ans d'historique : 300 points quotidiens, ou 60 fins de mois.
+  const minPoints = site === "us" && wb.growthFund.length < 400 ? 60 : 300;
+  if (!wb.isin || wb.growthFund.length < minPoints)
+    throw new Error(`${portfolioId}: classeur incomplet`);
 
   // Devise de cotation, agrégée sur TOUTES les positions (pas seulement le top).
   const byCurrency = new Map<string, number>();
@@ -81,7 +107,10 @@ async function snapshot(portfolioId: string, role: string) {
     name: wb.name,
     issuer: "iShares (BlackRock)",
     sourceUrl,
-    sourceLabel: "Classeur produit iShares — publication officielle de l'émetteur",
+    sourceLabel:
+      site === "us"
+        ? "Classeur produit iShares (États-Unis) — publication officielle de l'émetteur"
+        : "Classeur produit iShares — publication officielle de l'émetteur",
     retrievedAt: new Date().toISOString().slice(0, 10),
     navAsOf: wb.navAsOf,
     currency: wb.currency,
@@ -99,6 +128,8 @@ async function snapshot(portfolioId: string, role: string) {
     geographyExposure: wb.geographyExposure,
     geographyAsOf: wb.geographyAsOf,
     currencyExposure,
+    sustainability: wb.sustainability,
+    businessInvolvement: wb.businessInvolvement,
     holdingsAsOf: wb.holdingsAsOf,
     holdingsLines: wb.holdings.length,
     holdingsTotalWeightPct: round(holdingsWeight, 2),
@@ -123,8 +154,8 @@ async function snapshot(portfolioId: string, role: string) {
 
 const out = [];
 for (const f of FUNDS) {
-  console.log(`→ ${f.portfolioId} (${f.role})`);
-  out.push(await snapshot(f.portfolioId, f.role));
+  console.log(`→ ${f.portfolioId} (${f.role}, ${f.site})`);
+  out.push(await snapshot(f.portfolioId, f.role, f.site));
 }
 mkdirSync("src/content/demo", { recursive: true });
 writeFileSync(

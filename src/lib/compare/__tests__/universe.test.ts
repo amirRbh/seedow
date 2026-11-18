@@ -40,6 +40,10 @@ const catalogFund = (over: Partial<ObservatoryFund>): ObservatoryFund =>
 const snap: SnapshotSide = {
   isin: "IE00B1XNHC34",
   name: "iShares Global Clean Energy Transition UCITS ETF",
+  issuer: "iShares (BlackRock)",
+  domicile: "Ireland",
+  currency: "USD",
+  sourceUrl: "https://www.blackrock.com/example",
   sfdrDeclared: "Article 8",
   navAsOf: "2026-11-17",
   ter: 0.0065,
@@ -50,6 +54,9 @@ const snap: SnapshotSide = {
   volatility3y: 0.27,
   maxDrawdown5y: -0.5,
   excess3y: null,
+  perfFrequency: "daily",
+  perfAsOf: "2026-11-17",
+  thirdParty: null,
 };
 
 describe("univers fusionné", () => {

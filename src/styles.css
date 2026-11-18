@@ -1794,3 +1794,23 @@
     animation: none !important;
   }
 }
+
+/* ── Impression — rapport institutionnel (/comparer/rapport) ─────────────
+   Une page A4 sobre : fond papier, aucune ombre, pas de coupure au milieu
+   d'un tableau. Le chrome (boutons) porte `print:hidden`. */
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm 12mm;
+  }
+  body {
+    background: var(--paper);
+  }
+  .report-sheet {
+    box-shadow: none !important;
+    border: 0 !important;
+  }
+  .report-avoid {
+    break-inside: avoid;
+  }
+}

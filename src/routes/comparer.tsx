@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { AlertTriangle, Check, Download, Plus, Search, X } from "lucide-react";
+import { AlertTriangle, Braces, Check, Download, FileText, Plus, Search, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { DataStatusChip } from "@/components/analytics/DataStatusChip";
 import { shortFundName } from "@/lib/demo/labels";
@@ -10,20 +10,21 @@ import { Button } from "@/components/ui/button";
 import { useLang } from "@/hooks/useLang";
 import {
   buildUniverse,
+  comparisonCsv,
   COVERAGE_FIELDS,
   dataCoveragePct,
   effectiveSfdr,
   fieldPresence,
   screen,
-  toCsv,
+  toSnapshotSide,
   type CompareFund,
   type ScreenFilters,
-  type SnapshotSide,
 } from "@/lib/compare/universe";
 import { getSnapshotFunds, listSnapshotFunds } from "@/lib/demo/demo.functions";
 import { getObservatory } from "@/lib/esg/v2/observatory.functions";
 import { STI_SECTORS } from "@/lib/esg/v2/sti";
-import { formatPercent } from "@/lib/format";
+import { euFrameworkApplies } from "@/lib/esg/framework";
+import { formatDate, formatNumber, formatPercent } from "@/lib/format";
 import { siteUrl, socialMeta } from "@/lib/seo/socialMeta";
 import { cn } from "@/lib/utils";
 
@@ -39,28 +40,12 @@ export const Route = createFileRoute("/comparer")({
       getObservatory().catch(() => ({ funds: [], stats: null })),
       listSnapshotFunds(),
     ]);
-    const analytics = await getSnapshotFunds({ data: list.funds.map((f) => f.isin) });
-    const snapshots: SnapshotSide[] = analytics.map((a) => {
-      const w = (y: number) => a.performance.windows.find((x) => x.years === y);
-      return {
-        isin: a.isin,
-        name: a.name,
-        sfdrDeclared: a.sfdrDeclared,
-        navAsOf: a.navAsOf,
-        ter: a.ter,
-        benchmark: a.benchmark,
-        holdingsCount: a.holdingsCount,
-        energySectorPct: a.energySectorPct,
-        annualized: {
-          1: w(1)?.annualizedReturn ?? null,
-          3: w(3)?.annualizedReturn ?? null,
-          5: w(5)?.annualizedReturn ?? null,
-        },
-        volatility3y: w(3)?.annualizedVolatility ?? null,
-        maxDrawdown5y: w(5)?.maxDrawdown ?? null,
-        excess3y: w(3)?.excessAnnualizedReturn ?? null,
-      };
-    });
+    // L'instantané compte plus de 8 fonds : lecture par lots (limite de la fonction serveur).
+    const isins = list.funds.map((f) => f.isin);
+    const batches: string[][] = [];
+    for (let i = 0; i < isins.length; i += 8) batches.push(isins.slice(i, i + 8));
+    const analytics = (await Promise.all(batches.map((data) => getSnapshotFunds({ data })))).flat();
+    const snapshots = analytics.map(toSnapshotSide);
     return { universe: buildUniverse(catalog.funds, snapshots), catalogSize: catalog.funds.length };
   },
   head: () => ({
@@ -112,6 +97,8 @@ function ComparePage() {
 
   const pct = (v: number | null | undefined, d = 1) =>
     v == null ? "—" : formatPercent(v, lang, d);
+  const selectedIsins = selected.map((f) => f.isin).filter((x): x is string => !!x);
+  const hasThirdParty = selected.some((f) => f.snapshot?.thirdParty);
   const art = (n: number | null) =>
     n === null
       ? t("fin.sfdr.unknown")
@@ -120,39 +107,7 @@ function ComparePage() {
         : t("fin.sfdr.article", { n });
 
   const exportCsv = () => {
-    const header = [
-      t("fin.table.fund"),
-      "ISIN",
-      t("fin.compare.row.sfdr_catalog"),
-      t("fin.compare.row.sfdr_declared"),
-      t("fin.table.ter"),
-      ...STI_SECTORS.map(
-        (s) => `${t("fin.compare.row.exclusion")} ${t(`fin.compare.sector.${s}`)}`,
-      ),
-      t("fin.compare.row.ann1y"),
-      t("fin.compare.row.ann3y"),
-      t("fin.compare.row.ann5y"),
-      t("fin.compare.row.vol3y"),
-      t("fin.compare.row.mdd5y"),
-      t("fin.kpi.energy"),
-      t("fin.compare.row.coverage"),
-    ];
-    const rows = selected.map((f) => [
-      f.name,
-      f.isin,
-      f.sfdrCatalog,
-      f.sfdrDeclared,
-      f.ter,
-      ...STI_SECTORS.map((s) => f.exclusions[s] ?? null),
-      f.snapshot?.annualized[1] ?? null,
-      f.snapshot?.annualized[3] ?? null,
-      f.snapshot?.annualized[5] ?? null,
-      f.snapshot?.volatility3y ?? null,
-      f.snapshot?.maxDrawdown5y ?? null,
-      f.snapshot?.energySectorPct ?? null,
-      Math.round(dataCoveragePct(f)),
-    ]);
-    const blob = new Blob([toCsv(header, rows)], { type: "text/csv;charset=utf-8" });
+    const blob = new Blob([comparisonCsv(selected)], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -174,7 +129,11 @@ function ComparePage() {
       label: t("fin.compare.row.sfdr"),
       render: (f) => (
         <span className="inline-flex flex-col items-end gap-1">
-          <span>{art(effectiveSfdr(f))}</span>
+          <span>
+            {euFrameworkApplies(f.isin) === false && effectiveSfdr(f) === null
+              ? t("fin.report.not_applicable")
+              : art(effectiveSfdr(f))}
+          </span>
           {f.sfdrConflict && (
             <span className="inline-flex items-center gap-1 text-caption font-semibold text-solar-ink">
               <AlertTriangle aria-hidden className="size-3.5" />
@@ -224,6 +183,24 @@ function ComparePage() {
       render: (f) => pct(f.snapshot?.maxDrawdown5y),
     },
     {
+      // Les ETF américains s'arrêtent en fin de mois : la date est montrée, pas sous-entendue.
+      key: "perf-asof",
+      label: t("fin.report.as_of"),
+      render: (f) =>
+        f.snapshot?.perfAsOf ? (
+          <span className="mono-meta">
+            {formatDate(f.snapshot.perfAsOf, lang, {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            })}
+            {f.snapshot.perfFrequency === "monthly" && ` · ${t("fin.report.freq.monthly")}`}
+          </span>
+        ) : (
+          "—"
+        ),
+    },
+    {
       key: "energy",
       group: t("fin.compare.group.exposure"),
       label: t("fin.kpi.energy"),
@@ -235,6 +212,47 @@ function ComparePage() {
       label: t("fin.table.holdings"),
       render: (f) => f.snapshot?.holdingsCount ?? "—",
     },
+    ...(hasThirdParty
+      ? ([
+          {
+            key: "msci-rating",
+            group: t("fin.compare.group.third_party"),
+            label: t("fin.esg_data.rating"),
+            render: (f) => f.snapshot?.thirdParty?.rating ?? "—",
+          },
+          {
+            key: "msci-waci",
+            label: `${t("fin.esg_data.waci")} (${t("fin.esg_data.waci_unit")})`,
+            render: (f) =>
+              f.snapshot?.thirdParty?.waci == null
+                ? "—"
+                : formatNumber(f.snapshot.thirdParty.waci, lang, {
+                    minimumFractionDigits: 1,
+                    maximumFractionDigits: 1,
+                  }),
+          },
+          {
+            key: "msci-itr",
+            label: t("fin.esg_data.itr"),
+            render: (f) => f.snapshot?.thirdParty?.impliedTempRise ?? "—",
+          },
+          {
+            key: "msci-weapons",
+            label: t("fin.esg_data.involvement.controversial_weapons"),
+            render: (f) => pct(nullablePct(f.snapshot?.thirdParty?.controversialWeapons), 2),
+          },
+          {
+            key: "msci-coal",
+            label: t("fin.esg_data.involvement.thermal_coal"),
+            render: (f) => pct(nullablePct(f.snapshot?.thirdParty?.thermalCoal), 2),
+          },
+          {
+            key: "msci-ungc",
+            label: t("fin.esg_data.involvement.ungc_violators"),
+            render: (f) => pct(nullablePct(f.snapshot?.thirdParty?.ungcViolators), 2),
+          },
+        ] satisfies Row[])
+      : []),
     {
       key: "coverage",
       group: t("fin.compare.group.quality"),
@@ -268,15 +286,37 @@ function ComparePage() {
                   {t("fin.compare.selected_desc")}
                 </p>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={exportCsv}
-                disabled={selected.length === 0}
-              >
-                <Download aria-hidden />
-                {t("fin.compare.export")}
-              </Button>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={exportCsv}
+                  disabled={selected.length === 0}
+                >
+                  <Download aria-hidden />
+                  {t("fin.compare.export")}
+                </Button>
+                {selectedIsins.length > 0 && (
+                  <>
+                    <Button asChild variant="outline" size="sm">
+                      <Link to="/comparer/rapport" search={{ f: selectedIsins.join(",") }}>
+                        <FileText aria-hidden />
+                        {t("fin.compare.report")}
+                      </Link>
+                    </Button>
+                    <Button asChild variant="ghost" size="sm">
+                      <a
+                        href={`/api/public/v1/compare?isins=${selectedIsins.join(",")}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <Braces aria-hidden />
+                        {t("fin.compare.api")}
+                      </a>
+                    </Button>
+                  </>
+                )}
+              </div>
             </div>
 
             {selected.length === 0 ? (
@@ -328,8 +368,16 @@ function ComparePage() {
                 </table>
               </div>
             )}
-            <p className="mt-5 text-caption leading-relaxed text-ink-3">
-              {t("fin.compare.disclaimer")}
+            {hasThirdParty && (
+              <p className="mt-5 text-caption leading-relaxed text-ink-3">
+                {t("fin.compare.third_party_note")}
+              </p>
+            )}
+            <p className="mt-3 text-caption leading-relaxed text-ink-3">
+              {t("fin.compare.disclaimer")}{" "}
+              <Link to="/developpeurs" className="underline hover:no-underline">
+                {t("fin.compare.api_docs")}
+              </Link>
             </p>
           </section>
         </Reveal>
@@ -470,6 +518,11 @@ function ComparePage() {
       </div>
     </PublicPage>
   );
+}
+
+/** Les expositions MSCI sont publiées en % (0,24) : le formateur attend une fraction. */
+function nullablePct(v: number | null | undefined): number | null {
+  return v == null ? null : v / 100;
 }
 
 function RowGroup({

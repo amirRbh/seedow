@@ -3645,7 +3645,8 @@
     },
     "nav_demo": "Demo",
     "nav_compare": "Compare",
-    "nav_data": "Data sources"
+    "nav_data": "Data sources",
+    "nav_api": "API & exports"
   },
   "fin": {
     "status": {
@@ -3684,7 +3685,8 @@
       "no_history": "Not enough history to draw a chart.",
       "chart_aria": "{{name}} and its benchmark, rebased to 100",
       "past_disclaimer": "Past performance, computed on the history published by the issuer. It is not a guide to future returns and not a forecast.",
-      "simulated_disclaimer": "Simulation: constant-weight basket, no transaction costs or taxes. Not the performance of a real investor."
+      "simulated_disclaimer": "Simulation: constant-weight basket, no transaction costs or taxes. Not the performance of a real investor.",
+      "monthly_note": "Series published at month-end by the issuer: volatility and tracking error are computed on monthly points, and the month-end to month-end maximum drawdown understates intra-month losses."
     },
     "method": {
       "label": "How it is calculated",
@@ -3763,8 +3765,8 @@
           "not": "It is a disclosure category declared by the issuer, not a sustainability rating. An Article 9 fund is not guaranteed free of adverse impacts."
         },
         "esg_risk": {
-          "title": "ESG risk",
-          "not": "An ESG risk rating measures a company's exposure to ESG issues, not its effect on the world."
+          "title": "ESG rating",
+          "not": "An ESG rating measures how resilient the companies held are to ESG risks that matter financially to them, not their effect on the world. A climate-themed fund can be rated lower than a diversified one: the rating does not measure contribution to the transition."
         },
         "characteristics": {
           "title": "Promoted characteristics",
@@ -3788,10 +3790,13 @@
           "article_6": "Neither Article 8 nor Article 9",
           "article_8": "Article 8 — promotes E/S characteristics",
           "article_9": "Article 9 — sustainable investment objective",
-          "unknown": "Not provided"
+          "unknown": "Not provided",
+          "not_applicable": "Not applicable — fund domiciled outside the European Union"
         },
         "esg_risk": {
-          "no_licensed_rating": "No licensed rating in our sources"
+          "no_licensed_rating": "No licensed rating in our sources",
+          "msci_fund_rating": "MSCI ESG fund rating: {{rating}} — details and coverage in the block above",
+          "published_not_exported": "Rating published by {{issuer}} (computed by {{provider}}) — not reproduced in exports"
         },
         "characteristics": {
           "documented": "{{documented}} sector(s) documented out of {{total}} · {{excluded}} excluded",
@@ -3799,11 +3804,14 @@
           "none": "No documented policy in our sources"
         },
         "taxonomy": {
-          "not_collected": "Not collected"
+          "not_collected": "Not collected",
+          "not_applicable": "Not applicable — EU regulation"
         },
         "pai": {
           "statement_published": "PAI statement published",
-          "not_verified": "Publication not verified"
+          "not_verified": "Publication not verified",
+          "not_applicable": "Not applicable — no PAI statement outside the European Union",
+          "not_applicable_proxies": "No PAI statement (non-EU fund) — {{proxies}} related indicator(s) published by the issuer"
         },
         "impact": {
           "not_measured": "Not measured by Seedow"
@@ -3827,7 +3835,13 @@
         "board_independence": "Board independence",
         "business_ethics": "Business ethics",
         "corruption_controversies": "Corruption controversies",
-        "shareholder_rights": "Shareholder rights"
+        "shareholder_rights": "Shareholder rights",
+        "implied_temperature_rise": "Implied temperature rise",
+        "thermal_coal_involvement": "Thermal coal (> 5% of revenue)",
+        "oil_sands_involvement": "Oil sands (> 5% of revenue)",
+        "controversial_weapons_involvement": "Controversial weapons (≈ PAI 14)",
+        "ungc_violations": "UN Global Compact violations (≈ PAI 10)",
+        "tobacco_involvement": "Tobacco"
       }
     },
     "demo": {
@@ -3927,7 +3941,7 @@
     "compare": {
       "eyebrow": "Fund comparator",
       "title": "Compare funds on what they publish.",
-      "subtitle": "Fees, SFDR classification, documented exclusion policies, past performance, exposure and data coverage. Up to four funds, exportable to CSV.",
+      "subtitle": "Costs, SFDR classification, documented exclusion policies, past performance, exposure and data coverage. Up to four funds, exportable as CSV, as a printable report or through the API.",
       "universe": "{{catalog}} funds in the catalogue · {{total}} comparable",
       "selected_title": "Comparison ({{count}}/{{max}})",
       "selected_desc": "Add or remove funds from the list below. This page's link keeps your selection.",
@@ -3944,7 +3958,8 @@
         "exclusions": "Documented exclusions",
         "performance": "Past performance (annualised)",
         "exposure": "Exposure",
-        "quality": "Data quality"
+        "quality": "Data quality",
+        "third_party": "Published by the issuer (computed by MSCI ESG Research)"
       },
       "row": {
         "sfdr": "SFDR classification",
@@ -3957,7 +3972,8 @@
         "ann5y": "5 years",
         "vol3y": "3-yr volatility",
         "mdd5y": "5-yr maximum drawdown",
-        "coverage": "Data coverage"
+        "coverage": "Data coverage",
+        "sfdr_conflict_label": "Catalogue / issuer mismatch"
       },
       "sector": {
         "fossiles": "Fossil fuels",
@@ -3997,7 +4013,11 @@
       "filter_perf": "Performance history available",
       "results_one": "{{count}} fund matches",
       "results_other": "{{count}} funds match",
-      "more_results": "+ {{count}} more — refine your search."
+      "more_results": "+ {{count}} more — refine your search.",
+      "report": "Printable report",
+      "api": "JSON API",
+      "api_docs": "API & institutional exports →",
+      "third_party_note": "MSCI metrics: computed by MSCI ESG Research and published by the issuer (US ETFs). Displayed with attribution, never used to rank, and not included in exports — Seedow holds no redistribution licence."
     },
     "data": {
       "eyebrow": "Sources and quality",
@@ -4013,7 +4033,9 @@
         "fund_exposure": "Published exposures",
         "performance_history": "Performance history",
         "regulatory_document": "Regulatory documents",
-        "esg_issuer": "Company ESG data"
+        "esg_issuer": "Company ESG data",
+        "performance_history_monthly": "Monthly history (US ETFs)",
+        "esg_fund_metrics": "Fund ESG metrics (MSCI, via the issuer)"
       },
       "sources_title": "Source register",
       "sources_desc": "Written from the code: each entry names the file that implements it.",
@@ -4049,6 +4071,140 @@
       "desc": "{{covered}} of {{total}} funds broken down from the issuer's publication · {{pct}} of value broken down.",
       "none_covered": "None of your funds has a published composition in our sources yet. Your real exposure is therefore not computed — nor is it guessed.",
       "error": "Exposure could not be computed right now."
+    },
+    "esg_data": {
+      "title": "Sustainability metrics published by the issuer",
+      "desc": "Computed by {{provider}}, published by {{issuer}} in its product workbook. Reproduced as is, without recomputation or conversion into a score.",
+      "rating": "MSCI ESG rating",
+      "rating_hint": "Quality score {{quality}}/10 · coverage {{coverage}}",
+      "peer": "Published peer percentile: {{pct}} — “{{group}}” group ({{count}} funds)",
+      "waci": "Carbon intensity (WACI)",
+      "waci_unit": "t CO₂e / $M revenue",
+      "itr": "Implied temperature rise",
+      "coverage": "Coverage {{pct}}",
+      "involvement_title": "Share of the fund exposed to activities",
+      "involvement_desc": "Share of the fund's value invested in involved companies, according to MSCI ESG Research. Coverage: {{coverage}}.",
+      "involvement": {
+        "controversial_weapons": "Controversial weapons",
+        "ungc_violators": "UN Global Compact violators",
+        "nuclear_weapons": "Nuclear weapons",
+        "thermal_coal": "Thermal coal",
+        "civilian_firearms": "Civilian firearms",
+        "oil_sands": "Oil sands",
+        "tobacco": "Tobacco"
+      },
+      "involvement_threshold": "Thermal coal and oil sands: companies deriving more than 5% of revenue from them (issuer threshold). 0.00% means no covered company is identified, not a guarantee: a company MSCI does not cover is not counted.",
+      "method_rating": "MSCI ESG fund rating (AAA to CCC): weighted average of the ESG ratings of the companies held, published when at least 65% of the fund (50% for bonds) is covered. The percentile compares the quality score with the Lipper peer group.",
+      "method_waci": "WACI: each company's scope 1 and 2 emissions divided by its revenue, in t CO₂e per million dollars, weighted by its weight in the fund. Scope 3 is not included.",
+      "method_itr": "Implied temperature rise: MSCI's projection of the companies' emissions pathway, converted into associated warming. It is a forward-looking model, published as a band, and Seedow does not turn it into a number.",
+      "method_involvement": "Business involvement: computed by BlackRock from MSCI ESG Research involvement profiles, as a share of the fund's market value.",
+      "not": "None of these figures measures the fund's real-world impact. A rating is not a label, carbon intensity excludes scope 3, and a zero exposure depends on the provider's coverage.",
+      "attribution": "Source: {{provider}}, via {{issuer}}",
+      "basis": "computed on holdings as of {{date}}",
+      "license_note": "Seedow holds no MSCI licence: these figures are displayed with attribution, as published by the issuer, and are not redistributed through the API or exports."
+    },
+    "report": {
+      "title": "Fund comparison report",
+      "back": "Back to the comparator",
+      "print": "Print / PDF",
+      "generated": "Generated on",
+      "snapshot": "Issuer data as of",
+      "funds": "Funds",
+      "scope": "This report compares funds on what they publish: identity, regulatory framework, costs, past performance recomputed from the issuer's series, exposures and documented exclusions. It does not rank funds, computes no sustainability score and is not investment advice. Each block states its source and date; a missing value is written “—”, never replaced by zero.",
+      "not_found": "Not found in the comparable universe: {{isins}}.",
+      "catalog_down": "The Seedow catalogue was unreachable at generation time: only issuer data appear in this report (no exclusions or transparency).",
+      "empty_title": "No fund to report on",
+      "empty_desc": "Select 1 to {{max}} funds in the comparator, then open the printable report.",
+      "footer": "Seedow — report generated from the public comparator ({{url}}). The same data are available as CSV and JSON through public API v1. Past performance does not predict future returns.",
+      "identity_title": "Identity, regulatory framework and costs",
+      "issuer": "Issuer",
+      "domicile": "Domicile",
+      "currency": "Share class currency",
+      "benchmark": "Benchmark",
+      "eu_framework": "EU framework (SFDR) applies",
+      "yes": "Yes",
+      "no_non_eu": "No — non-EU",
+      "not_applicable": "Not applicable",
+      "performance_title": "Past performance",
+      "performance_note": "Annualised returns recomputed by Seedow from the issuer's total-return series (dividends reinvested), in the share class currency, and checked against the returns the issuer itself publishes.",
+      "published_3y": "3 years, as published by the issuer (at its date)",
+      "excess_3y": "Excess over benchmark, 3 years",
+      "tracking_3y": "Tracking error, 3 years",
+      "frequency": "Series frequency",
+      "freq": {
+        "daily": "Daily",
+        "monthly": "Monthly",
+        "irregular": "Irregular"
+      },
+      "as_of": "Data as of",
+      "exposure_title": "Published exposure",
+      "exposure_note": "Breakdowns computed and published by the issuer. The top three lines are shown; cash and “other” remain counted in the rest.",
+      "top_sectors": "Top three sectors",
+      "top_countries": "Top three countries",
+      "top10": "Weight of the top 10 holdings",
+      "exclusions_title": "Documented exclusions and transparency",
+      "exclusions_note": "Read in the fund's documents by the Seedow Observatory. “Not verified” describes Seedow's collection status, not the fund's policy.",
+      "esg_title": "Six ESG layers",
+      "esg_note": "Each layer is rendered separately, with its data status. A regulatory classification is not a rating; a rating is not an impact.",
+      "coverage_title": "Data coverage",
+      "coverage_note": "Fixed grid of ten fields. An unavailable field is never filled by default.",
+      "present": "Available",
+      "sources_title": "Sources",
+      "retrieved": "retrieved on",
+      "msci_not_exported": "This issuer also publishes metrics computed by {{provider}} (rating, carbon intensity, business involvement): available on the Seedow fund page and from {{issuer}}, not reproduced in this report for lack of a redistribution licence.",
+      "catalog_only": "Seedow catalogue data only (no issuer snapshot).",
+      "catalog_source": "Seedow catalogue (Observatory): recorded classifications, costs, exclusion policies, transparency index — {{state}} at generation time.",
+      "reachable": "reachable",
+      "unreachable": "unreachable",
+      "method_title": "Method",
+      "method_returns": "Annualised return: (end / start)^(365.25 / days) − 1, over the full window; a window that is not covered is never shortened.",
+      "method_vol": "Volatility: standard deviation of month-end returns × √12 (issuer convention). Maximum drawdown: largest fall from a previous high. No Sharpe ratio: no sourced risk-free rate.",
+      "method_status": "Data statuses: verified, estimated, simulated, stale, unavailable. A computation takes the status of its weakest input.",
+      "method_limits": "Limits: series in the share class currency, with no FX conversion; US ETFs publish month-end data only; Taxonomy and PAI values not collected.",
+      "disclaimer": "Information, not investment advice. Seedow does not recommend buying or selling any fund."
+    },
+    "dev": {
+      "eyebrow": "API & exports",
+      "title": "The comparator, in your own tools.",
+      "subtitle": "A read-only public API, a CSV export with stable columns and a printable report — for asset managers, distributors and fund selection teams. Every value carries its source, date and status.",
+      "open_compare": "Open the comparator",
+      "format": {
+        "json": {
+          "title": "JSON, field by field",
+          "desc": "Every value comes with its data status, source and date. An unknown value is null, never 0."
+        },
+        "csv": {
+          "title": "CSV with stable columns",
+          "desc": "English snake_case identifiers, UTF-8, dot decimal, RFC 4180: an automated import does not break from one language to another."
+        },
+        "report": {
+          "title": "Printable report",
+          "desc": "The same comparison, laid out for a committee: identity, costs, checked performance, exposures, coverage, dated sources."
+        }
+      },
+      "endpoints_title": "Endpoints",
+      "endpoints_desc": "Base: {{base}}. No key, no account. Responses cached at the edge (one hour). Up to {{max}} funds per comparison.",
+      "endpoint": {
+        "funds": "The comparable universe, filterable by name, SFDR classification, maximum costs, documented fossil policy and available history. Alphabetical order.",
+        "fund": "A fund's full record: identity, regulatory framework, costs, exclusions, transparency, performance by window, exposures, top holdings, coverage.",
+        "compare": "Up to eight records at once, in the requested order, with the export rows.",
+        "compare_csv": "The same comparison as CSV, one row per fund.",
+        "openapi": "The OpenAPI 3.1 specification, to import into your tooling."
+      },
+      "try": "Try:",
+      "curl_title": "Example",
+      "provenance_title": "Field-by-field provenance",
+      "provenance_desc": "Sensitive fields are { value, status, source, asOf } objects. Returns and volatilities are fractions, exposures are percentages, as the issuer publishes them.",
+      "columns_title": "CSV export columns",
+      "columns_desc": "Stable identifiers, in this order. Returns, volatility, maximum drawdown and costs as fractions; exposure shares as percentages; empty value = unknown.",
+      "rules_title": "What the API does not do",
+      "rule": {
+        "no_ranking": "It does not rank funds and computes no sustainability score: lists are alphabetical.",
+        "provenance": "It fills nothing by default: missing data is null, with the “unavailable” status.",
+        "msci": "It does not redistribute the metrics computed by MSCI ESG Research that some issuers publish: Seedow holds no licence for that. It only states that they exist and where to read them.",
+        "cache": "It is not real-time: documentary data move monthly, not by the second. The snapshot date is in every response.",
+        "not_advice": "It informs and does not advise: no response is a recommendation to buy or sell."
+      }
     }
   }
 }

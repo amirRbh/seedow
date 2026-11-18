@@ -11,9 +11,14 @@
  * Module PUR : le JSON est fourni par l'appelant (fonction serveur).
  */
 import { primarySourceStatus, type DataStatus } from "@/lib/data/status";
+import type {
+  WorkbookBusinessInvolvement,
+  WorkbookSustainability,
+} from "@/lib/data-engine/ishares-workbook";
+import type { ThirdPartyFundEsg } from "@/lib/esg/framework";
 import type { Position } from "@/lib/portfolio/exposure";
 import { securityKey } from "@/lib/portfolio/exposure";
-import type { SeriesPoint } from "@/lib/portfolio/performance";
+import { seriesFrequency, type SeriesPoint } from "@/lib/portfolio/performance";
 
 export interface SnapshotExposure {
   label: string;
@@ -48,6 +53,9 @@ export interface FundSnapshot {
   geographyExposure: SnapshotExposure[];
   geographyAsOf: string | null;
   currencyExposure: SnapshotExposure[];
+  /** Indicateurs MSCI publiés par l'émetteur (ETF américains), sinon absents ou `null`. */
+  sustainability?: WorkbookSustainability | null;
+  businessInvolvement?: WorkbookBusinessInvolvement | null;
   holdingsAsOf: string | null;
   holdingsLines: number;
   holdingsTotalWeightPct: number;
@@ -119,6 +127,23 @@ export function snapshotToPosition(f: FundSnapshot, marketValue: number): Positi
   };
 }
 
+/** Indicateurs MSCI repris par l'émetteur, au format du cadre ESG — `null` s'il n'en publie pas. */
+export function snapshotThirdPartyEsg(f: {
+  issuer: string;
+  sourceUrl: string;
+  sustainability?: WorkbookSustainability | null;
+  businessInvolvement?: WorkbookBusinessInvolvement | null;
+}): ThirdPartyFundEsg | null {
+  if (!f.sustainability && !f.businessInvolvement) return null;
+  return {
+    provider: "MSCI ESG Research",
+    publishedBy: f.issuer,
+    sourceUrl: f.sourceUrl,
+    sustainability: f.sustainability ?? null,
+    businessInvolvement: f.businessInvolvement ?? null,
+  };
+}
+
 /** Statut des données d'un fonds de l'instantané, selon leur âge. */
 export function snapshotStatus(
   f: FundSnapshot,
@@ -135,15 +160,49 @@ export function snapshotStatus(
     performance: primarySourceStatus(
       f.history.dates.length > 1,
       f.history.dates.at(-1) ?? null,
-      "performance_history",
+      seriesFrequency(fundSeries(f)) === "monthly"
+        ? "performance_history_monthly"
+        : "performance_history",
       now,
     ),
     regulatory: primarySourceStatus(f.sfdrDeclared != null, f.navAsOf, "regulatory_document", now),
   };
 }
 
-/** Part du secteur Énergie (GICS) publiée par l'émetteur, ou `null`. */
-export function energySectorPct(f: FundSnapshot): number | null {
-  if (f.sectorExposure.length === 0) return null;
-  return f.sectorExposure.find((s) => s.label.toLowerCase() === "energy")?.weightPct ?? 0;
+/** Les onze secteurs GICS, sous les libellés des émetteurs (« Communication » côté américain). */
+const GICS_SECTORS = new Set([
+  "energy",
+  "materials",
+  "industrials",
+  "consumer discretionary",
+  "consumer staples",
+  "health care",
+  "financials",
+  "information technology",
+  "communication",
+  "communication services",
+  "utilities",
+  "real estate",
+]);
+
+/** Sous-industries GICS du secteur Énergie (pétrole, gaz, charbon), y compris les regroupements d'émetteur. */
+const ENERGY_SUB_INDUSTRY = /oil & gas|integrated oil|coal & consumable fuels/i;
+
+/**
+ * Part du secteur Énergie (GICS) publiée par l'émetteur, ou `null`.
+ *
+ * Deux granularités existent : par SECTEUR (« Energy ») ou par SOUS-INDUSTRIE
+ * (« Oil & Gas Refining & Marketing & Transportation », typique des ETF
+ * thématiques). Dans le second cas, on additionne les sous-industries du
+ * secteur Énergie. Une répartition publiée est complète : l'absence d'une
+ * ligne Énergie vaut 0 (fonds d'État compris). Aucune répartition → `null`.
+ */
+export function energySectorPct(f: Pick<FundSnapshot, "sectorExposure">): number | null {
+  const rows = f.sectorExposure.filter((s) => !/cash|derivative|other/i.test(s.label));
+  if (rows.length === 0) return null;
+  if (rows.some((s) => GICS_SECTORS.has(s.label.toLowerCase())))
+    return rows.find((s) => s.label.toLowerCase() === "energy")?.weightPct ?? 0;
+  const energy = rows.filter((s) => ENERGY_SUB_INDUSTRY.test(s.label));
+  // Sous-industries : la répartition est complète, une absence vaut donc 0.
+  return Math.round(energy.reduce((sum, s) => sum + s.weightPct, 0) * 100) / 100;
 }

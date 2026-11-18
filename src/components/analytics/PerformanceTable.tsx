@@ -121,6 +121,9 @@ export function PerformanceTable({
           ))}
         </tbody>
       </table>
+      {report.frequency === "monthly" && (
+        <p className="mt-3 px-1 text-caption text-ink-3">{t("fin.perf.monthly_note")}</p>
+      )}
     </div>
   );
 }

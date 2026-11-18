@@ -220,14 +220,40 @@ export function alignSeries(
  * rendements quotidiens fonds − indice, × √252. Mesure à quel point le fonds
  * s'écarte de son indice, pas s'il fait « mieux ».
  */
-export function trackingError(fund: SeriesPoint[], benchmark: SeriesPoint[]): number | null {
+export function trackingError(
+  fund: SeriesPoint[],
+  benchmark: SeriesPoint[],
+  periodsPerYear: number = TRADING_DAYS_PER_YEAR,
+): number | null {
   const { a, b } = alignSeries(fund, benchmark);
   const ra = simpleReturns(a);
   const rb = simpleReturns(b);
-  if (ra.length < 20) return null;
+  // 20 rendements quotidiens au minimum ; 12 pour une série mensuelle.
+  if (ra.length < (periodsPerYear >= 52 ? 20 : 12)) return null;
   const diff = ra.map((r, i) => r - rb[i]);
   const sd = sampleStdDev(diff);
-  return sd === null ? null : sd * Math.sqrt(TRADING_DAYS_PER_YEAR);
+  return sd === null ? null : sd * Math.sqrt(periodsPerYear);
+}
+
+export type SeriesFrequency = "daily" | "monthly" | "irregular";
+
+/**
+ * Fréquence d'une série, lue sur l'écart MÉDIAN entre deux points : ≤ 7 jours
+ * → quotidienne (jours ouvrés, jours fériés compris) ; 25 à 35 jours →
+ * mensuelle (fins de mois publiées par un émetteur américain, par exemple).
+ * Le reste est irrégulier, et aucune mesure dépendant de la fréquence n'est
+ * alors calculée.
+ */
+export function seriesFrequency(series: SeriesPoint[]): SeriesFrequency {
+  if (series.length < 3) return "irregular";
+  const gaps: number[] = [];
+  for (let i = 1; i < series.length; i++)
+    gaps.push((Date.parse(series[i].date) - Date.parse(series[i - 1].date)) / 86_400_000);
+  gaps.sort((x, y) => x - y);
+  const median = gaps[Math.floor(gaps.length / 2)];
+  if (median <= 7) return "daily";
+  if (median >= 25 && median <= 35) return "monthly";
+  return "irregular";
 }
 
 export interface WindowMetrics {
@@ -240,7 +266,7 @@ export interface WindowMetrics {
   annualizedReturn: number | null;
   /** Rendements mensuels × √12 (convention émetteur). */
   annualizedVolatility: number | null;
-  /** Rendements quotidiens × √252. */
+  /** Rendements quotidiens × √252 — `null` si la série n'est pas quotidienne. */
   dailyVolatility: number | null;
   maxDrawdown: number | null;
   benchmarkAnnualizedReturn: number | null;
@@ -252,6 +278,11 @@ export interface WindowMetrics {
 }
 
 export interface PerformanceReport {
+  /**
+   * Fréquence de la série fournie. Sur une série mensuelle, la perte maximale
+   * est mesurée entre fins de mois : elle sous-estime la perte intra-mois.
+   */
+  frequency: SeriesFrequency;
   firstDate: string | null;
   lastDate: string | null;
   observations: number;
@@ -277,6 +308,9 @@ export function performanceReport(
   const fund = cleanSeries(fundSeries);
   const bench = options.benchmark ? cleanSeries(options.benchmark) : null;
   const rf = options.riskFreeRate ?? null;
+  const frequency = seriesFrequency(fund);
+  const periodsPerYear =
+    frequency === "daily" ? TRADING_DAYS_PER_YEAR : frequency === "monthly" ? 12 : null;
   const windows = (options.windows ?? [1, 3, 5]).map((years): WindowMetrics => {
     const w = trailingWindow(fund, years, options.endDate);
     if (!w) {
@@ -310,7 +344,7 @@ export function performanceReport(
         bw[bw.length - 1].date === w[w.length - 1].date
       ) {
         benchAnn = annualizedReturn(bw);
-        te = trackingError(w, bw);
+        te = periodsPerYear === null ? null : trackingError(w, bw, periodsPerYear);
       }
     }
     return {
@@ -321,7 +355,7 @@ export function performanceReport(
       cumulativeReturn: cumulativeReturn(w),
       annualizedReturn: ann,
       annualizedVolatility: vol,
-      dailyVolatility: annualizedVolatility(w),
+      dailyVolatility: frequency === "daily" ? annualizedVolatility(w) : null,
       maxDrawdown: maxDrawdown(w)?.depth ?? null,
       benchmarkAnnualizedReturn: benchAnn,
       excessAnnualizedReturn: ann !== null && benchAnn !== null ? ann - benchAnn : null,
@@ -331,6 +365,7 @@ export function performanceReport(
     };
   });
   return {
+    frequency,
     firstDate: fund[0]?.date ?? null,
     lastDate: fund[fund.length - 1]?.date ?? null,
     observations: fund.length,

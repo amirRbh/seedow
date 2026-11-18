@@ -9,11 +9,33 @@
  * dans la couverture — il n'est jamais rempli par défaut.
  */
 import type { ObservatoryFund, SectorDisclosureLevel } from "@/lib/esg/v2/observatory";
-import { parseSfdrArticle } from "@/lib/esg/framework";
+import { parseSfdrArticle, type ThirdPartyFundEsg } from "@/lib/esg/framework";
+import type { PerformanceReport, SeriesFrequency } from "@/lib/portfolio/performance";
+
+/**
+ * Indicateurs MSCI publiés par l'émetteur, réduits à ce que le comparateur
+ * AFFICHE. Ils ne sortent jamais dans un export (CSV, JSON, rapport) : Seedow
+ * n'a pas de licence de redistribution MSCI (cf. `lib/api/v1.ts`).
+ */
+export interface ThirdPartySide {
+  provider: string;
+  publishedBy: string;
+  rating: string | null;
+  waci: number | null;
+  impliedTempRise: string | null;
+  controversialWeapons: number | null;
+  thermalCoal: number | null;
+  ungcViolators: number | null;
+  asOf: string | null;
+}
 
 export interface SnapshotSide {
   isin: string;
   name: string;
+  issuer: string;
+  domicile: string | null;
+  currency: string | null;
+  sourceUrl: string;
   sfdrDeclared: string | null;
   navAsOf: string | null;
   ter: number | null;
@@ -24,6 +46,70 @@ export interface SnapshotSide {
   volatility3y: number | null;
   maxDrawdown5y: number | null;
   excess3y: number | null;
+  /** Fréquence de la série de performance (mensuelle pour les ETF américains). */
+  perfFrequency: SeriesFrequency;
+  perfAsOf: string | null;
+  thirdParty: ThirdPartySide | null;
+}
+
+/** Ce que le comparateur retient d'un fonds analysé de l'instantané. */
+export function toSnapshotSide(a: {
+  isin: string;
+  name: string;
+  issuer: string;
+  domicile: string | null;
+  currency: string | null;
+  sourceUrl: string;
+  sfdrDeclared: string | null;
+  navAsOf: string | null;
+  ter: number | null;
+  benchmark: string | null;
+  holdingsCount: number | null;
+  energySectorPct: number | null;
+  performance: PerformanceReport;
+  thirdPartyEsg: ThirdPartyFundEsg | null;
+}): SnapshotSide {
+  const w = (y: number) => a.performance.windows.find((x) => x.years === y);
+  const tp = a.thirdPartyEsg;
+  const involvement = (id: string) =>
+    tp?.businessInvolvement?.rows.find((r) => r.id === id)?.pct ?? null;
+  return {
+    isin: a.isin,
+    name: a.name,
+    issuer: a.issuer,
+    domicile: a.domicile,
+    currency: a.currency,
+    sourceUrl: a.sourceUrl,
+    sfdrDeclared: a.sfdrDeclared,
+    navAsOf: a.navAsOf,
+    ter: a.ter,
+    benchmark: a.benchmark,
+    holdingsCount: a.holdingsCount,
+    energySectorPct: a.energySectorPct,
+    annualized: {
+      1: w(1)?.annualizedReturn ?? null,
+      3: w(3)?.annualizedReturn ?? null,
+      5: w(5)?.annualizedReturn ?? null,
+    },
+    volatility3y: w(3)?.annualizedVolatility ?? null,
+    maxDrawdown5y: w(5)?.maxDrawdown ?? null,
+    excess3y: w(3)?.excessAnnualizedReturn ?? null,
+    perfFrequency: a.performance.frequency,
+    perfAsOf: a.performance.lastDate,
+    thirdParty: tp
+      ? {
+          provider: tp.provider,
+          publishedBy: tp.publishedBy,
+          rating: tp.sustainability?.msciRating ?? null,
+          waci: tp.sustainability?.waci ?? null,
+          impliedTempRise: tp.sustainability?.impliedTempRise ?? null,
+          controversialWeapons: involvement("controversial_weapons"),
+          thermalCoal: involvement("thermal_coal"),
+          ungcViolators: involvement("ungc_violators"),
+          asOf: tp.sustainability?.asOf ?? tp.businessInvolvement?.asOf ?? null,
+        }
+      : null,
+  };
 }
 
 export interface CompareFund {
@@ -82,7 +168,7 @@ export function buildUniverse(
       id: s.isin,
       isin: s.isin,
       name: s.name,
-      issuer: "iShares (BlackRock)",
+      issuer: s.issuer,
       assetClass: null,
       sfdrCatalog: null,
       sfdrDeclared: parseSfdrArticle(s.sfdrDeclared),
@@ -178,4 +264,111 @@ export function csvCell(value: string | number | null | undefined): string {
 
 export function toCsv(header: string[], rows: (string | number | null)[][]): string {
   return [header, ...rows].map((r) => r.map(csvCell).join(",")).join("\r\n") + "\r\n";
+}
+
+/**
+ * Colonnes de l'export institutionnel — identifiants STABLES (snake_case,
+ * anglais), pour qu'un import automatisé ne casse pas d'une langue à l'autre.
+ * Les rendements, volatilités et pertes sont en FRACTION (0.0525 = 5,25 %) ;
+ * les parts d'exposition en POURCENTAGE (12.4 = 12,4 %), comme l'émetteur les
+ * publie. Aucune colonne MSCI : non redistribuable.
+ */
+export const EXPORT_COLUMNS = [
+  "isin",
+  "name",
+  "issuer",
+  "domicile",
+  "currency",
+  "sfdr_catalog",
+  "sfdr_declared",
+  "sfdr_conflict",
+  "ter",
+  "exclusion_fossil",
+  "exclusion_weapons",
+  "exclusion_tobacco",
+  "exclusion_gambling",
+  "exclusion_animal_testing",
+  "exclusion_fast_fashion",
+  "transparency_blocks_evaluated",
+  "return_ann_1y",
+  "return_ann_3y",
+  "return_ann_5y",
+  "volatility_3y",
+  "max_drawdown_5y",
+  "excess_return_3y",
+  "performance_frequency",
+  "performance_as_of",
+  "energy_sector_pct",
+  "holdings_count",
+  "data_coverage_pct",
+  "source_url",
+] as const;
+
+export type ExportColumn = (typeof EXPORT_COLUMNS)[number];
+
+/** Secteurs du catalogue → colonne d'export (clés `STI_SECTORS`). */
+const EXCLUSION_COLUMN: Record<string, ExportColumn> = {
+  fossiles: "exclusion_fossil",
+  armement: "exclusion_weapons",
+  tabac: "exclusion_tobacco",
+  jeux: "exclusion_gambling",
+  tests_animaux: "exclusion_animal_testing",
+  fast_fashion: "exclusion_fast_fashion",
+};
+
+/** Une ligne d'export par fonds, valeurs brutes (`null` = inconnu, jamais 0). */
+export function exportRow(f: CompareFund): Record<ExportColumn, string | number | boolean | null> {
+  const s = f.snapshot;
+  const row: Record<ExportColumn, string | number | boolean | null> = {
+    isin: f.isin,
+    name: f.name,
+    issuer: f.issuer,
+    domicile: s?.domicile ?? null,
+    currency: s?.currency ?? null,
+    sfdr_catalog: f.sfdrCatalog,
+    sfdr_declared: f.sfdrDeclared,
+    sfdr_conflict: f.sfdrConflict,
+    ter: f.ter,
+    exclusion_fossil: null,
+    exclusion_weapons: null,
+    exclusion_tobacco: null,
+    exclusion_gambling: null,
+    exclusion_animal_testing: null,
+    exclusion_fast_fashion: null,
+    transparency_blocks_evaluated: f.stiBlocksEvaluated,
+    return_ann_1y: s?.annualized[1] ?? null,
+    return_ann_3y: s?.annualized[3] ?? null,
+    return_ann_5y: s?.annualized[5] ?? null,
+    volatility_3y: s?.volatility3y ?? null,
+    max_drawdown_5y: s?.maxDrawdown5y ?? null,
+    excess_return_3y: s?.excess3y ?? null,
+    performance_frequency: s?.perfFrequency ?? null,
+    performance_as_of: s?.perfAsOf ?? null,
+    energy_sector_pct: s?.energySectorPct ?? null,
+    holdings_count: s?.holdingsCount ?? null,
+    data_coverage_pct: Math.round(dataCoveragePct(f)),
+    source_url: s?.sourceUrl ?? null,
+  };
+  for (const [sector, level] of Object.entries(f.exclusions)) {
+    const col = EXCLUSION_COLUMN[sector];
+    if (col && level) row[col] = level;
+  }
+  return row;
+}
+
+/** Export CSV institutionnel (RFC 4180, UTF-8, séparateur virgule, point décimal). */
+export function comparisonCsv(funds: CompareFund[]): string {
+  return toCsv(
+    [...EXPORT_COLUMNS],
+    funds.map((f) => {
+      const r = exportRow(f);
+      return EXPORT_COLUMNS.map((c) => {
+        const v = r[c];
+        if (typeof v === "boolean") return String(v);
+        // Six décimales : au-delà, c'est du bruit de virgule flottante, pas de la précision.
+        if (typeof v === "number" && !Number.isInteger(v)) return Math.round(v * 1e6) / 1e6;
+        return v;
+      });
+    }),
+  );
 }

@@ -10,8 +10,10 @@ import {
   performanceReport,
   rebaseForChart,
   sampleStdDev,
+  seriesFrequency,
   sharpeRatio,
   shiftYears,
+  trackingError,
   trailingWindow,
   type SeriesPoint,
 } from "../performance";
@@ -231,5 +233,95 @@ describe("panier simulé à poids constants", () => {
   it("poids incohérents : série vide plutôt qu'un calcul faux", () => {
     expect(blendSeries([a, b], [1])).toEqual([]);
     expect(blendSeries([a, b], [0, 0])).toEqual([]);
+  });
+});
+
+/** Série mensuelle de fins de mois, à partir d'une liste de rendements. */
+function monthly(start: [number, number], returns: number[], base = 100): SeriesPoint[] {
+  const out: SeriesPoint[] = [];
+  let v = base;
+  let [y, m] = start;
+  for (let i = 0; i <= returns.length; i++) {
+    const last = new Date(Date.UTC(y, m, 0)).getUTCDate(); // dernier jour du mois m (1..12)
+    out.push({ date: `${y}-${String(m).padStart(2, "0")}-${last}`, value: v });
+    if (i < returns.length) v *= 1 + returns[i];
+    m += 1;
+    if (m > 12) {
+      m = 1;
+      y += 1;
+    }
+  }
+  return out;
+}
+
+describe("fréquence de série", () => {
+  it("quotidienne (jours ouvrés), mensuelle (fins de mois), irrégulière", () => {
+    const daily = s([
+      ["2026-01-05", 1],
+      ["2026-01-06", 1],
+      ["2026-01-07", 1],
+      ["2026-01-08", 1],
+      ["2026-01-09", 1],
+      ["2026-01-12", 1],
+    ]);
+    expect(seriesFrequency(daily)).toBe("daily");
+    expect(seriesFrequency(monthly([2025, 1], [0.01, 0.02, -0.01, 0.0]))).toBe("monthly");
+    expect(
+      seriesFrequency(
+        s([
+          ["2020-01-01", 1],
+          ["2021-01-01", 1],
+          ["2022-01-01", 1],
+        ]),
+      ),
+    ).toBe("irregular");
+    expect(seriesFrequency([])).toBe("irregular");
+  });
+});
+
+describe("rapport sur une série MENSUELLE (ETF américain)", () => {
+  const rets = Array.from({ length: 72 }, (_, i) =>
+    i % 3 === 0 ? 0.03 : i % 3 === 1 ? -0.01 : 0.005,
+  );
+  const fund = monthly([2020, 10], rets);
+  const bench = monthly(
+    [2020, 10],
+    rets.map((r) => r - 0.001),
+  );
+  const report = performanceReport(fund, { benchmark: bench });
+
+  it("déclare sa fréquence", () => {
+    expect(report.frequency).toBe("monthly");
+  });
+
+  it("pas de volatilité « quotidienne » sur des points mensuels", () => {
+    for (const w of report.windows) expect(w.dailyVolatility).toBeNull();
+  });
+
+  it("volatilité mensuelle × √12 et écart de suivi annualisé sur 12 périodes", () => {
+    const w3 = report.windows.find((w) => w.years === 3)!;
+    expect(w3.available).toBe(true);
+    expect(w3.annualizedVolatility).not.toBeNull();
+    // Écart constant de 0,1 pt par mois → écart-type ≈ 0 : l'écart de suivi est quasi nul.
+    expect(w3.trackingError).not.toBeNull();
+    expect(w3.trackingError!).toBeLessThan(1e-3);
+  });
+
+  it("écart de suivi : facteur d'annualisation explicite", () => {
+    const f = monthly(
+      [2024, 1],
+      [0.02, -0.01, 0.03, 0.0, 0.01, -0.02, 0.02, 0.01, 0.0, -0.01, 0.02, 0.01, 0.0],
+    );
+    const b = monthly(
+      [2024, 1],
+      [0.01, -0.01, 0.02, 0.01, 0.01, -0.01, 0.02, 0.0, 0.0, -0.02, 0.02, 0.0, 0.01],
+    );
+    const diff = f
+      .slice(1)
+      .map((p, i) => p.value / f[i].value - 1 - (b[i + 1].value / b[i].value - 1));
+    const expected = sampleStdDev(diff)! * Math.sqrt(12);
+    expect(trackingError(f, b, 12)).toBeCloseTo(expected, 12);
+    // Moins de 12 rendements mensuels : non calculable.
+    expect(trackingError(f.slice(0, 8), b.slice(0, 8), 12)).toBeNull();
   });
 });

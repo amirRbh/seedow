@@ -17,7 +17,14 @@ import {
   type PerformanceReport,
   type SeriesPoint,
 } from "@/lib/portfolio/performance";
+import {
+  analyze,
+  summarize,
+  type SnapshotFundAnalytics,
+  type SnapshotFundSummary,
+} from "./analytics";
 import type { DataStatus } from "@/lib/data/status";
+import type { ThirdPartyFundEsg } from "@/lib/esg/framework";
 import {
   benchmarkSeries,
   DEMO_CURRENCY,
@@ -25,6 +32,7 @@ import {
   energySectorPct,
   fundSeries,
   snapshotStatus,
+  snapshotThirdPartyEsg,
   snapshotToPosition,
   type FundSnapshot,
   type SnapshotExposure,
@@ -36,93 +44,7 @@ async function loadSnapshots(): Promise<SnapshotFile> {
   return (mod.default ?? mod) as SnapshotFile;
 }
 
-export interface SnapshotFundSummary {
-  isin: string;
-  name: string;
-  role: string;
-  issuer: string;
-  currency: string | null;
-  benchmark: string | null;
-  sfdrDeclared: string | null;
-  ter: number | null;
-  assetClass: string | null;
-  domicile: string | null;
-  holdingsCount: number | null;
-  navAsOf: string | null;
-  retrievedAt: string;
-  sourceUrl: string;
-  sourceLabel: string;
-  status: ReturnType<typeof snapshotStatus>;
-  energySectorPct: number | null;
-}
-
-function summarize(f: FundSnapshot): SnapshotFundSummary {
-  return {
-    isin: f.isin,
-    name: f.name,
-    role: f.role,
-    issuer: f.issuer,
-    currency: f.currency,
-    benchmark: f.benchmark,
-    sfdrDeclared: f.sfdrDeclared,
-    ter: f.ter,
-    assetClass: f.assetClass,
-    domicile: f.domicile,
-    holdingsCount: f.holdingsCount,
-    navAsOf: f.navAsOf,
-    retrievedAt: f.retrievedAt,
-    sourceUrl: f.sourceUrl,
-    sourceLabel: f.sourceLabel,
-    status: snapshotStatus(f),
-    energySectorPct: energySectorPct(f),
-  };
-}
-
-export interface SnapshotFundAnalytics extends SnapshotFundSummary {
-  performance: PerformanceReport;
-  publishedReturns: FundSnapshot["publishedReturns"];
-  publishedStdDev3y: number | null;
-  chart: { fund: SeriesPoint[]; benchmark: SeriesPoint[] };
-  sectorExposure: SnapshotExposure[];
-  sectorAsOf: string | null;
-  geographyExposure: SnapshotExposure[];
-  geographyAsOf: string | null;
-  currencyExposure: SnapshotExposure[];
-  holdingsAsOf: string | null;
-  holdingsLines: number;
-  topHoldings: FundSnapshot["topHoldings"];
-  topHoldingsWeightPct: number;
-}
-
-function analyze(f: FundSnapshot): SnapshotFundAnalytics {
-  const fund = fundSeries(f);
-  const bench = benchmarkSeries(f);
-  // Le graphique couvre 5 ans, rebasés à 100 le même jour pour les deux courbes.
-  const end = fund.at(-1)?.date ?? "";
-  const start = `${Number(end.slice(0, 4)) - 5}${end.slice(4)}`;
-  const fundChart = fund.filter((p) => p.date >= start);
-  const firstDate = fundChart[0]?.date;
-  const benchChart = bench.filter((p) => firstDate && p.date >= firstDate);
-  return {
-    ...summarize(f),
-    performance: performanceReport(fund, { benchmark: bench.length > 1 ? bench : null }),
-    publishedReturns: f.publishedReturns,
-    publishedStdDev3y: f.publishedStdDev3y,
-    chart: {
-      fund: rebaseForChart(fundChart, 180),
-      benchmark: benchChart[0]?.date === firstDate ? rebaseForChart(benchChart, 180) : [],
-    },
-    sectorExposure: f.sectorExposure,
-    sectorAsOf: f.sectorAsOf,
-    geographyExposure: f.geographyExposure,
-    geographyAsOf: f.geographyAsOf,
-    currencyExposure: f.currencyExposure.slice(0, 8),
-    holdingsAsOf: f.holdingsAsOf,
-    holdingsLines: f.holdingsLines,
-    topHoldings: f.topHoldings.slice(0, 10),
-    topHoldingsWeightPct: f.topHoldingsWeightPct,
-  };
-}
+export type { SnapshotFundAnalytics, SnapshotFundSummary } from "./analytics";
 
 /** Liste des fonds de l'instantané (identité et statuts, sans séries). */
 export const listSnapshotFunds = createServerFn({ method: "GET" }).handler(async () => {
@@ -145,6 +67,15 @@ export const getSnapshotFund = createServerFn({ method: "GET" })
     const f = snapshots.funds.find((x) => x.isin === isin);
     return f ? analyze(f) : null;
   });
+
+/** Les fonds de l'instantané, analysés — pour l'API publique et le rapport (lecture serveur). */
+export async function analyzeAllSnapshotFunds(): Promise<{
+  generatedAt: string;
+  funds: SnapshotFundAnalytics[];
+}> {
+  const snapshots = await loadSnapshots();
+  return { generatedAt: snapshots.generatedAt, funds: snapshots.funds.map(analyze) };
+}
 
 /** Plusieurs fonds à la fois — pour la démonstration et le comparateur (8 au plus). */
 export const getSnapshotFunds = createServerFn({ method: "GET" })
