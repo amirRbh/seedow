@@ -3,6 +3,9 @@ import { useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { joinWaitlist } from "@/lib/beta/beta.functions";
 import { LanguageToggle } from "@/components/LanguageToggle";
+import { Wordmark } from "@/components/brand/Wordmark";
+import { Aurora } from "@/components/motion/Aurora";
+import { CountUp } from "@/components/motion/CountUp";
 import { Button } from "@/components/ui/button";
 import { siteUrl, socialMeta } from "@/lib/seo/socialMeta";
 
@@ -42,30 +45,28 @@ function WaitlistPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-6 py-12">
-      <div className="w-full max-w-md">
-        <div className="flex items-center justify-between mb-6">
-          <Link
-            to="/"
-            className="block text-caption text-ink-3 font-medium hover:text-ink transition-colors"
-          >
-            ← {t("common.back")}
-          </Link>
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden px-5 py-12">
+      <Aurora />
+      <div className="relative z-10 w-full max-w-md">
+        <div className="mb-6 flex items-center justify-between">
+          <Wordmark />
           <LanguageToggle />
         </div>
-        <p className="text-caption font-semibold text-mint-ink mb-3">
-          {t("waitlist.eyebrow")}
-        </p>
-        <h1 className="font-display text-3xl text-ink leading-tight">{t("waitlist.title")}</h1>
-        <p className="text-body-sm text-ink-2 mt-3 leading-relaxed">{t("waitlist.desc")}</p>
+        <div className="paper-card animate-pop p-7 sm:p-9">
+          <span className="chip chip--verified">
+            <span aria-hidden className="live-dot" />
+            {t("waitlist.eyebrow")}
+          </span>
+          <h1 className="mt-5 text-[clamp(28px,4vw,36px)]">{t("waitlist.title")}</h1>
+          <p className="mt-3 text-body leading-relaxed text-ink-2">{t("waitlist.desc")}</p>
 
         {position !== null ? (
-          <div className="mt-8 p-6 border border-paper-3 rounded-2xl bg-paper-2">
-            <p className="text-caption font-semibold text-ink-3">
-              {t("waitlist.registered")}
+          <div className="hero-card mt-8 p-6 text-center">
+            <p className="stamp">{t("waitlist.registered")}</p>
+            <p className="mt-2 font-display text-[64px] font-extrabold leading-none tracking-[-0.04em] text-mint-ink">
+              #<CountUp value={position} />
             </p>
-            <p className="font-value text-4xl text-ink mt-2">#{position}</p>
-            <p className="text-label text-ink-3 mt-2">{t("waitlist.on_list")}</p>
+            <p className="mt-3 text-body-sm text-ink-2">{t("waitlist.on_list")}</p>
           </div>
         ) : (
           <form onSubmit={onSubmit} className="mt-8 space-y-3">
@@ -75,19 +76,26 @@ function WaitlistPage() {
               placeholder={t("waitlist.email_placeholder")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2.5 rounded border border-paper-3 bg-paper text-body-sm focus:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-1"
+              className="field"
             />
             {error && <p className="text-label text-alert-ink">{error}</p>}
             <Button
               type="submit"
-              size="pill"
+              size="lg"
               disabled={submitting}
-              className="w-full justify-center disabled:opacity-50"
+              className="w-full justify-center"
             >
               {submitting ? t("waitlist.submitting") : t("waitlist.btn_join")}
             </Button>
           </form>
         )}
+        </div>
+        <Link
+          to="/"
+          className="link-u mt-6 inline-block text-body-sm font-semibold text-ink-2 hover:text-ink"
+        >
+          ← {t("common.back")}
+        </Link>
       </div>
     </div>
   );

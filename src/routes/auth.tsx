@@ -1,13 +1,17 @@
 import { createFileRoute, Link, useNavigate, redirect } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { useBetaCapacity } from "@/hooks/useBetaCapacity";
 import { joinWaitlist } from "@/lib/beta/beta.functions";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
 import { LanguageToggle } from "@/components/LanguageToggle";
+import { Wordmark } from "@/components/brand/Wordmark";
+import { Aurora } from "@/components/motion/Aurora";
+import { Check, MailCheck } from "lucide-react";
+import { EASE_SIGNATURE } from "@/lib/motion";
 import { Button } from "@/components/ui/button";
 
 // Only accept same-origin relative paths: must start with "/" then a non-"/" path char,
@@ -117,25 +121,65 @@ function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-6 py-12">
+    <div className="grid min-h-screen lg:grid-cols-[1.05fr_1fr]">
+      {/* ── Panneau de marque (grand écran) ─────────────────────────
+          La signature, et ce que Seedow garantit — écrit, pas suggéré.
+          Décor : une aurore lente sur la bande sombre. */}
+      <aside className="on-deep relative m-3 hidden overflow-hidden rounded-[32px] lg:flex lg:flex-col lg:justify-between lg:p-12">
+        <Aurora />
+        <div className="relative z-10">
+          <Wordmark size="lg" className="text-on-deep" />
+        </div>
+        <div className="relative z-10">
+          <p className="display-lg max-w-[14ch]">
+            {t("site.signature_1")}
+            <br />
+            <span className="text-gradient">{t("site.signature_2")}</span>
+          </p>
+          <ul className="mt-10 flex flex-col gap-3">
+            {(["no_advice", "sources", "free"] as const).map((key, i) => (
+              <li
+                key={key}
+                className="flex animate-fade-in-up items-center gap-3 text-body-lg text-ink-2 [&_b]:font-bold [&_b]:text-ink"
+                style={{ animationDelay: `${300 + i * 120}ms` }}
+              >
+                <span className="flex h-7 w-7 flex-none items-center justify-center rounded-full bg-mint/20 text-mint-ink">
+                  <Check aria-hidden className="size-4" strokeWidth={3} />
+                </span>
+                <span>
+                  <Trans i18nKey={`landing.rv.proof.${key}`} components={{ b: <b /> }} />
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <p className="relative z-10 text-body-sm text-ink-3">{t("landing.badge_simulation")}</p>
+      </aside>
+
+      {/* ── Formulaire ──────────────────────────────────────────── */}
+      <div className="relative flex items-center justify-center overflow-hidden px-5 py-12">
+        <div className="lg:hidden">
+          <Aurora />
+        </div>
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-sm"
+        transition={{ duration: 0.5, ease: EASE_SIGNATURE }}
+        className="relative z-10 w-full max-w-[420px]"
       >
-        <div className="flex items-center justify-between mb-6">
-          <Link to="/" className="inline-flex items-center" aria-label="Seedow">
-            <span className="font-value text-lg text-ink tracking-tight">seedow</span>
+        <div className="mb-8 flex items-center justify-between">
+          <Link
+            to="/"
+            className="link-u text-body-sm font-semibold text-ink-2 hover:text-ink"
+          >
+            ← {t("common.back")}
           </Link>
           <LanguageToggle />
         </div>
-        <Link
-          to="/"
-          className="block text-caption text-ink-3 font-medium hover:text-ink transition-colors"
-        >
-          ← {t("common.back")}
-        </Link>
-        <h1 className="font-value text-3xl text-ink mt-6 leading-tight">
+        <div className="mb-6 lg:hidden">
+          <Wordmark size="lg" />
+        </div>
+        <h1 className="text-[clamp(30px,4vw,40px)] leading-tight">
           {waitlistDone !== null
             ? t("auth.title_waitlisted")
             : mode === "login"
@@ -144,7 +188,7 @@ function AuthPage() {
                 ? t("auth.title_beta_full")
                 : t("auth.title_signup")}
         </h1>
-        <p className="text-body-sm text-ink-2 mt-2">
+        <p className="mt-3 text-body leading-relaxed text-ink-2">
           {waitlistDone !== null
             ? t("auth.desc_waitlisted", { position: waitlistDone })
             : mode === "login"
@@ -155,17 +199,19 @@ function AuthPage() {
         </p>
 
         {mode === "signup" && capacity && !betaFull && waitlistDone === null && (
-          <p className="mt-4 text-caption font-semibold text-ink-3">
+          <p className="chip chip--verified mt-4">
+            <span aria-hidden className="live-dot" />
             {t("auth.slots_remaining")} :{" "}
-            <span className="text-ink font-semibold">{capacity.slotsLeft}</span> / {capacity.cap}
+            <span className="font-bold tabular-nums">{capacity.slotsLeft}</span> / {capacity.cap}
           </p>
         )}
 
         <button
           onClick={onGoogle}
-          className="mt-8 w-full py-2.5 rounded border border-paper-3 hover:border-ink transition-colors text-body-sm font-medium flex items-center justify-center gap-2"
+          type="button"
+          className="mt-8 flex h-14 w-full items-center justify-center gap-2.5 rounded-full bg-paper text-body font-semibold text-ink shadow-card ring-1 ring-inset ring-paper-3 outline-none transition-[box-shadow,transform] duration-200 ease-brand hover:shadow-soft hover:ring-ink-3 focus-visible:ring-2 focus-visible:ring-mint active:scale-[0.98] motion-reduce:transform-none"
         >
-          <svg viewBox="0 0 24 24" className="w-4 h-4">
+          <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden>
             <path
               fill="#4285F4"
               d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -199,7 +245,7 @@ function AuthPage() {
               placeholder={t("auth.name_placeholder")}
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              className="w-full px-3 py-2.5 rounded border border-paper-3 bg-paper text-body-sm text-ink placeholder-ink-3 focus:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-1 transition-colors"
+              className="field"
             />
           )}
           <input
@@ -209,7 +255,7 @@ function AuthPage() {
             onChange={(e) => setEmail(e.target.value)}
             required
             autoComplete="email"
-            className="w-full px-3 py-2.5 rounded border border-paper-3 bg-paper text-body-sm text-ink placeholder-ink-3 focus:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-1 transition-colors"
+            className="field"
           />
           {!magic && (
             <input
@@ -220,22 +266,30 @@ function AuthPage() {
               required
               minLength={8}
               autoComplete={mode === "signup" ? "new-password" : "current-password"}
-              className="w-full px-3 py-2.5 rounded border border-paper-3 bg-paper text-body-sm text-ink placeholder-ink-3 focus:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-1 transition-colors"
+              className="field"
             />
           )}
 
           {magicSent && (
-            <p className="text-label text-ink bg-highlight-5 border border-highlight-4 rounded px-3 py-2">
+            <p
+              role="status"
+              className="flex animate-pop items-center gap-2.5 rounded-2xl bg-mint-tint px-4 py-3 text-body-sm text-ink ring-1 ring-inset ring-mint-tint-border"
+            >
+              <MailCheck aria-hidden className="size-5 flex-none text-mint-ink" />
               {t("auth.magic_sent")}
             </p>
           )}
-          {error && <p className="text-label text-alert-ink">{error}</p>}
+          {error && (
+            <p role="alert" className="rounded-2xl bg-alert-tint px-4 py-3 text-body-sm text-alert-ink">
+              {error}
+            </p>
+          )}
 
           <Button
             type="submit"
-            size="pill"
+            size="lg"
             disabled={loading || magicSent}
-            className="w-full justify-center disabled:opacity-50"
+            className="w-full justify-center"
           >
             {loading
               ? t("common.please_wait")
@@ -256,14 +310,14 @@ function AuthPage() {
                 setMagicSent(false);
                 setError(null);
               }}
-              className="w-full text-center text-label text-ink-3 hover:text-ink underline-offset-4 hover:underline transition-colors"
+              className="min-h-[44px] w-full rounded-full text-center text-body-sm font-semibold text-ink-2 outline-none transition-colors hover:text-ink focus-visible:ring-2 focus-visible:ring-mint"
             >
               {magic ? t("auth.magic_use_password") : t("auth.magic_toggle")}
             </button>
           )}
         </form>
 
-        <p className="mt-6 text-label text-ink-3 text-center">
+        <p className="mt-6 text-center text-body-sm text-ink-2">
           {mode === "login" ? t("auth.no_account") : t("auth.have_account")}
           <button
             type="button"
@@ -271,12 +325,13 @@ function AuthPage() {
               setMode(mode === "login" ? "signup" : "login");
               setWaitlistDone(null);
             }}
-            className="text-ink underline-offset-4 hover:underline font-medium"
+            className="ml-1 font-bold text-mint-ink underline-offset-4 hover:underline"
           >
             {mode === "login" ? t("auth.to_signup") : t("auth.to_login")}
           </button>
         </p>
       </motion.div>
+      </div>
     </div>
   );
 }

@@ -22,11 +22,11 @@ export function RelatedCourse({ slug, reason }: Props) {
     <Link
       to="/cours/$slug"
       params={{ slug: course.slug }}
-      className="group flex items-center gap-3 bg-paper-2/60 border border-ink/8 hover:border-mint/60 transition-colors p-3 rounded-lg"
+      className="paper-card spot group flex items-center gap-3 rounded-2xl p-3 pr-4 outline-none transition-shadow duration-300 hover:shadow-soft focus-visible:ring-2 focus-visible:ring-mint"
     >
       <span
         aria-hidden="true"
-        className="flex-shrink-0 w-9 h-9 rounded-full bg-mint/15 text-mint-ink flex items-center justify-center"
+        className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-volt/12 text-volt-ink transition-transform duration-300 ease-brand group-hover:-rotate-6 motion-reduce:transition-none"
       >
         <svg
           width="16"
@@ -43,14 +43,14 @@ export function RelatedCourse({ slug, reason }: Props) {
         </svg>
       </span>
       <div className="min-w-0 flex-1">
-        <p className="text-caption font-semibold text-mint-ink mb-0.5">
+        <p className="mb-0.5 text-caption font-semibold text-volt-ink">
           {reason ?? "Cours en lien"}
         </p>
         <p className="text-body-sm font-medium text-ink leading-snug group-hover:text-mint-ink transition-colors truncate">
           {course.title}
         </p>
       </div>
-      <span className="flex-shrink-0 text-tag text-ink-3 tabular-nums">
+      <span className="flex-shrink-0 text-caption text-ink-3 tabular-nums">
         {course.readingMinutes} min →
       </span>
     </Link>

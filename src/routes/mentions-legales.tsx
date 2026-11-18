@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 
+import { LegalPage } from "@/components/layout/LegalPage";
+
 export const Route = createFileRoute("/mentions-legales")({
   head: () => ({
     meta: [
@@ -12,20 +14,8 @@ export const Route = createFileRoute("/mentions-legales")({
 
 function MentionsLegalesPage() {
   return (
-    <div className="min-h-screen text-ink">
-      <header className="max-w-3xl mx-auto px-6 pt-10 pb-8 border-b border-paper-3">
-        <Link
-          to="/"
-          className="text-caption font-semibold text-ink-3 hover:text-ink transition-colors"
-        >
-          ← Retour à l'accueil
-        </Link>
-        <h1 className="font-value text-4xl mt-4">Mentions légales</h1>
-        <p className="text-label text-ink-3 mt-2">Dernière mise à jour : 15 juillet 2026</p>
-      </header>
-
-      <div className="max-w-3xl mx-auto px-6 py-10 space-y-10 text-body text-ink-2 leading-relaxed">
-        <section className="paper-card p-5 border-l-4 border-l-gold">
+    <LegalPage title="Mentions légales" updated="Dernière mise à jour : 15 juillet 2026">
+        <section className="tile-accent accent-solar p-5 sm:p-6">
           <p className="text-body-sm text-ink">
             <strong>À compléter avant l'ouverture au public :</strong> Seedow n'est, à ce stade, pas
             encore immatriculé en tant que structure juridique. Les informations d'éditeur
@@ -36,7 +26,7 @@ function MentionsLegalesPage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">1. Éditeur du site</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">1. Éditeur du site</h2>
           <p className="mt-2">
             Éditeur : [à compléter — nom ou raison sociale, statut juridique, adresse du siège,
             SIREN/SIRET]
@@ -44,14 +34,14 @@ function MentionsLegalesPage() {
             Directeur de la publication : [à compléter]
             <br />
             Contact :{" "}
-            <a href="mailto:hello@seedow.life" className="underline hover:text-ink">
+            <a href="mailto:hello@seedow.life" className="font-semibold text-ink underline underline-offset-2 hover:no-underline">
               hello@seedow.life
             </a>
           </p>
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">2. Hébergement</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">2. Hébergement</h2>
           <p className="mt-2">
             L'application est déployée en edge sur l'infrastructure de Cloudflare, Inc. Les données
             (comptes, portefeuilles simulés, préférences) sont hébergées et gérées via Supabase,
@@ -62,14 +52,14 @@ function MentionsLegalesPage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">3. Nature du service</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">3. Nature du service</h2>
           <p className="mt-2">
             Seedow est un outil pédagogique de simulation d'investissement responsable (ESG). Le
             portefeuille présenté dans l'application est un portefeuille virtuel valorisé sur des
             cours de marché réels — aucune somme d'argent réelle n'est investie via l'application à
             ce stade. Ce fonctionnement est rappelé sur les pages concernées par un bandeau « Mode
             démo ». Pour plus de détails sur la nature du service, voir les{" "}
-            <Link to="/cgu" className="underline hover:text-ink">
+            <Link to="/cgu" className="font-semibold text-ink underline underline-offset-2 hover:no-underline">
               Conditions Générales d'Utilisation
             </Link>
             .
@@ -77,7 +67,7 @@ function MentionsLegalesPage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">4. Propriété intellectuelle</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">4. Propriété intellectuelle</h2>
           <p className="mt-2">
             La marque Seedow, son logo, la charte graphique, les contenus pédagogiques (cours,
             méthodologie) et le code de l'application sont protégés par le droit de la propriété
@@ -87,10 +77,10 @@ function MentionsLegalesPage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">5. Données personnelles et cookies</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">5. Données personnelles et cookies</h2>
           <p className="mt-2">
             Le traitement des données personnelles est décrit dans la{" "}
-            <Link to="/confidentialite" className="underline hover:text-ink">
+            <Link to="/confidentialite" className="font-semibold text-ink underline underline-offset-2 hover:no-underline">
               politique de confidentialité
             </Link>
             . Seedow n'utilise aucun cookie publicitaire ou de mesure d'audience tierce ; seules des
@@ -100,7 +90,7 @@ function MentionsLegalesPage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">6. Responsabilité</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">6. Responsabilité</h2>
           <p className="mt-2">
             Les informations et simulations fournies par Seedow, y compris via l'assistant Ethi, ont
             une visée pédagogique et ne constituent en aucun cas un conseil en investissement
@@ -110,10 +100,9 @@ function MentionsLegalesPage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">7. Droit applicable</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">7. Droit applicable</h2>
           <p className="mt-2">Les présentes mentions légales sont soumises au droit français.</p>
         </section>
-      </div>
-    </div>
+    </LegalPage>
   );
 }

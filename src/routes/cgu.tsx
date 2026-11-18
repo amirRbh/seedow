@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 
+import { LegalPage } from "@/components/layout/LegalPage";
+
 export const Route = createFileRoute("/cgu")({
   head: () => ({
     meta: [
@@ -12,20 +14,8 @@ export const Route = createFileRoute("/cgu")({
 
 function CguPage() {
   return (
-    <div className="min-h-screen text-ink">
-      <header className="max-w-3xl mx-auto px-6 pt-10 pb-8 border-b border-paper-3">
-        <Link
-          to="/"
-          className="text-caption font-semibold text-ink-3 hover:text-ink transition-colors"
-        >
-          ← Retour à l'accueil
-        </Link>
-        <h1 className="font-value text-4xl mt-4">Conditions Générales d'Utilisation</h1>
-        <p className="text-label text-ink-3 mt-2">Dernière mise à jour : 15 juillet 2026</p>
-      </header>
-
-      <div className="max-w-3xl mx-auto px-6 py-10 space-y-10 text-body text-ink-2 leading-relaxed">
-        <section className="paper-card p-5 border-l-4 border-l-gold">
+    <LegalPage title="Conditions Générales d'Utilisation" updated="Dernière mise à jour : 15 juillet 2026">
+        <section className="tile-accent accent-solar p-5 sm:p-6">
           <p className="text-body-sm text-ink">
             <strong>À retenir avant de continuer :</strong> Seedow est, à ce stade, un outil
             pédagogique de simulation. Le portefeuille que tu construis est virtuel et valorisé sur
@@ -37,7 +27,7 @@ function CguPage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">1. Objet</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">1. Objet</h2>
           <p className="mt-2">
             Les présentes CGU régissent l'accès et l'utilisation de l'application Seedow, un service
             qui permet de définir des préférences d'investissement responsable (ESG), de générer un
@@ -48,7 +38,7 @@ function CguPage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">2. Accès au service</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">2. Accès au service</h2>
           <p className="mt-2">
             L'accès est réservé aux personnes physiques âgées de 18 ans ou plus, disposant de la
             capacité juridique de contracter. Tu t'engages à fournir des informations exactes lors
@@ -58,7 +48,7 @@ function CguPage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">3. Fonctionnement du service</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">3. Fonctionnement du service</h2>
           <p className="mt-2">
             Après avoir répondu à quelques questions (causes soutenues, secteurs exclus, objectif,
             montant), Seedow génère un portefeuille virtuel à partir d'un univers d'actifs réels
@@ -74,7 +64,7 @@ function CguPage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">4. Assistant Ethi</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">4. Assistant Ethi</h2>
           <p className="mt-2">
             Ethi est un assistant conversationnel fondé sur un modèle de langage tiers. Il vise à
             expliquer des notions financières et à t'aider à explorer des scénarios à partir des
@@ -87,7 +77,7 @@ function CguPage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">
+          <h2 className="text-[clamp(19px,2vw,22px)]">
             4 bis. Outils de simulation et d'ajustement d'allocation
           </h2>
           <p className="mt-2">
@@ -110,7 +100,7 @@ function CguPage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">5. Absence de garantie de performance</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">5. Absence de garantie de performance</h2>
           <p className="mt-2">
             Les performances, projections et simulations affichées dans l'application sont fondées
             sur des données historiques ou des hypothèses ; elles ne préjugent en rien des
@@ -122,7 +112,7 @@ function CguPage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">6. Compte et résiliation</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">6. Compte et résiliation</h2>
           <p className="mt-2">
             Tu peux supprimer ton compte à tout moment depuis Réglages → Confidentialité ; la
             suppression est immédiate et définitive. L'éditeur peut suspendre ou résilier l'accès
@@ -132,7 +122,7 @@ function CguPage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">7. Propriété intellectuelle</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">7. Propriété intellectuelle</h2>
           <p className="mt-2">
             L'ensemble des éléments de l'application (marque, logo, charte graphique, contenus
             pédagogiques, méthodologie, code) est protégé par le droit de la propriété
@@ -142,7 +132,7 @@ function CguPage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">8. Disponibilité du service</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">8. Disponibilité du service</h2>
           <p className="mt-2">
             Seedow est actuellement en phase bêta. L'éditeur met en œuvre des moyens raisonnables
             pour assurer la disponibilité et la fiabilité du service, sans garantie d'accès continu
@@ -151,7 +141,7 @@ function CguPage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">9. Limitation de responsabilité</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">9. Limitation de responsabilité</h2>
           <p className="mt-2">
             Seedow est un outil pédagogique. Toute décision d'investissement réelle que tu
             prendrais, y compris sur la base d'informations issues de l'application ou de
@@ -162,10 +152,10 @@ function CguPage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">10. Données personnelles</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">10. Données personnelles</h2>
           <p className="mt-2">
             Le traitement de tes données personnelles est décrit dans la{" "}
-            <Link to="/confidentialite" className="underline hover:text-ink">
+            <Link to="/confidentialite" className="font-semibold text-ink underline underline-offset-2 hover:no-underline">
               politique de confidentialité
             </Link>
             .
@@ -173,7 +163,7 @@ function CguPage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">11. Modification des CGU</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">11. Modification des CGU</h2>
           <p className="mt-2">
             L'éditeur peut modifier les présentes CGU, notamment pour refléter une évolution du
             service. La version en vigueur est celle publiée sur cette page ; en cas de changement
@@ -182,7 +172,7 @@ function CguPage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">12. Droit applicable et litiges</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">12. Droit applicable et litiges</h2>
           <p className="mt-2">
             Les présentes CGU sont soumises au droit français. En cas de litige, une solution
             amiable sera recherchée en priorité ; à défaut, les tribunaux français compétents seront
@@ -191,16 +181,15 @@ function CguPage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">13. Contact</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">13. Contact</h2>
           <p className="mt-2">
             Pour toute question relative aux présentes CGU :{" "}
-            <a href="mailto:hello@seedow.life" className="underline hover:text-ink">
+            <a href="mailto:hello@seedow.life" className="font-semibold text-ink underline underline-offset-2 hover:no-underline">
               hello@seedow.life
             </a>
             .
           </p>
         </section>
-      </div>
-    </div>
+    </LegalPage>
   );
 }

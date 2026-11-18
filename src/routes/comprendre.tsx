@@ -4,6 +4,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
 import { RelatedCourse } from "@/components/courses/RelatedCourse";
 import { LanguageToggle } from "@/components/LanguageToggle";
+import { Wordmark } from "@/components/brand/Wordmark";
+import { Aurora } from "@/components/motion/Aurora";
+import { Button } from "@/components/ui/button";
 import { DURATION, EASE_REVEAL } from "@/lib/motion";
 import { isIntroDone, markIntroDone, readIntroStep, saveIntroStep } from "@/lib/intro";
 
@@ -95,36 +98,31 @@ function ComprendrePage() {
   };
 
   return (
-    <div className="bg-paper text-ink min-h-screen paper-grain flex flex-col">
-      <header className="border-b border-ink/8">
-        <nav className="max-w-3xl mx-auto flex justify-between items-center px-6 py-5">
-          <div className="flex items-center gap-6">
-            <Link to="/" className="font-display font-bold text-xl tracking-tight ">
-              seedow<span className="text-mint-ink gold-pulse">.</span>
-            </Link>
+    <div className="accent-volt relative flex min-h-screen flex-col overflow-hidden text-ink">
+      <Aurora />
+      <header className="relative z-10 px-3 pt-3">
+        <nav className="glass mx-auto flex h-[60px] max-w-3xl items-center justify-between rounded-full pr-2 pl-5">
+          <Wordmark />
+          <div className="flex items-center gap-2">
             <LanguageToggle />
+            <Button type="button" variant="ghost" size="sm" onClick={finish}>
+              Passer
+            </Button>
           </div>
-          <button
-            type="button"
-            onClick={finish}
-            className="text-caption font-semibold text-ink-3 hover:text-ink transition-colors"
-          >
-            Passer
-          </button>
         </nav>
       </header>
 
-      <div className="flex-1 flex items-center">
-        <div className="max-w-2xl mx-auto w-full px-6 py-12 md:py-20">
-          {/* Progression */}
-          <div className="flex items-center gap-2 mb-10" aria-hidden="true">
+      <div className="relative z-10 flex flex-1 items-center">
+        <div className="mx-auto w-full max-w-2xl px-6 py-12 md:py-20">
+          {/* Progression — chaque étape est une barre qui se remplit. */}
+          <div className="mb-10 flex items-center gap-2" aria-hidden="true">
             {STEPS.map((_, i) => (
-              <span
-                key={i}
-                className={`h-1 rounded-full transition-all duration-500 ${
-                  i === step ? "w-8 bg-mint" : i < step ? "w-4 bg-ink/40" : "w-4 bg-ink/12"
-                }`}
-              />
+              <span key={i} className="h-1.5 flex-1 overflow-hidden rounded-full bg-paper-inset">
+                <span
+                  className="block h-full rounded-full bg-section-accent transition-[width] duration-700 ease-brand motion-reduce:transition-none"
+                  style={{ width: i <= step ? "100%" : "0%" }}
+                />
+              </span>
             ))}
           </div>
 
@@ -137,14 +135,11 @@ function ComprendrePage() {
               exit={{ opacity: 0, x: direction * -24 }}
               transition={{ duration: DURATION.base, ease: EASE_REVEAL }}
             >
-              <p className="eyebrow mb-4">
+              <span className="chip chip--accent mb-5">
                 {current.eyebrow} · {step + 1}/{STEPS.length}
-              </p>
-              <h1 className="font-display text-3xl md:text-5xl leading-[1.05] text-ink mb-5">
-                {current.title}
-              </h1>
-              <div className="gold-rule mb-6" />
-              <p className="text-lg md:text-xl text-ink-2 leading-relaxed">{current.body}</p>
+              </span>
+              <h1 className="display-lg mb-6">{current.title}</h1>
+              <p className="text-body-xl leading-relaxed text-ink-2">{current.body}</p>
 
               {current.courseSlug && (
                 <div className="mt-7 max-w-md">
@@ -156,40 +151,31 @@ function ComprendrePage() {
 
           {/* Contrôles */}
           <div className="mt-12 flex items-center justify-between gap-4">
-            <button
+            <Button
               type="button"
+              variant="ghost"
               onClick={goPrev}
               disabled={step === 0}
-              className="text-caption font-semibold text-ink-3 hover:text-ink transition-colors disabled:opacity-0 disabled:pointer-events-none"
+              className="disabled:pointer-events-none disabled:opacity-0"
             >
               ← Retour
-            </button>
+            </Button>
 
             {isLast ? (
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                <Link
-                  to="/cours"
-                  onClick={markIntroDone}
-                  className="text-center text-xs font-semibold text-ink-3 hover:text-mint-ink transition-colors px-3 py-3"
-                >
-                  Voir les cours
-                </Link>
-                <button
-                  type="button"
-                  onClick={finish}
-                  className="bg-ink text-paper px-7 py-3.5 text-xs font-semibold hover:bg-ink-2 transition-colors"
-                >
-                  {user ? "Aller au tableau de bord →" : "Explorer les fonds →"}
-                </button>
+                <Button asChild variant="ghost">
+                  <Link to="/cours" onClick={markIntroDone}>
+                    Voir les cours
+                  </Link>
+                </Button>
+                <Button type="button" size="lg" onClick={finish}>
+                  {user ? "Aller au tableau de bord" : "Explorer les fonds"} <span aria-hidden>→</span>
+                </Button>
               </div>
             ) : (
-              <button
-                type="button"
-                onClick={goNext}
-                className="bg-ink text-paper px-7 py-3.5 text-xs font-semibold hover:bg-ink-2 transition-colors"
-              >
-                Continuer →
-              </button>
+              <Button type="button" size="lg" onClick={goNext}>
+                Continuer <span aria-hidden>→</span>
+              </Button>
             )}
           </div>
         </div>

@@ -1,5 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 
+import { LegalPage } from "@/components/layout/LegalPage";
+
 export const Route = createFileRoute("/confidentialite")({
   head: () => ({
     meta: [
@@ -16,29 +18,17 @@ export const Route = createFileRoute("/confidentialite")({
 function ConfidentialitePage() {
   const navigate = useNavigate();
   return (
-    <div className="min-h-screen text-ink">
-      <header className="max-w-3xl mx-auto px-6 pt-10 pb-8 border-b border-paper-3">
-        <Link
-          to="/"
-          className="text-caption font-semibold text-ink-3 hover:text-ink transition-colors"
-        >
-          ← Retour à l'accueil
-        </Link>
-        <h1 className="font-value text-4xl mt-4">Politique de confidentialité</h1>
-        <p className="text-label text-ink-3 mt-2">Dernière mise à jour : 15 juillet 2026</p>
-      </header>
-
-      <div className="max-w-3xl mx-auto px-6 py-10 space-y-10 text-body text-ink-2 leading-relaxed">
+    <LegalPage title="Politique de confidentialité" updated="Dernière mise à jour : 15 juillet 2026">
         <section>
           <p>
             Cette politique explique quelles données Seedow collecte, pourquoi, avec qui elles sont
             partagées, combien de temps elles sont conservées, et comment exercer tes droits. Le
             responsable de traitement est l'éditeur du site, dont les coordonnées figurent dans les{" "}
-            <Link to="/mentions-legales" className="underline hover:text-ink">
+            <Link to="/mentions-legales" className="font-semibold text-ink underline underline-offset-2 hover:no-underline">
               mentions légales
             </Link>{" "}
             — contact :{" "}
-            <a href="mailto:hello@seedow.life" className="underline hover:text-ink">
+            <a href="mailto:hello@seedow.life" className="font-semibold text-ink underline underline-offset-2 hover:no-underline">
               hello@seedow.life
             </a>
             .
@@ -46,7 +36,7 @@ function ConfidentialitePage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">1. Données collectées</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">1. Données collectées</h2>
           <ul className="mt-3 space-y-2 list-disc pl-5">
             <li>
               Identifiants de compte : email, mot de passe (jamais stocké en clair, géré par
@@ -75,7 +65,7 @@ function ConfidentialitePage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">2. Stockage local du navigateur</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">2. Stockage local du navigateur</h2>
           <p className="mt-2">
             Seedow n'utilise aucun cookie publicitaire ni de mesure d'audience tierce. Le navigateur
             stocke uniquement, en local (localStorage) : le jeton de session (pour rester connecté),
@@ -85,12 +75,12 @@ function ConfidentialitePage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">3. À quoi servent ces données</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">3. À quoi servent ces données</h2>
           <p className="mt-2">
             À fournir le service (générer et faire vivre ton portefeuille simulé, suivre tes
             objectifs, faire fonctionner l'assistant Ethi), à améliorer le produit pendant la phase
             bêta, et à te répondre si tu nous contactes. La base légale est l'exécution des{" "}
-            <Link to="/cgu" className="underline hover:text-ink">
+            <Link to="/cgu" className="font-semibold text-ink underline underline-offset-2 hover:no-underline">
               CGU
             </Link>{" "}
             que tu acceptes à l'inscription, ou l'intérêt légitime pour l'amélioration du produit en
@@ -99,7 +89,7 @@ function ConfidentialitePage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">4. Avec qui tes données sont partagées</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">4. Avec qui tes données sont partagées</h2>
           <ul className="mt-3 space-y-2 list-disc pl-5">
             <li>
               <strong>Supabase</strong> (via Lovable Cloud) : hébergement de la base de données et
@@ -132,7 +122,7 @@ function ConfidentialitePage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">5. Durée de conservation</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">5. Durée de conservation</h2>
           <p className="mt-2">
             Tes données sont conservées tant que ton compte existe. Tu peux les supprimer à tout
             moment (voir ci-dessous) ; la suppression est immédiate et définitive.
@@ -140,7 +130,7 @@ function ConfidentialitePage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">6. Tes droits</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">6. Tes droits</h2>
           <p className="mt-2">
             Conformément au RGPD, tu disposes d'un droit d'accès, de rectification, d'effacement, de
             portabilité, de limitation et d'opposition sur tes données.
@@ -150,7 +140,7 @@ function ConfidentialitePage() {
               <strong>Accès et portabilité</strong> : depuis{" "}
               <button
                 onClick={() => navigate({ to: "/reglages" })}
-                className="underline hover:text-ink"
+                className="font-semibold text-ink underline underline-offset-2 hover:no-underline"
               >
                 Réglages → Confidentialité
               </button>
@@ -162,7 +152,7 @@ function ConfidentialitePage() {
             </li>
             <li>
               Pour toute autre demande (rectification, limitation, opposition), écris à{" "}
-              <a href="mailto:hello@seedow.life" className="underline hover:text-ink">
+              <a href="mailto:hello@seedow.life" className="font-semibold text-ink underline underline-offset-2 hover:no-underline">
                 hello@seedow.life
               </a>
               .
@@ -173,7 +163,7 @@ function ConfidentialitePage() {
                 href="https://www.cnil.fr"
                 target="_blank"
                 rel="noreferrer"
-                className="underline hover:text-ink"
+                className="font-semibold text-ink underline underline-offset-2 hover:no-underline"
               >
                 CNIL
               </a>
@@ -183,7 +173,7 @@ function ConfidentialitePage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">7. Sécurité</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">7. Sécurité</h2>
           <p className="mt-2">
             Les échanges avec l'application sont chiffrés (HTTPS). L'accès à tes données en base est
             restreint par des règles de sécurité au niveau des lignes (Row Level Security) :
@@ -193,10 +183,9 @@ function ConfidentialitePage() {
         </section>
 
         <section>
-          <h2 className="font-value text-xl text-ink">8. Âge minimum</h2>
+          <h2 className="text-[clamp(19px,2vw,22px)]">8. Âge minimum</h2>
           <p className="mt-2">Seedow est réservé aux personnes âgées de 18 ans ou plus.</p>
         </section>
-      </div>
-    </div>
+    </LegalPage>
   );
 }
