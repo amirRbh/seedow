@@ -56,9 +56,7 @@ function AdminDataPage() {
     <div className="max-w-6xl mx-auto px-6 py-12 space-y-10">
       <header className="flex items-end justify-between flex-wrap gap-4">
         <div>
-          <p className="text-caption font-semibold text-mint-ink">
-            {t("admin_data.eyebrow")}
-          </p>
+          <p className="text-caption font-semibold text-mint-ink">{t("admin_data.eyebrow")}</p>
           <h1 className="font-display text-3xl text-ink mt-2">{t("admin_data.title")}</h1>
         </div>
         <Link to="/le-fil" className="text-label underline text-ink-3 hover:text-ink">

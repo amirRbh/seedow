@@ -78,9 +78,7 @@ export function GoalCard({ goal, onEdit }: { goal: FinancialGoal; onEdit: () => 
         <Progress value={pct} className="mt-2 h-1.5 bg-paper-3 [&>div]:bg-mint" />
         <div className="mt-2 flex items-center justify-between text-caption">
           <span className="text-ink-3 tabular-nums">{pct.toFixed(1)} %</span>
-          <span className={`font-semibold ${status.tone}`}>
-            {status.label}
-          </span>
+          <span className={`font-semibold ${status.tone}`}>{status.label}</span>
         </div>
       </div>
 

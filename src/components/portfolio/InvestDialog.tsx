@@ -86,10 +86,7 @@ export function InvestDialog({ trigger, defaultAmount = 200, label }: Props) {
 
         <div className="mt-2 space-y-4">
           <div>
-            <label
-              htmlFor="invest-amount"
-              className="text-caption font-semibold text-ink-3"
-            >
+            <label htmlFor="invest-amount" className="text-caption font-semibold text-ink-3">
               {t("invest_dialog.amount")}
             </label>
             <div className="mt-2 flex items-center gap-2">

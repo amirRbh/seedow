@@ -18,9 +18,7 @@ export function UnderstandPortfolioCard({ cause }: { cause?: string | null }) {
 
   return (
     <div className="rounded-[14px] bg-paper-2 border border-paper-3 p-5">
-      <p className="text-caption text-ink-3 font-medium">
-        {t("dashboard.understand.eyebrow")}
-      </p>
+      <p className="text-caption text-ink-3 font-medium">{t("dashboard.understand.eyebrow")}</p>
       <p className="text-body-sm text-ink-2 mt-1">{t("dashboard.understand.subtitle")}</p>
       <ul className="mt-4 flex flex-col divide-y divide-paper-3 border-t border-paper-3">
         {courses.map((course) => (

@@ -57,7 +57,8 @@ export function CourseCard({
       </div>
 
       <p className="mt-5 text-caption font-semibold text-ink-3">
-        {trackLabel} · {levelLabel} · <span className="tabular-nums">{course.readingMinutes} min</span>
+        {trackLabel} · {levelLabel} ·{" "}
+        <span className="tabular-nums">{course.readingMinutes} min</span>
       </p>
 
       <h3 className="mt-2 text-[clamp(19px,2vw,22px)] leading-snug">{course.title}</h3>

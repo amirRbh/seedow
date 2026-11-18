@@ -60,35 +60,35 @@ function WaitlistPage() {
           <h1 className="mt-5 text-[clamp(28px,4vw,36px)]">{t("waitlist.title")}</h1>
           <p className="mt-3 text-body leading-relaxed text-ink-2">{t("waitlist.desc")}</p>
 
-        {position !== null ? (
-          <div className="hero-card mt-8 p-6 text-center">
-            <p className="stamp">{t("waitlist.registered")}</p>
-            <p className="mt-2 font-display text-[64px] font-extrabold leading-none tracking-[-0.04em] text-mint-ink">
-              #<CountUp value={position} />
-            </p>
-            <p className="mt-3 text-body-sm text-ink-2">{t("waitlist.on_list")}</p>
-          </div>
-        ) : (
-          <form onSubmit={onSubmit} className="mt-8 space-y-3">
-            <input
-              type="email"
-              required
-              placeholder={t("waitlist.email_placeholder")}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="field"
-            />
-            {error && <p className="text-label text-alert-ink">{error}</p>}
-            <Button
-              type="submit"
-              size="lg"
-              disabled={submitting}
-              className="w-full justify-center"
-            >
-              {submitting ? t("waitlist.submitting") : t("waitlist.btn_join")}
-            </Button>
-          </form>
-        )}
+          {position !== null ? (
+            <div className="hero-card mt-8 p-6 text-center">
+              <p className="stamp">{t("waitlist.registered")}</p>
+              <p className="mt-2 font-display text-[64px] font-extrabold leading-none tracking-[-0.04em] text-mint-ink">
+                #<CountUp value={position} />
+              </p>
+              <p className="mt-3 text-body-sm text-ink-2">{t("waitlist.on_list")}</p>
+            </div>
+          ) : (
+            <form onSubmit={onSubmit} className="mt-8 space-y-3">
+              <input
+                type="email"
+                required
+                placeholder={t("waitlist.email_placeholder")}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="field"
+              />
+              {error && <p className="text-label text-alert-ink">{error}</p>}
+              <Button
+                type="submit"
+                size="lg"
+                disabled={submitting}
+                className="w-full justify-center"
+              >
+                {submitting ? t("waitlist.submitting") : t("waitlist.btn_join")}
+              </Button>
+            </form>
+          )}
         </div>
         <Link
           to="/"

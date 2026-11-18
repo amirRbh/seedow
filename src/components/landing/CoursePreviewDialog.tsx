@@ -37,9 +37,7 @@ export function CoursePreviewDialog({
 
             <h2 className="mt-4 text-[clamp(24px,3.2vw,32px)]">{course.title}</h2>
 
-            {excerpt && (
-              <p className="mt-4 text-body leading-[1.6] text-ink-2">{excerpt}</p>
-            )}
+            {excerpt && <p className="mt-4 text-body leading-[1.6] text-ink-2">{excerpt}</p>}
 
             {takeaways.length > 0 && (
               <div className="tile-accent mt-6 p-5">

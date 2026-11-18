@@ -38,9 +38,7 @@ export function WatchlistCard() {
       className="px-5 pt-8"
     >
       <div className="flex items-baseline justify-between mb-3">
-        <p className="text-caption text-ink-3 font-medium">
-          {t("watchlist.card_title")}
-        </p>
+        <p className="text-caption text-ink-3 font-medium">{t("watchlist.card_title")}</p>
         {watchedAssets.length > 0 && (
           <Link
             to="/discover"
@@ -82,9 +80,7 @@ export function WatchlistCard() {
                 <p className="text-body-sm font-semibold text-ink truncate leading-tight">
                   {asset.name}
                 </p>
-                <p className="text-caption font-semibold text-ink-3 mt-0.5">
-                  {asset.ticker}
-                </p>
+                <p className="text-caption font-semibold text-ink-3 mt-0.5">{asset.ticker}</p>
                 <SustainabilityBadge score={asset.seedow_score} className="mt-1" />
               </div>
               {asset.greenwashing_risk !== "low" && (

@@ -63,9 +63,7 @@ export function ImpactMoment() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-mint opacity-60" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-mint" />
             </span>
-            <span className="text-caption font-bold text-ink-3">
-              {t("impact_moment.eyebrow")}
-            </span>
+            <span className="text-caption font-bold text-ink-3">{t("impact_moment.eyebrow")}</span>
           </span>
           <span className="inline-flex items-center gap-1 text-caption font-semibold text-ink-3 transition-colors group-hover:text-ink">
             {t("impact_moment.cta")}

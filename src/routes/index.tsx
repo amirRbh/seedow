@@ -15,7 +15,8 @@ import { Magnetic } from "@/components/motion/Magnetic";
 import { Marquee } from "@/components/motion/Marquee";
 import { Reveal, RevealGroup } from "@/components/motion/Reveal";
 import { ScrollProgress } from "@/components/motion/ScrollProgress";
-import { SplitWords, wordCount } from "@/components/motion/SplitWords";
+import { SplitWords } from "@/components/motion/SplitWords";
+import { wordCount } from "@/lib/motion";
 import { Provenance } from "@/components/ui/Provenance";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
@@ -189,9 +190,7 @@ function Landing() {
             <p className="mt-6 max-w-[46ch] text-body-lg leading-relaxed text-ink-2">
               {t("landing.rv.hero.subtitle")}
             </p>
-            <p className="mt-6 max-w-[52ch] text-body-sm text-ink-3">
-              {t("landing.rv.hero.note")}
-            </p>
+            <p className="mt-6 max-w-[52ch] text-body-sm text-ink-3">{t("landing.rv.hero.note")}</p>
           </Reveal>
           <Reveal delay={120}>
             <MoneyXray variant="hero" />

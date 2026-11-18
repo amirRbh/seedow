@@ -118,9 +118,7 @@ export function EthiBriefing() {
                       TONE[s.tone],
                     )}
                   >
-                    <span className="font-semibold text-caption opacity-80">
-                      {s.label}
-                    </span>
+                    <span className="font-semibold text-caption opacity-80">{s.label}</span>
                     <span className="opacity-90">{s.detail}</span>
                   </Link>
                 ),

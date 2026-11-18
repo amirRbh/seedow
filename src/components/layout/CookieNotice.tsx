@@ -38,7 +38,10 @@ export function CookieNotice() {
       <div className="glass pointer-events-auto flex max-w-2xl animate-fade-in-up flex-col items-start gap-3 rounded-[24px] p-4 pl-5 sm:flex-row sm:items-center">
         <p className="flex-1 text-label leading-relaxed text-ink-2">
           {t("cookie_notice.text")}{" "}
-          <Link to="/confidentialite" className="font-semibold text-ink underline underline-offset-2 hover:no-underline">
+          <Link
+            to="/confidentialite"
+            className="font-semibold text-ink underline underline-offset-2 hover:no-underline"
+          >
             {t("cookie_notice.learn_more")}
           </Link>
         </p>

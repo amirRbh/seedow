@@ -169,7 +169,8 @@ function ComprendrePage() {
                   </Link>
                 </Button>
                 <Button type="button" size="lg" onClick={finish}>
-                  {user ? "Aller au tableau de bord" : "Explorer les fonds"} <span aria-hidden>→</span>
+                  {user ? "Aller au tableau de bord" : "Explorer les fonds"}{" "}
+                  <span aria-hidden>→</span>
                 </Button>
               </div>
             ) : (

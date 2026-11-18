@@ -87,7 +87,10 @@ function ObjectifsPage() {
 
           <p className="mt-10 text-body-sm text-ink-3">
             {t("objectives.estimates_note")}{" "}
-            <Link to="/methodologie" className="font-semibold text-ink-2 underline underline-offset-2">
+            <Link
+              to="/methodologie"
+              className="font-semibold text-ink-2 underline underline-offset-2"
+            >
               {t("objectives.methodology_link")}
             </Link>
             .

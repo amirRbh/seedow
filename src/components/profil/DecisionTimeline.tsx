@@ -41,9 +41,7 @@ export function DecisionTimeline() {
               )}
             />
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-caption font-semibold text-ink-3">
-                {tone.label}
-              </span>
+              <span className="text-caption font-semibold text-ink-3">{tone.label}</span>
               <span className="text-tag text-ink-3">·</span>
               <time
                 dateTime={d.date}

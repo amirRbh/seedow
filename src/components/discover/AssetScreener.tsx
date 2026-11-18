@@ -168,9 +168,7 @@ export function AssetScreener({ initialThemes }: { initialThemes?: string[] } = 
           Le premier langage du débutant, avant même les intentions financières.
           Filtre par cause réellement portée par l'actif (multi-sélection). */}
       <div className="px-5">
-        <p className="text-caption font-semibold text-ink-3 mb-2">
-          {t("discover.themes_eyebrow")}
-        </p>
+        <p className="text-caption font-semibold text-ink-3 mb-2">{t("discover.themes_eyebrow")}</p>
         <div className="flex flex-wrap gap-1.5">
           {THEME_OPTIONS.map((theme) => {
             const active = filters.themes.includes(theme);
@@ -410,9 +408,7 @@ export function AssetScreener({ initialThemes }: { initialThemes?: string[] } = 
           </div>
         ) : curatedView ? (
           <>
-            <p className="text-caption font-semibold text-ink-3 pt-1">
-              {t("discover.top_rated")}
-            </p>
+            <p className="text-caption font-semibold text-ink-3 pt-1">{t("discover.top_rated")}</p>
             {topRated.map((asset, i) => (
               <AssetRow key={asset.id} asset={asset} index={i} onOpen={() => setDetail(asset)} />
             ))}

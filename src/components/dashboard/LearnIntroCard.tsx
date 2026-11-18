@@ -46,9 +46,7 @@ export function LearnIntroCard() {
         </svg>
       </button>
 
-      <p className="text-caption font-semibold text-mint-ink mb-1">
-        {t("learn_intro.eyebrow")}
-      </p>
+      <p className="text-caption font-semibold text-mint-ink mb-1">{t("learn_intro.eyebrow")}</p>
       <p className="text-body-sm text-paper/85 leading-snug mb-3">{t("learn_intro.body")}</p>
       <Link
         to="/comprendre"

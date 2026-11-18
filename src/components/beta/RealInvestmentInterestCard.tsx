@@ -93,10 +93,7 @@ export function RealInvestmentInterestCard() {
                 </DialogHeader>
                 <div className="space-y-5 py-2">
                   <div>
-                    <label
-                      htmlFor="rii-amount"
-                      className="text-caption font-semibold text-ink-3"
-                    >
+                    <label htmlFor="rii-amount" className="text-caption font-semibold text-ink-3">
                       {t("real_invest_interest.envisaged_amount")}
                     </label>
                     <div className="flex items-center gap-3 mt-2">
@@ -117,10 +114,7 @@ export function RealInvestmentInterestCard() {
                   </div>
 
                   <div>
-                    <p
-                      id="rii-frequency-label"
-                      className="text-caption font-semibold text-ink-3"
-                    >
+                    <p id="rii-frequency-label" className="text-caption font-semibold text-ink-3">
                       {t("real_invest_interest.frequency")}
                     </p>
                     <div

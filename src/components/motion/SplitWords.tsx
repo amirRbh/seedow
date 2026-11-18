@@ -41,8 +41,3 @@ export function SplitWords({
     </span>
   );
 }
-
-/** Nombre de mots d'un texte — pour chaîner `startIndex` entre deux lignes. */
-export function wordCount(text: string): number {
-  return text.split(/\s+/).filter(Boolean).length;
-}

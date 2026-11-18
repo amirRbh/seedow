@@ -690,9 +690,7 @@ function CompareRow({
           </p>
         </div>
         <div>
-          <p className="text-caption font-semibold text-ink-3 mb-1">
-            {benchmarkLabel}
-          </p>
+          <p className="text-caption font-semibold text-ink-3 mb-1">{benchmarkLabel}</p>
           <p className="kpi-figure text-xl text-ink-2 tabular-nums">{msciValue}</p>
         </div>
       </div>

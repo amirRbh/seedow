@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
 import { Aurora } from "@/components/motion/Aurora";
 import { ScrollProgress } from "@/components/motion/ScrollProgress";
-import { SplitWords, wordCount } from "@/components/motion/SplitWords";
+import { SplitWords } from "@/components/motion/SplitWords";
+import { wordCount } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { SiteFooter } from "./SiteFooter";
 import { SiteHeader } from "./SiteHeader";
@@ -106,10 +107,7 @@ export function PageHero({
           </div>
         )}
         {children && (
-          <div
-            className="mt-8 animate-fade-in-up"
-            style={{ animationDelay: "360ms" }}
-          >
+          <div className="mt-8 animate-fade-in-up" style={{ animationDelay: "360ms" }}>
             {children}
           </div>
         )}

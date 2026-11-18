@@ -129,11 +129,7 @@ function ProfilPage() {
   const numLocale = lang === "en" ? "en-US" : "fr-FR";
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="min-h-screen"
-    >
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen">
       <div className="page accent-mint">
         <AppHeader
           eyebrow={t("profile.eyebrow")}
@@ -182,9 +178,7 @@ function ProfilPage() {
         {/* Hub — regroupe les surfaces annexes retirées du rail de navigation */}
         <section className="px-5 pt-5">
           <div className="paper-card p-6 sm:p-7">
-            <p className="chip chip--accent mb-3 w-fit">
-              {t("profile.hub_eyebrow")}
-            </p>
+            <p className="chip chip--accent mb-3 w-fit">{t("profile.hub_eyebrow")}</p>
             <h2 className="text-[clamp(20px,2.2vw,24px)]">{t("profile.hub_title")}</h2>
             <nav className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-3">
               <HubLink to="/objectifs" label={t("nav.objectives")} />
@@ -203,14 +197,15 @@ function ProfilPage() {
             Les nommer vaut mieux que les laisser dériver ou les couper. */}
         <section className="px-5 pt-5">
           <div className="paper-card p-6 sm:p-7">
-            <p className="chip chip--accent mb-3 w-fit">
-              {t("profile.lab_eyebrow")}
-            </p>
+            <p className="chip chip--accent mb-3 w-fit">{t("profile.lab_eyebrow")}</p>
             <h2 className="text-[clamp(20px,2.2vw,24px)]">{t("profile.lab_title")}</h2>
             <p className="mt-2 text-body-sm text-ink-2 max-w-[52ch] leading-relaxed">
               {t("profile.lab_desc")}
             </p>
-            <nav className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4" aria-label={t("profile.lab_title")}>
+            <nav
+              className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4"
+              aria-label={t("profile.lab_title")}
+            >
               <HubLink to="/vote" label={t("rail_nav.vote")} />
               <HubLink to="/reveil" label={t("rail_nav.reveil")} />
               <HubLink to="/communaute" label={t("nav.community")} />
@@ -222,12 +217,8 @@ function ProfilPage() {
         {/* Tes valeurs */}
         <section className="px-5 pt-5">
           <div className="paper-card p-6 sm:p-7">
-            <p className="chip chip--accent mb-3 w-fit">
-              {t("profile.values_eyebrow")}
-            </p>
-            <h2 className="text-[clamp(20px,2.2vw,24px)]">
-              {t("profile.values_title")}
-            </h2>
+            <p className="chip chip--accent mb-3 w-fit">{t("profile.values_eyebrow")}</p>
+            <h2 className="text-[clamp(20px,2.2vw,24px)]">{t("profile.values_title")}</h2>
 
             <div className="mt-5">
               <p className="text-caption font-semibold text-ink-3 mb-2">
@@ -236,10 +227,7 @@ function ProfilPage() {
               {meta && meta.causes.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
                   {meta.causes.map((c) => (
-                    <span
-                      key={c}
-                      className="chip chip--verified"
-                    >
+                    <span key={c} className="chip chip--verified">
                       {CAUSE_LABELS[c] ?? c}
                     </span>
                   ))}
@@ -256,10 +244,7 @@ function ProfilPage() {
               {meta && meta.exclusions.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
                   {meta.exclusions.map((e) => (
-                    <span
-                      key={e}
-                      className="chip line-through decoration-alert/60"
-                    >
+                    <span key={e} className="chip line-through decoration-alert/60">
                       {EXCLUSION_LABELS[e] ?? e}
                     </span>
                   ))}
@@ -291,12 +276,8 @@ function ProfilPage() {
         {/* Ton portefeuille */}
         <section className="px-5 pt-5">
           <div className="paper-card p-6 sm:p-7">
-            <p className="chip chip--accent mb-3 w-fit">
-              {t("profile.portfolio_eyebrow")}
-            </p>
-            <h2 className="text-[clamp(20px,2.2vw,24px)]">
-              {t("profile.portfolio_title")}
-            </h2>
+            <p className="chip chip--accent mb-3 w-fit">{t("profile.portfolio_eyebrow")}</p>
+            <h2 className="text-[clamp(20px,2.2vw,24px)]">{t("profile.portfolio_title")}</h2>
 
             <dl className="mt-5 divide-y divide-paper-3 border-t border-b border-paper-3">
               <Row label={t("profile.active_portfolio")} value={portfolio?.name ?? "—"} />
@@ -337,12 +318,8 @@ function ProfilPage() {
         {/* Ta progression */}
         <section className="px-5 pt-5">
           <div className="paper-card p-6 sm:p-7">
-            <p className="chip chip--accent mb-3 w-fit">
-              {t("profile.progress_eyebrow")}
-            </p>
-            <h2 className="text-[clamp(20px,2.2vw,24px)]">
-              {t("profile.progress_title")}
-            </h2>
+            <p className="chip chip--accent mb-3 w-fit">{t("profile.progress_eyebrow")}</p>
+            <h2 className="text-[clamp(20px,2.2vw,24px)]">{t("profile.progress_title")}</h2>
 
             <ul className="mt-5 space-y-3">
               <ProgressItem
@@ -376,12 +353,8 @@ function ProfilPage() {
         {/* Historique des décisions */}
         <section className="px-5 pt-5">
           <div className="paper-card p-6 sm:p-7">
-            <p className="chip chip--accent mb-3 w-fit">
-              {t("profile.decisions_eyebrow")}
-            </p>
-            <h2 className="text-[clamp(20px,2.2vw,24px)]">
-              {t("profile.decisions_title")}
-            </h2>
+            <p className="chip chip--accent mb-3 w-fit">{t("profile.decisions_eyebrow")}</p>
+            <h2 className="text-[clamp(20px,2.2vw,24px)]">{t("profile.decisions_title")}</h2>
             <p className="text-sm text-ink-3 mt-2">{t("profile.decisions_desc")}</p>
             <DecisionTimeline />
           </div>

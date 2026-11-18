@@ -495,93 +495,95 @@ function MethodologyPage() {
           durabilité. Elle passe donc AVANT l'historique de version. */}
       <section id="sti" className="mx-auto max-w-6xl scroll-mt-28 px-5 py-3 sm:px-6">
         <div className="paper-card p-6 md:p-10">
-        <h2 className="mb-4 text-[clamp(22px,2.6vw,28px)]">{t("methodologie.sti_title")}</h2>
-        <p className="text-body-sm text-ink-2 leading-relaxed max-w-2xl">
-          {t("methodologie.sti_intro")}
-        </p>
+          <h2 className="mb-4 text-[clamp(22px,2.6vw,28px)]">{t("methodologie.sti_title")}</h2>
+          <p className="text-body-sm text-ink-2 leading-relaxed max-w-2xl">
+            {t("methodologie.sti_intro")}
+          </p>
 
-        <p className="mt-6 text-body-sm font-semibold text-ink">
-          {t("methodologie.sti_not_measured_title")}
-        </p>
-        <p className="mt-2 text-body-sm text-ink-2 leading-relaxed max-w-2xl">
-          {t("methodologie.sti_not_measured")}
-        </p>
+          <p className="mt-6 text-body-sm font-semibold text-ink">
+            {t("methodologie.sti_not_measured_title")}
+          </p>
+          <p className="mt-2 text-body-sm text-ink-2 leading-relaxed max-w-2xl">
+            {t("methodologie.sti_not_measured")}
+          </p>
 
-        <p className="mt-6 text-body-sm font-semibold text-ink">
-          {t("methodologie.sti_grid_title")}
-        </p>
-        <ul className="mt-3 space-y-2 text-body-sm">
-          {STI_BLOCKS.map((b) => (
-            <li key={b.id} className="flex justify-between gap-4 border-b border-paper-3 pb-2">
-              <span className="text-ink-2">
-                <span className="font-mono text-ink-3 mr-2">{b.id}</span>
-                {t(`sti.block.${b.id}`)}
-              </span>
-              <span className="tabular-nums font-medium shrink-0">{BLOCK_MAX[b.id]} pts</span>
-            </li>
-          ))}
-        </ul>
+          <p className="mt-6 text-body-sm font-semibold text-ink">
+            {t("methodologie.sti_grid_title")}
+          </p>
+          <ul className="mt-3 space-y-2 text-body-sm">
+            {STI_BLOCKS.map((b) => (
+              <li key={b.id} className="flex justify-between gap-4 border-b border-paper-3 pb-2">
+                <span className="text-ink-2">
+                  <span className="font-mono text-ink-3 mr-2">{b.id}</span>
+                  {t(`sti.block.${b.id}`)}
+                </span>
+                <span className="tabular-nums font-medium shrink-0">{BLOCK_MAX[b.id]} pts</span>
+              </li>
+            ))}
+          </ul>
 
-        <p className="mt-6 text-body-sm font-semibold text-ink">
-          {t("methodologie.sti_abstention_title")}
-        </p>
-        <p className="mt-2 text-body-sm text-ink-2 leading-relaxed max-w-2xl">
-          {t("methodologie.sti_abstention")}
-        </p>
+          <p className="mt-6 text-body-sm font-semibold text-ink">
+            {t("methodologie.sti_abstention_title")}
+          </p>
+          <p className="mt-2 text-body-sm text-ink-2 leading-relaxed max-w-2xl">
+            {t("methodologie.sti_abstention")}
+          </p>
 
-        {/* Le point le plus contre-intuitif de la grille : sans cette phrase,
+          {/* Le point le plus contre-intuitif de la grille : sans cette phrase,
             le bloc B est lu comme une note de sévérité et la grille entière se
             lit de travers. */}
-        <p className="mt-6 text-body-sm font-semibold text-ink">
-          {t("methodologie.sti_precision_title")}
-        </p>
-        <p className="mt-2 text-body-sm text-ink-2 leading-relaxed max-w-2xl">
-          {t("sti.precision_not_severity")}
-        </p>
+          <p className="mt-6 text-body-sm font-semibold text-ink">
+            {t("methodologie.sti_precision_title")}
+          </p>
+          <p className="mt-2 text-body-sm text-ink-2 leading-relaxed max-w-2xl">
+            {t("sti.precision_not_severity")}
+          </p>
 
-        <p className="mt-6 text-body-sm font-semibold text-ink">
-          {t("methodologie.sti_discrepancies_title")}
-        </p>
-        <p className="mt-2 text-body-sm text-ink-2 leading-relaxed max-w-2xl">
-          {t("methodologie.sti_discrepancies")}
-        </p>
-        <ul className="mt-3 space-y-2 text-body-sm">
-          {DISCREPANCY_CODES.map((code) => (
-            <li key={code} className="flex gap-3 border-b border-paper-3 pb-2">
-              <span className="font-mono text-ink-3 shrink-0">{code}</span>
-              <span className="text-ink-2">{t(`constats.type.${code}`)}</span>
-            </li>
-          ))}
-        </ul>
+          <p className="mt-6 text-body-sm font-semibold text-ink">
+            {t("methodologie.sti_discrepancies_title")}
+          </p>
+          <p className="mt-2 text-body-sm text-ink-2 leading-relaxed max-w-2xl">
+            {t("methodologie.sti_discrepancies")}
+          </p>
+          <ul className="mt-3 space-y-2 text-body-sm">
+            {DISCREPANCY_CODES.map((code) => (
+              <li key={code} className="flex gap-3 border-b border-paper-3 pb-2">
+                <span className="font-mono text-ink-3 shrink-0">{code}</span>
+                <span className="text-ink-2">{t(`constats.type.${code}`)}</span>
+              </li>
+            ))}
+          </ul>
 
-        <p className="mt-6 text-body-sm font-semibold text-ink">
-          {t("methodologie.sti_governance_title")}
-        </p>
-        <p className="mt-2 text-body-sm text-ink-2 leading-relaxed max-w-2xl">
-          {t("methodologie.sti_governance", {
-            days: NOTICE_PERIOD_WORKING_DAYS,
-            hours: CORRECTION_DEADLINE_HOURS,
-          })}
-        </p>
+          <p className="mt-6 text-body-sm font-semibold text-ink">
+            {t("methodologie.sti_governance_title")}
+          </p>
+          <p className="mt-2 text-body-sm text-ink-2 leading-relaxed max-w-2xl">
+            {t("methodologie.sti_governance", {
+              days: NOTICE_PERIOD_WORKING_DAYS,
+              hours: CORRECTION_DEADLINE_HOURS,
+            })}
+          </p>
 
-        <p className="text-caption text-ink-3 mt-6">{t("sti.version", { version: STI_VERSION })}</p>
+          <p className="text-caption text-ink-3 mt-6">
+            {t("sti.version", { version: STI_VERSION })}
+          </p>
         </div>
       </section>
 
       {/* C3 — Historique de version (transparence auditable, Moat Blueprint) */}
       <section className="mx-auto max-w-6xl scroll-mt-28 px-5 py-3 sm:px-6">
         <div className="paper-card p-6 md:p-10">
-        <h2 className="mb-4 text-[clamp(22px,2.6vw,28px)]">{t("methodologie.version_title")}</h2>
-        <ul className="space-y-3">
-          {METHODOLOGY_VERSIONS.map((v) => (
-            <li key={v.version} className="flex items-baseline gap-3 text-body-sm">
-              <span className="font-mono text-ink-3 shrink-0">v{v.version}</span>
-              <span className="text-ink-3 shrink-0 tabular-nums">{v.date}</span>
-              <span className="text-ink-2">{t(v.noteKey)}</span>
-            </li>
-          ))}
-        </ul>
-        <p className="text-caption text-ink-3 mt-3">{t("methodologie.version_note")}</p>
+          <h2 className="mb-4 text-[clamp(22px,2.6vw,28px)]">{t("methodologie.version_title")}</h2>
+          <ul className="space-y-3">
+            {METHODOLOGY_VERSIONS.map((v) => (
+              <li key={v.version} className="flex items-baseline gap-3 text-body-sm">
+                <span className="font-mono text-ink-3 shrink-0">v{v.version}</span>
+                <span className="text-ink-3 shrink-0 tabular-nums">{v.date}</span>
+                <span className="text-ink-2">{t(v.noteKey)}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="text-caption text-ink-3 mt-3">{t("methodologie.version_note")}</p>
         </div>
       </section>
     </PublicPage>
@@ -662,9 +664,7 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
     <section id="esg-scores" className="max-w-6xl mx-auto px-6 py-12 border-t border-paper-3">
       <details className="group">
         <summary className="cursor-pointer select-none list-none">
-          <p className="text-caption text-ink-3 font-medium">
-            Transparence · Notation ESG
-          </p>
+          <p className="text-caption text-ink-3 font-medium">Transparence · Notation ESG</p>
           <h2 className="font-value text-3xl mt-2 flex items-center gap-2">
             <span className="inline-block transition-transform group-open:rotate-90">›</span>
             D'où viennent les scores ESG
@@ -678,9 +678,7 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
         <div id="sources" className="grid gap-6 md:grid-cols-2 mt-6">
           {/* Bloc 1 — Sources */}
           <div className="paper-card-inset p-5">
-            <p className="text-caption text-ink-3 font-medium mb-3">
-              01 · Sources de données
-            </p>
+            <p className="text-caption text-ink-3 font-medium mb-3">01 · Sources de données</p>
             <ul className="divide-y divide-paper-3 text-label">
               {sources.map((s) => (
                 <li key={s.name} className="py-2 flex items-baseline justify-between gap-3">
@@ -700,9 +698,7 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
             {/* Journal de provenance : ce qui répond, ce qui ne répond pas. On
                 publie aussi les impasses — un trou annoncé vaut mieux qu'un
                 chiffre inventé (contrat de transparence Seedow). */}
-            <p className="text-caption text-ink-3 font-medium mt-5 mb-2">
-              Journal de provenance
-            </p>
+            <p className="text-caption text-ink-3 font-medium mt-5 mb-2">Journal de provenance</p>
             <ul className="text-caption text-ink-2 leading-relaxed space-y-1.5">
               {SOURCE_LEDGER.map((entry) => (
                 <li key={entry.source} className="flex gap-2">
@@ -801,9 +797,7 @@ function EsgTransparencySection({ activeCauses }: { activeCauses: CauseTag[] }) 
 
         {/* Bloc 4 — Limites */}
         <div className="tile-accent accent-solar mt-6 p-5">
-          <p className="text-caption text-ink font-medium mb-3">
-            04 · Ce que la note ne dit pas
-          </p>
+          <p className="text-caption text-ink font-medium mb-3">04 · Ce que la note ne dit pas</p>
           <ul className="space-y-2 text-label text-ink-2 leading-relaxed">
             <li>
               <span className="font-value text-ink">Les agences ne sont pas d'accord.</span>{" "}

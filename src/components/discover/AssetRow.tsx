@@ -40,9 +40,7 @@ export function AssetRow({ asset, index, onOpen }: Props) {
       <div className="flex-1 min-w-0">
         <p className="text-body-sm font-semibold text-ink truncate leading-tight">{asset.name}</p>
         <div className="flex items-center gap-1.5 mt-1 min-w-0">
-          <span className="text-caption font-semibold text-ink-3 truncate">
-            {asset.category}
-          </span>
+          <span className="text-caption font-semibold text-ink-3 truncate">{asset.category}</span>
           {asset.greenwashing_risk === "high" && (
             <span className="text-alert-ink flex-shrink-0" title={t("transparency.gw_row_flag")}>
               ⚠

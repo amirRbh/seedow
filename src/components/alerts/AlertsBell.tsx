@@ -63,9 +63,7 @@ export function AlertsBell() {
 
       <SheetContent side="right" className="w-full sm:max-w-md bg-paper border-paper-3 p-0">
         <SheetHeader className="px-5 pt-6 pb-4 border-b border-paper-3 text-left">
-          <p className="text-caption font-semibold text-mint-ink">
-            {t("alerts.eyebrow")}
-          </p>
+          <p className="text-caption font-semibold text-mint-ink">{t("alerts.eyebrow")}</p>
           <SheetTitle className="font-value text-2xl text-ink leading-tight">
             {count === 0
               ? t("alerts.all_clear")

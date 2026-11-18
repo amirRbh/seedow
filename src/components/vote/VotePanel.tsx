@@ -36,9 +36,7 @@ export function VotePanel({ resolution, onVote, casting }: Props) {
             style={{ background: "linear-gradient(135deg, var(--mint), var(--ice))" }}
           />
           <div>
-            <span className="text-caption font-semibold text-ink-3">
-              {t("vote.explainer.who")}
-            </span>
+            <span className="text-caption font-semibold text-ink-3">{t("vote.explainer.who")}</span>
             <p className="mt-1 text-body-sm leading-relaxed text-ink">{resolution.summary}</p>
           </div>
         </div>

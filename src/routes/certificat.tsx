@@ -87,10 +87,7 @@ function CertificatPage() {
       {/* Toolbar — masquée à l'impression */}
       <div className="sticky top-0 z-10 px-3 pt-3 print:hidden">
         <div className="glass mx-auto flex h-[60px] max-w-5xl items-center justify-between gap-4 rounded-full pr-2 pl-5">
-          <Link
-            to="/portfolio"
-            className="link-u text-body-sm font-bold text-ink-2 hover:text-ink"
-          >
+          <Link to="/portfolio" className="link-u text-body-sm font-bold text-ink-2 hover:text-ink">
             {t("certificate.back_portfolio_short")}
           </Link>
           <div className="flex items-center gap-2">
@@ -108,131 +105,131 @@ function CertificatPage() {
 
       {/* Feuille A4 paysage */}
       <div className="mx-auto max-w-5xl px-4 py-8 print:p-0">
-      <Tilt max={2}>
-      <article className="hero-card accent-mint relative overflow-hidden px-7 py-10 md:px-14 md:py-14 print:rounded-none print:shadow-none">
-        {/* Filigrane : une graine, très légère, dans le coin du certificat. */}
-        <span
-          aria-hidden
-          className="pointer-events-none absolute -right-16 -bottom-16 h-64 w-64 rounded-full bg-mint/10 print:hidden"
-        />
-        <div
-          role="note"
-          className="mb-8 inline-flex flex-wrap items-center gap-2 rounded-full bg-solar-tint px-4 py-2 text-caption font-semibold text-solar-ink ring-1 ring-inset ring-solar-tint-border"
-        >
-          <span className="inline-block w-1.5 h-1.5 rounded-full bg-mint" aria-hidden />
-          <span className="font-semibold">Bêta</span>
-          <span className="text-label">
-            capital virtuel · cours réels · aucun argent investi
-          </span>
-        </div>
+        <Tilt max={2}>
+          <article className="hero-card accent-mint relative overflow-hidden px-7 py-10 md:px-14 md:py-14 print:rounded-none print:shadow-none">
+            {/* Filigrane : une graine, très légère, dans le coin du certificat. */}
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -right-16 -bottom-16 h-64 w-64 rounded-full bg-mint/10 print:hidden"
+            />
+            <div
+              role="note"
+              className="mb-8 inline-flex flex-wrap items-center gap-2 rounded-full bg-solar-tint px-4 py-2 text-caption font-semibold text-solar-ink ring-1 ring-inset ring-solar-tint-border"
+            >
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-mint" aria-hidden />
+              <span className="font-semibold">Bêta</span>
+              <span className="text-label">
+                capital virtuel · cours réels · aucun argent investi
+              </span>
+            </div>
 
-        <header className="flex items-start justify-between gap-6 pb-6 border-b border-paper-3">
-          <div>
-            <p className="font-display text-[30px] leading-none font-extrabold tracking-[-0.04em] text-ink">
-              seedow<span className="text-mint">.</span>
-            </p>
-            <p className="eyebrow mt-3">{t("certificate.subtitle")}</p>
-          </div>
-          <div className="text-right">
-            <p className="text-caption font-semibold text-ink-3">
-              {t("certificate.reference")}
-            </p>
-            <p className="font-display text-sm text-ink mt-1 tabular-nums">{certNo}</p>
-            <p className="text-caption text-ink-3 mt-1">{dateLong}</p>
-          </div>
-        </header>
+            <header className="flex items-start justify-between gap-6 pb-6 border-b border-paper-3">
+              <div>
+                <p className="font-display text-[30px] leading-none font-extrabold tracking-[-0.04em] text-ink">
+                  seedow<span className="text-mint">.</span>
+                </p>
+                <p className="eyebrow mt-3">{t("certificate.subtitle")}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-caption font-semibold text-ink-3">
+                  {t("certificate.reference")}
+                </p>
+                <p className="font-display text-sm text-ink mt-1 tabular-nums">{certNo}</p>
+                <p className="text-caption text-ink-3 mt-1">{dateLong}</p>
+              </div>
+            </header>
 
-        <section className="mt-10">
-          <p className="eyebrow">{t("certificate.holder")}</p>
-          <h1 className="display-lg mt-2">{holderName}</h1>
-          <p className="text-sm text-ink-2 mt-2">
-            {t("certificate.portfolio_line", {
-              name: portfolio.name,
-              value: formatCurrency(totalValue, lang),
-            })}
-          </p>
-        </section>
-
-        <section className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-8">
-          {impact?.measured && footprintKg != null ? (
-            <>
-              <KPIFigure
-                label={t("certificate.kpi_footprint")}
-                value={
-                  footprintInTonnes
-                    ? (footprintKg / 1000).toFixed(2)
-                    : footprintKg.toLocaleString(numLocale, { maximumFractionDigits: 0 })
-                }
-                unit={`${footprintInTonnes ? "t" : "kg"} CO₂e/an`}
-                size="lg"
-                accent
-              />
-              <KPIFigure
-                label={t("certificate.kpi_intensity")}
-                value={(impact.intensityGco2ePerEur ?? 0).toLocaleString(numLocale, {
-                  maximumFractionDigits: 1,
+            <section className="mt-10">
+              <p className="eyebrow">{t("certificate.holder")}</p>
+              <h1 className="display-lg mt-2">{holderName}</h1>
+              <p className="text-sm text-ink-2 mt-2">
+                {t("certificate.portfolio_line", {
+                  name: portfolio.name,
+                  value: formatCurrency(totalValue, lang),
                 })}
-                unit="gCO₂e/€"
-                size="lg"
-              />
-              <KPIFigure
-                label={t("certificate.kpi_coverage")}
-                value={coveragePct.toString()}
-                unit="%"
-                size="lg"
-              />
-            </>
-          ) : impact?.intensity ? (
-            <>
-              <KPIFigure
-                label={t("certificate.kpi_intensity_waci")}
-                value={impact.intensity.waci.toLocaleString(numLocale, {
-                  maximumFractionDigits: 0,
-                })}
-                unit="tCO₂e/M$"
-                size="lg"
-                accent
-              />
-              <KPIFigure
-                label={t("certificate.kpi_coverage")}
-                value={Math.round(impact.intensity.coverage * 100).toString()}
-                unit="%"
-                size="lg"
-              />
-            </>
-          ) : null}
-          <KPIFigure
-            label={t("certificate.kpi_impact")}
-            value={esgScore.toFixed(0)}
-            unit="/100"
-            size="lg"
-          />
-        </section>
+              </p>
+            </section>
 
-        <p className="mt-4 text-caption text-ink-3 leading-relaxed max-w-3xl">
-          {impact?.measured
-            ? t("certificate.footprint_note", { coverage: coveragePct })
-            : impact?.intensity
-              ? t("certificate.intensity_note")
-              : t("certificate.footprint_not_measured")}
-        </p>
+            <section className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-8">
+              {impact?.measured && footprintKg != null ? (
+                <>
+                  <KPIFigure
+                    label={t("certificate.kpi_footprint")}
+                    value={
+                      footprintInTonnes
+                        ? (footprintKg / 1000).toFixed(2)
+                        : footprintKg.toLocaleString(numLocale, { maximumFractionDigits: 0 })
+                    }
+                    unit={`${footprintInTonnes ? "t" : "kg"} CO₂e/an`}
+                    size="lg"
+                    accent
+                  />
+                  <KPIFigure
+                    label={t("certificate.kpi_intensity")}
+                    value={(impact.intensityGco2ePerEur ?? 0).toLocaleString(numLocale, {
+                      maximumFractionDigits: 1,
+                    })}
+                    unit="gCO₂e/€"
+                    size="lg"
+                  />
+                  <KPIFigure
+                    label={t("certificate.kpi_coverage")}
+                    value={coveragePct.toString()}
+                    unit="%"
+                    size="lg"
+                  />
+                </>
+              ) : impact?.intensity ? (
+                <>
+                  <KPIFigure
+                    label={t("certificate.kpi_intensity_waci")}
+                    value={impact.intensity.waci.toLocaleString(numLocale, {
+                      maximumFractionDigits: 0,
+                    })}
+                    unit="tCO₂e/M$"
+                    size="lg"
+                    accent
+                  />
+                  <KPIFigure
+                    label={t("certificate.kpi_coverage")}
+                    value={Math.round(impact.intensity.coverage * 100).toString()}
+                    unit="%"
+                    size="lg"
+                  />
+                </>
+              ) : null}
+              <KPIFigure
+                label={t("certificate.kpi_impact")}
+                value={esgScore.toFixed(0)}
+                unit="/100"
+                size="lg"
+              />
+            </section>
 
-        <section className="mt-12">
-          <p className="eyebrow">{t("certificate.methodology")}</p>
-          <p className="mt-3 text-sm text-ink-2 leading-relaxed max-w-3xl">
-            {t("certificate.methodology_body")}
-          </p>
-        </section>
+            <p className="mt-4 text-caption text-ink-3 leading-relaxed max-w-3xl">
+              {impact?.measured
+                ? t("certificate.footprint_note", { coverage: coveragePct })
+                : impact?.intensity
+                  ? t("certificate.intensity_note")
+                  : t("certificate.footprint_not_measured")}
+            </p>
 
-        <footer className="mt-12 flex flex-wrap items-end justify-between gap-4 text-caption text-ink-3">
-          <p>
-            {t("certificate.verification_label")}{" "}
-            <span className="text-ink font-medium">seedow.life/methodologie</span>
-          </p>
-          <p>{t("certificate.issued_on", { date: dateLong })}</p>
-        </footer>
-      </article>
-      </Tilt>
+            <section className="mt-12">
+              <p className="eyebrow">{t("certificate.methodology")}</p>
+              <p className="mt-3 text-sm text-ink-2 leading-relaxed max-w-3xl">
+                {t("certificate.methodology_body")}
+              </p>
+            </section>
+
+            <footer className="mt-12 flex flex-wrap items-end justify-between gap-4 text-caption text-ink-3">
+              <p>
+                {t("certificate.verification_label")}{" "}
+                <span className="text-ink font-medium">seedow.life/methodologie</span>
+              </p>
+              <p>{t("certificate.issued_on", { date: dateLong })}</p>
+            </footer>
+          </article>
+        </Tilt>
       </div>
 
       <style>{`

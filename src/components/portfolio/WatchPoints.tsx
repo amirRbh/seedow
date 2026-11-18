@@ -128,9 +128,7 @@ export function WatchPoints({ analysis, className = "" }: Props) {
       <ul className="mt-2.5 flex flex-col gap-2">
         {points.map((p) => (
           <li key={p.key} className="flex items-start gap-2.5 text-body-sm leading-snug">
-            <span
-              className={`text-caption font-semibold shrink-0 mt-0.5 ${KIND_TONE[p.kind]}`}
-            >
+            <span className={`text-caption font-semibold shrink-0 mt-0.5 ${KIND_TONE[p.kind]}`}>
               {t(`watch_points.kind.${p.kind}`)}
             </span>
             <span className="text-ink-2">{p.label}</span>

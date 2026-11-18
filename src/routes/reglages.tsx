@@ -87,11 +87,7 @@ function ReglagesPage() {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="min-h-screen"
-    >
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen">
       <div className="page accent-mint">
         <AppHeader
           eyebrow={t("reglages.eyebrow")}
@@ -352,9 +348,7 @@ function PreferencesSection() {
           className="paper-card-inset p-4"
         >
           <div className="flex items-baseline justify-between gap-3 mb-1">
-            <p className="text-caption text-ink-3 font-medium">
-              {t("reglages.pool_eyebrow")}
-            </p>
+            <p className="text-caption text-ink-3 font-medium">{t("reglages.pool_eyebrow")}</p>
             <span className="text-caption text-ink-3">
               {t("reglages.pool_summary", {
                 count: preview.poolSize,
@@ -918,11 +912,7 @@ function ToggleRow({
     <div className="flex items-center justify-between py-2 border-b border-paper-3 last:border-b-0">
       <span className="flex items-center gap-2">
         <span className={`text-body-sm ${disabled ? "text-ink-3" : "text-ink"}`}>{label}</span>
-        {disabled && disabledHint && (
-          <span className="chip">
-            {disabledHint}
-          </span>
-        )}
+        {disabled && disabledHint && <span className="chip">{disabledHint}</span>}
       </span>
       <button
         onClick={() => !disabled && onChange(!checked)}
@@ -1121,11 +1111,7 @@ function CronHealthBlock({
               >
                 <span
                   className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
-                    r.status === "ok"
-                      ? "bg-ink"
-                      : r.status === "partial"
-                        ? "bg-mint"
-                        : "bg-alert"
+                    r.status === "ok" ? "bg-ink" : r.status === "partial" ? "bg-mint" : "bg-alert"
                   }`}
                 />
                 <span className="text-ink-3 tabular-nums w-28 flex-shrink-0">
@@ -1272,9 +1258,7 @@ function MethodologySection() {
               </div>
               <div className="rounded border border-highlight-4 bg-highlight-5 p-2">
                 <p className="font-value text-ink">60–80</p>
-                <p className="text-ink">
-                  {t("reglages.methodology.esg_composite.scale_good")}
-                </p>
+                <p className="text-ink">{t("reglages.methodology.esg_composite.scale_good")}</p>
               </div>
               <div className="rounded border border-highlight-2 bg-highlight-5 p-2">
                 <p className="font-value text-ink">80–100</p>

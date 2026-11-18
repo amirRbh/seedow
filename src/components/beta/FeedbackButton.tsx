@@ -94,10 +94,7 @@ export function FeedbackButton() {
               </DialogHeader>
               <div className="space-y-5 py-2">
                 <div>
-                  <p
-                    id="feedback-nps-label"
-                    className="text-caption font-semibold text-ink-3"
-                  >
+                  <p id="feedback-nps-label" className="text-caption font-semibold text-ink-3">
                     {t("beta.feedback_nps_label")}
                   </p>
                   <div
@@ -141,10 +138,7 @@ export function FeedbackButton() {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="feedback-wish"
-                    className="text-caption font-semibold text-ink-3"
-                  >
+                  <label htmlFor="feedback-wish" className="text-caption font-semibold text-ink-3">
                     {t("beta.feedback_wish")}
                   </label>
                   <textarea

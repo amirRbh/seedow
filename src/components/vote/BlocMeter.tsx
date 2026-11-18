@@ -34,9 +34,7 @@ export function BlocMeter({ bloc, myChoice, onShare }: Props) {
     >
       <div className="flex items-center gap-2">
         <span aria-hidden="true" className="live-dot" />
-        <span className="text-caption font-semibold text-mint-ink">
-          {t("vote.bloc.live")}
-        </span>
+        <span className="text-caption font-semibold text-mint-ink">{t("vote.bloc.live")}</span>
       </div>
 
       {bloc.total === 0 ? (

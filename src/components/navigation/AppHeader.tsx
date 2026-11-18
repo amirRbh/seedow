@@ -54,11 +54,7 @@ export function AppHeader({
         <Wordmark to="/le-fil" label={t("rail_nav.seedow_home")} />
         <div className="flex items-center gap-2">
           <AlertsBell />
-          <Link
-            to="/profil"
-            aria-label={t("rail_nav.investor_profile")}
-            className={iconButton}
-          >
+          <Link to="/profil" aria-label={t("rail_nav.investor_profile")} className={iconButton}>
             <ProfileIcon />
           </Link>
           {!hideSettings && (

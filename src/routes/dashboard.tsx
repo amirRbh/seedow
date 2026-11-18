@@ -152,11 +152,7 @@ function Dashboard() {
   const isGrowing = gain > -0.005;
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="min-h-screen"
-    >
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen">
       {/* Bandeau mode invité — sticky, pleine largeur (hors conteneur centré) */}
       <GuestBanner guestParam={guest ?? false} />
 

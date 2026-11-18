@@ -28,9 +28,7 @@ export function ResolutionResult({ resolution, bloc }: Props) {
   return (
     <div className="flex flex-col gap-6">
       <div className="paper-card p-6 text-center md:p-8">
-        <p className="text-caption font-semibold text-ink-3">
-          {t("vote.result.official")}
-        </p>
+        <p className="text-caption font-semibold text-ink-3">{t("vote.result.official")}</p>
         {resolution.outcomePct != null ? (
           <p className="mt-3 font-mono text-[clamp(3rem,12vw,4.5rem)] font-bold leading-none tracking-tight text-mint-ink tabular-nums">
             {pctFmt.format(resolution.outcomePct)}&nbsp;%
@@ -47,9 +45,7 @@ export function ResolutionResult({ resolution, bloc }: Props) {
 
       {/* Comment le Bloc Seedow s'est positionné (vrai décompte) */}
       <div className="rounded-lg border border-paper-3 bg-paper p-5">
-        <p className="text-caption font-semibold text-ink-3">
-          {t("vote.result.bloc_title")}
-        </p>
+        <p className="text-caption font-semibold text-ink-3">{t("vote.result.bloc_title")}</p>
         {bloc.total === 0 ? (
           <p className="mt-2 text-body-sm text-ink-2">{t("vote.result.bloc_empty")}</p>
         ) : (

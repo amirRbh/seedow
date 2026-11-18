@@ -82,9 +82,7 @@ export function HoldingDetailSheet({ open, onClose, holding, valued }: Props) {
 
         {/* Performance bloc */}
         <div className="mt-5 paper-card p-4">
-          <p className="text-caption font-semibold text-ink-3 mb-2">
-            Évolution du prix
-          </p>
+          <p className="text-caption font-semibold text-ink-3 mb-2">Évolution du prix</p>
           {hasQuote ? (
             <>
               <div className="flex items-baseline gap-2">

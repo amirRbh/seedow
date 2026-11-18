@@ -73,7 +73,11 @@ export function BottomNavigation() {
                     transition={{ duration: 0.38, ease: EASE_SIGNATURE }}
                   />
                 )}
-                <Icon aria-hidden className="relative size-[22px]" strokeWidth={isActive ? 2.4 : 2} />
+                <Icon
+                  aria-hidden
+                  className="relative size-[22px]"
+                  strokeWidth={isActive ? 2.4 : 2}
+                />
                 <span className="relative text-tag leading-none font-bold">{t(item.labelKey)}</span>
               </Link>
             );

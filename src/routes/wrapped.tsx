@@ -105,9 +105,7 @@ function WrappedPage() {
 
       {loading ? (
         <div className="flex flex-1 items-center justify-center">
-          <p className="text-caption font-semibold text-ink-3">
-            {t("wrapped.loading")}
-          </p>
+          <p className="text-caption font-semibold text-ink-3">{t("wrapped.loading")}</p>
         </div>
       ) : total === 0 ? (
         <div className="flex flex-1 flex-col items-center justify-center px-8 text-center">
@@ -157,9 +155,7 @@ function WrappedPage() {
                     <p className="text-caption font-semibold text-mint-ink">
                       {t("wrapped.card_eyebrow")}
                     </p>
-                    <h1 className="mt-4 display-lg text-on-deep">
-                      {current.title}
-                    </h1>
+                    <h1 className="mt-4 display-lg text-on-deep">{current.title}</h1>
                     <p className="mt-3 max-w-sm text-body text-ink-2">{current.sub}</p>
                   </>
                 )}
@@ -193,9 +189,7 @@ function WrappedPage() {
                     <h2 className="mt-4 text-[clamp(28px,4vw,40px)] text-on-deep">
                       {t("wrapped.final_title")}
                     </h2>
-                    <p className="mt-3 max-w-sm text-body text-ink-2">
-                      {t("wrapped.final_sub")}
-                    </p>
+                    <p className="mt-3 max-w-sm text-body text-ink-2">{t("wrapped.final_sub")}</p>
                     <div className="mt-8 flex flex-col items-stretch gap-3">
                       <button
                         type="button"

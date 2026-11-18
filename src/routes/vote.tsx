@@ -58,9 +58,7 @@ function VotePage() {
             <div className="flex flex-col gap-8">
               {open.length > 0 && (
                 <div className="flex flex-col gap-3">
-                  <p className="text-caption font-semibold text-ink-3">
-                    {t("vote.open_heading")}
-                  </p>
+                  <p className="text-caption font-semibold text-ink-3">{t("vote.open_heading")}</p>
                   {open.map((item) => (
                     <ResolutionListItem
                       key={item.resolution.id}

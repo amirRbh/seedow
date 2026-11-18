@@ -64,9 +64,7 @@ export function AgencyReveal({
             className="absolute inset-y-0 w-1/2 bg-ink"
           />
         </div>
-        <p className="text-caption text-ink-3 font-medium">
-          {t("onboarding.agency.loading")}
-        </p>
+        <p className="text-caption text-ink-3 font-medium">{t("onboarding.agency.loading")}</p>
       </motion.div>
     );
   }
@@ -153,9 +151,7 @@ export function AgencyReveal({
           <p className="mt-3 font-value text-lg leading-snug text-on-deep">{resolution.title}</p>
 
           {resolution.fundsStance && (
-            <p className="mt-2 text-caption leading-relaxed text-ink-3">
-              {resolution.fundsStance}
-            </p>
+            <p className="mt-2 text-caption leading-relaxed text-ink-3">{resolution.fundsStance}</p>
           )}
 
           <p className="mt-4 border-t border-on-deep/15 pt-3 text-caption font-semibold tracking-[0.06em] text-ink-3">

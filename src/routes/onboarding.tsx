@@ -738,35 +738,35 @@ function Step({
       {/* Barre de pilotage : retour, progression qui se remplit, compteur écrit. */}
       <div className="sticky top-0 z-20 px-3 pt-3">
         <div className="glass mx-auto flex h-[60px] max-w-2xl items-center gap-4 rounded-full px-2">
-        <button
-          onClick={onBack}
-          className="flex h-11 w-11 flex-none items-center justify-center rounded-full text-ink-2 outline-none transition-colors hover:bg-paper-inset hover:text-ink focus-visible:ring-2 focus-visible:ring-mint"
-          aria-label={t("onboarding.step.back")}
-        >
-          <svg
-            viewBox="0 0 24 24"
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
+          <button
+            onClick={onBack}
+            className="flex h-11 w-11 flex-none items-center justify-center rounded-full text-ink-2 outline-none transition-colors hover:bg-paper-inset hover:text-ink focus-visible:ring-2 focus-visible:ring-mint"
+            aria-label={t("onboarding.step.back")}
           >
-            <path d="M15 6l-6 6 6 6" />
-          </svg>
-        </button>
-        <div className="flex flex-1 gap-1.5" aria-hidden>
-          {Array.from({ length: totalSteps }).map((_, i) => (
-            <div key={i} className="h-1.5 flex-1 overflow-hidden rounded-full bg-paper-inset">
-              <div
-                className="h-full rounded-full bg-ink transition-[width] duration-700 ease-brand motion-reduce:transition-none"
-                style={{ width: i <= stepIndex ? "100%" : "0%" }}
-              />
-            </div>
-          ))}
-        </div>
-        <span className="min-w-[44px] pr-3 text-right font-value text-label text-ink-2">
-          {t("onboarding.step.progress", { current: stepIndex + 1, total: totalSteps })}
-        </span>
+            <svg
+              viewBox="0 0 24 24"
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            >
+              <path d="M15 6l-6 6 6 6" />
+            </svg>
+          </button>
+          <div className="flex flex-1 gap-1.5" aria-hidden>
+            {Array.from({ length: totalSteps }).map((_, i) => (
+              <div key={i} className="h-1.5 flex-1 overflow-hidden rounded-full bg-paper-inset">
+                <div
+                  className="h-full rounded-full bg-ink transition-[width] duration-700 ease-brand motion-reduce:transition-none"
+                  style={{ width: i <= stepIndex ? "100%" : "0%" }}
+                />
+              </div>
+            ))}
+          </div>
+          <span className="min-w-[44px] pr-3 text-right font-value text-label text-ink-2">
+            {t("onboarding.step.progress", { current: stepIndex + 1, total: totalSteps })}
+          </span>
         </div>
       </div>
 
@@ -887,7 +887,9 @@ function Step({
                     vide), pas seulement à la couleur (CLAUDE.md §4). */}
                 <div
                   className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full transition-[background-color,box-shadow,transform] duration-300 ease-brand ${
-                    isSel ? "scale-100 bg-section-accent text-paper" : "ring-2 ring-inset ring-paper-3"
+                    isSel
+                      ? "scale-100 bg-section-accent text-paper"
+                      : "ring-2 ring-inset ring-paper-3"
                   }`}
                 >
                   {isSel &&
@@ -1187,9 +1189,7 @@ function PreviewScene({
                       <span className="font-value text-body-sm text-ink truncate block group-hover:underline underline-offset-4">
                         {a.name}
                       </span>
-                      <span className="text-caption font-semibold text-ink-3">
-                        {a.ticker}
-                      </span>
+                      <span className="text-caption font-semibold text-ink-3">{a.ticker}</span>
                     </span>
                     <span className="shrink-0 flex items-baseline gap-2">
                       <span className="font-value text-body-sm tabular-nums text-ink-2">

@@ -150,7 +150,11 @@ export function SiteHeader() {
               aria-label={open ? t("site.menu_close") : t("site.menu_open")}
               className="flex h-11 w-11 items-center justify-center rounded-full text-ink outline-none transition-colors hover:bg-paper-inset focus-visible:ring-2 focus-visible:ring-mint md:hidden"
             >
-              {open ? <X aria-hidden className="size-5" /> : <Menu aria-hidden className="size-5" />}
+              {open ? (
+                <X aria-hidden className="size-5" />
+              ) : (
+                <Menu aria-hidden className="size-5" />
+              )}
             </button>
           </div>
         </div>

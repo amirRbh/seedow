@@ -32,9 +32,7 @@ export function LandingCourses({ embedded = false }: { embedded?: boolean } = {}
   const [previewed, setPreviewed] = useState<Course | null>(null);
 
   return (
-    <section
-      className={embedded ? "accent-volt" : "accent-volt px-6 py-24 md:py-32"}
-    >
+    <section className={embedded ? "accent-volt" : "accent-volt px-6 py-24 md:py-32"}>
       <div className={embedded ? "" : "max-w-[980px] mx-auto"}>
         {!embedded && (
           <div className="text-center mb-14">
@@ -63,7 +61,9 @@ export function LandingCourses({ embedded = false }: { embedded?: boolean } = {}
           </div>
         )}
 
-        <RevealGroup className={resume ? "mt-4 grid gap-4 sm:grid-cols-3" : "grid gap-4 sm:grid-cols-3"}>
+        <RevealGroup
+          className={resume ? "mt-4 grid gap-4 sm:grid-cols-3" : "grid gap-4 sm:grid-cols-3"}
+        >
           {starters.map((c) => (
             <button
               key={c.slug}

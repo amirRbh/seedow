@@ -55,9 +55,7 @@ export function GoalSimulator({
 
   return (
     <div className="rounded-lg border border-paper-3 bg-paper p-6">
-      <p className="text-caption font-semibold text-mint-ink mb-4">
-        {t("goal.sim_eyebrow")}
-      </p>
+      <p className="text-caption font-semibold text-mint-ink mb-4">{t("goal.sim_eyebrow")}</p>
 
       <div className="space-y-5">
         <div>

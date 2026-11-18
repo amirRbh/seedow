@@ -78,15 +78,14 @@ function AdminBetaPage() {
   const fillPct = Math.round(stats.fillRate * 100);
   const statusLabel =
     stats.status === "open" ? t("admin_beta.status_open") : t("admin_beta.status_closed");
-  const statusTone = stats.status === "open" && stats.slotsLeft > 0 ? "text-forest" : "text-alert-ink";
+  const statusTone =
+    stats.status === "open" && stats.slotsLeft > 0 ? "text-forest" : "text-alert-ink";
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-12 space-y-10">
       <header className="flex items-end justify-between flex-wrap gap-4">
         <div>
-          <p className="text-caption font-semibold text-mint-ink">
-            {t("admin_beta.eyebrow")}
-          </p>
+          <p className="text-caption font-semibold text-mint-ink">{t("admin_beta.eyebrow")}</p>
           <h1 className="font-display text-3xl text-ink mt-2">{t("admin_beta.title")}</h1>
         </div>
         <Link to="/le-fil" className="text-label underline text-ink-3 hover:text-ink">
@@ -106,9 +105,7 @@ function AdminBetaPage() {
             </p>
           </div>
           <div className="text-right">
-            <p className={`text-label font-semibold ${statusTone}`}>
-              ● {statusLabel}
-            </p>
+            <p className={`text-label font-semibold ${statusTone}`}>● {statusLabel}</p>
             <p className="text-body-sm text-ink-2 mt-1 tabular-nums">
               {t("admin_beta.slots_left", { count: stats.slotsLeft })}
             </p>

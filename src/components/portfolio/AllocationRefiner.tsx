@@ -163,9 +163,7 @@ export function AllocationRefiner({ portfolioId }: Props) {
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="text-caption font-semibold text-ink-3">
-                    {row.leverLabel}
-                  </p>
+                  <p className="text-caption font-semibold text-ink-3">{row.leverLabel}</p>
                   <p className="text-body-sm text-ink mt-1 truncate">vs {row.altLabel}</p>
                 </div>
                 <div className="text-right shrink-0">
@@ -329,9 +327,7 @@ function BeforeAfter({
   return (
     <div className="border-t border-paper-3 pt-4 mt-1 space-y-4">
       <div className="grid grid-cols-[1fr_auto_1fr] gap-2 items-baseline">
-        <p className="text-caption font-semibold text-ink-3">
-          Avant — actuel
-        </p>
+        <p className="text-caption font-semibold text-ink-3">Avant — actuel</p>
         <span className="text-tag text-ink-3">vs</span>
         <p className="text-caption font-semibold text-mint-ink text-right">
           {t("allocation_refiner.after_label", { label: altLabel })}

@@ -29,9 +29,7 @@ export function DataProvenance({ basis, source, asOf, coveragePct, link, classNa
   const hasCoverage = typeof coveragePct === "number" && Number.isFinite(coveragePct);
 
   return (
-    <p
-      className={` text-caption leading-relaxed font-semibold text-ink-3 ${className}`}
-    >
+    <p className={` text-caption leading-relaxed font-semibold text-ink-3 ${className}`}>
       <span className="normal-case tracking-normal">{basis}</span>
       {source && (
         <>

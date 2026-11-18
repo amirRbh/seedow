@@ -41,15 +41,11 @@ export function CourseCertificate({
           <span className="font-display font-bold text-lg tracking-tight text-ink">
             seedow<span className="text-mint-ink">.</span>
           </span>
-          <span className="text-caption font-semibold text-ink-3">
-            Certificat de progression
-          </span>
+          <span className="text-caption font-semibold text-ink-3">Certificat de progression</span>
         </div>
 
         <div className="mt-10 md:mt-14">
-          <p className="text-caption text-ink-3 font-medium">
-            Délivré à
-          </p>
+          <p className="text-caption text-ink-3 font-medium">Délivré à</p>
           <p className="font-value text-2xl md:text-3xl text-ink mt-1">{name}</p>
         </div>
 
@@ -86,9 +82,7 @@ export function CourseCertificate({
             >
               <path d="M20 6 9 17l-5-5" />
             </svg>
-            <span className="text-caption font-semibold text-mint-ink">
-              Parcours complété
-            </span>
+            <span className="text-caption font-semibold text-mint-ink">Parcours complété</span>
           </div>
         )}
 

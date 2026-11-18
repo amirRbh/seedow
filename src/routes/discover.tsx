@@ -25,11 +25,7 @@ function Discover() {
   const { theme } = Route.useSearch();
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="min-h-screen"
-    >
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen">
       <div className="page accent-ice">
         <AppHeader eyebrow={t("discover.eyebrow")} title={t("discover.title")} />
 

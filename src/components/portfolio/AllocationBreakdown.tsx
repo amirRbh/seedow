@@ -78,9 +78,7 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
         <div>
           {/* « Allocation » est le mot du métier ; « Répartition » est le mot
               de l'utilisateur (§6 du vocabulaire). */}
-          <p className="text-caption font-semibold text-ink-3">
-            {t("allocation.title")}
-          </p>
+          <p className="text-caption font-semibold text-ink-3">{t("allocation.title")}</p>
           <p className="font-value text-2xl text-ink mt-0.5">
             {holdings.length}{" "}
             <span className="text-base text-ink-3">
@@ -135,9 +133,7 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
       {/* Movers — actifs dont le prix a évolué */}
       {movers.length > 0 && (
         <div className="border-t border-paper-3 pt-4 mb-4">
-          <p className="text-caption font-semibold text-ink-3 mb-2">
-            Mouvements notables
-          </p>
+          <p className="text-caption font-semibold text-ink-3 mb-2">Mouvements notables</p>
           <div className="flex flex-wrap gap-2">
             {movers.map((m) => {
               const up = m.returnPct >= 0;

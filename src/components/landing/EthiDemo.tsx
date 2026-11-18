@@ -90,9 +90,7 @@ export function EthiDemo() {
                 visible ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0",
               )}
             >
-              <span className="sr-only">
-                {isUser ? t("landing.ethi.speaker_you") : "Ethi"} :
-              </span>
+              <span className="sr-only">{isUser ? t("landing.ethi.speaker_you") : "Ethi"} :</span>
               <p
                 className={cn(
                   "max-w-[88%] px-4 py-3 text-body leading-relaxed",

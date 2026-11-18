@@ -82,9 +82,7 @@ function FundAuthorityPage() {
 
         {/* ── Identité — une seule fiche, tous les ISIN de parts dessous ──── */}
         <div className="mt-6 animate-fade-in-up">
-          <span className="chip chip--accent">
-            {fund.issuer ?? t("fonds_page.issuer_unknown")}
-          </span>
+          <span className="chip chip--accent">{fund.issuer ?? t("fonds_page.issuer_unknown")}</span>
           <h1 className="display-lg mt-4 max-w-[20ch]">{fund.name}</h1>
           <p className="mono-meta mt-3">{identifiers.join(" · ")}</p>
           {identifiers.length > 1 && (

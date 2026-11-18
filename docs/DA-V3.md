@@ -1,5 +1,9 @@
 # Seedow — Direction artistique V3
 
+> **Remplacée par [`DA-V4.md`](./DA-V4.md)** (novembre 2026). Conservée pour
+> l'historique des décisions : la V4 garde l'ossature décrite ici (surfaces,
+> état de preuve, tokens) et revient sur l'immobilité et l'absence d'ombre.
+
 > Référence DA. Remplace `CLAUDE.md` §4 pour la partie visuelle ; la sémantique
 > couleur et les règles d'accessibilité restent en vigueur.
 
