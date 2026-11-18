@@ -24,7 +24,7 @@ Un portefeuille structuré par vos convictions (climat, biodiversité, droits hu
 ## 🛠️ Stack technique
 
 - **Framework** : TanStack Start v1 (React 19 + SSR/Edge)
-- **Build** : Vite 7
+- **Build** : Vite 8 (Rolldown)
 - **Styling** : Tailwind CSS v4 + design tokens `oklch` dans `src/styles.css`
 - **UI** : shadcn/ui
 - **Backend** : Lovable Cloud (Supabase managé) — Postgres + RLS + Edge Functions + Auth + Storage

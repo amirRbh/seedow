@@ -196,13 +196,13 @@ Ethi est l'assistant conversationnel du produit (Lovable AI Gateway, Gemini/GPT-
 > ⚠️ Le repo utilise **TanStack Start**, pas Next.js. Si Next.js apparaît dans une doc ou un onboarding, c'est une erreur à corriger.
 
 - **Framework** : TanStack Start v1 (React 19, SSR/Edge), routing fichier dans `src/routes/`.
-- **Build** : Vite 7.
+- **Build** : Vite 8 (bundler Rolldown). Les options de build se déclarent en `rolldownOptions` (plus `rollupOptions`).
 - **Styling** : Tailwind CSS v4, design tokens hex (variables CSS) dans `src/styles.css`.
 - **UI** : shadcn/ui.
 - **Backend** : Lovable Cloud = Supabase managé (Postgres + RLS + Edge Functions + Auth + Storage).
 - **IA** : Lovable AI Gateway (Gemini / GPT-5) — moteur d'Ethi.
 - **Déploiement** : Cloudflare Workers (Edge).
-- **Versions TanStack figées** : `@tanstack/react-start`, `react-router` et `router-plugin` sont épinglés à des versions EXACTES et cohérentes (une seule copie de `router-core`). La branche 1.169+ exige Vite 8 : ne pas les passer en `^` ni les monter sans la migration Vite 8 (voir §7 Next). Les fonctions serveur utilisent `.validator(...)` (`.inputValidator` est déprécié).
+- **Versions TanStack figées** : `@tanstack/react-start`, `react-router` et `router-plugin` sont épinglés à des versions EXACTES et cohérentes — `react-router` doit être celle qu'exige `react-start`, et `router-plugin` celle qui dépend du même `router-core` (une seule copie, vérifiée par `security-floor.test.ts`). Les monter ensemble, jamais un seul. Les fonctions serveur utilisent `.validator(...)` (`.inputValidator` est déprécié).
 - **Package manager** : Bun (`bun install`, `bun run dev`). **Un seul lockfile fait foi : `bun.lock` (texte, versionné).** `bunfig.toml` fixe `saveTextLockfile = true` pour que Bun maintienne ce format lisible et diffable — pas de lockfile binaire (`bun.lockb`) ni de `package-lock.json` npm dans le repo (deux sources de vérité = dérive garantie). Ne pas réintroduire un second lockfile.
 - **Intelligence financière & ESG** : moteurs purs et testés (performance, look-through, cadre ESG en six couches, statuts de donnée), documentés dans `docs/financial-intelligence.md`. Tout nouveau chiffre affiché porte l'un des cinq statuts de `src/lib/data/status.ts` ; toute nouvelle source est ajoutée au registre `src/lib/data/sources.ts`.
 - **Données de marché** : ingestion horaire automatique via `pg_cron` → endpoint `/api/public/refresh-market-data`, source Yahoo Finance, stockage `asset_quotes` / `asset_prices`.
@@ -236,11 +236,11 @@ Ethi est l'assistant conversationnel du produit (Lovable AI Gateway, Gemini/GPT-
 - Parcours de démonstration `/demo`, comparateur de fonds `/comparer` (export CSV), registre des sources `/donnees`, look-through du portefeuille (instantané émetteur réel, cf. `docs/financial-intelligence.md`)
 - Indicateurs MSCI publiés par les émetteurs (ETF américains : notation, WACI, hausse de température implicite, expositions d'activité) — affichés attribués, jamais exportés ; SFDR/Taxonomie/PAI « non applicables » hors UE
 - API publique v1 en lecture seule (`/api/public/v1`, OpenAPI), export CSV institutionnel aux colonnes stables, rapport imprimable `/comparer/rapport`, documentation `/developpeurs`
-- Mise à niveau de sécurité : TanStack Start 1.168.61 (start-server-core 1.169.40, seroval 1.8) corrige GHSA-qx66-fv34-fjm8 ; `proxy-addr` et `shell-quote` forcés au-dessus de leurs correctifs ; Vite 7.3.8. Zéro vulnérabilité critique à l'audit, plancher verrouillé par `src/lib/__tests__/security-floor.test.ts`.
+- Mise à niveau de sécurité : TanStack Start corrige GHSA-qx66-fv34-fjm8 ; `proxy-addr` et `shell-quote` forcés au-dessus de leurs correctifs. Zéro vulnérabilité critique à l'audit, plancher verrouillé par `src/lib/__tests__/security-floor.test.ts`.
+- Migration Vite 8 (Rolldown) et TanStack Start 1.169.5 / React Router 1.170.46 : build ~2,5× plus rapide, bundle Worker validé dans workerd (`wrangler dev` sur `.output/server`).
 
 **Next** — _(à compléter par l'équipe produit)_
 
-- _Proposé, non validé :_ migrer vers Vite 8 pour suivre TanStack Start ≥ 1.169 (`start-plugin-core` ≥ 1.171.51 exige Vite 8 et déclare ses entrées en `rolldownOptions`) — à faire avec la config Lovable (`@lovable.dev/vite-tanstack-config`) et nitro.
 - _Proposé, non validé :_ passer `@lovable.dev/mcp-js` en 3.x pour embarquer `@modelcontextprotocol/sdk` ≥ 1.32 (plusieurs avis « high » sur le serveur `/mcp`) — version majeure, à tester avec l'outillage Lovable qui génère `src/routes/[.mcp]/`.
 
 **Later** — _(à compléter par l'équipe produit)_

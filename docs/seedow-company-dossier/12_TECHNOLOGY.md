@@ -2,7 +2,7 @@
 
 ## Stack (FACT)
 
-- **Front/SSR** : TanStack Start v1 (React 19), Vite 7, routing fichier, déploiement **Cloudflare Workers (Edge)**.
+- **Front/SSR** : TanStack Start v1 (React 19), Vite 8, routing fichier, déploiement **Cloudflare Workers (Edge)**.
 - **Styling/UI** : Tailwind CSS v4 (design tokens), shadcn/ui, framer-motion, recharts.
 - **Backend** : Lovable Cloud = **Supabase managé** — Postgres + **RLS** + Edge Functions + Auth (email + Google OAuth) + Storage + **Vault** (secrets).
 - **IA** : Lovable AI Gateway (Gemini / GPT-5) → Ethi. Rate-limiting en base (`ethi_rate_limits`).
