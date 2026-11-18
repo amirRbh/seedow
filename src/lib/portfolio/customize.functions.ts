@@ -121,7 +121,7 @@ function measureComposition(
 
 export const saveCustomPortfolio = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => InputSchema.parse(input))
+  .validator((input: unknown) => InputSchema.parse(input))
   .handler(async ({ data, context }) => {
     const { userId, supabase: userClient } = context;
 
@@ -172,7 +172,7 @@ export const saveCustomPortfolio = createServerFn({ method: "POST" })
  */
 export const createCustomPortfolio = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => CreateInputSchema.parse(input))
+  .validator((input: unknown) => CreateInputSchema.parse(input))
   .handler(async ({ data, context }) => {
     const { userId, supabase: userClient } = context;
 
@@ -290,7 +290,7 @@ const PreferencesInputSchema = z.object({
  */
 export const savePortfolioPreferences = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => PreferencesInputSchema.parse(input))
+  .validator((input: unknown) => PreferencesInputSchema.parse(input))
   .handler(async ({ data, context }) => {
     const { userId, supabase: userClient } = context;
 

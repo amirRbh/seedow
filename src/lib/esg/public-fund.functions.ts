@@ -30,7 +30,7 @@ import { mapPublicFundRow, PUBLIC_FUND_COLUMNS, type PublicFundRow } from "./pub
  * supplémentaire dans le seul cas où l'ISIN ne correspond à rien.
  */
 export const getPublicFundByIsin = createServerFn({ method: "GET" })
-  .inputValidator((input: string) => z.string().min(1).parse(input))
+  .validator((input: string) => z.string().min(1).parse(input))
   .handler(async ({ data: key }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const byColumn = (column: "isin" | "ticker") =>
