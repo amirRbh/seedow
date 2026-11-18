@@ -26,7 +26,7 @@
 
 ## 3. Stack technique (FACT)
 
-TanStack Start v1 (React 19, SSR/Edge) · Vite 7 · Tailwind CSS v4 (design tokens) · shadcn/ui · Backend Lovable Cloud = Supabase managé (Postgres + RLS + Edge Functions + Auth + Storage) · IA via Lovable AI Gateway (Gemini / GPT-5) · Déploiement Cloudflare Workers · Package manager Bun. Optimisation Markowitz via `quadprog`. Visualisation via `recharts`. i18n via `i18next` (FR/EN).
+TanStack Start v1 (React 19, SSR/Edge) · Vite 8 · Tailwind CSS v4 (design tokens) · shadcn/ui · Backend Lovable Cloud = Supabase managé (Postgres + RLS + Edge Functions + Auth + Storage) · IA via Lovable AI Gateway (Gemini / GPT-5) · Déploiement Cloudflare Workers · Package manager Bun. Optimisation Markowitz via `quadprog`. Visualisation via `recharts`. i18n via `i18next` (FR/EN).
 
 > **Incohérence relevée** : `.github/workflows/ci.yml` commente « déploiement (Vercel) » alors que README/CLAUDE.md indiquent Cloudflare Workers. À trancher (probablement un commentaire obsolète). Voir `FINAL_QC.md`.
 

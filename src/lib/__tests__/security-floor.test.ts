@@ -29,7 +29,11 @@ const FLOORS: [pkg: string, floor: string, advisory: string][] = [
   ["seroval", "1.6.1", "GHSA-mv8w-475r-vwqw, GHSA-p6vx-979v-rg4c (désérialisation)"],
   ["proxy-addr", "2.0.8", "GHSA-jqcg-44mw-7w3h (usurpation d'IP)"],
   ["shell-quote", "1.11.0", "GHSA-pqg4-j6r4-53mv (injection de commande)"],
-  ["vite", "7.3.7", "GHSA-rq7h-c2jc-7f22, GHSA-9jrq-w75r-8gcw (serveur de dev)"],
+  [
+    "vite",
+    "8.0.0",
+    "GHSA-rq7h-c2jc-7f22, GHSA-9jrq-w75r-8gcw (serveur de dev) ; Vite 8 exigé par start-plugin-core ≥ 1.171.51",
+  ],
 ];
 
 describe("plancher de sécurité des dépendances (bun.lock)", () => {
@@ -42,5 +46,6 @@ describe("plancher de sécurité des dépendances (bun.lock)", () => {
   it("une seule copie du cœur du routeur (pas de double instance au rendu serveur)", () => {
     expect(resolved("@tanstack/router-core")).toHaveLength(1);
     expect(resolved("@tanstack/react-router")).toHaveLength(1);
+    expect(resolved("vite")).toHaveLength(1);
   });
 });
