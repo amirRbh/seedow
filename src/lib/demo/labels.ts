@@ -57,3 +57,23 @@ export function sectorLabel(label: string, lang: string): string {
 export function countryLabel(label: string, lang: string): string {
   return lang === "fr" ? (COUNTRY_FR[label] ?? label) : label;
 }
+
+/** « iShares Core MSCI World UCITS ETF » → « Core MSCI World ». */
+export function shortFundName(name: string): string {
+  return name
+    .replace(/^iShares\s+/i, "")
+    .replace(/\s+UCITS ETF.*$/i, "")
+    .trim();
+}
+
+/** Libellé SFDR déclaré par l'émetteur, traduit (« Other » = ni 8 ni 9). */
+export function sfdrLabel(
+  declared: string | null,
+  t: (k: string, o?: Record<string, unknown>) => string,
+): string {
+  if (!declared) return t("fin.sfdr.unknown");
+  const m = /article\s*(8|9|6)/i.exec(declared);
+  if (m) return t("fin.sfdr.article", { n: m[1] });
+  if (/other/i.test(declared)) return t("fin.sfdr.other");
+  return declared;
+}

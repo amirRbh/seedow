@@ -6,7 +6,7 @@ import { EsgLayersPanel } from "./EsgLayersPanel";
 import { ExposureBars } from "./ExposureBars";
 import { PerformanceChart } from "./PerformanceChart";
 import { PerformanceTable } from "./PerformanceTable";
-import { shortFundName } from "./LookThroughTable";
+import { shortFundName } from "@/lib/demo/labels";
 import { useLang } from "@/hooks/useLang";
 import type { SnapshotFundAnalytics } from "@/lib/demo/demo.functions";
 import { countryLabel, sectorLabel } from "@/lib/demo/labels";
@@ -55,7 +55,12 @@ export function FundAnalyticsSection({
               benchmark: snapshot.benchmark ?? "—",
               currency: snapshot.currency ?? "—",
             })}
-            aside={<DataStatusChip status={snapshot.status.performance} detail={short(snapshot.performance.lastDate)} />}
+            aside={
+              <DataStatusChip
+                status={snapshot.status.performance}
+                detail={short(snapshot.performance.lastDate)}
+              />
+            }
             methodLabel={t("fin.method.label")}
             method={<p>{t("fin.method.performance")}</p>}
           >
@@ -72,25 +77,41 @@ export function FundAnalyticsSection({
             <p className="mt-4 text-caption text-ink-3">{t("fin.perf.past_disclaimer")}</p>
           </AnalyticsCard>
 
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-2 [&>*]:min-w-0">
             <AnalyticsCard
               title={t("fin.exposure.sector_title")}
-              aside={<DataStatusChip status={snapshot.status.exposure} detail={short(snapshot.sectorAsOf)} />}
+              aside={
+                <DataStatusChip
+                  status={snapshot.status.exposure}
+                  detail={short(snapshot.sectorAsOf)}
+                />
+              }
             >
-              <ExposureBars rows={snapshot.sectorExposure} formatLabel={(l) => sectorLabel(l, lang)} highlight="Energy" />
+              <ExposureBars
+                rows={snapshot.sectorExposure}
+                formatLabel={(l) => sectorLabel(l, lang)}
+                highlight="Energy"
+              />
             </AnalyticsCard>
             <AnalyticsCard
               title={t("fin.exposure.geography_title")}
               aside={
                 snapshot.geographyExposure.length > 0 ? (
-                  <DataStatusChip status={snapshot.status.exposure} detail={short(snapshot.geographyAsOf)} />
+                  <DataStatusChip
+                    status={snapshot.status.exposure}
+                    detail={short(snapshot.geographyAsOf)}
+                  />
                 ) : (
                   <DataStatusChip status="UNAVAILABLE" />
                 )
               }
             >
               {snapshot.geographyExposure.length > 0 ? (
-                <ExposureBars rows={snapshot.geographyExposure} formatLabel={(l) => countryLabel(l, lang)} tone="ice" />
+                <ExposureBars
+                  rows={snapshot.geographyExposure}
+                  formatLabel={(l) => countryLabel(l, lang)}
+                  tone="ice"
+                />
               ) : (
                 <p className="text-body-sm text-ink-2">{t("fin.fund.geography_unpublished")}</p>
               )}
@@ -101,27 +122,50 @@ export function FundAnalyticsSection({
             title={t("fin.fund.holdings_title")}
             description={t("fin.fund.holdings_desc", {
               lines: snapshot.holdingsLines,
-              pct: formatPercent(snapshot.topHoldings.reduce((s, h) => s + h.weightPct, 0) / 100, lang, 1),
+              pct: formatPercent(
+                snapshot.topHoldings.reduce((s, h) => s + h.weightPct, 0) / 100,
+                lang,
+                1,
+              ),
             })}
-            aside={<DataStatusChip status={snapshot.status.holdings} detail={short(snapshot.holdingsAsOf)} />}
+            aside={
+              <DataStatusChip
+                status={snapshot.status.holdings}
+                detail={short(snapshot.holdingsAsOf)}
+              />
+            }
           >
             <ol className="flex flex-col">
               {snapshot.topHoldings.map((h, i) => (
-                <li key={`${h.name}-${i}`} className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-baseline gap-3 border-t border-paper-3 py-2.5 first:border-t-0">
+                <li
+                  key={`${h.name}-${i}`}
+                  className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-baseline gap-3 border-t border-paper-3 py-2.5 first:border-t-0"
+                >
                   <span className="font-value text-caption tabular-nums text-ink-3">{i + 1}</span>
                   <span className="min-w-0">
-                    <span className="block truncate text-label font-semibold text-ink">{h.name}</span>
+                    <span className="block truncate text-label font-semibold text-ink">
+                      {h.name}
+                    </span>
                     <span className="mono-meta">
-                      {[h.ticker, h.sector ? sectorLabel(h.sector, lang) : null, h.currency].filter(Boolean).join(" · ")}
+                      {[h.ticker, h.sector ? sectorLabel(h.sector, lang) : null, h.currency]
+                        .filter(Boolean)
+                        .join(" · ")}
                     </span>
                   </span>
-                  <span className="font-value text-body-sm tabular-nums text-ink">{formatPercent(h.weightPct / 100, lang, 2)}</span>
+                  <span className="font-value text-body-sm tabular-nums text-ink">
+                    {formatPercent(h.weightPct / 100, lang, 2)}
+                  </span>
                 </li>
               ))}
             </ol>
             <p className="mono-meta mt-4">
               {snapshot.sourceLabel} ·{" "}
-              <a href={snapshot.sourceUrl} target="_blank" rel="noreferrer noopener" className="underline hover:no-underline">
+              <a
+                href={snapshot.sourceUrl}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="underline hover:no-underline"
+              >
                 {t("fin.demo.understand.source_link")}
               </a>
             </p>

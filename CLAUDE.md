@@ -67,6 +67,8 @@ src/
 │   ├── certificat.tsx · objectifs.tsx · objectifs.$goalId.tsx
 │   ├── ethi.tsx                 # chat Ethi (UI)
 │   ├── comprendre.tsx · methodologie.tsx    # pédagogie & méthode
+│   ├── demo.tsx · comparer.tsx · donnees.tsx  # démonstration, comparateur de fonds, sources des données
+│   ├── observatoire.tsx · fonds.$isin.tsx     # Observatoire STI 2.0 et fiche fonds
 │   ├── cours.tsx · cours.index.tsx · cours.$slug.tsx   # cours
 │   ├── communaute.tsx · profil.tsx · reglages.tsx
 │   ├── cgu.tsx · confidentialite.tsx · mentions-legales.tsx  # légal
@@ -85,12 +87,14 @@ src/
 │   └── ui/                       # shadcn, ne pas customiser à la main — regénérer
 ├── hooks/                        # useAuth, usePortfolioValuation, useActivePortfolio…
 ├── lib/                          # logique métier (jamais de calcul lourd en composant)
-│   ├── portfolio/                 # engine, markowitz, metrics, server functions
+│   ├── portfolio/                 # engine, markowitz, metrics, performance, exposure (look-through)
 │   ├── market/                    # client Yahoo Finance (server-only)
-│   ├── esg/                       # scoring ESG interne, détection greenwashing
+│   ├── esg/                       # scoring ESG interne, cadre ESG en six couches (framework.ts)
 │   │   └── v2/                     # STI 2.0 : signaux, constats E1–E5, déduplication
 │   ├── ethi/                      # prompts & contexte de l'assistant
 │   ├── landing/                   # répartition du flux « où va ton argent »
+│   ├── data/                      # statuts de donnée (VERIFIED…STALE) et registre des sources
+│   ├── demo/ · compare/           # instantané émetteur (serveur) et logique du comparateur
 │   ├── mcp/                        # serveur MCP + tools
 │   └── account/ auth/ beta/ discover/ preferences/ analytics/ monitoring/
 ├── i18n/ · content/               # locales (i18next) & contenu des cours
@@ -196,6 +200,7 @@ Ethi est l'assistant conversationnel du produit (Lovable AI Gateway, Gemini/GPT-
 - **IA** : Lovable AI Gateway (Gemini / GPT-5) — moteur d'Ethi.
 - **Déploiement** : Cloudflare Workers (Edge).
 - **Package manager** : Bun (`bun install`, `bun run dev`). **Un seul lockfile fait foi : `bun.lock` (texte, versionné).** `bunfig.toml` fixe `saveTextLockfile = true` pour que Bun maintienne ce format lisible et diffable — pas de lockfile binaire (`bun.lockb`) ni de `package-lock.json` npm dans le repo (deux sources de vérité = dérive garantie). Ne pas réintroduire un second lockfile.
+- **Intelligence financière & ESG** : moteurs purs et testés (performance, look-through, cadre ESG en six couches, statuts de donnée), documentés dans `docs/financial-intelligence.md`. Tout nouveau chiffre affiché porte l'un des cinq statuts de `src/lib/data/status.ts` ; toute nouvelle source est ajoutée au registre `src/lib/data/sources.ts`.
 - **Données de marché** : ingestion horaire automatique via `pg_cron` → endpoint `/api/public/refresh-market-data`, source Yahoo Finance, stockage `asset_quotes` / `asset_prices`.
 - **Secrets** : `LOVABLE_API_KEY` (Ethi), `CRON_SECRET` (sécurise l'endpoint d'ingestion), stocké dans **Supabase Vault**, accédé via `public.get_vault_secret('cron_secret')` — jamais en clair dans le code ou les migrations.
 - **Rôles** : table dédiée `user_roles` + fonction `has_role()` en `SECURITY DEFINER`. Toute nouvelle route sensible doit passer par cette fonction, pas par une vérification ad hoc côté client.
@@ -224,8 +229,11 @@ Ethi est l'assistant conversationnel du produit (Lovable AI Gateway, Gemini/GPT-
 - Auth (email + Google OAuth), bêta à liste d'attente + garde `_authenticated`
 - Ingestion de données de marché horaire (Yahoo Finance) + recalcul du modèle de risque
 - Serveur MCP (exposition d'outils Seedow via le protocole MCP)
+- Parcours de démonstration `/demo`, comparateur de fonds `/comparer` (export CSV), registre des sources `/donnees`, look-through du portefeuille (instantané émetteur réel, cf. `docs/financial-intelligence.md`)
 
 **Next** — _(à compléter par l'équipe produit)_
+
+- _Proposé, non validé :_ mettre à niveau TanStack Start (≥ 1.168.60 / start-server-core ≥ 1.169.39) pour corriger l'avis critique GHSA-qx66-fv34-fjm8 — migration de l'API `inputValidator` et de l'option `server` des routes à prévoir.
 
 **Later** — _(à compléter par l'équipe produit)_
 

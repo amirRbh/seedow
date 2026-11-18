@@ -15,15 +15,31 @@ type FundLike = Pick<ObservatoryFund, "sfdrArticle" | "sectors" | "themes" | "st
 const baseFund = (over: Partial<FundLike> = {}): FundLike => ({
   sfdrArticle: 9,
   sectors: [
-    { sector: "fossiles", level: "exclu_seuil_quantifie", source_document: "Prospectus", source_url: null, date: "2026-03-01" },
-    { sector: "armement", level: "non_verifie", source_document: null, source_url: null, date: null },
+    {
+      sector: "fossiles",
+      level: "exclu_seuil_quantifie",
+      source_document: "Prospectus",
+      source_url: null,
+      date: "2026-03-01",
+    },
+    {
+      sector: "armement",
+      level: "non_verifie",
+      source_document: null,
+      source_url: null,
+      date: null,
+    },
   ],
-  themes: [{ tag: "climat", level: "revendique", evidence: "clean energy", source_document: "Nom" }],
+  themes: [
+    { tag: "climat", level: "revendique", evidence: "clean energy", source_document: "Nom" },
+  ],
   sti: {
     version: "2.0",
     score: null,
     label: "non_notable",
-    blocks: [{ id: "C", earned: 0, max: 25, evaluable: false, unverifiedSignals: ["pai_published"] }],
+    blocks: [
+      { id: "C", earned: 0, max: 25, evaluable: false, unverifiedSignals: ["pai_published"] },
+    ],
     blocksEvaluated: 0,
     blocksTotal: 5,
     publishable: false,
@@ -47,7 +63,12 @@ describe("article SFDR déclaré", () => {
 describe("six couches distinctes", () => {
   it("rend toujours les six couches, dans l'ordre", () => {
     expect(describeEsgLayers({ fund: null }).map((l) => l.id)).toEqual([
-      "regulatory", "esg_risk", "characteristics", "taxonomy", "pai", "impact",
+      "regulatory",
+      "esg_risk",
+      "characteristics",
+      "taxonomy",
+      "pai",
+      "impact",
     ]);
   });
 
@@ -82,7 +103,11 @@ describe("six couches distinctes", () => {
 });
 
 describe("indicateurs par pilier et couverture", () => {
-  const indicators = buildEsgIndicators({ fund: baseFund(), energySectorPct: 4.22, energyAsOf: "2026-11-16" });
+  const indicators = buildEsgIndicators({
+    fund: baseFund(),
+    energySectorPct: 4.22,
+    energyAsOf: "2026-11-16",
+  });
 
   it("chaque case de la grille est rendue, les manquantes en UNAVAILABLE", () => {
     const total = INDICATOR_GRID.E.length + INDICATOR_GRID.S.length + INDICATOR_GRID.G.length;
@@ -92,7 +117,9 @@ describe("indicateurs par pilier et couverture", () => {
 
   it("une politique « non vérifiée » ne remplit pas l'indicateur", () => {
     expect(indicators.find((i) => i.id === "weapons_exclusion_policy")!.status).toBe("UNAVAILABLE");
-    expect(indicators.find((i) => i.id === "fossil_exclusion_policy")!.value).toBe("exclu_seuil_quantifie");
+    expect(indicators.find((i) => i.id === "fossil_exclusion_policy")!.value).toBe(
+      "exclu_seuil_quantifie",
+    );
   });
 
   it("couverture E = 2/6, confiance insuffisante", () => {
@@ -107,13 +134,26 @@ describe("note composite gardée par la couverture", () => {
   const grid = ["a", "b", "c", "d", "e"];
 
   it("couverture insuffisante : pas de note, même si les cases connues sont excellentes", () => {
-    const r = gatedPillarScore(new Map([["a", 100], ["b", 100]]), grid);
+    const r = gatedPillarScore(
+      new Map([
+        ["a", 100],
+        ["b", 100],
+      ]),
+      grid,
+    );
     expect(r.score).toBeNull();
     expect(r.coveragePct).toBe(40);
   });
 
   it("couverture suffisante : moyenne des seules cases connues, bornée 0..100", () => {
-    const r = gatedPillarScore(new Map([["a", 80], ["b", 60], ["c", 120]]), grid);
+    const r = gatedPillarScore(
+      new Map([
+        ["a", 80],
+        ["b", 60],
+        ["c", 120],
+      ]),
+      grid,
+    );
     expect(r.score).toBeCloseTo((80 + 60 + 100) / 3, 10);
     expect(r.confidence).toBe("medium");
   });

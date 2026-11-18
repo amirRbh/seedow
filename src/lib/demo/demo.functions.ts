@@ -150,7 +150,12 @@ export const getSnapshotFund = createServerFn({ method: "GET" })
 export const getSnapshotFunds = createServerFn({ method: "GET" })
   .inputValidator((input: string[]) =>
     z
-      .array(z.string().trim().regex(/^[A-Z]{2}[A-Z0-9]{9}\d$/i))
+      .array(
+        z
+          .string()
+          .trim()
+          .regex(/^[A-Z]{2}[A-Z0-9]{9}\d$/i),
+      )
       .max(8)
       .parse(input)
       .map((s) => s.toUpperCase()),
@@ -175,7 +180,13 @@ export interface DemoPortfolioResult {
   };
   /** Simulation à poids constants — jamais une performance réalisée. */
   simulated: { report: PerformanceReport; chart: SeriesPoint[]; seriesCurrency: string | null };
-  sources: { name: string; isin: string; sourceUrl: string; retrievedAt: string; navAsOf: string | null }[];
+  sources: {
+    name: string;
+    isin: string;
+    sourceUrl: string;
+    retrievedAt: string;
+    navAsOf: string | null;
+  }[];
 }
 
 /** Le portefeuille de démonstration, analysé de bout en bout. */
@@ -188,7 +199,9 @@ export const getDemoPortfolio = createServerFn({ method: "GET" }).handler(
     })).filter((l): l is typeof l & { fund: FundSnapshot } => l.fund !== undefined);
     const total = lines.reduce((s, l) => s + l.amount, 0);
 
-    const exposure = computePortfolioExposure(lines.map((l) => snapshotToPosition(l.fund, l.amount)));
+    const exposure = computePortfolioExposure(
+      lines.map((l) => snapshotToPosition(l.fund, l.amount)),
+    );
 
     const series = lines.map((l) => fundSeries(l.fund));
     const blended = blendSeries(
@@ -282,7 +295,12 @@ export const analyzePositionsExposure = createServerFn({ method: "POST" })
         const snap = p.isin ? byIsin.get(p.isin.toUpperCase()) : undefined;
         if (snap) {
           matched.push(p.id);
-          return { ...snapshotToPosition(snap, p.value), id: p.id, label: p.label, ter: p.ter ?? snap.ter };
+          return {
+            ...snapshotToPosition(snap, p.value),
+            id: p.id,
+            label: p.label,
+            ter: p.ter ?? snap.ter,
+          };
         }
         return {
           id: p.id,
@@ -296,7 +314,11 @@ export const analyzePositionsExposure = createServerFn({ method: "POST" })
       }),
     );
     return {
-      exposure: { ...exposure, holdings: exposure.holdings.slice(0, 12), holdingsTotal: exposure.holdings.length },
+      exposure: {
+        ...exposure,
+        holdings: exposure.holdings.slice(0, 12),
+        holdingsTotal: exposure.holdings.length,
+      },
       matchedPositions: matched,
       generatedAt: snapshots.generatedAt,
     };

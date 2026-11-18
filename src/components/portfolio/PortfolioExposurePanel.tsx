@@ -43,7 +43,10 @@ export function PortfolioExposurePanel({
     .filter((p) => p.value > 0);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["portfolio-exposure", positions.map((p) => `${p.id}:${p.value.toFixed(2)}`).join("|")],
+    queryKey: [
+      "portfolio-exposure",
+      positions.map((p) => `${p.id}:${p.value.toFixed(2)}`).join("|"),
+    ],
     queryFn: () => run({ data: positions }),
     enabled: positions.length > 0,
     staleTime: 5 * 60_000,
@@ -70,7 +73,9 @@ export function PortfolioExposurePanel({
       method={<p>{t("fin.method.lookthrough")}</p>}
     >
       {covered === 0 ? (
-        <p className="rounded-2xl bg-paper-2 p-4 text-body-sm text-ink-2">{t("fin.portfolio.none_covered")}</p>
+        <p className="rounded-2xl bg-paper-2 p-4 text-body-sm text-ink-2">
+          {t("fin.portfolio.none_covered")}
+        </p>
       ) : (
         <div className="flex flex-col gap-6">
           <div className="grid gap-6 md:grid-cols-2">
@@ -85,7 +90,9 @@ export function PortfolioExposurePanel({
               />
             </div>
             <div>
-              <p className="mb-3 text-label font-bold text-ink">{t("fin.exposure.geography_title")}</p>
+              <p className="mb-3 text-label font-bold text-ink">
+                {t("fin.exposure.geography_title")}
+              </p>
               <ExposureBars
                 rows={e.geography.buckets}
                 unclassifiedPct={e.geography.unclassifiedPct}

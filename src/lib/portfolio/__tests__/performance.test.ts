@@ -16,17 +16,32 @@ import {
   type SeriesPoint,
 } from "../performance";
 
-const s = (pairs: [string, number][]): SeriesPoint[] => pairs.map(([date, value]) => ({ date, value }));
+const s = (pairs: [string, number][]): SeriesPoint[] =>
+  pairs.map(([date, value]) => ({ date, value }));
 
 describe("rendements — cas calculés à la main", () => {
   it("cumulé : 100 → 121 = +21 %", () => {
-    expect(cumulativeReturn(s([["2020-01-01", 100], ["2022-01-01", 121]]))).toBeCloseTo(0.21, 10);
+    expect(
+      cumulativeReturn(
+        s([
+          ["2020-01-01", 100],
+          ["2022-01-01", 121],
+        ]),
+      ),
+    ).toBeCloseTo(0.21, 10);
   });
 
   it("CAGR : 100 → 121 sur deux années calendaires ≈ +10 %/an", () => {
     // 731 jours (2020 est bissextile) : 1,21^(365,25/731) − 1.
     const expected = 1.21 ** (365.25 / 731) - 1;
-    expect(annualizedReturn(s([["2020-01-01", 100], ["2022-01-01", 121]]))).toBeCloseTo(expected, 12);
+    expect(
+      annualizedReturn(
+        s([
+          ["2020-01-01", 100],
+          ["2022-01-01", 121],
+        ]),
+      ),
+    ).toBeCloseTo(expected, 12);
     expect(expected).toBeCloseTo(0.0999, 3);
   });
 
@@ -46,7 +61,10 @@ describe("volatilité", () => {
     const pts: SeriesPoint[] = Array.from({ length: 40 }, (_, i) => ({
       date: `2024-01-${String(i + 1).padStart(2, "0")}`.replace(/-(\d{2})$/, (m) => m),
       value: 100 * 1.001 ** i,
-    })).map((p, i) => ({ ...p, date: new Date(Date.UTC(2024, 0, 1 + i)).toISOString().slice(0, 10) }));
+    })).map((p, i) => ({
+      ...p,
+      date: new Date(Date.UTC(2024, 0, 1 + i)).toISOString().slice(0, 10),
+    }));
     expect(annualizedVolatility(pts)).toBeCloseTo(0, 10);
   });
 
@@ -64,14 +82,26 @@ describe("volatilité", () => {
   });
 
   it("moins de 20 rendements : non calculable plutôt qu'une estimation bruitée", () => {
-    expect(annualizedVolatility(s([["2024-01-01", 100], ["2024-01-02", 101]]))).toBeNull();
+    expect(
+      annualizedVolatility(
+        s([
+          ["2024-01-01", 100],
+          ["2024-01-02", 101],
+        ]),
+      ),
+    ).toBeNull();
   });
 });
 
 describe("perte maximale", () => {
   it("100 → 120 → 90 → 130 : −25 % du plus-haut 120, retrouvé ensuite", () => {
     const dd = maxDrawdown(
-      s([["2024-01-01", 100], ["2024-01-02", 120], ["2024-01-03", 90], ["2024-01-04", 130]]),
+      s([
+        ["2024-01-01", 100],
+        ["2024-01-02", 120],
+        ["2024-01-03", 90],
+        ["2024-01-04", 130],
+      ]),
     )!;
     expect(dd.depth).toBeCloseTo(-0.25, 12);
     expect(dd.peakDate).toBe("2024-01-02");
@@ -80,7 +110,14 @@ describe("perte maximale", () => {
   });
 
   it("série toujours croissante : 0, pas de creux", () => {
-    expect(maxDrawdown(s([["2024-01-01", 1], ["2024-01-02", 2]]))!.depth).toBe(0);
+    expect(
+      maxDrawdown(
+        s([
+          ["2024-01-01", 1],
+          ["2024-01-02", 2],
+        ]),
+      )!.depth,
+    ).toBe(0);
   });
 });
 
@@ -91,7 +128,10 @@ describe("fenêtres glissantes", () => {
   });
 
   it("série trop courte pour la fenêtre : null, jamais raccourcie en silence", () => {
-    const pts = s([["2025-06-01", 100], ["2026-06-01", 110]]);
+    const pts = s([
+      ["2025-06-01", 100],
+      ["2026-06-01", 110],
+    ]);
     expect(trailingWindow(pts, 3)).toBeNull();
     const report = performanceReport(pts, { windows: [3] });
     expect(report.windows[0].available).toBe(false);
@@ -164,8 +204,16 @@ describe("validation croisée de la volatilité 3 ans publiée par l'émetteur",
 });
 
 describe("panier simulé à poids constants", () => {
-  const a = s([["2024-01-01", 100], ["2024-01-02", 110], ["2024-01-03", 121]]);
-  const b = s([["2024-01-01", 50], ["2024-01-02", 50], ["2024-01-03", 50]]);
+  const a = s([
+    ["2024-01-01", 100],
+    ["2024-01-02", 110],
+    ["2024-01-03", 121],
+  ]);
+  const b = s([
+    ["2024-01-01", 50],
+    ["2024-01-02", 50],
+    ["2024-01-03", 50],
+  ]);
 
   it("50/50 entre +10 %/jour et 0 % : +5 % par jour, rééquilibré", () => {
     const out = blendSeries([a, b], [1, 1]);
@@ -173,7 +221,10 @@ describe("panier simulé à poids constants", () => {
   });
 
   it("ne garde que les dates communes, sans interpoler", () => {
-    const c = s([["2024-01-01", 10], ["2024-01-03", 12]]);
+    const c = s([
+      ["2024-01-01", 10],
+      ["2024-01-03", 12],
+    ]);
     expect(blendSeries([a, c], [1, 1]).map((p) => p.date)).toEqual(["2024-01-01", "2024-01-03"]);
   });
 

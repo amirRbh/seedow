@@ -304,7 +304,11 @@ export function performanceReport(
     if (bench) {
       const bw = bench.filter((p) => p.date >= w[0].date && p.date <= w[w.length - 1].date);
       // L'indice doit couvrir la MÊME fenêtre, aux mêmes bornes.
-      if (bw.length > 1 && bw[0].date === w[0].date && bw[bw.length - 1].date === w[w.length - 1].date) {
+      if (
+        bw.length > 1 &&
+        bw[0].date === w[0].date &&
+        bw[bw.length - 1].date === w[w.length - 1].date
+      ) {
         benchAnn = annualizedReturn(bw);
         te = trackingError(w, bw);
       }
@@ -347,9 +351,11 @@ export function rebaseForChart(series: SeriesPoint[], maxPoints = 260): SeriesPo
   const base = clean[0].value;
   const step = Math.max(1, Math.ceil(clean.length / maxPoints));
   const out: SeriesPoint[] = [];
-  for (let i = 0; i < clean.length; i += step) out.push({ date: clean[i].date, value: (clean[i].value / base) * 100 });
+  for (let i = 0; i < clean.length; i += step)
+    out.push({ date: clean[i].date, value: (clean[i].value / base) * 100 });
   const last = clean[clean.length - 1];
-  if (out[out.length - 1].date !== last.date) out.push({ date: last.date, value: (last.value / base) * 100 });
+  if (out[out.length - 1].date !== last.date)
+    out.push({ date: last.date, value: (last.value / base) * 100 });
   return out;
 }
 
@@ -362,11 +368,7 @@ export function rebaseForChart(series: SeriesPoint[], maxPoints = 260): SeriesPo
  * interface qui l'affiche doit l'écrire (statut SIMULATED). Les séries sont
  * alignées sur leurs dates COMMUNES uniquement — aucun prix n'est interpolé.
  */
-export function blendSeries(
-  series: SeriesPoint[][],
-  weights: number[],
-  base = 100,
-): SeriesPoint[] {
+export function blendSeries(series: SeriesPoint[][], weights: number[], base = 100): SeriesPoint[] {
   if (series.length === 0 || series.length !== weights.length) return [];
   const totalW = weights.reduce((s, w) => s + (w > 0 ? w : 0), 0);
   if (totalW <= 0) return [];

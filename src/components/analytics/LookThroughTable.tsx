@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useLang } from "@/hooks/useLang";
 import { formatCurrency, formatPercent } from "@/lib/format";
-import { sectorLabel } from "@/lib/demo/labels";
+import { sectorLabel, shortFundName } from "@/lib/demo/labels";
 import type { LookThroughHolding } from "@/lib/portfolio/exposure";
 
 /**
@@ -26,10 +26,18 @@ export function LookThroughTable({
         <caption className="sr-only">{t("fin.lookthrough.caption")}</caption>
         <thead>
           <tr className="text-caption font-semibold text-ink-3">
-            <th scope="col" className="pb-2">{t("fin.lookthrough.security")}</th>
-            <th scope="col" className="pb-2">{t("fin.lookthrough.via")}</th>
-            <th scope="col" className="pb-2 text-right">{t("fin.lookthrough.value")}</th>
-            <th scope="col" className="pb-2 text-right">{t("fin.lookthrough.weight")}</th>
+            <th scope="col" className="pb-2">
+              {t("fin.lookthrough.security")}
+            </th>
+            <th scope="col" className="pb-2">
+              {t("fin.lookthrough.via")}
+            </th>
+            <th scope="col" className="pb-2 text-right">
+              {t("fin.lookthrough.value")}
+            </th>
+            <th scope="col" className="pb-2 text-right">
+              {t("fin.lookthrough.weight")}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -60,9 +68,4 @@ export function LookThroughTable({
       </table>
     </div>
   );
-}
-
-/** « iShares Core MSCI World UCITS ETF » → « Core MSCI World ». */
-export function shortFundName(name: string): string {
-  return name.replace(/^iShares\s+/i, "").replace(/\s+UCITS ETF.*$/i, "").trim();
 }

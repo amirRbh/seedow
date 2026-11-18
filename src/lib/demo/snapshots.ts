@@ -120,7 +120,10 @@ export function snapshotToPosition(f: FundSnapshot, marketValue: number): Positi
 }
 
 /** Statut des données d'un fonds de l'instantané, selon leur âge. */
-export function snapshotStatus(f: FundSnapshot, now: Date = new Date()): {
+export function snapshotStatus(
+  f: FundSnapshot,
+  now: Date = new Date(),
+): {
   holdings: DataStatus;
   exposure: DataStatus;
   performance: DataStatus;

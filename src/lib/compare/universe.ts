@@ -47,7 +47,10 @@ export interface CompareFund {
   snapshot: SnapshotSide | null;
 }
 
-export function buildUniverse(catalog: ObservatoryFund[], snapshots: SnapshotSide[]): CompareFund[] {
+export function buildUniverse(
+  catalog: ObservatoryFund[],
+  snapshots: SnapshotSide[],
+): CompareFund[] {
   const byIsin = new Map(snapshots.map((s) => [s.isin.toUpperCase(), s]));
   const used = new Set<string>();
   const rows: CompareFund[] = catalog.map((f) => {

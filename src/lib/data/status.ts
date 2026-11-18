@@ -54,7 +54,10 @@ export type DatasetKind = keyof typeof FRESHNESS_DAYS;
 const DAY_MS = 86_400_000;
 
 /** Âge en jours entiers d'une date ISO à `now`. `null` si la date est illisible. */
-export function ageInDays(isoDate: string | null | undefined, now: Date = new Date()): number | null {
+export function ageInDays(
+  isoDate: string | null | undefined,
+  now: Date = new Date(),
+): number | null {
   if (!isoDate) return null;
   const t = Date.parse(isoDate.length === 10 ? `${isoDate}T00:00:00Z` : isoDate);
   if (!Number.isFinite(t)) return null;
@@ -103,9 +106,7 @@ export function weakestStatus(statuses: DataStatus[]): DataStatus {
  * verified / modelled / disputed / unknown. SIMULATED et STALE n'y avaient pas
  * d'équivalent — ils ont désormais leur propre pastille (voir `DataStatusChip`).
  */
-export function toProvenanceStatus(
-  status: DataStatus,
-): "verified" | "modelled" | "unknown" {
+export function toProvenanceStatus(status: DataStatus): "verified" | "modelled" | "unknown" {
   if (status === "VERIFIED") return "verified";
   if (status === "ESTIMATED") return "modelled";
   return "unknown";

@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { AlertTriangle, Check, Download, Plus, Search, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { DataStatusChip } from "@/components/analytics/DataStatusChip";
-import { shortFundName } from "@/components/analytics/LookThroughTable";
+import { shortFundName } from "@/lib/demo/labels";
 import { PageHero, PublicPage } from "@/components/layout/PublicPage";
 import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/button";
@@ -85,7 +85,9 @@ function ComparePage() {
   const [filters, setFilters] = useState<ScreenFilters>({ sfdr: "all", maxTer: null });
   const selected = useMemo(() => {
     const ids = (search.f ?? "").split(",").filter(Boolean);
-    const fromUrl = ids.map((id) => universe.find((u) => u.id === id)).filter((x): x is CompareFund => !!x);
+    const fromUrl = ids
+      .map((id) => universe.find((u) => u.id === id))
+      .filter((x): x is CompareFund => !!x);
     if (fromUrl.length > 0) return fromUrl.slice(0, MAX_SELECTED);
     // Par défaut : deux fonds de même univers, avec et sans filtre ISR.
     return ["IE00B4L5Y983", "IE00BDZZTM54"]
@@ -94,7 +96,11 @@ function ComparePage() {
   }, [search.f, universe]);
 
   const setSelected = (next: CompareFund[]) =>
-    navigate({ search: { f: next.map((x) => x.id).join(",") || undefined }, replace: true, resetScroll: false });
+    navigate({
+      search: { f: next.map((x) => x.id).join(",") || undefined },
+      replace: true,
+      resetScroll: false,
+    });
 
   const toggle = (f: CompareFund) => {
     const on = selected.some((s) => s.id === f.id);
@@ -104,9 +110,14 @@ function ComparePage() {
 
   const results = useMemo(() => screen(universe, filters), [universe, filters]);
 
-  const pct = (v: number | null | undefined, d = 1) => (v == null ? "—" : formatPercent(v, lang, d));
+  const pct = (v: number | null | undefined, d = 1) =>
+    v == null ? "—" : formatPercent(v, lang, d);
   const art = (n: number | null) =>
-    n === null ? t("fin.sfdr.unknown") : n === 6 ? t("fin.sfdr.other_short") : t("fin.sfdr.article", { n });
+    n === null
+      ? t("fin.sfdr.unknown")
+      : n === 6
+        ? t("fin.sfdr.other_short")
+        : t("fin.sfdr.article", { n });
 
   const exportCsv = () => {
     const header = [
@@ -115,7 +126,9 @@ function ComparePage() {
       t("fin.compare.row.sfdr_catalog"),
       t("fin.compare.row.sfdr_declared"),
       t("fin.table.ter"),
-      ...STI_SECTORS.map((s) => `${t("fin.compare.row.exclusion")} ${t(`fin.compare.sector.${s}`)}`),
+      ...STI_SECTORS.map(
+        (s) => `${t("fin.compare.row.exclusion")} ${t(`fin.compare.sector.${s}`)}`,
+      ),
       t("fin.compare.row.ann1y"),
       t("fin.compare.row.ann3y"),
       t("fin.compare.row.ann5y"),
@@ -148,7 +161,12 @@ function ComparePage() {
     URL.revokeObjectURL(url);
   };
 
-  type Row = { key: string; label: string; render: (f: CompareFund) => React.ReactNode; group?: string };
+  type Row = {
+    key: string;
+    label: string;
+    render: (f: CompareFund) => React.ReactNode;
+    group?: string;
+  };
   const rows: Row[] = [
     {
       key: "sfdr",
@@ -179,7 +197,9 @@ function ComparePage() {
       key: "sti",
       label: t("fin.compare.row.transparency"),
       render: (f) =>
-        f.stiBlocksEvaluated === null ? "—" : t("fin.compare.blocks", { n: f.stiBlocksEvaluated, total: f.stiBlocksTotal }),
+        f.stiBlocksEvaluated === null
+          ? "—"
+          : t("fin.compare.blocks", { n: f.stiBlocksEvaluated, total: f.stiBlocksTotal }),
     },
     {
       key: "ann1",
@@ -187,17 +207,34 @@ function ComparePage() {
       label: t("fin.compare.row.ann1y"),
       render: (f) => <Signed v={f.snapshot?.annualized[1]} text={pct(f.snapshot?.annualized[1])} />,
     },
-    { key: "ann3", label: t("fin.compare.row.ann3y"), render: (f) => <Signed v={f.snapshot?.annualized[3]} text={pct(f.snapshot?.annualized[3])} /> },
-    { key: "ann5", label: t("fin.compare.row.ann5y"), render: (f) => <Signed v={f.snapshot?.annualized[5]} text={pct(f.snapshot?.annualized[5])} /> },
+    {
+      key: "ann3",
+      label: t("fin.compare.row.ann3y"),
+      render: (f) => <Signed v={f.snapshot?.annualized[3]} text={pct(f.snapshot?.annualized[3])} />,
+    },
+    {
+      key: "ann5",
+      label: t("fin.compare.row.ann5y"),
+      render: (f) => <Signed v={f.snapshot?.annualized[5]} text={pct(f.snapshot?.annualized[5])} />,
+    },
     { key: "vol", label: t("fin.compare.row.vol3y"), render: (f) => pct(f.snapshot?.volatility3y) },
-    { key: "mdd", label: t("fin.compare.row.mdd5y"), render: (f) => pct(f.snapshot?.maxDrawdown5y) },
+    {
+      key: "mdd",
+      label: t("fin.compare.row.mdd5y"),
+      render: (f) => pct(f.snapshot?.maxDrawdown5y),
+    },
     {
       key: "energy",
       group: t("fin.compare.group.exposure"),
       label: t("fin.kpi.energy"),
-      render: (f) => (f.snapshot?.energySectorPct == null ? "—" : pct(f.snapshot.energySectorPct / 100)),
+      render: (f) =>
+        f.snapshot?.energySectorPct == null ? "—" : pct(f.snapshot.energySectorPct / 100),
     },
-    { key: "holdings", label: t("fin.table.holdings"), render: (f) => f.snapshot?.holdingsCount ?? "—" },
+    {
+      key: "holdings",
+      label: t("fin.table.holdings"),
+      render: (f) => f.snapshot?.holdingsCount ?? "—",
+    },
     {
       key: "coverage",
       group: t("fin.compare.group.quality"),
@@ -227,16 +264,25 @@ function ComparePage() {
                 <h2 id="compare-title" className="text-[clamp(20px,2.2vw,24px)]">
                   {t("fin.compare.selected_title", { count: selected.length, max: MAX_SELECTED })}
                 </h2>
-                <p className="mt-1 max-w-[62ch] text-body-sm text-ink-2">{t("fin.compare.selected_desc")}</p>
+                <p className="mt-1 max-w-[62ch] text-body-sm text-ink-2">
+                  {t("fin.compare.selected_desc")}
+                </p>
               </div>
-              <Button variant="outline" size="sm" onClick={exportCsv} disabled={selected.length === 0}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={exportCsv}
+                disabled={selected.length === 0}
+              >
                 <Download aria-hidden />
                 {t("fin.compare.export")}
               </Button>
             </div>
 
             {selected.length === 0 ? (
-              <p className="mt-6 rounded-2xl bg-paper-2 p-6 text-center text-body text-ink-2">{t("fin.compare.empty")}</p>
+              <p className="mt-6 rounded-2xl bg-paper-2 p-6 text-center text-body text-ink-2">
+                {t("fin.compare.empty")}
+              </p>
             ) : (
               <div className="-mx-1 mt-6 overflow-x-auto">
                 <table className="w-full min-w-[640px] border-separate border-spacing-x-1 text-left">
@@ -249,7 +295,11 @@ function ComparePage() {
                           <span className="flex items-start justify-end gap-1.5">
                             <span className="text-label font-bold leading-snug text-ink">
                               {f.slug ? (
-                                <Link to="/fonds/$isin" params={{ isin: f.slug }} className="hover:underline">
+                                <Link
+                                  to="/fonds/$isin"
+                                  params={{ isin: f.slug }}
+                                  className="hover:underline"
+                                >
                                   {shortFundName(f.name)}
                                 </Link>
                               ) : (
@@ -278,7 +328,9 @@ function ComparePage() {
                 </table>
               </div>
             )}
-            <p className="mt-5 text-caption leading-relaxed text-ink-3">{t("fin.compare.disclaimer")}</p>
+            <p className="mt-5 text-caption leading-relaxed text-ink-3">
+              {t("fin.compare.disclaimer")}
+            </p>
           </section>
         </Reveal>
 
@@ -287,10 +339,13 @@ function ComparePage() {
           <h2 id="screen-title" className="text-[clamp(20px,2.2vw,24px)]">
             {t("fin.compare.screen_title")}
           </h2>
-          <div className="mt-4 grid gap-3 md:grid-cols-[1.4fr_1fr_1fr]">
+          <div className="mt-4 grid gap-3 md:grid-cols-[1.4fr_1fr_1fr] [&>*]:min-w-0">
             <label className="relative block">
               <span className="sr-only">{t("fin.compare.search")}</span>
-              <Search aria-hidden className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-ink-3" />
+              <Search
+                aria-hidden
+                className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-ink-3"
+              />
               <input
                 type="search"
                 className="field pl-11"
@@ -304,7 +359,9 @@ function ComparePage() {
               <select
                 className="field"
                 value={filters.sfdr}
-                onChange={(e) => setFilters({ ...filters, sfdr: e.target.value as ScreenFilters["sfdr"] })}
+                onChange={(e) =>
+                  setFilters({ ...filters, sfdr: e.target.value as ScreenFilters["sfdr"] })
+                }
               >
                 <option value="all">{t("fin.compare.sfdr_all")}</option>
                 <option value="9">{t("fin.sfdr.article", { n: 9 })}</option>
@@ -318,7 +375,9 @@ function ComparePage() {
               <select
                 className="field"
                 value={filters.maxTer ?? ""}
-                onChange={(e) => setFilters({ ...filters, maxTer: e.target.value ? Number(e.target.value) : null })}
+                onChange={(e) =>
+                  setFilters({ ...filters, maxTer: e.target.value ? Number(e.target.value) : null })
+                }
               >
                 <option value="">{t("fin.compare.ter_all")}</option>
                 <option value="0.002">{t("fin.compare.ter_max", { v: "0,20 %" })}</option>
@@ -330,7 +389,9 @@ function ComparePage() {
           <div className="mt-3 flex flex-wrap gap-2">
             <ToggleChip
               on={!!filters.fossilPolicyDocumented}
-              onClick={() => setFilters({ ...filters, fossilPolicyDocumented: !filters.fossilPolicyDocumented })}
+              onClick={() =>
+                setFilters({ ...filters, fossilPolicyDocumented: !filters.fossilPolicyDocumented })
+              }
               label={t("fin.compare.filter_fossil")}
             />
             <ToggleChip
@@ -343,7 +404,7 @@ function ComparePage() {
           <p className="mt-5 text-label font-semibold text-ink-2" role="status">
             {t("fin.compare.results", { count: results.length })}
           </p>
-          <ul className="mt-3 grid gap-2 md:grid-cols-2">
+          <ul className="mt-3 grid gap-2 md:grid-cols-2 [&>*]:min-w-0">
             {results.slice(0, 40).map((f) => {
               const on = selected.some((s) => s.id === f.id);
               const full = !on && selected.length >= MAX_SELECTED;
@@ -356,7 +417,9 @@ function ComparePage() {
                     aria-pressed={on}
                     className={cn(
                       "flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left outline-none ring-1 ring-inset transition-[background-color,box-shadow] duration-200 focus-visible:ring-2 focus-visible:ring-mint disabled:cursor-not-allowed disabled:opacity-50",
-                      on ? "bg-mint-tint ring-mint" : "bg-paper-2 ring-transparent hover:ring-paper-3",
+                      on
+                        ? "bg-mint-tint ring-mint"
+                        : "bg-paper-2 ring-transparent hover:ring-paper-3",
                     )}
                   >
                     <span
@@ -366,24 +429,42 @@ function ComparePage() {
                         on ? "bg-mint text-paper" : "bg-paper text-ink-3",
                       )}
                     >
-                      {on ? <Check className="size-4" strokeWidth={3} /> : <Plus className="size-4" strokeWidth={2.5} />}
+                      {on ? (
+                        <Check className="size-4" strokeWidth={3} />
+                      ) : (
+                        <Plus className="size-4" strokeWidth={2.5} />
+                      )}
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-label font-semibold text-ink">{f.name}</span>
+                      <span className="block truncate text-label font-semibold text-ink">
+                        {f.name}
+                      </span>
                       <span className="mono-meta block truncate">
-                        {[f.isin, art(effectiveSfdr(f)), f.ter === null ? null : `TER ${pct(f.ter, 2)}`]
+                        {[
+                          f.isin,
+                          art(effectiveSfdr(f)),
+                          f.ter === null ? null : `TER ${pct(f.ter, 2)}`,
+                        ]
                           .filter(Boolean)
                           .join(" · ")}
                       </span>
                     </span>
-                    {f.snapshot && <DataStatusChip status="VERIFIED" className="hidden h-6 px-2 sm:inline-flex" detail={t("fin.compare.has_history")} />}
+                    {f.snapshot && (
+                      <DataStatusChip
+                        status="VERIFIED"
+                        className="hidden h-6 px-2 sm:inline-flex"
+                        detail={t("fin.compare.has_history")}
+                      />
+                    )}
                   </button>
                 </li>
               );
             })}
           </ul>
           {results.length > 40 && (
-            <p className="mt-3 text-caption text-ink-3">{t("fin.compare.more_results", { count: results.length - 40 })}</p>
+            <p className="mt-3 text-caption text-ink-3">
+              {t("fin.compare.more_results", { count: results.length - 40 })}
+            </p>
           )}
         </section>
       </div>
@@ -402,17 +483,27 @@ function RowGroup({
     <>
       {row.group && (
         <tr>
-          <th colSpan={funds.length + 1} scope="colgroup" className="pt-5 pb-1 text-left text-caption font-bold text-section-accent-ink">
+          <th
+            colSpan={funds.length + 1}
+            scope="colgroup"
+            className="pt-5 pb-1 text-left text-caption font-bold text-section-accent-ink"
+          >
             {row.group}
           </th>
         </tr>
       )}
       <tr>
-        <th scope="row" className="border-t border-paper-3 py-2.5 pr-2 text-label font-medium text-ink-2">
+        <th
+          scope="row"
+          className="border-t border-paper-3 py-2.5 pr-2 text-label font-medium text-ink-2"
+        >
           {row.label}
         </th>
         {funds.map((f) => (
-          <td key={f.id} className="border-t border-paper-3 py-2.5 text-right font-value text-body-sm tabular-nums text-ink">
+          <td
+            key={f.id}
+            className="border-t border-paper-3 py-2.5 text-right font-value text-body-sm tabular-nums text-ink"
+          >
             {row.render(f)}
           </td>
         ))}
@@ -423,7 +514,9 @@ function RowGroup({
 
 function Signed({ v, text }: { v: number | null | undefined; text: string }) {
   return (
-    <span className={cn(v != null && v < 0 && "text-alert-ink", v != null && v > 0 && "text-mint-ink")}>
+    <span
+      className={cn(v != null && v < 0 && "text-alert-ink", v != null && v > 0 && "text-mint-ink")}
+    >
       {v != null && v > 0 ? `+${text}` : text}
     </span>
   );
@@ -431,9 +524,19 @@ function Signed({ v, text }: { v: number | null | undefined; text: string }) {
 
 function ExclusionCell({ level }: { level: string | undefined }) {
   const { t } = useTranslation();
-  if (!level || level === "non_verifie") return <span className="font-sans text-caption text-ink-3">{t("fin.compare.level.non_verifie")}</span>;
+  if (!level || level === "non_verifie")
+    return (
+      <span className="font-sans text-caption text-ink-3">
+        {t("fin.compare.level.non_verifie")}
+      </span>
+    );
   return (
-    <span className={cn("font-sans text-caption font-semibold", level === "non_exclu_documente" ? "text-alert-ink" : "text-mint-ink")}>
+    <span
+      className={cn(
+        "font-sans text-caption font-semibold",
+        level === "non_exclu_documente" ? "text-alert-ink" : "text-mint-ink",
+      )}
+    >
       {t(`fin.compare.level.${level}`)}
     </span>
   );
@@ -467,7 +570,11 @@ function CoverageCell({ fund }: { fund: CompareFund }) {
 function ToggleChip({ on, onClick, label }: { on: boolean; onClick: () => void; label: string }) {
   return (
     <button type="button" aria-pressed={on} onClick={onClick} className="flow-pill">
-      {on ? <Check aria-hidden className="size-4" strokeWidth={2.5} /> : <Plus aria-hidden className="size-4" strokeWidth={2.5} />}
+      {on ? (
+        <Check aria-hidden className="size-4" strokeWidth={2.5} />
+      ) : (
+        <Plus aria-hidden className="size-4" strokeWidth={2.5} />
+      )}
       {label}
     </button>
   );

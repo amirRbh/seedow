@@ -87,7 +87,9 @@ function Landing() {
   const factSource = facts
     ? t("landing.facts.source", {
         fund: facts.fundName,
-        date: facts.asOf ? formatDate(facts.asOf, lang, { day: "numeric", month: "short", year: "numeric" }) : "—",
+        date: facts.asOf
+          ? formatDate(facts.asOf, lang, { day: "numeric", month: "short", year: "numeric" })
+          : "—",
       })
     : "";
   const STATS: { figure: string; text: string; src: string }[] = facts
@@ -293,19 +295,21 @@ function Landing() {
                 {t("landing.rv.cards.problem.desc")}
               </p>
 
-              {STATS.length > 0 && <RevealGroup className="mt-14 grid gap-10 md:grid-cols-3 md:gap-8">
-                {STATS.map((s) => (
-                  <div key={s.figure} className="border-t border-paper-3 pt-6">
-                    <p className="font-display text-[clamp(56px,7vw,92px)] font-extrabold leading-none tracking-[-0.04em] text-mint-ink">
-                      {s.figure}
-                    </p>
-                    <p className="mt-4 max-w-[26ch] text-body-lg leading-snug text-ink-2">
-                      {s.text}
-                    </p>
-                    <Provenance className="mt-4" source={s.src} status="verified" hideChip />
-                  </div>
-                ))}
-              </RevealGroup>}
+              {STATS.length > 0 && (
+                <RevealGroup className="mt-14 grid gap-10 md:grid-cols-3 md:gap-8">
+                  {STATS.map((s) => (
+                    <div key={s.figure} className="border-t border-paper-3 pt-6">
+                      <p className="font-display text-[clamp(56px,7vw,92px)] font-extrabold leading-none tracking-[-0.04em] text-mint-ink">
+                        {s.figure}
+                      </p>
+                      <p className="mt-4 max-w-[26ch] text-body-lg leading-snug text-ink-2">
+                        {s.text}
+                      </p>
+                      <Provenance className="mt-4" source={s.src} status="verified" hideChip />
+                    </div>
+                  ))}
+                </RevealGroup>
+              )}
               {STATS.length > 0 && (
                 <Link
                   to="/demo"

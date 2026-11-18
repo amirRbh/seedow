@@ -138,7 +138,8 @@ export function parseWorkbookDate(raw: string | undefined | null): string | null
   const direct = parseIsharesDate(text);
   if (direct) return direct;
   const long = /^(?:[A-Za-z]{3},\s*)?(\d{1,2}) ([A-Za-z]{3,4}) (\d{4})$/.exec(text);
-  if (long) return parseIsharesDate(`${long[1].padStart(2, "0")}/${long[2].slice(0, 3)}/${long[3]}`);
+  if (long)
+    return parseIsharesDate(`${long[1].padStart(2, "0")}/${long[2].slice(0, 3)}/${long[3]}`);
   return null;
 }
 
@@ -171,7 +172,9 @@ function readExposureBlock(
   title: string,
 ): { asOf: string | null; rows: WorkbookExposure[] } {
   if (!sheet) return { asOf: null, rows: [] };
-  const start = sheet.findIndex((r) => r.length === 1 && r[0].toLowerCase() === title.toLowerCase());
+  const start = sheet.findIndex(
+    (r) => r.length === 1 && r[0].toLowerCase() === title.toLowerCase(),
+  );
   if (start < 0) return { asOf: null, rows: [] };
   let asOf: string | null = null;
   const rows: WorkbookExposure[] = [];
@@ -228,7 +231,8 @@ function readHoldings(sheet: Sheet | undefined): { asOf: string | null; rows: Wo
     weight: col("Weight (%)"),
   };
   let asOf: string | null = null;
-  for (let i = headerIdx - 1; i >= Math.max(0, headerIdx - 4) && !asOf; i--) asOf = asOfIn(sheet[i]);
+  for (let i = headerIdx - 1; i >= Math.max(0, headerIdx - 4) && !asOf; i--)
+    asOf = asOfIn(sheet[i]);
   const rows: WorkbookHolding[] = [];
   for (let i = headerIdx + 1; i < sheet.length; i++) {
     const r = sheet[i];

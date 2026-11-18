@@ -38,11 +38,18 @@ export function ExposureBars({
 
   const line = (key: string, label: string, pct: number, cls: string, emphasis = false) => (
     <li key={key} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1.5">
-      <span className={cn("truncate text-label", emphasis ? "font-bold text-ink" : "text-ink-2")}>{label}</span>
-      <span className="font-value text-label tabular-nums text-ink">{formatPercent(pct / 100, lang, 1)}</span>
+      <span className={cn("truncate text-label", emphasis ? "font-bold text-ink" : "text-ink-2")}>
+        {label}
+      </span>
+      <span className="font-value text-label tabular-nums text-ink">
+        {formatPercent(pct / 100, lang, 1)}
+      </span>
       <span aria-hidden className="col-span-2 h-1.5 overflow-hidden rounded-full bg-paper-inset">
         <span
-          className={cn("block h-full rounded-full transition-[width] duration-700 ease-brand motion-reduce:transition-none", cls)}
+          className={cn(
+            "block h-full rounded-full transition-[width] duration-700 ease-brand motion-reduce:transition-none",
+            cls,
+          )}
           style={{ width: `${Math.max(0.5, (pct / scale) * 100)}%` }}
         />
       </span>
@@ -54,9 +61,21 @@ export function ExposureBars({
       {shown.map((r) =>
         // Mise en évidence NEUTRE (encre + gras) : une exposition sectorielle est
         // une information, pas un jugement — --alert reste réservé au négatif réel.
-        line(r.label, formatLabel(r.label), r.weightPct, highlight === r.label ? "bg-ink" : bar, highlight === r.label),
+        line(
+          r.label,
+          formatLabel(r.label),
+          r.weightPct,
+          highlight === r.label ? "bg-ink" : bar,
+          highlight === r.label,
+        ),
       )}
-      {rest > 0.05 && line("__rest", t("fin.exposure.other_buckets", { count: rows.length - max }), rest, "bg-ink-3")}
+      {rest > 0.05 &&
+        line(
+          "__rest",
+          t("fin.exposure.other_buckets", { count: rows.length - max }),
+          rest,
+          "bg-ink-3",
+        )}
       {unclassifiedPct > 0.05 &&
         line(
           "__unclassified",

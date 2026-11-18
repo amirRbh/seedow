@@ -11,7 +11,13 @@ import { cn } from "@/lib/utils";
  * ce qu'elle NE dit PAS. C'est la pièce qui empêche de lire « Article 9 »
  * comme une note, ou une note comme un impact.
  */
-export function EsgLayersPanel({ layers, compact = false }: { layers: EsgLayer[]; compact?: boolean }) {
+export function EsgLayersPanel({
+  layers,
+  compact = false,
+}: {
+  layers: EsgLayer[];
+  compact?: boolean;
+}) {
   const { t } = useTranslation();
   const { lang } = useLang();
   return (
@@ -37,7 +43,11 @@ export function EsgLayersPanel({ layers, compact = false }: { layers: EsgLayer[]
                 {t(`fin.esg.conflict.${layer.conflict.code}`, {
                   ...layer.conflict.params,
                   asOf: layer.conflict.params.asOf
-                    ? formatDate(String(layer.conflict.params.asOf), lang, { day: "numeric", month: "short", year: "numeric" })
+                    ? formatDate(String(layer.conflict.params.asOf), lang, {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })
                     : "",
                 })}
               </span>
@@ -51,7 +61,13 @@ export function EsgLayersPanel({ layers, compact = false }: { layers: EsgLayer[]
             <p className="mono-meta">
               {[
                 layer.source === "catalog" ? t("fin.esg.source_catalog") : layer.source,
-                layer.asOf ? formatDate(layer.asOf, lang, { day: "numeric", month: "short", year: "numeric" }) : null,
+                layer.asOf
+                  ? formatDate(layer.asOf, lang, {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    })
+                  : null,
               ]
                 .filter(Boolean)
                 .join(" · ")}

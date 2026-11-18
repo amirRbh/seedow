@@ -20,18 +20,47 @@ export function PerformanceTable({
   const { lang } = useLang();
   const pct = (v: number | null, signed = true) =>
     v === null ? "—" : `${signed && v > 0 ? "+" : ""}${formatPercent(v, lang, 1)}`;
-  const hasBench = showBenchmark && report.windows.some((w) => w.benchmarkAnnualizedReturn !== null);
+  const hasBench =
+    showBenchmark && report.windows.some((w) => w.benchmarkAnnualizedReturn !== null);
 
-  const rows: { key: string; label: string; render: (w: PerformanceReport["windows"][number]) => string; tone?: boolean }[] = [
-    { key: "cum", label: t("fin.perf.cumulative"), render: (w) => pct(w.cumulativeReturn), tone: true },
-    { key: "ann", label: t("fin.perf.annualized"), render: (w) => pct(w.annualizedReturn), tone: true },
+  const rows: {
+    key: string;
+    label: string;
+    render: (w: PerformanceReport["windows"][number]) => string;
+    tone?: boolean;
+  }[] = [
+    {
+      key: "cum",
+      label: t("fin.perf.cumulative"),
+      render: (w) => pct(w.cumulativeReturn),
+      tone: true,
+    },
+    {
+      key: "ann",
+      label: t("fin.perf.annualized"),
+      render: (w) => pct(w.annualizedReturn),
+      tone: true,
+    },
     ...(hasBench
       ? [
-          { key: "bench", label: t("fin.perf.benchmark_annualized"), render: (w: PerformanceReport["windows"][number]) => pct(w.benchmarkAnnualizedReturn) },
-          { key: "excess", label: t("fin.perf.excess"), render: (w: PerformanceReport["windows"][number]) => pct(w.excessAnnualizedReturn), tone: true },
+          {
+            key: "bench",
+            label: t("fin.perf.benchmark_annualized"),
+            render: (w: PerformanceReport["windows"][number]) => pct(w.benchmarkAnnualizedReturn),
+          },
+          {
+            key: "excess",
+            label: t("fin.perf.excess"),
+            render: (w: PerformanceReport["windows"][number]) => pct(w.excessAnnualizedReturn),
+            tone: true,
+          },
         ]
       : []),
-    { key: "vol", label: t("fin.perf.volatility"), render: (w) => pct(w.annualizedVolatility, false) },
+    {
+      key: "vol",
+      label: t("fin.perf.volatility"),
+      render: (w) => pct(w.annualizedVolatility, false),
+    },
     { key: "mdd", label: t("fin.perf.max_drawdown"), render: (w) => pct(w.maxDrawdown) },
   ];
 
@@ -45,7 +74,11 @@ export function PerformanceTable({
               {t("fin.perf.window")}
             </th>
             {report.windows.map((w) => (
-              <th key={w.years} scope="col" className="pb-2 text-right text-label font-bold text-ink">
+              <th
+                key={w.years}
+                scope="col"
+                className="pb-2 text-right text-label font-bold text-ink"
+              >
                 {t("fin.perf.years", { count: w.years })}
               </th>
             ))}
@@ -54,13 +87,22 @@ export function PerformanceTable({
         <tbody>
           {rows.map((row) => (
             <tr key={row.key}>
-              <th scope="row" className="border-t border-paper-3 py-2.5 pr-2 text-label font-medium text-ink-2">
+              <th
+                scope="row"
+                className="border-t border-paper-3 py-2.5 pr-2 text-label font-medium text-ink-2"
+              >
                 {row.label}
               </th>
               {report.windows.map((w) => {
                 const text = w.available ? row.render(w) : t("fin.perf.not_computable");
                 const v =
-                  row.key === "cum" ? w.cumulativeReturn : row.key === "ann" ? w.annualizedReturn : row.key === "excess" ? w.excessAnnualizedReturn : null;
+                  row.key === "cum"
+                    ? w.cumulativeReturn
+                    : row.key === "ann"
+                      ? w.annualizedReturn
+                      : row.key === "excess"
+                        ? w.excessAnnualizedReturn
+                        : null;
                 return (
                   <td
                     key={w.years}

@@ -1,13 +1,21 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, BookOpenCheck, Compass, Layers3, Scale, Sparkles, type LucideIcon } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpenCheck,
+  Compass,
+  Layers3,
+  Scale,
+  Sparkles,
+  type LucideIcon,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { AnalyticsCard } from "@/components/analytics/AnalyticsCard";
 import { DataStatusChip } from "@/components/analytics/DataStatusChip";
 import { EsgLayersPanel } from "@/components/analytics/EsgLayersPanel";
 import { ExposureBars } from "@/components/analytics/ExposureBars";
 import { KpiTile } from "@/components/analytics/KpiTile";
-import { LookThroughTable, shortFundName } from "@/components/analytics/LookThroughTable";
+import { LookThroughTable } from "@/components/analytics/LookThroughTable";
 import { PerformanceChart } from "@/components/analytics/PerformanceChart";
 import { PerformanceTable } from "@/components/analytics/PerformanceTable";
 import { PageHero, PublicPage } from "@/components/layout/PublicPage";
@@ -15,7 +23,7 @@ import { Reveal, RevealGroup } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/button";
 import { useLang } from "@/hooks/useLang";
 import { getDemoPortfolio, getSnapshotFunds } from "@/lib/demo/demo.functions";
-import { countryLabel, sectorLabel } from "@/lib/demo/labels";
+import { countryLabel, sectorLabel, sfdrLabel, shortFundName } from "@/lib/demo/labels";
 import { describeEsgLayers } from "@/lib/esg/framework";
 import { getObservatoryFund } from "@/lib/esg/v2/observatory.functions";
 import { formatCurrency, formatDate, formatPercent } from "@/lib/format";
@@ -95,7 +103,9 @@ function DemoPage() {
                   aria-current={current ? "step" : undefined}
                   className={cn(
                     "flex items-center gap-2 rounded-full px-3 py-2 text-label font-bold whitespace-nowrap outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-mint",
-                    current ? "bg-ink text-paper" : "text-ink-2 hover:bg-paper-inset hover:text-ink",
+                    current
+                      ? "bg-ink text-paper"
+                      : "text-ink-2 hover:bg-paper-inset hover:text-ink",
                   )}
                 >
                   <Icon aria-hidden className="size-4" />
@@ -112,9 +122,14 @@ function DemoPage() {
 
       <div className="mx-auto flex max-w-[1160px] flex-col gap-20 px-5 pb-10 sm:px-7 md:gap-28">
         <StepDiscover />
-        <StepExplore fund={funds.find((f) => f.isin === EXPLORE_ISIN) ?? null} catalogFund={catalogFund} />
+        <StepExplore
+          fund={funds.find((f) => f.isin === EXPLORE_ISIN) ?? null}
+          catalogFund={catalogFund}
+        />
         <StepAnalyze portfolio={portfolio} />
-        <StepCompare funds={COMPARE_ISINS.map((i) => funds.find((f) => f.isin === i)).filter(isDefined)} />
+        <StepCompare
+          funds={COMPARE_ISINS.map((i) => funds.find((f) => f.isin === i)).filter(isDefined)}
+        />
         <StepUnderstand sources={portfolio.sources} />
       </div>
     </PublicPage>
@@ -153,7 +168,9 @@ function StepHeader({ id, index }: { id: string; index: number }) {
         {t("fin.demo.step_label", { n: index })} · {t(`fin.demo.step.${id}.short`)}
       </span>
       <h2 className="display-lg mt-4">{t(`fin.demo.step.${id}.title`)}</h2>
-      <p className="mt-4 text-body-lg leading-relaxed text-ink-2">{t(`fin.demo.step.${id}.desc`)}</p>
+      <p className="mt-4 text-body-lg leading-relaxed text-ink-2">
+        {t(`fin.demo.step.${id}.desc`)}
+      </p>
     </Reveal>
   );
 }
@@ -168,10 +185,15 @@ function StepDiscover() {
       <StepHeader id="discover" index={1} />
       <RevealGroup className="grid gap-4 md:grid-cols-3">
         {pillars.map((p, i) => (
-          <div key={p} className={cn("paper-card spot p-6", ["accent-mint", "accent-ice", "accent-volt"][i])}>
+          <div
+            key={p}
+            className={cn("paper-card spot p-6", ["accent-mint", "accent-ice", "accent-volt"][i])}
+          >
             <span className="chip chip--accent">{t(`fin.demo.pillar.${p}.eyebrow`)}</span>
             <h3 className="mt-4 text-[clamp(19px,2vw,22px)]">{t(`fin.demo.pillar.${p}.title`)}</h3>
-            <p className="mt-2 text-body-sm leading-relaxed text-ink-2">{t(`fin.demo.pillar.${p}.desc`)}</p>
+            <p className="mt-2 text-body-sm leading-relaxed text-ink-2">
+              {t(`fin.demo.pillar.${p}.desc`)}
+            </p>
           </div>
         ))}
       </RevealGroup>
@@ -197,7 +219,13 @@ function StepDiscover() {
 type SnapshotFund = Awaited<ReturnType<typeof getSnapshotFunds>>[number];
 type CatalogFund = NonNullable<Awaited<ReturnType<typeof getObservatoryFund>>>["fund"] | null;
 
-function StepExplore({ fund, catalogFund }: { fund: SnapshotFund | null; catalogFund: CatalogFund }) {
+function StepExplore({
+  fund,
+  catalogFund,
+}: {
+  fund: SnapshotFund | null;
+  catalogFund: CatalogFund;
+}) {
   const { t } = useTranslation();
   const { lang } = useLang();
   if (!fund) return null;
@@ -211,7 +239,7 @@ function StepExplore({ fund, catalogFund }: { fund: SnapshotFund | null; catalog
   return (
     <section id="explore" className="scroll-mt-40">
       <StepHeader id="explore" index={2} />
-      <div className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
+      <div className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr] [&>*]:min-w-0">
         <Reveal>
           <AnalyticsCard
             title={fund.name}
@@ -219,9 +247,19 @@ function StepExplore({ fund, catalogFund }: { fund: SnapshotFund | null; catalog
               benchmark: fund.benchmark ?? "—",
               currency: fund.currency ?? "—",
             })}
-            aside={<DataStatusChip status={fund.status.performance} detail={short(fund.performance.lastDate)} />}
+            aside={
+              <DataStatusChip
+                status={fund.status.performance}
+                detail={short(fund.performance.lastDate)}
+              />
+            }
             methodLabel={t("fin.method.label")}
-            method={<PerformanceMethod published={fund.publishedReturns.fund} asOf={fund.publishedReturns.asOf} />}
+            method={
+              <PerformanceMethod
+                published={fund.publishedReturns.fund}
+                asOf={fund.publishedReturns.asOf}
+              />
+            }
           >
             <PerformanceChart
               series={fund.chart.fund}
@@ -246,7 +284,11 @@ function StepExplore({ fund, catalogFund }: { fund: SnapshotFund | null; catalog
             />
             <KpiTile
               label={t("fin.kpi.energy")}
-              value={fund.energySectorPct === null ? "—" : formatPercent(fund.energySectorPct / 100, lang, 1)}
+              value={
+                fund.energySectorPct === null
+                  ? "—"
+                  : formatPercent(fund.energySectorPct / 100, lang, 1)
+              }
               hint={t("fin.kpi.energy_hint")}
               status={fund.status.exposure}
             />
@@ -356,18 +398,35 @@ function StepAnalyze({ portfolio }: { portfolio: DemoPortfolio }) {
       </RevealGroup>
 
       <Reveal className="mt-4">
-        <AnalyticsCard title={t("fin.demo.analyze.positions_title")} description={t("fin.demo.analyze.positions_desc")}>
+        <AnalyticsCard
+          title={t("fin.demo.analyze.positions_title")}
+          description={t("fin.demo.analyze.positions_desc")}
+        >
           <div className="-mx-1 overflow-x-auto">
             <table className="w-full min-w-[640px] border-separate border-spacing-x-1 text-left">
               <thead>
                 <tr className="text-caption font-semibold text-ink-3">
-                  <th scope="col" className="pb-2">{t("fin.table.fund")}</th>
-                  <th scope="col" className="pb-2">{t("fin.table.sfdr_declared")}</th>
-                  <th scope="col" className="pb-2 text-right">{t("fin.table.amount")}</th>
-                  <th scope="col" className="pb-2 text-right">{t("fin.table.weight")}</th>
-                  <th scope="col" className="pb-2 text-right">{t("fin.table.ter")}</th>
-                  <th scope="col" className="pb-2 text-right">{t("fin.table.ann3y")}</th>
-                  <th scope="col" className="pb-2 text-right">{t("fin.table.vol3y")}</th>
+                  <th scope="col" className="pb-2">
+                    {t("fin.table.fund")}
+                  </th>
+                  <th scope="col" className="pb-2">
+                    {t("fin.table.sfdr_declared")}
+                  </th>
+                  <th scope="col" className="pb-2 text-right">
+                    {t("fin.table.amount")}
+                  </th>
+                  <th scope="col" className="pb-2 text-right">
+                    {t("fin.table.weight")}
+                  </th>
+                  <th scope="col" className="pb-2 text-right">
+                    {t("fin.table.ter")}
+                  </th>
+                  <th scope="col" className="pb-2 text-right">
+                    {t("fin.table.ann3y")}
+                  </th>
+                  <th scope="col" className="pb-2 text-right">
+                    {t("fin.table.vol3y")}
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -390,9 +449,13 @@ function StepAnalyze({ portfolio }: { portfolio: DemoPortfolio }) {
                     <Num>{formatPercent(p.weightPct / 100, lang, 0)}</Num>
                     <Num>{p.ter === null ? "—" : formatPercent(p.ter, lang, 2)}</Num>
                     <Num tone={p.annualized3y}>
-                      {p.annualized3y === null ? "—" : signed(formatPercent(p.annualized3y, lang, 1), p.annualized3y)}
+                      {p.annualized3y === null
+                        ? "—"
+                        : signed(formatPercent(p.annualized3y, lang, 1), p.annualized3y)}
                     </Num>
-                    <Num>{p.volatility3y === null ? "—" : formatPercent(p.volatility3y, lang, 1)}</Num>
+                    <Num>
+                      {p.volatility3y === null ? "—" : formatPercent(p.volatility3y, lang, 1)}
+                    </Num>
                   </tr>
                 ))}
               </tbody>
@@ -401,7 +464,7 @@ function StepAnalyze({ portfolio }: { portfolio: DemoPortfolio }) {
         </AnalyticsCard>
       </Reveal>
 
-      <div className="mt-4 grid gap-4 lg:grid-cols-3">
+      <div className="mt-4 grid gap-4 lg:grid-cols-3 [&>*]:min-w-0">
         <Reveal>
           <AnalyticsCard
             title={t("fin.exposure.sector_title")}
@@ -433,7 +496,11 @@ function StepAnalyze({ portfolio }: { portfolio: DemoPortfolio }) {
             title={t("fin.exposure.currency_title")}
             description={t("fin.exposure.currency_desc")}
           >
-            <ExposureBars rows={e.currency.buckets} unclassifiedPct={e.currency.unclassifiedPct} tone="volt" />
+            <ExposureBars
+              rows={e.currency.buckets}
+              unclassifiedPct={e.currency.unclassifiedPct}
+              tone="volt"
+            />
           </AnalyticsCard>
         </Reveal>
       </div>
@@ -450,9 +517,18 @@ function StepAnalyze({ portfolio }: { portfolio: DemoPortfolio }) {
         >
           <LookThroughTable holdings={e.holdings} currency={portfolio.currency} />
           <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
-            <MiniStat label={t("fin.kpi.largest_position")} value={formatPercent(e.concentration.largestPositionPct / 100, lang, 0)} />
-            <MiniStat label={t("fin.kpi.effective_positions")} value={e.concentration.effectivePositions.toFixed(1)} />
-            <MiniStat label={t("fin.kpi.top10")} value={formatPercent(e.concentration.top10UnderlyingPct / 100, lang, 1)} />
+            <MiniStat
+              label={t("fin.kpi.largest_position")}
+              value={formatPercent(e.concentration.largestPositionPct / 100, lang, 0)}
+            />
+            <MiniStat
+              label={t("fin.kpi.effective_positions")}
+              value={e.concentration.effectivePositions.toFixed(1)}
+            />
+            <MiniStat
+              label={t("fin.kpi.top10")}
+              value={formatPercent(e.concentration.top10UnderlyingPct / 100, lang, 1)}
+            />
           </div>
         </AnalyticsCard>
       </Reveal>
@@ -460,7 +536,9 @@ function StepAnalyze({ portfolio }: { portfolio: DemoPortfolio }) {
       <Reveal className="mt-4">
         <AnalyticsCard
           title={t("fin.demo.analyze.simulated_title")}
-          description={t("fin.demo.analyze.simulated_desc", { currency: portfolio.simulated.seriesCurrency ?? "—" })}
+          description={t("fin.demo.analyze.simulated_desc", {
+            currency: portfolio.simulated.seriesCurrency ?? "—",
+          })}
           aside={<DataStatusChip status="SIMULATED" />}
           methodLabel={t("fin.method.label")}
           method={<p>{t("fin.method.blend")}</p>}
@@ -507,14 +585,6 @@ function signed(text: string, v: number): string {
   return v > 0 ? `+${text}` : text;
 }
 
-export function sfdrLabel(declared: string | null, t: (k: string, o?: Record<string, unknown>) => string): string {
-  if (!declared) return t("fin.sfdr.unknown");
-  const m = /article\s*(8|9|6)/i.exec(declared);
-  if (m) return t("fin.sfdr.article", { n: m[1] });
-  if (/other/i.test(declared)) return t("fin.sfdr.other");
-  return declared;
-}
-
 // ── 4. Comparer ──────────────────────────────────────────────────────────
 
 function StepCompare({ funds }: { funds: SnapshotFund[] }) {
@@ -525,8 +595,14 @@ function StepCompare({ funds }: { funds: SnapshotFund[] }) {
   const rows: { label: string; render: (f: SnapshotFund) => string }[] = [
     { label: t("fin.table.sfdr_declared"), render: (f) => sfdrLabel(f.sfdrDeclared, t) },
     { label: t("fin.table.ter"), render: (f) => pct(f.ter, 2) },
-    { label: t("fin.table.holdings"), render: (f) => (f.holdingsCount === null ? "—" : String(f.holdingsCount)) },
-    { label: t("fin.kpi.energy"), render: (f) => (f.energySectorPct === null ? "—" : pct(f.energySectorPct / 100)) },
+    {
+      label: t("fin.table.holdings"),
+      render: (f) => (f.holdingsCount === null ? "—" : String(f.holdingsCount)),
+    },
+    {
+      label: t("fin.kpi.energy"),
+      render: (f) => (f.energySectorPct === null ? "—" : pct(f.energySectorPct / 100)),
+    },
     { label: t("fin.table.ann3y"), render: (f) => pct(w3(f)?.annualizedReturn ?? null) },
     { label: t("fin.table.vol3y"), render: (f) => pct(w3(f)?.annualizedVolatility ?? null) },
     { label: t("fin.perf.max_drawdown"), render: (f) => pct(w3(f)?.maxDrawdown ?? null) },
@@ -542,7 +618,11 @@ function StepCompare({ funds }: { funds: SnapshotFund[] }) {
                 <tr>
                   <th scope="col" className="pb-3" />
                   {funds.map((f) => (
-                    <th key={f.isin} scope="col" className="pb-3 text-right text-label font-bold text-ink">
+                    <th
+                      key={f.isin}
+                      scope="col"
+                      className="pb-3 text-right text-label font-bold text-ink"
+                    >
                       {shortFundName(f.name)}
                     </th>
                   ))}
@@ -551,11 +631,17 @@ function StepCompare({ funds }: { funds: SnapshotFund[] }) {
               <tbody>
                 {rows.map((r) => (
                   <tr key={r.label}>
-                    <th scope="row" className="border-t border-paper-3 py-2.5 pr-2 text-label font-medium text-ink-2">
+                    <th
+                      scope="row"
+                      className="border-t border-paper-3 py-2.5 pr-2 text-label font-medium text-ink-2"
+                    >
                       {r.label}
                     </th>
                     {funds.map((f) => (
-                      <td key={f.isin} className="border-t border-paper-3 py-2.5 text-right font-value text-body-sm tabular-nums text-ink">
+                      <td
+                        key={f.isin}
+                        className="border-t border-paper-3 py-2.5 text-right font-value text-body-sm tabular-nums text-ink"
+                      >
                         {r.render(f)}
                       </td>
                     ))}
@@ -587,14 +673,16 @@ function StepUnderstand({ sources }: { sources: DemoPortfolio["sources"] }) {
   return (
     <section id="understand" className="scroll-mt-40">
       <StepHeader id="understand" index={5} />
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-2 [&>*]:min-w-0">
         <Reveal>
           <AnalyticsCard title={t("fin.demo.understand.statuses_title")}>
             <ul className="flex flex-col gap-3">
               {statuses.map((s) => (
                 <li key={s} className="flex flex-col gap-1 sm:flex-row sm:items-start sm:gap-3">
                   <DataStatusChip status={s} className="w-fit shrink-0" />
-                  <span className="text-label leading-relaxed text-ink-2">{t(`fin.status_desc.${s}`)}</span>
+                  <span className="text-label leading-relaxed text-ink-2">
+                    {t(`fin.status_desc.${s}`)}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -614,15 +702,33 @@ function StepUnderstand({ sources }: { sources: DemoPortfolio["sources"] }) {
         <AnalyticsCard title={t("fin.demo.understand.sources_title")}>
           <ul className="flex flex-col gap-2">
             {sources.map((s) => (
-              <li key={s.isin} className="flex flex-col gap-0.5 border-t border-paper-3 pt-2 first:border-t-0 first:pt-0 sm:flex-row sm:items-baseline sm:justify-between">
+              <li
+                key={s.isin}
+                className="flex flex-col gap-0.5 border-t border-paper-3 pt-2 first:border-t-0 first:pt-0 sm:flex-row sm:items-baseline sm:justify-between"
+              >
                 <span className="text-label font-semibold text-ink">{s.name}</span>
                 <span className="mono-meta">
                   {t("fin.demo.understand.source_line", {
-                    asOf: s.navAsOf ? formatDate(s.navAsOf, lang, { day: "numeric", month: "short", year: "numeric" }) : "—",
-                    retrieved: formatDate(s.retrievedAt, lang, { day: "numeric", month: "short", year: "numeric" }),
+                    asOf: s.navAsOf
+                      ? formatDate(s.navAsOf, lang, {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        })
+                      : "—",
+                    retrieved: formatDate(s.retrievedAt, lang, {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    }),
                   })}{" "}
                   ·{" "}
-                  <a href={s.sourceUrl} target="_blank" rel="noreferrer noopener" className="underline hover:no-underline">
+                  <a
+                    href={s.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="underline hover:no-underline"
+                  >
                     {t("fin.demo.understand.source_link")}
                   </a>
                 </span>

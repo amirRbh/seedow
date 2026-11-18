@@ -52,8 +52,10 @@ export const DATA_SOURCES: readonly DataSourceEntry[] = [
     source: "API de cotation publique (non officielle)",
     integration: "scheduled",
     frequency: "Horaire (pg_cron → /hooks/refresh-market-data)",
-    license: "Usage non commercial toléré — à remplacer par un fournisseur sous licence avant tout usage B2B",
-    transformation: "Aucune sur les cours ; volatilités et covariances recalculées (modèle de risque)",
+    license:
+      "Usage non commercial toléré — à remplacer par un fournisseur sous licence avant tout usage B2B",
+    transformation:
+      "Aucune sur les cours ; volatilités et covariances recalculées (modèle de risque)",
     producesStatus: "VERIFIED",
     codePath: "src/lib/market/yahoo.server.ts",
     limits: "Pas de garantie de service ; symboles parfois absents pour les parts européennes.",
@@ -66,10 +68,12 @@ export const DATA_SOURCES: readonly DataSourceEntry[] = [
     integration: "scheduled",
     frequency: "Hebdomadaire (GitHub Action ingest-funds)",
     license: "Données publiques de l'autorité de marché",
-    transformation: "Extraction de l'article SFDR et des frais courants depuis le DIC (parseur testé)",
+    transformation:
+      "Extraction de l'article SFDR et des frais courants depuis le DIC (parseur testé)",
     producesStatus: "VERIFIED",
     codePath: "scripts/ingest-funds.ts · src/lib/esg/kid-parser.ts",
-    limits: "Fonds de droit français principalement ; extraction PDF dépendante de la mise en page.",
+    limits:
+      "Fonds de droit français principalement ; extraction PDF dépendante de la mise en page.",
   },
   {
     id: "adanos_catalog",
@@ -90,8 +94,10 @@ export const DATA_SOURCES: readonly DataSourceEntry[] = [
     provider: "iShares (BlackRock)",
     source: "API produit officielle — classeur « fundDownloadV2 »",
     integration: "manual",
-    frequency: "Déclenchement manuel (GitHub Action ingest-holdings) ; publication quotidienne côté émetteur",
-    license: "Documents publics de l'émetteur — conditions de réutilisation à confirmer pour un usage B2B",
+    frequency:
+      "Déclenchement manuel (GitHub Action ingest-holdings) ; publication quotidienne côté émetteur",
+    license:
+      "Documents publics de l'émetteur — conditions de réutilisation à confirmer pour un usage B2B",
     transformation:
       "Lecture fidèle des feuilles publiées ; agrégation par devise ; aucun retraitement des poids",
     producesStatus: "VERIFIED",
@@ -111,7 +117,8 @@ export const DATA_SOURCES: readonly DataSourceEntry[] = [
       "150 premières positions conservées (la part restante est écrite) ; 6 ans d'historique quotidien",
     producesStatus: "VERIFIED",
     codePath: "scripts/snapshot-demo-funds.ts",
-    limits: "Les montants du portefeuille de démonstration sont fictifs (SIMULATED) ; les données des fonds ne le sont pas.",
+    limits:
+      "Les montants du portefeuille de démonstration sont fictifs (SIMULATED) ; les données des fonds ne le sont pas.",
   },
   {
     id: "issuer_msci_factsheet",
@@ -124,7 +131,8 @@ export const DATA_SOURCES: readonly DataSourceEntry[] = [
     transformation: "Extraction texte du PDF, aucun recalcul",
     producesStatus: "VERIFIED",
     codePath: "scripts/ingest-issuer-esg.ts · src/lib/esg/factsheet-parser.ts",
-    limits: "Pas de note de risque ESG sous licence : la couche « risque ESG » reste indisponible sur la plupart des fonds.",
+    limits:
+      "Pas de note de risque ESG sous licence : la couche « risque ESG » reste indisponible sur la plupart des fonds.",
   },
   {
     id: "carbon_estimates",
@@ -137,7 +145,8 @@ export const DATA_SOURCES: readonly DataSourceEntry[] = [
     transformation: "Estimation bottom-up — jamais présentée comme une mesure",
     producesStatus: "ESTIMATED",
     codePath: "src/lib/esg/carbon-engine.ts",
-    limits: "Ordre de grandeur sectoriel ; ne remplace pas les émissions publiées par les entreprises.",
+    limits:
+      "Ordre de grandeur sectoriel ; ne remplace pas les émissions publiées par les entreprises.",
   },
   {
     id: "ademe_base_carbone",
@@ -176,13 +185,20 @@ export const DATA_SOURCES: readonly DataSourceEntry[] = [
     transformation: "—",
     producesStatus: "UNAVAILABLE",
     codePath: "src/lib/esg/framework.ts (couche « pai »)",
-    limits: "Seul le FAIT de publier une déclaration PAI est suivi (indice de transparence), pas ses valeurs.",
+    limits:
+      "Seul le FAIT de publier une déclaration PAI est suivi (indice de transparence), pas ses valeurs.",
   },
 ];
 
 /** Regroupe les sources par niveau d'intégration, dans un ordre de lecture stable. */
 export function sourcesByIntegration(): { level: IntegrationLevel; sources: DataSourceEntry[] }[] {
-  const order: IntegrationLevel[] = ["scheduled", "manual", "snapshot", "reference", "not_integrated"];
+  const order: IntegrationLevel[] = [
+    "scheduled",
+    "manual",
+    "snapshot",
+    "reference",
+    "not_integrated",
+  ];
   return order
     .map((level) => ({ level, sources: DATA_SOURCES.filter((s) => s.integration === level) }))
     .filter((g) => g.sources.length > 0);

@@ -25,7 +25,11 @@ export function AnalyticsCard({
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <h3 className="text-[clamp(18px,2vw,21px)]">{title}</h3>
-          {description && <p className="mt-1.5 max-w-[62ch] text-body-sm leading-relaxed text-ink-2">{description}</p>}
+          {description && (
+            <p className="mt-1.5 max-w-[62ch] text-body-sm leading-relaxed text-ink-2">
+              {description}
+            </p>
+          )}
         </div>
         {aside}
       </div>

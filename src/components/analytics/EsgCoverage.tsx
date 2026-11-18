@@ -44,7 +44,12 @@ export function EsgCoverage({
               .filter((i) => i.pillar === c.pillar)
               .map((i) => (
                 <li key={i.id} className="flex items-center justify-between gap-2">
-                  <span className={cn("text-label", i.status === "UNAVAILABLE" ? "text-ink-3" : "text-ink")}>
+                  <span
+                    className={cn(
+                      "text-label",
+                      i.status === "UNAVAILABLE" ? "text-ink-3" : "text-ink",
+                    )}
+                  >
                     {t(`fin.esg.indicator.${i.id}`)}
                   </span>
                   {i.status === "UNAVAILABLE" ? (

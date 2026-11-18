@@ -156,7 +156,11 @@ function round(n: number, digits = 6): number {
 }
 
 /** Clé de rapprochement d'un titre : ISIN s'il existe, sinon ticker + nom normalisés. */
-export function securityKey(input: { isin?: string | null; ticker?: string | null; name: string }): string {
+export function securityKey(input: {
+  isin?: string | null;
+  ticker?: string | null;
+  name: string;
+}): string {
   const isin = input.isin?.trim().toUpperCase();
   if (isin && /^[A-Z]{2}[A-Z0-9]{9}\d$/.test(isin)) return isin;
   const name = input.name
@@ -185,9 +189,17 @@ function addTo(map: Map<string, number>, label: string, value: number) {
   map.set(label, (map.get(label) ?? 0) + value);
 }
 
-function finalizeDimension(map: Map<string, number>, unclassified: number, total: number): DimensionExposure {
+function finalizeDimension(
+  map: Map<string, number>,
+  unclassified: number,
+  total: number,
+): DimensionExposure {
   const buckets = [...map.entries()]
-    .map(([label, value]) => ({ label, value: round(value, 4), weightPct: round(pct(value, total), 4) }))
+    .map(([label, value]) => ({
+      label,
+      value: round(value, 4),
+      weightPct: round(pct(value, total), 4),
+    }))
     .filter((b) => b.value > 0)
     .sort((a, b) => b.value - a.value);
   return {

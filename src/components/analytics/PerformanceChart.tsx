@@ -61,7 +61,12 @@ export function PerformanceChart({
               interval={0}
               tickFormatter={(d: string) => d.slice(0, 4)}
             />
-            <YAxis {...CHART_AXIS} width={36} domain={["auto", "auto"]} tickFormatter={(v: number) => v.toFixed(0)} />
+            <YAxis
+              {...CHART_AXIS}
+              width={36}
+              domain={["auto", "auto"]}
+              tickFormatter={(v: number) => v.toFixed(0)}
+            />
             <Tooltip
               cursor={{ stroke: "var(--color-ink-3)", strokeDasharray: "3 3" }}
               contentStyle={{
@@ -71,7 +76,9 @@ export function PerformanceChart({
                 boxShadow: "var(--shadow-soft)",
                 fontSize: 13,
               }}
-              labelFormatter={(d: string) => formatDate(d, lang, { day: "numeric", month: "short", year: "numeric" })}
+              labelFormatter={(d: string) =>
+                formatDate(d, lang, { day: "numeric", month: "short", year: "numeric" })
+              }
               formatter={(value: number, key: string) => [
                 value.toFixed(1),
                 key === "a" ? seriesLabel : (referenceLabel ?? ""),

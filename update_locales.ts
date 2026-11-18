@@ -3896,11 +3896,16 @@ const finFr = {
       STALE: "Périmé",
     },
     status_desc: {
-      VERIFIED: "Publié par une source primaire identifiée (émetteur, régulateur, fournisseur de cours), daté, repris sans retraitement.",
-      ESTIMATED: "Calculé ou modélisé par Seedow à partir de données réelles. Un ordre de grandeur, jamais une mesure.",
-      SIMULATED: "Construit pour illustrer un mécanisme : montants fictifs, simulation historique. Personne n'a détenu ce portefeuille.",
-      STALE: "Était vérifié, mais sa date de référence dépasse la fenêtre de fraîcheur de son jeu de données. Affiché avec son âge.",
-      UNAVAILABLE: "Absent de nos sources ou non collecté. Jamais remplacé par zéro ni par une valeur par défaut.",
+      VERIFIED:
+        "Publié par une source primaire identifiée (émetteur, régulateur, fournisseur de cours), daté, repris sans retraitement.",
+      ESTIMATED:
+        "Calculé ou modélisé par Seedow à partir de données réelles. Un ordre de grandeur, jamais une mesure.",
+      SIMULATED:
+        "Construit pour illustrer un mécanisme : montants fictifs, simulation historique. Personne n'a détenu ce portefeuille.",
+      STALE:
+        "Était vérifié, mais sa date de référence dépasse la fenêtre de fraîcheur de son jeu de données. Affiché avec son âge.",
+      UNAVAILABLE:
+        "Absent de nos sources ou non collecté. Jamais remplacé par zéro ni par une valeur par défaut.",
     },
     sfdr: {
       article: "Article {{n}}",
@@ -3923,21 +3928,28 @@ const finFr = {
       rebased: "Base 100 au début de la période, dividendes réinvestis.",
       no_history: "Historique insuffisant pour tracer une courbe.",
       chart_aria: "Évolution de {{name}} et de son indice, base 100",
-      past_disclaimer: "Performances passées, calculées sur l'historique publié par l'émetteur. Elles ne préjugent pas des performances futures et ne constituent pas une prévision.",
-      simulated_disclaimer: "Simulation : panier à poids constants, sans frais de transaction ni fiscalité. Ce n'est pas la performance d'un investisseur réel.",
+      past_disclaimer:
+        "Performances passées, calculées sur l'historique publié par l'émetteur. Elles ne préjugent pas des performances futures et ne constituent pas une prévision.",
+      simulated_disclaimer:
+        "Simulation : panier à poids constants, sans frais de transaction ni fiscalité. Ce n'est pas la performance d'un investisseur réel.",
     },
     method: {
       label: "Comment c'est calculé",
-      performance: "Rendements calculés sur la série « croissance de 10 000 » publiée par l'émetteur (dividendes réinvestis). Annualisation sur la durée calendaire réelle (365,25 j). Volatilité : écart-type des rendements mensuels × √12. Perte maximale : plus forte baisse d'un plus-haut au plus-bas suivant. Une fenêtre que l'historique ne couvre pas n'est pas raccourcie : elle est « non calculable ».",
-      cross_check: "Contrôle indépendant : au {{date}}, l'émetteur publie {{values}} (annualisés). Les valeurs recalculées par Seedow sur la même date concordent à moins de 0,05 point — vérifié par un test automatisé.",
-      lookthrough: "Chaque fonds est remplacé par ses positions publiées, au prorata de sa valeur dans le portefeuille : valeur du titre = valeur du fonds × poids du titre dans le fonds. Un même titre détenu par plusieurs fonds est agrégé en une seule ligne. Seules les 150 premières positions de chaque fonds sont conservées : la part restante n'est pas répartie, elle est comptée comme non couverte.",
-      blend: "Rendement quotidien du panier = Σ (poids × rendement quotidien du fonds), poids constants rééquilibrés chaque jour, sur les seules dates communes à tous les fonds. Aucun prix n'est interpolé. Séries dans la devise de part des fonds.",
+      performance:
+        "Rendements calculés sur la série « croissance de 10 000 » publiée par l'émetteur (dividendes réinvestis). Annualisation sur la durée calendaire réelle (365,25 j). Volatilité : écart-type des rendements mensuels × √12. Perte maximale : plus forte baisse d'un plus-haut au plus-bas suivant. Une fenêtre que l'historique ne couvre pas n'est pas raccourcie : elle est « non calculable ».",
+      cross_check:
+        "Contrôle indépendant : au {{date}}, l'émetteur publie {{values}} (annualisés). Les valeurs recalculées par Seedow sur la même date concordent à moins de 0,05 point — vérifié par un test automatisé.",
+      lookthrough:
+        "Chaque fonds est remplacé par ses positions publiées, au prorata de sa valeur dans le portefeuille : valeur du titre = valeur du fonds × poids du titre dans le fonds. Un même titre détenu par plusieurs fonds est agrégé en une seule ligne. Seules les 150 premières positions de chaque fonds sont conservées : la part restante n'est pas répartie, elle est comptée comme non couverte.",
+      blend:
+        "Rendement quotidien du panier = Σ (poids × rendement quotidien du fonds), poids constants rééquilibrés chaque jour, sur les seules dates communes à tous les fonds. Aucun prix n'est interpolé. Séries dans la devise de part des fonds.",
     },
     kpi: {
       ter: "Frais courants (TER)",
       ter_hint: "Frais annuels prélevés dans le fonds, déclarés par l'émetteur.",
       energy: "Secteur Énergie (GICS)",
-      energy_hint: "Pétrole, gaz, charbon et leurs services, selon la répartition sectorielle publiée.",
+      energy_hint:
+        "Pétrole, gaz, charbon et leurs services, selon la répartition sectorielle publiée.",
       total: "Valeur du portefeuille",
       total_hint_one: "{{count}} position — montant fictif",
       total_hint_other: "{{count}} positions — montants fictifs",
@@ -3965,7 +3977,8 @@ const finFr = {
       sector_title: "Exposition sectorielle",
       geography_title: "Exposition géographique",
       currency_title: "Devises de cotation",
-      currency_desc: "Devise dans laquelle les titres sous-jacents sont cotés — distincte de la devise du fonds.",
+      currency_desc:
+        "Devise dans laquelle les titres sous-jacents sont cotés — distincte de la devise du fonds.",
       coverage: "{{pct}} % de la valeur ventilé par l'émetteur.",
       unclassified: "Non ventilé",
       other_buckets: "{{count}} autres catégories",
@@ -3982,7 +3995,8 @@ const finFr = {
     },
     esg: {
       layers_title: "Six couches ESG, qui ne se confondent pas",
-      layers_desc: "Une classification réglementaire n'est pas une note, une note n'est pas un impact. Chaque couche est affichée séparément, avec ce qu'elle ne dit pas.",
+      layers_desc:
+        "Une classification réglementaire n'est pas une note, une note n'est pas un impact. Chaque couche est affichée séparément, avec ce qu'elle ne dit pas.",
       does_not_say: "Ce que ça ne dit pas :",
       source_catalog: "Catalogue Seedow",
       coverage_aria: "Couverture des indicateurs du pilier {{pillar}}",
@@ -4028,7 +4042,8 @@ const finFr = {
         },
         esg_risk: { no_licensed_rating: "Aucune note sous licence dans nos sources" },
         characteristics: {
-          documented: "{{documented}} secteur(s) documenté(s) sur {{total}} · {{excluded}} exclu(s)",
+          documented:
+            "{{documented}} secteur(s) documenté(s) sur {{total}} · {{excluded}} exclu(s)",
           claimed_only: "Thèmes revendiqués ({{claimed}}), aucune exclusion documentée",
           none: "Aucune politique documentée dans nos sources",
         },
@@ -4040,7 +4055,8 @@ const finFr = {
         impact: { not_measured: "Non mesuré par Seedow" },
       },
       conflict: {
-        sfdr_mismatch: "Le catalogue indique l'article {{catalog}}, mais l'émetteur déclare l'article {{declared}} dans son document du {{asOf}}. La déclaration de l'émetteur est retenue ; l'écart est signalé, pas effacé.",
+        sfdr_mismatch:
+          "Le catalogue indique l'article {{catalog}}, mais l'émetteur déclare l'article {{declared}} dans son document du {{asOf}}. La déclaration de l'émetteur est retenue ; l'écart est signalé, pas effacé.",
       },
       indicator: {
         carbon_intensity: "Intensité carbone",
@@ -4064,7 +4080,8 @@ const finFr = {
       eyebrow: "Parcours de démonstration",
       title: "De l'épargne",
       title_accent: "à l'exposition réelle.",
-      subtitle: "Un fonds, un portefeuille de démonstration et leurs expositions — calculés à partir des publications officielles des émetteurs. En cinq étapes, trois minutes.",
+      subtitle:
+        "Un fonds, un portefeuille de démonstration et leurs expositions — calculés à partir des publications officielles des émetteurs. En cinq étapes, trois minutes.",
       legend_verified: "données des fonds, sourcées et datées",
       legend_simulated: "montants du portefeuille, fictifs",
       steps_aria: "Étapes de la démonstration",
@@ -4124,11 +4141,14 @@ const finFr = {
         open_fund: "Ouvrir la fiche du fonds",
       },
       analyze: {
-        banner: "Portefeuille de démonstration — montants fictifs. Les compositions, frais et historiques des fonds sont réels et sourcés.",
+        banner:
+          "Portefeuille de démonstration — montants fictifs. Les compositions, frais et historiques des fonds sont réels et sourcés.",
         positions_title: "Les positions",
-        positions_desc: "Cinq fonds indiciels, montants illustratifs. Ce n'est une recommandation pour personne.",
+        positions_desc:
+          "Cinq fonds indiciels, montants illustratifs. Ce n'est une recommandation pour personne.",
         simulated_title: "Historique simulé du panier",
-        simulated_desc: "Ce qu'aurait donné ce panier à poids constants sur la période — en {{currency}}, devise des parts.",
+        simulated_desc:
+          "Ce qu'aurait donné ce panier à poids constants sur la période — en {{currency}}, devise des parts.",
         simulated_series: "Panier de démonstration (simulé)",
       },
       compare: {
@@ -4142,10 +4162,12 @@ const finFr = {
         limits_title: "Limites, écrites",
         limit: {
           past: "Les performances sont historiques : elles ne prévoient rien.",
-          lookthrough: "Le look-through porte sur les 150 premières positions de chaque fonds ; le reste est compté comme non couvert.",
+          lookthrough:
+            "Le look-through porte sur les 150 premières positions de chaque fonds ; le reste est compté comme non couvert.",
           esg: "Les données ESG sont incomplètes : la couverture de chaque pilier est affichée, aucune note composite n'est publiée.",
           impact: "Les indicateurs ESG ne sont pas une mesure d'impact réel.",
-          snapshot: "Les données de la démonstration sont un instantané daté ; elles passent au statut « périmé » à mesure qu'elles vieillissent.",
+          snapshot:
+            "Les données de la démonstration sont un instantané daté ; elles passent au statut « périmé » à mesure qu'elles vieillissent.",
         },
         sources_title: "Sources de cette démonstration",
         source_line: "données au {{asOf}} · collectées le {{retrieved}}",
@@ -4157,30 +4179,37 @@ const finFr = {
     portfolio: {
       title: "Ce que ton portefeuille détient vraiment",
       desc: "{{covered}} fonds sur {{total}} décomposés à partir de la publication de l'émetteur · {{pct}} de la valeur ventilée.",
-      none_covered: "Aucun de tes fonds n'a encore de composition publiée dans nos sources. Ton exposition réelle n'est donc pas calculée — elle n'est pas devinée non plus.",
+      none_covered:
+        "Aucun de tes fonds n'a encore de composition publiée dans nos sources. Ton exposition réelle n'est donc pas calculée — elle n'est pas devinée non plus.",
       error: "L'exposition n'a pas pu être calculée pour le moment.",
     },
     fund: {
       performance_title: "Performance historique",
-      geography_unpublished: "L'émetteur ne publie pas de répartition géographique pour ce fonds dans ce document. Elle n'est pas déduite.",
+      geography_unpublished:
+        "L'émetteur ne publie pas de répartition géographique pour ce fonds dans ce document. Elle n'est pas déduite.",
       holdings_title: "Principales positions",
       holdings_desc: "Les 10 premières des {{lines}} lignes publiées — {{pct}} du fonds.",
       coverage_title: "Indicateurs E / S / G : ce qui est renseigné",
-      coverage_desc: "La grille est fixe et publique. Une case vide reste vide : aucune note composite n'est calculée sur des données incomplètes.",
-      not_in_catalog: "Ce fonds figure dans l'instantané de l'émetteur, mais pas encore au catalogue Seedow : son indice de transparence n'est pas calculé.",
+      coverage_desc:
+        "La grille est fixe et publique. Une case vide reste vide : aucune note composite n'est calculée sur des données incomplètes.",
+      not_in_catalog:
+        "Ce fonds figure dans l'instantané de l'émetteur, mais pas encore au catalogue Seedow : son indice de transparence n'est pas calculé.",
     },
     compare: {
       eyebrow: "Comparateur de fonds",
       title: "Comparer des fonds sur ce qu'ils publient.",
-      subtitle: "Frais, classification SFDR, politiques d'exclusion documentées, performance passée, exposition et couverture des données. Jusqu'à quatre fonds, exportables en CSV.",
+      subtitle:
+        "Frais, classification SFDR, politiques d'exclusion documentées, performance passée, exposition et couverture des données. Jusqu'à quatre fonds, exportables en CSV.",
       universe: "{{catalog}} fonds au catalogue · {{total}} comparables",
       selected_title: "Comparaison ({{count}}/{{max}})",
-      selected_desc: "Ajoute ou retire des fonds depuis la liste ci-dessous. Le lien de cette page conserve ta sélection.",
+      selected_desc:
+        "Ajoute ou retire des fonds depuis la liste ci-dessous. Le lien de cette page conserve ta sélection.",
       empty: "Aucun fonds sélectionné. Choisis-en jusqu'à quatre dans la liste.",
       export: "Exporter en CSV",
       remove: "Retirer {{name}} de la comparaison",
       table_caption: "Comparaison des fonds sélectionnés",
-      disclaimer: "Information, pas un conseil : Seedow ne classe pas les fonds et ne recommande aucun achat. Une case « non vérifié » signifie que la donnée n'a pas été trouvée dans nos sources, pas que le fonds ne l'applique pas.",
+      disclaimer:
+        "Information, pas un conseil : Seedow ne classe pas les fonds et ne recommande aucun achat. Une case « non vérifié » signifie que la donnée n'a pas été trouvée dans nos sources, pas que le fonds ne l'applique pas.",
       sfdr_conflict: "catalogue : art. {{catalog}} · émetteur : art. {{declared}}",
       blocks: "{{n}}/{{total}} blocs évaluables",
       has_history: "historique",
@@ -4247,9 +4276,11 @@ const finFr = {
     data: {
       eyebrow: "Sources et qualité",
       title: "D'où vient chaque chiffre.",
-      subtitle: "Les sources réellement branchées, leur fréquence, leur licence, ce que Seedow en fait — et ce qui n'est pas encore intégré.",
+      subtitle:
+        "Les sources réellement branchées, leur fréquence, leur licence, ce que Seedow en fait — et ce qui n'est pas encore intégré.",
       statuses_title: "Cinq statuts, affichés partout",
-      statuses_desc: "Une donnée estimée ou simulée n'est jamais présentée comme vérifiée. Un calcul prend le statut de son entrée la plus faible.",
+      statuses_desc:
+        "Une donnée estimée ou simulée n'est jamais présentée comme vérifiée. Un calcul prend le statut de son entrée la plus faible.",
       freshness_title: "Fenêtres de fraîcheur — au-delà, une donnée vérifiée passe « périmée »",
       days: "jours",
       kind: {
@@ -4277,7 +4308,8 @@ const finFr = {
         limits: "Limites",
       },
       to_confirm: "À confirmer",
-      provider_note: "Chaque fournisseur passe par la même interface : ajouter une source de données de marché ou ESG, c'est ajouter un connecteur et une entrée au registre, sans réécrire les écrans.",
+      provider_note:
+        "Chaque fournisseur passe par la même interface : ajouter une source de données de marché ou ESG, c'est ajouter un connecteur et une entrée au registre, sans réécrire les écrans.",
       open_demo: "Voir la démonstration",
     },
   },
@@ -4315,11 +4347,16 @@ const finEn = {
       STALE: "Stale",
     },
     status_desc: {
-      VERIFIED: "Published by an identified primary source (issuer, regulator, price provider), dated, reproduced without restatement.",
-      ESTIMATED: "Computed or modelled by Seedow from real data. An order of magnitude, never a measurement.",
-      SIMULATED: "Built to illustrate a mechanism: fictitious amounts, historical simulation. Nobody held this portfolio.",
-      STALE: "Was verified, but its reference date is beyond its dataset's freshness window. Shown with its age.",
-      UNAVAILABLE: "Missing from our sources or not collected. Never replaced by zero or a default value.",
+      VERIFIED:
+        "Published by an identified primary source (issuer, regulator, price provider), dated, reproduced without restatement.",
+      ESTIMATED:
+        "Computed or modelled by Seedow from real data. An order of magnitude, never a measurement.",
+      SIMULATED:
+        "Built to illustrate a mechanism: fictitious amounts, historical simulation. Nobody held this portfolio.",
+      STALE:
+        "Was verified, but its reference date is beyond its dataset's freshness window. Shown with its age.",
+      UNAVAILABLE:
+        "Missing from our sources or not collected. Never replaced by zero or a default value.",
     },
     sfdr: {
       article: "Article {{n}}",
@@ -4342,15 +4379,21 @@ const finEn = {
       rebased: "Rebased to 100 at the start of the period, dividends reinvested.",
       no_history: "Not enough history to draw a chart.",
       chart_aria: "{{name}} and its benchmark, rebased to 100",
-      past_disclaimer: "Past performance, computed on the history published by the issuer. It is not a guide to future returns and not a forecast.",
-      simulated_disclaimer: "Simulation: constant-weight basket, no transaction costs or taxes. Not the performance of a real investor.",
+      past_disclaimer:
+        "Past performance, computed on the history published by the issuer. It is not a guide to future returns and not a forecast.",
+      simulated_disclaimer:
+        "Simulation: constant-weight basket, no transaction costs or taxes. Not the performance of a real investor.",
     },
     method: {
       label: "How it is calculated",
-      performance: "Returns computed on the issuer's published “growth of 10,000” series (dividends reinvested). Annualised over the actual calendar duration (365.25 days). Volatility: standard deviation of monthly returns × √12. Maximum drawdown: largest fall from a peak to the following trough. A window the history does not cover is not shortened: it is “not computable”.",
-      cross_check: "Independent check: as of {{date}}, the issuer publishes {{values}} (annualised). Seedow's recomputed values on the same date match within 0.05 points — verified by an automated test.",
-      lookthrough: "Each fund is replaced by its published holdings, pro rata to its value in the portfolio: security value = fund value × weight of the security in the fund. A security held by several funds is aggregated into a single line. Only each fund's top 150 holdings are kept: the remainder is not allocated, it is counted as not covered.",
-      blend: "Daily basket return = Σ (weight × daily fund return), constant weights rebalanced daily, on dates common to all funds only. No price is interpolated. Series in the funds' share-class currency.",
+      performance:
+        "Returns computed on the issuer's published “growth of 10,000” series (dividends reinvested). Annualised over the actual calendar duration (365.25 days). Volatility: standard deviation of monthly returns × √12. Maximum drawdown: largest fall from a peak to the following trough. A window the history does not cover is not shortened: it is “not computable”.",
+      cross_check:
+        "Independent check: as of {{date}}, the issuer publishes {{values}} (annualised). Seedow's recomputed values on the same date match within 0.05 points — verified by an automated test.",
+      lookthrough:
+        "Each fund is replaced by its published holdings, pro rata to its value in the portfolio: security value = fund value × weight of the security in the fund. A security held by several funds is aggregated into a single line. Only each fund's top 150 holdings are kept: the remainder is not allocated, it is counted as not covered.",
+      blend:
+        "Daily basket return = Σ (weight × daily fund return), constant weights rebalanced daily, on dates common to all funds only. No price is interpolated. Series in the funds' share-class currency.",
     },
     kpi: {
       ter: "Ongoing charges (TER)",
@@ -4384,7 +4427,8 @@ const finEn = {
       sector_title: "Sector exposure",
       geography_title: "Geographic exposure",
       currency_title: "Trading currencies",
-      currency_desc: "Currency in which the underlying securities trade — distinct from the fund's currency.",
+      currency_desc:
+        "Currency in which the underlying securities trade — distinct from the fund's currency.",
       coverage: "{{pct}}% of value broken down by the issuer.",
       unclassified: "Not broken down",
       other_buckets: "{{count}} other categories",
@@ -4401,7 +4445,8 @@ const finEn = {
     },
     esg: {
       layers_title: "Six ESG layers that must not be confused",
-      layers_desc: "A regulatory classification is not a rating, a rating is not an impact. Each layer is shown separately, with what it does not say.",
+      layers_desc:
+        "A regulatory classification is not a rating, a rating is not an impact. Each layer is shown separately, with what it does not say.",
       does_not_say: "What it does not say:",
       source_catalog: "Seedow catalogue",
       coverage_aria: "Indicator coverage for the {{pillar}} pillar",
@@ -4447,7 +4492,8 @@ const finEn = {
         },
         esg_risk: { no_licensed_rating: "No licensed rating in our sources" },
         characteristics: {
-          documented: "{{documented}} sector(s) documented out of {{total}} · {{excluded}} excluded",
+          documented:
+            "{{documented}} sector(s) documented out of {{total}} · {{excluded}} excluded",
           claimed_only: "Claimed themes ({{claimed}}), no documented exclusion",
           none: "No documented policy in our sources",
         },
@@ -4459,7 +4505,8 @@ const finEn = {
         impact: { not_measured: "Not measured by Seedow" },
       },
       conflict: {
-        sfdr_mismatch: "The catalogue says Article {{catalog}}, but the issuer declares Article {{declared}} in its document dated {{asOf}}. The issuer's declaration is used; the discrepancy is flagged, not erased.",
+        sfdr_mismatch:
+          "The catalogue says Article {{catalog}}, but the issuer declares Article {{declared}} in its document dated {{asOf}}. The issuer's declaration is used; the discrepancy is flagged, not erased.",
       },
       indicator: {
         carbon_intensity: "Carbon intensity",
@@ -4483,7 +4530,8 @@ const finEn = {
       eyebrow: "Demonstration journey",
       title: "From savings",
       title_accent: "to real exposure.",
-      subtitle: "A fund, a demonstration portfolio and their exposures — computed from the issuers' official publications. Five steps, three minutes.",
+      subtitle:
+        "A fund, a demonstration portfolio and their exposures — computed from the issuers' official publications. Five steps, three minutes.",
       legend_verified: "fund data, sourced and dated",
       legend_simulated: "portfolio amounts, fictitious",
       steps_aria: "Demonstration steps",
@@ -4543,11 +4591,14 @@ const finEn = {
         open_fund: "Open the fund page",
       },
       analyze: {
-        banner: "Demonstration portfolio — fictitious amounts. The funds' holdings, fees and histories are real and sourced.",
+        banner:
+          "Demonstration portfolio — fictitious amounts. The funds' holdings, fees and histories are real and sourced.",
         positions_title: "Positions",
-        positions_desc: "Five index funds, illustrative amounts. This is not a recommendation for anyone.",
+        positions_desc:
+          "Five index funds, illustrative amounts. This is not a recommendation for anyone.",
         simulated_title: "Simulated history of the basket",
-        simulated_desc: "What this constant-weight basket would have returned over the period — in {{currency}}, the share-class currency.",
+        simulated_desc:
+          "What this constant-weight basket would have returned over the period — in {{currency}}, the share-class currency.",
         simulated_series: "Demonstration basket (simulated)",
       },
       compare: {
@@ -4561,7 +4612,8 @@ const finEn = {
         limits_title: "Limits, stated",
         limit: {
           past: "Performance figures are historical: they predict nothing.",
-          lookthrough: "Look-through covers each fund's top 150 holdings; the rest is counted as not covered.",
+          lookthrough:
+            "Look-through covers each fund's top 150 holdings; the rest is counted as not covered.",
           esg: "ESG data is incomplete: coverage of each pillar is shown, no composite score is published.",
           impact: "ESG indicators are not a measurement of real-world impact.",
           snapshot: "The demonstration data is a dated snapshot; it becomes “stale” as it ages.",
@@ -4576,30 +4628,37 @@ const finEn = {
     portfolio: {
       title: "What your portfolio actually holds",
       desc: "{{covered}} of {{total}} funds broken down from the issuer's publication · {{pct}} of value broken down.",
-      none_covered: "None of your funds has a published composition in our sources yet. Your real exposure is therefore not computed — nor is it guessed.",
+      none_covered:
+        "None of your funds has a published composition in our sources yet. Your real exposure is therefore not computed — nor is it guessed.",
       error: "Exposure could not be computed right now.",
     },
     fund: {
       performance_title: "Historical performance",
-      geography_unpublished: "The issuer does not publish a geographic breakdown for this fund in this document. It is not inferred.",
+      geography_unpublished:
+        "The issuer does not publish a geographic breakdown for this fund in this document. It is not inferred.",
       holdings_title: "Top holdings",
       holdings_desc: "Top 10 of the {{lines}} published lines — {{pct}} of the fund.",
       coverage_title: "E / S / G indicators: what is filled in",
-      coverage_desc: "The grid is fixed and public. An empty cell stays empty: no composite score is computed on incomplete data.",
-      not_in_catalog: "This fund is in the issuer snapshot but not yet in the Seedow catalogue: its transparency index is not computed.",
+      coverage_desc:
+        "The grid is fixed and public. An empty cell stays empty: no composite score is computed on incomplete data.",
+      not_in_catalog:
+        "This fund is in the issuer snapshot but not yet in the Seedow catalogue: its transparency index is not computed.",
     },
     compare: {
       eyebrow: "Fund comparator",
       title: "Compare funds on what they publish.",
-      subtitle: "Fees, SFDR classification, documented exclusion policies, past performance, exposure and data coverage. Up to four funds, exportable to CSV.",
+      subtitle:
+        "Fees, SFDR classification, documented exclusion policies, past performance, exposure and data coverage. Up to four funds, exportable to CSV.",
       universe: "{{catalog}} funds in the catalogue · {{total}} comparable",
       selected_title: "Comparison ({{count}}/{{max}})",
-      selected_desc: "Add or remove funds from the list below. This page's link keeps your selection.",
+      selected_desc:
+        "Add or remove funds from the list below. This page's link keeps your selection.",
       empty: "No fund selected. Pick up to four from the list.",
       export: "Export to CSV",
       remove: "Remove {{name}} from the comparison",
       table_caption: "Comparison of the selected funds",
-      disclaimer: "Information, not advice: Seedow does not rank funds and recommends no purchase. “Not verified” means the data was not found in our sources, not that the fund does not apply it.",
+      disclaimer:
+        "Information, not advice: Seedow does not rank funds and recommends no purchase. “Not verified” means the data was not found in our sources, not that the fund does not apply it.",
       sfdr_conflict: "catalogue: art. {{catalog}} · issuer: art. {{declared}}",
       blocks: "{{n}}/{{total}} assessable blocks",
       has_history: "history",
@@ -4666,9 +4725,11 @@ const finEn = {
     data: {
       eyebrow: "Sources and quality",
       title: "Where every figure comes from.",
-      subtitle: "The sources actually connected, their frequency, their licence, what Seedow does with them — and what is not integrated yet.",
+      subtitle:
+        "The sources actually connected, their frequency, their licence, what Seedow does with them — and what is not integrated yet.",
       statuses_title: "Five statuses, shown everywhere",
-      statuses_desc: "Estimated or simulated data is never presented as verified. A calculation takes the status of its weakest input.",
+      statuses_desc:
+        "Estimated or simulated data is never presented as verified. A calculation takes the status of its weakest input.",
       freshness_title: "Freshness windows — beyond them, verified data becomes “stale”",
       days: "days",
       kind: {
@@ -4696,7 +4757,8 @@ const finEn = {
         limits: "Limits",
       },
       to_confirm: "To be confirmed",
-      provider_note: "Every provider goes through the same interface: adding a market or ESG data source means adding a connector and a registry entry, without rewriting the screens.",
+      provider_note:
+        "Every provider goes through the same interface: adding a market or ESG data source means adding a connector and a registry entry, without rewriting the screens.",
       open_demo: "See the demonstration",
     },
   },

@@ -101,11 +101,20 @@ export function describeEsgLayers(input: {
       declaredArticle !== null && catalogArticle !== null && declaredArticle !== catalogArticle
         ? {
             code: "sfdr_mismatch",
-            params: { declared: declaredArticle, catalog: catalogArticle, asOf: issuer?.asOf ?? "" },
+            params: {
+              declared: declaredArticle,
+              catalog: catalogArticle,
+              asOf: issuer?.asOf ?? "",
+            },
           }
         : null,
-    source: declaredArticle !== null ? issuer?.source ?? null : catalogArticle !== null ? "catalog" : null,
-    asOf: declaredArticle !== null ? issuer?.asOf ?? null : null,
+    source:
+      declaredArticle !== null
+        ? (issuer?.source ?? null)
+        : catalogArticle !== null
+          ? "catalog"
+          : null,
+    asOf: declaredArticle !== null ? (issuer?.asOf ?? null) : null,
   };
 
   // 2. Risque ESG — aucune note sous licence n'est branchée sur les fonds publics.
@@ -128,7 +137,12 @@ export function describeEsgLayers(input: {
       total: sectors.length,
       claimed: claimed.length,
     },
-    asOf: documented.map((s) => s.date).filter(Boolean).sort().at(-1) ?? null,
+    asOf:
+      documented
+        .map((s) => s.date)
+        .filter(Boolean)
+        .sort()
+        .at(-1) ?? null,
   };
 
   // 4. Taxonomie — non collectée. Jamais déduite de l'article SFDR.
@@ -174,7 +188,13 @@ export const INDICATOR_GRID: Record<Pillar, string[]> = {
     "biodiversity_exposure",
     "environmental_controversies",
   ],
-  S: ["weapons_exclusion_policy", "tobacco_exclusion_policy", "human_rights", "labour_practices", "social_controversies"],
+  S: [
+    "weapons_exclusion_policy",
+    "tobacco_exclusion_policy",
+    "human_rights",
+    "labour_practices",
+    "social_controversies",
+  ],
   G: ["board_independence", "business_ethics", "corruption_controversies", "shareholder_rights"],
 };
 
@@ -241,9 +261,17 @@ export interface PillarCoverage {
 export function pillarCoverage(indicators: EsgIndicator[]): PillarCoverage[] {
   return (["E", "S", "G"] as const).map((pillar) => {
     const rows = indicators.filter((i) => i.pillar === pillar);
-    const available = rows.filter((i) => i.status === "VERIFIED" || i.status === "ESTIMATED").length;
+    const available = rows.filter(
+      (i) => i.status === "VERIFIED" || i.status === "ESTIMATED",
+    ).length;
     const coveragePct = rows.length ? (available / rows.length) * 100 : 0;
-    return { pillar, available, total: rows.length, coveragePct, confidence: confidenceOf(coveragePct) };
+    return {
+      pillar,
+      available,
+      total: rows.length,
+      coveragePct,
+      confidence: confidenceOf(coveragePct),
+    };
   });
 }
 
@@ -275,7 +303,9 @@ export function gatedPillarScore(
   });
   const coveragePct = grid.length ? (known.length / grid.length) * 100 : 0;
   const confidence = confidenceOf(coveragePct);
-  if (coveragePct < minCoveragePct || known.length === 0) return { score: null, coveragePct, confidence };
-  const score = known.reduce((s, id) => s + Math.min(100, Math.max(0, subScores.get(id)!)), 0) / known.length;
+  if (coveragePct < minCoveragePct || known.length === 0)
+    return { score: null, coveragePct, confidence };
+  const score =
+    known.reduce((s, id) => s + Math.min(100, Math.max(0, subScores.get(id)!)), 0) / known.length;
   return { score, coveragePct, confidence };
 }

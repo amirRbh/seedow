@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { buildUniverse, csvCell, dataCoveragePct, screen, toCsv, type SnapshotSide } from "../universe";
+import {
+  buildUniverse,
+  csvCell,
+  dataCoveragePct,
+  screen,
+  toCsv,
+  type SnapshotSide,
+} from "../universe";
 import type { ObservatoryFund } from "@/lib/esg/v2/observatory";
 
 const catalogFund = (over: Partial<ObservatoryFund>): ObservatoryFund =>
@@ -17,7 +24,15 @@ const catalogFund = (over: Partial<ObservatoryFund>): ObservatoryFund =>
     sti: { blocksEvaluated: 0, blocksTotal: 5 },
     discrepancies: [],
     themes: [],
-    sectors: [{ sector: "fossiles", level: "non_verifie", source_document: null, source_url: null, date: null }],
+    sectors: [
+      {
+        sector: "fossiles",
+        level: "non_verifie",
+        source_document: null,
+        source_url: null,
+        date: null,
+      },
+    ],
     peer: { key: "p", assetClass: "thematic", region: null, declaredTheme: null },
     ...over,
   }) as unknown as ObservatoryFund;
@@ -56,7 +71,16 @@ describe("univers fusionné", () => {
 
 describe("filtres", () => {
   const rows = buildUniverse(
-    [catalogFund({}), catalogFund({ key: "b", name: "Bond", isins: ["FR0000000001"], sfdrArticle: null, ter: null })],
+    [
+      catalogFund({}),
+      catalogFund({
+        key: "b",
+        name: "Bond",
+        isins: ["FR0000000001"],
+        sfdrArticle: null,
+        ter: null,
+      }),
+    ],
     [snap],
   );
 

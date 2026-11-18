@@ -286,7 +286,10 @@ function Portfolio() {
                 « Vs le monde » du récit) est replié pour ne pas alourdir. */}
                 <TabsContent value="impact" className="pt-5 space-y-8">
                   <EsgFloorRelaxedNotice relaxed={portfolio.esg_floor_relaxed} />
-              <PortfolioExposurePanel holdings={portfolio.holdings} valued={valuation.holdings} />
+                  <PortfolioExposurePanel
+                    holdings={portfolio.holdings}
+                    valued={valuation.holdings}
+                  />
                   <ImpactExperience />
                   {/* Comparatif promu (analyse UX §05 — P1) : le « moment aha » vs un
                   fonds classique n'est plus replié. Source unique : /comparatif

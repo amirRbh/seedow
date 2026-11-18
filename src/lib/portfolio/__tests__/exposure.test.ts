@@ -46,7 +46,13 @@ const directX: Position = {
   kind: "direct",
   marketValue: 1000,
   assetClass: "Actions",
-  security: { key: "X", name: "Action X", sector: "Technologie", geography: "États-Unis", currency: "USD" },
+  security: {
+    key: "X",
+    name: "Action X",
+    sector: "Technologie",
+    geography: "États-Unis",
+    currency: "USD",
+  },
 };
 
 describe("exposition sectorielle pondérée par la valeur", () => {
@@ -133,7 +139,12 @@ describe("garde-fous", () => {
   it("une ventilation qui dépasse 100 % est ramenée à 100 % et signalée", () => {
     const over: Position = {
       ...fundA,
-      composition: { sector: [{ label: "Tech", weightPct: 80 }, { label: "Santé", weightPct: 40 }] },
+      composition: {
+        sector: [
+          { label: "Tech", weightPct: 80 },
+          { label: "Santé", weightPct: 40 },
+        ],
+      },
     };
     const r = computePortfolioExposure([over]);
     const sum = r.sector.buckets.reduce((s, b) => s + b.value, 0);

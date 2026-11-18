@@ -1,5 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, CalendarClock, Database, FileCode2, Hand, Ban, Camera, BookMarked, type LucideIcon } from "lucide-react";
+import {
+  ArrowRight,
+  CalendarClock,
+  Database,
+  FileCode2,
+  Hand,
+  Ban,
+  Camera,
+  BookMarked,
+  type LucideIcon,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { DataStatusChip } from "@/components/analytics/DataStatusChip";
 import { PageHero, PublicPage } from "@/components/layout/PublicPage";
@@ -42,7 +52,11 @@ function DataPage() {
   const groups = sourcesByIntegration();
   return (
     <PublicPage accent="ice" progress>
-      <PageHero eyebrow={t("fin.data.eyebrow")} title={t("fin.data.title")} subtitle={t("fin.data.subtitle")} />
+      <PageHero
+        eyebrow={t("fin.data.eyebrow")}
+        title={t("fin.data.title")}
+        subtitle={t("fin.data.subtitle")}
+      />
 
       <div className="mx-auto flex max-w-[1160px] flex-col gap-16 px-5 pb-10 sm:px-7">
         <section>
@@ -63,7 +77,8 @@ function DataPage() {
             <ul className="mt-2 grid gap-1.5 text-label text-ink-2 sm:grid-cols-2 lg:grid-cols-3">
               {Object.entries(FRESHNESS_DAYS).map(([kind, days]) => (
                 <li key={kind}>
-                  {t(`fin.data.kind.${kind}`)} : <span className="font-value tabular-nums text-ink">{days}</span>{" "}
+                  {t(`fin.data.kind.${kind}`)} :{" "}
+                  <span className="font-value tabular-nums text-ink">{days}</span>{" "}
                   {t("fin.data.days")}
                 </li>
               ))}
@@ -100,8 +115,14 @@ function DataPage() {
                         <dl className="grid gap-x-4 gap-y-2 text-label sm:grid-cols-[auto_1fr]">
                           <Row label={t("fin.data.field.source")} value={s.source} />
                           <Row label={t("fin.data.field.frequency")} value={s.frequency} />
-                          <Row label={t("fin.data.field.license")} value={s.license ?? t("fin.data.to_confirm")} />
-                          <Row label={t("fin.data.field.transformation")} value={s.transformation} />
+                          <Row
+                            label={t("fin.data.field.license")}
+                            value={s.license ?? t("fin.data.to_confirm")}
+                          />
+                          <Row
+                            label={t("fin.data.field.transformation")}
+                            value={s.transformation}
+                          />
                           <Row label={t("fin.data.field.limits")} value={s.limits} />
                         </dl>
                         <p className="mono-meta mt-auto flex items-center gap-1.5">

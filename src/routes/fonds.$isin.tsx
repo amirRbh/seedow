@@ -59,7 +59,8 @@ export const Route = createFileRoute("/fonds/$isin")({
     return { data, snapshot };
   },
   head: ({ params, loaderData }) => {
-    const fund = loaderData?.data?.fund ?? (loaderData?.snapshot ? { name: loaderData.snapshot.name } : null);
+    const fund =
+      loaderData?.data?.fund ?? (loaderData?.snapshot ? { name: loaderData.snapshot.name } : null);
     if (!fund) return { meta: [{ title: "Fonds — Seedow" }] };
     const title = `${fund.name} : que publie ce fonds ? — Seedow`;
     const description = `Ce que ${fund.name} publie, et à quel niveau de précision : indice de transparence Seedow (STI ${STI_VERSION}), documents sourcés et datés, constats d'écart opposables.`;
@@ -90,7 +91,10 @@ function SnapshotOnlyFundPage({ snapshot }: { snapshot: NonNullable<SnapshotFund
     <PublicPage accent="ice">
       <SiteHeaderSpacer />
       <div className="mx-auto max-w-4xl px-5 pb-8 sm:px-6">
-        <Link to="/comparer" className="link-u inline-flex items-center gap-2 text-body-sm font-bold text-ink-2 hover:text-ink">
+        <Link
+          to="/comparer"
+          className="link-u inline-flex items-center gap-2 text-body-sm font-bold text-ink-2 hover:text-ink"
+        >
           ← {t("site.nav_compare")}
         </Link>
         <div className="mt-6 animate-fade-in-up">
