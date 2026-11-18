@@ -44,7 +44,6 @@ import { Route as TarifsRouteImport } from './routes/tarifs'
 import { Route as VoteRouteImport } from './routes/vote'
 import { Route as WaitlistRouteImport } from './routes/waitlist'
 import { Route as WrappedRouteImport } from './routes/wrapped'
-import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as ApiEthiRouteImport } from './routes/api.ethi'
 import { Route as ComparerRapportRouteImport } from './routes/comparer_.rapport'
@@ -61,7 +60,6 @@ import { Route as HooksRefreshMarketDataRouteImport } from './routes/hooks/refre
 import { Route as ObjectifsGoalIdRouteImport } from './routes/objectifs.$goalId'
 import { Route as VoteResolutionIdRouteImport } from './routes/vote.$resolutionId'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
-import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as AuthenticatedAdminBetaRouteImport } from './routes/_authenticated/admin.beta'
 import { Route as AuthenticatedAdminDataRouteImport } from './routes/_authenticated/admin.data'
 import { Route as ApiPublicEsgPreviewRouteImport } from './routes/api.public.esg-preview'
@@ -244,12 +242,6 @@ const WrappedRoute = WrappedRouteImport.update({
   path: '/wrapped',
   getParentRoute: () => rootRouteImport,
 } as any)
-const Char91DotmcpChar93ListToolsRoute =
-  Char91DotmcpChar93ListToolsRouteImport.update({
-    id: '/.mcp/list-tools',
-    path: '/.mcp/list-tools',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const Char91DotwellKnownChar93OauthProtectedResourceRoute =
   Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
     id: '/.well-known/oauth-protected-resource',
@@ -334,12 +326,6 @@ const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
   path: '/.lovable/oauth/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
-const Char91DotmcpChar93InvokeToolToolRoute =
-  Char91DotmcpChar93InvokeToolToolRouteImport.update({
-    id: '/.mcp/invoke-tool/$tool',
-    path: '/.mcp/invoke-tool/$tool',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const AuthenticatedAdminBetaRoute = AuthenticatedAdminBetaRouteImport.update({
   id: '/admin/beta',
   path: '/admin/beta',
@@ -412,7 +398,6 @@ export interface FileRoutesByFullPath {
   '/vote': typeof VoteRouteWithChildren
   '/waitlist': typeof WaitlistRoute
   '/wrapped': typeof WrappedRoute
-  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/api/ethi': typeof ApiEthiRoute
   '/comparer/rapport': typeof ComparerRapportRoute
@@ -429,7 +414,6 @@ export interface FileRoutesByFullPath {
   '/vote/$resolutionId': typeof VoteResolutionIdRoute
   '/cours/': typeof CoursIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
-  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/beta': typeof AuthenticatedAdminBetaRoute
   '/admin/data': typeof AuthenticatedAdminDataRoute
   '/api/public/esg-preview': typeof ApiPublicEsgPreviewRoute
@@ -472,7 +456,6 @@ export interface FileRoutesByTo {
   '/vote': typeof VoteRouteWithChildren
   '/waitlist': typeof WaitlistRoute
   '/wrapped': typeof WrappedRoute
-  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/api/ethi': typeof ApiEthiRoute
   '/comparer/rapport': typeof ComparerRapportRoute
@@ -489,7 +472,6 @@ export interface FileRoutesByTo {
   '/vote/$resolutionId': typeof VoteResolutionIdRoute
   '/cours': typeof CoursIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
-  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/beta': typeof AuthenticatedAdminBetaRoute
   '/admin/data': typeof AuthenticatedAdminDataRoute
   '/api/public/esg-preview': typeof ApiPublicEsgPreviewRoute
@@ -535,7 +517,6 @@ export interface FileRoutesById {
   '/vote': typeof VoteRouteWithChildren
   '/waitlist': typeof WaitlistRoute
   '/wrapped': typeof WrappedRoute
-  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/api/ethi': typeof ApiEthiRoute
   '/comparer_/rapport': typeof ComparerRapportRoute
@@ -552,7 +533,6 @@ export interface FileRoutesById {
   '/vote/$resolutionId': typeof VoteResolutionIdRoute
   '/cours/': typeof CoursIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
-  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/admin/beta': typeof AuthenticatedAdminBetaRoute
   '/_authenticated/admin/data': typeof AuthenticatedAdminDataRoute
   '/api/public/esg-preview': typeof ApiPublicEsgPreviewRoute
@@ -598,7 +578,6 @@ export interface FileRouteTypes {
     | '/vote'
     | '/waitlist'
     | '/wrapped'
-    | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/api/ethi'
     | '/comparer/rapport'
@@ -615,7 +594,6 @@ export interface FileRouteTypes {
     | '/vote/$resolutionId'
     | '/cours/'
     | '/.lovable/oauth/consent'
-    | '/.mcp/invoke-tool/$tool'
     | '/admin/beta'
     | '/admin/data'
     | '/api/public/esg-preview'
@@ -658,7 +636,6 @@ export interface FileRouteTypes {
     | '/vote'
     | '/waitlist'
     | '/wrapped'
-    | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/api/ethi'
     | '/comparer/rapport'
@@ -675,7 +652,6 @@ export interface FileRouteTypes {
     | '/vote/$resolutionId'
     | '/cours'
     | '/.lovable/oauth/consent'
-    | '/.mcp/invoke-tool/$tool'
     | '/admin/beta'
     | '/admin/data'
     | '/api/public/esg-preview'
@@ -720,7 +696,6 @@ export interface FileRouteTypes {
     | '/vote'
     | '/waitlist'
     | '/wrapped'
-    | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/api/ethi'
     | '/comparer_/rapport'
@@ -737,7 +712,6 @@ export interface FileRouteTypes {
     | '/vote/$resolutionId'
     | '/cours/'
     | '/.lovable/oauth/consent'
-    | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/admin/beta'
     | '/_authenticated/admin/data'
     | '/api/public/esg-preview'
@@ -783,7 +757,6 @@ export interface RootRouteChildren {
   VoteRoute: typeof VoteRouteWithChildren
   WaitlistRoute: typeof WaitlistRoute
   WrappedRoute: typeof WrappedRoute
-  Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   ApiEthiRoute: typeof ApiEthiRoute
   ComparerRapportRoute: typeof ComparerRapportRoute
@@ -796,7 +769,6 @@ export interface RootRouteChildren {
   HooksRecomputeRiskModelRoute: typeof HooksRecomputeRiskModelRoute
   HooksRefreshMarketDataRoute: typeof HooksRefreshMarketDataRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
-  Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   ApiPublicEsgPreviewRoute: typeof ApiPublicEsgPreviewRoute
   ApiPublicV1CompareRoute: typeof ApiPublicV1CompareRoute
   ApiPublicV1OpenapiDotjsonRoute: typeof ApiPublicV1OpenapiDotjsonRoute
@@ -1051,13 +1023,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WrappedRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/.mcp/list-tools': {
-      id: '/.mcp/list-tools'
-      path: '/.mcp/list-tools'
-      fullPath: '/.mcp/list-tools'
-      preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/.well-known/oauth-protected-resource': {
       id: '/.well-known/oauth-protected-resource'
       path: '/.well-known/oauth-protected-resource'
@@ -1168,13 +1133,6 @@ declare module '@tanstack/react-router' {
       path: '/.lovable/oauth/consent'
       fullPath: '/.lovable/oauth/consent'
       preLoaderRoute: typeof DotlovableOauthConsentRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/.mcp/invoke-tool/$tool': {
-      id: '/.mcp/invoke-tool/$tool'
-      path: '/.mcp/invoke-tool/$tool'
-      fullPath: '/.mcp/invoke-tool/$tool'
-      preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin/beta': {
@@ -1312,7 +1270,6 @@ const rootRouteChildren: RootRouteChildren = {
   VoteRoute: VoteRouteWithChildren,
   WaitlistRoute: WaitlistRoute,
   WrappedRoute: WrappedRoute,
-  Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   ApiEthiRoute: ApiEthiRoute,
@@ -1326,7 +1283,6 @@ const rootRouteChildren: RootRouteChildren = {
   HooksRecomputeRiskModelRoute: HooksRecomputeRiskModelRoute,
   HooksRefreshMarketDataRoute: HooksRefreshMarketDataRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
-  Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
   ApiPublicEsgPreviewRoute: ApiPublicEsgPreviewRoute,
   ApiPublicV1CompareRoute: ApiPublicV1CompareRoute,
   ApiPublicV1OpenapiDotjsonRoute: ApiPublicV1OpenapiDotjsonRoute,

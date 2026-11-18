@@ -27,6 +27,12 @@ const FLOORS: [pkg: string, floor: string, advisory: string][] = [
   ["@tanstack/react-start", "1.168.60", "GHSA-qx66-fv34-fjm8 (XSS réfléchi, fonctions serveur)"],
   ["@tanstack/start-server-core", "1.169.39", "GHSA-qx66-fv34-fjm8, GHSA-9m65-766c-r333"],
   ["seroval", "1.6.1", "GHSA-mv8w-475r-vwqw, GHSA-p6vx-979v-rg4c (désérialisation)"],
+  [
+    "@modelcontextprotocol/sdk",
+    "1.32.0",
+    "GHSA-46jr-4wx8-v453, GHSA-f897-62hf-6gxq, GHSA-6qxp-vccf-f47h… (serveur /mcp)",
+  ],
+  ["@lovable.dev/mcp-js", "3.3.1", "embarque @modelcontextprotocol/sdk ≥ 1.32"],
   ["proxy-addr", "2.0.8", "GHSA-jqcg-44mw-7w3h (usurpation d'IP)"],
   ["shell-quote", "1.11.0", "GHSA-pqg4-j6r4-53mv (injection de commande)"],
   [
