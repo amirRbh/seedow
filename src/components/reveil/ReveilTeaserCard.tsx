@@ -28,7 +28,7 @@ export function ReveilTeaserCard() {
       >
         <div className="flex items-center justify-between gap-3">
           <span className="inline-flex items-center gap-2">
-            <span aria-hidden className="apple-live" />
+            <span aria-hidden className="live-dot" />
             <span className="text-caption font-semibold text-mint-ink">
               {t("reveil.eyebrow")}
             </span>

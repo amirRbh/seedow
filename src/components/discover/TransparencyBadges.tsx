@@ -12,7 +12,7 @@ import type { SustainabilityTier } from "@/lib/esg/sustainability-classification
  */
 
 const COVERAGE_TONE: Record<DataCoverage, string> = {
-  complete: "bg-highlight-5 text-highlight-1 border-highlight-4",
+  complete: "bg-highlight-5 text-ink border-highlight-4",
   partial: "bg-solar-tint text-ink border-solar/40",
   estimated: "bg-paper-2 text-ink-2 border-paper-3",
 };
@@ -47,9 +47,9 @@ export function DataCoverageBadge({
 }
 
 const RISK_TONE: Record<GreenwashingRisk, string> = {
-  low: "bg-highlight-5 text-highlight-1 border-highlight-4",
+  low: "bg-highlight-5 text-ink border-highlight-4",
   medium: "bg-solar-tint text-ink border-solar/40",
-  high: "bg-rust/10 text-rust border-rust/20",
+  high: "bg-alert/10 text-alert-ink border-alert/20",
 };
 
 export function GreenwashingBadge({
@@ -92,7 +92,7 @@ export function GreenwashingBadge({
 }
 
 const TIER_TONE: Record<SustainabilityTier, string> = {
-  paris_aligned: "bg-highlight-5 text-highlight-1 border-highlight-4",
+  paris_aligned: "bg-highlight-5 text-ink border-highlight-4",
   transition: "bg-solar-tint text-ink border-solar/40",
   broad_esg: "bg-paper-2 text-ink-2 border-paper-3",
   insufficient_evidence: "bg-paper-2 text-ink-2 border-paper-3",

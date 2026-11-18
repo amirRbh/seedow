@@ -167,7 +167,7 @@ export function RealInvestmentInterestCard() {
                     />
                   </div>
 
-                  {error && <p className="text-label text-rust">{error}</p>}
+                  {error && <p className="text-label text-alert-ink">{error}</p>}
                 </div>
                 <DialogFooter>
                   <Button

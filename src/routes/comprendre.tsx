@@ -100,7 +100,7 @@ function ComprendrePage() {
         <nav className="max-w-3xl mx-auto flex justify-between items-center px-6 py-5">
           <div className="flex items-center gap-6">
             <Link to="/" className="font-display font-bold text-xl tracking-tight ">
-              seedow<span className="text-gold gold-pulse">.</span>
+              seedow<span className="text-mint-ink gold-pulse">.</span>
             </Link>
             <LanguageToggle />
           </div>
@@ -122,7 +122,7 @@ function ComprendrePage() {
               <span
                 key={i}
                 className={`h-1 rounded-full transition-all duration-500 ${
-                  i === step ? "w-8 bg-gold" : i < step ? "w-4 bg-ink/40" : "w-4 bg-ink/12"
+                  i === step ? "w-8 bg-mint" : i < step ? "w-4 bg-ink/40" : "w-4 bg-ink/12"
                 }`}
               />
             ))}

@@ -156,7 +156,7 @@ export function CommunityPanel() {
             <ol className="divide-y divide-paper-3 rounded-lg border border-paper-3 bg-paper">
               {leaderboard.map((r, i) => (
                 <li key={r.id} className="flex items-center gap-4 px-4 py-3">
-                  <span className="font-value text-lg text-gold tabular-nums w-8">{i + 1}</span>
+                  <span className="font-value text-lg text-mint-ink tabular-nums w-8">{i + 1}</span>
                   <span className="flex-1 text-ink font-medium">@{r.public_handle}</span>
                   <span className="text-xs text-ink-3 tabular-nums">
                     ESG{" "}

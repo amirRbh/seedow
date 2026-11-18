@@ -46,13 +46,13 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
   const { lang } = useLang();
 
   const RISK_LABELS: Record<number, { label: string; tone: string }> = {
-    1: { label: t("asset_detail.risk_labels.1"), tone: "text-highlight-1" },
-    2: { label: t("asset_detail.risk_labels.2"), tone: "text-highlight-1" },
-    3: { label: t("asset_detail.risk_labels.3"), tone: "text-highlight-1" },
+    1: { label: t("asset_detail.risk_labels.1"), tone: "text-ink" },
+    2: { label: t("asset_detail.risk_labels.2"), tone: "text-ink" },
+    3: { label: t("asset_detail.risk_labels.3"), tone: "text-ink" },
     4: { label: t("asset_detail.risk_labels.4"), tone: "text-ink" },
-    5: { label: t("asset_detail.risk_labels.5"), tone: "text-rust" },
-    6: { label: t("asset_detail.risk_labels.6"), tone: "text-rust" },
-    7: { label: t("asset_detail.risk_labels.7"), tone: "text-bloom" },
+    5: { label: t("asset_detail.risk_labels.5"), tone: "text-alert-ink" },
+    6: { label: t("asset_detail.risk_labels.6"), tone: "text-alert-ink" },
+    7: { label: t("asset_detail.risk_labels.7"), tone: "text-volt-ink" },
   };
 
   // Composition publiée du fonds ouvert — chargée seulement quand la feuille
@@ -129,7 +129,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
               entreprise, un panier, un prêt ou de l'immobilier. On le lui dit en
               une phrase, AVANT le résumé de l'émetteur, sans jargon. */}
           <section className="rounded-xl bg-highlight-5/60 border border-highlight-4 p-3.5">
-            <p className="text-caption font-semibold text-highlight-1 mb-1.5">
+            <p className="text-caption font-semibold text-ink mb-1.5">
               {t("asset_detail.plain.label")}
             </p>
             <p className="text-body-sm text-ink-2 leading-relaxed">
@@ -201,7 +201,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                     key={tag}
                     term="SFDR"
                     variant="inline"
-                    className="text-tag bg-highlight-5 text-highlight-1 font-semibold px-2 py-0.5 rounded-full capitalize border border-solid border-highlight-4 hover:text-highlight-1"
+                    className="text-tag bg-highlight-5 text-ink font-semibold px-2 py-0.5 rounded-full capitalize border border-solid border-highlight-4 hover:text-ink"
                   >
                     {tag}
                   </Glossary>
@@ -266,8 +266,8 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                       <span
                         className={`text-tag font-semibold px-2 py-0.5 rounded-full ${
                           intensityCmp.cleaner
-                            ? "bg-highlight-5 text-highlight-1"
-                            : "bg-alert-tint text-rust"
+                            ? "bg-highlight-5 text-ink"
+                            : "bg-alert-tint text-alert-ink"
                         }`}
                       >
                         {t(
@@ -382,7 +382,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                 <ul className="space-y-2">
                   {risksList.map((r) => (
                     <li key={r.title} className="flex items-start gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-rust mt-1.5 flex-shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-alert mt-1.5 flex-shrink-0" />
                       <div className="text-label leading-relaxed">
                         <span className="font-semibold text-ink">{r.title} · </span>
                         <span className="text-ink-2">{r.desc}</span>
@@ -399,7 +399,7 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
                       {asset.exclusions.map((e) => (
                         <span
                           key={e}
-                          className="text-tag bg-rust/10 text-rust font-semibold px-2 py-0.5 rounded-full border border-rust/20"
+                          className="text-tag bg-alert/10 text-alert-ink font-semibold px-2 py-0.5 rounded-full border border-alert/20"
                         >
                           ⊘ {t(`onboarding.steps.exclusions.${e}`)}
                         </span>
@@ -495,12 +495,12 @@ export function AssetDetailSheet({ open, onOpenChange, asset }: Props) {
             aria-label={watched ? t("watchlist.following") : t("watchlist.follow")}
             className={`h-11 px-4 rounded-full border text-label font-semibold flex items-center gap-1.5 transition-colors ${
               watched
-                ? "bg-gold/15 border-gold text-ink"
+                ? "bg-mint/15 border-mint text-ink"
                 : "bg-paper-2 border-paper-3 text-ink-2 hover:border-ink/40"
             }`}
           >
             <Star
-              className={`w-4 h-4 transition-transform ${watched ? "fill-gold text-gold scale-110" : ""}`}
+              className={`w-4 h-4 transition-transform ${watched ? "fill-mint text-mint-ink scale-110" : ""}`}
               strokeWidth={2}
             />
             <span className="hidden sm:inline">
@@ -651,7 +651,7 @@ function MiniBar({ label, value }: { label: string; value: number }) {
         <span className="text-tag font-bold text-ink">{value.toFixed(1)}</span>
       </div>
       <div className="h-1 bg-paper-3 rounded-full overflow-hidden">
-        <div className="h-full bg-highlight-1 rounded-full" style={{ width: `${value * 10}%` }} />
+        <div className="h-full bg-ink rounded-full" style={{ width: `${value * 10}%` }} />
       </div>
     </div>
   );

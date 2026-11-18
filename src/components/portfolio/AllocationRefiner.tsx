@@ -157,7 +157,7 @@ export function AllocationRefiner({ portfolioId }: Props) {
               key={key}
               className={cn(
                 "border border-paper-3 rounded p-4 space-y-3 transition-colors",
-                decision === "accepted" && "border-gold/60 bg-gold/5",
+                decision === "accepted" && "border-mint/60 bg-mint/5",
                 decision === "rejected" && "border-paper-3 bg-paper-2/50 opacity-80",
               )}
             >
@@ -172,7 +172,7 @@ export function AllocationRefiner({ portfolioId }: Props) {
                   <p
                     className={cn(
                       "text-body-lg font-semibold tabular-nums",
-                      row.costBps > 0 ? "text-rust" : "text-highlight-2",
+                      row.costBps > 0 ? "text-alert-ink" : "text-highlight-2",
                     )}
                     style={{ fontVariantNumeric: "tabular-nums" }}
                   >
@@ -353,7 +353,7 @@ function BeforeAfter({
                     ? "text-ink-3"
                     : m.positive
                       ? "text-highlight-2"
-                      : "text-rust",
+                      : "text-alert-ink",
                 )}
               >
                 {m.deltaLabel}
@@ -375,7 +375,7 @@ function BeforeAfter({
             >
               <span className="text-ink truncate">{c.label}</span>
               <span className="tabular-nums text-ink-3">{(c.before * 100).toFixed(1)}%</span>
-              <span className="tabular-nums text-gold w-12 text-right">
+              <span className="tabular-nums text-mint-ink w-12 text-right">
                 → {(c.after * 100).toFixed(1)}%
               </span>
             </li>
@@ -394,7 +394,7 @@ function BeforeAfter({
                 key={h.id}
                 className={cn(
                   "flex justify-between gap-2 text-caption",
-                  !altTickers.has(h.id) && "text-rust",
+                  !altTickers.has(h.id) && "text-alert-ink",
                 )}
                 title={h.name}
               >
@@ -426,7 +426,7 @@ function BeforeAfter({
         </div>
       </div>
       <p className="text-tag text-ink-3 leading-relaxed">
-        <span className="text-rust">{t("allocation_refiner.removed_note")}</span>{" "}
+        <span className="text-alert-ink">{t("allocation_refiner.removed_note")}</span>{" "}
         <span className="text-highlight-2">{t("allocation_refiner.added_note")}</span>
       </p>
     </div>

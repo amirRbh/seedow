@@ -91,7 +91,7 @@ function PerfMedaillon({ value, max, accent }: { value: number; max: number; acc
   return (
     <div className="h-1 w-full bg-paper-3 rounded-full overflow-hidden mt-2">
       <div
-        className={cn("h-full rounded-full", accent ? "bg-gold" : "bg-highlight-1")}
+        className={cn("h-full rounded-full", accent ? "bg-mint" : "bg-ink")}
         style={{ width: `${w}%` }}
       />
     </div>
@@ -517,7 +517,7 @@ export function ComparatifPanel() {
         </p>
         <Link
           to="/methodologie"
-          className="mt-3 inline-flex items-center gap-2 text-caption font-semibold text-ink hover:text-highlight-1 transition-colors"
+          className="mt-3 inline-flex items-center gap-2 text-caption font-semibold text-ink hover:text-ink transition-colors"
         >
           Lire la méthodologie complète
           <svg
@@ -683,7 +683,7 @@ function CompareRow({
           >
             {seedowValue}
             {seedowWins && (
-              <span aria-hidden="true" className="ml-1.5 text-gold text-xs">
+              <span aria-hidden="true" className="ml-1.5 text-mint-ink text-xs">
                 ●
               </span>
             )}

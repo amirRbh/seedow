@@ -33,7 +33,7 @@ export function BlocMeter({ bloc, myChoice, onShare }: Props) {
       aria-label={t("vote.bloc.aria")}
     >
       <div className="flex items-center gap-2">
-        <span aria-hidden="true" className="apple-live" />
+        <span aria-hidden="true" className="live-dot" />
         <span className="text-caption font-semibold text-mint-ink">
           {t("vote.bloc.live")}
         </span>

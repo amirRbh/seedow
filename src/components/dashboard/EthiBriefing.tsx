@@ -16,9 +16,9 @@ import { useLang } from "@/hooks/useLang";
 import { cn } from "@/lib/utils";
 
 const TONE: Record<BriefingSignal["tone"], string> = {
-  gold: "border-gold/40 text-ink bg-gold/5 hover:bg-gold/10",
-  highlight: "border-highlight-1/40 text-highlight-1 bg-highlight-5/40 hover:bg-highlight-5/60",
-  rust: "border-rust/30 text-rust bg-alert-tint hover:bg-alert-tint/70",
+  gold: "border-mint/40 text-ink bg-mint/5 hover:bg-mint/10",
+  highlight: "border-ink/40 text-ink bg-highlight-5/40 hover:bg-highlight-5/60",
+  rust: "border-alert/30 text-alert-ink bg-alert-tint hover:bg-alert-tint/70",
   neutral: "border-paper-3 text-ink-2 bg-paper-2 hover:bg-paper-3",
 };
 

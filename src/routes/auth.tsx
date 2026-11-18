@@ -225,11 +225,11 @@ function AuthPage() {
           )}
 
           {magicSent && (
-            <p className="text-label text-highlight-1 bg-highlight-5 border border-highlight-4 rounded px-3 py-2">
+            <p className="text-label text-ink bg-highlight-5 border border-highlight-4 rounded px-3 py-2">
               {t("auth.magic_sent")}
             </p>
           )}
-          {error && <p className="text-label text-rust">{error}</p>}
+          {error && <p className="text-label text-alert-ink">{error}</p>}
 
           <Button
             type="submit"

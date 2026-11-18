@@ -123,7 +123,7 @@ function Consent() {
         </div>
 
         {error && (
-          <p role="alert" className="mt-4 text-label text-rust">
+          <p role="alert" className="mt-4 text-label text-alert-ink">
             {error}
           </p>
         )}

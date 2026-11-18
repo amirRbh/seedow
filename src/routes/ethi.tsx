@@ -321,7 +321,7 @@ function Ethi() {
         <div className="w-full max-w-lg mx-auto space-y-4">
           <div className="rounded-2xl border border-paper-3 bg-paper-2 px-4 py-2.5 flex items-start gap-2 text-caption leading-snug text-ink-2">
             <span
-              className="inline-block w-1.5 h-1.5 rounded-full bg-gold mt-1.5 flex-shrink-0"
+              className="inline-block w-1.5 h-1.5 rounded-full bg-mint mt-1.5 flex-shrink-0"
               aria-hidden
             />
             <span>{t("ethi.disclaimer")}</span>
@@ -382,7 +382,7 @@ function Ethi() {
             <button
               type="submit"
               disabled={!input.trim() || isLoading}
-              className="w-11 h-11 rounded-full bg-highlight-2 hover:bg-highlight-1 text-paper flex items-center justify-center disabled:opacity-30 transition-colors"
+              className="w-11 h-11 rounded-full bg-highlight-2 hover:bg-ink text-paper flex items-center justify-center disabled:opacity-30 transition-colors"
               aria-label={t("ethi.send")}
             >
               <svg

@@ -67,7 +67,7 @@ export function ResolutionResult({ resolution, bloc }: Props) {
         href={resolution.sourceUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-1.5 text-caption font-semibold text-ink-3 transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
+        className="inline-flex items-center gap-1.5 text-caption font-semibold text-ink-3 transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint"
       >
         {t("vote.source", { name: resolution.sourceName })}
       </a>

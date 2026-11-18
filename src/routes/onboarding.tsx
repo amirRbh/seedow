@@ -560,7 +560,7 @@ function AccountStep({ onAuthed, onBack }: { onAuthed: () => void; onBack: () =>
                   />
                 )}
 
-                {error && <p className="text-label text-rust">{error}</p>}
+                {error && <p className="text-label text-alert-ink">{error}</p>}
 
                 <button
                   type="submit"
@@ -1096,7 +1096,7 @@ function PreviewScene({
             role="alert"
             className="w-full max-w-md text-center"
           >
-            <p className="text-caption text-rust font-medium">
+            <p className="text-caption text-alert-ink font-medium">
               {t("onboarding.building.error_eyebrow")}
             </p>
             <h1 className="font-value text-2xl text-ink mt-3">

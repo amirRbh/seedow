@@ -139,7 +139,7 @@ export function InvestDialog({ trigger, defaultAmount = 200, label }: Props) {
             disabled={!canSubmit}
             className={cn(
               "w-full h-12 rounded-full font-semibold text-body-sm transition-colors flex items-center justify-center gap-2",
-              "bg-highlight-1 text-paper hover:bg-highlight-2",
+              "bg-ink text-paper hover:bg-highlight-2",
               "disabled:opacity-50 disabled:cursor-not-allowed",
             )}
           >

@@ -51,7 +51,7 @@ function AdminBetaPage() {
   if (error) {
     return (
       <div className="max-w-3xl mx-auto px-6 py-12">
-        <p className="text-rust text-sm">{error}</p>
+        <p className="text-alert-ink text-sm">{error}</p>
         <Link to="/le-fil" className="text-label underline mt-4 inline-block">
           {t("admin_beta.back_dashboard")}
         </Link>
@@ -78,7 +78,7 @@ function AdminBetaPage() {
   const fillPct = Math.round(stats.fillRate * 100);
   const statusLabel =
     stats.status === "open" ? t("admin_beta.status_open") : t("admin_beta.status_closed");
-  const statusTone = stats.status === "open" && stats.slotsLeft > 0 ? "text-forest" : "text-rust";
+  const statusTone = stats.status === "open" && stats.slotsLeft > 0 ? "text-forest" : "text-alert-ink";
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-12 space-y-10">
@@ -115,7 +115,7 @@ function AdminBetaPage() {
           </div>
         </div>
         <div className="h-2 w-full bg-paper-3 rounded-full overflow-hidden">
-          <div className="h-full bg-gold transition-all" style={{ width: `${fillPct}%` }} />
+          <div className="h-full bg-mint transition-all" style={{ width: `${fillPct}%` }} />
         </div>
         <p className="text-caption text-ink-3 mt-2 tabular-nums">{fillPct}%</p>
       </section>
@@ -159,7 +159,7 @@ function AdminBetaPage() {
                   <span className="text-ink-3 tabular-nums">
                     {s.completed} / {s.entered}
                     {s.entered > 0 && (
-                      <span className={`ml-2 ${dropRate > 0.3 ? "text-rust" : "text-ink-3"}`}>
+                      <span className={`ml-2 ${dropRate > 0.3 ? "text-alert-ink" : "text-ink-3"}`}>
                         (-{Math.round(dropRate * 100)}%)
                       </span>
                     )}
@@ -167,7 +167,7 @@ function AdminBetaPage() {
                 </div>
                 <div className="h-1.5 w-full bg-paper-3 rounded-full overflow-hidden mt-2">
                   <div
-                    className="h-full bg-gold"
+                    className="h-full bg-mint"
                     style={{ width: `${s.entered > 0 ? (s.completed / s.entered) * 100 : 0}%` }}
                   />
                 </div>
@@ -197,7 +197,7 @@ function AdminBetaPage() {
                 ? "text-ink-3"
                 : stats.ingestionSuccessRate >= 0.9
                   ? "text-forest"
-                  : "text-rust"
+                  : "text-alert-ink"
             }`}
           >
             {stats.ingestionSuccessRate !== null
@@ -219,8 +219,8 @@ function AdminBetaPage() {
                       r.status === "ok"
                         ? "text-forest"
                         : r.status === "partial"
-                          ? "text-gold"
-                          : "text-rust"
+                          ? "text-mint-ink"
+                          : "text-alert-ink"
                     }
                   >
                     ●
@@ -256,7 +256,7 @@ function AdminBetaPage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t("admin_beta.testers_search")}
-            className="text-body-sm border border-paper-3 rounded-lg px-3 py-1.5 bg-paper outline-none focus:border-gold transition-colors w-full sm:w-64"
+            className="text-body-sm border border-paper-3 rounded-lg px-3 py-1.5 bg-paper outline-none focus:border-mint transition-colors w-full sm:w-64"
           />
         </div>
         <div className="border border-paper-3 rounded-2xl overflow-hidden">
@@ -454,7 +454,7 @@ function ComprehensionSection({ comp }: { comp: ComprehensionStats }) {
           </span>
         </div>
         {lift != null && (
-          <p className={`text-caption mt-2 ${lift >= 0 ? "text-forest" : "text-rust"}`}>
+          <p className={`text-caption mt-2 ${lift >= 0 ? "text-forest" : "text-alert-ink"}`}>
             {lift >= 0 ? "+" : ""}
             {Math.round(lift * 100)} {t("admin_beta.comprehension_lift_suffix")}
           </p>

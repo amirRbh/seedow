@@ -144,7 +144,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     pathname.startsWith("/aide") ||
     pathname.startsWith("/certificat") ||
     pathname.startsWith("/fonds") ||
-    pathname.startsWith("/observatoire");
+    pathname.startsWith("/observatoire") ||
+    // DA V4 : toutes les pages qui se lisent sans compte portent le chrome
+    // public (SiteHeader / SiteFooter), jamais le dock de l'app.
+    pathname.startsWith("/methodologie") ||
+    pathname.startsWith("/comprendre") ||
+    pathname.startsWith("/waitlist") ||
+    pathname.startsWith("/mentions-legales") ||
+    pathname.startsWith("/confidentialite") ||
+    pathname.startsWith("/cgu");
 
   const showBanner = showBetaBannerFor(pathname);
 

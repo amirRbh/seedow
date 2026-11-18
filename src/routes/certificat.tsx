@@ -111,7 +111,7 @@ function CertificatPage() {
           role="note"
           className="mb-6 flex items-center gap-2 border border-paper-3 bg-paper-2/60 px-4 py-2 text-caption font-semibold text-ink-2"
         >
-          <span className="inline-block w-1.5 h-1.5 rounded-full bg-gold" aria-hidden />
+          <span className="inline-block w-1.5 h-1.5 rounded-full bg-mint" aria-hidden />
           <span className="font-semibold">Bêta</span>
           <span className="normal-case tracking-normal text-label text-ink-3">
             capital virtuel · cours réels · aucun argent investi

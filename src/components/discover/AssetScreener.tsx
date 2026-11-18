@@ -243,7 +243,7 @@ export function AssetScreener({ initialThemes }: { initialThemes?: string[] } = 
           </svg>
           {t("discover.intents.advanced")}
           {activeCount > 0 && (
-            <span className="bg-gold text-ink text-tag font-bold rounded-full px-1.5 leading-none py-0.5 ml-0.5">
+            <span className="bg-mint text-ink text-tag font-bold rounded-full px-1.5 leading-none py-0.5 ml-0.5">
               {activeCount}
             </span>
           )}
@@ -257,7 +257,7 @@ export function AssetScreener({ initialThemes }: { initialThemes?: string[] } = 
             <button
               type="button"
               onClick={() => setFilters(DEFAULT_FILTERS)}
-              className="text-caption font-semibold text-rust hover:text-ink transition-colors"
+              className="text-caption font-semibold text-alert-ink hover:text-ink transition-colors"
             >
               {t("discover.reset")}
             </button>
@@ -403,7 +403,7 @@ export function AssetScreener({ initialThemes }: { initialThemes?: string[] } = 
             <button
               type="button"
               onClick={() => setFilters(DEFAULT_FILTERS)}
-              className="mt-4 text-caption font-semibold text-ink underline underline-offset-4 decoration-gold"
+              className="mt-4 text-caption font-semibold text-ink underline underline-offset-4 decoration-mint"
             >
               {t("discover.reset")}
             </button>

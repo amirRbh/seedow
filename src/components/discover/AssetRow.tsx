@@ -44,7 +44,7 @@ export function AssetRow({ asset, index, onOpen }: Props) {
             {asset.category}
           </span>
           {asset.greenwashing_risk === "high" && (
-            <span className="text-rust flex-shrink-0" title={t("transparency.gw_row_flag")}>
+            <span className="text-alert-ink flex-shrink-0" title={t("transparency.gw_row_flag")}>
               ⚠
             </span>
           )}

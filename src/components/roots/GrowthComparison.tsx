@@ -87,7 +87,7 @@ export function GrowthComparison({
           </p>
         </div>
         <div
-          className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold ${isGrowing ? "bg-highlight-5 text-highlight-1" : "bg-alert-tint text-rust"}`}
+          className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold ${isGrowing ? "bg-highlight-5 text-ink" : "bg-alert-tint text-alert-ink"}`}
         >
           {isGrowing ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
           {isGrowing ? "+" : ""}
@@ -198,7 +198,7 @@ function AmountTile({
   accent?: "highlight" | "rust";
 }) {
   const accentClass =
-    accent === "highlight" ? "text-highlight-1" : accent === "rust" ? "text-rust" : "text-ink";
+    accent === "highlight" ? "text-ink" : accent === "rust" ? "text-alert-ink" : "text-ink";
   return (
     <div className="rounded-lg border border-paper-2 bg-paper-1/40 p-3">
       <p className="text-caption font-semibold text-ink-3">{label}</p>

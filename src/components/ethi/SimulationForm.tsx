@@ -90,7 +90,7 @@ export function SimulationForm({ onSubmit, onCancel }: Props) {
         </button>
         <button
           type="submit"
-          className="px-3 py-1.5 rounded-full text-caption bg-highlight-2 hover:bg-highlight-1 text-paper font-medium transition-colors"
+          className="px-3 py-1.5 rounded-full text-caption bg-highlight-2 hover:bg-ink text-paper font-medium transition-colors"
         >
           {t("ethi.sim.run")}
         </button>

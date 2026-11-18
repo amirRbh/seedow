@@ -69,7 +69,7 @@ export function ReveilFeed({ dispatches, onAssetClick }: Props) {
               <Link
                 to="/vote/$resolutionId"
                 params={{ resolutionId: d.action.resolutionId }}
-                className="group block rounded-2xl border border-paper-3 bg-paper p-4 transition-transform duration-300 hover:scale-[1.01] hover:border-ink-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 md:p-5"
+                className="group block rounded-2xl border border-paper-3 bg-paper p-4 transition-transform duration-300 hover:scale-[1.01] hover:border-ink-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint md:p-5"
               >
                 {inner}
               </Link>
@@ -77,7 +77,7 @@ export function ReveilFeed({ dispatches, onAssetClick }: Props) {
               <button
                 type="button"
                 onClick={() => d.action?.kind === "asset" && onAssetClick(d.action.assetId)}
-                className="group block w-full rounded-2xl border border-paper-3 bg-paper p-4 text-left transition-transform duration-300 hover:scale-[1.01] hover:border-ink-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 md:p-5"
+                className="group block w-full rounded-2xl border border-paper-3 bg-paper p-4 text-left transition-transform duration-300 hover:scale-[1.01] hover:border-ink-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint md:p-5"
               >
                 {inner}
               </button>

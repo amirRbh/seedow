@@ -24,7 +24,7 @@ export function ResolutionListItem({ resolution, bloc, myChoice }: Props) {
     <Link
       to="/vote/$resolutionId"
       params={{ resolutionId: resolution.id }}
-      className="group block rounded-lg border border-paper-3 bg-paper p-5 transition-transform duration-300 hover:scale-[1.01] hover:border-ink-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
+      className="group block rounded-lg border border-paper-3 bg-paper p-5 transition-transform duration-300 hover:scale-[1.01] hover:border-ink-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint"
       style={{ transitionTimingFunction: "cubic-bezier(0.32,0.72,0,1)" }}
     >
       <div className="flex items-center justify-between gap-3">
@@ -38,7 +38,7 @@ export function ResolutionListItem({ resolution, bloc, myChoice }: Props) {
           </span>
         ) : (
           <span className="inline-flex items-center gap-1.5 rounded-full bg-paper-2 px-2.5 py-1 text-caption font-semibold text-ink">
-            <span aria-hidden="true" className="apple-live" />
+            <span aria-hidden="true" className="live-dot" />
             {days === 0 ? t("vote.status.last_day") : t("vote.status.days_left", { n: days })}
           </span>
         )}

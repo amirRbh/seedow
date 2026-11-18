@@ -1053,6 +1053,10 @@
     overflow: hidden;
     pointer-events: none;
     z-index: 0;
+    /* L'aurore se dissout vers le bas : sans ce masque, le bord du conteneur
+       la coupait net et dessinait une ligne en travers de la page. */
+    -webkit-mask-image: linear-gradient(to bottom, #000 45%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 45%, transparent 100%);
   }
   .aurora > i {
     position: absolute;
@@ -1190,6 +1194,18 @@
   .shine:hover::after {
     transform: translateX(120%) skewX(-18deg);
     transition: transform 700ms var(--ease-brand);
+  }
+
+  /* Accordéon natif (<details class="faq">) : la réponse monte à l'ouverture. */
+  .faq[open] > .faq-body {
+    animation: rise 0.42s var(--ease-brand) both;
+  }
+  .faq {
+    transition: box-shadow 320ms var(--ease-brand);
+  }
+  .faq:hover,
+  .faq[open] {
+    box-shadow: var(--shadow-soft);
   }
 
   /* Trois points « Ethi écrit… » */

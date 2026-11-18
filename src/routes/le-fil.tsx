@@ -425,7 +425,7 @@ function LeFil() {
                         type="button"
                         onClick={() => setSelectedHolding(h)}
                         aria-label={t("le_fil.asset_detail", { name: h.name })}
-                        className="min-w-0 flex-1 rounded-sm text-left outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
+                        className="min-w-0 flex-1 rounded-sm text-left outline-none focus-visible:ring-2 focus-visible:ring-mint"
                       >
                         <p className="truncate text-body font-semibold text-ink">{h.name}</p>
                         {/* `allocationPct` est en POINTS (0..100) : le passer

@@ -679,7 +679,7 @@ function SegmentedControl<T extends string>({
           role="radio"
           aria-checked={value === opt.value}
           onClick={() => onChange(opt.value)}
-          className={`px-3.5 py-1.5 rounded-full text-label font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 ${
+          className={`px-3.5 py-1.5 rounded-full text-label font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint ${
             value === opt.value ? "bg-paper text-ink shadow-sm" : "text-ink-3 hover:text-ink-2"
           }`}
         >
@@ -744,7 +744,7 @@ function ThemeToggle() {
           role="radio"
           aria-checked={theme === opt.value}
           onClick={() => setTheme(opt.value)}
-          className={`px-3.5 py-1.5 rounded-full text-label font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 ${
+          className={`px-3.5 py-1.5 rounded-full text-label font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint ${
             theme === opt.value ? "bg-paper text-ink shadow-sm" : "text-ink-3 hover:text-ink-2"
           }`}
         >
@@ -971,7 +971,7 @@ function MarketDataBlock() {
           : t("reglages.methodology.market_data.refresh")}
       </button>
       {msg && (
-        <p className={`text-caption mt-2 ${state === "error" ? "text-rust" : "text-ink-3"}`}>
+        <p className={`text-caption mt-2 ${state === "error" ? "text-alert-ink" : "text-ink-3"}`}>
           {msg}
         </p>
       )}
@@ -1019,7 +1019,7 @@ function RiskModelBlock() {
           : t("reglages.methodology.risk_model.refresh")}
       </button>
       {msg && (
-        <p className={`text-caption mt-2 ${state === "error" ? "text-rust" : "text-ink-3"}`}>
+        <p className={`text-caption mt-2 ${state === "error" ? "text-alert-ink" : "text-ink-3"}`}>
           {msg}
         </p>
       )}
@@ -1073,7 +1073,7 @@ function CronHealthBlock({
       {loading ? (
         <p className="text-label text-ink-3">{t("reglages.methodology.health.loading")}</p>
       ) : error ? (
-        <p className="text-label text-rust">{t("common.error")}</p>
+        <p className="text-label text-alert-ink">{t("common.error")}</p>
       ) : runs.length === 0 ? (
         <p className="text-label text-ink-3">{t(emptyKey)}</p>
       ) : (
@@ -1082,10 +1082,10 @@ function CronHealthBlock({
             <span
               className={`w-2 h-2 rounded-full ${
                 lastRun?.status === "ok"
-                  ? "bg-highlight-1"
+                  ? "bg-ink"
                   : lastRun?.status === "partial"
-                    ? "bg-gold"
-                    : "bg-rust"
+                    ? "bg-mint"
+                    : "bg-alert"
               }`}
             />
             <p className="text-label text-ink-2">
@@ -1106,10 +1106,10 @@ function CronHealthBlock({
                 <span
                   className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
                     r.status === "ok"
-                      ? "bg-highlight-1"
+                      ? "bg-ink"
                       : r.status === "partial"
-                        ? "bg-gold"
-                        : "bg-rust"
+                        ? "bg-mint"
+                        : "bg-alert"
                   }`}
                 />
                 <span className="text-ink-3 tabular-nums w-28 flex-shrink-0">
@@ -1255,14 +1255,14 @@ function MethodologySection() {
                 <p className="text-ink-3">{t("reglages.methodology.esg_composite.scale_medium")}</p>
               </div>
               <div className="rounded border border-highlight-4 bg-highlight-5 p-2">
-                <p className="font-value text-highlight-1">60–80</p>
-                <p className="text-highlight-1">
+                <p className="font-value text-ink">60–80</p>
+                <p className="text-ink">
                   {t("reglages.methodology.esg_composite.scale_good")}
                 </p>
               </div>
               <div className="rounded border border-highlight-2 bg-highlight-5 p-2">
-                <p className="font-value text-highlight-1">80–100</p>
-                <p className="text-highlight-1">
+                <p className="font-value text-ink">80–100</p>
+                <p className="text-ink">
                   {t("reglages.methodology.esg_composite.scale_excellent")}
                 </p>
               </div>
@@ -1371,9 +1371,9 @@ function StatusBanner({
 
   const tone =
     status === "error"
-      ? "border-rust/40 text-rust bg-alert-tint"
+      ? "border-alert/40 text-alert-ink bg-alert-tint"
       : status === "saved"
-        ? "border-highlight-1/30 text-highlight-1 bg-highlight-5"
+        ? "border-ink/30 text-ink bg-highlight-5"
         : "border-paper-3 text-ink-3 bg-paper-2";
 
   return (

@@ -108,7 +108,7 @@ function ResolutionPage() {
         <div className="pt-6">
           <Link
             to="/vote"
-            className="inline-flex items-center gap-1.5 text-caption font-semibold text-ink-3 transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight-1"
+            className="inline-flex items-center gap-1.5 text-caption font-semibold text-ink-3 transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint"
           >
             ← {t("vote.back")}
           </Link>
@@ -134,7 +134,7 @@ function ResolutionPage() {
                 <span>{meetingLine}</span>
                 {resolution.status === "open" && days != null && (
                   <span className="inline-flex items-center gap-1.5 text-ink">
-                    <span aria-hidden="true" className="apple-live" />
+                    <span aria-hidden="true" className="live-dot" />
                     {days === 0
                       ? t("vote.status.last_day")
                       : t("vote.status.days_left", { n: days })}
@@ -159,7 +159,7 @@ function ResolutionPage() {
                   type="button"
                   disabled={casting}
                   onClick={() => submit(resolutionId, myChoice === "for" ? "against" : "for")}
-                  className="mx-auto text-caption font-semibold text-ink-3 underline-offset-4 transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 disabled:opacity-50"
+                  className="mx-auto text-caption font-semibold text-ink-3 underline-offset-4 transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint disabled:opacity-50"
                 >
                   {t("vote.change_vote")}
                 </button>

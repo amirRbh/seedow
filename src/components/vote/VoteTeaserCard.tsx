@@ -45,7 +45,7 @@ export function VoteTeaserCard() {
       >
         <div className="flex items-center justify-between gap-3">
           <span className="inline-flex items-center gap-2">
-            <span aria-hidden="true" className="apple-live" />
+            <span aria-hidden="true" className="live-dot" />
             <span className="text-caption font-semibold text-mint-ink">
               {t("vote.teaser.eyebrow")}
             </span>

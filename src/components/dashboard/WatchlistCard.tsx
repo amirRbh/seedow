@@ -77,7 +77,7 @@ export function WatchlistCard() {
               onClick={() => setDetail(asset)}
               className="paper-card w-full text-left p-3 flex items-center gap-3 hover:shadow-flat-1 transition-shadow"
             >
-              <Star className="w-4 h-4 fill-gold text-gold flex-shrink-0" aria-hidden />
+              <Star className="w-4 h-4 fill-mint text-mint-ink flex-shrink-0" aria-hidden />
               <div className="flex-1 min-w-0">
                 <p className="text-body-sm font-semibold text-ink truncate leading-tight">
                   {asset.name}

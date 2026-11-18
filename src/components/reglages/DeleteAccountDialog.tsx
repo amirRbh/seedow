@@ -54,7 +54,7 @@ export function DeleteAccountDialog() {
       }}
     >
       <AlertDialogTrigger asChild>
-        <button className="px-3 py-1.5 text-label border border-paper-3 text-rust rounded hover:border-rust transition-colors">
+        <button className="px-3 py-1.5 text-label border border-paper-3 text-alert-ink rounded hover:border-alert transition-colors">
           {t("reglages.delete_account")}
         </button>
       </AlertDialogTrigger>
@@ -85,7 +85,7 @@ export function DeleteAccountDialog() {
               e.preventDefault();
               void onConfirm();
             }}
-            className="bg-rust text-paper hover:bg-rust/90 disabled:opacity-40"
+            className="bg-alert text-paper hover:bg-alert/90 disabled:opacity-40"
           >
             {submitting ? t("common.sending") : t("reglages.delete_account_confirm_cta")}
           </AlertDialogAction>

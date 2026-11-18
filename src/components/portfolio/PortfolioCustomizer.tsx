@@ -329,7 +329,7 @@ export function PortfolioCustomizer({ portfolioId, holdings, onSaved }: Props) {
                   type="button"
                   onClick={() => removeLine(l.id)}
                   aria-label={t("portfolio_customizer.remove")}
-                  className="text-ink-3 hover:text-rust transition-colors flex-shrink-0"
+                  className="text-ink-3 hover:text-alert-ink transition-colors flex-shrink-0"
                 >
                   <Trash2 className="w-4 h-4" strokeWidth={1.8} aria-hidden />
                 </button>

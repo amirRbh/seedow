@@ -149,8 +149,8 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
                   onClick={() => setSelected(target)}
                   className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-caption transition-colors ${
                     up
-                      ? "border-highlight-1/30 bg-highlight-1/5 text-highlight-1 hover:bg-highlight-1/10"
-                      : "border-bloom/30 bg-bloom/5 text-bloom hover:bg-bloom/10"
+                      ? "border-ink/30 bg-ink/5 text-ink hover:bg-ink/10"
+                      : "border-volt/30 bg-volt/5 text-volt-ink hover:bg-volt/10"
                   }`}
                 >
                   {up ? (
@@ -207,7 +207,7 @@ export function AllocationBreakdown({ holdings, totalAmount, valuedHoldings }: P
                       {hasMove && (
                         <span
                           className={`flex items-center gap-0.5 text-caption font-semibold tabular-nums ${
-                            up ? "text-highlight-1" : "text-rust"
+                            up ? "text-ink" : "text-alert-ink"
                           }`}
                         >
                           {up ? (

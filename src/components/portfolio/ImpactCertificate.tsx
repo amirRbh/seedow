@@ -26,7 +26,7 @@ export function ImpactCertificate() {
       <div className="flex items-start gap-4">
         <div
           aria-hidden
-          className="hidden sm:flex w-10 h-10 rounded-full bg-gold/10 border border-gold/30 items-center justify-center text-gold flex-shrink-0"
+          className="hidden sm:flex w-10 h-10 rounded-full bg-mint/10 border border-mint/30 items-center justify-center text-mint-ink flex-shrink-0"
         >
           <svg
             viewBox="0 0 24 24"

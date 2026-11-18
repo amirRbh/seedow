@@ -77,7 +77,7 @@ function WaitlistPage() {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-3 py-2.5 rounded border border-paper-3 bg-paper text-body-sm focus:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-1"
             />
-            {error && <p className="text-label text-rust">{error}</p>}
+            {error && <p className="text-label text-alert-ink">{error}</p>}
             <Button
               type="submit"
               size="pill"

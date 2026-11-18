@@ -31,7 +31,7 @@ export function MetricLabel({ label, hint, className = "" }: Props) {
           e.preventDefault();
           setOpen((v) => !v);
         }}
-        className="relative w-3.5 h-3.5 rounded-full bg-paper-3 text-ink-2 text-tag font-bold flex items-center justify-center hover:bg-highlight-4 hover:text-highlight-1 transition-colors leading-none before:absolute before:-inset-3 before:content-['']"
+        className="relative w-3.5 h-3.5 rounded-full bg-paper-3 text-ink-2 text-tag font-bold flex items-center justify-center hover:bg-highlight-4 hover:text-ink transition-colors leading-none before:absolute before:-inset-3 before:content-['']"
       >
         ?
       </button>

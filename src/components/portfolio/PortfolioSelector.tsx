@@ -50,7 +50,7 @@ export function PortfolioSelector({ compact = false }: { compact?: boolean }) {
         ref={triggerRef}
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className={`flex items-center gap-1.5 rounded-full border border-paper-3 bg-paper hover:border-highlight-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight-1 focus-visible:ring-offset-1 ${
+        className={`flex items-center gap-1.5 rounded-full border border-paper-3 bg-paper hover:border-highlight-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint focus-visible:ring-offset-1 ${
           compact ? "h-7 px-2.5" : "h-8 px-3"
         }`}
         aria-haspopup="listbox"
@@ -95,7 +95,7 @@ export function PortfolioSelector({ compact = false }: { compact?: boolean }) {
                     }}
                     role="option"
                     aria-selected={isActive}
-                    className={`w-full flex items-center justify-between gap-2 px-3 py-2 text-left text-label transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-highlight-1 ${
+                    className={`w-full flex items-center justify-between gap-2 px-3 py-2 text-left text-label transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-mint ${
                       isActive ? "bg-highlight-5/40 text-ink" : "text-ink-2 hover:bg-paper-2"
                     }`}
                   >
@@ -109,7 +109,7 @@ export function PortfolioSelector({ compact = false }: { compact?: boolean }) {
                     {isActive && (
                       <svg
                         viewBox="0 0 24 24"
-                        className="w-3.5 h-3.5 text-highlight-1 flex-shrink-0"
+                        className="w-3.5 h-3.5 text-ink flex-shrink-0"
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="3"
@@ -131,9 +131,9 @@ export function PortfolioSelector({ compact = false }: { compact?: boolean }) {
                     close(false);
                     navigate({ to: "/onboarding", search: { new: 1 } });
                   }}
-                  className="w-full flex items-center gap-2 px-3 py-2.5 text-left text-label text-highlight-1 hover:bg-highlight-5/30 font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-highlight-1"
+                  className="w-full flex items-center gap-2 px-3 py-2.5 text-left text-label text-ink hover:bg-highlight-5/30 font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-mint"
                 >
-                  <span className="w-4 h-4 rounded-full border border-highlight-1 flex items-center justify-center text-tag leading-none">
+                  <span className="w-4 h-4 rounded-full border border-ink flex items-center justify-center text-tag leading-none">
                     +
                   </span>
                   {t("portfolio_selector.new_portfolio")}

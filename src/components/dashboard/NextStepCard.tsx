@@ -64,8 +64,8 @@ export function NextStepCard() {
   if (!card) return <EthiBriefing />;
 
   const toneClasses = {
-    gold: "border-gold/40 bg-gold/5",
-    highlight: "border-highlight-1/30 bg-highlight-5/40",
+    gold: "border-mint/40 bg-mint/5",
+    highlight: "border-ink/30 bg-highlight-5/40",
   } as const;
 
   return (

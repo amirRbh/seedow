@@ -27,7 +27,7 @@ function AdminDataPage() {
   if (error) {
     return (
       <div className="max-w-3xl mx-auto px-6 py-12">
-        <p className="text-rust text-sm">{error}</p>
+        <p className="text-alert-ink text-sm">{error}</p>
         <Link to="/le-fil" className="text-label underline mt-4 inline-block">
           {t("admin_data.back_dashboard")}
         </Link>
@@ -204,7 +204,7 @@ function Kpi({ label, value, tone }: { label: string; value: string; tone?: "for
       <p className="text-caption font-semibold text-ink-3">{label}</p>
       <p
         className={`font-value text-2xl mt-1 tabular-nums ${
-          tone === "forest" ? "text-forest" : tone === "rust" ? "text-rust" : "text-ink"
+          tone === "forest" ? "text-forest" : tone === "rust" ? "text-alert-ink" : "text-ink"
         }`}
       >
         {value}
