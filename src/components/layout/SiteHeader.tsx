@@ -58,10 +58,11 @@ export function SiteHeader() {
   }, [open]);
 
   const links: NavLink[] = [
+    { to: "/demo", label: t("site.nav_demo") },
     { to: "/observatoire", label: t("landing.footer.observatory") },
+    { to: "/comparer", label: t("site.nav_compare") },
     { to: "/cours", label: t("landing.nav.courses") },
     { to: "/methodologie", label: t("landing.nav.methodology") },
-    { to: "/tarifs", label: t("landing.footer.pricing") },
   ];
   const isActive = (to: string) => pathname === to || pathname.startsWith(`${to}/`);
 

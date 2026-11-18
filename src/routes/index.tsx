@@ -20,11 +20,17 @@ import { wordCount } from "@/lib/motion";
 import { Provenance } from "@/components/ui/Provenance";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
+import { useLang } from "@/hooks/useLang";
+import { getLandingFacts } from "@/lib/demo/demo.functions";
+import { formatDate, formatNumber } from "@/lib/format";
 import { trackAppEvent } from "@/lib/analytics/appEvents";
 import { cn } from "@/lib/utils";
 import { siteUrl, socialMeta } from "@/lib/seo/socialMeta";
 
 export const Route = createFileRoute("/")({
+  // Les trois faits du « constat » viennent de l'instantané émetteur ; sans
+  // lui, la section les omet plutôt que d'afficher un chiffre non sourcé.
+  loader: async () => ({ facts: await getLandingFacts().catch(() => null) }),
   head: () => ({
     meta: socialMeta({
       title: "Seedow — Votre argent façonne déjà le monde",
@@ -61,6 +67,7 @@ const CONTAINER = "mx-auto max-w-[1160px] px-5 sm:px-7";
 function Landing() {
   const { t } = useTranslation();
   const { session, loading } = useAuth();
+  const { lang } = useLang();
   const isAuthed = !loading && !!session;
 
   useEffect(() => {
@@ -71,11 +78,39 @@ function Landing() {
     void trackAppEvent("landing_cta_clicked", { placement, destination });
   };
 
-  const STATS: { figure: string; text: string; src: string }[] = [
-    { figure: "0 %", text: t("landing.stats.visibility"), src: t("landing.stats.visibility_src") },
-    { figure: "∞", text: t("landing.stats.jargon"), src: t("landing.stats.jargon_src") },
-    { figure: "1", text: t("landing.stats.only_app"), src: t("landing.stats.only_app_src") },
-  ];
+  const { facts } = Route.useLoaderData();
+  // Les anciens chiffres (« 0 % de visibilité », « ∞ de jargon », « seule app
+  // qui relie ton portefeuille à son impact réel ») étaient affichés comme
+  // VÉRIFIÉS sans source primaire — et le troisième promettait une mesure
+  // d'impact que Seedow ne fait pas. Ils sont remplacés par trois faits lus
+  // dans le document officiel d'un ETF Monde courant, avec émetteur et date.
+  const factSource = facts
+    ? t("landing.facts.source", {
+        fund: facts.fundName,
+        date: facts.asOf
+          ? formatDate(facts.asOf, lang, { day: "numeric", month: "short", year: "numeric" })
+          : "—",
+      })
+    : "";
+  const STATS: { figure: string; text: string; src: string }[] = facts
+    ? [
+        facts.holdingsCount != null && {
+          figure: formatNumber(facts.holdingsCount, lang, { maximumFractionDigits: 0 }),
+          text: t("landing.facts.holdings"),
+          src: factSource,
+        },
+        facts.usPct != null && {
+          figure: `${formatNumber(facts.usPct, lang, { maximumFractionDigits: 0 })} %`,
+          text: t("landing.facts.us"),
+          src: factSource,
+        },
+        facts.energyPct != null && {
+          figure: `${formatNumber(facts.energyPct, lang, { maximumFractionDigits: 1 })} %`,
+          text: t("landing.facts.energy"),
+          src: factSource,
+        },
+      ].filter((x): x is { figure: string; text: string; src: string } => !!x)
+    : [];
 
   const titleLine1 = t("landing.flow.title_line1");
 
@@ -260,19 +295,29 @@ function Landing() {
                 {t("landing.rv.cards.problem.desc")}
               </p>
 
-              <RevealGroup className="mt-14 grid gap-10 md:grid-cols-3 md:gap-8">
-                {STATS.map((s) => (
-                  <div key={s.figure} className="border-t border-paper-3 pt-6">
-                    <p className="font-display text-[clamp(56px,7vw,92px)] font-extrabold leading-none tracking-[-0.04em] text-mint-ink">
-                      {s.figure}
-                    </p>
-                    <p className="mt-4 max-w-[26ch] text-body-lg leading-snug text-ink-2">
-                      {s.text}
-                    </p>
-                    <Provenance className="mt-4" source={s.src} status="verified" hideChip />
-                  </div>
-                ))}
-              </RevealGroup>
+              {STATS.length > 0 && (
+                <RevealGroup className="mt-14 grid gap-10 md:grid-cols-3 md:gap-8">
+                  {STATS.map((s) => (
+                    <div key={s.figure} className="border-t border-paper-3 pt-6">
+                      <p className="font-display text-[clamp(56px,7vw,92px)] font-extrabold leading-none tracking-[-0.04em] text-mint-ink">
+                        {s.figure}
+                      </p>
+                      <p className="mt-4 max-w-[26ch] text-body-lg leading-snug text-ink-2">
+                        {s.text}
+                      </p>
+                      <Provenance className="mt-4" source={s.src} status="verified" hideChip />
+                    </div>
+                  ))}
+                </RevealGroup>
+              )}
+              {STATS.length > 0 && (
+                <Link
+                  to="/demo"
+                  className="link-u mt-10 inline-flex items-center gap-2 text-body font-bold text-on-deep"
+                >
+                  {t("landing.facts.cta")} <ArrowRight aria-hidden className="size-4" />
+                </Link>
+              )}
             </div>
           </div>
         </Reveal>

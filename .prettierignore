@@ -9,3 +9,5 @@ routeTree.gen.ts
 src/integrations/supabase/types.ts
 src/integrations/supabase/client.ts
 .lovable/
+# Instantané émetteur généré par scripts/snapshot-demo-funds.ts — donnée, pas du code
+src/content/demo/fund-snapshots.json

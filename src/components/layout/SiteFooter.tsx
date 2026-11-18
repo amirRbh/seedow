@@ -20,7 +20,9 @@ export function SiteFooter() {
     {
       title: t("site.footer.col_product"),
       links: [
+        { to: "/demo", label: t("site.nav_demo") },
         { to: "/observatoire", label: t("landing.footer.observatory") },
+        { to: "/comparer", label: t("site.nav_compare") },
         { to: "/tarifs", label: t("landing.footer.pricing") },
         { to: "/aide", label: t("landing.footer.help") },
       ],
@@ -30,6 +32,7 @@ export function SiteFooter() {
       links: [
         { to: "/cours", label: t("landing.footer.courses") },
         { to: "/methodologie", label: t("landing.footer.methodology") },
+        { to: "/donnees", label: t("site.nav_data") },
       ],
     },
     {

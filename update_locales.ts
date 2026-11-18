@@ -3763,6 +3763,9 @@ const designV4Fr = {
     nav_aria: "Navigation principale",
     menu_open: "Ouvrir le menu",
     menu_close: "Fermer le menu",
+    nav_demo: "Démo",
+    nav_compare: "Comparer",
+    nav_data: "Sources des données",
     signature_1: "Ce n'est pas une fatalité.",
     signature_2: "C'est un choix. Le tien aussi.",
     footer: {
@@ -3809,6 +3812,9 @@ const designV4En = {
     nav_aria: "Main navigation",
     menu_open: "Open menu",
     menu_close: "Close menu",
+    nav_demo: "Demo",
+    nav_compare: "Compare",
+    nav_data: "Data sources",
     signature_1: "It isn't inevitable.",
     signature_2: "It's a choice. Yours too.",
     footer: {
@@ -3850,6 +3856,914 @@ const designV4En = {
   },
 };
 
+/**
+ * Intelligence financière & ESG — démonstration, comparateur, sources de
+ * données, cadre ESG en six couches (lib/esg/framework.ts) et statuts de
+ * données (lib/data/status.ts). Le vocabulaire réglementaire suit les textes :
+ * une classification SFDR est une catégorie de divulgation, pas une note.
+ */
+const finFr = {
+  landing: {
+    // Seedow n'a pas de licence MSCI : il reprend des indicateurs que les
+    // émetteurs publient eux-mêmes. Le bandeau ne doit pas suggérer l'inverse.
+    rv: { proof: { sources: "Sources : <b>émetteurs</b> · <b>AMF</b> · <b>Yahoo Finance</b>" } },
+    flow: {
+      source_note:
+        "Illustration du mécanisme · valeurs de démonstration. Dans l'app : documents des émetteurs, AMF (SFDR), Yahoo Finance — chaque ligne datée.",
+    },
+    facts: {
+      holdings: "entreprises différentes dans un seul ETF Monde parmi les plus détenus en Europe.",
+      us: "de cet ETF « Monde » investis aux États-Unis.",
+      energy: "dans le secteur Énergie (pétrole, gaz, charbon), selon la classification GICS.",
+      source: "{{fund}} · document de l'émetteur au {{date}}",
+      cta: "Voir ce que contient un portefeuille, titre par titre",
+    },
+  },
+  profile: { kpi_impact: "Note ESG moyenne" },
+  certificate: { kpi_impact: "Note ESG moyenne" },
+  comparatif_panel: { impact_score: "Note ESG moyenne" },
+  portfolio_metrics: {
+    impact_score: "Note ESG moyenne",
+    impact_score_hint:
+      "Moyenne, pondérée par les poids, des notes ESG des lignes du portefeuille. Elle décrit l'exposition à des enjeux ESG — ce n'est pas une mesure d'impact réel.",
+  },
+  fin: {
+    status: {
+      VERIFIED: "Vérifié",
+      ESTIMATED: "Estimé",
+      SIMULATED: "Simulé",
+      UNAVAILABLE: "Indisponible",
+      STALE: "Périmé",
+    },
+    status_desc: {
+      VERIFIED:
+        "Publié par une source primaire identifiée (émetteur, régulateur, fournisseur de cours), daté, repris sans retraitement.",
+      ESTIMATED:
+        "Calculé ou modélisé par Seedow à partir de données réelles. Un ordre de grandeur, jamais une mesure.",
+      SIMULATED:
+        "Construit pour illustrer un mécanisme : montants fictifs, simulation historique. Personne n'a détenu ce portefeuille.",
+      STALE:
+        "Était vérifié, mais sa date de référence dépasse la fenêtre de fraîcheur de son jeu de données. Affiché avec son âge.",
+      UNAVAILABLE:
+        "Absent de nos sources ou non collecté. Jamais remplacé par zéro ni par une valeur par défaut.",
+    },
+    sfdr: {
+      article: "Article {{n}}",
+      other: "Ni 8 ni 9 (« Other »)",
+      other_short: "Ni 8 ni 9",
+      unknown: "Non renseigné",
+    },
+    perf: {
+      cumulative: "Rendement cumulé",
+      annualized: "Rendement annualisé",
+      benchmark_annualized: "Indice, annualisé",
+      excess: "Écart à l'indice",
+      volatility: "Volatilité annualisée",
+      max_drawdown: "Perte maximale",
+      window: "Fenêtre",
+      years_one: "{{count}} an",
+      years_other: "{{count}} ans",
+      not_computable: "non calculable",
+      table_caption: "Performance historique par fenêtre glissante",
+      rebased: "Base 100 au début de la période, dividendes réinvestis.",
+      no_history: "Historique insuffisant pour tracer une courbe.",
+      chart_aria: "Évolution de {{name}} et de son indice, base 100",
+      past_disclaimer:
+        "Performances passées, calculées sur l'historique publié par l'émetteur. Elles ne préjugent pas des performances futures et ne constituent pas une prévision.",
+      simulated_disclaimer:
+        "Simulation : panier à poids constants, sans frais de transaction ni fiscalité. Ce n'est pas la performance d'un investisseur réel.",
+    },
+    method: {
+      label: "Comment c'est calculé",
+      performance:
+        "Rendements calculés sur la série « croissance de 10 000 » publiée par l'émetteur (dividendes réinvestis). Annualisation sur la durée calendaire réelle (365,25 j). Volatilité : écart-type des rendements mensuels × √12. Perte maximale : plus forte baisse d'un plus-haut au plus-bas suivant. Une fenêtre que l'historique ne couvre pas n'est pas raccourcie : elle est « non calculable ».",
+      cross_check:
+        "Contrôle indépendant : au {{date}}, l'émetteur publie {{values}} (annualisés). Les valeurs recalculées par Seedow sur la même date concordent à moins de 0,05 point — vérifié par un test automatisé.",
+      lookthrough:
+        "Chaque fonds est remplacé par ses positions publiées, au prorata de sa valeur dans le portefeuille : valeur du titre = valeur du fonds × poids du titre dans le fonds. Un même titre détenu par plusieurs fonds est agrégé en une seule ligne. Seules les 150 premières positions de chaque fonds sont conservées : la part restante n'est pas répartie, elle est comptée comme non couverte.",
+      blend:
+        "Rendement quotidien du panier = Σ (poids × rendement quotidien du fonds), poids constants rééquilibrés chaque jour, sur les seules dates communes à tous les fonds. Aucun prix n'est interpolé. Séries dans la devise de part des fonds.",
+    },
+    kpi: {
+      ter: "Frais courants (TER)",
+      ter_hint: "Frais annuels prélevés dans le fonds, déclarés par l'émetteur.",
+      energy: "Secteur Énergie (GICS)",
+      energy_hint:
+        "Pétrole, gaz, charbon et leurs services, selon la répartition sectorielle publiée.",
+      total: "Valeur du portefeuille",
+      total_hint_one: "{{count}} position — montant fictif",
+      total_hint_other: "{{count}} positions — montants fictifs",
+      weighted_ter: "Frais moyens pondérés",
+      weighted_ter_hint: "≈ {{cost}} par an · {{coverage}} % de la valeur couverte",
+      lookthrough: "Couverture look-through",
+      lookthrough_hint: "Part de la valeur dont les titres sous-jacents sont connus.",
+      energy_portfolio: "Exposition Énergie (GICS)",
+      energy_portfolio_hint: "Σ valeur × part Énergie de chaque fonds · {{coverage}} % ventilé",
+      largest_position: "Plus grosse position",
+      effective_positions: "Nombre effectif de positions",
+      top10: "10 premiers titres sous-jacents",
+    },
+    table: {
+      fund: "Fonds",
+      sfdr_declared: "SFDR déclaré",
+      amount: "Montant",
+      weight: "Poids",
+      ter: "Frais (TER)",
+      ann3y: "Rend. annualisé 3 ans",
+      vol3y: "Volatilité 3 ans",
+      holdings: "Nombre de positions",
+    },
+    exposure: {
+      sector_title: "Exposition sectorielle",
+      geography_title: "Exposition géographique",
+      currency_title: "Devises de cotation",
+      currency_desc:
+        "Devise dans laquelle les titres sous-jacents sont cotés — distincte de la devise du fonds.",
+      coverage: "{{pct}} % de la valeur ventilé par l'émetteur.",
+      unclassified: "Non ventilé",
+      other_buckets: "{{count}} autres catégories",
+    },
+    lookthrough: {
+      title: "Ce que le portefeuille détient vraiment",
+      desc: "{{total}} titres sous-jacents identifiés · {{coverage}} % de la valeur couverte. Un titre détenu par plusieurs fonds n'apparaît qu'une fois.",
+      caption: "Titres sous-jacents agrégés à travers les fonds",
+      security: "Titre",
+      via: "Détenu via",
+      value: "Valeur",
+      weight: "Part du total",
+      direct: "En direct",
+    },
+    esg: {
+      layers_title: "Six couches ESG, qui ne se confondent pas",
+      layers_desc:
+        "Une classification réglementaire n'est pas une note, une note n'est pas un impact. Chaque couche est affichée séparément, avec ce qu'elle ne dit pas.",
+      does_not_say: "Ce que ça ne dit pas :",
+      source_catalog: "Catalogue Seedow",
+      coverage_aria: "Couverture des indicateurs du pilier {{pillar}}",
+      pillar: { E: "Environnement", S: "Social", G: "Gouvernance" },
+      confidence: {
+        high: "Confiance élevée",
+        medium: "Confiance moyenne",
+        low: "Confiance faible",
+        insufficient: "Données insuffisantes",
+      },
+      layer: {
+        regulatory: {
+          title: "Classification SFDR",
+          not: "C'est une catégorie de divulgation déclarée par l'émetteur, pas une note de durabilité. Un article 9 n'est pas garanti sans incidence négative.",
+        },
+        esg_risk: {
+          title: "Risque ESG",
+          not: "Une note de risque ESG mesure l'exposition de l'entreprise aux enjeux ESG, pas son effet sur le monde.",
+        },
+        characteristics: {
+          title: "Caractéristiques promues",
+          not: "Une exclusion documentée dit ce que le fonds s'interdit, pas ce qu'il finance positivement.",
+        },
+        taxonomy: {
+          title: "Alignement Taxonomie UE",
+          not: "L'alignement mesure la part d'activités économiques éligibles et alignées. Il ne se déduit pas de l'article SFDR.",
+        },
+        pai: {
+          title: "Principales incidences négatives (PAI)",
+          not: "Publier une déclaration PAI ne dit pas que les incidences sont faibles.",
+        },
+        impact: {
+          title: "Impact réel",
+          not: "Seedow ne mesure pas l'effet réel de ton argent sur le climat ou la société. Aucun indicateur de cette page ne le remplace.",
+        },
+      },
+      value: {
+        regulatory: {
+          article_6: "Ni article 8 ni article 9",
+          article_8: "Article 8 — promeut des caractéristiques E/S",
+          article_9: "Article 9 — objectif d'investissement durable",
+          unknown: "Non renseignée",
+        },
+        esg_risk: { no_licensed_rating: "Aucune note sous licence dans nos sources" },
+        characteristics: {
+          documented:
+            "{{documented}} secteur(s) documenté(s) sur {{total}} · {{excluded}} exclu(s)",
+          claimed_only: "Thèmes revendiqués ({{claimed}}), aucune exclusion documentée",
+          none: "Aucune politique documentée dans nos sources",
+        },
+        taxonomy: { not_collected: "Non collecté" },
+        pai: {
+          statement_published: "Déclaration PAI publiée",
+          not_verified: "Publication non vérifiée",
+        },
+        impact: { not_measured: "Non mesuré par Seedow" },
+      },
+      conflict: {
+        sfdr_mismatch:
+          "Le catalogue indique l'article {{catalog}}, mais l'émetteur déclare l'article {{declared}} dans son document du {{asOf}}. La déclaration de l'émetteur est retenue ; l'écart est signalé, pas effacé.",
+      },
+      indicator: {
+        carbon_intensity: "Intensité carbone",
+        fossil_sector_exposure: "Exposition au secteur Énergie",
+        fossil_exclusion_policy: "Exclusion des fossiles",
+        taxonomy_alignment: "Alignement Taxonomie",
+        biodiversity_exposure: "Biodiversité",
+        environmental_controversies: "Controverses environnementales",
+        weapons_exclusion_policy: "Exclusion de l'armement",
+        tobacco_exclusion_policy: "Exclusion du tabac",
+        human_rights: "Droits humains",
+        labour_practices: "Conditions de travail",
+        social_controversies: "Controverses sociales",
+        board_independence: "Indépendance du conseil",
+        business_ethics: "Éthique des affaires",
+        corruption_controversies: "Controverses de corruption",
+        shareholder_rights: "Droits des actionnaires",
+      },
+    },
+    demo: {
+      eyebrow: "Parcours de démonstration",
+      title: "De l'épargne",
+      title_accent: "à l'exposition réelle.",
+      subtitle:
+        "Un fonds, un portefeuille de démonstration et leurs expositions — calculés à partir des publications officielles des émetteurs. En cinq étapes, trois minutes.",
+      legend_verified: "données des fonds, sourcées et datées",
+      legend_simulated: "montants du portefeuille, fictifs",
+      steps_aria: "Étapes de la démonstration",
+      step_label: "Étape {{n}}",
+      step: {
+        discover: {
+          short: "Découvrir",
+          title: "Ton argent finance déjà quelque chose.",
+          desc: "Seedow relie une décision d'épargne à ce qu'elle finance : secteurs, pays, entreprises, frais, et ce que les fonds publient — avec la source et la date de chaque chiffre.",
+        },
+        explore: {
+          short: "Explorer",
+          title: "Un fonds, lu couche par couche.",
+          desc: "Performance passée recalculée et contrôlée, exposition sectorielle publiée, et les six couches ESG séparées : la classification réglementaire n'est pas une note.",
+        },
+        analyze: {
+          short: "Analyser",
+          title: "Un portefeuille, vu à travers ses fonds.",
+          desc: "Chaque fonds est remplacé par ce qu'il détient. On voit les vrais secteurs, pays, devises et entreprises — sans compter deux fois un titre détenu par deux fonds.",
+        },
+        compare: {
+          short: "Comparer",
+          title: "Comparer sans désigner de gagnant.",
+          desc: "Deux fonds du même univers, avec et sans filtre ISR : frais, classification, exposition, performance passée. L'outil informe — il ne dit pas quoi acheter.",
+        },
+        understand: {
+          short: "Comprendre",
+          title: "Ce que dit chaque chiffre, et ce qu'il ne dit pas.",
+          desc: "Statut de chaque donnée, sources, dates et limites, écrits en toutes lettres.",
+        },
+      },
+      pillar: {
+        rigour: {
+          eyebrow: "Rigueur financière",
+          title: "Des calculs vérifiables",
+          desc: "Rendements, volatilité et perte maximale recalculés sur l'historique publié — et contrôlés contre les chiffres de l'émetteur.",
+        },
+        transparency: {
+          eyebrow: "Transparence ESG",
+          title: "Six couches, pas une note",
+          desc: "Classification SFDR, risque ESG, exclusions, Taxonomie, PAI et impact réel restent séparés. Ce qui manque est écrit.",
+        },
+        credibility: {
+          eyebrow: "Crédibilité technique",
+          title: "Chaque chiffre a sa source",
+          desc: "Vérifié, estimé, simulé, périmé ou indisponible : le statut de chaque donnée est affiché, jamais deviné.",
+        },
+      },
+      is_not_title: "Ce que Seedow n'est pas",
+      is_not: {
+        advice: "Un conseiller en investissement : aucune recommandation personnalisée.",
+        execution: "Un courtier : aucun ordre n'est passé, aucun argent n'est investi.",
+        impact: "Une mesure d'impact réel : les indicateurs ESG n'en tiennent pas lieu.",
+      },
+      explore: {
+        fund_desc: "Indice de référence : {{benchmark}} · devise de la part : {{currency}}.",
+        open_fund: "Ouvrir la fiche du fonds",
+      },
+      analyze: {
+        banner:
+          "Portefeuille de démonstration — montants fictifs. Les compositions, frais et historiques des fonds sont réels et sourcés.",
+        positions_title: "Les positions",
+        positions_desc:
+          "Cinq fonds indiciels, montants illustratifs. Ce n'est une recommandation pour personne.",
+        simulated_title: "Historique simulé du panier",
+        simulated_desc:
+          "Ce qu'aurait donné ce panier à poids constants sur la période — en {{currency}}, devise des parts.",
+        simulated_series: "Panier de démonstration (simulé)",
+      },
+      compare: {
+        title: "Monde vs Monde ISR",
+        desc: "Même univers de départ (MSCI World), l'un avec un filtre ISR. Toutes les valeurs viennent des documents de l'émetteur.",
+        note: "Performances passées. Un écart de performance sur une période ne dit rien de la suivante.",
+        open: "Ouvrir le comparateur",
+      },
+      understand: {
+        statuses_title: "Cinq statuts de donnée",
+        limits_title: "Limites, écrites",
+        limit: {
+          past: "Les performances sont historiques : elles ne prévoient rien.",
+          lookthrough:
+            "Le look-through porte sur les 150 premières positions de chaque fonds ; le reste est compté comme non couvert.",
+          esg: "Les données ESG sont incomplètes : la couverture de chaque pilier est affichée, aucune note composite n'est publiée.",
+          impact: "Les indicateurs ESG ne sont pas une mesure d'impact réel.",
+          snapshot:
+            "Les données de la démonstration sont un instantané daté ; elles passent au statut « périmé » à mesure qu'elles vieillissent.",
+        },
+        sources_title: "Sources de cette démonstration",
+        source_line: "données au {{asOf}} · collectées le {{retrieved}}",
+        source_link: "document de l'émetteur",
+        open_data: "Toutes les sources et leur statut",
+        open_method: "Méthodologie complète",
+      },
+    },
+    portfolio: {
+      title: "Ce que ton portefeuille détient vraiment",
+      desc: "{{covered}} fonds sur {{total}} décomposés à partir de la publication de l'émetteur · {{pct}} de la valeur ventilée.",
+      none_covered:
+        "Aucun de tes fonds n'a encore de composition publiée dans nos sources. Ton exposition réelle n'est donc pas calculée — elle n'est pas devinée non plus.",
+      error: "L'exposition n'a pas pu être calculée pour le moment.",
+    },
+    fund: {
+      performance_title: "Performance historique",
+      geography_unpublished:
+        "L'émetteur ne publie pas de répartition géographique pour ce fonds dans ce document. Elle n'est pas déduite.",
+      holdings_title: "Principales positions",
+      holdings_desc: "Les 10 premières des {{lines}} lignes publiées — {{pct}} du fonds.",
+      coverage_title: "Indicateurs E / S / G : ce qui est renseigné",
+      coverage_desc:
+        "La grille est fixe et publique. Une case vide reste vide : aucune note composite n'est calculée sur des données incomplètes.",
+      not_in_catalog:
+        "Ce fonds figure dans l'instantané de l'émetteur, mais pas encore au catalogue Seedow : son indice de transparence n'est pas calculé.",
+    },
+    compare: {
+      eyebrow: "Comparateur de fonds",
+      title: "Comparer des fonds sur ce qu'ils publient.",
+      subtitle:
+        "Frais, classification SFDR, politiques d'exclusion documentées, performance passée, exposition et couverture des données. Jusqu'à quatre fonds, exportables en CSV.",
+      universe: "{{catalog}} fonds au catalogue · {{total}} comparables",
+      selected_title: "Comparaison ({{count}}/{{max}})",
+      selected_desc:
+        "Ajoute ou retire des fonds depuis la liste ci-dessous. Le lien de cette page conserve ta sélection.",
+      empty: "Aucun fonds sélectionné. Choisis-en jusqu'à quatre dans la liste.",
+      export: "Exporter en CSV",
+      remove: "Retirer {{name}} de la comparaison",
+      table_caption: "Comparaison des fonds sélectionnés",
+      disclaimer:
+        "Information, pas un conseil : Seedow ne classe pas les fonds et ne recommande aucun achat. Une case « non vérifié » signifie que la donnée n'a pas été trouvée dans nos sources, pas que le fonds ne l'applique pas.",
+      sfdr_conflict: "catalogue : art. {{catalog}} · émetteur : art. {{declared}}",
+      blocks: "{{n}}/{{total}} blocs évaluables",
+      has_history: "historique",
+      group: {
+        regulatory: "Réglementaire et frais",
+        exclusions: "Exclusions documentées",
+        performance: "Performance passée (annualisée)",
+        exposure: "Exposition",
+        quality: "Qualité des données",
+      },
+      row: {
+        sfdr: "Classification SFDR",
+        sfdr_catalog: "SFDR (catalogue)",
+        sfdr_declared: "SFDR (émetteur)",
+        exclusion: "Exclusion",
+        transparency: "Indice de transparence",
+        ann1y: "1 an",
+        ann3y: "3 ans",
+        ann5y: "5 ans",
+        vol3y: "Volatilité 3 ans",
+        mdd5y: "Perte maximale 5 ans",
+        coverage: "Couverture des données",
+      },
+      sector: {
+        fossiles: "Énergies fossiles",
+        armement: "Armement",
+        tabac: "Tabac",
+        jeux: "Jeux d'argent",
+        tests_animaux: "Tests animaux",
+        fast_fashion: "Fast fashion",
+      },
+      level: {
+        exclu_seuil_quantifie: "Exclu (seuil chiffré)",
+        exclu_sans_seuil: "Exclu (sans seuil)",
+        non_exclu_documente: "Non exclu",
+        non_verifie: "Non vérifié",
+      },
+      field: {
+        isin: "ISIN",
+        sfdr: "SFDR",
+        ter: "frais",
+        fossil_policy: "politique fossiles",
+        weapons_policy: "politique armement",
+        transparency_index: "transparence",
+        performance_3y: "performance",
+        volatility_3y: "volatilité",
+        energy_exposure: "exposition énergie",
+        holdings: "positions",
+      },
+      missing: "Manque",
+      screen_title: "Filtrer l'univers",
+      search: "Nom, émetteur ou ISIN",
+      filter_sfdr: "Classification SFDR",
+      sfdr_all: "Toutes classifications",
+      filter_ter: "Frais maximum",
+      ter_all: "Tous niveaux de frais",
+      ter_max: "Frais ≤ {{v}}",
+      filter_fossil: "Exclusion des fossiles documentée",
+      filter_perf: "Historique de performance disponible",
+      results_one: "{{count}} fonds correspond",
+      results_other: "{{count}} fonds correspondent",
+      more_results: "+ {{count}} autres — affine la recherche.",
+    },
+    data: {
+      eyebrow: "Sources et qualité",
+      title: "D'où vient chaque chiffre.",
+      subtitle:
+        "Les sources réellement branchées, leur fréquence, leur licence, ce que Seedow en fait — et ce qui n'est pas encore intégré.",
+      statuses_title: "Cinq statuts, affichés partout",
+      statuses_desc:
+        "Une donnée estimée ou simulée n'est jamais présentée comme vérifiée. Un calcul prend le statut de son entrée la plus faible.",
+      freshness_title: "Fenêtres de fraîcheur — au-delà, une donnée vérifiée passe « périmée »",
+      days: "jours",
+      kind: {
+        market_price: "Cours de marché",
+        fund_holdings: "Composition de fonds",
+        fund_exposure: "Expositions publiées",
+        performance_history: "Historique de performance",
+        regulatory_document: "Documents réglementaires",
+        esg_issuer: "Données ESG des entreprises",
+      },
+      sources_title: "Registre des sources",
+      sources_desc: "Écrit à partir du code : chaque entrée indique le fichier qui l'implémente.",
+      level: {
+        scheduled: "Intégrées et planifiées",
+        manual: "Connecteurs fonctionnels, déclenchés à la main",
+        snapshot: "Instantanés datés",
+        reference: "Tables de référence",
+        not_integrated: "Non intégrées — affichées comme indisponibles",
+      },
+      field: {
+        source: "Source",
+        frequency: "Fréquence",
+        license: "Licence",
+        transformation: "Transformation",
+        limits: "Limites",
+      },
+      to_confirm: "À confirmer",
+      provider_note:
+        "Chaque fournisseur passe par la même interface : ajouter une source de données de marché ou ESG, c'est ajouter un connecteur et une entrée au registre, sans réécrire les écrans.",
+      open_demo: "Voir la démonstration",
+    },
+  },
+};
+
+const finEn = {
+  landing: {
+    rv: { proof: { sources: "Sources: <b>issuers</b> · <b>AMF</b> · <b>Yahoo Finance</b>" } },
+    flow: {
+      source_note:
+        "Illustration of the mechanism · demonstration values. In the app: issuer documents, AMF (SFDR), Yahoo Finance — every line dated.",
+    },
+    facts: {
+      holdings: "different companies in a single World ETF, one of the most widely held in Europe.",
+      us: "of this “World” ETF invested in the United States.",
+      energy: "in the Energy sector (oil, gas, coal), per the GICS classification.",
+      source: "{{fund}} · issuer document as of {{date}}",
+      cta: "See what a portfolio holds, security by security",
+    },
+  },
+  profile: { kpi_impact: "Average ESG rating" },
+  certificate: { kpi_impact: "Average ESG rating" },
+  comparatif_panel: { impact_score: "Average ESG rating" },
+  portfolio_metrics: {
+    impact_score: "Average ESG rating",
+    impact_score_hint:
+      "Weighted average of the ESG ratings of the portfolio's lines. It describes exposure to ESG issues — it is not a measurement of real-world impact.",
+  },
+  fin: {
+    status: {
+      VERIFIED: "Verified",
+      ESTIMATED: "Estimated",
+      SIMULATED: "Simulated",
+      UNAVAILABLE: "Unavailable",
+      STALE: "Stale",
+    },
+    status_desc: {
+      VERIFIED:
+        "Published by an identified primary source (issuer, regulator, price provider), dated, reproduced without restatement.",
+      ESTIMATED:
+        "Computed or modelled by Seedow from real data. An order of magnitude, never a measurement.",
+      SIMULATED:
+        "Built to illustrate a mechanism: fictitious amounts, historical simulation. Nobody held this portfolio.",
+      STALE:
+        "Was verified, but its reference date is beyond its dataset's freshness window. Shown with its age.",
+      UNAVAILABLE:
+        "Missing from our sources or not collected. Never replaced by zero or a default value.",
+    },
+    sfdr: {
+      article: "Article {{n}}",
+      other: "Neither 8 nor 9 (“Other”)",
+      other_short: "Neither 8 nor 9",
+      unknown: "Not provided",
+    },
+    perf: {
+      cumulative: "Cumulative return",
+      annualized: "Annualised return",
+      benchmark_annualized: "Benchmark, annualised",
+      excess: "Difference vs benchmark",
+      volatility: "Annualised volatility",
+      max_drawdown: "Maximum drawdown",
+      window: "Window",
+      years_one: "{{count}} yr",
+      years_other: "{{count}} yrs",
+      not_computable: "not computable",
+      table_caption: "Historical performance by trailing window",
+      rebased: "Rebased to 100 at the start of the period, dividends reinvested.",
+      no_history: "Not enough history to draw a chart.",
+      chart_aria: "{{name}} and its benchmark, rebased to 100",
+      past_disclaimer:
+        "Past performance, computed on the history published by the issuer. It is not a guide to future returns and not a forecast.",
+      simulated_disclaimer:
+        "Simulation: constant-weight basket, no transaction costs or taxes. Not the performance of a real investor.",
+    },
+    method: {
+      label: "How it is calculated",
+      performance:
+        "Returns computed on the issuer's published “growth of 10,000” series (dividends reinvested). Annualised over the actual calendar duration (365.25 days). Volatility: standard deviation of monthly returns × √12. Maximum drawdown: largest fall from a peak to the following trough. A window the history does not cover is not shortened: it is “not computable”.",
+      cross_check:
+        "Independent check: as of {{date}}, the issuer publishes {{values}} (annualised). Seedow's recomputed values on the same date match within 0.05 points — verified by an automated test.",
+      lookthrough:
+        "Each fund is replaced by its published holdings, pro rata to its value in the portfolio: security value = fund value × weight of the security in the fund. A security held by several funds is aggregated into a single line. Only each fund's top 150 holdings are kept: the remainder is not allocated, it is counted as not covered.",
+      blend:
+        "Daily basket return = Σ (weight × daily fund return), constant weights rebalanced daily, on dates common to all funds only. No price is interpolated. Series in the funds' share-class currency.",
+    },
+    kpi: {
+      ter: "Ongoing charges (TER)",
+      ter_hint: "Annual fees deducted within the fund, as declared by the issuer.",
+      energy: "Energy sector (GICS)",
+      energy_hint: "Oil, gas, coal and related services, per the published sector breakdown.",
+      total: "Portfolio value",
+      total_hint_one: "{{count}} position — fictitious amount",
+      total_hint_other: "{{count}} positions — fictitious amounts",
+      weighted_ter: "Weighted average fees",
+      weighted_ter_hint: "≈ {{cost}} per year · {{coverage}}% of value covered",
+      lookthrough: "Look-through coverage",
+      lookthrough_hint: "Share of value whose underlying securities are known.",
+      energy_portfolio: "Energy exposure (GICS)",
+      energy_portfolio_hint: "Σ value × energy share of each fund · {{coverage}}% broken down",
+      largest_position: "Largest position",
+      effective_positions: "Effective number of positions",
+      top10: "Top 10 underlying securities",
+    },
+    table: {
+      fund: "Fund",
+      sfdr_declared: "SFDR declared",
+      amount: "Amount",
+      weight: "Weight",
+      ter: "Fees (TER)",
+      ann3y: "3-yr annualised return",
+      vol3y: "3-yr volatility",
+      holdings: "Number of holdings",
+    },
+    exposure: {
+      sector_title: "Sector exposure",
+      geography_title: "Geographic exposure",
+      currency_title: "Trading currencies",
+      currency_desc:
+        "Currency in which the underlying securities trade — distinct from the fund's currency.",
+      coverage: "{{pct}}% of value broken down by the issuer.",
+      unclassified: "Not broken down",
+      other_buckets: "{{count}} other categories",
+    },
+    lookthrough: {
+      title: "What the portfolio actually holds",
+      desc: "{{total}} underlying securities identified · {{coverage}}% of value covered. A security held by several funds appears once.",
+      caption: "Underlying securities aggregated across funds",
+      security: "Security",
+      via: "Held via",
+      value: "Value",
+      weight: "Share of total",
+      direct: "Direct",
+    },
+    esg: {
+      layers_title: "Six ESG layers that must not be confused",
+      layers_desc:
+        "A regulatory classification is not a rating, a rating is not an impact. Each layer is shown separately, with what it does not say.",
+      does_not_say: "What it does not say:",
+      source_catalog: "Seedow catalogue",
+      coverage_aria: "Indicator coverage for the {{pillar}} pillar",
+      pillar: { E: "Environmental", S: "Social", G: "Governance" },
+      confidence: {
+        high: "High confidence",
+        medium: "Medium confidence",
+        low: "Low confidence",
+        insufficient: "Insufficient data",
+      },
+      layer: {
+        regulatory: {
+          title: "SFDR classification",
+          not: "It is a disclosure category declared by the issuer, not a sustainability rating. An Article 9 fund is not guaranteed free of adverse impacts.",
+        },
+        esg_risk: {
+          title: "ESG risk",
+          not: "An ESG risk rating measures a company's exposure to ESG issues, not its effect on the world.",
+        },
+        characteristics: {
+          title: "Promoted characteristics",
+          not: "A documented exclusion says what the fund avoids, not what it positively finances.",
+        },
+        taxonomy: {
+          title: "EU Taxonomy alignment",
+          not: "Alignment measures the share of eligible and aligned economic activities. It cannot be inferred from the SFDR article.",
+        },
+        pai: {
+          title: "Principal adverse impacts (PAI)",
+          not: "Publishing a PAI statement does not mean the impacts are low.",
+        },
+        impact: {
+          title: "Real-world impact",
+          not: "Seedow does not measure the real effect of your money on climate or society. No indicator on this page replaces it.",
+        },
+      },
+      value: {
+        regulatory: {
+          article_6: "Neither Article 8 nor Article 9",
+          article_8: "Article 8 — promotes E/S characteristics",
+          article_9: "Article 9 — sustainable investment objective",
+          unknown: "Not provided",
+        },
+        esg_risk: { no_licensed_rating: "No licensed rating in our sources" },
+        characteristics: {
+          documented:
+            "{{documented}} sector(s) documented out of {{total}} · {{excluded}} excluded",
+          claimed_only: "Claimed themes ({{claimed}}), no documented exclusion",
+          none: "No documented policy in our sources",
+        },
+        taxonomy: { not_collected: "Not collected" },
+        pai: {
+          statement_published: "PAI statement published",
+          not_verified: "Publication not verified",
+        },
+        impact: { not_measured: "Not measured by Seedow" },
+      },
+      conflict: {
+        sfdr_mismatch:
+          "The catalogue says Article {{catalog}}, but the issuer declares Article {{declared}} in its document dated {{asOf}}. The issuer's declaration is used; the discrepancy is flagged, not erased.",
+      },
+      indicator: {
+        carbon_intensity: "Carbon intensity",
+        fossil_sector_exposure: "Energy sector exposure",
+        fossil_exclusion_policy: "Fossil fuel exclusion",
+        taxonomy_alignment: "Taxonomy alignment",
+        biodiversity_exposure: "Biodiversity",
+        environmental_controversies: "Environmental controversies",
+        weapons_exclusion_policy: "Weapons exclusion",
+        tobacco_exclusion_policy: "Tobacco exclusion",
+        human_rights: "Human rights",
+        labour_practices: "Labour practices",
+        social_controversies: "Social controversies",
+        board_independence: "Board independence",
+        business_ethics: "Business ethics",
+        corruption_controversies: "Corruption controversies",
+        shareholder_rights: "Shareholder rights",
+      },
+    },
+    demo: {
+      eyebrow: "Demonstration journey",
+      title: "From savings",
+      title_accent: "to real exposure.",
+      subtitle:
+        "A fund, a demonstration portfolio and their exposures — computed from the issuers' official publications. Five steps, three minutes.",
+      legend_verified: "fund data, sourced and dated",
+      legend_simulated: "portfolio amounts, fictitious",
+      steps_aria: "Demonstration steps",
+      step_label: "Step {{n}}",
+      step: {
+        discover: {
+          short: "Discover",
+          title: "Your money already finances something.",
+          desc: "Seedow links a savings decision to what it finances: sectors, countries, companies, fees, and what funds publish — with the source and date of every figure.",
+        },
+        explore: {
+          short: "Explore",
+          title: "One fund, read layer by layer.",
+          desc: "Past performance recomputed and cross-checked, published sector exposure, and six separate ESG layers: a regulatory classification is not a rating.",
+        },
+        analyze: {
+          short: "Analyse",
+          title: "A portfolio, seen through its funds.",
+          desc: "Each fund is replaced by what it holds. You see the real sectors, countries, currencies and companies — without double-counting a security held by two funds.",
+        },
+        compare: {
+          short: "Compare",
+          title: "Comparing without picking a winner.",
+          desc: "Two funds from the same universe, with and without an SRI screen: fees, classification, exposure, past performance. The tool informs — it does not say what to buy.",
+        },
+        understand: {
+          short: "Understand",
+          title: "What each figure says, and what it does not.",
+          desc: "The status of every data point, its sources, dates and limits, spelled out.",
+        },
+      },
+      pillar: {
+        rigour: {
+          eyebrow: "Financial rigour",
+          title: "Verifiable calculations",
+          desc: "Returns, volatility and maximum drawdown recomputed on the published history — and checked against the issuer's own figures.",
+        },
+        transparency: {
+          eyebrow: "ESG transparency",
+          title: "Six layers, not one score",
+          desc: "SFDR classification, ESG risk, exclusions, Taxonomy, PAI and real-world impact stay separate. What is missing is stated.",
+        },
+        credibility: {
+          eyebrow: "Technical credibility",
+          title: "Every figure has a source",
+          desc: "Verified, estimated, simulated, stale or unavailable: the status of every data point is shown, never guessed.",
+        },
+      },
+      is_not_title: "What Seedow is not",
+      is_not: {
+        advice: "An investment adviser: no personalised recommendation.",
+        execution: "A broker: no order is placed, no money is invested.",
+        impact: "A real-world impact measurement: ESG indicators do not stand in for one.",
+      },
+      explore: {
+        fund_desc: "Benchmark: {{benchmark}} · share-class currency: {{currency}}.",
+        open_fund: "Open the fund page",
+      },
+      analyze: {
+        banner:
+          "Demonstration portfolio — fictitious amounts. The funds' holdings, fees and histories are real and sourced.",
+        positions_title: "Positions",
+        positions_desc:
+          "Five index funds, illustrative amounts. This is not a recommendation for anyone.",
+        simulated_title: "Simulated history of the basket",
+        simulated_desc:
+          "What this constant-weight basket would have returned over the period — in {{currency}}, the share-class currency.",
+        simulated_series: "Demonstration basket (simulated)",
+      },
+      compare: {
+        title: "World vs World SRI",
+        desc: "Same starting universe (MSCI World), one with an SRI screen. Every value comes from the issuer's documents.",
+        note: "Past performance. A performance gap over one period says nothing about the next.",
+        open: "Open the comparator",
+      },
+      understand: {
+        statuses_title: "Five data statuses",
+        limits_title: "Limits, stated",
+        limit: {
+          past: "Performance figures are historical: they predict nothing.",
+          lookthrough:
+            "Look-through covers each fund's top 150 holdings; the rest is counted as not covered.",
+          esg: "ESG data is incomplete: coverage of each pillar is shown, no composite score is published.",
+          impact: "ESG indicators are not a measurement of real-world impact.",
+          snapshot: "The demonstration data is a dated snapshot; it becomes “stale” as it ages.",
+        },
+        sources_title: "Sources for this demonstration",
+        source_line: "data as of {{asOf}} · retrieved {{retrieved}}",
+        source_link: "issuer document",
+        open_data: "All sources and their status",
+        open_method: "Full methodology",
+      },
+    },
+    portfolio: {
+      title: "What your portfolio actually holds",
+      desc: "{{covered}} of {{total}} funds broken down from the issuer's publication · {{pct}} of value broken down.",
+      none_covered:
+        "None of your funds has a published composition in our sources yet. Your real exposure is therefore not computed — nor is it guessed.",
+      error: "Exposure could not be computed right now.",
+    },
+    fund: {
+      performance_title: "Historical performance",
+      geography_unpublished:
+        "The issuer does not publish a geographic breakdown for this fund in this document. It is not inferred.",
+      holdings_title: "Top holdings",
+      holdings_desc: "Top 10 of the {{lines}} published lines — {{pct}} of the fund.",
+      coverage_title: "E / S / G indicators: what is filled in",
+      coverage_desc:
+        "The grid is fixed and public. An empty cell stays empty: no composite score is computed on incomplete data.",
+      not_in_catalog:
+        "This fund is in the issuer snapshot but not yet in the Seedow catalogue: its transparency index is not computed.",
+    },
+    compare: {
+      eyebrow: "Fund comparator",
+      title: "Compare funds on what they publish.",
+      subtitle:
+        "Fees, SFDR classification, documented exclusion policies, past performance, exposure and data coverage. Up to four funds, exportable to CSV.",
+      universe: "{{catalog}} funds in the catalogue · {{total}} comparable",
+      selected_title: "Comparison ({{count}}/{{max}})",
+      selected_desc:
+        "Add or remove funds from the list below. This page's link keeps your selection.",
+      empty: "No fund selected. Pick up to four from the list.",
+      export: "Export to CSV",
+      remove: "Remove {{name}} from the comparison",
+      table_caption: "Comparison of the selected funds",
+      disclaimer:
+        "Information, not advice: Seedow does not rank funds and recommends no purchase. “Not verified” means the data was not found in our sources, not that the fund does not apply it.",
+      sfdr_conflict: "catalogue: art. {{catalog}} · issuer: art. {{declared}}",
+      blocks: "{{n}}/{{total}} assessable blocks",
+      has_history: "history",
+      group: {
+        regulatory: "Regulatory and fees",
+        exclusions: "Documented exclusions",
+        performance: "Past performance (annualised)",
+        exposure: "Exposure",
+        quality: "Data quality",
+      },
+      row: {
+        sfdr: "SFDR classification",
+        sfdr_catalog: "SFDR (catalogue)",
+        sfdr_declared: "SFDR (issuer)",
+        exclusion: "Exclusion",
+        transparency: "Transparency index",
+        ann1y: "1 year",
+        ann3y: "3 years",
+        ann5y: "5 years",
+        vol3y: "3-yr volatility",
+        mdd5y: "5-yr maximum drawdown",
+        coverage: "Data coverage",
+      },
+      sector: {
+        fossiles: "Fossil fuels",
+        armement: "Weapons",
+        tabac: "Tobacco",
+        jeux: "Gambling",
+        tests_animaux: "Animal testing",
+        fast_fashion: "Fast fashion",
+      },
+      level: {
+        exclu_seuil_quantifie: "Excluded (with threshold)",
+        exclu_sans_seuil: "Excluded (no threshold)",
+        non_exclu_documente: "Not excluded",
+        non_verifie: "Not verified",
+      },
+      field: {
+        isin: "ISIN",
+        sfdr: "SFDR",
+        ter: "fees",
+        fossil_policy: "fossil policy",
+        weapons_policy: "weapons policy",
+        transparency_index: "transparency",
+        performance_3y: "performance",
+        volatility_3y: "volatility",
+        energy_exposure: "energy exposure",
+        holdings: "holdings",
+      },
+      missing: "Missing",
+      screen_title: "Screen the universe",
+      search: "Name, issuer or ISIN",
+      filter_sfdr: "SFDR classification",
+      sfdr_all: "All classifications",
+      filter_ter: "Maximum fees",
+      ter_all: "All fee levels",
+      ter_max: "Fees ≤ {{v}}",
+      filter_fossil: "Documented fossil exclusion",
+      filter_perf: "Performance history available",
+      results_one: "{{count}} fund matches",
+      results_other: "{{count}} funds match",
+      more_results: "+ {{count}} more — refine your search.",
+    },
+    data: {
+      eyebrow: "Sources and quality",
+      title: "Where every figure comes from.",
+      subtitle:
+        "The sources actually connected, their frequency, their licence, what Seedow does with them — and what is not integrated yet.",
+      statuses_title: "Five statuses, shown everywhere",
+      statuses_desc:
+        "Estimated or simulated data is never presented as verified. A calculation takes the status of its weakest input.",
+      freshness_title: "Freshness windows — beyond them, verified data becomes “stale”",
+      days: "days",
+      kind: {
+        market_price: "Market prices",
+        fund_holdings: "Fund holdings",
+        fund_exposure: "Published exposures",
+        performance_history: "Performance history",
+        regulatory_document: "Regulatory documents",
+        esg_issuer: "Company ESG data",
+      },
+      sources_title: "Source register",
+      sources_desc: "Written from the code: each entry names the file that implements it.",
+      level: {
+        scheduled: "Integrated and scheduled",
+        manual: "Working connectors, triggered manually",
+        snapshot: "Dated snapshots",
+        reference: "Reference tables",
+        not_integrated: "Not integrated — shown as unavailable",
+      },
+      field: {
+        source: "Source",
+        frequency: "Frequency",
+        license: "Licence",
+        transformation: "Transformation",
+        limits: "Limits",
+      },
+      to_confirm: "To be confirmed",
+      provider_note:
+        "Every provider goes through the same interface: adding a market or ESG data source means adding a connector and a registry entry, without rewriting the screens.",
+      open_demo: "See the demonstration",
+    },
+  },
+};
+
 const FR_BLOCKS: Json[] = [
   composeSwitchFr,
   pedagogyFr,
@@ -3862,6 +4776,7 @@ const FR_BLOCKS: Json[] = [
   euroBreakdownFr,
   stiFr,
   designV4Fr,
+  finFr,
 ];
 const EN_BLOCKS: Json[] = [
   composeSwitchEn,
@@ -3875,6 +4790,7 @@ const EN_BLOCKS: Json[] = [
   euroBreakdownEn,
   stiEn,
   designV4En,
+  finEn,
 ];
 
 writeFileSync(
