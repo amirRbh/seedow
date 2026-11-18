@@ -9,9 +9,10 @@
  *
  *   1. regulatory      — classification SFDR (art. 6/8/9) : une catégorie de
  *                        DIVULGATION déclarée par l'émetteur, pas une note.
- *   2. esg_risk        — note de risque ESG d'un fournisseur sous licence :
- *                        mesure l'exposition de l'entreprise aux risques ESG,
- *                        pas son effet sur le monde.
+ *   2. esg_risk        — notation ESG d'un fournisseur (MSCI ESG Fund Rating
+ *                        quand l'émetteur la publie) : mesure la résilience
+ *                        des entreprises aux risques ESG financièrement
+ *                        matériels, pas leur effet sur le monde.
  *   3. characteristics — caractéristiques promues : politiques d'exclusion
  *                        documentées, thèmes revendiqués.
  *   4. taxonomy        — part alignée sur la Taxonomie européenne : une mesure
@@ -22,7 +23,12 @@
  *
  * Module PUR, testé (`framework.test.ts`).
  */
-import type { DataStatus } from "@/lib/data/status";
+import { primarySourceStatus, type DataStatus } from "@/lib/data/status";
+import type {
+  BusinessInvolvementId,
+  WorkbookBusinessInvolvement,
+  WorkbookSustainability,
+} from "@/lib/data-engine/ishares-workbook";
 import type { ObservatoryFund, SectorDisclosureLevel } from "./v2/observatory";
 
 export type EsgLayerId =
@@ -76,6 +82,45 @@ export function parseSfdrArticle(label: string | null | undefined): 6 | 8 | 9 | 
   return null;
 }
 
+/**
+ * Indicateurs de fonds calculés par un fournisseur de données (MSCI ESG
+ * Research) et PUBLIÉS par l'émetteur sur sa page produit. Seedow les reprend
+ * tels quels, attribués aux deux : le calculateur et le diffuseur. Seedow n'a
+ * pas de licence auprès du fournisseur — d'où l'absence de redistribution.
+ */
+export interface ThirdPartyFundEsg {
+  /** Calculateur : « MSCI ESG Research ». */
+  provider: string;
+  /** Diffuseur : « iShares (BlackRock) ». */
+  publishedBy: string;
+  sourceUrl: string | null;
+  sustainability: WorkbookSustainability | null;
+  businessInvolvement: WorkbookBusinessInvolvement | null;
+}
+
+/** Espace économique européen : là où le règlement SFDR et la Taxonomie s'appliquent. */
+const EEA = new Set(
+  "AT BE BG CY CZ DE DK EE ES FI FR GR HR HU IE IT LT LU LV MT NL PL PT RO SE SI SK IS LI NO".split(
+    " ",
+  ),
+);
+
+/**
+ * Le fonds relève-t-il du cadre européen (SFDR, Taxonomie) ? Lu sur le pays de
+ * l'ISIN, qui est celui de l'émission. `null` si l'ISIN manque : on ne présume
+ * rien. Un fonds hors EEE commercialisé en Europe peut publier un article SFDR :
+ * la déclaration de l'émetteur prime alors.
+ */
+export function euFrameworkApplies(isin: string | null | undefined): boolean | null {
+  const cc = isin?.trim().slice(0, 2).toUpperCase();
+  if (!cc || !/^[A-Z]{2}$/.test(cc)) return null;
+  return EEA.has(cc);
+}
+
+function thirdPartySource(tp: ThirdPartyFundEsg): string {
+  return `${tp.provider}, publié par ${tp.publishedBy}`;
+}
+
 const DOCUMENTED: SectorDisclosureLevel[] = [
   "exclu_seuil_quantifie",
   "exclu_sans_seuil",
@@ -85,17 +130,36 @@ const DOCUMENTED: SectorDisclosureLevel[] = [
 export function describeEsgLayers(input: {
   fund: Pick<ObservatoryFund, "sfdrArticle" | "sectors" | "themes" | "sti"> | null;
   issuer?: IssuerDeclaration | null;
+  /** ISIN du fonds : situe le fonds dans ou hors du cadre européen. */
+  isin?: string | null;
+  thirdParty?: ThirdPartyFundEsg | null;
+  /**
+   * Rendu destiné à un EXPORT (rapport, fichier) : une notation tierce non
+   * redistribuable y est signalée comme publiée, sans sa valeur.
+   */
+  exportContext?: boolean;
+  now?: Date;
 }): EsgLayer[] {
-  const { fund, issuer } = input;
+  const { fund, issuer, thirdParty } = input;
+  const eu = euFrameworkApplies(input.isin);
 
   // 1. Classification réglementaire — deux sources possibles, comparées.
   const catalogArticle = fund?.sfdrArticle ?? null;
   const declaredArticle = parseSfdrArticle(issuer?.sfdrDeclared);
   const article = declaredArticle ?? catalogArticle;
+  // Hors EEE et sans article déclaré : SFDR ne s'applique pas — ce n'est ni un
+  // trou de collecte ni un défaut du fonds, et l'interface l'écrit comme tel.
+  const nonEu = eu === false && article === null;
   const regulatory: EsgLayer = {
     id: "regulatory",
     status: article === null ? "UNAVAILABLE" : "VERIFIED",
-    value: article === null ? "unknown" : article === 6 ? "article_6" : `article_${article}`,
+    value: nonEu
+      ? "not_applicable"
+      : article === null
+        ? "unknown"
+        : article === 6
+          ? "article_6"
+          : `article_${article}`,
     params: article === null ? undefined : { article },
     conflict:
       declaredArticle !== null && catalogArticle !== null && declaredArticle !== catalogArticle
@@ -117,8 +181,34 @@ export function describeEsgLayers(input: {
     asOf: declaredArticle !== null ? (issuer?.asOf ?? null) : null,
   };
 
-  // 2. Risque ESG — aucune note sous licence n'est branchée sur les fonds publics.
-  const esgRisk: EsgLayer = { id: "esg_risk", status: "UNAVAILABLE", value: "no_licensed_rating" };
+  // 2. Risque ESG — la notation MSCI du fonds quand l'émetteur la publie, reprise
+  //    telle quelle et attribuée. Jamais recalculée, jamais convertie en score
+  //    Seedow, jamais utilisée pour classer (docs/scoring-v2.md).
+  const sust = thirdParty?.sustainability ?? null;
+  const esgRisk: EsgLayer =
+    thirdParty && sust?.msciRating && input.exportContext
+      ? {
+          id: "esg_risk",
+          status: primarySourceStatus(true, sust.asOf, "esg_fund_metrics", input.now),
+          value: "published_not_exported",
+          params: { provider: thirdParty.provider, issuer: thirdParty.publishedBy },
+          source: thirdPartySource(thirdParty),
+          asOf: sust.asOf,
+        }
+      : thirdParty && sust?.msciRating
+        ? {
+            id: "esg_risk",
+            status: primarySourceStatus(true, sust.asOf, "esg_fund_metrics", input.now),
+            value: "msci_fund_rating",
+            params: {
+              rating: sust.msciRating,
+              coverage: sust.ratingCoveragePct ?? "—",
+              quality: sust.qualityScore ?? "—",
+            },
+            source: thirdPartySource(thirdParty),
+            asOf: sust.asOf,
+          }
+        : { id: "esg_risk", status: "UNAVAILABLE", value: "no_licensed_rating" };
 
   // 3. Caractéristiques promues — exclusions documentées et thèmes revendiqués.
   const sectors = fund?.sectors ?? [];
@@ -145,17 +235,35 @@ export function describeEsgLayers(input: {
         .at(-1) ?? null,
   };
 
-  // 4. Taxonomie — non collectée. Jamais déduite de l'article SFDR.
-  const taxonomy: EsgLayer = { id: "taxonomy", status: "UNAVAILABLE", value: "not_collected" };
+  // 4. Taxonomie — non collectée. Jamais déduite de l'article SFDR. Hors EEE, le
+  //    règlement ne s'applique pas.
+  const taxonomy: EsgLayer = {
+    id: "taxonomy",
+    status: "UNAVAILABLE",
+    value: nonEu ? "not_applicable" : "not_collected",
+  };
 
   // 5. PAI — on sait seulement si la déclaration est publiée (signal STI C).
   const paiUnverified = fund?.sti.unverifiedSignals.includes("pai_published") ?? true;
   const blockC = fund?.sti.blocks.find((b) => b.id === "C");
   const paiPublished = !paiUnverified && blockC?.evaluable === true;
+  // Hors EEE : pas de déclaration PAI. Deux expositions publiées en sont
+  // voisines (armes controversées ≈ PAI 14, Pacte mondial ≈ PAI 10) : elles
+  // sont montrées comme indicateurs, jamais comme une déclaration PAI.
+  const proxies = (thirdParty?.businessInvolvement?.rows ?? []).filter(
+    (r) => r.id === "controversial_weapons" || r.id === "ungc_violators",
+  ).length;
   const pai: EsgLayer = {
     id: "pai",
     status: paiPublished ? "VERIFIED" : "UNAVAILABLE",
-    value: paiPublished ? "statement_published" : "not_verified",
+    value: paiPublished
+      ? "statement_published"
+      : nonEu
+        ? proxies > 0
+          ? "not_applicable_proxies"
+          : "not_applicable"
+        : "not_verified",
+    params: proxies > 0 ? { proxies } : undefined,
   };
 
   // 6. Impact réel — hors du périmètre de mesure de Seedow, et dit comme tel.
@@ -182,20 +290,35 @@ export interface EsgIndicator {
 export const INDICATOR_GRID: Record<Pillar, string[]> = {
   E: [
     "carbon_intensity",
+    "implied_temperature_rise",
     "fossil_sector_exposure",
+    "thermal_coal_involvement",
+    "oil_sands_involvement",
     "fossil_exclusion_policy",
     "taxonomy_alignment",
     "biodiversity_exposure",
     "environmental_controversies",
   ],
   S: [
+    "controversial_weapons_involvement",
+    "ungc_violations",
     "weapons_exclusion_policy",
+    "tobacco_involvement",
     "tobacco_exclusion_policy",
     "human_rights",
     "labour_practices",
     "social_controversies",
   ],
   G: ["board_independence", "business_ethics", "corruption_controversies", "shareholder_rights"],
+};
+
+/** Exposition d'activité publiée → indicateur de la grille. */
+const INVOLVEMENT_INDICATOR: Partial<Record<BusinessInvolvementId, string>> = {
+  thermal_coal: "thermal_coal_involvement",
+  oil_sands: "oil_sands_involvement",
+  controversial_weapons: "controversial_weapons_involvement",
+  ungc_violators: "ungc_violations",
+  tobacco: "tobacco_involvement",
 };
 
 const SECTOR_POLICY_INDICATOR: Record<string, string> = {
@@ -215,8 +338,38 @@ export function buildEsgIndicators(input: {
   energySectorPct?: number | null;
   energyAsOf?: string | null;
   energySource?: string | null;
+  thirdParty?: ThirdPartyFundEsg | null;
+  now?: Date;
 }): EsgIndicator[] {
   const values = new Map<string, Omit<EsgIndicator, "id" | "pillar">>();
+
+  const tp = input.thirdParty;
+  if (tp) {
+    const source = thirdPartySource(tp);
+    const sust = tp.sustainability;
+    const status = (asOf: string | null) =>
+      primarySourceStatus(true, asOf, "esg_fund_metrics", input.now);
+    if (sust?.waci != null)
+      values.set("carbon_intensity", {
+        status: status(sust.asOf),
+        value: sust.waci,
+        source,
+        asOf: sust.asOf,
+      });
+    if (sust?.impliedTempRise)
+      values.set("implied_temperature_rise", {
+        status: status(sust.asOf),
+        value: sust.impliedTempRise,
+        source,
+        asOf: sust.asOf,
+      });
+    const bi = tp.businessInvolvement;
+    for (const row of bi?.rows ?? []) {
+      const id = INVOLVEMENT_INDICATOR[row.id];
+      if (!id) continue;
+      values.set(id, { status: status(bi!.asOf), value: row.pct, source, asOf: bi!.asOf });
+    }
+  }
 
   if (input.energySectorPct != null && Number.isFinite(input.energySectorPct)) {
     values.set("fossil_sector_exposure", {

@@ -17,12 +17,31 @@
  *   - « Holdings »             — les positions, avec secteur GICS, classe
  *                                d'actifs et DEVISE de cotation.
  *
+ * Le classeur des ETF AMÉRICAINS (site `us`) suit la même structure avec des
+ * variantes (feuille « fundHeader », bloc « Average Annual », frais dans
+ * « Fees », dates « Sat, Oct 31, 2026 », croissance MENSUELLE) et ajoute deux
+ * feuilles que la version européenne n'a pas :
+ *
+ *   - « Sustainability Characteristics » — notation MSCI ESG du fonds, score de
+ *                                qualité, intensité carbone moyenne pondérée
+ *                                (WACI), hausse de température implicite, avec
+ *                                leurs taux de couverture ;
+ *   - « Business Involvement »  — part du fonds exposée à des activités
+ *                                (armes controversées, violations du Pacte
+ *                                mondial, charbon thermique, sables bitumineux…).
+ *
+ * Ces chiffres sont CALCULÉS par MSCI ESG Research (ou par BlackRock à partir
+ * de données MSCI) et REPRODUITS par l'émetteur : Seedow n'a pas de licence
+ * MSCI. Ils sont lus tels quels et attribués à l'écran ; ils ne sont pas
+ * redistribués par l'API publique (cf. `lib/api/v1.ts`).
+ *
  * Ce module ne calcule rien : il rend ce que le document dit, tel qu'il le dit.
  * Une cellule illisible rend `null` — jamais une valeur devinée (CLAUDE.md §1.3).
  * Module PUR, sans réseau : le script `scripts/snapshot-demo-funds.ts` fournit
  * le texte du classeur.
  */
 import { parseIsharesDate } from "./ishares-holdings";
+import { isinFromCusip } from "./isin";
 
 export interface WorkbookSeriesPoint {
   /** Date ISO (AAAA-MM-JJ). */
@@ -53,6 +72,46 @@ export interface WorkbookPublishedReturns {
   benchmark: Partial<Record<"1y" | "3y" | "5y" | "10y", number>>;
 }
 
+/** Feuille « Sustainability Characteristics » — chiffres MSCI repris par l'émetteur. */
+export interface WorkbookSustainability {
+  /** Notation MSCI ESG du fonds, AAA à CCC. */
+  msciRating: string | null;
+  /** Part du fonds couverte par la notation, en %. */
+  ratingCoveragePct: number | null;
+  /** Score de qualité ESG MSCI, 0 à 10. */
+  qualityScore: number | null;
+  /** Rang centile du score de qualité dans le groupe de pairs, en %. */
+  peerPercentile: number | null;
+  peerGroup: string | null;
+  peerCount: number | null;
+  /** Intensité carbone moyenne pondérée, t CO2e / M$ de chiffre d'affaires (scopes 1+2). */
+  waci: number | null;
+  waciCoveragePct: number | null;
+  /** Hausse de température implicite, en bande telle que publiée (« > 1.5° - 2.0° C »). */
+  impliedTempRise: string | null;
+  itrCoveragePct: number | null;
+  asOf: string | null;
+  /** Date des positions sur lesquelles MSCI a calculé ces chiffres. */
+  holdingsBasisAsOf: string | null;
+}
+
+export type BusinessInvolvementId =
+  | "controversial_weapons"
+  | "ungc_violators"
+  | "nuclear_weapons"
+  | "thermal_coal"
+  | "civilian_firearms"
+  | "oil_sands"
+  | "tobacco";
+
+/** Feuille « Business Involvement » — part de la valeur du fonds exposée. */
+export interface WorkbookBusinessInvolvement {
+  rows: { id: BusinessInvolvementId; label: string; pct: number }[];
+  /** Part du fonds couverte par les données d'implication, en %. */
+  coveragePct: number | null;
+  asOf: string | null;
+}
+
 export interface ISharesWorkbook {
   name: string | null;
   isin: string | null;
@@ -81,6 +140,9 @@ export interface ISharesWorkbook {
   geographyAsOf: string | null;
   holdings: WorkbookHolding[];
   holdingsAsOf: string | null;
+  /** `null` quand le classeur n'a pas la feuille (classeurs européens). */
+  sustainability: WorkbookSustainability | null;
+  businessInvolvement: WorkbookBusinessInvolvement | null;
 }
 
 // ── Lecture SpreadsheetML ────────────────────────────────────────────────
@@ -129,13 +191,14 @@ export function parseNumber(raw: string | undefined | null): number | null {
 }
 
 /**
- * Dates publiées sous trois formes : `17/Nov/2026`, `30/Sept/2026` (le mois de
- * septembre est écrit sur quatre lettres) et `Tue, 17 Nov 2026`.
+ * Dates publiées sous cinq formes : `17/Nov/2026`, `30/Sept/2026` (le mois de
+ * septembre est écrit sur quatre lettres), `Tue, 17 Nov 2026`, et côté
+ * américain `Nov 17, 2026` et `Sat, Oct 31, 2026`.
  */
 export function parseWorkbookDate(raw: string | undefined | null): string | null {
   if (!raw) return null;
   const text = raw.trim().replace(/\/Sept\//i, "/Sep/");
-  const direct = parseIsharesDate(text);
+  const direct = parseIsharesDate(text) ?? parseIsharesDate(text.replace(/^[A-Za-z]{3},\s*/, ""));
   if (direct) return direct;
   const long = /^(?:[A-Za-z]{3},\s*)?(\d{1,2}) ([A-Za-z]{3,4}) (\d{4})$/.exec(text);
   if (long)
@@ -147,7 +210,7 @@ export function parseWorkbookDate(raw: string | undefined | null): string | null
 function asOfIn(cells: string[]): string | null {
   for (let i = 0; i < cells.length; i++) {
     const c = cells[i];
-    const inline = /as of (\S+)$/i.exec(c);
+    const inline = /as of (.+)$/i.exec(c);
     if (inline) return parseWorkbookDate(inline[1]);
     if (c.toLowerCase() === "as of") return parseWorkbookDate(cells[i + 1]);
   }
@@ -195,13 +258,20 @@ function readExposureBlock(
 function readPublishedReturns(sheet: Sheet | undefined): WorkbookPublishedReturns {
   const out: WorkbookPublishedReturns = { asOf: null, fund: {}, benchmark: {} };
   if (!sheet) return out;
-  // Premier bloc « Annualised » : as of → en-têtes → Total Return → Benchmark.
-  const start = sheet.findIndex((r) => r[0]?.toLowerCase() === "annualised");
+  // Premier bloc annualisé (« Annualised » en Europe, « Average Annual » aux
+  // États-Unis) : as of → en-têtes → lignes de valeurs jusqu'au « as of » suivant.
+  const start = sheet.findIndex((r) => /^(annualised|average annual)$/i.test(r[0] ?? ""));
   if (start < 0) return out;
   const asOfRow = sheet[start + 1];
   const header = sheet[start + 2] ?? [];
-  const fundRow = sheet[start + 3] ?? [];
-  const benchRow = sheet[start + 4] ?? [];
+  const block: Sheet = [];
+  for (let i = start + 3; i < sheet.length; i++) {
+    const r = sheet[i];
+    if (r[0]?.toLowerCase() === "as of" || r.length === 1) break;
+    block.push(r);
+  }
+  const fundRow = block.find((r) => /^total return/i.test(r[0] ?? "")) ?? [];
+  const benchRow = block.find((r) => /^benchmark/i.test(r[0] ?? "")) ?? [];
   out.asOf = asOfRow ? asOfIn(asOfRow) : null;
   const keys = ["1y", "3y", "5y", "10y"] as const;
   for (const k of keys) {
@@ -252,10 +322,85 @@ function readHoldings(sheet: Sheet | undefined): { asOf: string | null; rows: Wo
   return { asOf, rows };
 }
 
-/** Lit un classeur produit iShares complet. Ne lève jamais. */
+/** Valeur et « as of » d'une ligne libellé / valeur / date, par motif de libellé. */
+function labelled(sheet: Sheet, re: RegExp): { value: string | null; asOf: string | null } {
+  const row = sheet.find((r) => re.test(r[0] ?? ""));
+  if (!row) return { value: null, asOf: null };
+  return { value: row[1]?.trim() || null, asOf: asOfIn(row.slice(2)) };
+}
+
+function readSustainability(sheet: Sheet | undefined): WorkbookSustainability | null {
+  if (!sheet || sheet.length === 0) return null;
+  const rating = labelled(sheet, /^MSCI ESG Fund Rating/i);
+  const ratingValue =
+    rating.value && /^(AAA|AA|A|BBB|BB|B|CCC)$/.test(rating.value) ? rating.value : null;
+  const waci = labelled(sheet, /^MSCI Weighted Average Carbon Intensity \(/i);
+  const itr = labelled(sheet, /^MSCI Implied Temperature Rise \(/i);
+  const basis = sheet
+    .map((r) => /based on holdings as of ([A-Za-z]{3} \d{1,2}, \d{4})/i.exec(r[0] ?? "")?.[1])
+    .find(Boolean);
+  const out: WorkbookSustainability = {
+    msciRating: ratingValue,
+    ratingCoveragePct: parseNumber(labelled(sheet, /^MSCI ESG % Coverage/i).value),
+    qualityScore: parseNumber(labelled(sheet, /^MSCI ESG Quality Score \(0-10\)/i).value),
+    peerPercentile: parseNumber(
+      labelled(sheet, /^MSCI ESG Quality Score - Peer Percentile/i).value,
+    ),
+    peerGroup: labelled(sheet, /^Fund Lipper Global Classification/i).value,
+    peerCount: parseNumber(labelled(sheet, /^Funds in Peer Group/i).value),
+    waci: parseNumber(waci.value),
+    waciCoveragePct: parseNumber(
+      labelled(sheet, /^MSCI Weighted Average Carbon Intensity % Coverage/i).value,
+    ),
+    // Bande publiée, jamais convertie en nombre : « > 1.5° - 2.0° C » n'est pas 1,75.
+    impliedTempRise: itr.value && /°/.test(itr.value) ? itr.value : null,
+    itrCoveragePct: parseNumber(
+      labelled(sheet, /^MSCI Implied Temperature Rise % Coverage/i).value,
+    ),
+    asOf: rating.asOf ?? waci.asOf ?? itr.asOf,
+    holdingsBasisAsOf: parseWorkbookDate(basis ?? null),
+  };
+  const hasAny =
+    out.msciRating !== null ||
+    out.qualityScore !== null ||
+    out.waci !== null ||
+    out.impliedTempRise !== null;
+  return hasAny ? out : null;
+}
+
+const INVOLVEMENT: { id: BusinessInvolvementId; re: RegExp }[] = [
+  { id: "controversial_weapons", re: /^MSCI - Controversial Weapons$/i },
+  { id: "ungc_violators", re: /^MSCI - UN Global Compact Violators$/i },
+  { id: "nuclear_weapons", re: /^MSCI - Nuclear Weapons$/i },
+  { id: "thermal_coal", re: /^MSCI - Thermal Coal$/i },
+  { id: "civilian_firearms", re: /^MSCI - Civilian Firearms$/i },
+  { id: "oil_sands", re: /^MSCI - Oil Sands$/i },
+  { id: "tobacco", re: /^MSCI - Tobacco$/i },
+];
+
+function readBusinessInvolvement(sheet: Sheet | undefined): WorkbookBusinessInvolvement | null {
+  if (!sheet || sheet.length === 0) return null;
+  const rows: WorkbookBusinessInvolvement["rows"] = [];
+  let asOf: string | null = null;
+  for (const { id, re } of INVOLVEMENT) {
+    const row = sheet.find((r) => re.test(r[0] ?? ""));
+    const pct = parseNumber(row?.[1]);
+    if (!row || pct === null) continue;
+    rows.push({ id, label: row[0], pct });
+    asOf ??= asOfIn(row.slice(2));
+  }
+  if (rows.length === 0) return null;
+  return {
+    rows,
+    coveragePct: parseNumber(labelled(sheet, /^Business Involvement Coverage/i).value),
+    asOf,
+  };
+}
+
+/** Lit un classeur produit iShares complet (européen ou américain). Ne lève jamais. */
 export function parseISharesWorkbook(xml: string): ISharesWorkbook {
   const sheets = readSheets(xml);
-  const header = sheets.get("Fund Header");
+  const header = sheets.get("Fund Header") ?? sheets.get("fundHeader");
   const facts = sheets.get("Key Facts");
   const characteristics = sheets.get("Portfolio Characteristics");
 
@@ -280,23 +425,42 @@ export function parseISharesWorkbook(xml: string): ISharesWorkbook {
   }
 
   const sector = readExposureBlock(sheets.get("Exposure Breakdowns"), "Sector");
-  const geography = readExposureBlock(sheets.get("Exposure Breakdowns"), "Geography/Locations");
+  const geographyEu = readExposureBlock(sheets.get("Exposure Breakdowns"), "Geography/Locations");
+  const geography =
+    geographyEu.rows.length > 0
+      ? geographyEu
+      : readExposureBlock(sheets.get("Exposure Breakdowns"), "Geography/Countries");
   const holdings = readHoldings(sheets.get("Holdings"));
 
-  const terRaw = keyFact(facts, "Total Expense Ratio") ?? keyFact(facts, "Ongoing Charges Figure");
+  const terRaw =
+    keyFact(facts, "Total Expense Ratio") ??
+    keyFact(facts, "Ongoing Charges Figure") ??
+    keyFact(sheets.get("Fees"), "Expense Ratio");
   const ter = parseNumber(terRaw);
+  // Les classeurs américains n'ont pas de ligne « devise » : la VL est écrite
+  // « $14.88 ». On ne lit le dollar que là, jamais par défaut.
+  // Pas de ligne ISIN côté américain, mais le CUSIP y est : l'ISIN s'en déduit
+  // par la norme (ISO 6166), et le fonds est alors domicilié aux États-Unis.
+  const isinFromUs = keyFact(facts, "ISIN") ? null : isinFromCusip(keyFact(facts, "CUSIP"));
+  const navCell = header?.find((r) => /^\$\d/.test(r[0] ?? ""))?.[0];
+  const currency =
+    keyFact(facts, "Share Class Currency") ??
+    keyFact(facts, "Fund Base Currency") ??
+    (navCell ? "USD" : null);
 
   return {
     name: header?.[0]?.[0] || null,
-    isin: keyFact(facts, "ISIN"),
-    currency: keyFact(facts, "Share Class Currency") ?? keyFact(facts, "Fund Base Currency"),
+    isin: keyFact(facts, "ISIN") ?? isinFromUs,
+    currency,
     benchmark: keyFact(facts, "Benchmark Index"),
     sfdrDeclared: keyFact(facts, "SFDR Classification"),
     // Arrondi à 6 décimales : 0.65 / 100 donne 0.006500000000000001 en flottant.
     ter: ter === null ? null : Math.round((ter / 100) * 1e6) / 1e6,
-    domicile: keyFact(facts, "Domicile"),
+    domicile: keyFact(facts, "Domicile") ?? (isinFromUs ? "United States" : null),
     assetClass: keyFact(facts, "Asset Class"),
-    launchDate: parseWorkbookDate(keyFact(facts, "Share Class Launch Date")),
+    launchDate: parseWorkbookDate(
+      keyFact(facts, "Share Class Launch Date") ?? keyFact(facts, "Fund Inception"),
+    ),
     holdingsCount: parseNumber(keyFact(characteristics, "Number of Holdings")),
     publishedStdDev3y: parseNumber(keyFact(characteristics, "Standard Deviation (3y)")),
     navAsOf,
@@ -310,5 +474,7 @@ export function parseISharesWorkbook(xml: string): ISharesWorkbook {
     geographyAsOf: geography.asOf,
     holdings: holdings.rows,
     holdingsAsOf: holdings.asOf,
+    sustainability: readSustainability(sheets.get("Sustainability Characteristics")),
+    businessInvolvement: readBusinessInvolvement(sheets.get("Business Involvement")),
   };
 }

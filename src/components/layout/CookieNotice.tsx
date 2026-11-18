@@ -34,7 +34,7 @@ export function CookieNotice() {
   if (!visible) return null;
 
   return (
-    <div className="pointer-events-none fixed inset-x-3 bottom-3 z-[60] flex justify-center safe-area-bottom">
+    <div className="pointer-events-none fixed inset-x-3 bottom-3 z-[60] flex justify-center safe-area-bottom print:hidden">
       <div className="glass pointer-events-auto flex max-w-2xl animate-fade-in-up flex-col items-start gap-3 rounded-[24px] p-4 pl-5 sm:flex-row sm:items-center">
         <p className="flex-1 text-label leading-relaxed text-ink-2">
           {t("cookie_notice.text")}{" "}

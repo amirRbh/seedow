@@ -45,8 +45,12 @@ export const FRESHNESS_DAYS = {
   fund_holdings: 45,
   fund_exposure: 45,
   performance_history: 10,
+  /** Séries publiées en fin de mois (ETF américains) : un mois de décalage est normal. */
+  performance_history_monthly: 45,
   regulatory_document: 400,
   esg_issuer: 548,
+  /** Indicateurs MSCI de fonds repris par l'émetteur : recalculés chaque mois par MSCI. */
+  esg_fund_metrics: 120,
 } as const;
 
 export type DatasetKind = keyof typeof FRESHNESS_DAYS;

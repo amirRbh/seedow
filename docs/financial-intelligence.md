@@ -19,8 +19,9 @@
 
 Règles : une donnée sans date ne peut pas être `VERIFIED` ; un calcul prend le
 statut de son entrée la plus faible (`weakestStatus`). Fenêtres de fraîcheur :
-`FRESHNESS_DAYS` (cours 5 j, compositions 45 j, historique 10 j, documents
-réglementaires 400 j, ESG émetteur 548 j).
+`FRESHNESS_DAYS` (cours 5 j, compositions 45 j, historique 10 j, historique
+mensuel 45 j, documents réglementaires 400 j, ESG émetteur 548 j, indicateurs
+ESG de fonds MSCI 120 j).
 
 Le registre des sources (`src/lib/data/sources.ts`) décrit l'état RÉEL de
 chaque intégration (planifiée, manuelle, instantané, référence, non intégrée),
@@ -44,9 +45,15 @@ avec sa licence, sa transformation et ses limites. Il est publié sur `/donnees`
   bornes.
 - `blendSeries` : panier à poids constants rééquilibré à chaque date commune,
   sans interpolation. Toujours affiché `SIMULATED`.
+- `seriesFrequency` : quotidienne (écart médian ≤ 7 j), mensuelle (25–35 j) ou
+  irrégulière. Sur une série mensuelle (ETF américains), pas de volatilité
+  « quotidienne », écart de suivi annualisé sur 12 périodes, et la perte
+  maximale entre fins de mois est signalée comme sous-estimant la perte
+  intra-mois. Sur une série irrégulière, aucune mesure dépendant de la
+  fréquence n'est calculée.
 
-**Validation indépendante** (`performance.test.ts`) : sur les 5 fonds de
-l'instantané, les rendements annualisés 1, 3 et 5 ans recalculés retrouvent
+**Validation indépendante** (`performance.test.ts`) : sur les 10 fonds de
+l'instantané (5 UCITS quotidiens, 5 ETF américains dont 4 mensuels), les rendements annualisés 1, 3 et 5 ans recalculés retrouvent
 ceux publiés par l'émetteur dans le même document à moins de 0,05 point, et la
 volatilité 3 ans retrouve l'écart-type publié **au centième**.
 
@@ -68,7 +75,9 @@ exposition(b) = Σ_positions valeur(p) × part_de_b_dans(p) / valeur totale
 - Frais : TER moyen pondéré par la valeur **sur la seule part dont les frais
   sont connus**, avec sa couverture ; `null` si aucun TER n'est connu.
 - Énergie : secteur Énergie au sens GICS (pétrole, gaz, charbon et services
-  associés) lu dans les répartitions publiées, avec sa couverture.
+  associés) lu dans les répartitions publiées, avec sa couverture. Quand
+  l'émetteur publie par sous-industrie (ETF thématiques), on additionne les
+  sous-industries du secteur Énergie (`energySectorPct`).
 
 ## 4. Cadre ESG (`src/lib/esg/framework.ts`)
 
@@ -78,26 +87,44 @@ pas » :
 1. **Classification SFDR** — catégorie de divulgation déclarée, pas une note.
    L'article déclaré par l'émetteur prime sur le catalogue ; un écart entre les
    deux est **affiché**, jamais arbitré en silence.
-2. **Risque ESG** — aucune note sous licence branchée : `UNAVAILABLE`.
+2. **Notation ESG** — la notation MSCI ESG du fonds quand l'émetteur la
+   publie (ETF américains), reprise telle quelle et attribuée au calculateur
+   ET au diffuseur ; sinon `UNAVAILABLE`. Jamais recalculée, jamais convertie
+   en score Seedow, jamais utilisée pour classer. Dans un export, elle est
+   signalée (`published_not_exported`) sans sa valeur.
 3. **Caractéristiques promues** — exclusions _documentées_ (les secteurs « non
    vérifiés » ne comptent pas) et thèmes revendiqués.
 4. **Taxonomie UE** — non collectée, jamais déduite de l'article SFDR.
 5. **PAI** — on suit seulement la publication de la déclaration.
-6. **Impact réel** — non mesuré par Seedow, et écrit comme tel.
 
-Grille d'indicateurs E (6) / S (5) / G (4), fixe et publique. Couverture par
+Hors Espace économique européen (`euFrameworkApplies`, lu sur le pays de
+l'ISIN) et sans article déclaré, SFDR, Taxonomie et PAI sont « non
+applicables » — ni un trou de collecte, ni un défaut du fonds. 6. **Impact réel** — non mesuré par Seedow, et écrit comme tel.
+
+Grille d'indicateurs E (9) / S (8) / G (4), fixe et publique. Les ETF
+américains remplissent, depuis leurs feuilles MSCI : intensité carbone (WACI,
+scopes 1+2), hausse de température implicite (bande publiée), charbon
+thermique et sables bitumineux (> 5 % du CA), armes controversées (≈ PAI 14),
+violations du Pacte mondial (≈ PAI 10, sans les principes OCDE), tabac. Couverture par
 pilier et confiance (≥ 80 % élevée, ≥ 60 % moyenne, ≥ 30 % faible, sinon
 insuffisante). `gatedPillarScore` refuse toute note sous 60 % de couverture ;
 aucune note composite n'est affichée sur les surfaces publiques
 (`docs/scoring-v2.md`).
 
-## 5. Données de démonstration (`src/content/demo/fund-snapshots.json`)
+## 5. Données de démonstration et fonds de référence (`src/content/demo/fund-snapshots.json`)
 
 Instantané figé par `scripts/snapshot-demo-funds.ts` à partir du classeur
 produit officiel iShares (API publique de l'émetteur, URL rejouable conservée) :
 identité, SFDR déclaré, TER, indice, expositions sectorielle et géographique,
 répartition par devise (toutes positions), 150 premières positions, ~6 ans de
 « croissance de 10 000 » fonds et indice, rendements publiés.
+
+Dix fonds : cinq UCITS (le portefeuille de démonstration) et cinq ETF
+américains — CRBN, ESGU, SUSL, ICLN, et IVV comme point de comparaison non ESG
+(qui ne publie pas de feuilles MSCI : rien n'est inventé). Pour les classeurs
+américains, l'ISIN est déduit du CUSIP publié (ISO 6166), le domicile en
+découle, et les indicateurs MSCI (« Sustainability Characteristics »,
+« Business Involvement ») sont conservés tels quels.
 
 Seuls les **montants** du portefeuille de démonstration sont fictifs
 (`SIMULATED`). L'instantané vieillit visiblement : il passe `STALE` au-delà des
@@ -115,13 +142,40 @@ Régénérer : `bun run scripts/snapshot-demo-funds.ts`.
 | `/donnees`            | Registre des sources et statuts                                            |
 | `/fonds/$isin`        | Fiche : performance, expositions, positions, six couches, couverture E/S/G |
 | `/portfolio` (Impact) | Look-through des positions réelles de l'utilisateur                        |
+| `/comparer/rapport`   | Rapport institutionnel imprimable (A4, PDF), mêmes données que l'API       |
+| `/developpeurs`       | Documentation de l'API publique et des exports                             |
 
-## 7. Limites connues
+## 7. API publique v1 et exports institutionnels (`src/lib/api/v1.ts`)
+
+Lecture seule, sans authentification, CORS ouvert en lecture, cache en
+bordure (`s-maxage=3600`). Spécification : `/api/public/v1/openapi.json`.
+
+| Point d'accès                     | Contenu                                                                              |
+| --------------------------------- | ------------------------------------------------------------------------------------ |
+| `GET /funds`                      | Univers comparable, filtres `q`, `sfdr`, `maxTer`, `fossilPolicy`, `withPerformance` |
+| `GET /funds/{isin}`               | Fiche complète, provenance `{ value, status, source, asOf }` par champ               |
+| `GET /compare?isins=…`            | 1 à 8 fiches dans l'ordre demandé + lignes d'export                                  |
+| `GET /compare?isins=…&format=csv` | CSV RFC 4180, colonnes stables `EXPORT_COLUMNS`                                      |
+
+Règles : aucun classement (ordre alphabétique), aucun score, une valeur absente
+est `null` + `UNAVAILABLE`, et **aucune donnée calculée par MSCI** n'est servie
+(pas de licence de redistribution) — l'API indique seulement qu'elles existent
+et où les lire. Le CSV, le JSON et le rapport imprimable sortent du même
+assemblage (`lib/api/data.server.ts`, `exportRow`). Testé dans
+`src/lib/api/__tests__/v1.test.ts`, y compris l'absence de toute valeur MSCI
+dans les sorties.
+
+## 8. Limites connues
 
 - `fund_holdings` est vide en production : le look-through en ligne ne couvre
   que les fonds de l'instantané tant que le cron d'ingestion n'a pas tourné.
 - Pas de taux sans risque sourcé : le ratio de Sharpe n'est pas affiché.
-- Pas de note de risque ESG sous licence, pas de Taxonomie, pas de valeurs PAI.
+- Pas de note ESG sous licence : seules les notations MSCI que publient les
+  émetteurs américains sont reprises (affichage attribué, pas d'export).
+- Pas de Taxonomie ni de valeurs PAI : les annexes périodiques SFDR des
+  émetteurs ne sont pas joignables depuis l'environnement de collecte, et aucun
+  flux EET sous licence n'est branché. Les classeurs UCITS d'iShares ne
+  contiennent pas ces valeurs.
 - Les séries de performance sont dans la devise de la part (souvent USD) ;
   aucune conversion de change n'est appliquée.
 - Le comparateur ne classe pas les fonds et ne recommande rien.

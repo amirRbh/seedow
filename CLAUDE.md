@@ -68,6 +68,7 @@ src/
 │   ├── ethi.tsx                 # chat Ethi (UI)
 │   ├── comprendre.tsx · methodologie.tsx    # pédagogie & méthode
 │   ├── demo.tsx · comparer.tsx · donnees.tsx  # démonstration, comparateur de fonds, sources des données
+│   ├── comparer_.rapport.tsx · developpeurs.tsx  # rapport institutionnel imprimable, doc de l'API
 │   ├── observatoire.tsx · fonds.$isin.tsx     # Observatoire STI 2.0 et fiche fonds
 │   ├── cours.tsx · cours.index.tsx · cours.$slug.tsx   # cours
 │   ├── communaute.tsx · profil.tsx · reglages.tsx
@@ -75,6 +76,7 @@ src/
 │   ├── _authenticated/          # layout + garde d'auth (route.tsx, admin.beta.tsx)
 │   ├── api.ethi.ts              # endpoint IA (server), pas une route UI
 │   ├── api.public.esg-preview.ts            # aperçu ESG public (server)
+│   ├── api.public.v1.*.ts                   # API publique v1 : funds, funds/$isin, compare (JSON/CSV), openapi.json
 │   ├── hooks/                   # endpoints cron (pas des routes UI)
 │   │   ├── refresh-market-data.ts           # ingestion horaire Yahoo Finance
 │   │   └── recompute-risk-model.ts          # recalcul du modèle de risque
@@ -95,6 +97,7 @@ src/
 │   ├── landing/                   # répartition du flux « où va ton argent »
 │   ├── data/                      # statuts de donnée (VERIFIED…STALE) et registre des sources
 │   ├── demo/ · compare/           # instantané émetteur (serveur) et logique du comparateur
+│   ├── api/                       # API publique v1 (logique pure, OpenAPI, chargement serveur)
 │   ├── mcp/                        # serveur MCP + tools
 │   └── account/ auth/ beta/ discover/ preferences/ analytics/ monitoring/
 ├── i18n/ · content/               # locales (i18next) & contenu des cours
@@ -230,6 +233,8 @@ Ethi est l'assistant conversationnel du produit (Lovable AI Gateway, Gemini/GPT-
 - Ingestion de données de marché horaire (Yahoo Finance) + recalcul du modèle de risque
 - Serveur MCP (exposition d'outils Seedow via le protocole MCP)
 - Parcours de démonstration `/demo`, comparateur de fonds `/comparer` (export CSV), registre des sources `/donnees`, look-through du portefeuille (instantané émetteur réel, cf. `docs/financial-intelligence.md`)
+- Indicateurs MSCI publiés par les émetteurs (ETF américains : notation, WACI, hausse de température implicite, expositions d'activité) — affichés attribués, jamais exportés ; SFDR/Taxonomie/PAI « non applicables » hors UE
+- API publique v1 en lecture seule (`/api/public/v1`, OpenAPI), export CSV institutionnel aux colonnes stables, rapport imprimable `/comparer/rapport`, documentation `/developpeurs`
 
 **Next** — _(à compléter par l'équipe produit)_
 
@@ -254,6 +259,7 @@ Ethi est l'assistant conversationnel du produit (Lovable AI Gateway, Gemini/GPT-
 - [ ] **i18n** : nouvelles chaînes passées par `update_locales.ts`, pas de texte en dur non traduisible dans un composant destiné à plusieurs langues.
 - [ ] **Cohérence DA** : toute UI nouvelle respecte les tokens couleur/typo du §4 — pas de couleur en dur, pas de nouvelle police introduite sans validation.
 - [ ] **Conformité Ethi** : si la PR touche à Ethi ou à un texte généré/affiché par lui, elle respecte le §5 (pas de recommandation individualisée, sourçage systématique).
+- [ ] **Exports et API** : aucune donnée de tiers sans droit de redistribution (MSCI…) dans l'API, le CSV ou le rapport ; une valeur absente est `null` + `UNAVAILABLE` ; aucun tri par qualité.
 - [ ] **Scoring public** : rien de nouveau ne s'affiche sur l'Observatoire, une fiche fonds ou l'aperçu public sans remonter à un signal sourcé et daté (`docs/scoring-v2.md` §3). Pas de score de durabilité, pas de pourcentage thématique, pas de classement inter-catégories, aucun constat sans sa ligne « ce que ce constat ne dit pas ».
 
 ---

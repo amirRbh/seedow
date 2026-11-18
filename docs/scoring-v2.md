@@ -26,7 +26,16 @@
 | **Constats d'écart**             | Contradiction sourcée | Jamais agrégée, liste finie | `src/lib/esg/v2/discrepancies.ts` |
 | **Faits bruts**                  | Donnée publiée        | Jamais agrégée              | repris tels quels dans les vues   |
 
-Aucun n'alimente les deux autres. Un fonds peut avoir un STI de 90 **et** un constat : il publie beaucoup, et dans ce qu'il publie il y a une contradiction. C'est l'usage le plus intéressant de l'Observatoire, et il serait invisible si le constat faisait baisser le score. Le test `observatory.test.ts` verrouille cette indépendance.
+Aucun n'alimente les deux autres.
+
+**Notations de tiers.** Une notation calculée par un fournisseur (MSCI ESG
+Fund Rating, WACI, expositions d'activité) que l'émetteur publie lui-même est
+un **fait brut** : elle peut apparaître sur une fiche fonds ou dans le
+comparateur, attribuée au calculateur et au diffuseur, datée, avec sa
+couverture et « ce qu'elle ne dit pas ». Elle n'est jamais agrégée, jamais
+convertie en score Seedow, jamais utilisée pour trier ou classer, jamais
+affichée sur l'Observatoire ni l'aperçu public, et jamais reprise dans un
+export (API, CSV, rapport) faute de licence de redistribution. Un fonds peut avoir un STI de 90 **et** un constat : il publie beaucoup, et dans ce qu'il publie il y a une contradiction. C'est l'usage le plus intéressant de l'Observatoire, et il serait invisible si le constat faisait baisser le score. Le test `observatory.test.ts` verrouille cette indépendance.
 
 ---
 

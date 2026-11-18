@@ -1,0 +1,1683 @@
+<?xml version="1.0"?>
+<ss:Workbook xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+<ss:Styles>
+<ss:Style ss:ID="Default">
+<ss:Alignment ss:Horizontal="Left"/>
+</ss:Style>
+<ss:Style ss:ID="Disclaimer">
+<ss:Alignment ss:Vertical="Center" ss:WrapText="1"/>
+</ss:Style>
+<ss:Style ss:ID="DefaultHyperlink">
+<ss:Alignment ss:Vertical="Center" ss:WrapText="1"/>
+<ss:Font ss:Color="#0000FF" ss:Underline="Single" />
+</ss:Style>
+<ss:Style ss:ID="Header">
+<ss:Font ss:Bold="1" />
+</ss:Style>
+<ss:Style ss:ID="AsOfDate">
+<ss:Font ss:Italic="1" />
+</ss:Style>
+<ss:Style ss:ID="Date">
+<ss:NumberFormat ss:Format="dd\-mmm\-yyyy"/>
+</ss:Style>
+<ss:Style ss:ID="Left">
+<ss:Alignment ss:Horizontal="Left"/>
+<ss:NumberFormat ss:Format="Standard"/>
+</ss:Style>
+<ss:Style ss:ID="Right">
+<ss:Alignment ss:Horizontal="Right"/>
+<ss:NumberFormat ss:Format="Standard"/>
+</ss:Style>
+</ss:Styles>
+<ss:Worksheet ss:Name="fundHeader">
+<ss:Table>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">iShares Global Clean Energy ETF</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String"></ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">NAV as of Nov 17, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">$14.88</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">52 WK: 14.88 - 23.69</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row></ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">1 Day NAV Change as of Nov 17, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">$-0.44(-2.89%)</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String"></ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row></ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">NAV Total Return as of Nov 17, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">-9.05%</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String"></ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row></ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Morningstar Rating</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">3</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String"></ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row></ss:Row>
+</ss:Table>
+</ss:Worksheet>
+<ss:Worksheet ss:Name="Performance Returns">
+<ss:Table>
+<ss:Row>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Average Annual</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:Index="5">
+<ss:Data ss:Type="String">as of</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">Oct 31, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row/>
+<ss:Row>
+<ss:Cell/>
+<ss:Cell>
+<ss:Data ss:Type="String">1y</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3y</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">5y</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">10y</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">Incept.</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Total Return (%)</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">-10.24</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">7.24</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">-8.24</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">7.43</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">-4.53</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Market Price (%)</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">-10.57</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">7.18</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">-8.32</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">7.39</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">-4.54</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Benchmark (%)</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">-9.92</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">7.47</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">-8.11</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">7.52</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">-5.09</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">After Tax Pre-Liq. (%)</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">-10.47</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">6.91</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">-8.50</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">7.03</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">-4.99</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">After Tax Post-Liq. (%)</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">-5.87</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">5.64</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">-5.97</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">5.98</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">-3.17</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row/>
+<ss:Row>
+<ss:Cell ss:Index="5">
+<ss:Data ss:Type="String">as of</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">Sep 30, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+</ss:Table>
+</ss:Worksheet>
+<ss:Worksheet ss:Name="Growth of Hypothetical 10,000">
+<ss:Table>
+<ss:Row>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String"></ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">iShares Global Clean Energy ETF</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">S&P Global Clean Energy Transition Index (Net)</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Sat, Oct 31, 2026</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">4,421.25</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,963.52</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Wed, Sep 30, 2026</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">4,908.29</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">4,398.48</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Mon, Aug 31, 2026</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">5,003.49</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">4,477.72</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Fri, Jul 31, 2026</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">5,074.84</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">4,542.56</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Tue, Jun 30, 2026</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">5,916.39</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">5,289.80</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Sun, May 31, 2026</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">6,755.55</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">6,052.61</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Thu, Apr 30, 2026</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">5,942.74</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">5,307.88</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Tue, Mar 31, 2026</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">5,226.45</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">4,636.98</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Sat, Feb 28, 2026</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">5,241.85</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">4,688.12</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Sat, Jan 31, 2026</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">5,234.87</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">4,684.86</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Wed, Dec 31, 2025</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">4,714.23</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">4,214.75</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Sun, Nov 30, 2025</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">4,831.72</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">4,310.68</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Fri, Oct 31, 2025</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">4,925.41</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">4,399.83</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Tue, Sep 30, 2025</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">4,408.83</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,932.48</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Sun, Aug 31, 2025</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">4,100.96</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,658.73</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Thu, Jul 31, 2025</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,827.67</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,420.22</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Mon, Jun 30, 2025</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,733.95</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,321.59</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Sat, May 31, 2025</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,586.88</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,195.84</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Wed, Apr 30, 2025</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,324.58</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">2,967.53</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Mon, Mar 31, 2025</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,217.44</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">2,866.50</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Fri, Feb 28, 2025</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,142.95</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">2,806.99</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Fri, Jan 31, 2025</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,208.73</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">2,870.98</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Tue, Dec 31, 2024</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,215.80</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">2,870.85</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Sat, Nov 30, 2024</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,458.97</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,087.86</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Thu, Oct 31, 2024</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,661.06</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,265.17</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Mon, Sep 30, 2024</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">4,101.56</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,669.99</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Sat, Aug 31, 2024</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,994.51</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,567.36</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Wed, Jul 31, 2024</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,949.49</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,522.92</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Sun, Jun 30, 2024</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,739.69</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,342.05</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Fri, May 31, 2024</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">4,155.67</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,705.17</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Tue, Apr 30, 2024</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,676.29</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,290.34</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Sun, Mar 31, 2024</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,882.44</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,463.07</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Thu, Feb 29, 2024</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,861.59</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,445.12</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Wed, Jan 31, 2024</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,849.27</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,448.48</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Sun, Dec 31, 2023</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">4,332.33</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,868.70</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Thu, Nov 30, 2023</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,914.64</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,493.00</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Tue, Oct 31, 2023</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,584.18</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,192.20</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Sat, Sep 30, 2023</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">4,029.88</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,600.61</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Thu, Aug 31, 2023</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">4,426.01</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">3,950.88</ss:Data>
+</ss:Cell>
+</ss:Row>
+</ss:Table>
+</ss:Worksheet>
+<ss:Worksheet ss:Name="Key Facts">
+<ss:Table>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Net Assets of Fund</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">$1,894,693,000</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Nov 17, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Fund Inception</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Jun 24, 2008</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Exchange</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">NASDAQ</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Asset Class</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Equity</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Benchmark Index</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">S&P Global Clean Energy Transition Index (Net)</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Bloomberg Index Ticker</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">SPGTCLNT</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Investment Style</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Index</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Shares Outstanding</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">127,300,000</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Nov 17, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Distribution Frequency</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Semi-Annual</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Premium/Discount</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">-0.23</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Nov 17, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">CUSIP</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">464288224</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Closing Price</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">$14.85</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Nov 17, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Non-FV NAV</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">14.89</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Nov 17, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">30 Day Avg. Volume</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">6,561,123.00</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Nov 17, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">30 Day Median Bid/Ask Spread</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">0.06%</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Nov 17, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Daily Volume</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">5,368,845.00</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Nov 17, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+</ss:Table>
+</ss:Worksheet>
+<ss:Worksheet ss:Name="Portfolio Characteristics">
+<ss:Table>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Number of Holdings</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">102</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Nov 17, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Equity Beta (3y)</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">1.13</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Oct 31, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">30 Day SEC Yield</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">0.86%</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Oct 31, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">12m Trailing Yield</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">1.20%</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Oct 31, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Standard Deviation (3y)</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">27.13%</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Oct 31, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">P/E Ratio</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">17.88</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Nov 17, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">P/B Ratio</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">1.95</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Nov 17, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row/><ss:Row/>
+<ss:Row ss:Height="32">
+<ss:Cell ss:StyleID="Disclaimer" ss:MergeAcross="11">
+<ss:Data ss:Type="String">This information must be preceded or accompanied by a current prospectus. For standardized performance, please see the Performance section.</ss:Data>
+</ss:Cell>
+</ss:Row>
+</ss:Table>
+</ss:Worksheet>
+<ss:Worksheet ss:Name="Business Involvement">
+<ss:Table>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">MSCI - Controversial Weapons</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">0.00%</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Nov 17, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">MSCI - UN Global Compact Violators</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">0.00%</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Nov 17, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">MSCI - Nuclear Weapons</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">0.00%</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Nov 17, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">MSCI - Thermal Coal</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">0.00%</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Nov 17, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">MSCI - Civilian Firearms</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">0.00%</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Nov 17, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">MSCI - Oil Sands</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">0.00%</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Nov 17, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">MSCI - Tobacco</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">0.00%</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Nov 17, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Business Involvement Coverage</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">99.85%</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Nov 17, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Percentage of Fund not covered</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">0.15%</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Nov 17, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row/><ss:Row/>
+<ss:Row ss:Height="98.714">
+<ss:Cell ss:StyleID="Disclaimer" ss:MergeAcross="11">
+<ss:Data ss:Type="String">Business Involvement metrics can help investors gain a more comprehensive view of specific activities in which a fund may be exposed through its investments.
+Business Involvement metrics are not indicative of a fund’s investment objective, and, unless otherwise stated in fund documentation and included within a fund’s investment objective, do not change a fund’s investment objective or constrain the fund’s investable universe. For more information regarding a fund's investment strategy, please see the fund's prospectus.
+Review the MSCI methodology behind the Business Involvement metrics, using links below.</ss:Data>
+</ss:Cell>
+</ss:Row>
+</ss:Table>
+</ss:Worksheet>
+<ss:Worksheet ss:Name="Fees">
+<ss:Table>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Expense Ratio</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">0.38%</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Other Expenses</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">0.01%</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Acquired Fund Fees and Expenses</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">0.00%</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Management Fee</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">0.37%</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row/><ss:Row/>
+<ss:Row ss:Height="33">
+<ss:Cell ss:StyleID="Disclaimer" ss:MergeAcross="11">
+<ss:Data ss:Type="String">The amounts shown above are as of the current prospectus, but may not include extraordinary expenses incurred by the Fund over the past fiscal year. Amounts are rounded to the nearest basis point, which in some cases may be "0.00".</ss:Data>
+</ss:Cell>
+</ss:Row>
+</ss:Table>
+</ss:Worksheet>
+<ss:Worksheet ss:Name="Exposure Breakdowns">
+<ss:Table>
+<ss:Row>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Sector</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data
+ss:Type="String">as of</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">Nov 17, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Type</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Fund</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String"></ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Renewable Electricity</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">29.06</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Electric Utilities</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">21.53</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Heavy Electrical Equipment</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">14.54</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Electrical Components &amp; Equipment</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">13.89</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Semiconductors</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">13.74</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Semiconductor Equipment</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">4.16</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Oil &amp; Gas Refining &amp; Marketing &amp; Transportation</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">1.58</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Construction &amp; Engineering</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">0.33</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Independent Power Producers &amp; Energy Traders</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">0.32</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Steel</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">0.24</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Industrial Machinery &amp; Supplies &amp; Components</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">0.15</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Cash and/or Derivatives</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">0.46</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row/>
+<ss:Row/>
+<ss:Row>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Geography/Countries</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data
+ss:Type="String">as of</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">Nov 17, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Type</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Fund</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String"></ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">United States</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">34.18</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">China</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">19.10</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Spain</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">8.59</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Brazil</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">8.57</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">India</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">5.62</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Denmark</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">5.03</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Israel</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">3.72</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Portugal</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">3.32</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Japan</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">2.92</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Germany</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">2.13</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Korea (South)</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">1.39</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Taiwan</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">1.03</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Other</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">3.95</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Cash and/or Derivatives</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">0.46</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row/><ss:Row/>
+<ss:Row ss:Height="75">
+<ss:Cell ss:StyleID="Disclaimer" ss:MergeAcross="11">
+<ss:Data ss:Type="String">Geographic exposure relates principally to the domicile of the issuers of the securities held in the product, added together and then expressed as a percentage of the product's total holdings, excluding currency holdings. Percentages do not reflect fair valuation. In some instances, percentages may reflect the location where the issuer of the securities carries out much of their business. Bonds are included in U.S. bond indices when the securities are denominated in U.S. dollars regardless of the domicile of the issuer.</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row/>
+<ss:Row/><ss:Row/>
+<ss:Row ss:Height="32">
+<ss:Cell ss:StyleID="Disclaimer" ss:MergeAcross="11">
+<ss:Data ss:Type="String">Allocations are subject to change.</ss:Data>
+</ss:Cell>
+</ss:Row>
+</ss:Table>
+</ss:Worksheet>
+<ss:Worksheet ss:Name="Holdings">
+<ss:Table>
+<ss:Row>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">All</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data
+ss:Type="String">as of</ss:Data>
+</ss:Cell>
+<ss:Cell>
+<ss:Data ss:Type="String">Nov 17, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Ticker</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Name</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Type</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Sector</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Asset Class</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Market Value</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Weight (%)</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Notional Value</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Quantity</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Header">
+<ss:Data ss:Type="String">Accrual Date</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">NXT</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">NEXTPOWER INC</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">EQUITY</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Industrials</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Equity</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">$153,355,962.96</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">8.20</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">153,355,962.96</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">1,954,077.00</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">-</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">FSLR</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">FIRST SOLAR</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">EQUITY</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Information Technology</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Equity</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">$145,538,258.49</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">7.78</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">145,538,258.49</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">951,417.00</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">-</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">IBE</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">IBERDROLA</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">EQUITY</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Utilities</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Equity</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">$138,086,607.86</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">7.38</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">138,086,607.86</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">5,484,600.00</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">-</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">600900</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">CHINA YANGTZE POWER LTD A</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">EQUITY</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Utilities</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Equity</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">$115,696,396.38</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">6.18</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">115,696,396.38</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Right">
+<ss:Data ss:Type="String">25,203,666.00</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">-</ss:Data>
+</ss:Cell>
+</ss:Row>
+</ss:Table>
+</ss:Worksheet>
+<ss:Worksheet ss:Name="Sustainability Characteristics">
+<ss:Table>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">MSCI ESG Fund Rating (AAA-CCC)</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">A</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Oct 23, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">MSCI ESG % Coverage</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">87.91%</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Oct 23, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">MSCI ESG Quality Score (0-10)</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">7.1</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Oct 23, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">MSCI ESG Quality Score - Peer Percentile</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">53.82%</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Oct 23, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Fund Lipper Global Classification</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">Equity Theme - Alternative Energy</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Oct 23, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">Funds in Peer Group</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">249</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Oct 23, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">MSCI Weighted Average Carbon Intensity (Tons CO2E/$M SALES)</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">273.17</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Oct 23, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">MSCI Weighted Average Carbon Intensity % Coverage</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">93.37%</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Oct 23, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">MSCI Implied Temperature Rise (0-3.0+ °C)</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">&gt; 1.5° - 2.0° C</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Oct 23, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row>
+<ss:Cell>
+<ss:Data ss:Type="String">MSCI Implied Temperature Rise % Coverage</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="Left">
+<ss:Data ss:Type="String">91.88%</ss:Data>
+</ss:Cell>
+<ss:Cell ss:StyleID="AsOfDate">
+<ss:Data ss:Type="String">as of Oct 23, 2026</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row/><ss:Row/>
+<ss:Row ss:Height="133.571">
+<ss:Cell ss:StyleID="Disclaimer" ss:MergeAcross="11">
+<ss:Data ss:Type="String">Sustainability Characteristics provide investors with specific non-traditional metrics. Alongside other metrics and information, these enable investors to evaluate funds on certain environmental, social and governance characteristics. Sustainability Characteristics do not provide an indication of current or future performance nor do they represent the potential risk and reward profile of a fund. They are provided for transparency and for information purposes only. Sustainability Characteristics should not be considered solely or in isolation, but instead are one type of information that investors may wish to consider when assessing a fund. Learn more
+Review the MSCI methodologies behind Sustainability Characteristics using the links below.</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row/><ss:Row/>
+<ss:Row ss:Height="74.429">
+<ss:Cell ss:StyleID="Disclaimer" ss:MergeAcross="11">
+<ss:Data ss:Type="String">To be included in MSCI ESG Fund Ratings, 65% (or 50% for bond funds and money market funds) of the fund’s gross weight must come from securities with ESG coverage by MSCI ESG Research (certain cash positions and other asset types deemed not relevant for ESG analysis by MSCI are removed prior to calculating a fund’s gross weight; the absolute values of short positions are included but treated as uncovered), the fund’s holdings date must be less than one year old, and the fund must have at least ten securities.</ss:Data>
+</ss:Cell>
+</ss:Row>
+<ss:Row/><ss:Row/>
+<ss:Row ss:Height="32">
+<ss:Cell ss:StyleID="Disclaimer" ss:MergeAcross="11">
+<ss:Data ss:Type="String">All data is from MSCI ESG Fund Ratings as of Oct 23, 2026, based on holdings as of Sep 30, 2026. As such, the fund’s sustainable characteristics may differ from MSCI ESG Fund Ratings from time to time.</ss:Data>
+</ss:Cell>
+</ss:Row>
+</ss:Table>
+</ss:Worksheet>
+</ss:Workbook>

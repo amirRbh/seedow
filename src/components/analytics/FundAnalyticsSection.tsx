@@ -6,6 +6,7 @@ import { EsgLayersPanel } from "./EsgLayersPanel";
 import { ExposureBars } from "./ExposureBars";
 import { PerformanceChart } from "./PerformanceChart";
 import { PerformanceTable } from "./PerformanceTable";
+import { ThirdPartyEsgCard } from "./ThirdPartyEsgCard";
 import { shortFundName } from "@/lib/demo/labels";
 import { useLang } from "@/hooks/useLang";
 import type { SnapshotFundAnalytics } from "@/lib/demo/demo.functions";
@@ -32,14 +33,18 @@ export function FundAnalyticsSection({
   const short = (d: string | null) =>
     d ? formatDate(d, lang, { day: "numeric", month: "short", year: "numeric" }) : "—";
 
+  const thirdParty = snapshot?.thirdPartyEsg ?? null;
   const layers = describeEsgLayers({
     fund,
+    isin: snapshot?.isin ?? fund?.isins[0] ?? null,
+    thirdParty,
     issuer: snapshot
       ? { sfdrDeclared: snapshot.sfdrDeclared, asOf: snapshot.navAsOf, source: snapshot.issuer }
       : null,
   });
   const indicators = buildEsgIndicators({
     fund,
+    thirdParty,
     energySectorPct: snapshot?.energySectorPct ?? null,
     energyAsOf: snapshot?.sectorAsOf ?? null,
     energySource: snapshot?.issuer ?? null,
@@ -172,6 +177,8 @@ export function FundAnalyticsSection({
           </AnalyticsCard>
         </>
       )}
+
+      {thirdParty && <ThirdPartyEsgCard data={thirdParty} />}
 
       <AnalyticsCard title={t("fin.esg.layers_title")} description={t("fin.esg.layers_desc")}>
         <EsgLayersPanel layers={layers} />

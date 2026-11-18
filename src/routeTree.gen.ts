@@ -28,6 +28,7 @@ import { Route as LeFilRouteImport } from './routes/le-fil'
 import { Route as EthiRouteImport } from './routes/ethi'
 import { Route as DonneesRouteImport } from './routes/donnees'
 import { Route as DiscoverRouteImport } from './routes/discover'
+import { Route as DeveloppeursRouteImport } from './routes/developpeurs'
 import { Route as DemoRouteImport } from './routes/demo'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CoursRouteImport } from './routes/cours'
@@ -55,6 +56,7 @@ import { Route as HooksDispatchNotificationsRouteImport } from './routes/hooks/d
 import { Route as HooksDiscoverFundsRouteImport } from './routes/hooks/discover-funds'
 import { Route as FondsIsinRouteImport } from './routes/fonds.$isin'
 import { Route as CoursSlugRouteImport } from './routes/cours.$slug'
+import { Route as ComparerRapportRouteImport } from './routes/comparer_.rapport'
 import { Route as ApiEthiRouteImport } from './routes/api.ethi'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
@@ -63,6 +65,10 @@ import { Route as AuthenticatedAdminDataRouteImport } from './routes/_authentica
 import { Route as AuthenticatedAdminBetaRouteImport } from './routes/_authenticated/admin.beta'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
+import { Route as ApiPublicV1OpenapiDotjsonRouteImport } from './routes/api.public.v1.openapi[.]json'
+import { Route as ApiPublicV1CompareRouteImport } from './routes/api.public.v1.compare'
+import { Route as ApiPublicV1FundsIndexRouteImport } from './routes/api.public.v1.funds.index'
+import { Route as ApiPublicV1FundsIsinRouteImport } from './routes/api.public.v1.funds.$isin'
 
 const WrappedRoute = WrappedRouteImport.update({
   id: '/wrapped',
@@ -157,6 +163,11 @@ const DonneesRoute = DonneesRouteImport.update({
 const DiscoverRoute = DiscoverRouteImport.update({
   id: '/discover',
   path: '/discover',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DeveloppeursRoute = DeveloppeursRouteImport.update({
+  id: '/developpeurs',
+  path: '/developpeurs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DemoRoute = DemoRouteImport.update({
@@ -296,6 +307,11 @@ const CoursSlugRoute = CoursSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => CoursRoute,
 } as any)
+const ComparerRapportRoute = ComparerRapportRouteImport.update({
+  id: '/comparer_/rapport',
+  path: '/comparer/rapport',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiEthiRoute = ApiEthiRouteImport.update({
   id: '/api/ethi',
   path: '/api/ethi',
@@ -339,6 +355,27 @@ const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
   path: '/.lovable/oauth/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicV1OpenapiDotjsonRoute =
+  ApiPublicV1OpenapiDotjsonRouteImport.update({
+    id: '/api/public/v1/openapi.json',
+    path: '/api/public/v1/openapi.json',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicV1CompareRoute = ApiPublicV1CompareRouteImport.update({
+  id: '/api/public/v1/compare',
+  path: '/api/public/v1/compare',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicV1FundsIndexRoute = ApiPublicV1FundsIndexRouteImport.update({
+  id: '/api/public/v1/funds/',
+  path: '/api/public/v1/funds/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicV1FundsIsinRoute = ApiPublicV1FundsIsinRouteImport.update({
+  id: '/api/public/v1/funds/$isin',
+  path: '/api/public/v1/funds/$isin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -355,6 +392,7 @@ export interface FileRoutesByFullPath {
   '/cours': typeof CoursRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/demo': typeof DemoRoute
+  '/developpeurs': typeof DeveloppeursRoute
   '/discover': typeof DiscoverRoute
   '/donnees': typeof DonneesRoute
   '/ethi': typeof EthiRoute
@@ -377,6 +415,7 @@ export interface FileRoutesByFullPath {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/api/ethi': typeof ApiEthiRoute
+  '/comparer/rapport': typeof ComparerRapportRoute
   '/cours/$slug': typeof CoursSlugRoute
   '/fonds/$isin': typeof FondsIsinRoute
   '/hooks/discover-funds': typeof HooksDiscoverFundsRoute
@@ -394,6 +433,10 @@ export interface FileRoutesByFullPath {
   '/admin/beta': typeof AuthenticatedAdminBetaRoute
   '/admin/data': typeof AuthenticatedAdminDataRoute
   '/api/public/esg-preview': typeof ApiPublicEsgPreviewRoute
+  '/api/public/v1/compare': typeof ApiPublicV1CompareRoute
+  '/api/public/v1/openapi.json': typeof ApiPublicV1OpenapiDotjsonRoute
+  '/api/public/v1/funds/$isin': typeof ApiPublicV1FundsIsinRoute
+  '/api/public/v1/funds/': typeof ApiPublicV1FundsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -409,6 +452,7 @@ export interface FileRoutesByTo {
   '/construire': typeof ConstruireRoute
   '/dashboard': typeof DashboardRoute
   '/demo': typeof DemoRoute
+  '/developpeurs': typeof DeveloppeursRoute
   '/discover': typeof DiscoverRoute
   '/donnees': typeof DonneesRoute
   '/ethi': typeof EthiRoute
@@ -431,6 +475,7 @@ export interface FileRoutesByTo {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/api/ethi': typeof ApiEthiRoute
+  '/comparer/rapport': typeof ComparerRapportRoute
   '/cours/$slug': typeof CoursSlugRoute
   '/fonds/$isin': typeof FondsIsinRoute
   '/hooks/discover-funds': typeof HooksDiscoverFundsRoute
@@ -448,6 +493,10 @@ export interface FileRoutesByTo {
   '/admin/beta': typeof AuthenticatedAdminBetaRoute
   '/admin/data': typeof AuthenticatedAdminDataRoute
   '/api/public/esg-preview': typeof ApiPublicEsgPreviewRoute
+  '/api/public/v1/compare': typeof ApiPublicV1CompareRoute
+  '/api/public/v1/openapi.json': typeof ApiPublicV1OpenapiDotjsonRoute
+  '/api/public/v1/funds/$isin': typeof ApiPublicV1FundsIsinRoute
+  '/api/public/v1/funds': typeof ApiPublicV1FundsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -466,6 +515,7 @@ export interface FileRoutesById {
   '/cours': typeof CoursRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/demo': typeof DemoRoute
+  '/developpeurs': typeof DeveloppeursRoute
   '/discover': typeof DiscoverRoute
   '/donnees': typeof DonneesRoute
   '/ethi': typeof EthiRoute
@@ -488,6 +538,7 @@ export interface FileRoutesById {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/api/ethi': typeof ApiEthiRoute
+  '/comparer_/rapport': typeof ComparerRapportRoute
   '/cours/$slug': typeof CoursSlugRoute
   '/fonds/$isin': typeof FondsIsinRoute
   '/hooks/discover-funds': typeof HooksDiscoverFundsRoute
@@ -505,6 +556,10 @@ export interface FileRoutesById {
   '/_authenticated/admin/beta': typeof AuthenticatedAdminBetaRoute
   '/_authenticated/admin/data': typeof AuthenticatedAdminDataRoute
   '/api/public/esg-preview': typeof ApiPublicEsgPreviewRoute
+  '/api/public/v1/compare': typeof ApiPublicV1CompareRoute
+  '/api/public/v1/openapi.json': typeof ApiPublicV1OpenapiDotjsonRoute
+  '/api/public/v1/funds/$isin': typeof ApiPublicV1FundsIsinRoute
+  '/api/public/v1/funds/': typeof ApiPublicV1FundsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -523,6 +578,7 @@ export interface FileRouteTypes {
     | '/cours'
     | '/dashboard'
     | '/demo'
+    | '/developpeurs'
     | '/discover'
     | '/donnees'
     | '/ethi'
@@ -545,6 +601,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/api/ethi'
+    | '/comparer/rapport'
     | '/cours/$slug'
     | '/fonds/$isin'
     | '/hooks/discover-funds'
@@ -562,6 +619,10 @@ export interface FileRouteTypes {
     | '/admin/beta'
     | '/admin/data'
     | '/api/public/esg-preview'
+    | '/api/public/v1/compare'
+    | '/api/public/v1/openapi.json'
+    | '/api/public/v1/funds/$isin'
+    | '/api/public/v1/funds/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -577,6 +638,7 @@ export interface FileRouteTypes {
     | '/construire'
     | '/dashboard'
     | '/demo'
+    | '/developpeurs'
     | '/discover'
     | '/donnees'
     | '/ethi'
@@ -599,6 +661,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/api/ethi'
+    | '/comparer/rapport'
     | '/cours/$slug'
     | '/fonds/$isin'
     | '/hooks/discover-funds'
@@ -616,6 +679,10 @@ export interface FileRouteTypes {
     | '/admin/beta'
     | '/admin/data'
     | '/api/public/esg-preview'
+    | '/api/public/v1/compare'
+    | '/api/public/v1/openapi.json'
+    | '/api/public/v1/funds/$isin'
+    | '/api/public/v1/funds'
   id:
     | '__root__'
     | '/'
@@ -633,6 +700,7 @@ export interface FileRouteTypes {
     | '/cours'
     | '/dashboard'
     | '/demo'
+    | '/developpeurs'
     | '/discover'
     | '/donnees'
     | '/ethi'
@@ -655,6 +723,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/api/ethi'
+    | '/comparer_/rapport'
     | '/cours/$slug'
     | '/fonds/$isin'
     | '/hooks/discover-funds'
@@ -672,6 +741,10 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/beta'
     | '/_authenticated/admin/data'
     | '/api/public/esg-preview'
+    | '/api/public/v1/compare'
+    | '/api/public/v1/openapi.json'
+    | '/api/public/v1/funds/$isin'
+    | '/api/public/v1/funds/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -690,6 +763,7 @@ export interface RootRouteChildren {
   CoursRoute: typeof CoursRouteWithChildren
   DashboardRoute: typeof DashboardRoute
   DemoRoute: typeof DemoRoute
+  DeveloppeursRoute: typeof DeveloppeursRoute
   DiscoverRoute: typeof DiscoverRoute
   DonneesRoute: typeof DonneesRoute
   EthiRoute: typeof EthiRoute
@@ -712,6 +786,7 @@ export interface RootRouteChildren {
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   ApiEthiRoute: typeof ApiEthiRoute
+  ComparerRapportRoute: typeof ComparerRapportRoute
   FondsIsinRoute: typeof FondsIsinRoute
   HooksDiscoverFundsRoute: typeof HooksDiscoverFundsRoute
   HooksDispatchNotificationsRoute: typeof HooksDispatchNotificationsRoute
@@ -723,6 +798,10 @@ export interface RootRouteChildren {
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   ApiPublicEsgPreviewRoute: typeof ApiPublicEsgPreviewRoute
+  ApiPublicV1CompareRoute: typeof ApiPublicV1CompareRoute
+  ApiPublicV1OpenapiDotjsonRoute: typeof ApiPublicV1OpenapiDotjsonRoute
+  ApiPublicV1FundsIsinRoute: typeof ApiPublicV1FundsIsinRoute
+  ApiPublicV1FundsIndexRoute: typeof ApiPublicV1FundsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -858,6 +937,13 @@ declare module '@tanstack/react-router' {
       path: '/discover'
       fullPath: '/discover'
       preLoaderRoute: typeof DiscoverRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/developpeurs': {
+      id: '/developpeurs'
+      path: '/developpeurs'
+      fullPath: '/developpeurs'
+      preLoaderRoute: typeof DeveloppeursRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/demo': {
@@ -1049,6 +1135,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CoursSlugRouteImport
       parentRoute: typeof CoursRoute
     }
+    '/comparer_/rapport': {
+      id: '/comparer_/rapport'
+      path: '/comparer/rapport'
+      fullPath: '/comparer/rapport'
+      preLoaderRoute: typeof ComparerRapportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/ethi': {
       id: '/api/ethi'
       path: '/api/ethi'
@@ -1103,6 +1196,34 @@ declare module '@tanstack/react-router' {
       path: '/.lovable/oauth/consent'
       fullPath: '/.lovable/oauth/consent'
       preLoaderRoute: typeof DotlovableOauthConsentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/v1/openapi.json': {
+      id: '/api/public/v1/openapi.json'
+      path: '/api/public/v1/openapi.json'
+      fullPath: '/api/public/v1/openapi.json'
+      preLoaderRoute: typeof ApiPublicV1OpenapiDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/v1/compare': {
+      id: '/api/public/v1/compare'
+      path: '/api/public/v1/compare'
+      fullPath: '/api/public/v1/compare'
+      preLoaderRoute: typeof ApiPublicV1CompareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/v1/funds/': {
+      id: '/api/public/v1/funds/'
+      path: '/api/public/v1/funds'
+      fullPath: '/api/public/v1/funds/'
+      preLoaderRoute: typeof ApiPublicV1FundsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/v1/funds/$isin': {
+      id: '/api/public/v1/funds/$isin'
+      path: '/api/public/v1/funds/$isin'
+      fullPath: '/api/public/v1/funds/$isin'
+      preLoaderRoute: typeof ApiPublicV1FundsIsinRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -1171,6 +1292,7 @@ const rootRouteChildren: RootRouteChildren = {
   CoursRoute: CoursRouteWithChildren,
   DashboardRoute: DashboardRoute,
   DemoRoute: DemoRoute,
+  DeveloppeursRoute: DeveloppeursRoute,
   DiscoverRoute: DiscoverRoute,
   DonneesRoute: DonneesRoute,
   EthiRoute: EthiRoute,
@@ -1194,6 +1316,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   ApiEthiRoute: ApiEthiRoute,
+  ComparerRapportRoute: ComparerRapportRoute,
   FondsIsinRoute: FondsIsinRoute,
   HooksDiscoverFundsRoute: HooksDiscoverFundsRoute,
   HooksDispatchNotificationsRoute: HooksDispatchNotificationsRoute,
@@ -1205,6 +1328,10 @@ const rootRouteChildren: RootRouteChildren = {
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
   ApiPublicEsgPreviewRoute: ApiPublicEsgPreviewRoute,
+  ApiPublicV1CompareRoute: ApiPublicV1CompareRoute,
+  ApiPublicV1OpenapiDotjsonRoute: ApiPublicV1OpenapiDotjsonRoute,
+  ApiPublicV1FundsIsinRoute: ApiPublicV1FundsIsinRoute,
+  ApiPublicV1FundsIndexRoute: ApiPublicV1FundsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
