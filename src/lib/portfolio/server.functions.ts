@@ -36,7 +36,7 @@ const ScreenParamsSchema = z.object({
  * compose). Sert l'onboarding, les réglages et le simulateur `/methodologie`.
  */
 export const screenAssetPool = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => ScreenParamsSchema.parse(input))
+  .validator((input: unknown) => ScreenParamsSchema.parse(input))
   .handler(async ({ data }) => {
     const universe = await loadUniverse();
     const result = screenPool(universe.assets, {

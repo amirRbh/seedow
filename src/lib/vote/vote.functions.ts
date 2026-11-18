@@ -152,7 +152,7 @@ export const listResolutions = createServerFn({ method: "GET" }).handler(
 );
 
 export const getResolution = createServerFn({ method: "GET" })
-  .inputValidator((input: { id: string }) => z.object({ id: z.string().uuid() }).parse(input))
+  .validator((input: { id: string }) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ data }): Promise<ResolutionWithBloc | null> => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -200,7 +200,7 @@ export interface CastVoteResult {
 
 export const castVote = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { resolutionId: string; choice: VoteChoice }) =>
+  .validator((input: { resolutionId: string; choice: VoteChoice }) =>
     z
       .object({
         resolutionId: z.string().uuid(),

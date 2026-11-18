@@ -9,7 +9,7 @@ import { z } from "zod";
 import { MAX_REPORT } from "./report";
 
 export const getComparisonReport = createServerFn({ method: "GET" })
-  .inputValidator((input: string[]) =>
+  .validator((input: string[]) =>
     z
       .array(
         z

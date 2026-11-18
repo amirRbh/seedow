@@ -41,7 +41,7 @@ function rangeToDays(range: PortfolioHistoryResult["range"]): number | null {
  */
 export const getPortfolioHistory = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input) => inputSchema.parse(input))
+  .validator((input) => inputSchema.parse(input))
   .handler(async ({ data, context }): Promise<PortfolioHistoryResult> => {
     const { supabase, userId } = context;
 

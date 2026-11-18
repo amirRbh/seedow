@@ -39,7 +39,7 @@ export type AnalyzeCompositionResult = PortfolioAnalysis & {
 };
 
 export const analyzeComposition = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => InputSchema.parse(input))
+  .validator((input: unknown) => InputSchema.parse(input))
   .handler(async ({ data }): Promise<AnalyzeCompositionResult> => {
     const universe = await loadUniverse();
     const byId = new Map(universe.assets.map((a) => [a.id, a]));

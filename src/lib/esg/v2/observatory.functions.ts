@@ -192,7 +192,7 @@ export const getObservatory = createServerFn({ method: "GET" }).handler(async ()
  * lien vers la part Acc atterrissent sur la même fiche, avec le même STI.
  */
 export const getObservatoryFund = createServerFn({ method: "GET" })
-  .inputValidator((input: string) => z.string().min(1).max(64).parse(input))
+  .validator((input: string) => z.string().min(1).max(64).parse(input))
   .handler(async ({ data: key }) => {
     const { funds } = await loadObservatory();
     const needle = key.trim().toUpperCase();

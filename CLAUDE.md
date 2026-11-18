@@ -202,6 +202,7 @@ Ethi est l'assistant conversationnel du produit (Lovable AI Gateway, Gemini/GPT-
 - **Backend** : Lovable Cloud = Supabase managé (Postgres + RLS + Edge Functions + Auth + Storage).
 - **IA** : Lovable AI Gateway (Gemini / GPT-5) — moteur d'Ethi.
 - **Déploiement** : Cloudflare Workers (Edge).
+- **Versions TanStack figées** : `@tanstack/react-start`, `react-router` et `router-plugin` sont épinglés à des versions EXACTES et cohérentes (une seule copie de `router-core`). La branche 1.169+ exige Vite 8 : ne pas les passer en `^` ni les monter sans la migration Vite 8 (voir §7 Next). Les fonctions serveur utilisent `.validator(...)` (`.inputValidator` est déprécié).
 - **Package manager** : Bun (`bun install`, `bun run dev`). **Un seul lockfile fait foi : `bun.lock` (texte, versionné).** `bunfig.toml` fixe `saveTextLockfile = true` pour que Bun maintienne ce format lisible et diffable — pas de lockfile binaire (`bun.lockb`) ni de `package-lock.json` npm dans le repo (deux sources de vérité = dérive garantie). Ne pas réintroduire un second lockfile.
 - **Intelligence financière & ESG** : moteurs purs et testés (performance, look-through, cadre ESG en six couches, statuts de donnée), documentés dans `docs/financial-intelligence.md`. Tout nouveau chiffre affiché porte l'un des cinq statuts de `src/lib/data/status.ts` ; toute nouvelle source est ajoutée au registre `src/lib/data/sources.ts`.
 - **Données de marché** : ingestion horaire automatique via `pg_cron` → endpoint `/api/public/refresh-market-data`, source Yahoo Finance, stockage `asset_quotes` / `asset_prices`.
@@ -235,10 +236,12 @@ Ethi est l'assistant conversationnel du produit (Lovable AI Gateway, Gemini/GPT-
 - Parcours de démonstration `/demo`, comparateur de fonds `/comparer` (export CSV), registre des sources `/donnees`, look-through du portefeuille (instantané émetteur réel, cf. `docs/financial-intelligence.md`)
 - Indicateurs MSCI publiés par les émetteurs (ETF américains : notation, WACI, hausse de température implicite, expositions d'activité) — affichés attribués, jamais exportés ; SFDR/Taxonomie/PAI « non applicables » hors UE
 - API publique v1 en lecture seule (`/api/public/v1`, OpenAPI), export CSV institutionnel aux colonnes stables, rapport imprimable `/comparer/rapport`, documentation `/developpeurs`
+- Mise à niveau de sécurité : TanStack Start 1.168.61 (start-server-core 1.169.40, seroval 1.8) corrige GHSA-qx66-fv34-fjm8 ; `proxy-addr` et `shell-quote` forcés au-dessus de leurs correctifs ; Vite 7.3.8. Zéro vulnérabilité critique à l'audit, plancher verrouillé par `src/lib/__tests__/security-floor.test.ts`.
 
 **Next** — _(à compléter par l'équipe produit)_
 
-- _Proposé, non validé :_ mettre à niveau TanStack Start (≥ 1.168.60 / start-server-core ≥ 1.169.39) pour corriger l'avis critique GHSA-qx66-fv34-fjm8 — migration de l'API `inputValidator` et de l'option `server` des routes à prévoir.
+- _Proposé, non validé :_ migrer vers Vite 8 pour suivre TanStack Start ≥ 1.169 (`start-plugin-core` ≥ 1.171.51 exige Vite 8 et déclare ses entrées en `rolldownOptions`) — à faire avec la config Lovable (`@lovable.dev/vite-tanstack-config`) et nitro.
+- _Proposé, non validé :_ passer `@lovable.dev/mcp-js` en 3.x pour embarquer `@modelcontextprotocol/sdk` ≥ 1.32 (plusieurs avis « high » sur le serveur `/mcp`) — version majeure, à tester avec l'outillage Lovable qui génère `src/routes/[.mcp]/`.
 
 **Later** — _(à compléter par l'équipe produit)_
 

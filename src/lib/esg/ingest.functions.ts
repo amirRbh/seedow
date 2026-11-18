@@ -60,7 +60,7 @@ export function buildAssetUpdate(row: IngestRow): Record<string, unknown> {
 
 export const ingestIssuerEsgData = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => IngestSchema.parse(input))
+  .validator((input: unknown) => IngestSchema.parse(input))
   .handler(async ({ data, context }) => {
     const { userId, supabase } = context;
     const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: userId, _role: "admin" });

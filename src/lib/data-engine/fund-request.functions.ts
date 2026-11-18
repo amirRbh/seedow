@@ -24,7 +24,7 @@ const RequestSchema = z.object({
 
 export const requestFundAnalysis = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => RequestSchema.parse(input))
+  .validator((input: unknown) => RequestSchema.parse(input))
   .handler(async ({ data, context }) => {
     const { userId, supabase } = context;
     const normalized = normalizeFundRequest(data.query);
@@ -53,7 +53,7 @@ const ListSchema = z.object({
 
 export const listFundRequests = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => ListSchema.parse(input ?? {}))
+  .validator((input: unknown) => ListSchema.parse(input ?? {}))
   .handler(async ({ data, context }) => {
     const { userId, supabase } = context;
     const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: userId, _role: "admin" });

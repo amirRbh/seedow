@@ -90,7 +90,7 @@ const RESULTS_CACHE_TTL_MS = 5 * 60 * 1000;
 
 export const simulateTradeoffs = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => InputSchema.parse(input))
+  .validator((input: unknown) => InputSchema.parse(input))
   .handler(async ({ data, context }) => {
     const { userId, supabase: userClient } = context;
     const { data: pf, error } = await userClient

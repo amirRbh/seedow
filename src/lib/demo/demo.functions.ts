@@ -54,7 +54,7 @@ export const listSnapshotFunds = createServerFn({ method: "GET" }).handler(async
 
 /** Analyse complète d'un fonds de l'instantané, par ISIN. `null` s'il n'y figure pas. */
 export const getSnapshotFund = createServerFn({ method: "GET" })
-  .inputValidator((input: string) =>
+  .validator((input: string) =>
     z
       .string()
       .trim()
@@ -79,7 +79,7 @@ export async function analyzeAllSnapshotFunds(): Promise<{
 
 /** Plusieurs fonds à la fois — pour la démonstration et le comparateur (8 au plus). */
 export const getSnapshotFunds = createServerFn({ method: "GET" })
-  .inputValidator((input: string[]) =>
+  .validator((input: string[]) =>
     z
       .array(
         z
@@ -216,7 +216,7 @@ const positionInput = z.object({
  * reste une position entière, comptée dans la part « non ventilée ».
  */
 export const analyzePositionsExposure = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => z.array(positionInput).max(50).parse(input))
+  .validator((input: unknown) => z.array(positionInput).max(50).parse(input))
   .handler(async ({ data: positions }) => {
     const snapshots = await loadSnapshots();
     const byIsin = new Map(snapshots.funds.map((f) => [f.isin, f]));

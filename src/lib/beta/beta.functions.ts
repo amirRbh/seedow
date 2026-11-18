@@ -66,7 +66,7 @@ function clientIp(): string {
 }
 
 export const joinWaitlist = createServerFn({ method: "POST" })
-  .inputValidator((input: { email: string; source?: string }) =>
+  .validator((input: { email: string; source?: string }) =>
     z
       .object({
         email: z.string().trim().email().max(255),
@@ -110,7 +110,7 @@ export const joinWaitlist = createServerFn({ method: "POST" })
  * par IP pour éviter qu'un bug en boucle ne remplisse la table.
  */
 export const logClientError = createServerFn({ method: "POST" })
-  .inputValidator(
+  .validator(
     (input: {
       message: string;
       stack?: string;
@@ -164,7 +164,7 @@ export const logClientError = createServerFn({ method: "POST" })
 
 export const submitRealInvestmentIntent = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator(
+  .validator(
     (input: {
       amount: number;
       frequency: "one_shot" | "monthly";
@@ -194,16 +194,15 @@ export const submitRealInvestmentIntent = createServerFn({ method: "POST" })
 
 export const submitBetaFeedback = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator(
-    (input: { nps?: number; blocker?: string; wish?: string; routeWhenSent?: string }) =>
-      z
-        .object({
-          nps: z.number().int().min(0).max(10).optional(),
-          blocker: z.string().trim().max(2000).optional(),
-          wish: z.string().trim().max(2000).optional(),
-          routeWhenSent: z.string().max(255).optional(),
-        })
-        .parse(input),
+  .validator((input: { nps?: number; blocker?: string; wish?: string; routeWhenSent?: string }) =>
+    z
+      .object({
+        nps: z.number().int().min(0).max(10).optional(),
+        blocker: z.string().trim().max(2000).optional(),
+        wish: z.string().trim().max(2000).optional(),
+        routeWhenSent: z.string().max(255).optional(),
+      })
+      .parse(input),
   )
   .handler(async ({ data, context }) => {
     const { error } = await context.supabase.from("beta_feedback").insert({

@@ -43,7 +43,7 @@ const ParamsSchema = z.object({
  * Used by the methodology page simulator.
  */
 export const simulatePortfolio = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => ParamsSchema.parse(input))
+  .validator((input: unknown) => ParamsSchema.parse(input))
   .handler(async ({ data }) => {
     const universe = await loadUniverse();
     const params: PortfolioParams = {
@@ -279,7 +279,7 @@ export async function persistPortfolio(
  */
 export const generatePortfolio = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => ParamsSchema.parse(input))
+  .validator((input: unknown) => ParamsSchema.parse(input))
   .handler(async ({ data, context }) => {
     const { userId, supabase: userClient } = context;
     const universe = await loadUniverse(userClient as typeof supabaseAdmin);
@@ -330,7 +330,7 @@ function downsample<T>(arr: T[], target = 180): T[] {
  */
 export const backtestPortfolio = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => BacktestSchema.parse(input))
+  .validator((input: unknown) => BacktestSchema.parse(input))
   .handler(async ({ data, context }) => {
     const { userId, supabase } = context;
     const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: userId, _role: "admin" });
@@ -392,7 +392,7 @@ const RebalanceSchema = z.object({ portfolio_id: z.string().uuid() });
  */
 export const rebalancePortfolio = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => RebalanceSchema.parse(input))
+  .validator((input: unknown) => RebalanceSchema.parse(input))
   .handler(async ({ data, context }) => {
     const { userId, supabase: userClient } = context;
     const rebalancedAt = new Date().toISOString();
