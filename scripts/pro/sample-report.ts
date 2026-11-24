@@ -99,7 +99,13 @@ console.log(
   `✓ ${sample.funds.reduce((n, f) => n + Object.keys(f.evidence).length, 0)} citations vérifiées`,
 );
 
-const report = await computeReport({ ...sample, funds });
+const reportInput = { ...sample, funds };
+// Entrée complète du rendu, pour rejouer ailleurs (ex. dans workerd) : --dump-input <fichier>
+const dumpAt = process.argv.indexOf("--dump-input");
+if (dumpAt > 0 && process.argv[dumpAt + 1]) {
+  await writeFile(process.argv[dumpAt + 1], JSON.stringify(reportInput));
+}
+const report = await computeReport(reportInput);
 const pdf = await renderReportPdf(report, await loadReportFonts());
 await writeFile(OUT, pdf);
 

@@ -14,6 +14,10 @@
  * (`pro-annexes/<isin>/<sha256>.pdf`) ; upsert `pro_funds`, insert
  * `pro_fund_documents` et `pro_fund_sustainability_data`.
  *
+ *   bun run scripts/pro/ingest.ts --inbox [--dry-run]
+ *     traite les dépôts faits depuis /pro/fonds (`pro-annexes/inbox/<uid>/<ISIN>__….pdf`),
+ *     puis les range dans `processed/<uid>/` ou `failed/<uid>/`.
+ *
  * L'ISIN figure rarement dans une annexe : il vient de --isin, du manifeste,
  * ou à défaut du document (citation vérifiée). Sans ISIN, rien n'est écrit.
  *
@@ -24,6 +28,7 @@ import { readdir, readFile, stat } from "node:fs/promises";
 import { basename, join } from "node:path";
 import { parseArgs } from "node:util";
 import { z } from "zod";
+import { parseInboxFileName } from "../../src/lib/pro/app/isin";
 import { EXTRACTION_VERSION } from "../../src/lib/pro/extraction/prompt.v1";
 import { sustainabilityRow } from "../../src/lib/pro/extraction/to-row";
 import { processAnnex, sha256Hex, type ProcessedAnnex } from "./lib/process-annex";
@@ -38,11 +43,12 @@ const { values: opts, positionals } = parseArgs({
     manifest: { type: "string" },
     "source-url": { type: "string" },
     "dry-run": { type: "boolean", default: false },
+    inbox: { type: "boolean", default: false },
   },
 });
 
 const target = positionals[0];
-if (!target) {
+if (!target && !opts.inbox) {
   console.error(
     "Usage : bun run scripts/pro/ingest.ts <dossier|fichier.pdf|url> [--isin …] [--dry-run]",
   );
@@ -57,6 +63,37 @@ interface Input {
   label: string;
   bytes: Uint8Array;
   sourceUrl: string | null;
+  /** ISIN imposé (dépôt depuis l'interface). */
+  isin?: string;
+  /** Chemin du dépôt à ranger après traitement. */
+  inbox?: { uid: string; name: string };
+}
+
+async function loadInbox(): Promise<Input[]> {
+  const db = serviceClient();
+  const inputs: Input[] = [];
+  const { data: users, error } = await db.storage.from(ANNEX_BUCKET).list("inbox", { limit: 1000 });
+  if (error) throw error;
+  for (const u of users ?? []) {
+    if (!/^[0-9a-f-]{36}$/.test(u.name)) continue;
+    const { data: files, error: e2 } = await db.storage
+      .from(ANNEX_BUCKET)
+      .list(`inbox/${u.name}`, { limit: 1000 });
+    if (e2) throw e2;
+    for (const f of files ?? []) {
+      const isin = parseInboxFileName(f.name);
+      const dl = await db.storage.from(ANNEX_BUCKET).download(`inbox/${u.name}/${f.name}`);
+      if (dl.error) throw dl.error;
+      inputs.push({
+        label: `inbox/${u.name}/${f.name}`,
+        bytes: new Uint8Array(await dl.data.arrayBuffer()),
+        sourceUrl: null,
+        isin: isin ?? undefined,
+        inbox: { uid: u.name, name: f.name },
+      });
+    }
+  }
+  return inputs;
 }
 
 async function loadInputs(t: string): Promise<Input[]> {
@@ -92,6 +129,7 @@ const manifest: Record<string, string> = opts.manifest
   : {};
 
 function resolveIsin(input: Input, p: ProcessedAnnex): string | null {
+  if (input.isin) return input.isin;
   if (opts.isin) return opts.isin;
   const fromManifest = manifest[input.label] ?? manifest[p.sha256];
   if (fromManifest) return fromManifest;
@@ -99,7 +137,7 @@ function resolveIsin(input: Input, p: ProcessedAnnex): string | null {
   return x.value && p.verification.evidence.isin?.verified ? x.value : null;
 }
 
-const inputs = await loadInputs(target);
+const inputs = opts.inbox ? await loadInbox() : await loadInputs(target!);
 if (opts.isin && inputs.length > 1) {
   console.error("--isin ne s'utilise qu'avec un seul document (sinon --manifest).");
   process.exit(1);
@@ -107,8 +145,18 @@ if (opts.isin && inputs.length > 1) {
 const db = opts["dry-run"] ? null : serviceClient();
 const summary = { ingested: 0, skipped: 0, needsReview: 0, failed: 0, noIsin: 0 };
 
+/** Range un dépôt de l'inbox après traitement (hors --dry-run). */
+async function fileAway(input: Input, ok: boolean): Promise<void> {
+  if (!db || !input.inbox) return;
+  const from = `inbox/${input.inbox.uid}/${input.inbox.name}`;
+  const to = `${ok ? "processed" : "failed"}/${input.inbox.uid}/${input.inbox.name}`;
+  const { error } = await db.storage.from(ANNEX_BUCKET).move(from, to);
+  if (error) console.error(`  ✗ rangement de ${from} : ${error.message}`);
+}
+
 for (const input of inputs) {
   const sha = sha256Hex(input.bytes);
+  let ok = false;
   try {
     if (db) {
       const { data: existing, error } = await db
@@ -120,6 +168,7 @@ for (const input of inputs) {
       if (existing) {
         console.log(`= ${input.label} : déjà ingéré (${existing.isin}), ignoré`);
         summary.skipped++;
+        await fileAway(input, true);
         continue;
       }
     }
@@ -136,6 +185,7 @@ for (const input of inputs) {
     if (!isin) {
       console.log("    ✗ ISIN inconnu : relancer avec --isin ou --manifest. Rien n'est écrit.");
       summary.noIsin++;
+      await fileAway(input, false);
       continue;
     }
     if (!db) continue;
@@ -186,10 +236,12 @@ for (const input of inputs) {
 
     summary.ingested++;
     if (row.status === "needs_review") summary.needsReview++;
+    ok = true;
   } catch (e) {
     summary.failed++;
     console.error(`✗ ${input.label} : ${e instanceof Error ? e.message : String(e)}`);
   }
+  if (input.inbox) await fileAway(input, ok);
 }
 
 console.log(

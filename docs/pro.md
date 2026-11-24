@@ -212,3 +212,50 @@ citations vérifiées contre les PDF avant rendu :
 ```bash
 bun run scripts/pro/sample-report.ts   # → fixtures/report/sample-report.pdf
 ```
+
+## 5. Interface `/pro`
+
+Pages (`src/routes/pro/`, rendu client derrière la garde d'authentification,
+comme `_authenticated`) :
+
+| Route               | Rôle                                                                                                                    |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `/pro`              | création du cabinet au premier passage (nom, ORIAS), puis redirection vers les rapports                                 |
+| `/pro/fonds`        | recherche par ISIN ou nom, engagements et statut des données (validées / non revues / à revoir), dépôt d'une annexe PDF |
+| `/pro/clients/new`  | préférences : (a), (b), (c) + catégories PAI, adaptation documentée ; pseudonyme obligatoire                            |
+| `/pro/rapports/new` | profil + ISIN collés ou CSV (clé de contrôle vérifiée), aperçu des verdicts, génération                                 |
+| `/pro/rapports`     | historique, téléchargement par lien signé de 60 s, empreinte SHA-256 du PDF ; aucune suppression                        |
+
+Fonctions serveur : `src/lib/pro/pro.functions.ts` (toutes derrière
+`requireSupabaseAuth`, entrées zod). Lectures et écritures du cabinet avec le
+client de l'utilisateur (RLS) ; seule la génération écrit `pro_reports` et le
+PDF en service role, après avoir relu le profil sous RLS.
+
+Interface en français uniquement : le module s'adresse aux CIF français et le
+rapport est un document réglementaire en français. Ses chaînes ne passent donc
+pas par `update_locales.ts` ; à revoir si une version multilingue est décidée.
+
+### Dépôt d'annexes depuis l'interface
+
+L'extraction est trop lourde pour le Worker. Le PDF déposé part dans
+`pro-annexes/inbox/<uid>/<ISIN>__<horodatage>.pdf` (chaque utilisateur ne voit
+que ses dépôts), puis :
+
+```bash
+bun run scripts/pro/ingest.ts --inbox
+```
+
+traite chaque dépôt (ISIN lu dans le nom de fichier) et le range dans
+`processed/<uid>/` ou `failed/<uid>/` ; l'interface affiche ces états. Les
+données n'apparaissent qu'après ingestion, avec leur statut de revue.
+
+### Génération dans le Worker
+
+- Le PDF est rendu dans le Worker : pdf-lib + fontkit (~0,5 Mo compressés) et
+  polices inlinées (~0,2 Mo) ne sont chargés que par la fonction de génération
+  (import dynamique), jamais côté client. Bundle serveur total ≈ 2,8 Mo
+  compressés.
+- Vérifié dans workerd (`wrangler dev --local`) : le PDF produit est identique
+  à l'octet près à celui produit par Bun pour la même entrée.
+- Temps de rendu mesuré en local : ~1,3 s pour 5 fonds. Au-delà de la limite
+  CPU du plan Workers gratuit (10 ms) : plan payant requis (30 s par défaut).

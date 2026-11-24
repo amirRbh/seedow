@@ -15,7 +15,16 @@
 import fontkit from "@pdf-lib/fontkit";
 import { PDFDocument, rgb, type PDFFont, type PDFPage, type RGB } from "pdf-lib";
 import { PAI_CATEGORY_LABELS, formatPct } from "../matching/engine";
-import type { AlertCode, AxisResult, AxisStatus, MatchResult, Verdict } from "../matching/types";
+import {
+  ALERT_LABELS,
+  AXIS_STATUS_LABELS,
+  AXIS_TITLES,
+  LEGAL_NOTICE,
+  VERDICT_LABELS,
+} from "../labels";
+import type { MatchResult, Verdict } from "../matching/types";
+
+export { ALERT_LABELS, AXIS_STATUS_LABELS, LEGAL_NOTICE, VERDICT_LABELS };
 import type { ComputedReport, ReportFund } from "./model";
 
 export interface ReportFonts {
@@ -44,13 +53,6 @@ export const REPORT_TOKENS = {
 } as const;
 const C = REPORT_TOKENS;
 
-export const VERDICT_LABELS: Record<Verdict, string> = {
-  ADEQUAT: "Adéquat",
-  PARTIEL: "Partiel",
-  NON_ADEQUAT: "Non adéquat",
-  A_VERIFIER: "À vérifier",
-  NEUTRE: "Neutre (aucune préférence)",
-};
 const VERDICT_COLORS: Record<Verdict, RGB> = {
   ADEQUAT: C.mint,
   PARTIEL: C.amber,
@@ -58,29 +60,6 @@ const VERDICT_COLORS: Record<Verdict, RGB> = {
   NON_ADEQUAT: C.red,
   NEUTRE: C.ink2,
 };
-export const AXIS_STATUS_LABELS: Record<AxisStatus, string> = {
-  PASS: "conforme",
-  FAIL: "non conforme",
-  DONNEE_MANQUANTE: "donnée manquante",
-  A_CONFIRMER: "à confirmer",
-};
-const AXIS_TITLES: Record<AxisResult["axis"], string> = {
-  a: "(a) Alignement sur la taxinomie de l'UE",
-  b: "(b) Investissements durables (art. 2(17) SFDR)",
-  c: "(c) Principales incidences négatives (PAI)",
-};
-export const ALERT_LABELS: Record<AlertCode, string> = {
-  NOM_ESG_ALLOCATION_FAIBLE: "Nom ESG, #1 < 80 %",
-  NOM_DURABLE_SANS_ID: "Nom « durable », 0 % durable",
-  ART8_ZERO_INVEST_DURABLE: "Art. 8 sans part durable",
-  TAXO_ZERO: "Taxinomie 0 %",
-  PAI_NON: "PAI : non",
-  DOC_ANCIEN: "Annexe > 12 mois",
-  NON_VALIDE: "Données non revues",
-};
-
-export const LEGAL_NOTICE =
-  "Outil d'aide à la documentation. Ne constitue pas un conseil en investissement. L'appréciation de l'adéquation relève de la responsabilité du CIF.";
 
 // ---------------------------------------------------------------------------
 // Mise en page

@@ -113,4 +113,24 @@ DO $$ BEGIN
 END $$;
 RESET ROLE;
 
+-- Dépôts : chacun ne lit que les siens ; les annexes rangées par ISIN restent lisibles.
+INSERT INTO storage.objects (bucket_id, name) VALUES ('pro-annexes', 'FR0010592022/abc.pdf');
+SET ROLE authenticated;
+SET request.jwt.claim.sub = '00000000-0000-0000-0000-00000000000b';
+DO $$ BEGIN
+  IF (SELECT count(*) FROM storage.objects WHERE bucket_id = 'pro-annexes' AND name LIKE 'inbox/%') <> 0 THEN
+    RAISE EXCEPTION 'ÉCHEC : B voit le dépôt de A';
+  END IF;
+  IF (SELECT count(*) FROM storage.objects WHERE name = 'FR0010592022/abc.pdf') <> 1 THEN
+    RAISE EXCEPTION 'ÉCHEC : annexe publique illisible';
+  END IF;
+END $$;
+SET request.jwt.claim.sub = '00000000-0000-0000-0000-00000000000a';
+DO $$ BEGIN
+  IF (SELECT count(*) FROM storage.objects WHERE bucket_id = 'pro-annexes' AND name LIKE 'inbox/%') <> 1 THEN
+    RAISE EXCEPTION 'ÉCHEC : A ne voit pas son dépôt';
+  END IF;
+END $$;
+RESET ROLE;
+
 SELECT 'OK — RLS et immutabilité Pro vérifiées' AS result;
