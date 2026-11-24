@@ -1,0 +1,140 @@
+{
+  "_comment": "Attendu PRÉ-REMPLI par lecture humaine assistée (texte pdfjs + rendu des pages pour les cases cochées et les graphiques), INDÉPENDAMMENT de l'extraction par le modèle. À relire et corriger à la main. Pourcentages = engagement minimum en % de l'actif. pai_categories = catégories identifiables (toutes les cinq si le document affirme prendre en compte tous les indicateurs obligatoires du tableau 1). Pages = index physique dans le PDF.",
+  "fixtures": {
+    "bnpp-art8-feeder-fr.pdf": {
+      "isin": null,
+      "source_url": "https://docfinder.bnpparibas-am.com/api/files/f6f78851-ee27-46d9-b001-1a59fa17ec02",
+      "fund_name": "Allianz Horizon Neo Février 2026",
+      "fields": {
+        "sfdr_article": 8,
+        "doc_date": null,
+        "min_sustainable_pct": 0,
+        "min_sustainable_env_pct": null,
+        "min_sustainable_social_pct": null,
+        "min_taxonomy_pct": 0,
+        "min_taxonomy_pct_excl_sovereign": 0,
+        "min_es_aligned_pct": 0,
+        "considers_pai": true,
+        "pai_categories": ["ghg", "biodiversity", "water", "waste", "social"],
+        "fossil_gas_nuclear": "no"
+      },
+      "expect_needs_review": true,
+      "notes": "Fonds à formule exposé via un panier d'actions. p1 : case « promeut des caractéristiques E/S mais ne réalisera pas d'investissements durables » cochée ; p6 : « proportion minimum d'investissements durables est de 0% » ; #1 « comprise entre 0% et 100% » → minimum 0 (ambigu, fourchette). p7 : taxinomie 0 %, case « Non » gaz/nucléaire cochée « en conséquence » faute de données. PAI : p3 case cochée « Oui … certaines des principales incidences négatives » + liste d'indicateurs p4 (1-4, 7-11, 13-14). Le nom du produit n'apparaît que dans une zone graphique p1. Pas de date au format jour."
+    },
+    "bnpp-global-environment-fr.pdf": {
+      "isin": null,
+      "source_url": "https://docfinder.bnpparibas-am.com/api/files/5ffe513b-ab09-4819-905d-5159f5318b3f/512",
+      "fund_name": "BNP Paribas Funds Global Environment",
+      "fields": {
+        "sfdr_article": 9,
+        "doc_date": null,
+        "min_sustainable_pct": 85,
+        "min_sustainable_env_pct": 45,
+        "min_sustainable_social_pct": 1,
+        "min_taxonomy_pct": 2,
+        "min_taxonomy_pct_excl_sovereign": 2,
+        "min_es_aligned_pct": 85,
+        "considers_pai": true,
+        "pai_categories": ["ghg", "biodiversity", "water", "waste", "social"],
+        "fossil_gas_nuclear": "no"
+      },
+      "notes": "Art. 9. p1 : environnemental 45 %, social 1 % (cases cochées visibles seulement sur le rendu). p9 : « #1 Durable 85% » et « au moins 2 % … EU Taxonomy Aligned ». p6 : « Oui » + « tient compte des principales incidences négatives » ; indicateurs nommés p3-p4. p11 : case « Non » gaz/nucléaire (graphique). Graphiques taxinomie p11 : 2 % / 2 %. Aucune date."
+    },
+    "carmignac-global-active-fr.pdf": {
+      "isin": null,
+      "source_url": "https://www.carmignac.com/assets/yoda/PCD_CIN_10_FR_fr/SFDR-Pre-Contractual-Disclosure_Carmignac-Investissement_FR_fr.pdf",
+      "fund_name": "Carmignac Global Active",
+      "fields": {
+        "sfdr_article": 8,
+        "doc_date": "2026-01-01",
+        "min_sustainable_pct": 10,
+        "min_sustainable_env_pct": 1,
+        "min_sustainable_social_pct": 3,
+        "min_taxonomy_pct": 0,
+        "min_taxonomy_pct_excl_sovereign": 0,
+        "min_es_aligned_pct": 90,
+        "considers_pai": true,
+        "pai_categories": ["ghg", "biodiversity", "water", "waste", "social"],
+        "fossil_gas_nuclear": "no"
+      },
+      "notes": "L'URL demandée (Carmignac Investissement) sert l'annexe de Carmignac Global Active (extrait de prospectus, pages imprimées 27-41). p1 : « proportion minimale de 10% d'investissements durables » ; p12 : env. 1 %, social 3 %, #1 90 % minimum, taxinomie 0 %. p8 : PAI « Oui » avec la liste des indicateurs. p12 : case « Non » gaz/nucléaire."
+    },
+    "ecofi-enjeux-futurs-fr.pdf": {
+      "isin": "FR0010592022",
+      "source_url": "https://www.carac.fr/media/Docs_PDF/AnnexeSFDR_FR0010592022%20Ecofi%20Enjeux%20Futurs.pdf",
+      "fund_name": "Ecofi Enjeux Futurs",
+      "fields": {
+        "sfdr_article": 9,
+        "doc_date": null,
+        "min_sustainable_pct": 100,
+        "min_sustainable_env_pct": 0,
+        "min_sustainable_social_pct": 0,
+        "min_taxonomy_pct": 0,
+        "min_taxonomy_pct_excl_sovereign": null,
+        "min_es_aligned_pct": 100,
+        "considers_pai": true,
+        "pai_categories": ["ghg", "biodiversity", "water", "waste", "social"],
+        "fossil_gas_nuclear": null
+      },
+      "expect_needs_review": true,
+      "notes": "Art. 9. AMBIGU : p1 minimums env. 0 % et social 0 % ; p4 « investit 100% de ses actifs dans des … investissements durables » et « #2 Non durables 0% », mais p5 « Les actifs « #2 Autres » représentent au maximum 10% de l'actif net ». Valeur retenue 100 (seul chiffre affirmé pour le total) — à trancher. p4 : « L'alignement avec la Taxonomie européenne est de 0% ». Graphiques taxinomie p5 sans valeur lisible dans le texte → hors souverains null. Question gaz/nucléaire absente (ancien modèle) → null. PAI p2 : « 14 indicateurs obligatoires du tableau 1 »."
+    },
+    "lafrancaise-carbon-impact-govt-bonds-fr.pdf": {
+      "isin": null,
+      "source_url": "https://www.bancapassadore.it/servizi/allfunds/2993_93.pdf",
+      "fund_name": "La Française Carbon Impact Global Government Bonds",
+      "fields": {
+        "sfdr_article": 8,
+        "doc_date": "2025-01-31",
+        "min_sustainable_pct": 55,
+        "min_sustainable_env_pct": 0,
+        "min_sustainable_social_pct": 0,
+        "min_taxonomy_pct": 0,
+        "min_taxonomy_pct_excl_sovereign": 0,
+        "min_es_aligned_pct": 90,
+        "considers_pai": true,
+        "pai_categories": ["ghg", "biodiversity", "water", "waste", "social"],
+        "fossil_gas_nuclear": "no"
+      },
+      "notes": "p1 : « proportion minimale de 55,0% d'investissements durables ». p9 : #1 90,0 %, #1A 55,0 %, « Environnementaux autres 100,0% » du schéma vs p10 « part minimale … non alignés … est de 0% » et social 0 % → env. 0 (minimum affirmé). p3 : « ☒ Oui … 14 indicateurs d'incidences négatives et 2 indicateurs optionnels ». Graphiques taxinomie p10 : 0 % / 0 % (graphique hors souverains = 0,0 % des investissements). Document de janvier 2025 : plus de 12 mois."
+    },
+    "lafrancaise-rendement-global-2028-en.pdf": {
+      "isin": "FR0013439528",
+      "source_url": "https://doc.la-francaise.com/documents/lt/FR0013439528/annexe-sfdr-precontractuelle/en",
+      "fund_name": "La Française Rendement Global 2028",
+      "fields": {
+        "sfdr_article": 8,
+        "doc_date": "2026-04-16",
+        "min_sustainable_pct": 20,
+        "min_sustainable_env_pct": null,
+        "min_sustainable_social_pct": 0,
+        "min_taxonomy_pct": 0,
+        "min_taxonomy_pct_excl_sovereign": 0,
+        "min_es_aligned_pct": 80,
+        "considers_pai": true,
+        "pai_categories": [],
+        "fossil_gas_nuclear": "no"
+      },
+      "notes": "EN. p1 : « minimum proportion of 20.0% of sustainable investments ». p5 : #1 80.0 %, #1A 20.0 % ; schéma « 0.0% / 0.0% / 100.0% » sans libellé lisible. p6 : « does not include a commitment to the EU Taxonomy » (taxinomie 0) et « does not provide for a minimum proportion of sustainable investment with a social objective » (social 0) ; minimum env. non chiffré → null. Graphiques p6 : 0,0 % / 0,0 %. p3 : « ☒ Yes » — climat, environnement, facteurs sociaux cités en termes généraux, aucun indicateur nommé → catégories []. ISIN trouvé dans l'URL, pas dans le document."
+    },
+    "oddo-pilotage-selection-dynamique-en.pdf": {
+      "isin": null,
+      "source_url": "https://am.oddo-bhf.com/fr-en/download-document/46038",
+      "fund_name": "Pilotage Sélection Dynamique",
+      "fields": {
+        "sfdr_article": 8,
+        "doc_date": "2025-08-04",
+        "min_sustainable_pct": 8,
+        "min_sustainable_env_pct": 8,
+        "min_sustainable_social_pct": 0,
+        "min_taxonomy_pct": 0,
+        "min_taxonomy_pct_excl_sovereign": 0,
+        "min_es_aligned_pct": 75,
+        "considers_pai": false,
+        "pai_categories": [],
+        "fossil_gas_nuclear": "no"
+      },
+      "notes": "EN, fonds de fonds. p1 : « minimum proportion of 8.0% of sustainable investments ». p3 : « At least 75% … aligned » et « At least 0% … taxonomy-aligned ». p5 : env. non aligné 8 %, « no minimum share of sustainable investments with a social objective » → 0. p2 : PAI « ☒ No ». p4 : gaz/nucléaire « ☒ No ». Seul cas PAI = Non du jeu."
+    }
+  }
+}
