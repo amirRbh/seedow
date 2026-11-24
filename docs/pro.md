@@ -132,3 +132,53 @@ par la vérification.
   première page et l'allocation d'actifs (cas Ecofi Enjeux Futurs) : minimum
   retenu, revue obligatoire.
 - L'ISIN n'est presque jamais dans l'annexe.
+
+## 3. Moteur de matching (`src/lib/pro/matching/engine.ts`)
+
+Module pur (aucune I/O, aucune horloge : la date de référence `asOf` est
+passée en option), `ENGINE_VERSION = "1.0.0"`, archivée dans chaque rapport.
+
+```ts
+match(preferences, fundData | null, { asOf: "2026-11-24", isin? }) → { verdict, axes, alerts, engine_version }
+```
+
+Entrées validées par zod (`src/lib/pro/matching/types.ts`) : un minimum
+exprimé est strictement positif, des catégories PAI exigent `pai_required`.
+
+| Axe | PASS si                                                              | Sinon                                                                               |
+| --- | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| (a) | valeur la plus basse entre « avec » et « hors » souverains ≥ minimum | FAIL ; aucune des deux → DONNEE_MANQUANTE ; art. 6 → FAIL                           |
+| (b) | `min_sustainable_pct` ≥ minimum                                      | FAIL ; null → DONNEE_MANQUANTE ; art. 6 → FAIL                                      |
+| (c) | `considers_pai = true` (et catégories demandées identifiées)         | `false` → FAIL ; null → DONNEE_MANQUANTE ; catégorie non identifiable → A_CONFIRMER |
+
+Verdict, dans cet ordre :
+
+1. `NEUTRE` — aucune préférence exprimée ;
+2. `A_VERIFIER` — pas de données pour l'ISIN, extraction `needs_review`, ou un
+   axe en DONNEE_MANQUANTE (même si un autre axe échoue) ;
+3. `ADEQUAT` — tous les axes PASS ;
+4. `NON_ADEQUAT` — tous les axes FAIL ;
+5. `A_VERIFIER` — aucun FAIL mais au moins un axe A_CONFIRMER ;
+6. `PARTIEL` — sinon.
+
+Une extraction `auto` (citations vérifiées, pas encore revue) peut être
+ADEQUAT : l'alerte `NON_VALIDE` le signale.
+
+Alertes (constats factuels, sans effet sur le verdict) :
+
+| Code                        | Niveau    | Condition                                                                                                                                                          |
+| --------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `NOM_ESG_ALLOCATION_FAIBLE` | attention | nom contenant ESG, durable, ISR, green, climat, impact, transition, sustainable, responsible (et variantes) et #1 < 80 % (orientations ESMA sur les noms de fonds) |
+| `NOM_DURABLE_SANS_ID`       | attention | « durable »/« sustainable » dans le nom et `min_sustainable_pct = 0`                                                                                               |
+| `ART8_ZERO_INVEST_DURABLE`  | info      | art. 8 et `min_sustainable_pct = 0`                                                                                                                                |
+| `TAXO_ZERO`                 | info      | une proportion taxinomie (avec ou hors souverains) = 0                                                                                                             |
+| `PAI_NON`                   | attention | `considers_pai = false`                                                                                                                                            |
+| `DOC_ANCIEN`                | attention | `doc_date` antérieure de plus de 12 mois à `asOf`                                                                                                                  |
+| `NON_VALIDE`                | attention | statut `auto` ou `needs_review`                                                                                                                                    |
+
+Une valeur inconnue ne déclenche jamais d'alerte (on ne constate pas ce qu'on
+ne sait pas).
+
+```bash
+bun run test:pro:coverage   # tests du moteur, seuil de couverture 100 %
+```

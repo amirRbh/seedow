@@ -15,7 +15,8 @@
     "test:watch": "vitest",
     "ingest:esg": "bun run scripts/ingest-issuer-esg.ts",
     "ingest:fund-data": "bun run scripts/ingest-fund-data.ts",
-    "ingest:funds": "bun run scripts/ingest-funds.ts"
+    "ingest:funds": "bun run scripts/ingest-funds.ts",
+    "test:pro:coverage": "vitest run src/lib/pro/matching --coverage.enabled --coverage.provider=v8 --coverage.include='src/lib/pro/matching/**' --coverage.exclude='**/__tests__/**' --coverage.reporter=text --coverage.thresholds.100"
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.25.5",
@@ -68,6 +69,7 @@
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^5.0.4",
+    "@vitest/coverage-v8": "4.1.12",
     "eslint": "^9.32.0",
     "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-prettier": "^5.2.6",
