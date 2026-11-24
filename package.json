@@ -16,7 +16,7 @@
     "ingest:esg": "bun run scripts/ingest-issuer-esg.ts",
     "ingest:fund-data": "bun run scripts/ingest-fund-data.ts",
     "ingest:funds": "bun run scripts/ingest-funds.ts",
-    "test:pro:coverage": "vitest run src/lib/pro/matching --coverage.enabled --coverage.provider=v8 --coverage.include='src/lib/pro/matching/**' --coverage.exclude='**/__tests__/**' --coverage.reporter=text --coverage.thresholds.100"
+    "test:pro:coverage": "vitest run src/lib/pro/matching src/lib/pro/scan --coverage.enabled --coverage.provider=v8 --coverage.include='src/lib/pro/matching/**' --coverage.exclude='**/__tests__/**' --coverage.reporter=text --coverage.thresholds.100"
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.25.5",

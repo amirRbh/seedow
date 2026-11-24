@@ -259,3 +259,39 @@ données n'apparaissent qu'après ingestion, avec leur statut de revue.
   à l'octet près à celui produit par Bun pour la même entrée.
 - Temps de rendu mesuré en local : ~1,3 s pour 5 fonds. Au-delà de la limite
   CPU du plan Workers gratuit (10 ms) : plan payant requis (30 s par défaut).
+
+## 6. Scan de contrat (acquisition)
+
+```bash
+bun run scripts/pro/scan-contract.ts uc.csv --insurer "Assureur" --contract "Contrat" \
+  [--list-date 2026-10-01] [--source-url https://…] [--profile FORT] [--out dossier]
+```
+
+- Lit les ISIN du CSV (clé de contrôle vérifiée, colonnes et libellés
+  ignorés), enregistre la liste dans `pro_contract_uc_lists`, lit
+  `pro_fund_current_data`.
+- Hors ligne : `--data fonds.json` (tableau de `FundData`), aucune écriture.
+- Profils types (`src/lib/pro/matching/profiles.ts`), **hypothèses de travail**
+  affichées comme telles dans chaque sortie :
+
+  | Profil | Hypothèse                             |
+  | ------ | ------------------------------------- |
+  | Léger  | PAI requises                          |
+  | Modéré | durable ≥ 10 %                        |
+  | Fort   | durable ≥ 25 % **ou** taxinomie ≥ 5 % |
+
+  Un profil à plusieurs alternatives retient la meilleure issue : adéquat >
+  à vérifier > partiel > non adéquat. Une UC sans donnée ou en attente de revue
+  est « à vérifier », jamais « adéquate ».
+
+- Sorties : un PDF d'une page (« X UC sur Y non adéquates pour un profil fort,
+  voici lesquelles », les trois profils, la couverture) et un CSV détaillé
+  (`;`, virgule décimale, BOM : s'ouvre tel quel dans un tableur français).
+
+Exemple : `fixtures/scan/` (5 fonds réels des fixtures + 1 UC sans annexe) :
+
+```bash
+bun run scripts/pro/scan-contract.ts fixtures/scan/sample-uc.csv --insurer "Assureur Exemple" \
+  --contract "Contrat Exemple Vie" --list-date 2026-10-01 --as-of 2026-11-24 \
+  --data fixtures/scan/sample-funds-data.json --out fixtures/scan
+```

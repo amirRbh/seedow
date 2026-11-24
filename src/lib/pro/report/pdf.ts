@@ -69,7 +69,7 @@ const A4: [number, number] = [595.28, 841.89];
 const M = { left: 48, right: 48, top: 64, bottom: 64 };
 const W = A4[0] - M.left - M.right;
 
-interface Fonts {
+export interface Fonts {
   text: PDFFont;
   bold: PDFFont;
   mono: PDFFont;
@@ -88,7 +88,7 @@ const GLYPH_FALLBACKS: Record<string, string> = {
   "­": "",
 };
 
-function sanitize(font: PDFFont, s: string): string {
+export function sanitize(font: PDFFont, s: string): string {
   const supported = new Set(font.getCharacterSet());
   let out = "";
   for (const ch of s.replace(/\s+/g, " ")) {
@@ -682,15 +682,20 @@ function drawChrome(doc: PDFDocument, pages: PDFPage[], f: Fonts, r: ComputedRep
   void doc;
 }
 
-export async function renderReportPdf(r: ComputedReport, fonts: ReportFonts): Promise<Uint8Array> {
-  const doc = await PDFDocument.create();
+/** Enregistre fontkit et embarque les quatre polices (sous-ensemble). */
+export async function embedReportFonts(doc: PDFDocument, fonts: ReportFonts): Promise<Fonts> {
   doc.registerFontkit(fontkit);
-  const f: Fonts = {
+  return {
     text: await doc.embedFont(fonts.interRegular, { subset: true }),
     bold: await doc.embedFont(fonts.interSemiBold, { subset: true }),
     mono: await doc.embedFont(fonts.monoRegular, { subset: true }),
     monoBold: await doc.embedFont(fonts.monoMedium, { subset: true }),
   };
+}
+
+export async function renderReportPdf(r: ComputedReport, fonts: ReportFonts): Promise<Uint8Array> {
+  const doc = await PDFDocument.create();
+  const f = await embedReportFonts(doc, fonts);
   const created = new Date(r.input.created_at);
   doc.setTitle(`Rapport d'adéquation durabilité — ${r.input.profile.client_ref} — ${r.as_of}`);
   doc.setAuthor(r.input.cabinet.name);

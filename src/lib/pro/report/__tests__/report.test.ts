@@ -186,3 +186,35 @@ describe("rapport d'exemple versionné", () => {
     expect(text).toContain(LEGAL_NOTICE);
   }, 30_000);
 });
+
+describe("synthèse de scan (1 page)", () => {
+  it("tient sur une page et annonce le chiffre clé du profil choisi", async () => {
+    const { scanContract } = await import("../../scan/scan");
+    const { DEFAULT_SCAN_PROFILES } = await import("../../matching/profiles");
+    const { renderScanPdf } = await import("../scan-pdf");
+    const { fundDataSchema } = await import("../../matching/types");
+    const data = (
+      JSON.parse(await readFile("fixtures/scan/sample-funds-data.json", "utf8")) as unknown[]
+    ).map((d) => fundDataSchema.parse(d));
+    const many = Array.from({ length: 60 }, (_, i) => `FR${String(i).padStart(9, "0")}0`);
+    const result = scanContract(
+      {
+        insurer: "A",
+        contract_name: "C",
+        list_date: "2026-10-01",
+        source_url: null,
+        as_of: "2026-11-24",
+      },
+      [...data.map((d) => d.isin), ...many],
+      new Map(data.map((d) => [d.isin, d])),
+      DEFAULT_SCAN_PROFILES,
+    );
+    const pdf = await renderScanPdf(result, "FORT", await loadReportFonts());
+    const pages = await pdfPagesText(pdf);
+    expect(pages).toHaveLength(1);
+    const text = pages[0].replace(/\s+/g, " ");
+    expect(text).toContain("2 UC sur 65 non adéquates pour un profil fort");
+    expect(text).toContain("Profils types : hypothèses de travail");
+    expect(text).toContain(LEGAL_NOTICE);
+  }, 30_000);
+});

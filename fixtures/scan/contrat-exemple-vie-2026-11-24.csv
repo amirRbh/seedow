@@ -1,0 +1,7 @@
+﻿isin;nom;donnees;statut_donnees;article_sfdr;date_annexe;durable_min_pct;taxinomie_min_pct;pai;verdict_LEGER;verdict_MODERE;verdict_FORT;constats
+LU0347711466;BNP Paribas Funds Global Environment Classic Capitalisation;oui;auto;9;;85;2;oui;ADEQUAT;ADEQUAT;ADEQUAT;NON_VALIDE
+FR0010592022;Ecofi Enjeux Futurs;oui;needs_review;9;;100;0;oui;A_VERIFIER;A_VERIFIER;A_VERIFIER;TAXO_ZERO NON_VALIDE
+FR0010158220;La Française Carbon Impact Global Government Bonds (part I);oui;auto;8;2025-01-31;55;0;oui;ADEQUAT;ADEQUAT;ADEQUAT;TAXO_ZERO DOC_ANCIEN NON_VALIDE
+FR0013439528;La Française Rendement Global 2028;oui;auto;8;2026-04-16;20;0;oui;ADEQUAT;ADEQUAT;NON_ADEQUAT;TAXO_ZERO NON_VALIDE
+FR0011250281;Pilotage Sélection Dynamique;oui;auto;8;2025-08-04;8;0;non;NON_ADEQUAT;NON_ADEQUAT;NON_ADEQUAT;TAXO_ZERO PAI_NON DOC_ANCIEN NON_VALIDE
+FR0010135103;;non;;;;;;;A_VERIFIER;A_VERIFIER;A_VERIFIER;
