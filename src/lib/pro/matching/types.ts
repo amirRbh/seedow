@@ -99,6 +99,8 @@ export interface MatchResult {
   isin: string;
   fund_name: string | null;
   verdict: Verdict;
+  /** Raison du verdict, en une phrase factuelle. */
+  verdict_reason: string;
   axes: AxisResult[];
   alerts: Alert[];
   engine_version: string;

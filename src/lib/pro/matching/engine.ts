@@ -308,17 +308,59 @@ function alertsFor(fund: FundData, opts: MatchOptions): Alert[] {
   return alerts;
 }
 
-function verdictOf(axes: readonly AxisResult[], fund: FundData | null): Verdict {
-  if (axes.length === 0) return "NEUTRE";
-  if (fund === null || fund.status === "needs_review") return "A_VERIFIER";
-  if (axes.some((a) => a.status === "DONNEE_MANQUANTE")) return "A_VERIFIER";
+function verdictOf(
+  axes: readonly AxisResult[],
+  fund: FundData | null,
+): { verdict: Verdict; reason: string } {
+  if (axes.length === 0) {
+    return { verdict: "NEUTRE", reason: "Aucune préférence de durabilité exprimée par le client." };
+  }
+  if (fund === null) {
+    return { verdict: "A_VERIFIER", reason: "Aucune donnée disponible pour ce fonds." };
+  }
+  if (fund.status === "needs_review") {
+    return {
+      verdict: "A_VERIFIER",
+      reason: "Les données extraites de l'annexe sont en attente de revue humaine.",
+    };
+  }
+  if (axes.some((a) => a.status === "DONNEE_MANQUANTE")) {
+    return {
+      verdict: "A_VERIFIER",
+      reason: "Au moins une donnée nécessaire à la comparaison est absente de l'annexe.",
+    };
+  }
   const pass = axes.filter((a) => a.status === "PASS").length;
   const fail = axes.filter((a) => a.status === "FAIL").length;
-  if (pass === axes.length) return "ADEQUAT";
-  if (fail === axes.length) return "NON_ADEQUAT";
-  if (fail === 0) return "A_VERIFIER"; // seuls des axes « à confirmer » restent
-  return "PARTIEL";
+  if (pass === axes.length) {
+    return {
+      verdict: "ADEQUAT",
+      reason: "Chaque préférence exprimée est satisfaite par un engagement de l'annexe.",
+    };
+  }
+  if (fail === axes.length) {
+    return {
+      verdict: "NON_ADEQUAT",
+      reason: "Aucune des préférences exprimées n'est satisfaite par les engagements de l'annexe.",
+    };
+  }
+  if (fail === 0) {
+    return {
+      verdict: "A_VERIFIER",
+      reason: "Une catégorie d'incidences négatives demandée reste à confirmer.",
+    };
+  }
+  return {
+    verdict: "PARTIEL",
+    reason:
+      "Une partie seulement des préférences exprimées est satisfaite par les engagements de l'annexe.",
+  };
 }
+
+const verdictFields = (v: { verdict: Verdict; reason: string }) => ({
+  verdict: v.verdict,
+  verdict_reason: v.reason,
+});
 
 /**
  * Confronte les préférences d'un client aux engagements d'un fonds.
@@ -347,7 +389,7 @@ export function match(
     return {
       isin: opts.isin ?? "",
       fund_name: null,
-      verdict: verdictOf(axes, null),
+      ...verdictFields(verdictOf(axes, null)),
       axes,
       alerts: [],
       engine_version: ENGINE_VERSION,
@@ -359,7 +401,7 @@ export function match(
   return {
     isin: fund.isin,
     fund_name: fund.name,
-    verdict: verdictOf(axes, fund),
+    ...verdictFields(verdictOf(axes, fund)),
     axes,
     alerts: alertsFor(fund, opts),
     engine_version: ENGINE_VERSION,

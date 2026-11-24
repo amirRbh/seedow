@@ -620,3 +620,22 @@ describe("validation des entrées (zod)", () => {
     expect(match(p, fund(), { asOf: AS_OF })).toEqual(match(p, fund(), { asOf: AS_OF }));
   });
 });
+
+describe("raison du verdict", () => {
+  it.each([
+    [prefs(), fund(), /Aucune préférence/],
+    [prefs({ sfdr_min_pct: 1 }), null, /Aucune donnée disponible/],
+    [prefs({ sfdr_min_pct: 1 }), fund({ status: "needs_review" }), /en attente de revue humaine/],
+    [prefs({ sfdr_min_pct: 1 }), fund({ min_sustainable_pct: null }), /absente de l'annexe/],
+    [prefs({ sfdr_min_pct: 1 }), fund(), /Chaque préférence exprimée est satisfaite/],
+    [prefs({ sfdr_min_pct: 99 }), fund(), /Aucune des préférences/],
+    [
+      prefs({ pai_required: true, pai_categories: ["water"] }),
+      fund({ pai_categories: [] }),
+      /reste à confirmer/,
+    ],
+    [prefs({ sfdr_min_pct: 99, pai_required: true }), fund(), /Une partie seulement/],
+  ] as const)("%#", (p, f, re) => {
+    expect(match(p, f, { asOf: AS_OF }).verdict_reason).toMatch(re);
+  });
+});

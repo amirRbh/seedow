@@ -182,3 +182,33 @@ ne sait pas).
 ```bash
 bun run test:pro:coverage   # tests du moteur, seuil de couverture 100 %
 ```
+
+## 4. Rapport PDF (`src/lib/pro/report/`)
+
+**Choix : pdf-lib** (+ `@pdf-lib/fontkit`), pas Cloudflare Browser Rendering.
+pdf-lib est du JS pur : il tourne tel quel dans le Worker et dans les scripts,
+sans binding payant ni navigateur distant, et son rendu est déterministe (même
+entrée → mêmes octets), ce qui permet de régénérer un rapport archivé et de le
+comparer à son empreinte.
+
+- `model.ts` : entrées validées (zod), verdicts via le moteur, date de
+  référence en heure de Paris, `data_snapshot_hash` (SHA-256 du JSON canonique
+  des données fonds utilisées) et `content_hash` (contenu du rapport).
+- `pdf.ts` : rendu A4 portrait. En-tête (cabinet, ORIAS, pseudonyme, date et
+  heure, ID), préférences et adaptation documentée, tableau de synthèse,
+  détail par fonds avec citations et pages, méthodologie et limites, versions
+  et empreintes, mention légale (encadrée en fin de rapport et en pied de
+  chaque page).
+- Polices : Inter (sous-ensemble latin, OFL) et IBM Plex Mono (fichiers WOFF
+  d'origine, non modifiés : la licence réserve le nom « Plex » aux versions
+  non modifiées ; le sous-ensemble est fait à l'embarquement dans le PDF).
+  Licences dans `src/lib/pro/report/fonts/`.
+- L'empreinte du fichier PDF ne peut pas figurer dans le fichier lui-même :
+  elle est calculée après rendu et archivée dans `pro_reports.pdf_sha256`.
+
+Exemple à 5 fonds réels (cabinet fictif, ORIAS 00000000, bandeau « EXEMPLE »),
+citations vérifiées contre les PDF avant rendu :
+
+```bash
+bun run scripts/pro/sample-report.ts   # → fixtures/report/sample-report.pdf
+```
