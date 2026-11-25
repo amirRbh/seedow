@@ -70,3 +70,54 @@ export function parseInboxFileName(name: string): string | null {
   const m = /^([A-Z0-9]{12})__[A-Za-z0-9._-]*\.pdf$/.exec(name);
   return m && isValidIsin(m[1]) ? m[1] : null;
 }
+
+/** « 12 500,50 », « 12500.5 », « 12 500 € » → 12500.5 ; null si ce n'est pas un montant. */
+export function parseAmount(raw: string): number | null {
+  const t = raw
+    .replace(/[\s\u00a0\u202f\u20ac]/g, "")
+    .replace(/,(\d{1,2})$/, ".$1")
+    .replace(/,/g, "");
+  if (!/^\d+(\.\d+)?$/.test(t)) return null;
+  const n = Number(t);
+  return n > 0 && Number.isFinite(n) ? n : null;
+}
+
+export interface ParsedAllocation extends ParsedIsinList {
+  /** Montants dans l'ordre des ISIN, si CHAQUE ligne en porte un ; sinon null. */
+  amounts: number[] | null;
+  /** ISIN sans montant alors que d'autres en ont : allocation incomplète. */
+  missing_amounts: string[];
+}
+
+/**
+ * Lit une allocation « une ligne par fonds » : ISIN puis, facultativement, un
+ * montant (« FR0010592022 ; 12 500 »). Sans aucun montant : évaluation fonds
+ * par fonds. Avec des montants sur toutes les lignes : approche portefeuille.
+ */
+export function parseAllocation(text: string, max = MAX_ISINS_PER_REPORT): ParsedAllocation {
+  const base = parseIsinList(text, max);
+  const amountByIsin = new Map<string, number>();
+  for (const line of text.split(/\r?\n/)) {
+    const m = /\b([A-Za-z]{2}[A-Za-z0-9]{9}[0-9])\b/.exec(line);
+    if (!m) continue;
+    const isin = m[1].toUpperCase();
+    const rest = line.slice(m.index + m[0].length).split(/[;\t|]/);
+    for (const cell of rest) {
+      const a = parseAmount(cell.replace(/^["']+|["']+$/g, ""));
+      if (a !== null) {
+        amountByIsin.set(isin, (amountByIsin.get(isin) ?? 0) + a);
+        break;
+      }
+    }
+  }
+  const withAmount = base.isins.filter((i) => amountByIsin.has(i));
+  const amounts =
+    withAmount.length > 0 && withAmount.length === base.isins.length
+      ? base.isins.map((i) => amountByIsin.get(i)!)
+      : null;
+  return {
+    ...base,
+    amounts,
+    missing_amounts: withAmount.length > 0 ? base.isins.filter((i) => !amountByIsin.has(i)) : [],
+  };
+}

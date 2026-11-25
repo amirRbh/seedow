@@ -17,8 +17,10 @@ import { VERDICT_LABELS, renderReportPdf } from "../../src/lib/pro/report/pdf";
 import { loadReportFonts } from "./lib/fonts";
 import { pdfPagesText } from "./lib/pdf-text";
 
-const IN = "fixtures/report/sample-5-funds.json";
-const OUT = "fixtures/report/sample-report.pdf";
+const argIn = process.argv.indexOf("--in");
+const argOut = process.argv.indexOf("--out");
+const IN = argIn > 0 ? process.argv[argIn + 1] : "fixtures/report/sample-5-funds.json";
+const OUT = argOut > 0 ? process.argv[argOut + 1] : "fixtures/report/sample-report.pdf";
 
 const pct = z.number().min(0).max(100).nullable();
 const sampleSchema = z.object({
@@ -27,10 +29,12 @@ const sampleSchema = z.object({
   example: z.boolean(),
   cabinet: z.unknown(),
   profile: z.unknown(),
+  adaptation: z.unknown().optional(),
   funds: z.array(
     z.object({
       fixture: z.string(),
       isin: z.string(),
+      amount: z.number().positive().optional(),
       name: z.string(),
       sfdr_article: z.union([z.literal(6), z.literal(8), z.literal(9)]).nullable(),
       doc_date: z.string().nullable(),
@@ -68,6 +72,7 @@ for (const f of sample.funds) {
   }
   funds.push({
     isin: f.isin,
+    ...(f.amount !== undefined ? { amount: f.amount } : {}),
     data: {
       isin: f.isin,
       name: f.name,

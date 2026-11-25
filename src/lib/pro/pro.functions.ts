@@ -18,6 +18,9 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import {
   clientProfileInputSchema,
+  predefinedProfileInputSchema,
+  predefinedProfileRowSchema,
+  type PredefinedProfileRow,
   clientProfileRowSchema,
   currentDataRowSchema,
   toPreferences,
@@ -27,7 +30,8 @@ import {
 } from "./app/data";
 import { MAX_ISINS_PER_REPORT, isValidIsin } from "./app/isin";
 import { match } from "./matching/engine";
-import type { MatchResult, Verdict } from "./matching/types";
+import { matchPortfolio, type PortfolioResult } from "./matching/portfolio";
+import { clientPreferencesSchema, type MatchResult, type Verdict } from "./matching/types";
 
 const untyped = (c: unknown) => c as SupabaseClient;
 const uuid = z.string().uuid();
@@ -125,23 +129,179 @@ export const createCabinet = createServerFn({ method: "POST" })
     return cabinetSchema.parse(row);
   });
 
+/** Archive un PDF et sa ligne immuable ; en cas d'échec de la ligne, retire le PDF. */
+async function archivePdf(
+  table: "pro_reports" | "pro_collection_records",
+  pdf_path: string,
+  pdf: Uint8Array,
+  row: Record<string, unknown>,
+): Promise<void> {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const admin = untyped(supabaseAdmin);
+  const up = await admin.storage
+    .from("pro-reports")
+    .upload(pdf_path, pdf, { contentType: "application/pdf", upsert: false });
+  if (up.error) fail(`Archivage du PDF impossible : ${up.error.message}`);
+  const ins = await admin.from(table).insert(row);
+  if (ins.error) {
+    await admin.storage.from("pro-reports").remove([pdf_path]);
+    fail(`Archivage impossible : ${ins.error.message}`);
+  }
+}
+
 export const createClientProfile = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .validator((input: unknown) => clientProfileInputSchema.parse(input))
+  .handler(async ({ data, context }): Promise<{ id: string; record_id: string }> => {
+    const db = untyped(context.supabase);
+    const cabinet = (await myCabinet(db)) ?? fail("Créez d'abord votre cabinet");
+    const base = {
+      cabinet_id: cabinet.id,
+      client_ref: data.client_ref,
+      collected_at: data.collected_at,
+      joint_account: data.joint_account,
+      preference_mode: data.preference_mode,
+    };
+    let row: Record<string, unknown>;
+    if (data.preference_mode === "neutral") {
+      row = {
+        ...base,
+        taxonomy_min_pct: null,
+        sfdr_min_pct: null,
+        pai_required: false,
+        pai_categories: [],
+      };
+    } else if (data.preference_mode === "detailed") {
+      row = {
+        ...base,
+        taxonomy_min_pct: data.taxonomy_min_pct,
+        sfdr_min_pct: data.sfdr_min_pct,
+        pai_required: data.pai_required,
+        pai_categories: data.pai_categories,
+      };
+    } else {
+      // Relu sous RLS : le profil prédéfini appartient au cabinet et n'est pas archivé.
+      const { data: pre, error } = await db
+        .from("pro_predefined_profiles")
+        .select("*")
+        .eq("id", data.predefined_profile_id)
+        .is("archived_at", null)
+        .maybeSingle();
+      if (error) fail(error.message);
+      if (!pre) fail("Profil prédéfini introuvable ou archivé");
+      const p = predefinedProfileRowSchema.parse(pre);
+      row = {
+        ...base,
+        predefined_profile_id: p.id,
+        predefined_label: p.label,
+        predefined_description: p.description,
+        taxonomy_min_pct: p.taxonomy_min_pct,
+        sfdr_min_pct: p.sfdr_min_pct,
+        pai_required: p.pai_required,
+        pai_categories: p.pai_categories,
+      };
+    }
+    const { data: inserted, error } = await db
+      .from("pro_client_profiles")
+      .insert(row)
+      .select("*")
+      .single();
+    if (error) fail(error.message);
+    const profile = clientProfileRowSchema.parse(inserted);
+
+    // Fiche de recueil archivée (support durable des explications et des choix).
+    const [{ renderCollectionPdf }, { bundledReportFonts }, { sha256Hex }] = await Promise.all([
+      import("./report/collection-pdf"),
+      import("./report/fonts.server"),
+      import("./report/model"),
+    ]);
+    const snapshot = {
+      record_id: crypto.randomUUID(),
+      created_at: new Date().toISOString(),
+      cabinet: { name: cabinet.name, orias_number: cabinet.orias_number },
+      profile: toReportProfile(profile),
+    };
+    const pdf = await renderCollectionPdf(snapshot, bundledReportFonts());
+    const pdf_path = `${cabinet.id}/collection/${snapshot.record_id}.pdf`;
+    await archivePdf("pro_collection_records", pdf_path, pdf, {
+      id: snapshot.record_id,
+      cabinet_id: cabinet.id,
+      client_profile_id: profile.id,
+      snapshot,
+      pdf_path,
+      pdf_sha256: await sha256Hex(pdf),
+      created_at: snapshot.created_at,
+    });
+    return { id: profile.id, record_id: snapshot.record_id };
+  });
+
+export const listPredefinedProfiles = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<PredefinedProfileRow[]> => {
+    const db = untyped(context.supabase);
+    const { data, error } = await db
+      .from("pro_predefined_profiles")
+      .select("*")
+      .is("archived_at", null)
+      .order("created_at");
+    if (error) fail(error.message);
+    return z.array(predefinedProfileRowSchema).parse(data ?? []);
+  });
+
+export const createPredefinedProfile = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((input: unknown) => predefinedProfileInputSchema.parse(input))
   .handler(async ({ data, context }): Promise<{ id: string }> => {
     const db = untyped(context.supabase);
     const cabinet = (await myCabinet(db)) ?? fail("Créez d'abord votre cabinet");
     const { data: row, error } = await db
-      .from("pro_client_profiles")
-      .insert({
-        ...data,
-        adaptation_note: data.adapted ? data.adaptation_note : null,
-        cabinet_id: cabinet.id,
-      })
+      .from("pro_predefined_profiles")
+      .insert({ ...data, cabinet_id: cabinet.id })
       .select("id")
       .single();
     if (error) fail(error.message);
     return { id: uuid.parse(row.id) };
+  });
+
+export const archivePredefinedProfile = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((input: { id: string }) => z.object({ id: uuid }).parse(input))
+  .handler(async ({ data, context }): Promise<void> => {
+    const db = untyped(context.supabase);
+    const { error } = await db
+      .from("pro_predefined_profiles")
+      .update({ archived_at: new Date().toISOString() })
+      .eq("id", data.id);
+    if (error) fail(error.message);
+  });
+
+export interface CollectionRecordItem {
+  id: string;
+  client_profile_id: string;
+  created_at: string;
+  pdf_sha256: string;
+}
+
+export const listCollectionRecords = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<CollectionRecordItem[]> => {
+    const db = untyped(context.supabase);
+    const { data, error } = await db
+      .from("pro_collection_records")
+      .select("id, client_profile_id, created_at, pdf_sha256")
+      .order("created_at", { ascending: false })
+      .limit(500);
+    if (error) fail(error.message);
+    return z
+      .array(
+        z.object({
+          id: uuid,
+          client_profile_id: uuid,
+          created_at: z.string(),
+          pdf_sha256: z.string(),
+        }),
+      )
+      .parse(data ?? []);
   });
 
 // ---------------------------------------------------------------------------
@@ -257,13 +417,44 @@ export const listMyAnnexUploads = createServerFn({ method: "GET" })
 // Rapports
 // ---------------------------------------------------------------------------
 
-const reportRequestSchema = z.object({ profile_id: uuid, isins: isinList });
+const reportRequestSchema = z
+  .object({
+    profile_id: uuid,
+    isins: isinList,
+    /** Montants par ISIN (même ordre) : évaluation par portefeuille. */
+    amounts: z.array(z.number().positive().finite()).optional(),
+    adaptation: z
+      .object({
+        proposal: z.string().trim().min(1).max(4000),
+        decision: z.enum(["accepted", "refused"]),
+        adapted: clientPreferencesSchema.nullable(),
+        reasons: z.string().trim().min(1).max(4000),
+      })
+      .optional(),
+  })
+  .refine((r) => !r.amounts || r.amounts.length === r.isins.length, {
+    message: "Un montant par ISIN",
+    path: ["amounts"],
+  });
 type ReportRequest = z.infer<typeof reportRequestSchema>;
 
 export interface ReportPreview {
   results: MatchResult[];
+  portfolio: PortfolioResult | null;
   /** ISIN demandés sans aucune donnée en base. */
   missing: string[];
+  /** ACPR/AMF : une adaptation ne se propose que si rien ne correspond. */
+  adaptation_allowed: boolean;
+  preference_mode: "neutral" | "detailed" | "predefined";
+}
+
+async function loadRequest(db: SupabaseClient, data: ReportRequest) {
+  const profile = await profileById(db, data.profile_id);
+  const rows = await currentRows(db, data.isins);
+  const funds = toReportFunds(data.isins, rows).map((f, i) =>
+    data.amounts ? { ...f, amount: data.amounts[i] } : f,
+  );
+  return { profile, funds };
 }
 
 export const previewReport = createServerFn({ method: "POST" })
@@ -271,11 +462,27 @@ export const previewReport = createServerFn({ method: "POST" })
   .validator((input: ReportRequest) => reportRequestSchema.parse(input))
   .handler(async ({ data, context }): Promise<ReportPreview> => {
     const db = untyped(context.supabase);
-    const profile = await profileById(db, data.profile_id);
-    const funds = toReportFunds(data.isins, await currentRows(db, data.isins));
+    const { profile, funds } = await loadRequest(db, data);
     const asOf = new Date().toISOString().slice(0, 10);
-    const results = funds.map((f) => match(toPreferences(profile), f.data, { asOf, isin: f.isin }));
-    return { results, missing: funds.filter((f) => f.data === null).map((f) => f.isin) };
+    const prefs = toPreferences(profile);
+    const results = funds.map((f) => match(prefs, f.data, { asOf, isin: f.isin }));
+    const portfolio = data.amounts
+      ? matchPortfolio(
+          prefs,
+          funds.map((f) => ({ isin: f.isin, amount: f.amount!, fund: f.data })),
+          { asOf },
+        )
+      : null;
+    const matches = portfolio
+      ? portfolio.verdict === "ADEQUAT"
+      : results.some((r) => r.verdict === "ADEQUAT");
+    return {
+      results,
+      portfolio,
+      missing: funds.filter((f) => f.data === null).map((f) => f.isin),
+      adaptation_allowed: profile.preference_mode !== "neutral" && !matches,
+      preference_mode: profile.preference_mode,
+    };
   });
 
 export const generateReport = createServerFn({ method: "POST" })
@@ -285,47 +492,49 @@ export const generateReport = createServerFn({ method: "POST" })
     const db = untyped(context.supabase);
     const cabinet = (await myCabinet(db)) ?? fail("Créez d'abord votre cabinet");
     // Relu avec le client de l'utilisateur : la RLS prouve que le profil est au cabinet.
-    const profile = await profileById(db, data.profile_id);
+    const { profile, funds } = await loadRequest(db, data);
     if (profile.cabinet_id !== cabinet.id) fail("Profil client introuvable");
-    const funds = toReportFunds(data.isins, await currentRows(db, data.isins));
 
     const [
-      { computeReport, sha256Hex },
+      { computeReport, sha256Hex, ReportInputError },
       { renderReportPdf },
       { bundledReportFonts },
-      { supabaseAdmin },
     ] = await Promise.all([
       import("./report/model"),
       import("./report/pdf"),
       import("./report/fonts.server"),
-      import("@/integrations/supabase/client.server"),
     ]);
 
-    const report = await computeReport({
-      report_id: crypto.randomUUID(),
-      created_at: new Date().toISOString(),
-      cabinet: { name: cabinet.name, orias_number: cabinet.orias_number },
-      profile: toReportProfile(profile),
-      funds,
-    });
+    let report;
+    try {
+      report = await computeReport({
+        report_id: crypto.randomUUID(),
+        created_at: new Date().toISOString(),
+        cabinet: { name: cabinet.name, orias_number: cabinet.orias_number },
+        profile: toReportProfile(profile),
+        funds,
+        adaptation: data.adaptation,
+      });
+    } catch (e) {
+      if (e instanceof ReportInputError) fail(e.message);
+      throw e;
+    }
     const pdf = await renderReportPdf(report, bundledReportFonts());
     const pdf_sha256 = await sha256Hex(pdf);
     const id = report.input.report_id;
     const pdf_path = `${cabinet.id}/${id}.pdf`;
-
-    const admin = untyped(supabaseAdmin);
-    const up = await admin.storage
-      .from("pro-reports")
-      .upload(pdf_path, pdf, { contentType: "application/pdf", upsert: false });
-    if (up.error) fail(`Archivage du PDF impossible : ${up.error.message}`);
-
-    const ins = await admin.from("pro_reports").insert({
+    await archivePdf("pro_reports", pdf_path, pdf, {
       id,
       cabinet_id: cabinet.id,
       client_profile_id: profile.id,
-      profile_snapshot: report.input.profile,
+      profile_snapshot: { ...report.input.profile, adaptation: report.input.adaptation ?? null },
       results: {
         matches: report.results,
+        portfolio: report.portfolio,
+        evaluation: report.evaluation,
+        recommendation: report.recommendation,
+        initial_matches: report.initial_results,
+        initial_portfolio: report.initial_portfolio,
         funds: report.input.funds,
         as_of: report.as_of,
         content_hash: report.content_hash,
@@ -337,11 +546,6 @@ export const generateReport = createServerFn({ method: "POST" })
       pdf_sha256,
       created_at: report.input.created_at,
     });
-    if (ins.error) {
-      // Rapport non archivé : on ne laisse pas de PDF orphelin.
-      await admin.storage.from("pro-reports").remove([pdf_path]);
-      fail(`Archivage du rapport impossible : ${ins.error.message}`);
-    }
     return { id, pdf_sha256 };
   });
 
@@ -415,6 +619,26 @@ export const getReportDownloadUrl = createServerFn({ method: "POST" })
     if (!row) fail("Rapport introuvable");
     const r = z.object({ pdf_path: z.string(), pdf_sha256: z.string() }).parse(row);
     // Lien signé court, créé avec le client de l'utilisateur (RLS du bucket).
+    const signed = await db.storage
+      .from("pro-reports")
+      .createSignedUrl(r.pdf_path, 60, { download: true });
+    if (signed.error) fail(signed.error.message);
+    return { url: signed.data.signedUrl, pdf_sha256: r.pdf_sha256 };
+  });
+
+export const getCollectionDownloadUrl = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((input: { id: string }) => z.object({ id: uuid }).parse(input))
+  .handler(async ({ data, context }): Promise<{ url: string; pdf_sha256: string }> => {
+    const db = untyped(context.supabase);
+    const { data: row, error } = await db
+      .from("pro_collection_records")
+      .select("pdf_path, pdf_sha256")
+      .eq("id", data.id)
+      .maybeSingle();
+    if (error) fail(error.message);
+    if (!row) fail("Fiche introuvable");
+    const r = z.object({ pdf_path: z.string(), pdf_sha256: z.string() }).parse(row);
     const signed = await db.storage
       .from("pro-reports")
       .createSignedUrl(r.pdf_path, 60, { download: true });

@@ -124,7 +124,7 @@ export function verifyExtraction(x: Extraction, pages: readonly string[]): Verif
 
   for (const f of EVIDENCE_FIELDS) {
     const e = x[f];
-    if (e.value === null) continue;
+    if (!e || e.value === null) continue; // absent (extraction v1) ou non trouvé
     const rec: EvidenceRecord = {
       page: e.page,
       quote: e.quote,

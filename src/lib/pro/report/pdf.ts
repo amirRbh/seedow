@@ -22,7 +22,7 @@ import {
   LEGAL_NOTICE,
   VERDICT_LABELS,
 } from "../labels";
-import type { MatchResult, Verdict } from "../matching/types";
+import type { ClientPreferences, MatchResult, Verdict } from "../matching/types";
 
 export { ALERT_LABELS, AXIS_STATUS_LABELS, LEGAL_NOTICE, VERDICT_LABELS };
 import type { ComputedReport, ReportFund } from "./model";
@@ -231,8 +231,7 @@ class Layout {
 
 const shortHash = (h: string) => `${h.slice(0, 16)}…${h.slice(-8)}`;
 
-function preferenceLines(r: ComputedReport): string[] {
-  const p = r.input.profile;
+function preferenceLinesOf(p: ClientPreferences): string[] {
   return [
     `(a) Proportion minimale d'investissements alignés sur la taxinomie de l'UE : ${
       p.taxonomy_min_pct === null ? "non exprimée" : `au moins ${formatPct(p.taxonomy_min_pct)}`
@@ -249,6 +248,14 @@ function preferenceLines(r: ComputedReport): string[] {
     }`,
   ];
 }
+
+const MODE_LABELS = {
+  neutral:
+    "Le client ne souhaite pas que des préférences de durabilité soient prises en compte, ou ne s'est pas prononcé (client « neutre ») : des produits présentant ou non des caractéristiques de durabilité peuvent lui être recommandés.",
+  detailed: "Le client a précisé lui-même ses préférences selon les trois critères réglementaires.",
+  predefined:
+    "Le client a souhaité une prise en compte de la durabilité sans détailler lui-même les critères, et a choisi un profil prédéfini du cabinet.",
+} as const;
 
 function sourceSummary(fund: ReportFund, res: MatchResult): string {
   if (!fund.document) return "Aucune annexe";
@@ -305,32 +312,145 @@ function drawHeaderBlock(L: Layout, r: ComputedReport): void {
   }
 }
 
+function quoteBlock(L: Layout, title: string, body: string): void {
+  L.gap(6);
+  L.ensure(14 + L.measure(body, { size: 9.5, width: W - 10 }));
+  const top = L.y;
+  L.text(title, { font: L.f.bold, size: 10, x: M.left + 10, width: W - 10 });
+  L.text(body, { size: 9.5, x: M.left + 10, width: W - 10 });
+  L.page.drawLine({
+    start: { x: M.left + 2, y: top },
+    end: { x: M.left + 2, y: L.y + 4 },
+    thickness: 1.5,
+    color: C.ink,
+  });
+}
+
 function drawPreferences(L: Layout, r: ComputedReport): void {
   const p = r.input.profile;
   L.section("1. Préférences de durabilité du client");
   L.text(`Préférences recueillies le ${p.collected_at}.`, { size: 9.5, color: C.ink2 });
   L.gap(4);
-  for (const line of preferenceLines(r)) {
-    L.text(line, { size: 10 });
+  L.text(MODE_LABELS[p.preference_mode], { size: 10 });
+  if (p.preference_mode === "predefined") {
+    quoteBlock(
+      L,
+      `Profil prédéfini choisi : ${p.predefined_label ?? ""}`,
+      p.predefined_description ?? "",
+    );
+  }
+  if (p.joint_account) {
     L.gap(2);
+    L.text("Compte joint : préférences recueillies auprès de chaque co-titulaire.", { size: 9.5 });
+  }
+  if (p.preference_mode !== "neutral") {
+    L.gap(4);
+    for (const line of preferenceLinesOf(r.initial_preferences)) {
+      L.text(line, { size: 10 });
+      L.gap(2);
+    }
   }
   if (p.adapted) {
-    L.gap(6);
-    L.ensure(14 + L.measure(p.adaptation_note ?? "", { size: 9.5, width: W - 10 }));
+    // Rapports antérieurs : adaptation portée par le profil.
+    quoteBlock(L, "Adaptation des préférences documentée", p.adaptation_note ?? "");
+  }
+  const ad = r.input.adaptation;
+  if (ad) {
+    L.gap(8);
+    L.text("Adaptation proposée pour ce conseil", {
+      font: L.f.bold,
+      size: 11,
+      lead: 16,
+      keep: true,
+    });
+    L.text(
+      "Aucun produit ou allocation examiné ne correspondait aux préférences recueillies (voir la comparaison en section 2). " +
+        "L'adaptation ne vaut que pour ce conseil : le recueil n'est pas modifié.",
+      { size: 9.5 },
+    );
+    quoteBlock(L, "Proposition faite au client", ad.proposal);
+    quoteBlock(
+      L,
+      ad.decision === "accepted"
+        ? "Décision du client : accepte l'adaptation"
+        : "Décision du client : refuse l'adaptation",
+      ad.reasons,
+    );
+    if (ad.decision === "accepted" && ad.adapted) {
+      L.gap(4);
+      L.text("Préférences adaptées appliquées à ce conseil :", { font: L.f.bold, size: 10 });
+      for (const line of preferenceLinesOf(ad.adapted)) {
+        L.text(line, { size: 10 });
+        L.gap(2);
+      }
+    }
+  }
+  if (r.recommendation === "none") {
+    L.gap(8);
+    L.ensure(60);
     const top = L.y;
-    L.text("Adaptation des préférences documentée", {
+    L.gap(8);
+    L.text("Aucune recommandation n'est présentée comme correspondant aux préférences du client", {
+      font: L.f.bold,
+      size: 10.5,
+      x: M.left + 10,
+      width: W - 20,
+    });
+    L.text(
+      "Le client a refusé d'adapter ses préférences et aucun produit examiné n'y correspond (art. 54 §10 du règlement délégué (UE) 2017/565). Le présent document conserve l'enregistrement de cette décision et de ses motifs.",
+      { size: 9.5, x: M.left + 10, width: W - 20 },
+    );
+    L.gap(6);
+    L.page.drawRectangle({
+      x: M.left,
+      y: L.y,
+      width: W,
+      height: top - L.y,
+      borderColor: C.red,
+      borderWidth: 1,
+    });
+  }
+}
+
+function drawPortfolio(L: Layout, r: ComputedReport): void {
+  const pf = r.portfolio;
+  if (!pf) return;
+  L.section("Évaluation de l'allocation (approche portefeuille)");
+  L.text(
+    `Allocation de ${pf.total_amount.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} € sur ${pf.lines.length} ligne(s). ` +
+      "Les minimums du client s'apprécient sur la moyenne des engagements pondérée par les montants ; les principales incidences négatives, ligne par ligne.",
+    { size: 9.5 },
+  );
+  L.gap(4);
+  const yv = L.y;
+  L.marker(VERDICT_COLORS[pf.verdict], M.left, yv - 2.5, 8);
+  L.text(`Verdict de l'allocation : ${VERDICT_LABELS[pf.verdict]}`, {
+    font: L.f.bold,
+    size: 10.5,
+    x: M.left + 13,
+  });
+  L.text(pf.verdict_reason, { size: 9.5, x: M.left + 13, width: W - 13 });
+  for (const a of pf.axes) {
+    L.gap(4);
+    L.text(`${AXIS_TITLES[a.axis]} — ${AXIS_STATUS_LABELS[a.status]}`, {
       font: L.f.bold,
       size: 10,
-      x: M.left + 10,
-      width: W - 10,
+      keep: true,
     });
-    L.text(p.adaptation_note ?? "", { size: 9.5, x: M.left + 10, width: W - 10 });
-    L.page.drawLine({
-      start: { x: M.left + 2, y: top },
-      end: { x: M.left + 2, y: L.y + 4 },
-      thickness: 1.5,
-      color: C.ink,
+    L.text(`Demandé : ${a.requested} · Allocation : ${a.fund_value}`, {
+      font: L.f.mono,
+      size: 8.5,
+      lead: 12,
     });
+    L.text(a.detail, { size: 9.5 });
+  }
+  L.gap(6);
+  L.text("Lignes de l'allocation", { font: L.f.bold, size: 10, keep: true });
+  for (const line of pf.lines) {
+    L.text(
+      `${line.isin} · ${line.result.fund_name ?? "fonds sans données"} · ${line.amount.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} € (${formatPct(line.weight_pct)}) · évaluation isolée : ${VERDICT_LABELS[line.result.verdict]}`,
+      { size: 9 },
+    );
   }
 }
 
@@ -344,7 +464,23 @@ const TABLE_COLS = [
 ] as const;
 
 function drawSummary(L: Layout, r: ComputedReport): void {
-  L.section("2. Synthèse par fonds");
+  L.section(
+    r.input.adaptation?.decision === "accepted"
+      ? "2. Synthèse par fonds (préférences adaptées)"
+      : "2. Synthèse par fonds",
+  );
+  if (r.initial_results) {
+    const n = r.initial_results.filter((x) => x.verdict === "ADEQUAT").length;
+    L.text(
+      `Avec les préférences recueillies : ${n} fonds adéquat(s) sur ${r.initial_results.length}` +
+        (r.initial_portfolio
+          ? `, allocation : ${VERDICT_LABELS[r.initial_portfolio.verdict].toLowerCase()}`
+          : "") +
+        ".",
+      { size: 9.5 },
+    );
+    L.gap(2);
+  }
   const counts = new Map<Verdict, number>();
   for (const res of r.results) counts.set(res.verdict, (counts.get(res.verdict) ?? 0) + 1);
   const order: Verdict[] = ["ADEQUAT", "PARTIEL", "NON_ADEQUAT", "A_VERIFIER", "NEUTRE"];
@@ -574,7 +710,8 @@ function drawMethodology(L: Layout, r: ComputedReport): void {
   L.section("4. Méthodologie et limites");
   const paras = [
     "Données. Les engagements des fonds proviennent exclusivement des annexes précontractuelles SFDR (règlement délégué (UE) 2022/1288, annexe II pour les produits de l'article 8, annexe III pour l'article 9). Chaque valeur est adossée à une citation et à un numéro de page ; la présence de la citation sur la page est vérifiée automatiquement contre le texte du document. Les valeurs ambiguës, manquantes ou lues uniquement sur un élément graphique sont soumises à une revue humaine.",
-    "Règles. Pour chaque préférence exprimée : (a) l'engagement minimum d'alignement sur la taxinomie est comparé au minimum demandé, en retenant la valeur la plus basse entre les graphiques avec et hors obligations souveraines ; (b) la proportion minimale d'investissements durables est comparée au minimum demandé ; (c) la prise en compte des principales incidences négatives est vérifiée, et chaque catégorie demandée doit être identifiable dans l'annexe. Une donnée absente n'est jamais considérée comme conforme. Un fonds relevant de l'article 6 ne satisfait ni (a) ni (b). Le verdict « adéquat » suppose que toutes les préférences exprimées soient conformes.",
+    "Règles. Pour chaque préférence exprimée : (a) l'engagement minimum d'alignement sur la taxinomie est comparé au minimum demandé, en retenant la valeur la plus basse entre les graphiques avec et hors obligations souveraines ; (b) la proportion minimale d'investissements durables est comparée au minimum demandé ; (c) la prise en compte des principales incidences négatives est vérifiée, et chaque catégorie demandée doit être identifiable dans l'annexe. Une donnée absente n'est jamais considérée comme conforme. Un fonds relevant de l'article 6 ne satisfait ni (a) ni (b). Le verdict « adéquat » suppose que toutes les préférences exprimées soient conformes (approche cumulative). En approche portefeuille, (a) et (b) s'apprécient sur la moyenne pondérée par les montants (une ligne relevant de l'article 6 compte pour 0 %) et (c) sur chaque ligne.",
+    "Noms de fonds. Les constats sur les noms appliquent les orientations de l'ESMA sur les noms de fonds utilisant des termes ESG ou de durabilité (ESMA34-472-440, §15 à 19) : seuil de 80 % et exclusions PAB ou CTB selon la famille du terme.",
     "Limites. Le rapport compare des engagements minimums déclarés, non la composition effective du portefeuille à une date donnée. Une annexe peut avoir été mise à jour depuis la date indiquée. Une annexe couvre l'ensemble des parts d'un fonds ; l'ISIN désigne la part examinée. Les constats signalent un écart entre le document et un seuil ; ils ne portent aucune appréciation sur la société de gestion.",
   ];
   for (const p of paras) {
@@ -710,6 +847,7 @@ export async function renderReportPdf(r: ComputedReport, fonts: ReportFonts): Pr
   const L = new Layout(doc, f);
   drawHeaderBlock(L, r);
   drawPreferences(L, r);
+  drawPortfolio(L, r);
   drawSummary(L, r);
   L.section("3. Détail par fonds");
   L.text(

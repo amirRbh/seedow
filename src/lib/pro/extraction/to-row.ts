@@ -50,6 +50,8 @@ export interface SustainabilityRow {
   considers_pai: boolean | null;
   pai_categories: PaiCategory[];
   fossil_gas_nuclear: FossilGasNuclear | null;
+  /** "not_stated" : cherché (prompt v2+), non trouvé ; null : non évalué (v1). */
+  benchmark_exclusions: "pab" | "ctb" | "not_stated" | null;
   /** Preuves par champ, plus `_review_reasons` (raisons de la mise en revue). */
   evidence: Record<string, EvidenceMap[string] | string[]>;
   extraction_model: string;
@@ -78,6 +80,10 @@ export function sustainabilityRow(args: {
     considers_pai: vals.considers_pai,
     pai_categories: vals.pai_categories,
     fossil_gas_nuclear: vals.fossil_gas_nuclear,
+    benchmark_exclusions:
+      args.extraction.benchmark_exclusions === undefined
+        ? null
+        : (args.extraction.benchmark_exclusions.value ?? "not_stated"),
     evidence: {
       ...args.verification.evidence,
       ...(args.verification.reviewReasons.length > 0

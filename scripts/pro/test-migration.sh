@@ -8,7 +8,7 @@ DB="seedow_pro_test_$$"
 createdb "$DB"
 trap 'dropdb --if-exists "$DB"' EXIT
 psql -q -v ON_ERROR_STOP=1 -d "$DB" -f supabase/tests/pro/supabase-stub.sql
-for m in supabase/migrations/2026112412*_pro_*.sql supabase/migrations/2026112413*_pro_*.sql; do
+for m in $(ls supabase/migrations/*_pro_*.sql | sort); do
   psql -q -v ON_ERROR_STOP=1 -d "$DB" -f "$m"
 done
 psql -q -v ON_ERROR_STOP=1 -d "$DB" -f supabase/tests/pro/pro_rls.sql

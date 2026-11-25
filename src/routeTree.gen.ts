@@ -61,11 +61,13 @@ import { Route as HooksRefreshMarketDataRouteImport } from './routes/hooks/refre
 import { Route as ObjectifsGoalIdRouteImport } from './routes/objectifs.$goalId'
 import { Route as ProIndexRouteImport } from './routes/pro/index'
 import { Route as ProFondsRouteImport } from './routes/pro/fonds'
+import { Route as ProProfilsPredefinisRouteImport } from './routes/pro/profils-predefinis'
 import { Route as VoteResolutionIdRouteImport } from './routes/vote.$resolutionId'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as AuthenticatedAdminBetaRouteImport } from './routes/_authenticated/admin.beta'
 import { Route as AuthenticatedAdminDataRouteImport } from './routes/_authenticated/admin.data'
 import { Route as ApiPublicEsgPreviewRouteImport } from './routes/api.public.esg-preview'
+import { Route as ProClientsIndexRouteImport } from './routes/pro/clients.index'
 import { Route as ProClientsNewRouteImport } from './routes/pro/clients.new'
 import { Route as ProRapportsIndexRouteImport } from './routes/pro/rapports.index'
 import { Route as ProRapportsNewRouteImport } from './routes/pro/rapports.new'
@@ -337,6 +339,11 @@ const ProFondsRoute = ProFondsRouteImport.update({
   path: '/fonds',
   getParentRoute: () => ProRouteRoute,
 } as any)
+const ProProfilsPredefinisRoute = ProProfilsPredefinisRouteImport.update({
+  id: '/profils-predefinis',
+  path: '/profils-predefinis',
+  getParentRoute: () => ProRouteRoute,
+} as any)
 const VoteResolutionIdRoute = VoteResolutionIdRouteImport.update({
   id: '/$resolutionId',
   path: '/$resolutionId',
@@ -361,6 +368,11 @@ const ApiPublicEsgPreviewRoute = ApiPublicEsgPreviewRouteImport.update({
   id: '/api/public/esg-preview',
   path: '/api/public/esg-preview',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ProClientsIndexRoute = ProClientsIndexRouteImport.update({
+  id: '/clients/',
+  path: '/clients/',
+  getParentRoute: () => ProRouteRoute,
 } as any)
 const ProClientsNewRoute = ProClientsNewRouteImport.update({
   id: '/clients/new',
@@ -449,6 +461,7 @@ export interface FileRoutesByFullPath {
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
   '/pro/fonds': typeof ProFondsRoute
+  '/pro/profils-predefinis': typeof ProProfilsPredefinisRoute
   '/vote/$resolutionId': typeof VoteResolutionIdRoute
   '/cours/': typeof CoursIndexRoute
   '/pro/': typeof ProIndexRoute
@@ -458,6 +471,7 @@ export interface FileRoutesByFullPath {
   '/api/public/esg-preview': typeof ApiPublicEsgPreviewRoute
   '/pro/clients/new': typeof ProClientsNewRoute
   '/pro/rapports/new': typeof ProRapportsNewRoute
+  '/pro/clients/': typeof ProClientsIndexRoute
   '/pro/rapports/': typeof ProRapportsIndexRoute
   '/api/public/v1/compare': typeof ApiPublicV1CompareRoute
   '/api/public/v1/openapi.json': typeof ApiPublicV1OpenapiDotjsonRoute
@@ -512,6 +526,7 @@ export interface FileRoutesByTo {
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
   '/pro/fonds': typeof ProFondsRoute
+  '/pro/profils-predefinis': typeof ProProfilsPredefinisRoute
   '/vote/$resolutionId': typeof VoteResolutionIdRoute
   '/cours': typeof CoursIndexRoute
   '/pro': typeof ProIndexRoute
@@ -521,6 +536,7 @@ export interface FileRoutesByTo {
   '/api/public/esg-preview': typeof ApiPublicEsgPreviewRoute
   '/pro/clients/new': typeof ProClientsNewRoute
   '/pro/rapports/new': typeof ProRapportsNewRoute
+  '/pro/clients': typeof ProClientsIndexRoute
   '/pro/rapports': typeof ProRapportsIndexRoute
   '/api/public/v1/compare': typeof ApiPublicV1CompareRoute
   '/api/public/v1/openapi.json': typeof ApiPublicV1OpenapiDotjsonRoute
@@ -579,6 +595,7 @@ export interface FileRoutesById {
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
   '/pro/fonds': typeof ProFondsRoute
+  '/pro/profils-predefinis': typeof ProProfilsPredefinisRoute
   '/vote/$resolutionId': typeof VoteResolutionIdRoute
   '/cours/': typeof CoursIndexRoute
   '/pro/': typeof ProIndexRoute
@@ -588,6 +605,7 @@ export interface FileRoutesById {
   '/api/public/esg-preview': typeof ApiPublicEsgPreviewRoute
   '/pro/clients/new': typeof ProClientsNewRoute
   '/pro/rapports/new': typeof ProRapportsNewRoute
+  '/pro/clients/': typeof ProClientsIndexRoute
   '/pro/rapports/': typeof ProRapportsIndexRoute
   '/api/public/v1/compare': typeof ApiPublicV1CompareRoute
   '/api/public/v1/openapi.json': typeof ApiPublicV1OpenapiDotjsonRoute
@@ -646,6 +664,7 @@ export interface FileRouteTypes {
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
     | '/pro/fonds'
+    | '/pro/profils-predefinis'
     | '/vote/$resolutionId'
     | '/cours/'
     | '/pro/'
@@ -655,6 +674,7 @@ export interface FileRouteTypes {
     | '/api/public/esg-preview'
     | '/pro/clients/new'
     | '/pro/rapports/new'
+    | '/pro/clients/'
     | '/pro/rapports/'
     | '/api/public/v1/compare'
     | '/api/public/v1/openapi.json'
@@ -709,6 +729,7 @@ export interface FileRouteTypes {
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
     | '/pro/fonds'
+    | '/pro/profils-predefinis'
     | '/vote/$resolutionId'
     | '/cours'
     | '/pro'
@@ -718,6 +739,7 @@ export interface FileRouteTypes {
     | '/api/public/esg-preview'
     | '/pro/clients/new'
     | '/pro/rapports/new'
+    | '/pro/clients'
     | '/pro/rapports'
     | '/api/public/v1/compare'
     | '/api/public/v1/openapi.json'
@@ -775,6 +797,7 @@ export interface FileRouteTypes {
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
     | '/pro/fonds'
+    | '/pro/profils-predefinis'
     | '/vote/$resolutionId'
     | '/cours/'
     | '/pro/'
@@ -784,6 +807,7 @@ export interface FileRouteTypes {
     | '/api/public/esg-preview'
     | '/pro/clients/new'
     | '/pro/rapports/new'
+    | '/pro/clients/'
     | '/pro/rapports/'
     | '/api/public/v1/compare'
     | '/api/public/v1/openapi.json'
@@ -1213,6 +1237,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProFondsRouteImport
       parentRoute: typeof ProRouteRoute
     }
+    '/pro/profils-predefinis': {
+      id: '/pro/profils-predefinis'
+      path: '/profils-predefinis'
+      fullPath: '/pro/profils-predefinis'
+      preLoaderRoute: typeof ProProfilsPredefinisRouteImport
+      parentRoute: typeof ProRouteRoute
+    }
     '/vote/$resolutionId': {
       id: '/vote/$resolutionId'
       path: '/$resolutionId'
@@ -1247,6 +1278,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/public/esg-preview'
       preLoaderRoute: typeof ApiPublicEsgPreviewRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/pro/clients/': {
+      id: '/pro/clients/'
+      path: '/clients'
+      fullPath: '/pro/clients/'
+      preLoaderRoute: typeof ProClientsIndexRouteImport
+      parentRoute: typeof ProRouteRoute
     }
     '/pro/clients/new': {
       id: '/pro/clients/new'
@@ -1315,17 +1353,21 @@ const AuthenticatedRouteRouteWithChildren =
 
 interface ProRouteRouteChildren {
   ProFondsRoute: typeof ProFondsRoute
+  ProProfilsPredefinisRoute: typeof ProProfilsPredefinisRoute
   ProIndexRoute: typeof ProIndexRoute
   ProClientsNewRoute: typeof ProClientsNewRoute
   ProRapportsNewRoute: typeof ProRapportsNewRoute
+  ProClientsIndexRoute: typeof ProClientsIndexRoute
   ProRapportsIndexRoute: typeof ProRapportsIndexRoute
 }
 
 const ProRouteRouteChildren: ProRouteRouteChildren = {
   ProFondsRoute: ProFondsRoute,
+  ProProfilsPredefinisRoute: ProProfilsPredefinisRoute,
   ProIndexRoute: ProIndexRoute,
   ProClientsNewRoute: ProClientsNewRoute,
   ProRapportsNewRoute: ProRapportsNewRoute,
+  ProClientsIndexRoute: ProClientsIndexRoute,
   ProRapportsIndexRoute: ProRapportsIndexRoute,
 }
 

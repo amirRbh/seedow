@@ -1,5 +1,7 @@
 # Seedow Pro — preuve d'adéquation aux préférences de durabilité
 
+> Veille réglementaire et conséquences produit : [`docs/pro/veille-reglementaire-2026-11.md`](pro/veille-reglementaire-2026-11.md).
+
 Module B2B pour cabinets CGP/CIF : pour un client et une liste d'ISIN, un verdict
 par fonds, sourcé page par page dans l'annexe précontractuelle SFDR, archivé
 dans un rapport PDF horodaté. Outil d'aide à la documentation : il ne
@@ -294,4 +296,63 @@ Exemple : `fixtures/scan/` (5 fonds réels des fixtures + 1 UC sans annexe) :
 bun run scripts/pro/scan-contract.ts fixtures/scan/sample-uc.csv --insurer "Assureur Exemple" \
   --contract "Contrat Exemple Vie" --list-date 2026-10-01 --as-of 2026-11-24 \
   --data fixtures/scan/sample-funds-data.json --out fixtures/scan
+```
+
+## 7. Mise à niveau réglementaire (novembre 2026)
+
+Issue de la synthèse SPOT de l'AMF (février 2026), du document conjoint
+ACPR/AMF (novembre 2025) et des orientations ESMA sur les noms de fonds :
+voir la [veille](pro/veille-reglementaire-2026-11.md).
+
+### Moteur 1.1.0
+
+- **Noms de fonds** (`src/lib/pro/matching/esma-names.ts`) : familles de termes
+  ESMA (§15, FR et EN ; rattachements interprétés signalés), exigences §16 à
+  19 (80 %, exclusions PAB ou CTB, engagement significatif pour « durable »,
+  exception « transition »). Nouvelle alerte `NOM_EXCLUSIONS_NON_MENTIONNEES`,
+  silencieuse tant que l'annexe n'a pas été lue avec le prompt v2.
+- **Portefeuille** (`src/lib/pro/matching/portfolio.ts`) : avec des montants,
+  (a) et (b) s'apprécient en moyenne pondérée (art. 6 = 0 %, donnée absente =
+  non calculable), (c) ligne par ligne (approche cumulative).
+
+### Recueil
+
+- Trois parcours (`preference_mode`) : **neutre** (non / ne se prononce pas),
+  **détaillé**, **prédéfini** (profil du cabinet, `/pro/profils-predefinis`,
+  au moins un critère, description remise au client, archivage sans réécriture).
+- **Fiche de recueil** PDF archivée à chaque enregistrement
+  (`pro_collection_records`, immuable) : explication neutre des trois
+  critères, réponses du client, signatures. Champ « compte joint ».
+
+### Adaptation, au moment du conseil
+
+- Proposée seulement **après** l'aperçu et si rien ne correspond (aucun fonds,
+  ou l'allocation en approche portefeuille) ; refusée par le serveur sinon.
+- Ne vaut que pour le conseil en cours : le recueil n'est pas modifié.
+- Le rapport reproduit la proposition, la décision, les préférences adaptées,
+  les motifs, et la comparaison avec les préférences initiales. Un **refus**
+  produit un rapport « aucune recommandation ».
+
+### Extraction : prompt v2
+
+`src/lib/pro/extraction/prompt.v2.ts` ajoute `benchmark_exclusions` (PAB, CTB,
+ou non mentionnées). `prompt.ts` désigne la version courante ; v1 reste pour
+rejouer les extractions antérieures.
+
+### Migration
+
+`20261125120000_pro_collection_modes.sql` : `pro_predefined_profiles`, colonnes
+de mode sur `pro_client_profiles` (contrainte de cohérence), `pro_collection_records`
+(immuable), `benchmark_exclusions` et vue courante recréée. Tests :
+`scripts/pro/test-migration.sh` (applique toutes les migrations `*_pro_*`).
+
+### Exemples
+
+- `fixtures/report/sample-report.pdf` : 5 fonds, évaluation fonds par fonds.
+- `fixtures/report/sample-portfolio-report.pdf` : 3 fonds avec montants,
+  adaptation acceptée (taxinomie retirée), allocation adéquate à 63 %
+  d'investissements durables en moyenne pondérée.
+
+```bash
+bun run scripts/pro/sample-report.ts --in fixtures/report/sample-portfolio.json --out fixtures/report/sample-portfolio-report.pdf
 ```

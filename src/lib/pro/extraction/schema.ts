@@ -20,6 +20,9 @@ export const PAI_CATEGORIES = ["ghg", "biodiversity", "water", "waste", "social"
 export type PaiCategory = (typeof PAI_CATEGORIES)[number];
 
 export const FOSSIL_GAS_NUCLEAR = ["no", "fossil_gas", "nuclear", "both"] as const;
+
+/** Exclusions d'indice de référence (orientations ESMA sur les noms de fonds). */
+export const BENCHMARK_EXCLUSIONS = ["pab", "ctb"] as const;
 export type FossilGasNuclear = (typeof FOSSIL_GAS_NUCLEAR)[number];
 
 /** Champs « pourcentage » : engagement minimum, en % de l'actif. */
@@ -74,12 +77,14 @@ export const extractionSchema = z
         .strict(),
     ),
     fossil_gas_nuclear: field(z.enum(FOSSIL_GAS_NUCLEAR)),
+    /** Depuis prompt.v2 ; absent des extractions v1. */
+    benchmark_exclusions: field(z.enum(BENCHMARK_EXCLUSIONS)).optional(),
   })
   .strict();
 
 export type Extraction = z.infer<typeof extractionSchema>;
 export type ExtractionField = Exclude<keyof Extraction, "language" | "pai_categories">;
-export type FieldEvidence = Extraction[ExtractionField];
+export type FieldEvidence = NonNullable<Extraction[ExtractionField]>;
 
 /** Champs à valeur + preuve, dans l'ordre du schéma. */
 export const EVIDENCE_FIELDS = [
@@ -93,6 +98,7 @@ export const EVIDENCE_FIELDS = [
   "considers_pai",
   "pai_all_mandatory_indicators",
   "fossil_gas_nuclear",
+  "benchmark_exclusions",
 ] as const satisfies readonly ExtractionField[];
 
 /**
@@ -146,6 +152,7 @@ export const extractionJsonSchema: JsonSchema = {
     "pai_all_mandatory_indicators",
     "pai_categories",
     "fossil_gas_nuclear",
+    "benchmark_exclusions",
   ],
   properties: {
     language: nullable({ type: "string", enum: ["fr", "en"] }),
@@ -191,6 +198,10 @@ export const extractionJsonSchema: JsonSchema = {
     fossil_gas_nuclear: jsonField(
       { type: "string", enum: [...FOSSIL_GAS_NUCLEAR] },
       "réponse à la question gaz fossile / nucléaire",
+    ),
+    benchmark_exclusions: jsonField(
+      { type: "string", enum: [...BENCHMARK_EXCLUSIONS] },
+      "exclusions d'indice de référence « accord de Paris » (pab) ou « transition climatique » (ctb) affirmées",
     ),
   },
 };

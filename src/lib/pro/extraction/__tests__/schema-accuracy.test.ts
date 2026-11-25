@@ -74,3 +74,30 @@ describe("notation de précision", () => {
     }
   });
 });
+
+describe("exclusions d'indice de référence (prompt v2)", () => {
+  it("v1 : non évalué ; v2 : pab, ctb ou not_stated", async () => {
+    const { sustainabilityRow } = await import("../to-row");
+    const f = { value: null, page: null, quote: null, ambiguous: false, visual: false, note: null };
+    const base = Object.fromEntries(
+      Object.keys(extractionSchema.shape)
+        .filter((k) => k !== "benchmark_exclusions")
+        .map((k) => [k, k === "pai_categories" ? [] : k === "language" ? "fr" : f]),
+    );
+    const row = (x: unknown) =>
+      sustainabilityRow({
+        documentId: "d",
+        isin: "FR0010592022",
+        extraction: extractionSchema.parse(x),
+        verification: { evidence: {}, status: "auto", reviewReasons: [], paiCategories: [] },
+        model: "m",
+        version: "v",
+      }).benchmark_exclusions;
+    expect(row(base)).toBeNull();
+    expect(row({ ...base, benchmark_exclusions: f })).toBe("not_stated");
+    expect(
+      row({ ...base, benchmark_exclusions: { ...f, value: "pab", page: 3, quote: "q" } }),
+    ).toBe("pab");
+    expect(extractionJsonSchema.required).toContain("benchmark_exclusions");
+  });
+});
