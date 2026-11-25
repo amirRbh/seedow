@@ -25,6 +25,7 @@ export const AXIS_TITLES: Record<AxisResult["axis"], string> = {
 export const ALERT_LABELS: Record<AlertCode, string> = {
   NOM_ESG_ALLOCATION_FAIBLE: "Nom ESG, #1 < 80 %",
   NOM_DURABLE_SANS_ID: "Nom « durable », 0 % durable",
+  NOM_EXCLUSIONS_NON_MENTIONNEES: "Nom ESG, exclusions PAB/CTB non mentionnées",
   ART8_ZERO_INVEST_DURABLE: "Art. 8 sans part durable",
   TAXO_ZERO: "Taxinomie 0 %",
   PAI_NON: "PAI : non",

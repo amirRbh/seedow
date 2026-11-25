@@ -21,6 +21,13 @@
  * prêtent aucune intention au gérant et ne changent pas le verdict.
  */
 import { PAI_CATEGORIES, type PaiCategory } from "../extraction/schema";
+import {
+  ESMA_CATEGORY_LABELS,
+  EXCLUSION_LABELS,
+  esmaRequirements,
+  esmaTermsInName,
+  exclusionsSatisfy,
+} from "./esma-names";
 import type {
   Alert,
   AxisResult,
@@ -32,7 +39,12 @@ import type {
   Verdict,
 } from "./types";
 
-export const ENGINE_VERSION = "1.0.0";
+/**
+ * 1.0.0 : axes (a), (b), (c), verdicts, alertes.
+ * 1.1.0 : alertes de nom alignées sur les orientations ESMA (familles de
+ *         termes, exclusions PAB/CTB) ; évaluation au niveau du portefeuille.
+ */
+export const ENGINE_VERSION = "1.1.0";
 
 /** Seuil des orientations de l'ESMA sur les noms de fonds utilisant des termes ESG ou de durabilité. */
 export const ESMA_NAME_THRESHOLD_PCT = 80;
@@ -46,28 +58,6 @@ export const PAI_CATEGORY_LABELS: Record<PaiCategory, string> = {
   waste: "déchets",
   social: "social",
 };
-
-/** Termes ESG / durabilité dans le nom (début de mot, insensible à la casse et aux accents). */
-const ESG_NAME_TERMS: readonly { term: string; re: RegExp }[] = [
-  { term: "ESG", re: /\besg\b/ },
-  { term: "durable", re: /\bdurab/ },
-  { term: "ISR", re: /\bisr\b/ },
-  { term: "green", re: /\bgreen\b/ },
-  { term: "climat", re: /\bclimat/ },
-  { term: "impact", re: /\bimpact\b/ },
-  { term: "transition", re: /\btransition\b/ },
-  { term: "sustainable", re: /\bsustainab/ },
-  { term: "responsible", re: /\brespons[ai]b/ },
-];
-const SUSTAINABLE_NAME_TERMS = new Set(["durable", "sustainable"]);
-
-const fold = (s: string) => s.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
-
-/** Termes ESG trouvés dans un nom de fonds. */
-export function esgTermsInName(name: string): string[] {
-  const n = fold(name);
-  return ESG_NAME_TERMS.filter((t) => t.re.test(n)).map((t) => t.term);
-}
 
 export function formatPct(v: number): string {
   return `${String(Math.round(v * 100) / 100).replace(".", ",")} %`;
@@ -229,11 +219,21 @@ function axisPai(categories: readonly PaiCategory[], fund: FundData): AxisResult
 
 function alertsFor(fund: FundData, opts: MatchOptions): Alert[] {
   const alerts: Alert[] = [];
-  const terms = esgTermsInName(fund.name);
-  const quoted = (ts: string[]) => ts.map((t) => `« ${t} »`).join(", ");
+  const matches = esmaTermsInName(fund.name);
+  const req = esmaRequirements(matches);
+  const quoted = (ts: string[]) => [...new Set(ts)].map((t) => `« ${t} »`).join(", ");
+  const families = req.categories.map((c) => ESMA_CATEGORY_LABELS[c]).join(", ");
+  const nameIntro =
+    matches.length === 0
+      ? ""
+      : `Le nom du fonds contient ${matches.length > 1 ? "les termes" : "le terme"} ${quoted(
+          matches.map((m) => m.term),
+        )} (famille${req.categories.length > 1 ? "s" : ""} ESMA : ${families}${
+          matches.some((m) => m.interpreted) ? ", rattachement interprété par Seedow" : ""
+        }). `;
 
   if (
-    terms.length > 0 &&
+    matches.length > 0 &&
     fund.min_es_aligned_pct !== null &&
     fund.min_es_aligned_pct < ESMA_NAME_THRESHOLD_PCT
   ) {
@@ -241,18 +241,37 @@ function alertsFor(fund: FundData, opts: MatchOptions): Alert[] {
       code: "NOM_ESG_ALLOCATION_FAIBLE",
       level: "attention",
       message:
-        `Le nom du fonds contient ${terms.length > 1 ? "les termes" : "le terme"} ${quoted(terms)}. ` +
+        nameIntro +
         `L'annexe prévoit une proportion minimale de ${formatPct(fund.min_es_aligned_pct)} d'investissements de la catégorie #1, ` +
         `en dessous du seuil de ${ESMA_NAME_THRESHOLD_PCT} % retenu par les orientations de l'ESMA sur les noms de fonds.`,
       sources: [src(fund, "min_es_aligned_pct")],
     });
   }
-  const sustainableTerms = terms.filter((t) => SUSTAINABLE_NAME_TERMS.has(t));
-  if (sustainableTerms.length > 0 && fund.min_sustainable_pct === 0) {
+  const declared = fund.benchmark_exclusions;
+  if (req.exclusions && declared) {
+    const satisfied = declared !== "not_stated" && exclusionsSatisfy(declared, req.exclusions);
+    if (!satisfied) {
+      alerts.push({
+        code: "NOM_EXCLUSIONS_NON_MENTIONNEES",
+        level: "attention",
+        message:
+          nameIntro +
+          `Les orientations de l'ESMA prévoient alors les ${EXCLUSION_LABELS[req.exclusions]}. ` +
+          (declared === "not_stated"
+            ? "L'annexe, telle que lue par Seedow, ne mentionne pas ces exclusions."
+            : `L'annexe mentionne seulement les ${EXCLUSION_LABELS[declared]}.`),
+        sources: [src(fund, "benchmark_exclusions")],
+      });
+    }
+  }
+  if (req.meaningfulSustainableInvestment && fund.min_sustainable_pct === 0) {
     alerts.push({
       code: "NOM_DURABLE_SANS_ID",
       level: "attention",
-      message: `Le nom du fonds contient ${quoted(sustainableTerms)} ; l'annexe prévoit une proportion minimale d'investissements durables de 0 %.`,
+      message:
+        nameIntro +
+        "Les orientations de l'ESMA attendent alors un engagement significatif en investissements durables ; " +
+        "l'annexe prévoit une proportion minimale d'investissements durables de 0 %.",
       sources: [src(fund, "min_sustainable_pct")],
     });
   }
@@ -308,17 +327,24 @@ function alertsFor(fund: FundData, opts: MatchOptions): Alert[] {
   return alerts;
 }
 
-function verdictOf(
-  axes: readonly AxisResult[],
-  fund: FundData | null,
+/** Ce qui empêche de conclure, quels que soient les axes. */
+export type VerdictBlock = "no_data" | "needs_review" | null;
+
+/**
+ * Règle de verdict, partagée par l'évaluation par fonds et par portefeuille.
+ * `block` : aucune donnée (fonds inconnu) ou données en attente de revue.
+ */
+export function decideVerdict(
+  axes: readonly Pick<AxisResult, "status">[],
+  block: VerdictBlock,
 ): { verdict: Verdict; reason: string } {
   if (axes.length === 0) {
     return { verdict: "NEUTRE", reason: "Aucune préférence de durabilité exprimée par le client." };
   }
-  if (fund === null) {
+  if (block === "no_data") {
     return { verdict: "A_VERIFIER", reason: "Aucune donnée disponible pour ce fonds." };
   }
-  if (fund.status === "needs_review") {
+  if (block === "needs_review") {
     return {
       verdict: "A_VERIFIER",
       reason: "Les données extraites de l'annexe sont en attente de revue humaine.",
@@ -355,6 +381,13 @@ function verdictOf(
     reason:
       "Une partie seulement des préférences exprimées est satisfaite par les engagements de l'annexe.",
   };
+}
+
+function verdictOf(axes: readonly AxisResult[], fund: FundData | null) {
+  return decideVerdict(
+    axes,
+    fund === null ? "no_data" : fund.status === "needs_review" ? "needs_review" : null,
+  );
 }
 
 const verdictFields = (v: { verdict: Verdict; reason: string }) => ({

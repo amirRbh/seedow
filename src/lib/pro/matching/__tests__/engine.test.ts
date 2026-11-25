@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ENGINE_VERSION, esgTermsInName, formatPct, isOlderThanMonths, match } from "../engine";
+import { ENGINE_VERSION, formatPct, isOlderThanMonths, match } from "../engine";
 import {
   clientPreferencesSchema,
   fundDataSchema,
@@ -537,7 +537,7 @@ describe("alertes", () => {
     ]) {
       expect(text).not.toContain(word);
     }
-    expect(all[0].message).toMatch(/les termes « durable », « climat », « impact »/);
+    expect(all[0].message).toMatch(/les termes « climat », « impact », « durable »/);
     expect(all[0].message).toMatch(/10 %.*80 %/);
     expect(all[5].message).toMatch(/datée du 2024-01-01/);
     expect(all.find((a) => a.code === "NON_VALIDE")?.message).toMatch(/en attente de revue/);
@@ -559,22 +559,6 @@ describe("alertes", () => {
 });
 
 describe("utilitaires", () => {
-  it.each([
-    ["Mirova Global Green Bond", ["green"]],
-    ["Amundi Responsible Investing", ["responsible"]],
-    ["Fonds Responsable Europe", ["responsible"]],
-    ["Sustainability Leaders", ["sustainable"]],
-    ["Actions Climatiques", ["climat"]],
-    ["Fonds Développement Durables", ["durable"]],
-    ["ESG Leaders ISR", ["ESG", "ISR"]],
-    ["Energy Transition Impact", ["impact", "transition"]],
-    ["Impactful Equity", []],
-    ["Greenfield Infrastructure", []],
-    ["Prisrisk", []],
-  ])("termes ESG dans « %s »", (name, terms) => {
-    expect(esgTermsInName(name).sort()).toEqual([...terms].sort());
-  });
-
   it("formatPct : virgule décimale, arrondi au centième", () => {
     expect(formatPct(10)).toBe("10 %");
     expect(formatPct(55.5)).toBe("55,5 %");
