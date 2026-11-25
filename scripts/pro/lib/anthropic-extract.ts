@@ -12,7 +12,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import {
   EXTRACTION_SYSTEM_PROMPT,
   EXTRACTION_USER_PROMPT,
-} from "../../../src/lib/pro/extraction/prompt.v1";
+} from "../../../src/lib/pro/extraction/prompt";
 import {
   extractionJsonSchema,
   extractionSchema,

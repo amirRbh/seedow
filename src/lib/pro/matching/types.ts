@@ -46,6 +46,12 @@ export const fundDataSchema = z.object({
   considers_pai: z.boolean().nullable(),
   pai_categories: z.array(z.enum(PAI_CATEGORIES)),
   status: z.enum(["auto", "needs_review", "validated"]),
+  /**
+   * Exclusions d'indice de référence déclarées dans l'annexe (orientations ESMA
+   * sur les noms) : "pab", "ctb", "not_stated" (cherchées, non trouvées).
+   * Absent ou null : non évalué (extractions antérieures au prompt v2).
+   */
+  benchmark_exclusions: z.enum(["pab", "ctb", "not_stated"]).nullable().optional(),
   /** Preuves par champ (sous-ensemble de `evidence` jsonb). */
   evidence: z.record(z.string(), evidenceRefSchema).default({}),
 });
@@ -82,6 +88,7 @@ export interface AxisResult {
 export type AlertCode =
   | "NOM_ESG_ALLOCATION_FAIBLE"
   | "NOM_DURABLE_SANS_ID"
+  | "NOM_EXCLUSIONS_NON_MENTIONNEES"
   | "ART8_ZERO_INVEST_DURABLE"
   | "TAXO_ZERO"
   | "PAI_NON"

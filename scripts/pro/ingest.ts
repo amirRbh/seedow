@@ -29,7 +29,7 @@ import { basename, join } from "node:path";
 import { parseArgs } from "node:util";
 import { z } from "zod";
 import { parseInboxFileName } from "../../src/lib/pro/app/isin";
-import { EXTRACTION_VERSION } from "../../src/lib/pro/extraction/prompt.v1";
+import { EXTRACTION_VERSION } from "../../src/lib/pro/extraction/prompt";
 import { sustainabilityRow } from "../../src/lib/pro/extraction/to-row";
 import { processAnnex, sha256Hex, type ProcessedAnnex } from "./lib/process-annex";
 import { ANNEX_BUCKET, serviceClient } from "./lib/supabase";

@@ -56,7 +56,13 @@ const rowSchema = z
   })
   .passthrough();
 
-const EDITABLE = [...PCT_FIELDS, "considers_pai", "pai_categories", "fossil_gas_nuclear"] as const;
+const EDITABLE = [
+  ...PCT_FIELDS,
+  "considers_pai",
+  "pai_categories",
+  "fossil_gas_nuclear",
+  "benchmark_exclusions",
+] as const;
 type Editable = (typeof EDITABLE)[number];
 
 function parseValue(field: Editable, raw: string): unknown {
@@ -66,6 +72,7 @@ function parseValue(field: Editable, raw: string): unknown {
   }
   if (field === "considers_pai") return z.enum(["true", "false"]).parse(raw) === "true";
   if (field === "fossil_gas_nuclear") return z.enum(FOSSIL_GAS_NUCLEAR).parse(raw);
+  if (field === "benchmark_exclusions") return z.enum(["pab", "ctb", "not_stated"]).parse(raw);
   return z.array(z.enum(PAI_CATEGORIES)).parse(
     raw
       .split(",")

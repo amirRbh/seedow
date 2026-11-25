@@ -4,7 +4,7 @@
  * et par l'évaluation sur fixtures.
  */
 import { createHash } from "node:crypto";
-import { EXTRACTION_VERSION } from "../../../src/lib/pro/extraction/prompt.v1";
+import { EXTRACTION_VERSION } from "../../../src/lib/pro/extraction/prompt";
 import { extractionSchema, type Extraction } from "../../../src/lib/pro/extraction/schema";
 import { verifyExtraction, type VerificationResult } from "../../../src/lib/pro/extraction/verify";
 import { extractWithModel } from "./anthropic-extract";

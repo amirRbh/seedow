@@ -21,7 +21,7 @@ import {
   formatAccuracy,
   scoreExtractions,
 } from "../../src/lib/pro/extraction/accuracy";
-import { EXTRACTION_VERSION } from "../../src/lib/pro/extraction/prompt.v1";
+import { EXTRACTION_VERSION } from "../../src/lib/pro/extraction/prompt";
 import {
   sustainabilityValues,
   type SustainabilityValues,

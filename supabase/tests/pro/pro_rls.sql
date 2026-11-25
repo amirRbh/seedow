@@ -133,4 +133,67 @@ DO $$ BEGIN
 END $$;
 RESET ROLE;
 
+-- ---- Modes de recueil, profils prédéfinis, fiches de recueil ----
+SET ROLE authenticated;
+SET request.jwt.claim.sub = '00000000-0000-0000-0000-00000000000a';
+INSERT INTO public.pro_predefined_profiles (id, cabinet_id, label, description, sfdr_min_pct)
+VALUES ('50000000-0000-0000-0000-00000000000a', '10000000-0000-0000-0000-00000000000a', 'Engagé', 'Au moins 25 % d''investissements durables', 25);
+DO $$ BEGIN
+  INSERT INTO public.pro_predefined_profiles (cabinet_id, label, description)
+  VALUES ('10000000-0000-0000-0000-00000000000a', 'Vide', 'aucun critère');
+  RAISE EXCEPTION 'ÉCHEC : profil prédéfini sans critère accepté';
+EXCEPTION WHEN check_violation THEN NULL; END $$;
+DO $$ BEGIN
+  UPDATE public.pro_predefined_profiles SET sfdr_min_pct = 1;
+  RAISE EXCEPTION 'ÉCHEC : seuil d''un profil prédéfini réécrit';
+EXCEPTION WHEN insufficient_privilege THEN NULL; END $$;
+UPDATE public.pro_predefined_profiles SET archived_at = now() WHERE id = '50000000-0000-0000-0000-00000000000a';
+-- Profil « prédéfini » cohérent ; « neutre » sans critère ; incohérences refusées.
+INSERT INTO public.pro_client_profiles (cabinet_id, client_ref, collected_at, sfdr_min_pct, preference_mode, predefined_profile_id, predefined_label, predefined_description)
+VALUES ('10000000-0000-0000-0000-00000000000a', 'CLI-A-P', '2026-11-25', 25, 'predefined', '50000000-0000-0000-0000-00000000000a', 'Engagé', 'Au moins 25 %');
+INSERT INTO public.pro_client_profiles (cabinet_id, client_ref, collected_at, preference_mode)
+VALUES ('10000000-0000-0000-0000-00000000000a', 'CLI-A-N', '2026-11-25', 'neutral');
+DO $$ BEGIN
+  INSERT INTO public.pro_client_profiles (cabinet_id, client_ref, collected_at, sfdr_min_pct, preference_mode)
+  VALUES ('10000000-0000-0000-0000-00000000000a', 'CLI-A-X', '2026-11-25', 10, 'neutral');
+  RAISE EXCEPTION 'ÉCHEC : profil neutre avec critère accepté';
+EXCEPTION WHEN check_violation THEN NULL; END $$;
+DO $$ BEGIN
+  INSERT INTO public.pro_client_profiles (cabinet_id, client_ref, collected_at, sfdr_min_pct, preference_mode)
+  VALUES ('10000000-0000-0000-0000-00000000000a', 'CLI-A-Y', '2026-11-25', 10, 'predefined');
+  RAISE EXCEPTION 'ÉCHEC : profil prédéfini sans référence accepté';
+EXCEPTION WHEN check_violation THEN NULL; END $$;
+-- B ne voit pas les profils prédéfinis de A.
+SET request.jwt.claim.sub = '00000000-0000-0000-0000-00000000000b';
+DO $$ BEGIN
+  IF (SELECT count(*) FROM public.pro_predefined_profiles) <> 0 THEN RAISE EXCEPTION 'ÉCHEC : B voit les profils prédéfinis de A'; END IF;
+END $$;
+RESET ROLE;
+-- Fiches de recueil : écrites par le serveur, immuables, lisibles par le seul cabinet.
+SET ROLE service_role;
+INSERT INTO public.pro_collection_records (cabinet_id, client_profile_id, snapshot, pdf_path, pdf_sha256)
+VALUES ('10000000-0000-0000-0000-00000000000a', '20000000-0000-0000-0000-00000000000a', '{}', 'x', repeat('d', 64));
+DO $$ BEGIN
+  DELETE FROM public.pro_collection_records;
+  RAISE EXCEPTION 'ÉCHEC : fiche de recueil supprimée';
+EXCEPTION WHEN insufficient_privilege THEN NULL; END $$;
+RESET ROLE;
+SET ROLE authenticated;
+SET request.jwt.claim.sub = '00000000-0000-0000-0000-00000000000b';
+DO $$ BEGIN
+  IF (SELECT count(*) FROM public.pro_collection_records) <> 0 THEN RAISE EXCEPTION 'ÉCHEC : B voit la fiche de A'; END IF;
+END $$;
+SET request.jwt.claim.sub = '00000000-0000-0000-0000-00000000000a';
+DO $$ BEGIN
+  IF (SELECT count(*) FROM public.pro_collection_records) <> 1 THEN RAISE EXCEPTION 'ÉCHEC : A ne voit pas sa fiche'; END IF;
+  INSERT INTO public.pro_collection_records (cabinet_id, client_profile_id, snapshot, pdf_path, pdf_sha256)
+  VALUES ('10000000-0000-0000-0000-00000000000a', '20000000-0000-0000-0000-00000000000a', '{}', 'x', repeat('d', 64));
+  RAISE EXCEPTION 'ÉCHEC : A a écrit une fiche';
+EXCEPTION WHEN insufficient_privilege THEN NULL; END $$;
+-- La vue courante expose la nouvelle colonne.
+DO $$ BEGIN
+  PERFORM benchmark_exclusions FROM public.pro_fund_current_data LIMIT 1;
+END $$;
+RESET ROLE;
+
 SELECT 'OK — RLS et immutabilité Pro vérifiées' AS result;

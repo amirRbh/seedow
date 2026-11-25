@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { loadReportFonts } from "../../../../../scripts/pro/lib/fonts";
 import { pdfPagesText } from "../../../../../scripts/pro/lib/pdf-text";
 import { canonicalJson, computeReport, parisDate, parisDateTimeLabel, sha256Hex } from "../model";
+import { ENGINE_VERSION } from "../../matching/engine";
 import { LEGAL_NOTICE, renderReportPdf, wrapText } from "../pdf";
 
 const fund = (isin: string, over: Record<string, unknown> = {}) => ({
@@ -132,7 +133,7 @@ describe("rendu PDF", () => {
       "Aucune donnée disponible pour ce fonds.",
       r.data_snapshot_hash,
       r.content_hash,
-      "1.0.0",
+      ENGINE_VERSION,
       LEGAL_NOTICE,
     ]) {
       expect(text).toContain(s);

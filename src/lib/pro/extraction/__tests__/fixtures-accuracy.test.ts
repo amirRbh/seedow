@@ -12,7 +12,7 @@ import { readFile } from "node:fs/promises";
 import { describe, expect, it } from "vitest";
 import { pdfPagesText } from "../../../../../scripts/pro/lib/pdf-text";
 import { expectedFileSchema, formatAccuracy, scoreExtractions } from "../accuracy";
-import { EXTRACTION_VERSION } from "../prompt.v1";
+import { EXTRACTION_VERSION } from "../prompt";
 import { extractionSchema } from "../schema";
 import { sustainabilityValues, type SustainabilityValues } from "../to-row";
 import { verifyExtraction } from "../verify";

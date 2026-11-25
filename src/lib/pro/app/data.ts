@@ -6,7 +6,7 @@
 import { z } from "zod";
 import { PAI_CATEGORIES } from "../extraction/schema";
 import type { ClientPreferences, EvidenceRef, FundData } from "../matching/types";
-import type { ReportFund, ReportProfile } from "../report/model";
+import { PREFERENCE_MODES, type ReportFund, type ReportProfile } from "../report/model";
 
 /** PostgREST renvoie les `numeric` en nombre ou en chaîne selon la configuration. */
 const num = z
@@ -33,6 +33,7 @@ export const currentDataRowSchema = z.object({
   extraction_model: z.string(),
   extraction_version: z.string(),
   validated_at: z.string().nullable(),
+  benchmark_exclusions: z.enum(["pab", "ctb", "not_stated"]).nullable().default(null),
 });
 export type CurrentDataRow = z.infer<typeof currentDataRowSchema>;
 
@@ -71,6 +72,7 @@ export function toFundData(row: CurrentDataRow): FundData {
     considers_pai: row.considers_pai,
     pai_categories: row.pai_categories ?? [],
     status: row.status,
+    benchmark_exclusions: row.benchmark_exclusions,
     evidence: evidenceRefs(row.evidence),
   };
 }
@@ -112,8 +114,14 @@ export const clientProfileRowSchema = z.object({
   pai_required: z.boolean(),
   pai_categories: z.array(z.enum(PAI_CATEGORIES)),
   collected_at: z.string(),
-  adapted: z.boolean(),
-  adaptation_note: z.string().nullable(),
+  // Colonnes ajoutées par 20261125120000 : valeurs par défaut pour les lignes antérieures.
+  preference_mode: z.enum(PREFERENCE_MODES).default("detailed"),
+  predefined_profile_id: z.string().uuid().nullable().default(null),
+  predefined_label: z.string().nullable().default(null),
+  predefined_description: z.string().nullable().default(null),
+  joint_account: z.boolean().default(false),
+  adapted: z.boolean().default(false),
+  adaptation_note: z.string().nullable().default(null),
   created_at: z.string(),
 });
 export type ClientProfileRow = z.infer<typeof clientProfileRowSchema>;
@@ -132,35 +140,104 @@ export function toReportProfile(p: ClientProfileRow): ReportProfile {
     client_ref: p.client_ref,
     collected_at: p.collected_at,
     ...toPreferences(p),
+    preference_mode: p.preference_mode,
+    predefined_label: p.predefined_label,
+    predefined_description: p.predefined_description,
+    joint_account: p.joint_account,
     adapted: p.adapted,
     adaptation_note: p.adaptation_note,
   };
 }
 
-/** Saisie du formulaire de préférences (`/pro/clients/new`). */
-export const clientProfileInputSchema = z
+export const predefinedProfileRowSchema = z.object({
+  id: z.string().uuid(),
+  cabinet_id: z.string().uuid(),
+  label: z.string(),
+  description: z.string(),
+  taxonomy_min_pct: num,
+  sfdr_min_pct: num,
+  pai_required: z.boolean(),
+  pai_categories: z.array(z.enum(PAI_CATEGORIES)),
+  archived_at: z.string().nullable(),
+  created_at: z.string(),
+});
+export type PredefinedProfileRow = z.infer<typeof predefinedProfileRowSchema>;
+
+const minPct = z.number().gt(0, "Un minimum exprimé est supérieur à 0").max(100);
+
+/** Création d'un profil prédéfini du cabinet. */
+export const predefinedProfileInputSchema = z
   .object({
-    client_ref: z
+    label: z.string().trim().min(1, "Nom requis").max(80),
+    description: z
       .string()
       .trim()
-      .regex(
-        /^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/,
-        "Pseudonyme interne uniquement (lettres, chiffres, . _ -) : jamais le nom ni l'email du client.",
-      ),
-    collected_at: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date de recueil requise"),
-    taxonomy_min_pct: z.number().gt(0, "Un minimum exprimé est supérieur à 0").max(100).nullable(),
-    sfdr_min_pct: z.number().gt(0, "Un minimum exprimé est supérieur à 0").max(100).nullable(),
+      .min(20, "Décrivez au client les critères et engagements chiffrés (20 caractères minimum)")
+      .max(2000),
+    taxonomy_min_pct: minPct.nullable(),
+    sfdr_min_pct: minPct.nullable(),
     pai_required: z.boolean(),
     pai_categories: z.array(z.enum(PAI_CATEGORIES)),
-    adapted: z.boolean(),
-    adaptation_note: z.string().trim().max(4000).nullable(),
+  })
+  .refine((p) => p.taxonomy_min_pct !== null || p.sfdr_min_pct !== null || p.pai_required, {
+    message: "Un profil prédéfini repose sur au moins un critère MiFID/DDA",
+    path: ["label"],
   })
   .refine((p) => p.pai_required || p.pai_categories.length === 0, {
     message: "Des catégories PAI supposent que les PAI soient demandées",
     path: ["pai_categories"],
-  })
-  .refine((p) => !p.adapted || (p.adaptation_note ?? "").length > 0, {
-    message: "Une adaptation des préférences doit être documentée",
-    path: ["adaptation_note"],
   });
+export type PredefinedProfileInput = z.infer<typeof predefinedProfileInputSchema>;
+
+const clientRef = z
+  .string()
+  .trim()
+  .regex(
+    /^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/,
+    "Pseudonyme interne uniquement (lettres, chiffres, . _ -) : jamais le nom ni l'email du client.",
+  );
+const collectedAt = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date de recueil requise");
+
+/**
+ * Saisie du recueil (`/pro/clients/new`), selon le parcours ACPR/AMF :
+ * neutre (pas de prise en compte souhaitée, ou pas de réponse), détaillé
+ * (le client précise lui-même les critères), prédéfini (le client choisit un
+ * profil du cabinet). L'adaptation éventuelle se fait au moment du conseil,
+ * dans le rapport, jamais en réécrivant le recueil.
+ */
+export const clientProfileInputSchema = z.union([
+  z.object({
+    preference_mode: z.literal("neutral"),
+    client_ref: clientRef,
+    collected_at: collectedAt,
+    joint_account: z.boolean(),
+  }),
+  z
+    .object({
+      preference_mode: z.literal("detailed"),
+      client_ref: clientRef,
+      collected_at: collectedAt,
+      joint_account: z.boolean(),
+      taxonomy_min_pct: minPct.nullable(),
+      sfdr_min_pct: minPct.nullable(),
+      pai_required: z.boolean(),
+      pai_categories: z.array(z.enum(PAI_CATEGORIES)),
+    })
+    .refine((p) => p.taxonomy_min_pct !== null || p.sfdr_min_pct !== null || p.pai_required, {
+      message:
+        "Préférences détaillées : au moins un critère. Sinon, enregistrez le client comme « neutre ».",
+      path: ["taxonomy_min_pct"],
+    })
+    .refine((p) => p.pai_required || p.pai_categories.length === 0, {
+      message: "Des catégories PAI supposent que les PAI soient demandées",
+      path: ["pai_categories"],
+    }),
+  z.object({
+    preference_mode: z.literal("predefined"),
+    client_ref: clientRef,
+    collected_at: collectedAt,
+    joint_account: z.boolean(),
+    predefined_profile_id: z.string().uuid("Choisissez un profil prédéfini"),
+  }),
+]);
 export type ClientProfileInput = z.infer<typeof clientProfileInputSchema>;

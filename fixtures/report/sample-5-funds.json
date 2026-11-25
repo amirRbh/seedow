@@ -1,9 +1,12 @@
 {
-  "_comment": "Exemple de rapport : cabinet fictif (ORIAS 00000000), client pseudonymisé, 5 fonds réels. Valeurs lues à la main dans les annexes de fixtures/annexes (cf. expected.json), citations recopiées des PDF et vérifiées par scripts/pro/sample-report.ts avant rendu. ISIN : sources publiques (finanzen.net, abcbourse, doc.la-francaise.com, carac.fr). Statut « auto » (non revu) sauf Ecofi « needs_review » (ambiguïté tranchée à 100 mais revue exigée).",
+  "_comment": "Exemple de rapport : cabinet fictif (ORIAS 00000000), client pseudonymisé, 5 fonds réels. Valeurs lues à la main dans les annexes de fixtures/annexes (cf. expected.json), citations recopiées des PDF et vérifiées par scripts/pro/sample-report.ts avant rendu. ISIN : sources publiques (finanzen.net, abcbourse, doc.la-francaise.com, carac.fr). Évaluation fonds par fonds. Statut « auto » (non revu) sauf Ecofi « needs_review » (ambiguïté tranchée à 100 mais revue exigée).",
   "report_id": "6f1c2a9e-3b7d-4e21-9a55-0c8d7e4f1b23",
   "created_at": "2026-11-24T14:32:05Z",
   "example": true,
-  "cabinet": { "name": "Cabinet Exemple Patrimoine", "orias_number": "00000000" },
+  "cabinet": {
+    "name": "Cabinet Exemple Patrimoine",
+    "orias_number": "00000000"
+  },
   "profile": {
     "client_ref": "CLI-2026-014",
     "collected_at": "2026-11-18",
@@ -11,8 +14,8 @@
     "sfdr_min_pct": 25,
     "pai_required": true,
     "pai_categories": ["ghg"],
-    "adapted": true,
-    "adaptation_note": "Préférence initiale exprimée le 2026-11-18 : au moins 5 % d'investissements alignés sur la taxinomie. Aucune unité de compte du contrat proposé n'atteignant ce seuil, le client a accepté le 2026-11-20 de retirer cette préférence pour ce contrat (compte rendu d'entretien au dossier)."
+    "preference_mode": "detailed",
+    "joint_account": false
   },
   "funds": [
     {
@@ -113,7 +116,10 @@
           "page": 1,
           "quote": "bien qu’il n’ait pas pour objectif l’investissement durable, il contiendra une proportion minimale de 55,0% d’investissements durables"
         },
-        "min_taxonomy_pct": { "page": 9, "quote": "Alignés sur la taxinomie 0,0%" },
+        "min_taxonomy_pct": {
+          "page": 9,
+          "quote": "Alignés sur la taxinomie 0,0%"
+        },
         "min_es_aligned_pct": {
           "page": 9,
           "quote": "#1 Alignés sur les caractéristiques en E/S 90,0%"

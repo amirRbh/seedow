@@ -27,7 +27,9 @@ export const Route = createFileRoute("/pro")({
 const NAV = [
   { to: "/pro/rapports", label: "Rapports" },
   { to: "/pro/rapports/new", label: "Nouveau rapport" },
-  { to: "/pro/clients/new", label: "Nouveau profil client" },
+  { to: "/pro/clients", label: "Clients" },
+  { to: "/pro/clients/new", label: "Recueil" },
+  { to: "/pro/profils-predefinis", label: "Profils prédéfinis" },
   { to: "/pro/fonds", label: "Fonds" },
 ] as const;
 
