@@ -36,6 +36,7 @@ import { Route as ObjectifsRouteImport } from './routes/objectifs'
 import { Route as ObservatoireRouteImport } from './routes/observatoire'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
+import { Route as ProRouteRouteImport } from './routes/pro/route'
 import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as ReglagesRouteImport } from './routes/reglages'
 import { Route as ReveilRouteImport } from './routes/reveil'
@@ -58,11 +59,16 @@ import { Route as HooksRecomputeIngestionPlanRouteImport } from './routes/hooks/
 import { Route as HooksRecomputeRiskModelRouteImport } from './routes/hooks/recompute-risk-model'
 import { Route as HooksRefreshMarketDataRouteImport } from './routes/hooks/refresh-market-data'
 import { Route as ObjectifsGoalIdRouteImport } from './routes/objectifs.$goalId'
+import { Route as ProIndexRouteImport } from './routes/pro/index'
+import { Route as ProFondsRouteImport } from './routes/pro/fonds'
 import { Route as VoteResolutionIdRouteImport } from './routes/vote.$resolutionId'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as AuthenticatedAdminBetaRouteImport } from './routes/_authenticated/admin.beta'
 import { Route as AuthenticatedAdminDataRouteImport } from './routes/_authenticated/admin.data'
 import { Route as ApiPublicEsgPreviewRouteImport } from './routes/api.public.esg-preview'
+import { Route as ProClientsNewRouteImport } from './routes/pro/clients.new'
+import { Route as ProRapportsIndexRouteImport } from './routes/pro/rapports.index'
+import { Route as ProRapportsNewRouteImport } from './routes/pro/rapports.new'
 import { Route as ApiPublicV1CompareRouteImport } from './routes/api.public.v1.compare'
 import { Route as ApiPublicV1OpenapiDotjsonRouteImport } from './routes/api.public.v1.openapi[.]json'
 import { Route as ApiPublicV1FundsIndexRouteImport } from './routes/api.public.v1.funds.index'
@@ -202,6 +208,11 @@ const PortfolioRoute = PortfolioRouteImport.update({
   path: '/portfolio',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProRouteRoute = ProRouteRouteImport.update({
+  id: '/pro',
+  path: '/pro',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfilRoute = ProfilRouteImport.update({
   id: '/profil',
   path: '/profil',
@@ -316,6 +327,16 @@ const ObjectifsGoalIdRoute = ObjectifsGoalIdRouteImport.update({
   path: '/$goalId',
   getParentRoute: () => ObjectifsRoute,
 } as any)
+const ProIndexRoute = ProIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProRouteRoute,
+} as any)
+const ProFondsRoute = ProFondsRouteImport.update({
+  id: '/fonds',
+  path: '/fonds',
+  getParentRoute: () => ProRouteRoute,
+} as any)
 const VoteResolutionIdRoute = VoteResolutionIdRouteImport.update({
   id: '/$resolutionId',
   path: '/$resolutionId',
@@ -341,6 +362,21 @@ const ApiPublicEsgPreviewRoute = ApiPublicEsgPreviewRouteImport.update({
   path: '/api/public/esg-preview',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProClientsNewRoute = ProClientsNewRouteImport.update({
+  id: '/clients/new',
+  path: '/clients/new',
+  getParentRoute: () => ProRouteRoute,
+} as any)
+const ProRapportsIndexRoute = ProRapportsIndexRouteImport.update({
+  id: '/rapports/',
+  path: '/rapports/',
+  getParentRoute: () => ProRouteRoute,
+} as any)
+const ProRapportsNewRoute = ProRapportsNewRouteImport.update({
+  id: '/rapports/new',
+  path: '/rapports/new',
+  getParentRoute: () => ProRouteRoute,
+} as any)
 const ApiPublicV1CompareRoute = ApiPublicV1CompareRouteImport.update({
   id: '/api/public/v1/compare',
   path: '/api/public/v1/compare',
@@ -365,6 +401,7 @@ const ApiPublicV1FundsIsinRoute = ApiPublicV1FundsIsinRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/pro': typeof ProRouteRouteWithChildren
   '/aide': typeof AideRoute
   '/auth': typeof AuthRoute
   '/certificat': typeof CertificatRoute
@@ -411,12 +448,17 @@ export interface FileRoutesByFullPath {
   '/hooks/recompute-risk-model': typeof HooksRecomputeRiskModelRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
+  '/pro/fonds': typeof ProFondsRoute
   '/vote/$resolutionId': typeof VoteResolutionIdRoute
   '/cours/': typeof CoursIndexRoute
+  '/pro/': typeof ProIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/admin/beta': typeof AuthenticatedAdminBetaRoute
   '/admin/data': typeof AuthenticatedAdminDataRoute
   '/api/public/esg-preview': typeof ApiPublicEsgPreviewRoute
+  '/pro/clients/new': typeof ProClientsNewRoute
+  '/pro/rapports/new': typeof ProRapportsNewRoute
+  '/pro/rapports/': typeof ProRapportsIndexRoute
   '/api/public/v1/compare': typeof ApiPublicV1CompareRoute
   '/api/public/v1/openapi.json': typeof ApiPublicV1OpenapiDotjsonRoute
   '/api/public/v1/funds/$isin': typeof ApiPublicV1FundsIsinRoute
@@ -469,12 +511,17 @@ export interface FileRoutesByTo {
   '/hooks/recompute-risk-model': typeof HooksRecomputeRiskModelRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
+  '/pro/fonds': typeof ProFondsRoute
   '/vote/$resolutionId': typeof VoteResolutionIdRoute
   '/cours': typeof CoursIndexRoute
+  '/pro': typeof ProIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/admin/beta': typeof AuthenticatedAdminBetaRoute
   '/admin/data': typeof AuthenticatedAdminDataRoute
   '/api/public/esg-preview': typeof ApiPublicEsgPreviewRoute
+  '/pro/clients/new': typeof ProClientsNewRoute
+  '/pro/rapports/new': typeof ProRapportsNewRoute
+  '/pro/rapports': typeof ProRapportsIndexRoute
   '/api/public/v1/compare': typeof ApiPublicV1CompareRoute
   '/api/public/v1/openapi.json': typeof ApiPublicV1OpenapiDotjsonRoute
   '/api/public/v1/funds/$isin': typeof ApiPublicV1FundsIsinRoute
@@ -484,6 +531,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/pro': typeof ProRouteRouteWithChildren
   '/aide': typeof AideRoute
   '/auth': typeof AuthRoute
   '/certificat': typeof CertificatRoute
@@ -530,12 +578,17 @@ export interface FileRoutesById {
   '/hooks/recompute-risk-model': typeof HooksRecomputeRiskModelRoute
   '/hooks/refresh-market-data': typeof HooksRefreshMarketDataRoute
   '/objectifs/$goalId': typeof ObjectifsGoalIdRoute
+  '/pro/fonds': typeof ProFondsRoute
   '/vote/$resolutionId': typeof VoteResolutionIdRoute
   '/cours/': typeof CoursIndexRoute
+  '/pro/': typeof ProIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/_authenticated/admin/beta': typeof AuthenticatedAdminBetaRoute
   '/_authenticated/admin/data': typeof AuthenticatedAdminDataRoute
   '/api/public/esg-preview': typeof ApiPublicEsgPreviewRoute
+  '/pro/clients/new': typeof ProClientsNewRoute
+  '/pro/rapports/new': typeof ProRapportsNewRoute
+  '/pro/rapports/': typeof ProRapportsIndexRoute
   '/api/public/v1/compare': typeof ApiPublicV1CompareRoute
   '/api/public/v1/openapi.json': typeof ApiPublicV1OpenapiDotjsonRoute
   '/api/public/v1/funds/$isin': typeof ApiPublicV1FundsIsinRoute
@@ -545,6 +598,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/pro'
     | '/aide'
     | '/auth'
     | '/certificat'
@@ -591,12 +645,17 @@ export interface FileRouteTypes {
     | '/hooks/recompute-risk-model'
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
+    | '/pro/fonds'
     | '/vote/$resolutionId'
     | '/cours/'
+    | '/pro/'
     | '/.lovable/oauth/consent'
     | '/admin/beta'
     | '/admin/data'
     | '/api/public/esg-preview'
+    | '/pro/clients/new'
+    | '/pro/rapports/new'
+    | '/pro/rapports/'
     | '/api/public/v1/compare'
     | '/api/public/v1/openapi.json'
     | '/api/public/v1/funds/$isin'
@@ -649,12 +708,17 @@ export interface FileRouteTypes {
     | '/hooks/recompute-risk-model'
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
+    | '/pro/fonds'
     | '/vote/$resolutionId'
     | '/cours'
+    | '/pro'
     | '/.lovable/oauth/consent'
     | '/admin/beta'
     | '/admin/data'
     | '/api/public/esg-preview'
+    | '/pro/clients/new'
+    | '/pro/rapports/new'
+    | '/pro/rapports'
     | '/api/public/v1/compare'
     | '/api/public/v1/openapi.json'
     | '/api/public/v1/funds/$isin'
@@ -663,6 +727,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/pro'
     | '/aide'
     | '/auth'
     | '/certificat'
@@ -709,12 +774,17 @@ export interface FileRouteTypes {
     | '/hooks/recompute-risk-model'
     | '/hooks/refresh-market-data'
     | '/objectifs/$goalId'
+    | '/pro/fonds'
     | '/vote/$resolutionId'
     | '/cours/'
+    | '/pro/'
     | '/.lovable/oauth/consent'
     | '/_authenticated/admin/beta'
     | '/_authenticated/admin/data'
     | '/api/public/esg-preview'
+    | '/pro/clients/new'
+    | '/pro/rapports/new'
+    | '/pro/rapports/'
     | '/api/public/v1/compare'
     | '/api/public/v1/openapi.json'
     | '/api/public/v1/funds/$isin'
@@ -724,6 +794,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  ProRouteRoute: typeof ProRouteRouteWithChildren
   AideRoute: typeof AideRoute
   AuthRoute: typeof AuthRoute
   CertificatRoute: typeof CertificatRoute
@@ -967,6 +1038,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortfolioRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pro': {
+      id: '/pro'
+      path: '/pro'
+      fullPath: '/pro'
+      preLoaderRoute: typeof ProRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profil': {
       id: '/profil'
       path: '/profil'
@@ -1121,6 +1199,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ObjectifsGoalIdRouteImport
       parentRoute: typeof ObjectifsRoute
     }
+    '/pro/': {
+      id: '/pro/'
+      path: '/'
+      fullPath: '/pro/'
+      preLoaderRoute: typeof ProIndexRouteImport
+      parentRoute: typeof ProRouteRoute
+    }
+    '/pro/fonds': {
+      id: '/pro/fonds'
+      path: '/fonds'
+      fullPath: '/pro/fonds'
+      preLoaderRoute: typeof ProFondsRouteImport
+      parentRoute: typeof ProRouteRoute
+    }
     '/vote/$resolutionId': {
       id: '/vote/$resolutionId'
       path: '/$resolutionId'
@@ -1155,6 +1247,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/public/esg-preview'
       preLoaderRoute: typeof ApiPublicEsgPreviewRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/pro/clients/new': {
+      id: '/pro/clients/new'
+      path: '/clients/new'
+      fullPath: '/pro/clients/new'
+      preLoaderRoute: typeof ProClientsNewRouteImport
+      parentRoute: typeof ProRouteRoute
+    }
+    '/pro/rapports/': {
+      id: '/pro/rapports/'
+      path: '/rapports'
+      fullPath: '/pro/rapports/'
+      preLoaderRoute: typeof ProRapportsIndexRouteImport
+      parentRoute: typeof ProRouteRoute
+    }
+    '/pro/rapports/new': {
+      id: '/pro/rapports/new'
+      path: '/rapports/new'
+      fullPath: '/pro/rapports/new'
+      preLoaderRoute: typeof ProRapportsNewRouteImport
+      parentRoute: typeof ProRouteRoute
     }
     '/api/public/v1/compare': {
       id: '/api/public/v1/compare'
@@ -1200,6 +1313,26 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface ProRouteRouteChildren {
+  ProFondsRoute: typeof ProFondsRoute
+  ProIndexRoute: typeof ProIndexRoute
+  ProClientsNewRoute: typeof ProClientsNewRoute
+  ProRapportsNewRoute: typeof ProRapportsNewRoute
+  ProRapportsIndexRoute: typeof ProRapportsIndexRoute
+}
+
+const ProRouteRouteChildren: ProRouteRouteChildren = {
+  ProFondsRoute: ProFondsRoute,
+  ProIndexRoute: ProIndexRoute,
+  ProClientsNewRoute: ProClientsNewRoute,
+  ProRapportsNewRoute: ProRapportsNewRoute,
+  ProRapportsIndexRoute: ProRapportsIndexRoute,
+}
+
+const ProRouteRouteWithChildren = ProRouteRoute._addFileChildren(
+  ProRouteRouteChildren,
+)
+
 interface CoursRouteChildren {
   CoursSlugRoute: typeof CoursSlugRoute
   CoursIndexRoute: typeof CoursIndexRoute
@@ -1237,6 +1370,7 @@ const VoteRouteWithChildren = VoteRoute._addFileChildren(VoteRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  ProRouteRoute: ProRouteRouteWithChildren,
   AideRoute: AideRoute,
   AuthRoute: AuthRoute,
   CertificatRoute: CertificatRoute,

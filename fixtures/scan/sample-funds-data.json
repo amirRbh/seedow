@@ -1,0 +1,161 @@
+[
+  {
+    "isin": "LU0347711466",
+    "name": "BNP Paribas Funds Global Environment Classic Capitalisation",
+    "sfdr_article": 9,
+    "doc_date": null,
+    "min_sustainable_pct": 85,
+    "min_taxonomy_pct": 2,
+    "min_taxonomy_pct_excl_sovereign": 2,
+    "min_es_aligned_pct": 85,
+    "considers_pai": true,
+    "pai_categories": ["ghg", "biodiversity", "water", "waste", "social"],
+    "status": "auto",
+    "evidence": {
+      "min_sustainable_pct": {
+        "page": 9,
+        "quote": "La proportion minimale d'investissements utilisés pour atteindre l'objectif d'investissement durable conformément aux éléments contraignants de sa stratégie d'investissement est de 85 %."
+      },
+      "min_taxonomy_pct": {
+        "page": 9,
+        "quote": "Le produit financier investira au moins 2 % de ses actifs dans des sociétés « EU Taxonomie Aligned »."
+      },
+      "min_es_aligned_pct": {
+        "page": 9,
+        "quote": "La proportion minimale d'investissements utilisés pour atteindre l'objectif d'investissement durable conformément aux éléments contraignants de sa stratégie d'investissement est de 85 %."
+      },
+      "considers_pai": {
+        "page": 6,
+        "quote": "Le Compartiment tient compte des principales incidences négatives sur les facteurs de durabilité"
+      },
+      "pai_category:ghg": {
+        "page": 3,
+        "quote": "Émissions de GES, empreinte carbone et intensité de GES des sociétés bénéficiaires des"
+      }
+    }
+  },
+  {
+    "isin": "FR0010592022",
+    "name": "Ecofi Enjeux Futurs",
+    "sfdr_article": 9,
+    "doc_date": null,
+    "min_sustainable_pct": 100,
+    "min_taxonomy_pct": 0,
+    "min_taxonomy_pct_excl_sovereign": null,
+    "min_es_aligned_pct": 100,
+    "considers_pai": true,
+    "pai_categories": ["ghg", "biodiversity", "water", "waste", "social"],
+    "status": "needs_review",
+    "evidence": {
+      "min_sustainable_pct": {
+        "page": 4,
+        "quote": "Le produit financier investit 100% de ses actifs dans des actifs qui ont été considérés comme étant des investissements durables (#1A Durables)."
+      },
+      "min_taxonomy_pct": {
+        "page": 4,
+        "quote": "L'alignement avec la Taxonomie européenne est de 0%."
+      },
+      "considers_pai": {
+        "page": 2,
+        "quote": "Ce produit financier prend en compte 14 indicateurs obligatoires du tableau 1 de l’Annexe I du Règlement Délégué (UE) 2022/1288 de la Commission européenne"
+      },
+      "pai_category:ghg": {
+        "page": 2,
+        "quote": "Ce produit financier prend en compte 14 indicateurs obligatoires du tableau 1 de l’Annexe I du Règlement Délégué (UE) 2022/1288 de la Commission européenne"
+      }
+    }
+  },
+  {
+    "isin": "FR0010158220",
+    "name": "La Française Carbon Impact Global Government Bonds (part I)",
+    "sfdr_article": 8,
+    "doc_date": "2025-01-31",
+    "min_sustainable_pct": 55,
+    "min_taxonomy_pct": 0,
+    "min_taxonomy_pct_excl_sovereign": 0,
+    "min_es_aligned_pct": 90,
+    "considers_pai": true,
+    "pai_categories": ["ghg", "biodiversity", "water", "waste", "social"],
+    "status": "auto",
+    "evidence": {
+      "min_sustainable_pct": {
+        "page": 1,
+        "quote": "bien qu’il n’ait pas pour objectif l’investissement durable, il contiendra une proportion minimale de 55,0% d’investissements durables"
+      },
+      "min_taxonomy_pct": {
+        "page": 9,
+        "quote": "Alignés sur la taxinomie 0,0%"
+      },
+      "min_es_aligned_pct": {
+        "page": 9,
+        "quote": "#1 Alignés sur les caractéristiques en E/S 90,0%"
+      },
+      "considers_pai": {
+        "page": 3,
+        "quote": "Oui, Les principales incidences négatives sur les facteurs de durabilité ont été pris en compte par le fournisseur externe de données ISS."
+      },
+      "pai_category:ghg": {
+        "page": 3,
+        "quote": "La société de gestion prend en compte les 14 indicateurs d'incidences négatives sur la durabilité"
+      }
+    }
+  },
+  {
+    "isin": "FR0013439528",
+    "name": "La Française Rendement Global 2028",
+    "sfdr_article": 8,
+    "doc_date": "2026-04-16",
+    "min_sustainable_pct": 20,
+    "min_taxonomy_pct": 0,
+    "min_taxonomy_pct_excl_sovereign": 0,
+    "min_es_aligned_pct": 80,
+    "considers_pai": true,
+    "pai_categories": [],
+    "status": "auto",
+    "evidence": {
+      "min_sustainable_pct": {
+        "page": 1,
+        "quote": "while it does not have as its objective sustainable investment, it will have a minimum proportion of 20.0% of sustainable investments"
+      },
+      "min_taxonomy_pct": {
+        "page": 6,
+        "quote": "This financial product does not include a commitment to the EU Taxonomy."
+      },
+      "considers_pai": {
+        "page": 3,
+        "quote": "Yes, sustainability implications represent the impact that investment decisions may have on sustainability factors."
+      }
+    }
+  },
+  {
+    "isin": "FR0011250281",
+    "name": "Pilotage Sélection Dynamique",
+    "sfdr_article": 8,
+    "doc_date": "2025-08-04",
+    "min_sustainable_pct": 8,
+    "min_taxonomy_pct": 0,
+    "min_taxonomy_pct_excl_sovereign": 0,
+    "min_es_aligned_pct": 75,
+    "considers_pai": false,
+    "pai_categories": [],
+    "status": "auto",
+    "evidence": {
+      "min_sustainable_pct": {
+        "page": 1,
+        "quote": "while it does not have as its objective a sustainable investment, it will have a minimum proportion of 8.0% of sustainable investments"
+      },
+      "min_taxonomy_pct": {
+        "page": 3,
+        "quote": "At least 0% of the Fund’s assets will be taxonomy -aligned."
+      },
+      "min_es_aligned_pct": {
+        "page": 3,
+        "quote": "At least 8% of the Fund’s assets will sustainable investments and at least 75% of the Fund’s assets will be"
+      },
+      "considers_pai": {
+        "page": 2,
+        "quote": "which is available on the Management Company’s website: am.oddo-bhf.com. ☒ No"
+      }
+    }
+  }
+]
