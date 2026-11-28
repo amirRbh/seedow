@@ -356,3 +356,84 @@ de mode sur `pro_client_profiles` (contrainte de cohérence), `pro_collection_re
 ```bash
 bun run scripts/pro/sample-report.ts --in fixtures/report/sample-portfolio.json --out fixtures/report/sample-portfolio-report.pdf
 ```
+
+## 8. Exploitation en production (novembre 2026)
+
+Le conteneur de développement ne joint ni Supabase ni l'application publiée :
+toute opération sur la production passe par le workflow **Pro ops**
+(`.github/workflows/pro-ops.yml`), déclenché à la main. Une tâche par run ; les
+tâches qui écrivent exigent `confirm = JE-CONFIRME`.
+
+| Tâche          | Écrit en base                      | Coût Anthropic      | Rôle                                                                                |
+| -------------- | ---------------------------------- | ------------------- | ----------------------------------------------------------------------------------- |
+| `status`       | non (transaction en lecture seule) | 0                   | comptes des tables, RLS, stockage, visibilité REST, app publiée, validité de la clé |
+| `eval`         | non                                | oui, plafonné       | précision de l'extraction sur les 7 annexes de référence                            |
+| `fund-base`    | seulement avec confirmation        | oui si confirmation | base UC (voir ci-dessous)                                                           |
+| `ingest-inbox` | oui                                | oui, plafonné       | traite les annexes déposées depuis `/pro/fonds`                                     |
+| `e2e`          | oui (données fictives)             | oui, plafonné       | parcours complet sur l'app publiée                                                  |
+
+Secrets GitHub Actions requis : `SUPABASE_DB_URL`, `SUPABASE_URL`,
+`SUPABASE_SERVICE_ROLE_KEY`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `ANTHROPIC_API_KEY`.
+
+### Clé Anthropic et coûts
+
+- La clé n'existe que comme secret GitHub Actions (ou variable de shell locale).
+  Le code de l'application n'importe ni le SDK ni la clé, et aucune variable
+  `VITE_*` ne porte de secret : verrouillé par `src/lib/pro/__tests__/secrets-boundary.test.ts`,
+  et vérifié sur le build (aucune mention d'Anthropic dans `.output/`).
+- Modèle par défaut : `claude-opus-5-5` (`EXTRACTION_MODEL` pour en changer).
+- Chaque run a un plafond (`EXTRACTION_MAX_COST_USD`, 10 $ par défaut) : avant
+  chaque appel, les tokens d'entrée sont comptés (appel gratuit) et l'appel n'est
+  lancé que si `dépensé + entrée comptée + sortie maximale` reste sous le plafond.
+  Le coût réel est imputé d'après l'usage renvoyé, refus et réponses tronquées compris.
+  Tarifs dans `src/lib/pro/extraction/cost.ts` (à revérifier avant décision budgétaire).
+- Erreurs : le SDK réessaie 408/409/429/5xx (4 tentatives, attente exponentielle) ;
+  une erreur de compte (clé refusée, droits, modèle inconnu, limite de débit
+  persistante, plafond atteint) arrête le run et laisse les dépôts en place ;
+  une erreur propre à un document (PDF refusé, réponse hors schéma) n'arrête que lui.
+- Un document de plus de 60 pages est refusé : une annexe se traite seule.
+
+### Base UC
+
+1. **Liste de départ** — `data/pro/uc-universe-v1.json`, générée par
+   `scripts/pro/select-universe.ts` depuis l'extrait GECO du repo (9 octobre 2026) :
+   168 fonds de droit français, ouverts à tous souscripteurs, dont le nom porte un
+   terme encadré par l'ESMA, au plus 4 par société de gestion (68 sociétés). Règles :
+   `src/lib/pro/funds/universe.ts`. Cette liste ne dit pas qu'un fonds est plus
+   durable, plus vendu ou plus présent en assurance-vie qu'un autre.
+2. **Identité** — GECO (AMF), source primaire : nom, société de gestion et son LEI,
+   classification AMF, devise ; `identity_source`, `identity_source_url` et
+   `identity_retrieved_at` sur chaque ligne. L'ingestion d'une annexe n'écrase
+   jamais cette identité (l'annexe ne nomme presque jamais la société de gestion).
+3. **Frais courants** — lus dans le KID / DIC par le parseur déterministe existant
+   (`lib/esg/kid-parser`, aucune IA), avec page et ligne citées
+   (`pro_fund_costs`, historique en insertion seule ; un même KID n'est importé
+   qu'une fois). Sans page retrouvée : `needs_review`. DIC multi-parts : non attribué.
+4. **Annexe SFDR** — repérée dans le document SFDR ou le prospectus le plus récent
+   (`src/lib/pro/funds/annex-locate.ts`), isolée dans un PDF à part ; l'empreinte
+   du document complet et les pages d'origine sont conservées
+   (`pro_fund_documents.source_sha256`, `source_page_start`, `source_page_end`).
+   Prospectus à compartiments : seule l'annexe qui nomme le fonds est retenue,
+   sinon revue manuelle.
+5. **Extraction** — `ingest.ts` sur les annexes isolées, avec le manifeste produit.
+6. **Journal** — chaque import écrit une ligne dans `pro_fund_imports` (commit,
+   paramètres, comptes).
+
+Doublons : clé primaire ISIN (`pro_funds`), empreinte SHA-256 unique des
+documents, `(isin, source_sha256)` unique pour les frais. Le run est rejouable.
+
+Limites : GECO ne couvre que les fonds agréés en France — les SICAV
+luxembourgeoises, nombreuses en unités de compte, exigent une autre source
+(société de gestion, CSSF). Conditions de réutilisation des données GECO et
+des documents réglementaires : à confirmer par écrit avant tout usage commercial.
+
+### Parcours complet (`e2e`)
+
+`scripts/pro/e2e-prod.ts`, Playwright sur l'application publiée : connexion d'un
+compte de test, cabinet fictif (ORIAS 00000000), client `E2E-…`, dépôt de
+l'annexe Ecofi Enjeux Futurs, analyse (`ingest --inbox`), allocation et aperçu,
+génération du rapport, téléchargement (empreinte comparée à la base), puis
+contrôle d'isolation avec un second compte. Comptes `seedow-pro-e2e-{a,b}@example.com`
+(domaine réservé, aucun e-mail envoyé), mot de passe aléatoire renouvelé à chaque
+run. Les rapports de test restent dans le cabinet fictif : ils sont immuables.
+Captures d'écran en artefact du run.
