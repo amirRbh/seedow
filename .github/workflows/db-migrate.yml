@@ -19,10 +19,25 @@
 # l'étape dédiée) ; c'est un geste console à faire après coup.
 #
 # Secret requis : SUPABASE_DB_URL (chaîne « Session pooler », port 5432, IPv4).
+#
+# ⚠ BASE DE PRODUCTION : ne PAS lancer le mode par défaut. Rejouer les 80+
+# migrations réécrit des données vivantes (secret `cron_secret` du Vault remis à
+# une ancienne valeur, `assets` ramené à d'anciens symboles et indicateurs, jobs
+# pg_cron réécrits par le pré-enregistrement). Sur une base existante, utiliser
+# l'entrée `only` : seules les migrations désignées sont appliquées, en mode
+# STRICT (ON_ERROR_STOP=1, une transaction par fichier, arrêt à la première
+# erreur, rien n'est appliqué à moitié), sans toucher à pg_cron.
 name: DB migrate (Supabase)
 
 on:
   workflow_dispatch:
+    inputs:
+      only:
+        description: >-
+          Base existante : motif de fichiers à appliquer SEULS, en mode strict
+          (ex. « *_pro_*.sql »). Vide = rejouer tout (base vierge uniquement).
+        required: false
+        default: ""
 
 jobs:
   migrate:
@@ -35,6 +50,7 @@ jobs:
         run: sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client
 
       - name: Pré-enregistrer les jobs pg_cron (les migrations font unschedule)
+        if: inputs.only == ''
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
@@ -49,7 +65,33 @@ jobs:
           end $$;
           SQL
 
+      - name: Appliquer les migrations désignées (strict, base existante)
+        if: inputs.only != ''
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          ONLY: ${{ inputs.only }}
+        run: |
+          set -euo pipefail
+          if [ -z "$SUPABASE_DB_URL" ]; then echo "::error::Secret SUPABASE_DB_URL manquant."; exit 1; fi
+          # Le motif ne sert qu'à sélectionner des fichiers du dossier : pas de
+          # chemin, pas de caractère de shell.
+          if ! printf '%s' "$ONLY" | grep -qE '^[A-Za-z0-9_.*-]+$'; then
+            echo "::error::Motif refusé : « $ONLY »."; exit 1
+          fi
+          files=$(cd supabase/migrations && ls -1 $ONLY 2>/dev/null | grep -E '\.sql$' | sort || true)
+          if [ -z "$files" ]; then echo "::error::Aucune migration ne correspond à « $ONLY »."; exit 1; fi
+          echo "Migrations sélectionnées :"; printf '  %s\n' $files
+          for f in $files; do
+            echo "→ $f"
+            # Une transaction par fichier : une erreur annule tout le fichier,
+            # et le run s'arrête — les fichiers suivants ne sont pas tentés.
+            psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 --single-transaction -q \
+              -f "supabase/migrations/$f"
+          done
+          echo "$files" | tail -1 > /tmp/last_migration
+
       - name: Appliquer les migrations (tolérant aux collisions d'idempotence)
+        if: inputs.only == ''
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
@@ -123,7 +165,11 @@ jobs:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
           set -euo pipefail
-          last=$(ls supabase/migrations/*.sql | sort | tail -1)
+          if [ -s /tmp/last_migration ]; then
+            last="supabase/migrations/$(cat /tmp/last_migration)"
+          else
+            last=$(ls supabase/migrations/*.sql | sort | tail -1)
+          fi
           echo "Dernière migration : $(basename "$last")"
           tables=$(grep -oiE 'CREATE TABLE( IF NOT EXISTS)? +public\.[a-z0-9_]+' "$last" \
                    | sed -E 's/.*public\.//' | sort -u)
