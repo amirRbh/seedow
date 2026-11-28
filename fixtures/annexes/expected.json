@@ -1,10 +1,16 @@
 {
-  "_comment": "Attendu PRÉ-REMPLI par lecture humaine assistée (texte pdfjs + rendu des pages pour les cases cochées et les graphiques), INDÉPENDAMMENT de l'extraction par le modèle. À relire et corriger à la main. Pourcentages = engagement minimum en % de l'actif. pai_categories = catégories identifiables (toutes les cinq si le document affirme prendre en compte tous les indicateurs obligatoires du tableau 1). Pages = index physique dans le PDF.",
+  "_comment": "Attendu PRÉ-REMPLI par lecture humaine assistée (texte pdfjs + rendu des pages pour les cases cochées et les graphiques), INDÉPENDAMMENT de l'extraction par le modèle. À relire et corriger à la main. Pourcentages = engagement minimum en % de l'actif. pai_categories = catégories identifiables (toutes les cinq si le document affirme prendre en compte tous les indicateurs obligatoires du tableau 1). Pages = index physique dans le PDF. identity = ce que le DOCUMENT énonce (relevé le 2026-11-28 sur le texte pdfjs) : aucune des 7 annexes ne mentionne d'ISIN (attendu null : l'ISIN vient de GECO ou du manifeste, jamais de l'extraction) ; LEI relevé tel quel, clé ISO 17442 vérifiée ; société de gestion jamais désignée explicitement (null), Crédit Mutuel AM accepté pour Rendement Global 2028 où elle est citée comme autrice de la stratégie.",
   "fixtures": {
     "bnpp-art8-feeder-fr.pdf": {
       "isin": null,
       "source_url": "https://docfinder.bnpparibas-am.com/api/files/f6f78851-ee27-46d9-b001-1a59fa17ec02",
       "fund_name": "Allianz Horizon Neo Février 2026",
+      "identity": {
+        "fund_name": "Allianz Horizon Neo Février 2026",
+        "isin": null,
+        "lei": "9695001C8IYCKPNBAI20",
+        "management_company": null
+      },
       "fields": {
         "sfdr_article": 8,
         "doc_date": null,
@@ -25,6 +31,12 @@
       "isin": null,
       "source_url": "https://docfinder.bnpparibas-am.com/api/files/5ffe513b-ab09-4819-905d-5159f5318b3f/512",
       "fund_name": "BNP Paribas Funds Global Environment",
+      "identity": {
+        "fund_name": "BNP Paribas Funds Global Environment",
+        "isin": null,
+        "lei": "213800LPWZUEV2JPJF87",
+        "management_company": null
+      },
       "fields": {
         "sfdr_article": 9,
         "doc_date": null,
@@ -44,6 +56,12 @@
       "isin": null,
       "source_url": "https://www.carmignac.com/assets/yoda/PCD_CIN_10_FR_fr/SFDR-Pre-Contractual-Disclosure_Carmignac-Investissement_FR_fr.pdf",
       "fund_name": "Carmignac Global Active",
+      "identity": {
+        "fund_name": "Carmignac Global Active",
+        "isin": null,
+        "lei": "9695009POEVS8JJC8R51",
+        "management_company": null
+      },
       "fields": {
         "sfdr_article": 8,
         "doc_date": "2026-01-01",
@@ -63,6 +81,12 @@
       "isin": "FR0010592022",
       "source_url": "https://www.carac.fr/media/Docs_PDF/AnnexeSFDR_FR0010592022%20Ecofi%20Enjeux%20Futurs.pdf",
       "fund_name": "Ecofi Enjeux Futurs",
+      "identity": {
+        "fund_name": "Ecofi Enjeux Futurs",
+        "isin": null,
+        "lei": "969500XJ8EY8J6QDD528",
+        "management_company": null
+      },
       "fields": {
         "sfdr_article": 9,
         "doc_date": null,
@@ -83,6 +107,12 @@
       "isin": null,
       "source_url": "https://www.bancapassadore.it/servizi/allfunds/2993_93.pdf",
       "fund_name": "La Française Carbon Impact Global Government Bonds",
+      "identity": {
+        "fund_name": "La Française Carbon Impact Global Government Bonds",
+        "isin": null,
+        "lei": "969500USB5121OISVQ25",
+        "management_company": null
+      },
       "fields": {
         "sfdr_article": 8,
         "doc_date": "2025-01-31",
@@ -102,6 +132,13 @@
       "isin": "FR0013439528",
       "source_url": "https://doc.la-francaise.com/documents/lt/FR0013439528/annexe-sfdr-precontractuelle/en",
       "fund_name": "La Française Rendement Global 2028",
+      "identity": {
+        "fund_name": "La Française Rendement Global 2028",
+        "isin": null,
+        "lei": "969500DOW5XNOPU78J81",
+        "management_company": null,
+        "management_company_accepted": ["Crédit Mutuel Asset Management"]
+      },
       "fields": {
         "sfdr_article": 8,
         "doc_date": "2026-04-16",
@@ -121,6 +158,12 @@
       "isin": null,
       "source_url": "https://am.oddo-bhf.com/fr-en/download-document/46038",
       "fund_name": "Pilotage Sélection Dynamique",
+      "identity": {
+        "fund_name": "Pilotage Sélection Dynamique",
+        "isin": null,
+        "lei": "969500HR13MXHKNG4H92",
+        "management_company": null
+      },
       "fields": {
         "sfdr_article": 8,
         "doc_date": "2025-08-04",

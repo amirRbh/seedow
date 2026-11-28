@@ -52,6 +52,22 @@ export const expectedFixtureSchema = z.object({
       fossil_gas_nuclear: z.enum(FOSSIL_GAS_NUCLEAR).nullable(),
     })
     .strict(),
+  /**
+   * Identité telle que le DOCUMENT l'énonce (pas la vérité externe) : un champ
+   * absent du document est attendu à `null`, et toute valeur est une invention.
+   * `management_company_accepted` : variantes jugées acceptables (citation
+   * indirecte), notées justes elles aussi.
+   */
+  identity: z
+    .object({
+      fund_name: z.string().nullable(),
+      isin: z.string().nullable(),
+      lei: z.string().nullable(),
+      management_company: z.string().nullable(),
+      management_company_accepted: z.array(z.string()).optional(),
+    })
+    .strict()
+    .optional(),
   /** Le pipeline doit-il envoyer ce document en revue ? (indicatif, non noté) */
   expect_needs_review: z.boolean().optional(),
   notes: z.string().optional(),
@@ -120,6 +136,86 @@ export function scoreExtractions(
     overall: sum(SCORED_FIELDS),
     mismatches,
   };
+}
+
+// ---------------------------------------------------------------------------
+// Identité : nom, ISIN, LEI, société de gestion, catégorie SFDR
+// ---------------------------------------------------------------------------
+
+export const IDENTITY_FIELDS = ["fund_name", "isin", "lei", "management_company"] as const;
+export type IdentityField = (typeof IDENTITY_FIELDS)[number];
+
+export interface IdentityValues {
+  fund_name: string | null;
+  isin: string | null;
+  lei: string | null;
+  management_company: string | null;
+}
+
+/** Comparaison de libellés : casse, accents, ponctuation et espaces ignorés. */
+export function normalizeLabel(x: string): string {
+  return x
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+export interface IdentityReport {
+  perField: Record<IdentityField, { correct: number; total: number }>;
+  /** Valeurs données alors que le document ne les énonce pas. */
+  invented: { fixture: string; field: IdentityField; actual: string }[];
+  mismatches: { fixture: string; field: IdentityField; expected: unknown; actual: unknown }[];
+}
+
+export function scoreIdentity(
+  expected: Record<string, ExpectedFixture>,
+  actual: Record<string, IdentityValues>,
+): IdentityReport {
+  const perField = Object.fromEntries(
+    IDENTITY_FIELDS.map((f) => [f, { correct: 0, total: 0 }]),
+  ) as IdentityReport["perField"];
+  const invented: IdentityReport["invented"] = [];
+  const mismatches: IdentityReport["mismatches"] = [];
+
+  for (const [name, exp] of Object.entries(expected)) {
+    const id = exp.identity;
+    if (!id) continue;
+    const got = actual[name];
+    for (const f of IDENTITY_FIELDS) {
+      perField[f].total++;
+      const want = id[f];
+      const a = got ? got[f] : undefined;
+      let ok: boolean;
+      if (a === undefined) ok = false;
+      else if (want === null) {
+        ok =
+          a === null ||
+          (f === "management_company" &&
+            (id.management_company_accepted ?? []).some(
+              (v) => normalizeLabel(v) === normalizeLabel(a),
+            ));
+        if (!ok && a !== null) invented.push({ fixture: name, field: f, actual: a });
+      } else if (a === null) ok = false;
+      else if (f === "fund_name" || f === "management_company") {
+        ok = normalizeLabel(want) === normalizeLabel(a);
+      } else ok = want === a;
+      if (ok) perField[f].correct++;
+      else mismatches.push({ fixture: name, field: f, expected: want, actual: a ?? "∅" });
+    }
+  }
+  return { perField, invented, mismatches };
+}
+
+export function formatIdentity(r: IdentityReport): string {
+  const lines = ["champ d'identité                   | justes | précision", "-".repeat(60)];
+  for (const f of IDENTITY_FIELDS) {
+    const c = r.perField[f];
+    lines.push(`${f.padEnd(35)}| ${`${c.correct}/${c.total}`.padEnd(7)}| ${pctStr(c)}`);
+  }
+  lines.push(`valeurs inventées (absentes du document) : ${r.invented.length}`);
+  return lines.join("\n");
 }
 
 const pctStr = (c: { correct: number; total: number }) =>
