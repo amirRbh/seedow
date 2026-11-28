@@ -12,6 +12,28 @@ for s in SUPABASE_DB_URL SUPABASE_URL SUPABASE_SERVICE_ROLE_KEY ANTHROPIC_API_KE
   if [ -n "${!s:-}" ]; then echo "- $s : présent"; else echo "- $s : ABSENT"; fi
 done
 
+echo; echo "## Quelle base ? (comparaison avec le projet de l'application, .env versionné)"
+# L'identifiant du projet Lovable Cloud est public (il est dans .env) ; on ne
+# compare que des booléens, sans afficher l'URL ni l'identifiant des secrets.
+app_ref=$(grep -E '^VITE_SUPABASE_PROJECT_ID=' .env | cut -d'"' -f2)
+same() { if [ -n "$1" ] && [ -n "$app_ref" ] && printf '%s' "$1" | grep -q "$app_ref"; then echo "oui"; else echo "NON"; fi; }
+echo "- projet de l'application publiée : lu dans .env (${#app_ref} caractères)"
+echo "- SUPABASE_URL vise ce projet : $(same "${SUPABASE_URL:-}")"
+echo "- SUPABASE_DB_URL vise ce projet : $(same "${SUPABASE_DB_URL:-}")"
+
+
+echo; echo "## Base de l'application publiée (clé publique du .env, lecture seule)"
+# Sans secret : la clé « publishable » est publique. 200 = table présente et
+# lisible, 401/403 = table présente mais réservée aux comptes connectés,
+# 404 = table absente de cette base.
+app_url=$(grep -E '^VITE_SUPABASE_URL=' .env | cut -d'"' -f2)
+app_key=$(grep -E '^VITE_SUPABASE_PUBLISHABLE_KEY=' .env | cut -d'"' -f2)
+for t in pro_funds pro_fund_costs pro_predefined_profiles pro_cabinets assets; do
+  code=$(curl -s -o /tmp/app.json -w '%{http_code}' "$app_url/rest/v1/$t?select=*&limit=0" \
+    -H "apikey: $app_key" -H "Authorization: Bearer $app_key")
+  echo "- $t : HTTP $code $(grep -o '"code":"[^"]*"' /tmp/app.json || true)"
+done
+
 echo; echo "## Tables Pro (lignes)"
 for t in pro_funds pro_fund_documents pro_fund_sustainability_data pro_cabinets \
          pro_client_profiles pro_predefined_profiles pro_collection_records pro_reports \
