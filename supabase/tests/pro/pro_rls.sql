@@ -196,4 +196,47 @@ DO $$ BEGIN
 END $$;
 RESET ROLE;
 
+-- ---- Base UC de référence : frais sourcés, journal des imports ----
+SET ROLE service_role;
+UPDATE public.pro_funds SET identity_source = 'amf_geco', amf_classification = 'Actions internationales'
+  WHERE isin = 'FR0010592022';
+INSERT INTO public.pro_fund_costs (isin, ongoing_charges_pct, status, page, quote, source_doc_type, source_url, source_sha256, parser)
+VALUES ('FR0010592022', 1.2, 'auto', 2, 'Frais courants 1,20 %', 'kid', 'https://geco.amf-france.org/x', repeat('e', 64), 'kid-parser@1');
+-- Réimport du même KID : refusé par la contrainte d'unicité (idempotence).
+DO $$ BEGIN
+  INSERT INTO public.pro_fund_costs (isin, ongoing_charges_pct, status, page, quote, source_doc_type, source_url, source_sha256, parser)
+  VALUES ('FR0010592022', 1.2, 'auto', 2, 'q', 'kid', 'u', repeat('e', 64), 'kid-parser@1');
+  RAISE EXCEPTION 'ÉCHEC : même KID importé deux fois';
+EXCEPTION WHEN unique_violation THEN NULL; END $$;
+-- « auto » sans page ni citation : refusé.
+DO $$ BEGIN
+  INSERT INTO public.pro_fund_costs (isin, ongoing_charges_pct, status, source_doc_type, source_url, source_sha256, parser)
+  VALUES ('FR0010592022', 1.2, 'auto', 'kid', 'u', repeat('f', 64), 'kid-parser@1');
+  RAISE EXCEPTION 'ÉCHEC : frais « auto » sans preuve acceptés';
+EXCEPTION WHEN check_violation THEN NULL; END $$;
+-- Le service ne réécrit pas l'historique des frais.
+DO $$ BEGIN
+  UPDATE public.pro_fund_costs SET ongoing_charges_pct = 0.5;
+  RAISE EXCEPTION 'ÉCHEC : frais réécrits';
+EXCEPTION WHEN insufficient_privilege THEN NULL; END $$;
+INSERT INTO public.pro_fund_imports (source, counts, status) VALUES ('test', '{"created": 1}', 'ok');
+RESET ROLE;
+
+SET ROLE authenticated;
+SET request.jwt.claim.sub = '00000000-0000-0000-0000-00000000000a';
+DO $$ BEGIN
+  IF (SELECT count(*) FROM public.pro_fund_costs) <> 1 THEN RAISE EXCEPTION 'ÉCHEC : frais illisibles'; END IF;
+  PERFORM identity_source, selection_reason FROM public.pro_funds LIMIT 1;
+END $$;
+DO $$ BEGIN
+  INSERT INTO public.pro_fund_costs (isin, status, source_doc_type, source_url, source_sha256, parser)
+  VALUES ('FR0010592022', 'not_found', 'kid', 'u', repeat('1', 64), 'p');
+  RAISE EXCEPTION 'ÉCHEC : un utilisateur a écrit des frais';
+EXCEPTION WHEN insufficient_privilege THEN NULL; END $$;
+DO $$ BEGIN
+  PERFORM count(*) FROM public.pro_fund_imports;
+  RAISE EXCEPTION 'ÉCHEC : un utilisateur lit le journal des imports';
+EXCEPTION WHEN insufficient_privilege THEN NULL; END $$;
+RESET ROLE;
+
 SELECT 'OK — RLS et immutabilité Pro vérifiées' AS result;

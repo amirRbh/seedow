@@ -36,3 +36,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Sorties des scripts Pro (base UC, e2e) — artefacts de run, jamais versionnés
+out/

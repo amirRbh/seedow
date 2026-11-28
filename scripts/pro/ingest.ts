@@ -21,8 +21,12 @@
  * L'ISIN figure rarement dans une annexe : il vient de --isin, du manifeste,
  * ou à défaut du document (citation vérifiée). Sans ISIN, rien n'est écrit.
  *
- * Env : ANTHROPIC_API_KEY, EXTRACTION_MODEL (défaut claude-sonnet-5-5),
+ * Env : ANTHROPIC_API_KEY, EXTRACTION_MODEL (défaut claude-opus-5-5),
+ *       EXTRACTION_MAX_COST_USD (plafond du run, défaut 10 $),
  *       SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY.
+ *
+ * Une erreur de compte (clé refusée, plafond atteint, limite de débit) arrête le
+ * run ; une erreur propre à un document n'arrête que ce document.
  */
 import { readdir, readFile, stat } from "node:fs/promises";
 import { basename, join } from "node:path";
@@ -31,6 +35,8 @@ import { z } from "zod";
 import { parseInboxFileName } from "../../src/lib/pro/app/isin";
 import { EXTRACTION_VERSION } from "../../src/lib/pro/extraction/prompt";
 import { sustainabilityRow } from "../../src/lib/pro/extraction/to-row";
+import { formatUsd } from "../../src/lib/pro/extraction/cost";
+import { FatalExtractionError, runBudget } from "./lib/anthropic-extract";
 import { processAnnex, sha256Hex, type ProcessedAnnex } from "./lib/process-annex";
 import { ANNEX_BUCKET, serviceClient } from "./lib/supabase";
 
@@ -122,16 +128,31 @@ async function loadInputs(t: string): Promise<Input[]> {
   ];
 }
 
-const manifest: Record<string, string> = opts.manifest
-  ? z
-      .record(z.string(), z.string().regex(ISIN_RE))
-      .parse(JSON.parse(await readFile(opts.manifest, "utf8")))
+/**
+ * Manifeste : `{"<fichier ou sha256>": "<ISIN>"}`, ou la forme produite par
+ * `build-fund-base.ts`, qui garde l'origine d'une annexe isolée d'un prospectus.
+ */
+const manifestEntry = z.union([
+  z.string().regex(ISIN_RE),
+  z.object({
+    isin: z.string().regex(ISIN_RE),
+    source_url: z.string().url(),
+    source_sha256: z.string().regex(/^[0-9a-f]{64}$/),
+    source_page_start: z.number().int().min(1),
+    source_page_end: z.number().int().min(1),
+  }),
+]);
+type ManifestEntry = z.infer<typeof manifestEntry>;
+const manifest: Record<string, ManifestEntry> = opts.manifest
+  ? z.record(z.string(), manifestEntry).parse(JSON.parse(await readFile(opts.manifest, "utf8")))
   : {};
+const entryIsin = (e: ManifestEntry | undefined) => (typeof e === "string" ? e : e?.isin);
+const entryOrigin = (e: ManifestEntry | undefined) => (e && typeof e === "object" ? e : null);
 
 function resolveIsin(input: Input, p: ProcessedAnnex): string | null {
   if (input.isin) return input.isin;
   if (opts.isin) return opts.isin;
-  const fromManifest = manifest[input.label] ?? manifest[p.sha256];
+  const fromManifest = entryIsin(manifest[input.label] ?? manifest[p.sha256]);
   if (fromManifest) return fromManifest;
   const x = p.cached.extraction.isin;
   return x.value && p.verification.evidence.isin?.verified ? x.value : null;
@@ -144,6 +165,8 @@ if (opts.isin && inputs.length > 1) {
 }
 const db = opts["dry-run"] ? null : serviceClient();
 const summary = { ingested: 0, skipped: 0, needsReview: 0, failed: 0, noIsin: 0 };
+const budget = runBudget();
+let fatal: string | null = null;
 
 /** Range un dépôt de l'inbox après traitement (hors --dry-run). */
 async function fileAway(input: Input, ok: boolean): Promise<void> {
@@ -173,7 +196,7 @@ for (const input of inputs) {
       }
     }
 
-    const p = await processAnnex(input.bytes, { label: input.label });
+    const p = await processAnnex(input.bytes, { label: input.label, budget });
     const x = p.cached.extraction;
     const isin = resolveIsin(input, p);
     console.log(
@@ -196,17 +219,36 @@ for (const input of inputs) {
       .upload(storagePath, input.bytes, { contentType: "application/pdf", upsert: false });
     if (up.error && !/exists/i.test(up.error.message)) throw up.error;
 
-    const fund = await db.from("pro_funds").upsert(
-      {
-        isin,
-        name: x.fund_name.value ?? isin,
-        management_company: x.management_company.value,
-        sfdr_article: x.sfdr_article.value,
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: "isin" },
-    );
+    // L'identité GECO (source primaire) n'est jamais écrasée par celle de
+    // l'annexe, qui ne nomme presque jamais la société de gestion. L'annexe ne
+    // complète que l'article SFDR, et seulement si sa citation est vérifiée.
+    const existing = await db
+      .from("pro_funds")
+      .select("isin, identity_source")
+      .eq("isin", isin)
+      .maybeSingle();
+    if (existing.error) throw existing.error;
+    const articleVerified = p.verification.evidence.sfdr_article?.verified === true;
+    const now = new Date().toISOString();
+    const fund = existing.data
+      ? await db
+          .from("pro_funds")
+          .update({
+            ...(articleVerified ? { sfdr_article: x.sfdr_article.value } : {}),
+            updated_at: now,
+          })
+          .eq("isin", isin)
+      : await db.from("pro_funds").insert({
+          isin,
+          name: x.fund_name.value ?? isin,
+          management_company: x.management_company.value,
+          sfdr_article: articleVerified ? x.sfdr_article.value : null,
+          identity_source: "annex",
+          identity_retrieved_at: now,
+          updated_at: now,
+        });
     if (fund.error) throw fund.error;
+    const origin = entryOrigin(manifest[input.label] ?? manifest[p.sha256]);
 
     const doc = await db
       .from("pro_fund_documents")
@@ -214,10 +256,13 @@ for (const input of inputs) {
         isin,
         doc_type: "sfdr_precontractual",
         language: x.language,
-        source_url: input.sourceUrl,
+        source_url: origin?.source_url ?? input.sourceUrl,
         storage_path: storagePath,
         sha256: sha,
         doc_date: x.doc_date.value,
+        source_sha256: origin?.source_sha256 ?? null,
+        source_page_start: origin?.source_page_start ?? null,
+        source_page_end: origin?.source_page_end ?? null,
       })
       .select("id")
       .single();
@@ -238,6 +283,12 @@ for (const input of inputs) {
     if (row.status === "needs_review") summary.needsReview++;
     ok = true;
   } catch (e) {
+    if (e instanceof FatalExtractionError) {
+      // Le document n'est pas en cause : il reste dans l'inbox pour le prochain run.
+      fatal = e.message;
+      console.error(`■ arrêt du run : ${e.message}`);
+      break;
+    }
     summary.failed++;
     console.error(`✗ ${input.label} : ${e instanceof Error ? e.message : String(e)}`);
   }
@@ -246,6 +297,7 @@ for (const input of inputs) {
 
 console.log(
   `\n${summary.ingested} ingéré(s) dont ${summary.needsReview} à revoir · ${summary.skipped} déjà présent(s) · ` +
-    `${summary.noIsin} sans ISIN · ${summary.failed} échec(s)`,
+    `${summary.noIsin} sans ISIN · ${summary.failed} échec(s)\n` +
+    `${budget.callCount} appel(s) modèle · ${formatUsd(budget.spentUsd)} sur un plafond de ${formatUsd(budget.limitUsd)}`,
 );
-if (summary.failed > 0) process.exit(1);
+if (fatal || summary.failed > 0) process.exit(1);
